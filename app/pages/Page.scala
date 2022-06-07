@@ -16,12 +16,40 @@
 
 package pages
 
-import scala.language.implicitConversions
+import models.{CheckMode, NormalMode, UserAnswers}
+import play.api.mvc.Call
 
-trait Page
+trait Page {
+  def navigate(waypoints: Waypoints, answers: UserAnswers): Call = {
+    val targetPage            = nextPage(waypoints, answers)
+    val recalibratedWaypoints = waypoints.recalibrate(this, targetPage)
 
-object Page {
+    targetPage.route(recalibratedWaypoints)
+  }
 
-  implicit def toString(page: Page): String =
-    page.toString
+  def nextPage(waypoints: Waypoints, answers: UserAnswers): Page =
+    waypoints match {
+      case EmptyWaypoints =>
+        nextPageNormalMode(waypoints, answers)
+
+      case b: NonEmptyWaypoints =>
+        b.currentMode match {
+          case CheckMode  => nextPageCheckMode(b, answers)
+          case NormalMode => nextPageNormalMode(b, answers)
+        }
+    }
+
+  protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    waypoints.next.page
+
+  protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    throw new NotImplementedError("nextPageNormalMode is not implemented")
+
+  def route(waypoints: Waypoints): Call
+
+  def changeLink(waypoints: Waypoints, sourcePage: CheckAnswersPage): Call =
+    route(waypoints.setNextWaypoint(sourcePage.waypoint))
+
+  def changeLink(waypoints: Waypoints, sourcePage: AddItemPage): Call =
+    route(waypoints.setNextWaypoint(sourcePage.waypoint(CheckMode)))
 }
