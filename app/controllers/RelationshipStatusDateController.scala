@@ -17,26 +17,26 @@
 package controllers
 
 import controllers.actions._
-import forms.RelationshipStartDateFormProvider
+import forms.RelationshipStatusDateFormProvider
 import javax.inject.Inject
-import pages.{RelationshipStartDatePage, Waypoints}
+import pages.{RelationshipStatusDatePage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.RelationshipStartDateView
+import views.html.RelationshipStatusDateView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class RelationshipStartDateController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        sessionRepository: SessionRepository,
-                                        identify: IdentifierAction,
-                                        getData: DataRetrievalAction,
-                                        requireData: DataRequiredAction,
-                                        formProvider: RelationshipStartDateFormProvider,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: RelationshipStartDateView
+class RelationshipStatusDateController @Inject()(
+                                                  override val messagesApi: MessagesApi,
+                                                  sessionRepository: SessionRepository,
+                                                  identify: IdentifierAction,
+                                                  getData: DataRetrievalAction,
+                                                  requireData: DataRequiredAction,
+                                                  formProvider: RelationshipStatusDateFormProvider,
+                                                  val controllerComponents: MessagesControllerComponents,
+                                                  view: RelationshipStatusDateView
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   def form = formProvider()
@@ -44,7 +44,7 @@ class RelationshipStartDateController @Inject()(
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(RelationshipStartDatePage) match {
+      val preparedForm = request.userAnswers.get(RelationshipStatusDatePage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -61,9 +61,9 @@ class RelationshipStartDateController @Inject()(
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(RelationshipStartDatePage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(RelationshipStatusDatePage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(RelationshipStartDatePage.navigate(waypoints, updatedAnswers))
+          } yield Redirect(RelationshipStatusDatePage.navigate(waypoints, updatedAnswers))
       )
   }
 }

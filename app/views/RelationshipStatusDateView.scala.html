@@ -24,9 +24,9 @@
 
 @(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("relationshipStartDate.title"))) {
+@layout(pageTitle = title(form, messages("relationshipStatusDate.title"))) {
 
-    @formHelper(action = routes.RelationshipStartDateController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.RelationshipStatusDateController.onSubmit(waypoints), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value.day")))
@@ -35,9 +35,9 @@
         @govukDateInput(
             DateViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(messages("relationshipStartDate.heading")).asPageHeading()
+                legend = LegendViewModel(messages("relationshipStatusDate.heading")).asPageHeading()
             )
-            .withHint(HintViewModel(messages("relationshipStartDate.hint")))
+            .withHint(HintViewModel(messages("relationshipStatusDate.hint")))
         )
 
         @govukButton(

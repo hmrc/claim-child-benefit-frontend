@@ -26,8 +26,8 @@ POST       /anyChildLivedWithOthers                        controllers.AnyChildL
 GET        /everLivedOrWorkedAbroad                        controllers.EverLivedOrWorkedAbroadController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /everLivedOrWorkedAbroad                        controllers.EverLivedOrWorkedAbroadController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /relationshipStartDate                  controllers.RelationshipStartDateController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /relationshipStartDate                  controllers.RelationshipStartDateController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /relationshipStatusDate                  controllers.RelationshipStatusDateController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /relationshipStatusDate                  controllers.RelationshipStatusDateController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /relationshipStatus                        controllers.RelationshipStatusController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /relationshipStatus                        controllers.RelationshipStatusController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

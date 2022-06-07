@@ -18,21 +18,16 @@ package pages
 
 import java.time.LocalDate
 
-import org.scalacheck.Arbitrary
-import pages.behaviours.PageBehaviours
+import controllers.routes
+import play.api.libs.json.JsPath
+import play.api.mvc.Call
 
-class RelationshipStartDatePageSpec extends PageBehaviours {
+case object RelationshipStatusDatePage extends QuestionPage[LocalDate] {
 
-  "RelationshipStartDatePage" - {
+  override def path: JsPath = JsPath \ toString
 
-    implicit lazy val arbitraryLocalDate: Arbitrary[LocalDate] = Arbitrary {
-      datesBetween(LocalDate.of(1900, 1, 1), LocalDate.of(2100, 1, 1))
-    }
+  override def toString: String = "relationshipStatusDate"
 
-    beRetrievable[LocalDate](RelationshipStartDatePage)
-
-    beSettable[LocalDate](RelationshipStartDatePage)
-
-    beRemovable[LocalDate](RelationshipStartDatePage)
-  }
+  override def route(waypoints: Waypoints): Call =
+    routes.RelationshipStatusDateController.onPageLoad(waypoints)
 }

@@ -14,20 +14,25 @@
  * limitations under the License.
  */
 
-package pages
+package forms
 
-import java.time.LocalDate
+import java.time.{LocalDate, ZoneOffset}
 
-import controllers.routes
-import play.api.libs.json.JsPath
-import play.api.mvc.Call
+import forms.behaviours.DateBehaviours
 
-case object RelationshipStartDatePage extends QuestionPage[LocalDate] {
+class RelationshipStatusDateFormProviderSpec extends DateBehaviours {
 
-  override def path: JsPath = JsPath \ toString
+  val form = new RelationshipStatusDateFormProvider()()
 
-  override def toString: String = "relationshipStartDate"
+  ".value" - {
 
-  override def route(waypoints: Waypoints): Call =
-    routes.RelationshipStartDateController.onPageLoad(waypoints)
+    val validData = datesBetween(
+      min = LocalDate.of(2000, 1, 1),
+      max = LocalDate.now(ZoneOffset.UTC)
+    )
+
+    behave like dateField(form, "value", validData)
+
+    behave like mandatoryDateField(form, "value", "relationshipStatusDate.error.required.all")
+  }
 }

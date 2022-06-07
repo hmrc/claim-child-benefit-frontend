@@ -14,23 +14,25 @@
  * limitations under the License.
  */
 
-package forms
+package pages
 
 import java.time.LocalDate
 
-import forms.mappings.Mappings
-import javax.inject.Inject
-import play.api.data.Form
+import org.scalacheck.Arbitrary
+import pages.behaviours.PageBehaviours
 
-class RelationshipStartDateFormProvider @Inject() extends Mappings {
+class RelationshipStatusDatePageSpec extends PageBehaviours {
 
-  def apply(): Form[LocalDate] =
-    Form(
-      "value" -> localDate(
-        invalidKey     = "relationshipStartDate.error.invalid",
-        allRequiredKey = "relationshipStartDate.error.required.all",
-        twoRequiredKey = "relationshipStartDate.error.required.two",
-        requiredKey    = "relationshipStartDate.error.required"
-      )
-    )
+  "RelationshipStatusDatePage" - {
+
+    implicit lazy val arbitraryLocalDate: Arbitrary[LocalDate] = Arbitrary {
+      datesBetween(LocalDate.of(1900, 1, 1), LocalDate.of(2100, 1, 1))
+    }
+
+    beRetrievable[LocalDate](RelationshipStatusDatePage)
+
+    beSettable[LocalDate](RelationshipStatusDatePage)
+
+    beRemovable[LocalDate](RelationshipStatusDatePage)
+  }
 }

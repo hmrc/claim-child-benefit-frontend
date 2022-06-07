@@ -18,27 +18,27 @@ package viewmodels.checkAnswers
 
 import java.time.format.DateTimeFormatter
 import models.UserAnswers
-import pages.{RelationshipStartDatePage, CheckAnswersPage, Waypoints}
+import pages.{RelationshipStatusDatePage, CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object RelationshipStartDateSummary  {
+object RelationshipStatusDateSummary  {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(RelationshipStartDatePage).map {
+    answers.get(RelationshipStatusDatePage).map {
       answer =>
 
         val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
         SummaryListRowViewModel(
-          key     = "relationshipStartDate.checkYourAnswersLabel",
+          key     = "relationshipStatusDate.checkYourAnswersLabel",
           value   = ValueViewModel(answer.format(dateFormatter)),
           actions = Seq(
-            ActionItemViewModel("site.change", RelationshipStartDatePage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("relationshipStartDate.change.hidden"))
+            ActionItemViewModel("site.change", RelationshipStatusDatePage.changeLink(waypoints, sourcePage).url)
+              .withVisuallyHiddenText(messages("relationshipStatusDate.change.hidden"))
           )
         )
     }

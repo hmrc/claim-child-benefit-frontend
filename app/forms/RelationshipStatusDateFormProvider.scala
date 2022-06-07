@@ -16,23 +16,21 @@
 
 package forms
 
-import java.time.{LocalDate, ZoneOffset}
+import java.time.LocalDate
 
-import forms.behaviours.DateBehaviours
+import forms.mappings.Mappings
+import javax.inject.Inject
+import play.api.data.Form
 
-class RelationshipStartDateFormProviderSpec extends DateBehaviours {
+class RelationshipStatusDateFormProvider @Inject() extends Mappings {
 
-  val form = new RelationshipStartDateFormProvider()()
-
-  ".value" - {
-
-    val validData = datesBetween(
-      min = LocalDate.of(2000, 1, 1),
-      max = LocalDate.now(ZoneOffset.UTC)
+  def apply(): Form[LocalDate] =
+    Form(
+      "value" -> localDate(
+        invalidKey     = "relationshipStatusDate.error.invalid",
+        allRequiredKey = "relationshipStatusDate.error.required.all",
+        twoRequiredKey = "relationshipStatusDate.error.required.two",
+        requiredKey    = "relationshipStatusDate.error.required"
+      )
     )
-
-    behave like dateField(form, "value", validData)
-
-    behave like mandatoryDateField(form, "value", "relationshipStartDate.error.required.all")
-  }
 }

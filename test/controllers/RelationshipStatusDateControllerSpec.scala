@@ -19,45 +19,45 @@ package controllers
 import java.time.{LocalDate, ZoneOffset}
 
 import base.SpecBase
-import forms.RelationshipStartDateFormProvider
+import forms.RelationshipStatusDateFormProvider
 import models.UserAnswers
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{RelationshipStartDatePage, EmptyWaypoints}
+import pages.{RelationshipStatusDatePage, EmptyWaypoints}
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
-import views.html.RelationshipStartDateView
+import views.html.RelationshipStatusDateView
 
 import scala.concurrent.Future
 
-class RelationshipStartDateControllerSpec extends SpecBase with MockitoSugar {
+class RelationshipStatusDateControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new RelationshipStartDateFormProvider()
+  val formProvider = new RelationshipStatusDateFormProvider()
   private def form = formProvider()
   private val waypoints = EmptyWaypoints
 
   val validAnswer = LocalDate.now(ZoneOffset.UTC)
 
-  lazy val relationshipStartDateRoute = routes.RelationshipStartDateController.onPageLoad(waypoints).url
+  lazy val relationshipStatusDateRoute = routes.RelationshipStatusDateController.onPageLoad(waypoints).url
 
   override val emptyUserAnswers = UserAnswers(userAnswersId)
 
   def getRequest(): FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest(GET, relationshipStartDateRoute)
+    FakeRequest(GET, relationshipStatusDateRoute)
 
   def postRequest(): FakeRequest[AnyContentAsFormUrlEncoded] =
-    FakeRequest(POST, relationshipStartDateRoute)
+    FakeRequest(POST, relationshipStatusDateRoute)
       .withFormUrlEncodedBody(
         "value.day"   -> validAnswer.getDayOfMonth.toString,
         "value.month" -> validAnswer.getMonthValue.toString,
         "value.year"  -> validAnswer.getYear.toString
       )
 
-  "RelationshipStartDate Controller" - {
+  "RelationshipStatusDate Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
@@ -66,7 +66,7 @@ class RelationshipStartDateControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val result = route(application, getRequest).value
 
-        val view = application.injector.instanceOf[RelationshipStartDateView]
+        val view = application.injector.instanceOf[RelationshipStatusDateView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, waypoints)(getRequest, messages(application)).toString
@@ -75,12 +75,12 @@ class RelationshipStartDateControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(RelationshipStartDatePage, validAnswer).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(RelationshipStatusDatePage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val view = application.injector.instanceOf[RelationshipStartDateView]
+        val view = application.injector.instanceOf[RelationshipStatusDateView]
 
         val result = route(application, getRequest).value
 
@@ -104,10 +104,10 @@ class RelationshipStartDateControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val result = route(application, postRequest).value
-        val expectedAnswers = emptyUserAnswers.set(RelationshipStartDatePage, validAnswer).success.value
+        val expectedAnswers = emptyUserAnswers.set(RelationshipStatusDatePage, validAnswer).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual RelationshipStartDatePage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual RelationshipStatusDatePage.navigate(waypoints, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -117,13 +117,13 @@ class RelationshipStartDateControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       val request =
-        FakeRequest(POST, relationshipStartDateRoute)
+        FakeRequest(POST, relationshipStatusDateRoute)
           .withFormUrlEncodedBody(("value", "invalid value"))
 
       running(application) {
         val boundForm = form.bind(Map("value" -> "invalid value"))
 
-        val view = application.injector.instanceOf[RelationshipStartDateView]
+        val view = application.injector.instanceOf[RelationshipStatusDateView]
 
         val result = route(application, request).value
 
