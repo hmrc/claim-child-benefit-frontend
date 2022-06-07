@@ -43,7 +43,7 @@ trait Page {
     waypoints.next.page
 
   protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    throw new NotImplementedError("nextPageNormalMode is not implemented")
+    IndexPage
 
   def route(waypoints: Waypoints): Call
 

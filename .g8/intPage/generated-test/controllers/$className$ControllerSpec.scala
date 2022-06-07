@@ -1,13 +1,13 @@
 package controllers
 
+import base.SpecBase
 import forms.$className$FormProvider
 import models.UserAnswers
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{$className$Page, EmptyWaypoints}
 import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
@@ -20,8 +20,6 @@ class $className$ControllerSpec extends SpecBase with MockitoSugar {
   val formProvider = new $className$FormProvider()
   val form = formProvider()
   private val waypoints = EmptyWaypoints
-
-  def onwardRoute = Call("GET", "/foo")
 
   val validAnswer = $minimum$
 
@@ -63,7 +61,7 @@ class $className$ControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
-    "must redirect to the next page when valid data is submitted" in {
+    "must save the answer and redirect to the next page when valid data is submitted" in {
 
       val mockSessionRepository = mock[SessionRepository]
 
@@ -82,9 +80,11 @@ class $className$ControllerSpec extends SpecBase with MockitoSugar {
             .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value
+        val expectedAnswers = emptyUserAnswers.set($className$Page, validAnswer).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual $className$Page.navigate(waypoints, expectedAnswers).url
+        verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }
 
