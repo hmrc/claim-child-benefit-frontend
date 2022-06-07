@@ -26,9 +26,13 @@ object RelationshipStatus extends Enumerable.Implicits {
 
   case object Married extends WithName("married") with RelationshipStatus
   case object Cohabiting extends WithName("cohabiting") with RelationshipStatus
+  case object Widowed extends WithName("widowed") with RelationshipStatus
+  case object Separated extends WithName("separated") with RelationshipStatus
+  case object Divorced extends WithName("divorced") with RelationshipStatus
+  case object Single extends WithName("single") with RelationshipStatus
 
   val values: Seq[RelationshipStatus] = Seq(
-    Married, Cohabiting
+    Married, Cohabiting, Widowed, Separated, Divorced, Single
   )
 
   def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
