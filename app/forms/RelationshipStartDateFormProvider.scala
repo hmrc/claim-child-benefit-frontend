@@ -14,16 +14,23 @@
  * limitations under the License.
  */
 
-package generators
+package forms
 
-import models._
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
+import java.time.LocalDate
 
-trait ModelGenerators {
+import forms.mappings.Mappings
+import javax.inject.Inject
+import play.api.data.Form
 
-  implicit lazy val arbitraryRelationshipStatus: Arbitrary[RelationshipStatus] =
-    Arbitrary {
-      Gen.oneOf(RelationshipStatus.values.toSeq)
-    }
+class RelationshipStartDateFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[LocalDate] =
+    Form(
+      "value" -> localDate(
+        invalidKey     = "relationshipStartDate.error.invalid",
+        allRequiredKey = "relationshipStartDate.error.required.all",
+        twoRequiredKey = "relationshipStartDate.error.required.two",
+        requiredKey    = "relationshipStartDate.error.required"
+      )
+    )
 }

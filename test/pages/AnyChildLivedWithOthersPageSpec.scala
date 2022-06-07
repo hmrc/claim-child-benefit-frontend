@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package generators
+package pages
 
-import models._
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
+import pages.behaviours.PageBehaviours
 
-trait ModelGenerators {
+class AnyChildLivedWithOthersPageSpec extends PageBehaviours {
 
-  implicit lazy val arbitraryRelationshipStatus: Arbitrary[RelationshipStatus] =
-    Arbitrary {
-      Gen.oneOf(RelationshipStatus.values.toSeq)
-    }
+  "AnyChildLivedWithOthersPage" - {
+
+    beRetrievable[Boolean](AnyChildLivedWithOthersPage)
+
+    beSettable[Boolean](AnyChildLivedWithOthersPage)
+
+    beRemovable[Boolean](AnyChildLivedWithOthersPage)
+  }
 }

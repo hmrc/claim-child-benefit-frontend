@@ -14,16 +14,25 @@
  * limitations under the License.
  */
 
-package generators
+package pages
 
-import models._
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
+import java.time.LocalDate
 
-trait ModelGenerators {
+import org.scalacheck.Arbitrary
+import pages.behaviours.PageBehaviours
 
-  implicit lazy val arbitraryRelationshipStatus: Arbitrary[RelationshipStatus] =
-    Arbitrary {
-      Gen.oneOf(RelationshipStatus.values.toSeq)
+class RelationshipStartDatePageSpec extends PageBehaviours {
+
+  "RelationshipStartDatePage" - {
+
+    implicit lazy val arbitraryLocalDate: Arbitrary[LocalDate] = Arbitrary {
+      datesBetween(LocalDate.of(1900, 1, 1), LocalDate.of(2100, 1, 1))
     }
+
+    beRetrievable[LocalDate](RelationshipStartDatePage)
+
+    beSettable[LocalDate](RelationshipStartDatePage)
+
+    beRemovable[LocalDate](RelationshipStartDatePage)
+  }
 }

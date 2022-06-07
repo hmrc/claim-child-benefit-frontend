@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
-package generators
+package pages
 
-import models._
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
+import java.time.LocalDate
 
-trait ModelGenerators {
+import controllers.routes
+import play.api.libs.json.JsPath
+import play.api.mvc.Call
 
-  implicit lazy val arbitraryRelationshipStatus: Arbitrary[RelationshipStatus] =
-    Arbitrary {
-      Gen.oneOf(RelationshipStatus.values.toSeq)
-    }
+case object RelationshipStartDatePage extends QuestionPage[LocalDate] {
+
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "relationshipStartDate"
+
+  override def route(waypoints: Waypoints): Call =
+    routes.RelationshipStartDateController.onPageLoad(waypoints)
 }

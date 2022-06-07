@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package generators
+package pages
 
-import models._
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
+import controllers.routes
+import play.api.libs.json.JsPath
+import play.api.mvc.Call
 
-trait ModelGenerators {
+case object AnyChildLivedWithOthersPage extends QuestionPage[Boolean] {
 
-  implicit lazy val arbitraryRelationshipStatus: Arbitrary[RelationshipStatus] =
-    Arbitrary {
-      Gen.oneOf(RelationshipStatus.values.toSeq)
-    }
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "anyChildLivedWithOthers"
+
+  override def route(waypoints: Waypoints): Call =
+    routes.AnyChildLivedWithOthersController.onPageLoad(waypoints)
 }

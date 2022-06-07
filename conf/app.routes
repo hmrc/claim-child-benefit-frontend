@@ -19,3 +19,17 @@ GET         /account/sign-out                            controllers.auth.AuthCo
 GET         /account/signed-out                          controllers.auth.SignedOutController.onPageLoad
 
 GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad
+
+GET        /anyChildLivedWithOthers                        controllers.AnyChildLivedWithOthersController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /anyChildLivedWithOthers                        controllers.AnyChildLivedWithOthersController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /everLivedOrWorkedAbroad                        controllers.EverLivedOrWorkedAbroadController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /everLivedOrWorkedAbroad                        controllers.EverLivedOrWorkedAbroadController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /relationshipStartDate                  controllers.RelationshipStartDateController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /relationshipStartDate                  controllers.RelationshipStartDateController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /relationshipStatus                        controllers.RelationshipStatusController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /relationshipStatus                        controllers.RelationshipStatusController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /usePrintAndPostForm                       controllers.UsePrintAndPostFormController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)

@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-package generators
+package pages
 
-import models._
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
+import models.RelationshipStatus
+import pages.behaviours.PageBehaviours
 
-trait ModelGenerators {
+class RelationshipStatusSpec extends PageBehaviours {
 
-  implicit lazy val arbitraryRelationshipStatus: Arbitrary[RelationshipStatus] =
-    Arbitrary {
-      Gen.oneOf(RelationshipStatus.values.toSeq)
-    }
+  "RelationshipStatusPage" - {
+
+    beRetrievable[RelationshipStatus](RelationshipStatusPage)
+
+    beSettable[RelationshipStatus](RelationshipStatusPage)
+
+    beRemovable[RelationshipStatus](RelationshipStatusPage)
+  }
 }

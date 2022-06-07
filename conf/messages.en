@@ -55,3 +55,36 @@ signedOut.guidance = We did not save your answers.
 
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
+
+anyChildLivedWithOthers.title = anyChildLivedWithOthers
+anyChildLivedWithOthers.heading = anyChildLivedWithOthers
+anyChildLivedWithOthers.checkYourAnswersLabel = anyChildLivedWithOthers
+anyChildLivedWithOthers.error.required = Select yes if anyChildLivedWithOthers
+anyChildLivedWithOthers.change.hidden = AnyChildLivedWithOthers
+
+everLivedOrWorkedAbroad.title = everLivedOrWorkedAbroad
+everLivedOrWorkedAbroad.heading = everLivedOrWorkedAbroad
+everLivedOrWorkedAbroad.checkYourAnswersLabel = everLivedOrWorkedAbroad
+everLivedOrWorkedAbroad.error.required = Select yes if everLivedOrWorkedAbroad
+everLivedOrWorkedAbroad.change.hidden = EverLivedOrWorkedAbroad
+
+relationshipStartDate.title = RelationshipStartDate
+relationshipStartDate.heading = RelationshipStartDate
+relationshipStartDate.hint = For example, 12 11 2007
+relationshipStartDate.checkYourAnswersLabel = RelationshipStartDate
+relationshipStartDate.error.required.all = Enter the relationshipStartDate
+relationshipStartDate.error.required.two = The relationshipStartDate must include {0} and {1}
+relationshipStartDate.error.required = The relationshipStartDate must include {0}
+relationshipStartDate.error.invalid = Enter a real RelationshipStartDate
+relationshipStartDate.change.hidden = RelationshipStartDate
+
+relationshipStatus.title = What is your marital or civil partnership status?
+relationshipStatus.heading = What is your marital or civil partnership status?
+relationshipStatus.married = Married or in a civil partnership
+relationshipStatus.cohabiting = Living with a partner as if you are married or in a partnership
+relationshipStatus.checkYourAnswersLabel = What is your marital or civil partnership status?
+relationshipStatus.error.required = Select relationshipStatus
+relationshipStatus.change.hidden = RelationshipStatus
+
+usePrintAndPostForm.title = usePrintAndPostForm
+usePrintAndPostForm.heading = usePrintAndPostForm

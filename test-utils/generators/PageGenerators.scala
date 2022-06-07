@@ -20,4 +20,16 @@ import org.scalacheck.Arbitrary
 import pages._
 
 trait PageGenerators {
+
+  implicit lazy val arbitraryRelationshipStatusPage: Arbitrary[RelationshipStatusPage.type] =
+    Arbitrary(RelationshipStatusPage)
+
+  implicit lazy val arbitraryRelationshipStartDatePage: Arbitrary[RelationshipStartDatePage.type] =
+    Arbitrary(RelationshipStartDatePage)
+
+  implicit lazy val arbitraryEverLivedOrWorkedAbroadPage: Arbitrary[EverLivedOrWorkedAbroadPage.type] =
+    Arbitrary(EverLivedOrWorkedAbroadPage)
+
+  implicit lazy val arbitraryAnyChildLivedWithOthersPage: Arbitrary[AnyChildLivedWithOthersPage.type] =
+    Arbitrary(AnyChildLivedWithOthersPage)
 }
