@@ -27,7 +27,7 @@ trait Page {
     targetPage.route(recalibratedWaypoints)
   }
 
-  def nextPage(waypoints: Waypoints, answers: UserAnswers): Page =
+  protected def nextPage(waypoints: Waypoints, answers: UserAnswers): Page =
     waypoints match {
       case EmptyWaypoints =>
         nextPageNormalMode(waypoints, answers)
