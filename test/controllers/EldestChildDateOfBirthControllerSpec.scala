@@ -16,15 +16,13 @@
 
 package controllers
 
-import java.time.{LocalDate, ZoneOffset}
-
 import base.SpecBase
 import forms.EldestChildDateOfBirthFormProvider
-import models.UserAnswers
+import models.EldestChildName
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{EldestChildDateOfBirthPage, EmptyWaypoints}
+import pages.{EldestChildDateOfBirthPage, EldestChildNamePage, EmptyWaypoints}
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
@@ -32,19 +30,21 @@ import play.api.test.Helpers._
 import repositories.SessionRepository
 import views.html.EldestChildDateOfBirthView
 
+import java.time.{LocalDate, ZoneOffset}
 import scala.concurrent.Future
 
 class EldestChildDateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
+  val eldestChildName = EldestChildName("first", None, "last")
   val formProvider = new EldestChildDateOfBirthFormProvider()
-  private def form = formProvider()
+  private def form = formProvider("first")
   private val waypoints = EmptyWaypoints
 
   val validAnswer = LocalDate.now(ZoneOffset.UTC)
 
   lazy val eldestChildDateOfBirthRoute = routes.EldestChildDateOfBirthController.onPageLoad(waypoints).url
 
-  override val emptyUserAnswers = UserAnswers(userAnswersId)
+  val baseAnswers = emptyUserAnswers.set(EldestChildNamePage, eldestChildName).success.value
 
   def getRequest(): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, eldestChildDateOfBirthRoute)
@@ -61,7 +61,7 @@ class EldestChildDateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val result = route(application, getRequest).value
@@ -69,13 +69,13 @@ class EldestChildDateOfBirthControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[EldestChildDateOfBirthView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(getRequest, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, "first")(getRequest, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(EldestChildDateOfBirthPage, validAnswer).success.value
+      val userAnswers = baseAnswers.set(EldestChildDateOfBirthPage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -85,7 +85,7 @@ class EldestChildDateOfBirthControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, getRequest).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints)(getRequest, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints, "first")(getRequest, messages(application)).toString
       }
     }
 
@@ -96,7 +96,7 @@ class EldestChildDateOfBirthControllerSpec extends SpecBase with MockitoSugar {
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
             bind[SessionRepository].toInstance(mockSessionRepository)
           )
@@ -104,7 +104,7 @@ class EldestChildDateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val result = route(application, postRequest).value
-        val expectedAnswers = emptyUserAnswers.set(EldestChildDateOfBirthPage, validAnswer).success.value
+        val expectedAnswers = baseAnswers.set(EldestChildDateOfBirthPage, validAnswer).success.value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual EldestChildDateOfBirthPage.navigate(waypoints, expectedAnswers).url
@@ -114,7 +114,7 @@ class EldestChildDateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, eldestChildDateOfBirthRoute)
@@ -128,7 +128,7 @@ class EldestChildDateOfBirthControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, "first")(request, messages(application)).toString
       }
     }
 

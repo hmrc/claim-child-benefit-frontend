@@ -18,10 +18,12 @@ package controllers
 
 import controllers.actions._
 import forms.EldestChildDateOfBirthFormProvider
+
 import javax.inject.Inject
-import pages.{EldestChildDateOfBirthPage, Waypoints}
+import pages.{EldestChildDateOfBirthPage, EldestChildNamePage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.twirl.api.HtmlFormat
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.EldestChildDateOfBirthView
@@ -37,33 +39,46 @@ class EldestChildDateOfBirthController @Inject()(
                                         formProvider: EldestChildDateOfBirthFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
                                         view: EldestChildDateOfBirthView
-                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
-
-  def form = formProvider()
+                                      )(implicit ec: ExecutionContext)
+  extends FrontendBaseController
+    with I18nSupport
+    with AnswerExtractor {
 
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
+      getAnswer(EldestChildNamePage) {
+        eldestChildName =>
 
-      val preparedForm = request.userAnswers.get(EldestChildDateOfBirthPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
+          val firstName = HtmlFormat.escape(eldestChildName.firstName).toString
+          val form = formProvider(firstName)
+
+          val preparedForm = request.userAnswers.get(EldestChildDateOfBirthPage) match {
+            case None => form
+            case Some(value) => form.fill(value)
+          }
+
+          Ok(view(preparedForm, waypoints, firstName))
       }
-
-      Ok(view(preparedForm, waypoints))
   }
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      getAnswerAsync(EldestChildNamePage) {
+        eldestChildName =>
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints))),
+          val firstName = HtmlFormat.escape(eldestChildName.firstName).toString
+          val form = formProvider(firstName)
 
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(EldestChildDateOfBirthPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(EldestChildDateOfBirthPage.navigate(waypoints, updatedAnswers))
-      )
+          form.bindFromRequest().fold(
+            formWithErrors =>
+              Future.successful(BadRequest(view(formWithErrors, waypoints, firstName))),
+
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(EldestChildDateOfBirthPage, value))
+                _ <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(EldestChildDateOfBirthPage.navigate(waypoints, updatedAnswers))
+          )
+        }
   }
 }

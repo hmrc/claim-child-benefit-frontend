@@ -22,7 +22,7 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints, firstName: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("eldestChildDateOfBirth.title"))) {
 
@@ -35,7 +35,7 @@
         @govukDateInput(
             DateViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(messages("eldestChildDateOfBirth.heading")).asPageHeading()
+                legend = LegendViewModel(messages("eldestChildDateOfBirth.heading", firstName)).asPageHeading()
             )
             .withHint(HintViewModel(messages("eldestChildDateOfBirth.hint")))
         )
