@@ -17,6 +17,9 @@
 package controllers
 
 import controllers.actions.IdentifierAction
+import models.UserAnswers
+import pages.{EmptyWaypoints, IndexPage}
+
 import javax.inject.Inject
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -31,5 +34,9 @@ class IndexController @Inject()(
 
   def onPageLoad: Action[AnyContent] = identify { implicit request =>
     Ok(view())
+  }
+
+  def onSubmit: Action[AnyContent] = identify { implicit request =>
+    Redirect(IndexPage.navigate(EmptyWaypoints, UserAnswers(request.userId)))
   }
 }

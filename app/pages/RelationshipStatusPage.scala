@@ -15,15 +15,25 @@
  */
 
 package pages
+
 import controllers.routes
-import models.UserAnswers
+import models.RelationshipStatus.{Cohabiting, Separated}
+import models.{RelationshipStatus, UserAnswers}
+import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-object IndexPage extends Page {
+case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
+
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "relationshipStatus"
 
   override def route(waypoints: Waypoints): Call =
-    routes.IndexController.onPageLoad
+    routes.RelationshipStatusController.onPageLoad(waypoints)
 
-  override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    EverLivedOrWorkedAbroadPage
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case Cohabiting | Separated => RelationshipStatusDatePage
+      case _                      => IndexPage
+    }.orRecover
 }

@@ -15,15 +15,24 @@
  */
 
 package pages
+
 import controllers.routes
 import models.UserAnswers
+import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-object IndexPage extends Page {
+case object EverLivedOrWorkedAbroadPage extends QuestionPage[Boolean] {
+
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "everLivedOrWorkedAbroad"
 
   override def route(waypoints: Waypoints): Call =
-    routes.IndexController.onPageLoad
+    routes.EverLivedOrWorkedAbroadController.onPageLoad(waypoints)
 
   override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    EverLivedOrWorkedAbroadPage
+    answers.get(this).map {
+      case true  => UsePrintAndPostFormPage
+      case false => AnyChildLivedWithOthersPage
+    }.orRecover
 }

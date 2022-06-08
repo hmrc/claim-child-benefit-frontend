@@ -14,16 +14,10 @@
  * limitations under the License.
  */
 
-package generators
+package object pages {
 
-import models._
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
-
-trait ModelGenerators {
-
-  implicit lazy val arbitraryRelationshipStatus: Arbitrary[RelationshipStatus] =
-    Arbitrary {
-      Gen.oneOf(RelationshipStatus.values.toSeq)
-    }
+  implicit class RecoveryOps(val a: Option[Page]) {
+    def orRecover: Page =
+      a.getOrElse(JourneyRecoveryPage)
+  }
 }

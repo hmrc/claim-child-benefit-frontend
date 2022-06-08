@@ -55,3 +55,47 @@ signedOut.guidance = We did not save your answers.
 
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
+
+anyChildLivedWithOthers.title = Have any of the children you will claim for lived with anyone else in the last 12 months?
+anyChildLivedWithOthers.heading = Have any of the children you will claim for lived with anyone else in the last 12 months?
+anyChildLivedWithOthers.checkYourAnswersLabel = Have any of the children you will claim for lived with anyone else in the last 12 months?
+anyChildLivedWithOthers.error.required = Select yes if any of the children you will claim for has lived with anyone else in the last 12 months
+anyChildLivedWithOthers.change.hidden = if any of the children you will claim for has lived with anyone else in the last 12 months
+
+everLivedOrWorkedAbroad.title = Have you or your partner ever lived or worked outside the UK?
+everLivedOrWorkedAbroad.heading = Have you or your partner ever lived or worked outside the UK?
+everLivedOrWorkedAbroad.checkYourAnswersLabel = Have you or your partner ever lived or worked outside the UK?
+everLivedOrWorkedAbroad.error.required = Select yes if you or your partner have ever lived or worked outside the UK
+everLivedOrWorkedAbroad.change.hidden = if you or your partner have ever lived or worked outside the UK
+
+relationshipStatusDate.cohabiting.title = When did you start living with your partner?
+relationshipStatusDate.cohabiting.heading = When did you start living with your partner?
+relationshipStatusDate.separated.title = When did you separate from your partner?
+relationshipStatusDate.separated.heading = When did you separate from your partner?
+relationshipStatusDate.hint = For example, 12 11 2007
+relationshipStatusDate.checkYourAnswersLabel = Since
+relationshipStatusDate.cohabiting.error.required.all = Enter the date you started living with your partner
+relationshipStatusDate.cohabiting.error.required.two = The date must include {0} and {1}
+relationshipStatusDate.cohabiting.error.required = The date must include {0}
+relationshipStatusDate.cohabiting.error.invalid = Enter a real date
+relationshipStatusDate.separated.error.required.all = Enter the date you separated from your partner
+relationshipStatusDate.separated.error.required.two = The date must include {0} and {1}
+relationshipStatusDate.separated.error.required = The date must include {0}
+relationshipStatusDate.separated.error.invalid = Enter a real date
+relationshipStatusDate.cohabiting.change.hidden = when you started living with your partner
+relationshipStatusDate.separated.change.hidden = when you separated from your partner
+
+relationshipStatus.title = What is your marital or civil partnership status?
+relationshipStatus.heading = What is your marital or civil partnership status?
+relationshipStatus.married = Married or in a civil partnership
+relationshipStatus.cohabiting = Living with a partner as if you’re married or in a partnership
+relationshipStatus.widowed = Widowed
+relationshipStatus.separated = Separated
+relationshipStatus.divorced = Divorced
+relationshipStatus.single = Single
+relationshipStatus.checkYourAnswersLabel = What is your marital or civil partnership status?
+relationshipStatus.error.required = Select your marital or civil partnership status
+relationshipStatus.change.hidden = your marital or civil partnership status
+
+usePrintAndPostForm.title = Use the Print and Post form
+usePrintAndPostForm.heading = Use the Print and Post form

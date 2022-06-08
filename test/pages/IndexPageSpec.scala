@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
-package generators
+package pages
 
-import models._
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
+import base.SpecBase
+import controllers.routes
 
-trait ModelGenerators {
+class IndexPageSpec extends SpecBase {
 
-  implicit lazy val arbitraryRelationshipStatus: Arbitrary[RelationshipStatus] =
-    Arbitrary {
-      Gen.oneOf(RelationshipStatus.values.toSeq)
+  "IndexPage" - {
+
+    "must navigate to Ever Lived or Worked Abroad" in {
+
+      IndexPage
+        .navigate(EmptyWaypoints, emptyUserAnswers)
+        .mustEqual(routes.EverLivedOrWorkedAbroadController.onPageLoad(EmptyWaypoints))
     }
+  }
 }

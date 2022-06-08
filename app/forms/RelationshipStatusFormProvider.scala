@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package generators
+package forms
 
-import models._
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
+import javax.inject.Inject
 
-trait ModelGenerators {
+import forms.mappings.Mappings
+import play.api.data.Form
+import models.RelationshipStatus
 
-  implicit lazy val arbitraryRelationshipStatus: Arbitrary[RelationshipStatus] =
-    Arbitrary {
-      Gen.oneOf(RelationshipStatus.values.toSeq)
-    }
+class RelationshipStatusFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[RelationshipStatus] =
+    Form(
+      "value" -> enumerable[RelationshipStatus]("relationshipStatus.error.required")
+    )
 }
