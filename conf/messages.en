@@ -143,3 +143,133 @@ applicantOrPartnerIncomeOver60k.heading = Is your or your partner’s income ove
 applicantOrPartnerIncomeOver60k.checkYourAnswersLabel = Is your or your partner’s income over £60,000 per year?
 applicantOrPartnerIncomeOver60k.error.required = Select yes if your or your partner’s income is over £60,000 per year
 applicantOrPartnerIncomeOver60k.change.hidden = your or your partner’s income is over £60,000 per year
+
+accountHolderName.title = accountHolderName
+accountHolderName.heading = accountHolderName
+accountHolderName.checkYourAnswersLabel = accountHolderName
+accountHolderName.error.required = Enter accountHolderName
+accountHolderName.error.length = AccountHolderName must be 100 characters or less
+accountHolderName.change.hidden = AccountHolderName
+
+accountHolderNames.title = accountHolderNames
+accountHolderNames.heading = accountHolderNames
+accountHolderNames.name1 = name1
+accountHolderNames.name2 = name2
+accountHolderNames.checkYourAnswersLabel = AccountHolderNames
+accountHolderNames.error.name1.required = Enter name1
+accountHolderNames.error.name2.required = Enter name2
+accountHolderNames.error.name1.length = name1 must be 100 characters or less
+accountHolderNames.error.name2.length = name2 must be 100 characters or less
+accountHolderNames.name1.change.hidden = name1
+accountHolderNames.name2.change.hidden = name2
+
+accountInApplicantsName.title = accountInApplicantsName
+accountInApplicantsName.heading = accountInApplicantsName
+accountInApplicantsName.checkYourAnswersLabel = accountInApplicantsName
+accountInApplicantsName.error.required = Select yes if accountInApplicantsName
+accountInApplicantsName.change.hidden = AccountInApplicantsName
+
+accountIsJoint.title = accountIsJoint
+accountIsJoint.heading = accountIsJoint
+accountIsJoint.checkYourAnswersLabel = accountIsJoint
+accountIsJoint.error.required = Select yes if accountIsJoint
+accountIsJoint.change.hidden = AccountIsJoint
+
+applicantHasSuitableAccount.title = applicantHasSuitableAccount
+applicantHasSuitableAccount.heading = applicantHasSuitableAccount
+applicantHasSuitableAccount.checkYourAnswersLabel = applicantHasSuitableAccount
+applicantHasSuitableAccount.error.required = Select yes if applicantHasSuitableAccount
+applicantHasSuitableAccount.change.hidden = ApplicantHasSuitableAccount
+
+bankAccountDetails.title = bankAccountDetails
+bankAccountDetails.heading = bankAccountDetails
+bankAccountDetails.bankName = bankName
+bankAccountDetails.accountNumber = accountNumber
+bankAccountDetails.checkYourAnswersLabel = BankAccountDetails
+bankAccountDetails.error.bankName.required = Enter bankName
+bankAccountDetails.error.accountNumber.required = Enter accountNumber
+bankAccountDetails.error.bankName.length = bankName must be 100 characters or less
+bankAccountDetails.error.accountNumber.length = accountNumber must be 8 characters or less
+bankAccountDetails.bankName.change.hidden = bankName
+bankAccountDetails.accountNumber.change.hidden = accountNumber
+
+bankAccountType.title = Is the account with a bank or building society?
+bankAccountType.heading = Is the account with a bank or building society?
+bankAccountType.bank = Bank
+bankAccountType.buildingSociety = Building society
+bankAccountType.checkYourAnswersLabel = Is the account with a bank or building society?
+bankAccountType.error.required = Select bankAccountType
+bankAccountType.change.hidden = BankAccountType
+
+buildingSocietyAccountDetails.title = buildingSocietyAccountDetails
+buildingSocietyAccountDetails.heading = buildingSocietyAccountDetails
+buildingSocietyAccountDetails.buildingSocietyName = buildingSocietyName
+buildingSocietyAccountDetails.accountNumber = accountNumber
+buildingSocietyAccountDetails.checkYourAnswersLabel = BuildingSocietyAccountDetails
+buildingSocietyAccountDetails.error.buildingSocietyName.required = Enter buildingSocietyName
+buildingSocietyAccountDetails.error.accountNumber.required = Enter accountNumber
+buildingSocietyAccountDetails.error.buildingSocietyName.length = buildingSocietyName must be 100 characters or less
+buildingSocietyAccountDetails.error.accountNumber.length = accountNumber must be 8 characters or less
+buildingSocietyAccountDetails.buildingSocietyName.change.hidden = buildingSocietyName
+buildingSocietyAccountDetails.accountNumber.change.hidden = accountNumber
+
+claimedChildBenefitBefore.title = claimedChildBenefitBefore
+claimedChildBenefitBefore.heading = claimedChildBenefitBefore
+claimedChildBenefitBefore.checkYourAnswersLabel = claimedChildBenefitBefore
+claimedChildBenefitBefore.error.required = Select yes if claimedChildBenefitBefore
+claimedChildBenefitBefore.change.hidden = ClaimedChildBenefitBefore
+
+currentlyEntitledToChildBenefit.title = currentlyEntitledToChildBenefit
+currentlyEntitledToChildBenefit.heading = currentlyEntitledToChildBenefit
+currentlyEntitledToChildBenefit.checkYourAnswersLabel = currentlyEntitledToChildBenefit
+currentlyEntitledToChildBenefit.error.required = Select yes if currentlyEntitledToChildBenefit
+currentlyEntitledToChildBenefit.change.hidden = CurrentlyEntitledToChildBenefit
+
+currentlyReceivingChildBenefit.title = currentlyReceivingChildBenefit
+currentlyReceivingChildBenefit.heading = currentlyReceivingChildBenefit
+currentlyReceivingChildBenefit.checkYourAnswersLabel = currentlyReceivingChildBenefit
+currentlyReceivingChildBenefit.error.required = Select yes if currentlyReceivingChildBenefit
+currentlyReceivingChildBenefit.change.hidden = CurrentlyReceivingChildBenefit
+
+eldestChildDateOfBirth.title = EldestChildDateOfBirth
+eldestChildDateOfBirth.heading = EldestChildDateOfBirth
+eldestChildDateOfBirth.hint = For example, 12 11 2007
+eldestChildDateOfBirth.checkYourAnswersLabel = EldestChildDateOfBirth
+eldestChildDateOfBirth.error.required.all = Enter the eldestChildDateOfBirth
+eldestChildDateOfBirth.error.required.two = The eldestChildDateOfBirth must include {0} and {1}
+eldestChildDateOfBirth.error.required = The eldestChildDateOfBirth must include {0}
+eldestChildDateOfBirth.error.invalid = Enter a real EldestChildDateOfBirth
+eldestChildDateOfBirth.change.hidden = EldestChildDateOfBirth
+
+eldestChildName.title = eldestChildName
+eldestChildName.heading = eldestChildName
+eldestChildName.firstName = firstName
+eldestChildName.middleNames = middleNames
+eldestChildName.checkYourAnswersLabel = EldestChildName
+eldestChildName.error.firstName.required = Enter firstName
+eldestChildName.error.middleNames.required = Enter middleNames
+eldestChildName.error.firstName.length = firstName must be 100 characters or less
+eldestChildName.error.middleNames.length = middleNames must be 100 characters or less
+eldestChildName.firstName.change.hidden = firstName
+eldestChildName.middleNames.change.hidden = middleNames
+
+taxChargeExplanation.title = taxChargeExplanation
+taxChargeExplanation.heading = taxChargeExplanation
+
+wantToBePaid.title = wantToBePaid
+wantToBePaid.heading = wantToBePaid
+wantToBePaid.checkYourAnswersLabel = wantToBePaid
+wantToBePaid.error.required = Select yes if wantToBePaid
+wantToBePaid.change.hidden = WantToBePaid
+
+wantToBePaidToExistingAccount.title = wantToBePaidToExistingAccount
+wantToBePaidToExistingAccount.heading = wantToBePaidToExistingAccount
+wantToBePaidToExistingAccount.checkYourAnswersLabel = wantToBePaidToExistingAccount
+wantToBePaidToExistingAccount.error.required = Select yes if wantToBePaidToExistingAccount
+wantToBePaidToExistingAccount.change.hidden = WantToBePaidToExistingAccount
+
+wantToBePaidWeekly.title = wantToBePaidWeekly
+wantToBePaidWeekly.heading = wantToBePaidWeekly
+wantToBePaidWeekly.checkYourAnswersLabel = wantToBePaidWeekly
+wantToBePaidWeekly.error.required = Select yes if wantToBePaidWeekly
+wantToBePaidWeekly.change.hidden = WantToBePaidWeekly

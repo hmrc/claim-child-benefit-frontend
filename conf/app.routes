@@ -52,3 +52,53 @@ POST       /applicantOrPartnerIncomeOver50k                        controllers.A
 
 GET        /applicantOrPartnerIncomeOver60k                        controllers.ApplicantOrPartnerIncomeOver60kController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /applicantOrPartnerIncomeOver60k                        controllers.ApplicantOrPartnerIncomeOver60kController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /accountHolderName                        controllers.AccountHolderNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /accountHolderName                        controllers.AccountHolderNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /accountHolderNames                        controllers.AccountHolderNamesController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /accountHolderNames                        controllers.AccountHolderNamesController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /accountInApplicantsName                        controllers.AccountInApplicantsNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /accountInApplicantsName                        controllers.AccountInApplicantsNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /accountIsJoint                        controllers.AccountIsJointController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /accountIsJoint                        controllers.AccountIsJointController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /applicantHasSuitableAccount                        controllers.ApplicantHasSuitableAccountController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /applicantHasSuitableAccount                        controllers.ApplicantHasSuitableAccountController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /bankAccountDetails                        controllers.BankAccountDetailsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /bankAccountDetails                        controllers.BankAccountDetailsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /bankAccountType                        controllers.BankAccountTypeController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /bankAccountType                        controllers.BankAccountTypeController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /buildingSocietyAccountDetails                        controllers.BuildingSocietyAccountDetailsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /buildingSocietyAccountDetails                        controllers.BuildingSocietyAccountDetailsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /claimedChildBenefitBefore                        controllers.ClaimedChildBenefitBeforeController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /claimedChildBenefitBefore                        controllers.ClaimedChildBenefitBeforeController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /currentlyEntitledToChildBenefit                        controllers.CurrentlyEntitledToChildBenefitController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /currentlyEntitledToChildBenefit                        controllers.CurrentlyEntitledToChildBenefitController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /currentlyReceivingChildBenefit                        controllers.CurrentlyReceivingChildBenefitController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /currentlyReceivingChildBenefit                        controllers.CurrentlyReceivingChildBenefitController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /eldestChildDateOfBirth                  controllers.EldestChildDateOfBirthController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /eldestChildDateOfBirth                  controllers.EldestChildDateOfBirthController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /eldestChildName                        controllers.EldestChildNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /eldestChildName                        controllers.EldestChildNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /taxChargeExplanation                       controllers.TaxChargeExplanationController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /wantToBePaid                        controllers.WantToBePaidController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /wantToBePaid                        controllers.WantToBePaidController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /wantToBePaidToExistingAccount                        controllers.WantToBePaidToExistingAccountController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /wantToBePaidToExistingAccount                        controllers.WantToBePaidToExistingAccountController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /wantToBePaidWeekly                        controllers.WantToBePaidWeeklyController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /wantToBePaidWeekly                        controllers.WantToBePaidWeeklyController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
