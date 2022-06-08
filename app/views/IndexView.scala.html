@@ -15,7 +15,9 @@
  *@
 
 @this(
-    layout: templates.Layout
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukButton: GovukButton
 )
 
 @()(implicit request: Request[_], messages: Messages)
@@ -28,4 +30,13 @@
     <h1 class="govuk-heading-xl">@messages("index.heading")</h1>
 
     <p class="govuk-body">@messages("index.guidance")</p>
+
+    @formHelper(action = routes.IndexController.onSubmit) {
+        @govukButton(ButtonViewModel(HtmlContent(
+            messages("site.start") +
+            """<svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
+            </svg>"""
+        )))
+    }
 }

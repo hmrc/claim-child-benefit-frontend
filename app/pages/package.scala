@@ -14,16 +14,10 @@
  * limitations under the License.
  */
 
-package pages
-import controllers.routes
-import models.UserAnswers
-import play.api.mvc.Call
+package object pages {
 
-object IndexPage extends Page {
-
-  override def route(waypoints: Waypoints): Call =
-    routes.IndexController.onPageLoad
-
-  override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    EverLivedOrWorkedAbroadPage
+  implicit class RecoveryOps(val a: Option[Page]) {
+    def orRecover: Page =
+      a.getOrElse(JourneyRecoveryPage)
+  }
 }

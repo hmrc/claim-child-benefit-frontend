@@ -18,6 +18,8 @@ package controllers
 
 import controllers.actions._
 import forms.EverLivedOrWorkedAbroadFormProvider
+import models.UserAnswers
+
 import javax.inject.Inject
 import pages.{EverLivedOrWorkedAbroadPage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -33,7 +35,6 @@ class EverLivedOrWorkedAbroadController @Inject()(
                                          sessionRepository: SessionRepository,
                                          identify: IdentifierAction,
                                          getData: DataRetrievalAction,
-                                         requireData: DataRequiredAction,
                                          formProvider: EverLivedOrWorkedAbroadFormProvider,
                                          val controllerComponents: MessagesControllerComponents,
                                          view: EverLivedOrWorkedAbroadView
@@ -41,10 +42,10 @@ class EverLivedOrWorkedAbroadController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(EverLivedOrWorkedAbroadPage) match {
+      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(EverLivedOrWorkedAbroadPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -52,7 +53,7 @@ class EverLivedOrWorkedAbroadController @Inject()(
       Ok(view(preparedForm, waypoints))
   }
 
-  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
 
       form.bindFromRequest().fold(
@@ -61,7 +62,7 @@ class EverLivedOrWorkedAbroadController @Inject()(
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(EverLivedOrWorkedAbroadPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(EverLivedOrWorkedAbroadPage, value))
             _              <- sessionRepository.set(updatedAnswers)
           } yield Redirect(EverLivedOrWorkedAbroadPage.navigate(waypoints, updatedAnswers))
       )

@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import pages.behaviours.PageBehaviours
 
 class AnyChildLivedWithOthersPageSpec extends PageBehaviours {
@@ -27,5 +28,31 @@ class AnyChildLivedWithOthersPageSpec extends PageBehaviours {
     beSettable[Boolean](AnyChildLivedWithOthersPage)
 
     beRemovable[Boolean](AnyChildLivedWithOthersPage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Use Print and Post Form when the answer is yes" in {
+
+          val answers = emptyUserAnswers.set(AnyChildLivedWithOthersPage, true).success.value
+
+          AnyChildLivedWithOthersPage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.UsePrintAndPostFormController.onPageLoad(waypoints))
+        }
+
+        "to Any Child Lived With Others when the answer is no" in {
+
+          val answers = emptyUserAnswers.set(AnyChildLivedWithOthersPage, false).success.value
+
+          AnyChildLivedWithOthersPage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.RelationshipStatusController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }

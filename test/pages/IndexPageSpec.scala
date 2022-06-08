@@ -16,23 +16,18 @@
 
 package pages
 
+import base.SpecBase
 import controllers.routes
-import models.UserAnswers
-import play.api.libs.json.JsPath
-import play.api.mvc.Call
 
-case object AnyChildLivedWithOthersPage extends QuestionPage[Boolean] {
+class IndexPageSpec extends SpecBase {
 
-  override def path: JsPath = JsPath \ toString
+  "IndexPage" - {
 
-  override def toString: String = "anyChildLivedWithOthers"
+    "must navigate to Ever Lived or Worked Abroad" in {
 
-  override def route(waypoints: Waypoints): Call =
-    routes.AnyChildLivedWithOthersController.onPageLoad(waypoints)
-
-  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case true  => UsePrintAndPostFormPage
-      case false => RelationshipStatusPage
-    }.orRecover
+      IndexPage
+        .navigate(EmptyWaypoints, emptyUserAnswers)
+        .mustEqual(routes.EverLivedOrWorkedAbroadController.onPageLoad(EmptyWaypoints))
+    }
+  }
 }

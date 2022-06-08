@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import pages.behaviours.PageBehaviours
 
 class EverLivedOrWorkedAbroadPageSpec extends PageBehaviours {
@@ -27,5 +28,31 @@ class EverLivedOrWorkedAbroadPageSpec extends PageBehaviours {
     beSettable[Boolean](EverLivedOrWorkedAbroadPage)
 
     beRemovable[Boolean](EverLivedOrWorkedAbroadPage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Use Print and Post Form when the answer is yes" in {
+
+          val answers = emptyUserAnswers.set(EverLivedOrWorkedAbroadPage, true).success.value
+
+          EverLivedOrWorkedAbroadPage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.UsePrintAndPostFormController.onPageLoad(waypoints))
+        }
+
+        "to Any Child Lived With Others when the answer is no" in {
+
+          val answers = emptyUserAnswers.set(EverLivedOrWorkedAbroadPage, false).success.value
+
+          EverLivedOrWorkedAbroadPage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.AnyChildLivedWithOthersController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }
