@@ -32,7 +32,11 @@ object EldestChildNameSummary  {
     answers.get(EldestChildNamePage).map {
       answer =>
 
-      val value = HtmlFormat.escape(answer.firstName).toString + "<br/>" + HtmlFormat.escape(answer.middleNames).toString
+        val value = Seq(
+          Some(HtmlFormat.escape(answer.firstName).toString),
+          answer.middleNames.map(x => HtmlFormat.escape(x).toString),
+          Some(HtmlFormat.escape(answer.lastName).toString)
+        ).flatten.mkString("<br/>")
 
         SummaryListRowViewModel(
           key     = "eldestChildName.checkYourAnswersLabel",

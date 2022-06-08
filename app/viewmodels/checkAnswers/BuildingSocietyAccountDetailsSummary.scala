@@ -32,7 +32,12 @@ object BuildingSocietyAccountDetailsSummary  {
     answers.get(BuildingSocietyAccountDetailsPage).map {
       answer =>
 
-      val value = HtmlFormat.escape(answer.buildingSocietyName).toString + "<br/>" + HtmlFormat.escape(answer.accountNumber).toString
+      val value = Seq(
+        Some(HtmlFormat.escape(answer.buildingSocietyName).toString),
+        Some(HtmlFormat.escape(answer.sortCode).toString),
+        Some(HtmlFormat.escape(answer.accountNumber).toString),
+        answer.rollNumber.map(x => HtmlFormat.escape(x).toString)
+      ).flatten.mkString("<br/>")
 
         SummaryListRowViewModel(
           key     = "buildingSocietyAccountDetails.checkYourAnswersLabel",

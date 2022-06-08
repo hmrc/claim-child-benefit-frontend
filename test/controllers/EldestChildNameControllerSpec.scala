@@ -40,7 +40,7 @@ class EldestChildNameControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val eldestChildNameRoute = routes.EldestChildNameController.onPageLoad(waypoints).url
 
-  private val validAnswer = EldestChildName("value 1", "value 2")
+  private val validAnswer = EldestChildName("first", None, "last")
   private val userAnswers = emptyUserAnswers.set(EldestChildNamePage, validAnswer).success.value
 
   "EldestChildName Controller" - {
@@ -73,7 +73,7 @@ class EldestChildNameControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(EldestChildName("value 1", "value 2")), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints)(request, messages(application)).toString
       }
     }
 
@@ -93,7 +93,7 @@ class EldestChildNameControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, eldestChildNameRoute)
-            .withFormUrlEncodedBody(("firstName", "value 1"), ("middleNames", "value 2"))
+            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"))
 
         val result = route(application, request).value
         val expectedAnswers = emptyUserAnswers.set(EldestChildNamePage, validAnswer).success.value
@@ -145,7 +145,7 @@ class EldestChildNameControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, eldestChildNameRoute)
-            .withFormUrlEncodedBody(("firstName", "value 1"), ("middleNames", "value 2"))
+            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"))
 
         val result = route(application, request).value
 

@@ -18,7 +18,11 @@ package models
 
 import play.api.libs.json._
 
-case class EldestChildName (firstName: String, middleNames: String)
+case class EldestChildName (
+                             firstName: String,
+                             middleNames: Option[String],
+                             lastName: String
+                           )
 
 object EldestChildName {
   implicit val format = Json.format[EldestChildName]

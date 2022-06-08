@@ -69,6 +69,27 @@ class EldestChildNameFormProviderSpec extends StringFieldBehaviours {
       maxLength = maxLength,
       lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
     )
+  }
+
+  ".lastName" - {
+
+    val fieldName = "lastName"
+    val requiredKey = "eldestChildName.error.lastName.required"
+    val lengthKey = "eldestChildName.error.lastName.length"
+    val maxLength = 100
+
+    behave like fieldThatBindsValidData(
+      form,
+      fieldName,
+      stringsWithMaxLength(maxLength)
+    )
+
+    behave like fieldWithMaxLength(
+      form,
+      fieldName,
+      maxLength = maxLength,
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+    )
 
     behave like mandatoryField(
       form,

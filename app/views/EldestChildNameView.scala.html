@@ -52,6 +52,14 @@
             .withWidth(Full)
         )
 
+        @govukInput(
+            InputViewModel(
+                field = form("lastName"),
+                label = LabelViewModel(messages("eldestChildName.lastName"))
+            )
+            .withWidth(Full)
+        )
+
         @govukButton(
             ButtonViewModel(messages("site.continue"))
         )

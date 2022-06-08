@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-package models
+package forms
 
-import play.api.libs.json._
+import scala.util.matching.Regex
 
-case class BuildingSocietyAccountDetails (
-                                           buildingSocietyName: String,
-                                           accountNumber: String,
-                                           sortCode: String,
-                                           rollNumber: Option[String]
-                                         )
+object Validation {
 
-object BuildingSocietyAccountDetails {
-  implicit val format = Json.format[BuildingSocietyAccountDetails]
+  val accountNumberPattern: Regex = "^[ -]*(?:\\d[ -]*){6,8}$".r.anchored
+  val sortCodePattern: Regex      = "^[ -]*(?:\\d[ -]*){6}$".r.anchored
+  val rollNumberPattern: Regex    = """[a-zA-Z0-9- .]{1,18}""".r.anchored
 }

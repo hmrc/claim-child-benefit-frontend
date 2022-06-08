@@ -46,10 +46,20 @@
 
         @govukInput(
             InputViewModel(
+                field = form("sortCode"),
+                label = LabelViewModel(messages("bankAccountDetails.sortCode"))
+            )
+            .withWidth(Fixed5)
+            .withHint(HintViewModel(messages("bankAccountDetails.sortCode.hint")))
+        )
+
+        @govukInput(
+            InputViewModel(
                 field = form("accountNumber"),
                 label = LabelViewModel(messages("bankAccountDetails.accountNumber"))
             )
-            .withWidth(Full)
+            .withWidth(Fixed10)
+            .withHint(HintViewModel("bankAccountDetails.accountNumber.hint"))
         )
 
         @govukButton(
