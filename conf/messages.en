@@ -99,3 +99,43 @@ relationshipStatus.change.hidden = your marital or civil partnership status
 
 usePrintAndPostForm.title = Use the Print and Post form
 usePrintAndPostForm.heading = Use the Print and Post form
+
+applicantBenefits.title = Do you receive any of the following?
+applicantBenefits.heading = Do you receive any of the following?
+applicantBenefits.incomeSupport = Income support
+applicantBenefits.jobseekersAllowance = Income-based Jobseekers Allowance
+applicantBenefits.checkYourAnswersLabel = Do you receive any of the following?
+applicantBenefits.error.required = Select applicantBenefits
+applicantBenefits.change.hidden = ApplicantBenefits
+
+applicantIncomeOver50k.title = applicantIncomeOver50k
+applicantIncomeOver50k.heading = applicantIncomeOver50k
+applicantIncomeOver50k.checkYourAnswersLabel = applicantIncomeOver50k
+applicantIncomeOver50k.error.required = Select yes if applicantIncomeOver50k
+applicantIncomeOver50k.change.hidden = ApplicantIncomeOver50k
+
+applicantIncomeOver60k.title = applicantIncomeOver60k
+applicantIncomeOver60k.heading = applicantIncomeOver60k
+applicantIncomeOver60k.checkYourAnswersLabel = applicantIncomeOver60k
+applicantIncomeOver60k.error.required = Select yes if applicantIncomeOver60k
+applicantIncomeOver60k.change.hidden = ApplicantIncomeOver60k
+
+applicantOrPartnerBenefits.title = Do you or your partner receive any of the following?
+applicantOrPartnerBenefits.heading = Do you or your partner receive any of the following?
+applicantOrPartnerBenefits.incomeSupport = Income support
+applicantOrPartnerBenefits.jobseekersAllowance = Income-based Jobseekers Allowance
+applicantOrPartnerBenefits.checkYourAnswersLabel = Do you or your partner receive any of the following?
+applicantOrPartnerBenefits.error.required = Select applicantOrPartnerBenefits
+applicantOrPartnerBenefits.change.hidden = ApplicantOrPartnerBenefits
+
+applicantOrPartnerIncomeOver50k.title = applicantOrPartnerIncomeOver50k
+applicantOrPartnerIncomeOver50k.heading = applicantOrPartnerIncomeOver50k
+applicantOrPartnerIncomeOver50k.checkYourAnswersLabel = applicantOrPartnerIncomeOver50k
+applicantOrPartnerIncomeOver50k.error.required = Select yes if applicantOrPartnerIncomeOver50k
+applicantOrPartnerIncomeOver50k.change.hidden = ApplicantOrPartnerIncomeOver50k
+
+applicantOrPartnerIncomeOver60k.title = applicantOrPartnerIncomeOver60k
+applicantOrPartnerIncomeOver60k.heading = applicantOrPartnerIncomeOver60k
+applicantOrPartnerIncomeOver60k.checkYourAnswersLabel = applicantOrPartnerIncomeOver60k
+applicantOrPartnerIncomeOver60k.error.required = Select yes if applicantOrPartnerIncomeOver60k
+applicantOrPartnerIncomeOver60k.change.hidden = ApplicantOrPartnerIncomeOver60k

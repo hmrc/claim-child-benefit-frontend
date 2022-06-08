@@ -21,6 +21,24 @@ import pages._
 
 trait PageGenerators {
 
+  implicit lazy val arbitraryApplicantOrPartnerIncomeOver60kPage: Arbitrary[ApplicantOrPartnerIncomeOver60kPage.type] =
+    Arbitrary(ApplicantOrPartnerIncomeOver60kPage)
+
+  implicit lazy val arbitraryApplicantOrPartnerIncomeOver50kPage: Arbitrary[ApplicantOrPartnerIncomeOver50kPage.type] =
+    Arbitrary(ApplicantOrPartnerIncomeOver50kPage)
+
+  implicit lazy val arbitraryApplicantOrPartnerBenefitsPage: Arbitrary[ApplicantOrPartnerBenefitsPage.type] =
+    Arbitrary(ApplicantOrPartnerBenefitsPage)
+
+  implicit lazy val arbitraryApplicantIncomeOver60kPage: Arbitrary[ApplicantIncomeOver60kPage.type] =
+    Arbitrary(ApplicantIncomeOver60kPage)
+
+  implicit lazy val arbitraryApplicantIncomeOver50kPage: Arbitrary[ApplicantIncomeOver50kPage.type] =
+    Arbitrary(ApplicantIncomeOver50kPage)
+
+  implicit lazy val arbitraryApplicantBenefitsPage: Arbitrary[ApplicantBenefitsPage.type] =
+    Arbitrary(ApplicantBenefitsPage)
+
   implicit lazy val arbitraryRelationshipStatusPage: Arbitrary[RelationshipStatusPage.type] =
     Arbitrary(RelationshipStatusPage)
 
