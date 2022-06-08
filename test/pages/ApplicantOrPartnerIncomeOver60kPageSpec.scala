@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import pages.behaviours.PageBehaviours
 
 class ApplicantOrPartnerIncomeOver60kPageSpec extends PageBehaviours {
@@ -27,5 +28,21 @@ class ApplicantOrPartnerIncomeOver60kPageSpec extends PageBehaviours {
     beSettable[Boolean](ApplicantOrPartnerIncomeOver60kPage)
 
     beRemovable[Boolean](ApplicantOrPartnerIncomeOver60kPage)
+
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Applicant or Partner Benefits" in {
+
+          ApplicantOrPartnerIncomeOver60kPage
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.ApplicantOrPartnerBenefitsController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }

@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import forms.ApplicantOrPartnerBenefitsFormProvider
-import models.{ApplicantOrPartnerBenefits, UserAnswers}
+import models.{Benefits, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -61,7 +61,7 @@ class ApplicantOrPartnerBenefitsControllerSpec extends SpecBase with MockitoSuga
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ApplicantOrPartnerBenefitsPage, ApplicantOrPartnerBenefits.values.toSet).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(ApplicantOrPartnerBenefitsPage, Benefits.values.toSet).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -73,7 +73,7 @@ class ApplicantOrPartnerBenefitsControllerSpec extends SpecBase with MockitoSuga
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(ApplicantOrPartnerBenefits.values.toSet), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(Benefits.values.toSet), waypoints)(request, messages(application)).toString
       }
     }
 
@@ -93,10 +93,10 @@ class ApplicantOrPartnerBenefitsControllerSpec extends SpecBase with MockitoSuga
       running(application) {
         val request =
           FakeRequest(POST, applicantOrPartnerBenefitsRoute)
-            .withFormUrlEncodedBody(("value[0]", ApplicantOrPartnerBenefits.values.head.toString))
+            .withFormUrlEncodedBody(("value[0]", Benefits.values.head.toString))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(ApplicantOrPartnerBenefitsPage, Set(ApplicantOrPartnerBenefits.values.head)).success.value
+        val expectedAnswers = emptyUserAnswers.set(ApplicantOrPartnerBenefitsPage, Set(Benefits.values.head)).success.value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual ApplicantOrPartnerBenefitsPage.navigate(waypoints, expectedAnswers).url
@@ -145,7 +145,7 @@ class ApplicantOrPartnerBenefitsControllerSpec extends SpecBase with MockitoSuga
       running(application) {
         val request =
           FakeRequest(POST, applicantOrPartnerBenefitsRoute)
-            .withFormUrlEncodedBody(("value[0]", ApplicantOrPartnerBenefits.values.head.toString))
+            .withFormUrlEncodedBody(("value[0]", Benefits.values.head.toString))
 
         val result = route(application, request).value
 

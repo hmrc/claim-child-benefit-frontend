@@ -17,11 +17,11 @@
 package pages
 
 import controllers.routes
-import models.ApplicantOrPartnerBenefits
+import models.Benefits
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object ApplicantOrPartnerBenefitsPage extends QuestionPage[Set[ApplicantOrPartnerBenefits]] {
+case object ApplicantOrPartnerBenefitsPage extends QuestionPage[Set[Benefits]] {
 
   override def path: JsPath = JsPath \ toString
 

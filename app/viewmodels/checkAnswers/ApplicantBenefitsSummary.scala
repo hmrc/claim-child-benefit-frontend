@@ -35,7 +35,7 @@ object ApplicantBenefitsSummary  {
         val value = ValueViewModel(
           HtmlContent(
             answers.map {
-              answer => HtmlFormat.escape(messages(s"applicantBenefits.$answer")).toString
+              answer => HtmlFormat.escape(messages(s"benefits.$answer")).toString
             }
             .mkString(",<br>")
           )

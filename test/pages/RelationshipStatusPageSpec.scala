@@ -56,40 +56,40 @@ class RelationshipStatusPageSpec extends PageBehaviours {
             .mustEqual(routes.RelationshipStatusDateController.onPageLoad(waypoints))
         }
 
-        "to Index when the answer is Married" in {
+        "to Applicant or Partner Income over 50k when the answer is Married" in {
 
           val answers = emptyUserAnswers.set(RelationshipStatusPage, Married).success.value
 
           RelationshipStatusPage
             .navigate(waypoints, answers)
-            .mustEqual(routes.IndexController.onPageLoad)
+            .mustEqual(routes.ApplicantOrPartnerIncomeOver50kController.onPageLoad(waypoints))
         }
 
-        "to Index when the answer is Widowed" in {
+        "to Applicant Income Over 50k when the answer is Widowed" in {
 
           val answers = emptyUserAnswers.set(RelationshipStatusPage, Widowed).success.value
 
           RelationshipStatusPage
             .navigate(waypoints, answers)
-            .mustEqual(routes.IndexController.onPageLoad)
+            .mustEqual(routes.ApplicantIncomeOver50kController.onPageLoad(waypoints))
         }
 
-        "to Index when the answer is Divorced" in {
+        "to Applicant Income Over 50k when the answer is Divorced" in {
 
           val answers = emptyUserAnswers.set(RelationshipStatusPage, Divorced).success.value
 
           RelationshipStatusPage
             .navigate(waypoints, answers)
-            .mustEqual(routes.IndexController.onPageLoad)
+            .mustEqual(routes.ApplicantIncomeOver50kController.onPageLoad(waypoints))
         }
 
-        "to Index when the answer is Single" in {
+        "to Applicant Income Over 50k when the answer is Single" in {
 
           val answers = emptyUserAnswers.set(RelationshipStatusPage, Single).success.value
 
           RelationshipStatusPage
             .navigate(waypoints, answers)
-            .mustEqual(routes.IndexController.onPageLoad)
+            .mustEqual(routes.ApplicantIncomeOver50kController.onPageLoad(waypoints))
         }
       }
     }

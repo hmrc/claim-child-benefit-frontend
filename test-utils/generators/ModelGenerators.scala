@@ -22,18 +22,13 @@ import org.scalacheck.{Arbitrary, Gen}
 
 trait ModelGenerators {
 
-  implicit lazy val arbitraryApplicantOrPartnerBenefits: Arbitrary[ApplicantOrPartnerBenefits] =
+  implicit lazy val arbitraryBenefits: Arbitrary[Benefits] =
     Arbitrary {
-      Gen.oneOf(ApplicantOrPartnerBenefits.values)
-    }
-
-  implicit lazy val arbitraryApplicantBenefits: Arbitrary[ApplicantBenefits] =
-    Arbitrary {
-      Gen.oneOf(ApplicantBenefits.values)
+      Gen.oneOf(Benefits.values)
     }
 
   implicit lazy val arbitraryRelationshipStatus: Arbitrary[RelationshipStatus] =
     Arbitrary {
-      Gen.oneOf(RelationshipStatus.values.toSeq)
+      Gen.oneOf(RelationshipStatus.values)
     }
 }

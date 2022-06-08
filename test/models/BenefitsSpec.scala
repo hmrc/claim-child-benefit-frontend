@@ -24,40 +24,40 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatest.OptionValues
 import play.api.libs.json.{JsError, JsString, Json}
 
-class ApplicantOrPartnerBenefitsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues with ModelGenerators {
+class BenefitsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues with ModelGenerators {
 
-  "ApplicantOrPartnerBenefits" - {
+  "ApplicantBenefits" - {
 
     "must deserialise valid values" in {
 
-      val gen = arbitrary[ApplicantOrPartnerBenefits]
+      val gen = arbitrary[Benefits]
 
       forAll(gen) {
-        applicantOrPartnerBenefits =>
+        applicantBenefits =>
 
-          JsString(applicantOrPartnerBenefits.toString).validate[ApplicantOrPartnerBenefits].asOpt.value mustEqual applicantOrPartnerBenefits
+          JsString(applicantBenefits.toString).validate[Benefits].asOpt.value mustEqual applicantBenefits
       }
     }
 
     "must fail to deserialise invalid values" in {
 
-      val gen = arbitrary[String] suchThat (!ApplicantOrPartnerBenefits.values.map(_.toString).contains(_))
+      val gen = arbitrary[String] suchThat (!Benefits.values.map(_.toString).contains(_))
 
       forAll(gen) {
         invalidValue =>
 
-          JsString(invalidValue).validate[ApplicantOrPartnerBenefits] mustEqual JsError("error.invalid")
+          JsString(invalidValue).validate[Benefits] mustEqual JsError("error.invalid")
       }
     }
 
     "must serialise" in {
 
-      val gen = arbitrary[ApplicantOrPartnerBenefits]
+      val gen = arbitrary[Benefits]
 
       forAll(gen) {
-        applicantOrPartnerBenefits =>
+        applicantBenefits =>
 
-          Json.toJson(applicantOrPartnerBenefits) mustEqual JsString(applicantOrPartnerBenefits.toString)
+          Json.toJson(applicantBenefits) mustEqual JsString(applicantBenefits.toString)
       }
     }
   }

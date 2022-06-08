@@ -17,6 +17,7 @@
 package pages
 
 import controllers.routes
+import models.UserAnswers
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -28,4 +29,10 @@ case object ApplicantOrPartnerIncomeOver50kPage extends QuestionPage[Boolean] {
 
   override def route(waypoints: Waypoints): Call =
     routes.ApplicantOrPartnerIncomeOver50kController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true  => ApplicantOrPartnerIncomeOver60kPage
+      case false => ApplicantOrPartnerBenefitsPage
+    }.orRecover
 }

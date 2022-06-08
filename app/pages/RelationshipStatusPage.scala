@@ -17,7 +17,7 @@
 package pages
 
 import controllers.routes
-import models.RelationshipStatus.{Cohabiting, Separated}
+import models.RelationshipStatus._
 import models.{RelationshipStatus, UserAnswers}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
@@ -34,6 +34,7 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case Cohabiting | Separated => RelationshipStatusDatePage
-      case _                      => IndexPage
+      case Married                => ApplicantOrPartnerIncomeOver50kPage
+      case _                      => ApplicantIncomeOver50kPage
     }.orRecover
 }

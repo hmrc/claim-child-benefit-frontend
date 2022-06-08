@@ -10,6 +10,7 @@ site.start = Start now
 site.startAgain = Start again
 site.signIn = Sign in
 site.govuk = GOV.UK
+site.or = or
 
 date.day = Day
 date.month = Month
@@ -100,42 +101,45 @@ relationshipStatus.change.hidden = your marital or civil partnership status
 usePrintAndPostForm.title = Use the Print and Post form
 usePrintAndPostForm.heading = Use the Print and Post form
 
+benefits.incomeSupport = Income support
+benefits.jobseekersAllowance = Income-based Jobseeker’s Allowance
+benefits.pensionCredit = Pension credit
+benefits.employmentSupport = Income-related Employment and Support Allowance
+benefits.universalCredit = Universal Credit
+benefits.none = None of the above
+
 applicantBenefits.title = Do you receive any of the following?
 applicantBenefits.heading = Do you receive any of the following?
-applicantBenefits.incomeSupport = Income support
-applicantBenefits.jobseekersAllowance = Income-based Jobseekers Allowance
 applicantBenefits.checkYourAnswersLabel = Do you receive any of the following?
-applicantBenefits.error.required = Select applicantBenefits
-applicantBenefits.change.hidden = ApplicantBenefits
+applicantBenefits.error.required = Select the benefits you receive
+applicantBenefits.change.hidden = the benefits you receive
 
-applicantIncomeOver50k.title = applicantIncomeOver50k
-applicantIncomeOver50k.heading = applicantIncomeOver50k
-applicantIncomeOver50k.checkYourAnswersLabel = applicantIncomeOver50k
-applicantIncomeOver50k.error.required = Select yes if applicantIncomeOver50k
-applicantIncomeOver50k.change.hidden = ApplicantIncomeOver50k
+applicantIncomeOver50k.title = Is your income over £50,000 per year?
+applicantIncomeOver50k.heading = Is your income over £50,000 per year?
+applicantIncomeOver50k.checkYourAnswersLabel = Is your income over £50,000 per year?
+applicantIncomeOver50k.error.required = Select yes if your income is over £50,000 per year
+applicantIncomeOver50k.change.hidden = if your income is over £50,000 per year
 
-applicantIncomeOver60k.title = applicantIncomeOver60k
-applicantIncomeOver60k.heading = applicantIncomeOver60k
-applicantIncomeOver60k.checkYourAnswersLabel = applicantIncomeOver60k
-applicantIncomeOver60k.error.required = Select yes if applicantIncomeOver60k
-applicantIncomeOver60k.change.hidden = ApplicantIncomeOver60k
+applicantIncomeOver60k.title = Is your income over £60,000 per year?
+applicantIncomeOver60k.heading = Is your income over £60,000 per year?
+applicantIncomeOver60k.checkYourAnswersLabel = Is your income over £60,000 per year?
+applicantIncomeOver60k.error.required = Select yes if your income is over £60,000 per year
+applicantIncomeOver60k.change.hidden = if your income is over £60,000 per year
 
 applicantOrPartnerBenefits.title = Do you or your partner receive any of the following?
 applicantOrPartnerBenefits.heading = Do you or your partner receive any of the following?
-applicantOrPartnerBenefits.incomeSupport = Income support
-applicantOrPartnerBenefits.jobseekersAllowance = Income-based Jobseekers Allowance
 applicantOrPartnerBenefits.checkYourAnswersLabel = Do you or your partner receive any of the following?
-applicantOrPartnerBenefits.error.required = Select applicantOrPartnerBenefits
-applicantOrPartnerBenefits.change.hidden = ApplicantOrPartnerBenefits
+applicantOrPartnerBenefits.error.required = Select the benefits you or your partner receive
+applicantOrPartnerBenefits.change.hidden = the benefits you or your partner receive
 
-applicantOrPartnerIncomeOver50k.title = applicantOrPartnerIncomeOver50k
-applicantOrPartnerIncomeOver50k.heading = applicantOrPartnerIncomeOver50k
-applicantOrPartnerIncomeOver50k.checkYourAnswersLabel = applicantOrPartnerIncomeOver50k
-applicantOrPartnerIncomeOver50k.error.required = Select yes if applicantOrPartnerIncomeOver50k
-applicantOrPartnerIncomeOver50k.change.hidden = ApplicantOrPartnerIncomeOver50k
+applicantOrPartnerIncomeOver50k.title = Is your or your partner’s income over £50,000 per year?
+applicantOrPartnerIncomeOver50k.heading = Is your or your partner’s income over £50,000 per year?
+applicantOrPartnerIncomeOver50k.checkYourAnswersLabel = Is your or your partner’s income over £50,000 per year?
+applicantOrPartnerIncomeOver50k.error.required = Select yes if your or your partner’s income is over £50,000 per year
+applicantOrPartnerIncomeOver50k.change.hidden = your or your partner’s income is over £50,000 per year
 
-applicantOrPartnerIncomeOver60k.title = applicantOrPartnerIncomeOver60k
-applicantOrPartnerIncomeOver60k.heading = applicantOrPartnerIncomeOver60k
-applicantOrPartnerIncomeOver60k.checkYourAnswersLabel = applicantOrPartnerIncomeOver60k
-applicantOrPartnerIncomeOver60k.error.required = Select yes if applicantOrPartnerIncomeOver60k
-applicantOrPartnerIncomeOver60k.change.hidden = ApplicantOrPartnerIncomeOver60k
+applicantOrPartnerIncomeOver60k.title = Is your or your partner’s income over £60,000 per year?
+applicantOrPartnerIncomeOver60k.heading = Is your or your partner’s income over £60,000 per year?
+applicantOrPartnerIncomeOver60k.checkYourAnswersLabel = Is your or your partner’s income over £60,000 per year?
+applicantOrPartnerIncomeOver60k.error.required = Select yes if your or your partner’s income is over £60,000 per year
+applicantOrPartnerIncomeOver60k.change.hidden = your or your partner’s income is over £60,000 per year

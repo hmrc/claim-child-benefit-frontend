@@ -21,12 +21,12 @@ import javax.inject.Inject
 import forms.mappings.Mappings
 import play.api.data.Form
 import play.api.data.Forms.set
-import models.ApplicantBenefits
+import models.Benefits
 
 class ApplicantBenefitsFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Set[ApplicantBenefits]] =
+  def apply(): Form[Set[Benefits]] =
     Form(
-      "value" -> set(enumerable[ApplicantBenefits]("applicantBenefits.error.required")).verifying(nonEmptySet("applicantBenefits.error.required"))
+      "value" -> set(enumerable[Benefits]("applicantBenefits.error.required")).verifying(nonEmptySet("applicantBenefits.error.required"))
     )
 }

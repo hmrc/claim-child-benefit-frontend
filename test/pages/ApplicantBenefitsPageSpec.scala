@@ -16,17 +16,17 @@
 
 package pages
 
-import models.ApplicantBenefits
+import models.Benefits
 import pages.behaviours.PageBehaviours
 
 class ApplicantBenefitsPageSpec extends PageBehaviours {
 
   "ApplicantBenefitsPage" - {
 
-    beRetrievable[Set[ApplicantBenefits]](ApplicantBenefitsPage)
+    beRetrievable[Set[Benefits]](ApplicantBenefitsPage)
 
-    beSettable[Set[ApplicantBenefits]](ApplicantBenefitsPage)
+    beSettable[Set[Benefits]](ApplicantBenefitsPage)
 
-    beRemovable[Set[ApplicantBenefits]](ApplicantBenefitsPage)
+    beRemovable[Set[Benefits]](ApplicantBenefitsPage)
   }
 }

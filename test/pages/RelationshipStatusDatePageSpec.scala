@@ -16,8 +16,10 @@
 
 package pages
 
-import java.time.LocalDate
+import controllers.routes
+import models.RelationshipStatus.{Cohabiting, Separated}
 
+import java.time.LocalDate
 import org.scalacheck.Arbitrary
 import pages.behaviours.PageBehaviours
 
@@ -34,5 +36,31 @@ class RelationshipStatusDatePageSpec extends PageBehaviours {
     beSettable[LocalDate](RelationshipStatusDatePage)
 
     beRemovable[LocalDate](RelationshipStatusDatePage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Applicant Income Over 50k when the relationship status is Separated" in {
+
+          val answers = emptyUserAnswers.set(RelationshipStatusPage, Separated).success.value
+
+          RelationshipStatusDatePage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.ApplicantIncomeOver50kController.onPageLoad(waypoints))
+        }
+
+        "to Applicant or Partner Income Over 50k when the relationship status is Cohabiting" in {
+
+          val answers = emptyUserAnswers.set(RelationshipStatusPage, Cohabiting).success.value
+
+          RelationshipStatusDatePage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.ApplicantOrPartnerIncomeOver50kController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }

@@ -17,7 +17,7 @@
 package forms
 
 import forms.behaviours.CheckboxFieldBehaviours
-import models.ApplicantOrPartnerBenefits
+import models.Benefits
 import play.api.data.FormError
 
 class ApplicantOrPartnerBenefitsFormProviderSpec extends CheckboxFieldBehaviours {
@@ -29,10 +29,10 @@ class ApplicantOrPartnerBenefitsFormProviderSpec extends CheckboxFieldBehaviours
     val fieldName = "value"
     val requiredKey = "applicantOrPartnerBenefits.error.required"
 
-    behave like checkboxField[ApplicantOrPartnerBenefits](
+    behave like checkboxField[Benefits](
       form,
       fieldName,
-      validValues  = ApplicantOrPartnerBenefits.values,
+      validValues  = Benefits.values,
       invalidError = FormError(s"$fieldName[0]", "error.invalid")
     )
 
