@@ -17,24 +17,22 @@
 package pages
 
 import controllers.routes
-import models.RelationshipStatus._
-import models.{RelationshipStatus, UserAnswers}
+import models.UserAnswers
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
+case object ApplicantIncomeOver50kPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "relationshipStatus"
+  override def toString: String = "applicantIncomeOver50k"
 
   override def route(waypoints: Waypoints): Call =
-    routes.RelationshipStatusController.onPageLoad(waypoints)
+    routes.ApplicantIncomeOver50kController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
-      case Cohabiting | Separated => RelationshipStatusDatePage
-      case Married                => ApplicantOrPartnerIncomeOver50kPage
-      case _                      => ApplicantIncomeOver50kPage
+      case true  => ApplicantIncomeOver60kPage
+      case false => ApplicantBenefitsPage
     }.orRecover
 }

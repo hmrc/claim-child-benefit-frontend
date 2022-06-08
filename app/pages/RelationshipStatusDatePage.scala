@@ -17,8 +17,9 @@
 package pages
 
 import java.time.LocalDate
-
 import controllers.routes
+import models.RelationshipStatus.{Cohabiting, Separated}
+import models.UserAnswers
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -30,4 +31,11 @@ case object RelationshipStatusDatePage extends QuestionPage[LocalDate] {
 
   override def route(waypoints: Waypoints): Call =
     routes.RelationshipStatusDateController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(RelationshipStatusPage).map {
+      case Separated  => ApplicantIncomeOver50kPage
+      case Cohabiting => ApplicantOrPartnerIncomeOver50kPage
+      case _          => JourneyRecoveryPage
+    }.orRecover
 }

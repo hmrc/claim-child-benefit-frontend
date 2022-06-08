@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-package generators
+package forms
 
-import models._
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
+import javax.inject.Inject
 
-trait ModelGenerators {
+import forms.mappings.Mappings
+import play.api.data.Form
 
-  implicit lazy val arbitraryBenefits: Arbitrary[Benefits] =
-    Arbitrary {
-      Gen.oneOf(Benefits.values)
-    }
+class ApplicantIncomeOver50kFormProvider @Inject() extends Mappings {
 
-  implicit lazy val arbitraryRelationshipStatus: Arbitrary[RelationshipStatus] =
-    Arbitrary {
-      Gen.oneOf(RelationshipStatus.values)
-    }
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean("applicantIncomeOver50k.error.required")
+    )
 }

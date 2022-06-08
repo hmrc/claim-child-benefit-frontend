@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-package generators
+package pages
 
-import models._
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
+import models.Benefits
+import pages.behaviours.PageBehaviours
 
-trait ModelGenerators {
+class ApplicantOrPartnerBenefitsPageSpec extends PageBehaviours {
 
-  implicit lazy val arbitraryBenefits: Arbitrary[Benefits] =
-    Arbitrary {
-      Gen.oneOf(Benefits.values)
-    }
+  "ApplicantOrPartnerBenefitsPage" - {
 
-  implicit lazy val arbitraryRelationshipStatus: Arbitrary[RelationshipStatus] =
-    Arbitrary {
-      Gen.oneOf(RelationshipStatus.values)
-    }
+    beRetrievable[Set[Benefits]](ApplicantOrPartnerBenefitsPage)
+
+    beSettable[Set[Benefits]](ApplicantOrPartnerBenefitsPage)
+
+    beRemovable[Set[Benefits]](ApplicantOrPartnerBenefitsPage)
+  }
 }
