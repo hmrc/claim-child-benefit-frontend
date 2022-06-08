@@ -24,6 +24,134 @@ import play.api.libs.json.{JsValue, Json}
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
 
+  implicit lazy val arbitraryWantToBePaidWeeklyUserAnswersEntry: Arbitrary[(WantToBePaidWeeklyPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[WantToBePaidWeeklyPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryWantToBePaidToExistingAccountUserAnswersEntry: Arbitrary[(WantToBePaidToExistingAccountPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[WantToBePaidToExistingAccountPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryWantToBePaidUserAnswersEntry: Arbitrary[(WantToBePaidPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[WantToBePaidPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryEldestChildNameUserAnswersEntry: Arbitrary[(EldestChildNamePage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[EldestChildNamePage.type]
+        value <- arbitrary[EldestChildName].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryEldestChildDateOfBirthUserAnswersEntry: Arbitrary[(EldestChildDateOfBirthPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[EldestChildDateOfBirthPage.type]
+        value <- arbitrary[Int].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryCurrentlyReceivingChildBenefitUserAnswersEntry: Arbitrary[(CurrentlyReceivingChildBenefitPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[CurrentlyReceivingChildBenefitPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryCurrentlyEntitledToChildBenefitUserAnswersEntry: Arbitrary[(CurrentlyEntitledToChildBenefitPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[CurrentlyEntitledToChildBenefitPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryClaimedChildBenefitBeforeUserAnswersEntry: Arbitrary[(ClaimedChildBenefitBeforePage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[ClaimedChildBenefitBeforePage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryBuildingSocietyAccountDetailsUserAnswersEntry: Arbitrary[(BuildingSocietyAccountDetailsPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[BuildingSocietyAccountDetailsPage.type]
+        value <- arbitrary[BuildingSocietyAccountDetails].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryBankAccountTypeUserAnswersEntry: Arbitrary[(BankAccountTypePage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[BankAccountTypePage.type]
+        value <- arbitrary[BankAccountType].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryBankAccountDetailsUserAnswersEntry: Arbitrary[(BankAccountDetailsPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[BankAccountDetailsPage.type]
+        value <- arbitrary[BankAccountDetails].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryApplicantHasSuitableAccountUserAnswersEntry: Arbitrary[(ApplicantHasSuitableAccountPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[ApplicantHasSuitableAccountPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryAccountIsJointUserAnswersEntry: Arbitrary[(AccountIsJointPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[AccountIsJointPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryAccountInApplicantsNameUserAnswersEntry: Arbitrary[(AccountInApplicantsNamePage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[AccountInApplicantsNamePage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryAccountHolderNamesUserAnswersEntry: Arbitrary[(AccountHolderNamesPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[AccountHolderNamesPage.type]
+        value <- arbitrary[AccountHolderNames].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryAccountHolderNameUserAnswersEntry: Arbitrary[(AccountHolderNamePage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[AccountHolderNamePage.type]
+        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
+      } yield (page, value)
+    }
+
   implicit lazy val arbitraryApplicantOrPartnerIncomeOver60kUserAnswersEntry: Arbitrary[(ApplicantOrPartnerIncomeOver60kPage.type, JsValue)] =
     Arbitrary {
       for {
