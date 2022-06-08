@@ -17,20 +17,21 @@
 package forms
 
 import java.time.LocalDate
-
 import forms.mappings.Mappings
+import models.RelationshipStatus
+
 import javax.inject.Inject
 import play.api.data.Form
 
 class RelationshipStatusDateFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[LocalDate] =
+  def apply(relationshipStatus: RelationshipStatus): Form[LocalDate] =
     Form(
       "value" -> localDate(
-        invalidKey     = "relationshipStatusDate.error.invalid",
-        allRequiredKey = "relationshipStatusDate.error.required.all",
-        twoRequiredKey = "relationshipStatusDate.error.required.two",
-        requiredKey    = "relationshipStatusDate.error.required"
+        invalidKey     = s"relationshipStatusDate.${relationshipStatus.toString}.error.invalid",
+        allRequiredKey = s"relationshipStatusDate.${relationshipStatus.toString}.error.required.all",
+        twoRequiredKey = s"relationshipStatusDate.${relationshipStatus.toString}.error.required.two",
+        requiredKey    = s"relationshipStatusDate.${relationshipStatus.toString}.error.required"
       )
     )
 }

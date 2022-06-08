@@ -17,12 +17,14 @@
 package forms
 
 import java.time.{LocalDate, ZoneOffset}
-
 import forms.behaviours.DateBehaviours
+import models.RelationshipStatus
 
 class RelationshipStatusDateFormProviderSpec extends DateBehaviours {
 
-  val form = new RelationshipStatusDateFormProvider()()
+  private val relationshipStatus = RelationshipStatus.Separated
+  private val formProvider       = new RelationshipStatusDateFormProvider()
+  private val form               = formProvider(relationshipStatus)
 
   ".value" - {
 
@@ -33,6 +35,6 @@ class RelationshipStatusDateFormProviderSpec extends DateBehaviours {
 
     behave like dateField(form, "value", validData)
 
-    behave like mandatoryDateField(form, "value", "relationshipStatusDate.error.required.all")
+    behave like mandatoryDateField(form, "value", "relationshipStatusDate.separated.error.required.all")
   }
 }

@@ -18,8 +18,9 @@ package controllers
 
 import controllers.actions._
 import forms.RelationshipStatusDateFormProvider
+
 import javax.inject.Inject
-import pages.{RelationshipStatusDatePage, Waypoints}
+import pages.{RelationshipStatusDatePage, RelationshipStatusPage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -37,33 +38,44 @@ class RelationshipStatusDateController @Inject()(
                                                   formProvider: RelationshipStatusDateFormProvider,
                                                   val controllerComponents: MessagesControllerComponents,
                                                   view: RelationshipStatusDateView
-                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                      )(implicit ec: ExecutionContext)
+  extends FrontendBaseController
+    with I18nSupport
+    with AnswerExtractor {
 
-  def form = formProvider()
-
-  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
+    def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
+      getAnswer(RelationshipStatusPage) {
+        relationshipStatus =>
 
-      val preparedForm = request.userAnswers.get(RelationshipStatusDatePage) match {
-        case None => form
-        case Some(value) => form.fill(value)
+          def form = formProvider(relationshipStatus)
+
+          val preparedForm = request.userAnswers.get(RelationshipStatusDatePage) match {
+            case None => form
+            case Some(value) => form.fill(value)
+          }
+
+          Ok(view(preparedForm, waypoints, relationshipStatus))
       }
-
-      Ok(view(preparedForm, waypoints))
   }
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      getAnswerAsync(RelationshipStatusPage) {
+        relationshipStatus =>
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints))),
+          def form = formProvider(relationshipStatus)
 
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(RelationshipStatusDatePage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(RelationshipStatusDatePage.navigate(waypoints, updatedAnswers))
-      )
+          form.bindFromRequest().fold(
+            formWithErrors =>
+              Future.successful(BadRequest(view(formWithErrors, waypoints, relationshipStatus))),
+
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(RelationshipStatusDatePage, value))
+                _ <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(RelationshipStatusDatePage.navigate(waypoints, updatedAnswers))
+          )
+      }
   }
 }

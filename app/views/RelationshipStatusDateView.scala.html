@@ -22,9 +22,9 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints, relationshipStatus: RelationshipStatus)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("relationshipStatusDate.title"))) {
+@layout(pageTitle = title(form, messages(s"relationshipStatusDate.${relationshipStatus.toString}.title"))) {
 
     @formHelper(action = routes.RelationshipStatusDateController.onSubmit(waypoints), 'autoComplete -> "off") {
 
@@ -35,7 +35,7 @@
         @govukDateInput(
             DateViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(messages("relationshipStatusDate.heading")).asPageHeading()
+                legend = LegendViewModel(messages(s"relationshipStatusDate.${relationshipStatus.toString}.heading")).asPageHeading()
             )
             .withHint(HintViewModel(messages("relationshipStatusDate.hint")))
         )
