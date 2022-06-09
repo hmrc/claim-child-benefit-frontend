@@ -16,23 +16,26 @@
 
 package pages
 
+import base.SpecBase
 import controllers.routes
-import models.UserAnswers
-import play.api.libs.json.JsPath
-import play.api.mvc.Call
 
-case object CurrentlyEntitledToChildBenefitPage extends QuestionPage[Boolean] {
+class TaxChargeExplanationPageSpec extends SpecBase {
 
-  override def path: JsPath = JsPath \ toString
+  "TaxChargeExplanationPage" - {
 
-  override def toString: String = "currentlyEntitledToChildBenefit"
+    "must navigate" - {
 
-  override def route(waypoints: Waypoints): Call =
-    routes.CurrentlyEntitledToChildBenefitController.onPageLoad(waypoints)
+      "when there are no waypoints" - {
 
-  override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case true  => CurrentlyReceivingChildBenefitPage
-      case false => TaxChargeExplanationPage
-    }.orRecover
+        val waypoints = EmptyWaypoints
+
+        "to Want to be paid" in {
+
+          TaxChargeExplanationPage
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.WantToBePaidController.onPageLoad(waypoints))
+        }
+      }
+    }
+  }
 }

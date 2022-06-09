@@ -17,10 +17,14 @@
 package pages
 
 import controllers.routes
+import models.UserAnswers
 import play.api.mvc.Call
 
 case object TaxChargeExplanationPage extends Page {
 
   override def route(waypoints: Waypoints): Call =
     routes.TaxChargeExplanationController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    WantToBePaidPage
 }
