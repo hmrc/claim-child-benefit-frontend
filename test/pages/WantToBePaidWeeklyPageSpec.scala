@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import pages.behaviours.PageBehaviours
 
 class WantToBePaidWeeklyPageSpec extends PageBehaviours {
@@ -27,5 +28,31 @@ class WantToBePaidWeeklyPageSpec extends PageBehaviours {
     beSettable[Boolean](WantToBePaidWeeklyPage)
 
     beRemovable[Boolean](WantToBePaidWeeklyPage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Applicant has Suitable Account when the answer is yes" in {
+
+          val answers = emptyUserAnswers.set(WantToBePaidWeeklyPage, true).success.value
+
+          WantToBePaidWeeklyPage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.ApplicantHasSuitableAccountController.onPageLoad(waypoints))
+        }
+
+        "to Index when the answer is no" in {
+
+          val answers = emptyUserAnswers.set(WantToBePaidWeeklyPage, false).success.value
+
+          WantToBePaidWeeklyPage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.IndexController.onPageLoad)
+        }
+      }
+    }
   }
 }

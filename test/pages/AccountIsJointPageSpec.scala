@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import pages.behaviours.PageBehaviours
 
 class AccountIsJointPageSpec extends PageBehaviours {
@@ -27,5 +28,31 @@ class AccountIsJointPageSpec extends PageBehaviours {
     beSettable[Boolean](AccountIsJointPage)
 
     beRemovable[Boolean](AccountIsJointPage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Account Holder Names when the answer is yes" in {
+
+          val answers = emptyUserAnswers.set(AccountIsJointPage, true).success.value
+
+          AccountIsJointPage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.AccountHolderNamesController.onPageLoad(waypoints))
+        }
+
+        "to Account Holder Name when the answer is yes" in {
+
+          val answers = emptyUserAnswers.set(AccountIsJointPage, false).success.value
+
+          AccountIsJointPage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.AccountHolderNameController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }

@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import pages.behaviours.PageBehaviours
 
 class CurrentlyEntitledToChildBenefitPageSpec extends PageBehaviours {
@@ -27,5 +28,31 @@ class CurrentlyEntitledToChildBenefitPageSpec extends PageBehaviours {
     beSettable[Boolean](CurrentlyEntitledToChildBenefitPage)
 
     beRemovable[Boolean](CurrentlyEntitledToChildBenefitPage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Currently Receiving Child Benefit when the answer is yes" in {
+
+          val answers = emptyUserAnswers.set(CurrentlyEntitledToChildBenefitPage, true).success.value
+
+          CurrentlyEntitledToChildBenefitPage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.CurrentlyReceivingChildBenefitController.onPageLoad(waypoints))
+        }
+
+        "to Tax Charge Explanation when the answer is no" in {
+
+          val answers = emptyUserAnswers.set(CurrentlyEntitledToChildBenefitPage, false).success.value
+
+          CurrentlyEntitledToChildBenefitPage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.TaxChargeExplanationController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }

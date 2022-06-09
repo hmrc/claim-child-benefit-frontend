@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import models.BankAccountType
 import pages.behaviours.PageBehaviours
 
@@ -28,5 +29,31 @@ class BankAccountTypeSpec extends PageBehaviours {
     beSettable[BankAccountType](BankAccountTypePage)
 
     beRemovable[BankAccountType](BankAccountTypePage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Bank Account Details when the answer is Bank" in {
+
+          val answers = emptyUserAnswers.set(BankAccountTypePage, BankAccountType.Bank).success.value
+
+          BankAccountTypePage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.BankAccountDetailsController.mustEqual(waypoints))
+        }
+
+        "to Building Society Account Details when the answer is Bank" in {
+
+          val answers = emptyUserAnswers.set(BankAccountTypePage, BankAccountType.BuildingSociety).success.value
+
+          BankAccountTypePage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.BuildingSocietyAccountDetailsController.mustEqual(waypoints))
+        }
+      }
+    }
   }
 }

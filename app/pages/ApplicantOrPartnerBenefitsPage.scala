@@ -17,7 +17,7 @@
 package pages
 
 import controllers.routes
-import models.Benefits
+import models.{Benefits, UserAnswers}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -29,4 +29,7 @@ case object ApplicantOrPartnerBenefitsPage extends QuestionPage[Set[Benefits]] {
 
   override def route(waypoints: Waypoints): Call =
     routes.ApplicantOrPartnerBenefitsController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    ClaimedChildBenefitBeforePage
 }

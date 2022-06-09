@@ -16,20 +16,26 @@
 
 package pages
 
+import base.SpecBase
 import controllers.routes
-import models.{AccountHolderNames, UserAnswers}
-import play.api.libs.json.JsPath
-import play.api.mvc.Call
 
-case object AccountHolderNamesPage extends QuestionPage[AccountHolderNames] {
+class TaxChargeExplanationPageSpec extends SpecBase {
 
-  override def path: JsPath = JsPath \ toString
+  "TaxChargeExplanationPage" - {
 
-  override def toString: String = "accountHolderNames"
+    "must navigate" - {
 
-  override def route(waypoints: Waypoints): Call =
-    routes.AccountHolderNamesController.onPageLoad(waypoints)
+      "when there are no waypoints" - {
 
-  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    BankAccountTypePage
+        val waypoints = EmptyWaypoints
+
+        "to Want to be paid" in {
+
+          TaxChargeExplanationPage
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.WantToBePaidController.onPageLoad(waypoints))
+        }
+      }
+    }
+  }
 }

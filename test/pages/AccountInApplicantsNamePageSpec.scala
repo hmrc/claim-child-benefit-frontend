@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import pages.behaviours.PageBehaviours
 
 class AccountInApplicantsNamePageSpec extends PageBehaviours {
@@ -27,5 +28,31 @@ class AccountInApplicantsNamePageSpec extends PageBehaviours {
     beSettable[Boolean](AccountInApplicantsNamePage)
 
     beRemovable[Boolean](AccountInApplicantsNamePage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Account is Joint when the answer is yes" in {
+
+          val answers = emptyUserAnswers.set(AccountInApplicantsNamePage, true).success.value
+
+          AccountInApplicantsNamePage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.AccountIsJointController.onPageLoad(waypoints))
+        }
+
+        "to Bank Account Type when the answer is no" in {
+
+          val answers = emptyUserAnswers.set(AccountInApplicantsNamePage, false).success.value
+
+          AccountInApplicantsNamePage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.BankAccountTypeController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }
