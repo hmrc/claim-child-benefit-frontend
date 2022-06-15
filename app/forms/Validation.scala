@@ -14,22 +14,13 @@
  * limitations under the License.
  */
 
-package pages
+package forms
 
-import controllers.routes
-import models.{AccountHolderNames, UserAnswers}
-import play.api.libs.json.JsPath
-import play.api.mvc.Call
+import scala.util.matching.Regex
 
-case object AccountHolderNamesPage extends QuestionPage[AccountHolderNames] {
+object Validation {
 
-  override def path: JsPath = JsPath \ toString
-
-  override def toString: String = "accountHolderNames"
-
-  override def route(waypoints: Waypoints): Call =
-    routes.AccountHolderNamesController.onPageLoad(waypoints)
-
-  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    BankAccountTypePage
+  val accountNumberPattern: Regex = "^[ -]*(?:\\d[ -]*){6,8}$".r.anchored
+  val sortCodePattern: Regex      = "^[ -]*(?:\\d[ -]*){6}$".r.anchored
+  val rollNumberPattern: Regex    = """[a-zA-Z0-9- .]{1,18}""".r.anchored
 }

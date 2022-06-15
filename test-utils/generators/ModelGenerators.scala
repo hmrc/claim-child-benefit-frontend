@@ -26,8 +26,9 @@ trait ModelGenerators {
     Arbitrary {
       for {
         firstName <- arbitrary[String]
-        middleNames <- arbitrary[String]
-      } yield EldestChildName(firstName, middleNames)
+        middleNames <- Gen.option(arbitrary[String])
+        lastName <- arbitrary[String]
+      } yield EldestChildName(firstName, middleNames, lastName)
     }
 
   implicit lazy val arbitraryBuildingSocietyAccountDetails: Arbitrary[BuildingSocietyAccountDetails] =
@@ -35,12 +36,14 @@ trait ModelGenerators {
       for {
         buildingSocietyName <- arbitrary[String]
         accountNumber <- arbitrary[String]
-      } yield BuildingSocietyAccountDetails(buildingSocietyName, accountNumber)
+        sortCode <- arbitrary[String]
+        rollNumber <- Gen.option(arbitrary[String])
+      } yield BuildingSocietyAccountDetails(buildingSocietyName, accountNumber, sortCode, rollNumber)
     }
 
   implicit lazy val arbitraryBankAccountType: Arbitrary[BankAccountType] =
     Arbitrary {
-      Gen.oneOf(BankAccountType.values.toSeq)
+      Gen.oneOf(BankAccountType.values)
     }
 
   implicit lazy val arbitraryBankAccountDetails: Arbitrary[BankAccountDetails] =
@@ -48,7 +51,8 @@ trait ModelGenerators {
       for {
         bankName <- arbitrary[String]
         accountNumber <- arbitrary[String]
-      } yield BankAccountDetails(bankName, accountNumber)
+        sortCode <- arbitrary[String]
+      } yield BankAccountDetails(bankName, accountNumber, sortCode)
     }
 
   implicit lazy val arbitraryAccountHolderNames: Arbitrary[AccountHolderNames] =

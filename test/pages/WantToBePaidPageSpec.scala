@@ -16,9 +16,14 @@
 
 package pages
 
+import controllers.routes
+import models.Benefits
+import org.scalacheck.Gen
 import pages.behaviours.PageBehaviours
 
 class WantToBePaidPageSpec extends PageBehaviours {
+
+  private val qualifyingBenefitsGen = Gen.oneOf(Benefits.qualifyingBenefits)
 
   "WantToBePaidPage" - {
 
@@ -27,5 +32,100 @@ class WantToBePaidPageSpec extends PageBehaviours {
     beSettable[Boolean](WantToBePaidPage)
 
     beRemovable[Boolean](WantToBePaidPage)
+
+    "must navigate" - {
+
+      import models.RelationshipStatus._
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "and the answer is yes" - {
+
+          val baseAnswers = emptyUserAnswers.set(WantToBePaidPage, true).success.value
+
+          "to Want to be paid weekly" - {
+
+            "when the user is Single" in {
+
+              val answers = baseAnswers.set(RelationshipStatusPage, Single).success.value
+
+              WantToBePaidPage
+                .navigate(waypoints, answers)
+                .mustEqual(routes.WantToBePaidWeeklyController.onPageLoad(waypoints))
+            }
+
+            "when the user is Divorced" in {
+
+              val answers = baseAnswers.set(RelationshipStatusPage, Divorced).success.value
+
+              WantToBePaidPage
+                .navigate(waypoints, answers)
+                .mustEqual(routes.WantToBePaidWeeklyController.onPageLoad(waypoints))
+            }
+
+            "when the user is Widowed" in {
+
+              val answers = baseAnswers.set(RelationshipStatusPage, Widowed).success.value
+
+              WantToBePaidPage
+                .navigate(waypoints, answers)
+                .mustEqual(routes.WantToBePaidWeeklyController.onPageLoad(waypoints))
+            }
+
+            "when the user is Separated" in {
+
+              val answers = baseAnswers.set(RelationshipStatusPage, Separated).success.value
+
+              WantToBePaidPage
+                .navigate(waypoints, answers)
+                .mustEqual(routes.WantToBePaidWeeklyController.onPageLoad(waypoints))
+            }
+
+            "when the user is Married and in receipt of qualifying benefits" in {
+
+              val benefits = Set(qualifyingBenefitsGen.sample.value)
+
+              val answers =
+                baseAnswers
+                  .set(RelationshipStatusPage, Married).success.value
+                  .set(ApplicantOrPartnerBenefitsPage, benefits).success.value
+
+              WantToBePaidPage
+                .navigate(waypoints, answers)
+                .mustEqual(routes.WantToBePaidWeeklyController.onPageLoad(waypoints))
+            }
+            
+            "when the user is Cohabiting and in receipt of qualifying benefits" in {
+
+              val benefits = Set(qualifyingBenefitsGen.sample.value)
+
+              val answers =
+                baseAnswers
+                  .set(RelationshipStatusPage, Cohabiting).success.value
+                  .set(ApplicantOrPartnerBenefitsPage, benefits).success.value
+
+              WantToBePaidPage
+                .navigate(waypoints, answers)
+                .mustEqual(routes.WantToBePaidWeeklyController.onPageLoad(waypoints))
+            }
+          }
+        }
+
+        "when the answer is no" - {
+
+          // TODO: Update when next section is available
+          "to Index" in {
+
+            val answers = emptyUserAnswers.set(WantToBePaidPage, false).success.value
+
+            WantToBePaidPage
+              .navigate(waypoints, answers)
+              .mustEqual(routes.IndexController.onPageLoad)
+          }
+        }
+      }
+    }
   }
 }

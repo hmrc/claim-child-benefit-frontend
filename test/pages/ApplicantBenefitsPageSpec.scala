@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import models.Benefits
 import pages.behaviours.PageBehaviours
 
@@ -28,5 +29,20 @@ class ApplicantBenefitsPageSpec extends PageBehaviours {
     beSettable[Set[Benefits]](ApplicantBenefitsPage)
 
     beRemovable[Set[Benefits]](ApplicantBenefitsPage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Claimed Child Benefit Before" in {
+
+          ApplicantBenefitsPage
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.ClaimedChildBenefitBeforeController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }

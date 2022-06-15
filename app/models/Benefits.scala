@@ -41,6 +41,8 @@ object Benefits extends Enumerable.Implicits {
     NoneOfTheAbove
   )
 
+  val qualifyingBenefits: Set[Benefits] = values.toSet - NoneOfTheAbove
+
   def checkboxItems(implicit messages: Messages): Seq[CheckboxItem] = {
 
     val divider = CheckboxItem(divider = Some(messages("site.or")))

@@ -16,8 +16,9 @@
 
 package pages
 
-import java.time.LocalDate
+import controllers.routes
 
+import java.time.LocalDate
 import org.scalacheck.Arbitrary
 import pages.behaviours.PageBehaviours
 
@@ -34,5 +35,20 @@ class EldestChildDateOfBirthPageSpec extends PageBehaviours {
     beSettable[LocalDate](EldestChildDateOfBirthPage)
 
     beRemovable[LocalDate](EldestChildDateOfBirthPage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Want to be paid to existing account" in {
+
+          EldestChildDateOfBirthPage
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.WantToBePaidToExistingAccountController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }

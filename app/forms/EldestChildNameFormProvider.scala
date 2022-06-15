@@ -29,8 +29,10 @@ class EldestChildNameFormProvider @Inject() extends Mappings {
      mapping(
       "firstName" -> text("eldestChildName.error.firstName.required")
         .verifying(maxLength(100, "eldestChildName.error.firstName.length")),
-      "middleNames" -> text("eldestChildName.error.middleNames.required")
-        .verifying(maxLength(100, "eldestChildName.error.middleNames.length"))
+      "middleNames" -> optional(text("eldestChildName.error.middleNames.required")
+        .verifying(maxLength(100, "eldestChildName.error.middleNames.length"))),
+       "lastName" -> text("eldestChildName.error.lastName.required")
+         .verifying(maxLength(100, "eldestChildName.error.lastName.length"))
     )(EldestChildName.apply)(EldestChildName.unapply)
    )
  }

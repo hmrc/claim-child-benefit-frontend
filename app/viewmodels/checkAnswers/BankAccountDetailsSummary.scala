@@ -32,7 +32,11 @@ object BankAccountDetailsSummary  {
     answers.get(BankAccountDetailsPage).map {
       answer =>
 
-      val value = HtmlFormat.escape(answer.bankName).toString + "<br/>" + HtmlFormat.escape(answer.accountNumber).toString
+      val value = Seq(
+        HtmlFormat.escape(answer.bankName).toString,
+        HtmlFormat.escape(answer.sortCode).toString,
+        HtmlFormat.escape(answer.accountNumber).toString
+      ).mkString("<br/>")
 
         SummaryListRowViewModel(
           key     = "bankAccountDetails.checkYourAnswersLabel",

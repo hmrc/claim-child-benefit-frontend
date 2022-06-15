@@ -17,6 +17,9 @@
 package pages
 
 import controllers.routes
+import models.Benefits.qualifyingBenefits
+import models.RelationshipStatus._
+import models.UserAnswers
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -28,4 +31,23 @@ case object WantToBePaidPage extends QuestionPage[Boolean] {
 
   override def route(waypoints: Waypoints): Call =
     routes.WantToBePaidController.onPageLoad(waypoints)
+
+  override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true =>
+        answers.get(RelationshipStatusPage).map {
+          case Married | Cohabiting =>
+            if (answers.get(ApplicantOrPartnerBenefitsPage).forall(_.intersect(qualifyingBenefits).isEmpty)) {
+              ApplicantHasSuitableAccountPage
+            } else {
+              WantToBePaidWeeklyPage
+            }
+
+          case _ =>
+            WantToBePaidWeeklyPage
+        }.orRecover
+
+      case false =>
+        IndexPage
+    }.orRecover
 }

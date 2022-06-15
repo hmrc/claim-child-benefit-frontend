@@ -25,10 +25,10 @@ sealed trait BankAccountType
 object BankAccountType extends Enumerable.Implicits {
 
   case object Bank extends WithName("bank") with BankAccountType
-  case object Buildingsociety extends WithName("buildingSociety") with BankAccountType
+  case object BuildingSociety extends WithName("buildingSociety") with BankAccountType
 
   val values: Seq[BankAccountType] = Seq(
-    Bank, Buildingsociety
+    Bank, BuildingSociety
   )
 
   def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {

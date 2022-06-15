@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import pages.behaviours.PageBehaviours
 
 class ApplicantHasSuitableAccountPageSpec extends PageBehaviours {
@@ -27,5 +28,32 @@ class ApplicantHasSuitableAccountPageSpec extends PageBehaviours {
     beSettable[Boolean](ApplicantHasSuitableAccountPage)
 
     beRemovable[Boolean](ApplicantHasSuitableAccountPage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Account in Applicant Name when the answer is yes" in {
+
+          val answers = emptyUserAnswers.set(ApplicantHasSuitableAccountPage, true).success.value
+
+          ApplicantHasSuitableAccountPage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.AccountInApplicantsNameController.onPageLoad(waypoints))
+        }
+
+        // TODO: Update when next section is available
+        "to Index when the answer is no" in {
+
+          val answers = emptyUserAnswers.set(ApplicantHasSuitableAccountPage, false).success.value
+
+          ApplicantHasSuitableAccountPage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.IndexController.onPageLoad)
+        }
+      }
+    }
   }
 }

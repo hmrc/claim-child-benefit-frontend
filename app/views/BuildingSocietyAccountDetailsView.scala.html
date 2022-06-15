@@ -46,11 +46,28 @@
 
         @govukInput(
             InputViewModel(
+                field = form("sortCode"),
+                label = LabelViewModel(messages("buildingSocietyAccountDetails.sortCode"))
+            )
+            .withWidth(Fixed5)
+            .withHint(HintViewModel(messages("buildingSocietyAccountDetails.sortCode.hint"))))
+
+        @govukInput(
+            InputViewModel(
                 field = form("accountNumber"),
                 label = LabelViewModel(messages("buildingSocietyAccountDetails.accountNumber"))
             )
-            .withWidth(Full)
-        )
+            .withWidth(Fixed10)
+            .withHint(HintViewModel(messages("buildingSocietyAccountDetails.accountNumber.hint"))))
+
+
+        @govukInput(
+            InputViewModel(
+                field = form("rollNumber"),
+                label = LabelViewModel(messages("buildingSocietyAccountDetails.rollNumber"))
+            )
+            .withWidth(Fixed10)
+            .withHint(HintViewModel(messages("buildingSocietyAccountDetails.rollNumber.hint"))))
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))

@@ -40,7 +40,7 @@ class BuildingSocietyAccountDetailsControllerSpec extends SpecBase with MockitoS
 
   lazy val buildingSocietyAccountDetailsRoute = routes.BuildingSocietyAccountDetailsController.onPageLoad(waypoints).url
 
-  private val validAnswer = BuildingSocietyAccountDetails("value 1", "value 2")
+  private val validAnswer = BuildingSocietyAccountDetails("name", "00123456", "123456", None)
   private val userAnswers = emptyUserAnswers.set(BuildingSocietyAccountDetailsPage, validAnswer).success.value
 
   "BuildingSocietyAccountDetails Controller" - {
@@ -73,7 +73,7 @@ class BuildingSocietyAccountDetailsControllerSpec extends SpecBase with MockitoS
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(BuildingSocietyAccountDetails("value 1", "value 2")), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints)(request, messages(application)).toString
       }
     }
 
@@ -93,7 +93,7 @@ class BuildingSocietyAccountDetailsControllerSpec extends SpecBase with MockitoS
       running(application) {
         val request =
           FakeRequest(POST, buildingSocietyAccountDetailsRoute)
-            .withFormUrlEncodedBody(("buildingSocietyName", "value 1"), ("accountNumber", "value 2"))
+            .withFormUrlEncodedBody(("buildingSocietyName", "name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
 
         val result = route(application, request).value
         val expectedAnswers = emptyUserAnswers.set(BuildingSocietyAccountDetailsPage, validAnswer).success.value
@@ -145,7 +145,7 @@ class BuildingSocietyAccountDetailsControllerSpec extends SpecBase with MockitoS
       running(application) {
         val request =
           FakeRequest(POST, buildingSocietyAccountDetailsRoute)
-            .withFormUrlEncodedBody(("buildingSocietyName", "value 1"), ("accountNumber", "value 2"))
+            .withFormUrlEncodedBody(("buildingSocietyName", "name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
 
         val result = route(application, request).value
 

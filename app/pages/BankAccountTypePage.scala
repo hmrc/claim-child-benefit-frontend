@@ -17,7 +17,7 @@
 package pages
 
 import controllers.routes
-import models.BankAccountType
+import models.{BankAccountType, UserAnswers}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -29,4 +29,10 @@ case object BankAccountTypePage extends QuestionPage[BankAccountType] {
 
   override def route(waypoints: Waypoints): Call =
     routes.BankAccountTypeController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case BankAccountType.Bank            => BankAccountDetailsPage
+      case BankAccountType.BuildingSociety => BuildingSocietyAccountDetailsPage
+    }.orRecover
 }

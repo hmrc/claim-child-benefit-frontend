@@ -25,12 +25,18 @@ import models.BuildingSocietyAccountDetails
 
 class BuildingSocietyAccountDetailsFormProvider @Inject() extends Mappings {
 
-   def apply(): Form[BuildingSocietyAccountDetails] = Form(
-     mapping(
+  def apply(): Form[BuildingSocietyAccountDetails] = Form(
+    mapping(
       "buildingSocietyName" -> text("buildingSocietyAccountDetails.error.buildingSocietyName.required")
         .verifying(maxLength(100, "buildingSocietyAccountDetails.error.buildingSocietyName.length")),
       "accountNumber" -> text("buildingSocietyAccountDetails.error.accountNumber.required")
-        .verifying(maxLength(8, "buildingSocietyAccountDetails.error.accountNumber.length"))
+        .verifying(regexp(Validation.accountNumberPattern.toString, "buildingSocietyAccountDetails.error.accountNumber.invalid")),
+      "sortCode" -> text("buildingSocietyAccountDetails.error.sortCode.required")
+        .verifying(regexp(Validation.sortCodePattern.toString, "buildingSocietyAccountDetails.error.sortCode.invalid")),
+      "rollNumber" -> optional(
+        text("buildingSocietyAccountDetails.error.rollNumber.required")
+          .verifying(regexp(Validation.rollNumberPattern.toString, "buildingSocietyAccountDetails.error.rollNumber.required"))
+      )
     )(BuildingSocietyAccountDetails.apply)(BuildingSocietyAccountDetails.unapply)
-   )
- }
+  )
+}

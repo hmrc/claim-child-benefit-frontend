@@ -40,7 +40,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val bankAccountDetailsRoute = routes.BankAccountDetailsController.onPageLoad(waypoints).url
 
-  private val validAnswer = BankAccountDetails("value 1", "value 2")
+  private val validAnswer = BankAccountDetails("name", "00123456", "123456")
   private val userAnswers = emptyUserAnswers.set(BankAccountDetailsPage, validAnswer).success.value
 
   "BankAccountDetails Controller" - {
@@ -73,7 +73,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(BankAccountDetails("value 1", "value 2")), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints)(request, messages(application)).toString
       }
     }
 
@@ -93,7 +93,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("bankName", "value 1"), ("accountNumber", "value 2"))
+            .withFormUrlEncodedBody(("bankName", "name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
 
         val result = route(application, request).value
         val expectedAnswers = emptyUserAnswers.set(BankAccountDetailsPage, validAnswer).success.value
@@ -145,7 +145,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("bankName", "value 1"), ("accountNumber", "value 2"))
+            .withFormUrlEncodedBody(("bankName", "name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
 
         val result = route(application, request).value
 
