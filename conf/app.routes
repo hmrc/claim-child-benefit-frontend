@@ -102,3 +102,45 @@ POST       /wantToBePaidToExistingAccount                        controllers.Wan
 
 GET        /wantToBePaidWeekly                        controllers.WantToBePaidWeeklyController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /wantToBePaidWeekly                        controllers.WantToBePaidWeeklyController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /addApplicantPreviousFamilyName                        controllers.AddApplicantPreviousFamilyNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /addApplicantPreviousFamilyName                        controllers.AddApplicantPreviousFamilyNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /applicantCurrentAddress                        controllers.ApplicantCurrentAddressController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /applicantCurrentAddress                        controllers.ApplicantCurrentAddressController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /applicantDateOfBirth                  controllers.ApplicantDateOfBirthController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /applicantDateOfBirth                  controllers.ApplicantDateOfBirthController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /applicantEmploymentStatus                        controllers.ApplicantEmploymentStatusController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /applicantEmploymentStatus                        controllers.ApplicantEmploymentStatusController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /applicantHasPreviousFamilyName                        controllers.ApplicantHasPreviousFamilyNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /applicantHasPreviousFamilyName                        controllers.ApplicantHasPreviousFamilyNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /applicantLivedAtCurrentAddressOneYear                        controllers.ApplicantLivedAtCurrentAddressOneYearController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /applicantLivedAtCurrentAddressOneYear                        controllers.ApplicantLivedAtCurrentAddressOneYearController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /applicantName                        controllers.ApplicantNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /applicantName                        controllers.ApplicantNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /applicantNationality                        controllers.ApplicantNationalityController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /applicantNationality                        controllers.ApplicantNationalityController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /applicantNino                        controllers.ApplicantNinoController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /applicantNino                        controllers.ApplicantNinoController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /applicantNinoKnown                        controllers.ApplicantNinoKnownController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /applicantNinoKnown                        controllers.ApplicantNinoKnownController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /applicantPhoneNumber                        controllers.ApplicantPhoneNumberController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /applicantPhoneNumber                        controllers.ApplicantPhoneNumberController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /applicantPreviousAddress                        controllers.ApplicantPreviousAddressController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /applicantPreviousAddress                        controllers.ApplicantPreviousAddressController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /applicantPreviousFamilyName                        controllers.ApplicantPreviousFamilyNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /applicantPreviousFamilyName                        controllers.ApplicantPreviousFamilyNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /removeApplicantPreviousFamilyName                        controllers.RemoveApplicantPreviousFamilyNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /removeApplicantPreviousFamilyName                        controllers.RemoveApplicantPreviousFamilyNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

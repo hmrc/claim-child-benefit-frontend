@@ -21,6 +21,48 @@ import pages._
 
 trait PageGenerators {
 
+  implicit lazy val arbitraryRemoveApplicantPreviousFamilyNamePage: Arbitrary[RemoveApplicantPreviousFamilyNamePage.type] =
+    Arbitrary(RemoveApplicantPreviousFamilyNamePage)
+
+  implicit lazy val arbitraryApplicantPreviousFamilyNamePage: Arbitrary[ApplicantPreviousFamilyNamePage.type] =
+    Arbitrary(ApplicantPreviousFamilyNamePage)
+
+  implicit lazy val arbitraryApplicantPreviousAddressPage: Arbitrary[ApplicantPreviousAddressPage.type] =
+    Arbitrary(ApplicantPreviousAddressPage)
+
+  implicit lazy val arbitraryApplicantPhoneNumberPage: Arbitrary[ApplicantPhoneNumberPage.type] =
+    Arbitrary(ApplicantPhoneNumberPage)
+
+  implicit lazy val arbitraryApplicantNinoKnownPage: Arbitrary[ApplicantNinoKnownPage.type] =
+    Arbitrary(ApplicantNinoKnownPage)
+
+  implicit lazy val arbitraryApplicantNinoPage: Arbitrary[ApplicantNinoPage.type] =
+    Arbitrary(ApplicantNinoPage)
+
+  implicit lazy val arbitraryApplicantNationalityPage: Arbitrary[ApplicantNationalityPage.type] =
+    Arbitrary(ApplicantNationalityPage)
+
+  implicit lazy val arbitraryApplicantNamePage: Arbitrary[ApplicantNamePage.type] =
+    Arbitrary(ApplicantNamePage)
+
+  implicit lazy val arbitraryApplicantLivedAtCurrentAddressOneYearPage: Arbitrary[ApplicantLivedAtCurrentAddressOneYearPage.type] =
+    Arbitrary(ApplicantLivedAtCurrentAddressOneYearPage)
+
+  implicit lazy val arbitraryApplicantHasPreviousFamilyNamePage: Arbitrary[ApplicantHasPreviousFamilyNamePage.type] =
+    Arbitrary(ApplicantHasPreviousFamilyNamePage)
+
+  implicit lazy val arbitraryApplicantEmploymentStatusPage: Arbitrary[ApplicantEmploymentStatusPage.type] =
+    Arbitrary(ApplicantEmploymentStatusPage)
+
+  implicit lazy val arbitraryApplicantDateOfBirthPage: Arbitrary[ApplicantDateOfBirthPage.type] =
+    Arbitrary(ApplicantDateOfBirthPage)
+
+  implicit lazy val arbitraryApplicantCurrentAddressPage: Arbitrary[ApplicantCurrentAddressPage.type] =
+    Arbitrary(ApplicantCurrentAddressPage)
+
+  implicit lazy val arbitraryAddApplicantPreviousFamilyNamePage: Arbitrary[AddApplicantPreviousFamilyNamePage.type] =
+    Arbitrary(AddApplicantPreviousFamilyNamePage)
+
   implicit lazy val arbitraryWantToBePaidWeeklyPage: Arbitrary[WantToBePaidWeeklyPage.type] =
     Arbitrary(WantToBePaidWeeklyPage)
 

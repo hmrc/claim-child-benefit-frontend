@@ -287,3 +287,115 @@ wantToBePaidWeekly.heading = Do you want to be paid Child Benefit every week?
 wantToBePaidWeekly.checkYourAnswersLabel = Do you want to be paid Child Benefit every week?
 wantToBePaidWeekly.error.required = Select yes if you want to be paid Child Benefit every week
 wantToBePaidWeekly.change.hidden = if you want to be paid Child Benefit every week
+
+addApplicantPreviousFamilyName.title = addApplicantPreviousFamilyName
+addApplicantPreviousFamilyName.heading = addApplicantPreviousFamilyName
+addApplicantPreviousFamilyName.checkYourAnswersLabel = addApplicantPreviousFamilyName
+addApplicantPreviousFamilyName.error.required = Select yes if addApplicantPreviousFamilyName
+addApplicantPreviousFamilyName.change.hidden = AddApplicantPreviousFamilyName
+
+applicantCurrentAddress.title = applicantCurrentAddress
+applicantCurrentAddress.heading = applicantCurrentAddress
+applicantCurrentAddress.line1 = line1
+applicantCurrentAddress.line2 = line2
+applicantCurrentAddress.checkYourAnswersLabel = ApplicantCurrentAddress
+applicantCurrentAddress.error.line1.required = Enter line1
+applicantCurrentAddress.error.line2.required = Enter line2
+applicantCurrentAddress.error.line1.length = line1 must be 100 characters or less
+applicantCurrentAddress.error.line2.length = line2 must be 100 characters or less
+applicantCurrentAddress.line1.change.hidden = line1
+applicantCurrentAddress.line2.change.hidden = line2
+
+applicantDateOfBirth.title = ApplicantDateOfBirth
+applicantDateOfBirth.heading = ApplicantDateOfBirth
+applicantDateOfBirth.hint = For example, 12 11 2007
+applicantDateOfBirth.checkYourAnswersLabel = ApplicantDateOfBirth
+applicantDateOfBirth.error.required.all = Enter the applicantDateOfBirth
+applicantDateOfBirth.error.required.two = The applicantDateOfBirth must include {0} and {1}
+applicantDateOfBirth.error.required = The applicantDateOfBirth must include {0}
+applicantDateOfBirth.error.invalid = Enter a real ApplicantDateOfBirth
+applicantDateOfBirth.change.hidden = ApplicantDateOfBirth
+
+applicantEmploymentStatus.title = What is your employment status?
+applicantEmploymentStatus.heading = What is your employment status?
+applicantEmploymentStatus.lookingForWork = Looking for work in the UK
+applicantEmploymentStatus.employed = Employed in the UK
+applicantEmploymentStatus.checkYourAnswersLabel = What is your employment status?
+applicantEmploymentStatus.error.required = Select applicantEmploymentStatus
+applicantEmploymentStatus.change.hidden = ApplicantEmploymentStatus
+
+applicantHasPreviousFamilyName.title = applicantHasPreviousFamilyName
+applicantHasPreviousFamilyName.heading = applicantHasPreviousFamilyName
+applicantHasPreviousFamilyName.checkYourAnswersLabel = applicantHasPreviousFamilyName
+applicantHasPreviousFamilyName.error.required = Select yes if applicantHasPreviousFamilyName
+applicantHasPreviousFamilyName.change.hidden = ApplicantHasPreviousFamilyName
+
+applicantLivedAtCurrentAddressOneYear.title = applicantLivedAtCurrentAddressOneYear
+applicantLivedAtCurrentAddressOneYear.heading = applicantLivedAtCurrentAddressOneYear
+applicantLivedAtCurrentAddressOneYear.checkYourAnswersLabel = applicantLivedAtCurrentAddressOneYear
+applicantLivedAtCurrentAddressOneYear.error.required = Select yes if applicantLivedAtCurrentAddressOneYear
+applicantLivedAtCurrentAddressOneYear.change.hidden = ApplicantLivedAtCurrentAddressOneYear
+
+applicantName.title = applicantName
+applicantName.heading = applicantName
+applicantName.firstName = firstName
+applicantName.lastName = lastName
+applicantName.checkYourAnswersLabel = ApplicantName
+applicantName.error.firstName.required = Enter firstName
+applicantName.error.lastName.required = Enter lastName
+applicantName.error.firstName.length = firstName must be 100 characters or less
+applicantName.error.lastName.length = lastName must be 100 characters or less
+applicantName.firstName.change.hidden = firstName
+applicantName.lastName.change.hidden = lastName
+
+applicantNationality.title = applicantNationality
+applicantNationality.heading = applicantNationality
+applicantNationality.checkYourAnswersLabel = applicantNationality
+applicantNationality.error.required = Enter applicantNationality
+applicantNationality.error.length = ApplicantNationality must be 100 characters or less
+applicantNationality.change.hidden = ApplicantNationality
+
+applicantNino.title = applicantNino
+applicantNino.heading = applicantNino
+applicantNino.checkYourAnswersLabel = applicantNino
+applicantNino.error.required = Enter applicantNino
+applicantNino.error.length = ApplicantNino must be 100 characters or less
+applicantNino.change.hidden = ApplicantNino
+
+applicantNinoKnown.title = applicantNinoKnown
+applicantNinoKnown.heading = applicantNinoKnown
+applicantNinoKnown.checkYourAnswersLabel = applicantNinoKnown
+applicantNinoKnown.error.required = Select yes if applicantNinoKnown
+applicantNinoKnown.change.hidden = ApplicantNinoKnown
+
+applicantPhoneNumber.title = applicantPhoneNumber
+applicantPhoneNumber.heading = applicantPhoneNumber
+applicantPhoneNumber.checkYourAnswersLabel = applicantPhoneNumber
+applicantPhoneNumber.error.required = Enter applicantPhoneNumber
+applicantPhoneNumber.error.length = ApplicantPhoneNumber must be 100 characters or less
+applicantPhoneNumber.change.hidden = ApplicantPhoneNumber
+
+applicantPreviousAddress.title = applicantPreviousAddress
+applicantPreviousAddress.heading = applicantPreviousAddress
+applicantPreviousAddress.line1 = line1
+applicantPreviousAddress.line2 = line2
+applicantPreviousAddress.checkYourAnswersLabel = ApplicantPreviousAddress
+applicantPreviousAddress.error.line1.required = Enter line1
+applicantPreviousAddress.error.line2.required = Enter line2
+applicantPreviousAddress.error.line1.length = line1 must be 100 characters or less
+applicantPreviousAddress.error.line2.length = line2 must be 100 characters or less
+applicantPreviousAddress.line1.change.hidden = line1
+applicantPreviousAddress.line2.change.hidden = line2
+
+applicantPreviousFamilyName.title = applicantPreviousFamilyName
+applicantPreviousFamilyName.heading = applicantPreviousFamilyName
+applicantPreviousFamilyName.checkYourAnswersLabel = applicantPreviousFamilyName
+applicantPreviousFamilyName.error.required = Enter applicantPreviousFamilyName
+applicantPreviousFamilyName.error.length = ApplicantPreviousFamilyName must be 100 characters or less
+applicantPreviousFamilyName.change.hidden = ApplicantPreviousFamilyName
+
+removeApplicantPreviousFamilyName.title = removeApplicantPreviousFamilyName
+removeApplicantPreviousFamilyName.heading = removeApplicantPreviousFamilyName
+removeApplicantPreviousFamilyName.checkYourAnswersLabel = removeApplicantPreviousFamilyName
+removeApplicantPreviousFamilyName.error.required = Select yes if removeApplicantPreviousFamilyName
+removeApplicantPreviousFamilyName.change.hidden = RemoveApplicantPreviousFamilyName
