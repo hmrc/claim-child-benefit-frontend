@@ -20,7 +20,7 @@ import controllers.routes
 import models.BankAccountType
 import pages.behaviours.PageBehaviours
 
-class BankAccountTypeSpec extends PageBehaviours {
+class BankAccountTypePageSpec extends PageBehaviours {
 
   "BankAccountTypePage" - {
 
@@ -42,7 +42,7 @@ class BankAccountTypeSpec extends PageBehaviours {
 
           BankAccountTypePage
             .navigate(waypoints, answers)
-            .mustEqual(routes.BankAccountDetailsController.mustEqual(waypoints))
+            .mustEqual(routes.BankAccountDetailsController.onPageLoad(waypoints))
         }
 
         "to Building Society Account Details when the answer is Bank" in {
@@ -51,7 +51,7 @@ class BankAccountTypeSpec extends PageBehaviours {
 
           BankAccountTypePage
             .navigate(waypoints, answers)
-            .mustEqual(routes.BuildingSocietyAccountDetailsController.mustEqual(waypoints))
+            .mustEqual(routes.BuildingSocietyAccountDetailsController.onPageLoad(waypoints))
         }
       }
     }
