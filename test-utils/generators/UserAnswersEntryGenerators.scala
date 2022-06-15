@@ -24,6 +24,118 @@ import play.api.libs.json.{JsValue, Json}
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
 
+  implicit lazy val arbitraryRemoveApplicantPreviousFamilyNameUserAnswersEntry: Arbitrary[(RemoveApplicantPreviousFamilyNamePage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[RemoveApplicantPreviousFamilyNamePage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryApplicantPreviousFamilyNameUserAnswersEntry: Arbitrary[(ApplicantPreviousFamilyNamePage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[ApplicantPreviousFamilyNamePage.type]
+        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryApplicantPreviousAddressUserAnswersEntry: Arbitrary[(ApplicantPreviousAddressPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[ApplicantPreviousAddressPage.type]
+        value <- arbitrary[ApplicantPreviousAddress].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryApplicantPhoneNumberUserAnswersEntry: Arbitrary[(ApplicantPhoneNumberPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[ApplicantPhoneNumberPage.type]
+        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryApplicantNinoKnownUserAnswersEntry: Arbitrary[(ApplicantNinoKnownPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[ApplicantNinoKnownPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryApplicantNinoUserAnswersEntry: Arbitrary[(ApplicantNinoPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[ApplicantNinoPage.type]
+        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryApplicantNationalityUserAnswersEntry: Arbitrary[(ApplicantNationalityPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[ApplicantNationalityPage.type]
+        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryApplicantNameUserAnswersEntry: Arbitrary[(ApplicantNamePage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[ApplicantNamePage.type]
+        value <- arbitrary[ApplicantName].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryApplicantLivedAtCurrentAddressOneYearUserAnswersEntry: Arbitrary[(ApplicantLivedAtCurrentAddressOneYearPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[ApplicantLivedAtCurrentAddressOneYearPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryApplicantHasPreviousFamilyNameUserAnswersEntry: Arbitrary[(ApplicantHasPreviousFamilyNamePage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[ApplicantHasPreviousFamilyNamePage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryApplicantEmploymentStatusUserAnswersEntry: Arbitrary[(ApplicantEmploymentStatusPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[ApplicantEmploymentStatusPage.type]
+        value <- arbitrary[ApplicantEmploymentStatus].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryApplicantDateOfBirthUserAnswersEntry: Arbitrary[(ApplicantDateOfBirthPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[ApplicantDateOfBirthPage.type]
+        value <- arbitrary[Int].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryApplicantCurrentAddressUserAnswersEntry: Arbitrary[(ApplicantCurrentAddressPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[ApplicantCurrentAddressPage.type]
+        value <- arbitrary[ApplicantCurrentAddress].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryAddApplicantPreviousFamilyNameUserAnswersEntry: Arbitrary[(AddApplicantPreviousFamilyNamePage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[AddApplicantPreviousFamilyNamePage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
   implicit lazy val arbitraryWantToBePaidWeeklyUserAnswersEntry: Arbitrary[(WantToBePaidWeeklyPage.type, JsValue)] =
     Arbitrary {
       for {
