@@ -139,8 +139,8 @@ POST       /applicantPhoneNumber                        controllers.ApplicantPho
 GET        /applicantPreviousAddress                        controllers.ApplicantPreviousAddressController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /applicantPreviousAddress                        controllers.ApplicantPreviousAddressController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /applicantPreviousFamilyName                        controllers.ApplicantPreviousFamilyNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /applicantPreviousFamilyName                        controllers.ApplicantPreviousFamilyNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /applicantPreviousFamilyName/:index                        controllers.ApplicantPreviousFamilyNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /applicantPreviousFamilyName/:index                        controllers.ApplicantPreviousFamilyNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
-GET        /removeApplicantPreviousFamilyName                        controllers.RemoveApplicantPreviousFamilyNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /removeApplicantPreviousFamilyName                        controllers.RemoveApplicantPreviousFamilyNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /removeApplicantPreviousFamilyName/:index                        controllers.RemoveApplicantPreviousFamilyNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /removeApplicantPreviousFamilyName/:index                        controllers.RemoveApplicantPreviousFamilyNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)

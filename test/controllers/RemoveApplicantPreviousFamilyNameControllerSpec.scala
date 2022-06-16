@@ -18,11 +18,11 @@ package controllers
 
 import base.SpecBase
 import forms.RemoveApplicantPreviousFamilyNameFormProvider
-import models.UserAnswers
+import models.{Index, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.Mockito.{times, verify, when}
+import org.mockito.Mockito.{never, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{RemoveApplicantPreviousFamilyNamePage, EmptyWaypoints}
+import pages.{ApplicantPreviousFamilyNamePage, EmptyWaypoints, RemoveApplicantPreviousFamilyNamePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -39,14 +39,16 @@ class RemoveApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mock
   val formProvider = new RemoveApplicantPreviousFamilyNameFormProvider()
   val form = formProvider()
   private val waypoints = EmptyWaypoints
+  private val index = Index(0)
+  private val baseAnswers = emptyUserAnswers.set(ApplicantPreviousFamilyNamePage(index), "name").success.value
 
-  lazy val removeApplicantPreviousFamilyNameRoute = routes.RemoveApplicantPreviousFamilyNameController.onPageLoad(waypoints).url
+  lazy val removeApplicantPreviousFamilyNameRoute = routes.RemoveApplicantPreviousFamilyNameController.onPageLoad(waypoints, index).url
 
   "RemoveApplicantPreviousFamilyName Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, removeApplicantPreviousFamilyNameRoute)
@@ -56,36 +58,18 @@ class RemoveApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mock
         val view = application.injector.instanceOf[RemoveApplicantPreviousFamilyNameView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index)(request, messages(application)).toString
       }
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers = UserAnswers(userAnswersId).set(RemoveApplicantPreviousFamilyNamePage, true).success.value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, removeApplicantPreviousFamilyNameRoute)
-
-        val view = application.injector.instanceOf[RemoveApplicantPreviousFamilyNameView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
-      }
-    }
-
-    "must save the answer and redirect to the next page when valid data is submitted" in {
+    "must remove the previous name and redirect to the next page when the answer is yes" in {
 
       val mockSessionRepository = mock[SessionRepository]
 
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
             bind[SessionRepository].toInstance(mockSessionRepository)
           )
@@ -97,11 +81,37 @@ class RemoveApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mock
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(RemoveApplicantPreviousFamilyNamePage, true).success.value
+        val expectedAnswers = baseAnswers.remove(ApplicantPreviousFamilyNamePage(index)).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual RemoveApplicantPreviousFamilyNamePage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual RemoveApplicantPreviousFamilyNamePage(index).navigate(waypoints, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
+      }
+    }
+
+    "must not remove the previous name and redirect to the next page when the answer is no" in {
+
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = Some(baseAnswers))
+          .overrides(
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, removeApplicantPreviousFamilyNameRoute)
+            .withFormUrlEncodedBody(("value", "false"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual RemoveApplicantPreviousFamilyNamePage(index).navigate(waypoints, baseAnswers).url
+        verify(mockSessionRepository, never()).set(any())
       }
     }
 
@@ -121,7 +131,7 @@ class RemoveApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mock
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index)(request, messages(application)).toString
       }
     }
 

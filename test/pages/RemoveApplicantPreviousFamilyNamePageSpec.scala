@@ -22,10 +22,5 @@ class RemoveApplicantPreviousFamilyNamePageSpec extends PageBehaviours {
 
   "RemoveApplicantPreviousFamilyNamePage" - {
 
-    beRetrievable[Boolean](RemoveApplicantPreviousFamilyNamePage)
-
-    beSettable[Boolean](RemoveApplicantPreviousFamilyNamePage)
-
-    beRemovable[Boolean](RemoveApplicantPreviousFamilyNamePage)
   }
 }

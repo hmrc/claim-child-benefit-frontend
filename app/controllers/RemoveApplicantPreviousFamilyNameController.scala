@@ -18,8 +18,10 @@ package controllers
 
 import controllers.actions._
 import forms.RemoveApplicantPreviousFamilyNameFormProvider
+import models.Index
+
 import javax.inject.Inject
-import pages.{RemoveApplicantPreviousFamilyNamePage, Waypoints}
+import pages.{ApplicantPreviousFamilyNamePage, RemoveApplicantPreviousFamilyNamePage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -41,29 +43,27 @@ class RemoveApplicantPreviousFamilyNameController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-
-      val preparedForm = request.userAnswers.get(RemoveApplicantPreviousFamilyNamePage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-
-      Ok(view(preparedForm, waypoints))
+      Ok(view(form, waypoints, index))
   }
 
-  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints))),
+          Future.successful(BadRequest(view(formWithErrors, waypoints, index))),
 
         value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(RemoveApplicantPreviousFamilyNamePage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(RemoveApplicantPreviousFamilyNamePage.navigate(waypoints, updatedAnswers))
+          if (value) {
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.remove(ApplicantPreviousFamilyNamePage(index)))
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(RemoveApplicantPreviousFamilyNamePage(index).navigate(waypoints, updatedAnswers))
+          } else {
+            Future.successful(Redirect(RemoveApplicantPreviousFamilyNamePage(index).navigate(waypoints, request.userAnswers)))
+          }
       )
   }
 }
