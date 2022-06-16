@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import forms.RemoveApplicantPreviousFamilyNameFormProvider
-import models.{Index, UserAnswers}
+import models.Index
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{never, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -34,13 +34,14 @@ import scala.concurrent.Future
 
 class RemoveApplicantPreviousFamilyNameControllerSpec extends SpecBase with MockitoSugar {
 
-  def onwardRoute = Call("GET", "/foo")
+  private def onwardRoute = Call("GET", "/foo")
+  private val name = "name"
 
   val formProvider = new RemoveApplicantPreviousFamilyNameFormProvider()
-  val form = formProvider()
+  val form = formProvider(name)
   private val waypoints = EmptyWaypoints
   private val index = Index(0)
-  private val baseAnswers = emptyUserAnswers.set(ApplicantPreviousFamilyNamePage(index), "name").success.value
+  private val baseAnswers = emptyUserAnswers.set(ApplicantPreviousFamilyNamePage(index), name).success.value
 
   lazy val removeApplicantPreviousFamilyNameRoute = routes.RemoveApplicantPreviousFamilyNameController.onPageLoad(waypoints, index).url
 
@@ -58,7 +59,7 @@ class RemoveApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mock
         val view = application.injector.instanceOf[RemoveApplicantPreviousFamilyNameView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, index)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index, name)(request, messages(application)).toString
       }
     }
 
@@ -117,7 +118,7 @@ class RemoveApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mock
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request =
@@ -131,7 +132,7 @@ class RemoveApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mock
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, index)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index, name)(request, messages(application)).toString
       }
     }
 

@@ -410,7 +410,7 @@ applicantPreviousFamilyName.error.required = Enter your other last name
 applicantPreviousFamilyName.error.length = Last name must be 100 characters or less
 applicantPreviousFamilyName.change.hidden = your other last name
 
-removeApplicantPreviousFamilyName.title = Do you want to remove {0}?
+removeApplicantPreviousFamilyName.title = Do you want to remove this other name?
 removeApplicantPreviousFamilyName.heading = Do you want to remove {0}?
 removeApplicantPreviousFamilyName.error.required = Select yes if you want to remove {0}
 

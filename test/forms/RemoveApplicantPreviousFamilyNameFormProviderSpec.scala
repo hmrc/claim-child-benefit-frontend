@@ -23,8 +23,9 @@ class RemoveApplicantPreviousFamilyNameFormProviderSpec extends BooleanFieldBeha
 
   val requiredKey = "removeApplicantPreviousFamilyName.error.required"
   val invalidKey = "error.boolean"
+  val name = "name"
 
-  val form = new RemoveApplicantPreviousFamilyNameFormProvider()()
+  val form = new RemoveApplicantPreviousFamilyNameFormProvider()(name)
 
   ".value" - {
 
@@ -33,13 +34,13 @@ class RemoveApplicantPreviousFamilyNameFormProviderSpec extends BooleanFieldBeha
     behave like booleanField(
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+      invalidError = FormError(fieldName, invalidKey, Seq(name))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq(name))
     )
   }
 }
