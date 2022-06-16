@@ -18,13 +18,12 @@ package controllers
 
 import base.SpecBase
 import forms.ApplicantNameFormProvider
-import models.{ApplicantName, UserAnswers}
+import models.ApplicantName
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{ApplicantNamePage, EmptyWaypoints}
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
@@ -40,7 +39,7 @@ class ApplicantNameControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val applicantNameRoute = routes.ApplicantNameController.onPageLoad(waypoints).url
 
-  private val validAnswer = ApplicantName("value 1", "value 2")
+  private val validAnswer = ApplicantName(None, "first", None, "last")
   private val userAnswers = emptyUserAnswers.set(ApplicantNamePage, validAnswer).success.value
 
   "ApplicantName Controller" - {
@@ -73,7 +72,7 @@ class ApplicantNameControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(ApplicantName("value 1", "value 2")), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints)(request, messages(application)).toString
       }
     }
 
@@ -93,7 +92,7 @@ class ApplicantNameControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, applicantNameRoute)
-            .withFormUrlEncodedBody(("firstName", "value 1"), ("lastName", "value 2"))
+            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"))
 
         val result = route(application, request).value
         val expectedAnswers = emptyUserAnswers.set(ApplicantNamePage, validAnswer).success.value
@@ -145,7 +144,7 @@ class ApplicantNameControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, applicantNameRoute)
-            .withFormUrlEncodedBody(("firstName", "value 1"), ("lastName", "value 2"))
+            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"))
 
         val result = route(application, request).value
 

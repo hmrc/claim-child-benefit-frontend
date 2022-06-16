@@ -19,23 +19,37 @@ package generators
 import models._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.{Arbitrary, Gen}
+import uk.gov.hmrc.domain.Nino
 
 trait ModelGenerators {
+
+  implicit lazy val arbitraryNino: Arbitrary[Nino] = Arbitrary {
+    for {
+      firstChar <- Gen.oneOf('A', 'C', 'E', 'H', 'J', 'L', 'M', 'O', 'P', 'R', 'S', 'W', 'X', 'Y').map(_.toString)
+      secondChar <- Gen.oneOf('A', 'B', 'C', 'E', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'R', 'S', 'T', 'W', 'X', 'Y', 'Z').map(_.toString)
+      digits <- Gen.listOfN(6, Gen.numChar)
+      lastChar <- Gen.oneOf('A', 'B', 'C', 'D')
+    } yield Nino(firstChar ++ secondChar ++ digits :+ lastChar)
+  }
 
   implicit lazy val arbitraryApplicantPreviousAddress: Arbitrary[ApplicantPreviousAddress] =
     Arbitrary {
       for {
-        line1 <- arbitrary[String]
-        line2 <- arbitrary[String]
-      } yield ApplicantPreviousAddress(line1, line2)
+        line1    <- arbitrary[String]
+        line2    <- Gen.option(arbitrary[String])
+        line3    <- Gen.option(arbitrary[String])
+        postcode <- arbitrary[String]
+      } yield ApplicantPreviousAddress(line1, line2, line3, postcode)
     }
 
   implicit lazy val arbitraryApplicantName: Arbitrary[ApplicantName] =
     Arbitrary {
       for {
-        firstName <- arbitrary[String]
-        lastName <- arbitrary[String]
-      } yield ApplicantName(firstName, lastName)
+        title       <- Gen.option(arbitrary[String])
+        firstName   <- arbitrary[String]
+        middleNames <- Gen.option(arbitrary[String])
+        lastName    <- arbitrary[String]
+      } yield ApplicantName(title, firstName, middleNames, lastName)
     }
 
   implicit lazy val arbitraryApplicantEmploymentStatus: Arbitrary[ApplicantEmploymentStatus] =
@@ -46,9 +60,11 @@ trait ModelGenerators {
   implicit lazy val arbitraryApplicantCurrentAddress: Arbitrary[ApplicantCurrentAddress] =
     Arbitrary {
       for {
-        line1 <- arbitrary[String]
-        line2 <- arbitrary[String]
-      } yield ApplicantCurrentAddress(line1, line2)
+        line1    <- arbitrary[String]
+        line2    <- Gen.option(arbitrary[String])
+        line3    <- Gen.option(arbitrary[String])
+        postcode <- arbitrary[String]
+      } yield ApplicantCurrentAddress(line1, line2, line3, postcode)
     }
 
   implicit lazy val arbitraryEldestChildName: Arbitrary[EldestChildName] =

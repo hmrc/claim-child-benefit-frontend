@@ -53,8 +53,48 @@ class ApplicantPreviousAddressFormProviderSpec extends StringFieldBehaviours {
   ".line2" - {
 
     val fieldName = "line2"
-    val requiredKey = "applicantPreviousAddress.error.line2.required"
     val lengthKey = "applicantPreviousAddress.error.line2.length"
+    val maxLength = 100
+
+    behave like fieldThatBindsValidData(
+      form,
+      fieldName,
+      stringsWithMaxLength(maxLength)
+    )
+
+    behave like fieldWithMaxLength(
+      form,
+      fieldName,
+      maxLength = maxLength,
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+    )
+  }
+
+  ".line3" - {
+
+    val fieldName = "line3"
+    val lengthKey = "applicantPreviousAddress.error.line3.length"
+    val maxLength = 100
+
+    behave like fieldThatBindsValidData(
+      form,
+      fieldName,
+      stringsWithMaxLength(maxLength)
+    )
+
+    behave like fieldWithMaxLength(
+      form,
+      fieldName,
+      maxLength = maxLength,
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+    )
+  }
+
+  ".postcode" - {
+
+    val fieldName = "postcode"
+    val requiredKey = "applicantPreviousAddress.error.postcode.required"
+    val lengthKey = "applicantPreviousAddress.error.postcode.length"
     val maxLength = 100
 
     behave like fieldThatBindsValidData(
@@ -76,4 +116,5 @@ class ApplicantPreviousAddressFormProviderSpec extends StringFieldBehaviours {
       requiredError = FormError(fieldName, requiredKey)
     )
   }
+
 }

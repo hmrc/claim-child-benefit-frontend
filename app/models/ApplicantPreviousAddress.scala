@@ -18,8 +18,13 @@ package models
 
 import play.api.libs.json._
 
-case class ApplicantPreviousAddress (line1: String, line2: String)
+case class ApplicantPreviousAddress (
+                                      line1: String,
+                                      line2: Option[String],
+                                      line3: Option[String],
+                                      postcode: String
+                                    )
 
 object ApplicantPreviousAddress {
-  implicit val format = Json.format[ApplicantPreviousAddress]
+  implicit val format: OFormat[ApplicantPreviousAddress] = Json.format[ApplicantPreviousAddress]
 }

@@ -17,15 +17,18 @@
 package forms
 
 import javax.inject.Inject
-
 import forms.mappings.Mappings
 import play.api.data.Form
+import uk.gov.hmrc.domain.Nino
+
+import scala.util.Try
 
 class ApplicantNinoFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[String] =
+  def apply(): Form[Nino] =
     Form(
       "value" -> text("applicantNino.error.required")
-        .verifying(maxLength(100, "applicantNino.error.length"))
+        .verifying("applicantNino.error.invalid", nonEmptyString => Try(Nino(nonEmptyString.trim.toUpperCase)).isSuccess)
+        .transform[Nino](nonEmptyString => Nino(nonEmptyString.trim.toUpperCase), nino => nino.toString)
     )
 }

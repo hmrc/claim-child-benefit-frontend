@@ -27,10 +27,14 @@ class ApplicantNameFormProvider @Inject() extends Mappings {
 
    def apply(): Form[ApplicantName] = Form(
      mapping(
-      "firstName" -> text("applicantName.error.firstName.required")
-        .verifying(maxLength(100, "applicantName.error.firstName.length")),
-      "lastName" -> text("applicantName.error.lastName.required")
-        .verifying(maxLength(100, "applicantName.error.lastName.length"))
+       "title" -> optional(text("applicantName.error.titleField.required")
+         .verifying(maxLength(20, "applicantName.error.titleField.length"))),
+       "firstName" -> text("applicantName.error.firstName.required")
+         .verifying(maxLength(100, "applicantName.error.firstName.length")),
+       "middleNames" -> optional(text("applicantName.error.middleNames.required")
+         .verifying(maxLength(100, "applicantName.error.middleNames.length"))),
+       "lastName" -> text("applicantName.error.lastName.required")
+         .verifying(maxLength(100, "applicantName.error.lastName.length"))
     )(ApplicantName.apply)(ApplicantName.unapply)
    )
  }
