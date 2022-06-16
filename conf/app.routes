@@ -93,6 +93,7 @@ GET        /eldestChildName                        controllers.EldestChildNameCo
 POST       /eldestChildName                        controllers.EldestChildNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /taxChargeExplanation                       controllers.TaxChargeExplanationController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /taxChargeExplanation                       controllers.TaxChargeExplanationController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /wantToBePaid                        controllers.WantToBePaidController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /wantToBePaid                        controllers.WantToBePaidController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
