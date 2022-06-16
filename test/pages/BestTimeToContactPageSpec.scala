@@ -17,20 +17,32 @@
 package pages
 
 import controllers.routes
-import models.UserAnswers
-import play.api.libs.json.JsPath
-import play.api.mvc.Call
-import uk.gov.hmrc.domain.Nino
+import pages.behaviours.PageBehaviours
 
-case object ApplicantNinoPage extends QuestionPage[Nino] {
 
-  override def path: JsPath = JsPath \ toString
+class BestTimeToContactPageSpec extends PageBehaviours {
 
-  override def toString: String = "applicantNino"
+  "BestTimeToContactPage" - {
 
-  override def route(waypoints: Waypoints): Call =
-    routes.ApplicantNinoController.onPageLoad(waypoints)
+    beRetrievable[String](BestTimeToContactPage)
 
-  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantDateOfBirthPage
+    beSettable[String](BestTimeToContactPage)
+
+    beRemovable[String](BestTimeToContactPage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Applicant Nationality" in {
+
+          BestTimeToContactPage
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.ApplicantNationalityController.onPageLoad(waypoints))
+        }
+      }
+    }
+  }
 }

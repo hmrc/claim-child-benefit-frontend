@@ -20,17 +20,16 @@ import controllers.routes
 import models.UserAnswers
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
-import uk.gov.hmrc.domain.Nino
 
-case object ApplicantNinoPage extends QuestionPage[Nino] {
+case object BestTimeToContactPage extends QuestionPage[String] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "applicantNino"
+  override def toString: String = "bestTimeToContact"
 
   override def route(waypoints: Waypoints): Call =
-    routes.ApplicantNinoController.onPageLoad(waypoints)
+    routes.BestTimeToContactController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantDateOfBirthPage
+    ApplicantNationalityPage
 }

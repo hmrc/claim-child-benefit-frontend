@@ -144,3 +144,6 @@ POST       /applicantPreviousFamilyName/:index                        controller
 
 GET        /removeApplicantPreviousFamilyName/:index                        controllers.RemoveApplicantPreviousFamilyNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /removeApplicantPreviousFamilyName/:index                        controllers.RemoveApplicantPreviousFamilyNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+
+GET        /bestTimeToContact                        controllers.BestTimeToContactController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /bestTimeToContact                        controllers.BestTimeToContactController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

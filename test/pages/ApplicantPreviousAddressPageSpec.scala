@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import models.ApplicantPreviousAddress
 import pages.behaviours.PageBehaviours
 
@@ -28,5 +29,20 @@ class ApplicantPreviousAddressPageSpec extends PageBehaviours {
     beSettable[ApplicantPreviousAddress](ApplicantPreviousAddressPage)
 
     beRemovable[ApplicantPreviousAddress](ApplicantPreviousAddressPage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Applicant Phone Number" in {
+
+          ApplicantPreviousAddressPage
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.ApplicantPhoneNumberController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }

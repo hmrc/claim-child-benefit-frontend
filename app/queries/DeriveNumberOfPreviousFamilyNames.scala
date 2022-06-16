@@ -14,23 +14,12 @@
  * limitations under the License.
  */
 
-package pages
-
-import controllers.routes
-import models.UserAnswers
+package queries
 import play.api.libs.json.JsPath
-import play.api.mvc.Call
-import uk.gov.hmrc.domain.Nino
 
-case object ApplicantNinoPage extends QuestionPage[Nino] {
+case object DeriveNumberOfPreviousFamilyNames extends Derivable[List[String], Int] {
 
-  override def path: JsPath = JsPath \ toString
+  override val derive: List[String] => Int = _.size
 
-  override def toString: String = "applicantNino"
-
-  override def route(waypoints: Waypoints): Call =
-    routes.ApplicantNinoController.onPageLoad(waypoints)
-
-  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantDateOfBirthPage
+  override def path: JsPath = JsPath \ "applicantPreviousFamilyNames"
 }

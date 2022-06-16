@@ -44,14 +44,13 @@ class ApplicantHasSuitableAccountPageSpec extends PageBehaviours {
             .mustEqual(routes.AccountInApplicantsNameController.onPageLoad(waypoints))
         }
 
-        // TODO: Update when next section is available
-        "to Index when the answer is no" in {
+        "to Applicant Name when the answer is no" in {
 
           val answers = emptyUserAnswers.set(ApplicantHasSuitableAccountPage, false).success.value
 
           ApplicantHasSuitableAccountPage
             .navigate(waypoints, answers)
-            .mustEqual(routes.IndexController.onPageLoad)
+            .mustEqual(routes.ApplicantNameController.onPageLoad(waypoints))
         }
       }
     }

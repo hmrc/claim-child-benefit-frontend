@@ -17,7 +17,7 @@
 package pages
 
 import controllers.routes
-import models.BankAccountDetails
+import models.{BankAccountDetails, UserAnswers}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -29,4 +29,7 @@ case object BankAccountDetailsPage extends QuestionPage[BankAccountDetails] {
 
   override def route(waypoints: Waypoints): Call =
     routes.BankAccountDetailsController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    ApplicantNamePage
 }

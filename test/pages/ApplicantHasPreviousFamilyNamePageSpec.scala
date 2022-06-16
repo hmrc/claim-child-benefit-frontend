@@ -16,6 +16,8 @@
 
 package pages
 
+import controllers.routes
+import models.Index
 import pages.behaviours.PageBehaviours
 
 class ApplicantHasPreviousFamilyNamePageSpec extends PageBehaviours {
@@ -27,5 +29,31 @@ class ApplicantHasPreviousFamilyNamePageSpec extends PageBehaviours {
     beSettable[Boolean](ApplicantHasPreviousFamilyNamePage)
 
     beRemovable[Boolean](ApplicantHasPreviousFamilyNamePage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Applicant Previous Family Name when the answer is yes" in {
+
+          val answers = emptyUserAnswers.set(ApplicantHasPreviousFamilyNamePage, true).success.value
+
+          ApplicantHasPreviousFamilyNamePage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.ApplicantPreviousFamilyNameController.onPageLoad(waypoints, Index(0)))
+        }
+
+        "to Applicant Nino Known when the answer is no" in {
+
+          val answers = emptyUserAnswers.set(ApplicantHasPreviousFamilyNamePage, false).success.value
+
+          ApplicantHasPreviousFamilyNamePage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.ApplicantNinoKnownController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }

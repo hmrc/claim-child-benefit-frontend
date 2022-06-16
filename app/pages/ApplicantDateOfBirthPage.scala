@@ -17,8 +17,8 @@
 package pages
 
 import java.time.LocalDate
-
 import controllers.routes
+import models.UserAnswers
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -30,4 +30,7 @@ case object ApplicantDateOfBirthPage extends QuestionPage[LocalDate] {
 
   override def route(waypoints: Waypoints): Call =
     routes.ApplicantDateOfBirthController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    ApplicantCurrentAddressPage
 }

@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import models.BankAccountDetails
 import pages.behaviours.PageBehaviours
 
@@ -28,5 +29,20 @@ class BankAccountDetailsPageSpec extends PageBehaviours {
     beSettable[BankAccountDetails](BankAccountDetailsPage)
 
     beRemovable[BankAccountDetails](BankAccountDetailsPage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Applicant Name" in {
+
+          BankAccountDetailsPage
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.ApplicantNameController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }

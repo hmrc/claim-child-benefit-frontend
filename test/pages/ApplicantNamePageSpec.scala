@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import models.ApplicantName
 import pages.behaviours.PageBehaviours
 
@@ -28,5 +29,20 @@ class ApplicantNamePageSpec extends PageBehaviours {
     beSettable[ApplicantName](ApplicantNamePage)
 
     beRemovable[ApplicantName](ApplicantNamePage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Applicant has Previous Family Name" in {
+
+          ApplicantNamePage
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.ApplicantHasPreviousFamilyNameController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }

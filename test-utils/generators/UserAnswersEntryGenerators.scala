@@ -25,6 +25,14 @@ import uk.gov.hmrc.domain.Nino
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
 
+  implicit lazy val arbitraryBestTimeToContactUserAnswersEntry: Arbitrary[(BestTimeToContactPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[BestTimeToContactPage.type]
+        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
+      } yield (page, value)
+    }
+
   implicit lazy val arbitraryApplicantPreviousFamilyNameUserAnswersEntry: Arbitrary[(ApplicantPreviousFamilyNamePage, JsValue)] =
     Arbitrary {
       for {

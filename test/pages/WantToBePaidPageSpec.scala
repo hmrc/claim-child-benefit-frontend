@@ -115,14 +115,13 @@ class WantToBePaidPageSpec extends PageBehaviours {
 
         "when the answer is no" - {
 
-          // TODO: Update when next section is available
-          "to Index" in {
+          "to Applicant Name" in {
 
             val answers = emptyUserAnswers.set(WantToBePaidPage, false).success.value
 
             WantToBePaidPage
               .navigate(waypoints, answers)
-              .mustEqual(routes.IndexController.onPageLoad)
+              .mustEqual(routes.ApplicantNameController.onPageLoad(waypoints))
           }
         }
       }

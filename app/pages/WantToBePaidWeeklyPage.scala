@@ -33,6 +33,6 @@ case object WantToBePaidWeeklyPage extends QuestionPage[Boolean] {
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map{
       case true  => ApplicantHasSuitableAccountPage
-      case false => IndexPage
+      case false => ApplicantNamePage
     }.orRecover
 }

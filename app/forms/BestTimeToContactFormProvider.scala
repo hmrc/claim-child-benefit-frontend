@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-package pages
+package forms
 
-import controllers.routes
-import models.UserAnswers
-import play.api.libs.json.JsPath
-import play.api.mvc.Call
-import uk.gov.hmrc.domain.Nino
+import javax.inject.Inject
 
-case object ApplicantNinoPage extends QuestionPage[Nino] {
+import forms.mappings.Mappings
+import play.api.data.Form
 
-  override def path: JsPath = JsPath \ toString
+class BestTimeToContactFormProvider @Inject() extends Mappings {
 
-  override def toString: String = "applicantNino"
-
-  override def route(waypoints: Waypoints): Call =
-    routes.ApplicantNinoController.onPageLoad(waypoints)
-
-  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantDateOfBirthPage
+  def apply(): Form[String] =
+    Form(
+      "value" -> text("bestTimeToContact.error.required")
+        .verifying(maxLength(100, "bestTimeToContact.error.length"))
+    )
 }
