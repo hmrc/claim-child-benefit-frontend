@@ -16,6 +16,7 @@
 
 package pages
 
+import models.{CheckMode, NormalMode}
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -27,6 +28,16 @@ class WaypointSpec extends AnyFreeSpec with Matchers with OptionValues {
     "must return CheckYourAnswers when given its waypoint" in {
 
       Waypoint.fromString("check-answers").value mustEqual CheckYourAnswersPage.waypoint
+    }
+
+    "must return Add Applicant Previous Family Name when given its Normal mode waypoint" in {
+
+      Waypoint.fromString("add-other-name").value mustEqual AddApplicantPreviousFamilyNamePage.waypoint(NormalMode)
+    }
+
+    "must return Add Applicant Previous Family Name when given its check mode waypoint" in {
+
+      Waypoint.fromString("change-other-name").value mustEqual AddApplicantPreviousFamilyNamePage.waypoint(CheckMode)
     }
   }
 }

@@ -16,28 +16,48 @@
 
 package viewmodels.checkAnswers
 
-import models.UserAnswers
-import pages.{AddApplicantPreviousFamilyNamePage, CheckAnswersPage, Waypoints}
+import controllers.routes
+import models.{Index, UserAnswers}
+import pages.{AddApplicantPreviousFamilyNamePage, AddItemPage, ApplicantPreviousFamilyNamePage, CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
+import queries.AllPreviousFamilyNames
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.hmrcfrontend.views.viewmodels.addtoalist.ListItem
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object AddApplicantPreviousFamilyNameSummary  {
 
-  def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
-         (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AddApplicantPreviousFamilyNamePage).map {
-      answer =>
+  def rows(answers: UserAnswers, waypoints: Waypoints, sourcePage: AddItemPage)(implicit messages: Messages): Seq[ListItem] =
+    answers.get(AllPreviousFamilyNames).getOrElse(List.empty).zipWithIndex.map {
+      case (name, index) =>
+        val escaped = HtmlFormat.escape(name).toString
 
-        val value = if (answer) "site.yes" else "site.no"
+        ListItem(
+          name      = escaped,
+          changeUrl = ApplicantPreviousFamilyNamePage(Index(index)).changeLink(waypoints, sourcePage).url,
+          removeUrl = routes.RemoveApplicantPreviousFamilyNameController.onPageLoad(waypoints, Index(index)).url
+        )
+    }
+
+
+  def checkAnswersRow(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
+                     (implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(AllPreviousFamilyNames).map {
+      names =>
+
+        val value = names.map(HtmlFormat.escape).mkString("<br>")
 
         SummaryListRowViewModel(
-          key     = "addApplicantPreviousFamilyName.checkYourAnswersLabel",
-          value   = ValueViewModel(value),
+          key = "addApplicantPreviousFamilyName.checkYourAnswersLabel",
+          value = ValueViewModel(HtmlContent(value)),
           actions = Seq(
-            ActionItemViewModel("site.change", AddApplicantPreviousFamilyNamePage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("addApplicantPreviousFamilyName.change.hidden"))
+            ActionItemViewModel(
+              "site.change",
+              AddApplicantPreviousFamilyNamePage.changeLink(waypoints, sourcePage).url
+            ).withVisuallyHiddenText(messages("addApplicantPreviousFamilyName.change.hidden"))
           )
         )
     }

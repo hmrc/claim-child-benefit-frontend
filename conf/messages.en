@@ -288,11 +288,14 @@ wantToBePaidWeekly.checkYourAnswersLabel = Do you want to be paid Child Benefit 
 wantToBePaidWeekly.error.required = Select yes if you want to be paid Child Benefit every week
 wantToBePaidWeekly.change.hidden = if you want to be paid Child Benefit every week
 
-addApplicantPreviousFamilyName.title = Have you used any other last names?
-addApplicantPreviousFamilyName.heading = Have you used any other last names?
-addApplicantPreviousFamilyName.checkYourAnswersLabel = Have you used any other last names?
-addApplicantPreviousFamilyName.error.required = Select yes if you have used any other last names
-addApplicantPreviousFamilyName.change.hidden = if you have used any other last names
+addApplicantPreviousFamilyName.title.plural = You have added {0} other family names
+addApplicantPreviousFamilyName.heading.plural = You have added {0} other family names
+addApplicantPreviousFamilyName.title.singular = You have added 1 other family name
+addApplicantPreviousFamilyName.heading.singular = You have added 1 other family name
+addApplicantPreviousFamilyName.checkYourAnswersLabel = Other last names
+addApplicantPreviousFamilyName.error.required = Select yes if you need to add another last names
+addApplicantPreviousFamilyName.addAnother = Do you need to add another last name?
+addApplicantPreviousFamilyName.change.hidden = your other last names
 
 applicantCurrentAddress.title = What is your address?
 applicantCurrentAddress.heading = What is your address?

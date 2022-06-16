@@ -17,11 +17,14 @@
 package pages
 
 import controllers.routes
-import models.{Index, UserAnswers}
+import models.{Index, NormalMode, UserAnswers}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case class ApplicantPreviousFamilyNamePage(index: Index) extends QuestionPage[String] {
+case class ApplicantPreviousFamilyNamePage(index: Index) extends QuestionPage[String] with AddToListQuestionPage {
+
+  override val addItemWaypoint: Waypoint = AddApplicantPreviousFamilyNamePage.waypoint(NormalMode)
+  override val section: AddToListSection = PreviousFamilyNamesSection
 
   override def path: JsPath = JsPath \ toString \ index.position
 

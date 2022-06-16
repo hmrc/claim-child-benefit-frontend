@@ -23,11 +23,13 @@ import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{AddApplicantPreviousFamilyNamePage, EmptyWaypoints}
+import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
+import viewmodels.checkAnswers.AddApplicantPreviousFamilyNameSummary
 import views.html.AddApplicantPreviousFamilyNameView
 
 import scala.concurrent.Future
@@ -55,26 +57,11 @@ class AddApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mockito
 
         val view = application.injector.instanceOf[AddApplicantPreviousFamilyNameView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
-      }
-    }
-
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers = UserAnswers(userAnswersId).set(AddApplicantPreviousFamilyNamePage, true).success.value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, addApplicantPreviousFamilyNameRoute)
-
-        val view = application.injector.instanceOf[AddApplicantPreviousFamilyNameView]
-
-        val result = route(application, request).value
+        implicit val msgs: Messages = messages(application)
+        val otherNames = AddApplicantPreviousFamilyNameSummary.rows(emptyUserAnswers, waypoints, AddApplicantPreviousFamilyNamePage)
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, otherNames)(request, implicitly).toString
       }
     }
 
@@ -118,10 +105,13 @@ class AddApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mockito
 
         val view = application.injector.instanceOf[AddApplicantPreviousFamilyNameView]
 
+        implicit val msgs: Messages = messages(application)
+        val otherNames = AddApplicantPreviousFamilyNameSummary.rows(emptyUserAnswers, waypoints, AddApplicantPreviousFamilyNamePage)
+
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, otherNames)(request, implicitly).toString
       }
     }
 

@@ -22,7 +22,10 @@ import play.api.libs.json.JsPath
 import play.api.mvc.Call
 import queries.DeriveNumberOfPreviousFamilyNames
 
-case object AddApplicantPreviousFamilyNamePage extends QuestionPage[Boolean] {
+case object AddApplicantPreviousFamilyNamePage extends QuestionPage[Boolean] with AddItemPage {
+
+  override val normalModeUrlFragment: String = "add-other-name"
+  override val checkModeUrlFragment: String = "change-other-name"
 
   override def path: JsPath = JsPath \ toString
 

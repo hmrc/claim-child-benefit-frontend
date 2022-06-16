@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package pages
+package queries
+import play.api.libs.json.JsPath
 
-trait AddToListSection
+case object AllPreviousFamilyNames extends Settable[List[String]] with Gettable[List[String]] {
 
-object PreviousFamilyNamesSection extends AddToListSection
+  override def path: JsPath = JsPath \ "applicantPreviousFamilyNames"
+}
