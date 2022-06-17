@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import pages.behaviours.PageBehaviours
 
 class PartnerNinoKnownPageSpec extends PageBehaviours {
@@ -27,5 +28,31 @@ class PartnerNinoKnownPageSpec extends PageBehaviours {
     beSettable[Boolean](PartnerNinoKnownPage)
 
     beRemovable[Boolean](PartnerNinoKnownPage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Partner NINO when the answer is yes" in {
+
+          val answers = emptyUserAnswers.set(PartnerNinoKnownPage, true).success.value
+
+          PartnerNinoKnownPage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.PartnerNinoController.onPageLoad(waypoints))
+        }
+
+        "to Partner Date of Birth when the answer is no" in {
+
+          val answers = emptyUserAnswers.set(PartnerNinoKnownPage, false).success.value
+
+          PartnerNinoKnownPage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.PartnerDateOfBirthController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }

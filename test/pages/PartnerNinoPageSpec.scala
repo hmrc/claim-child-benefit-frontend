@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import pages.behaviours.PageBehaviours
 import uk.gov.hmrc.domain.Nino
 
@@ -29,5 +30,20 @@ class PartnerNinoPageSpec extends PageBehaviours {
     beSettable[Nino](PartnerNinoPage)
 
     beRemovable[Nino](PartnerNinoPage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Partner Date of Birth" in {
+
+          PartnerNinoPage
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.PartnerDateOfBirthController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }

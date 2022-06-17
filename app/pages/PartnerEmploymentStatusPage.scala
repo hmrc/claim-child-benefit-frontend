@@ -17,7 +17,7 @@
 package pages
 
 import controllers.routes
-import models.PartnerEmploymentStatus
+import models.{PartnerEmploymentStatus, UserAnswers}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -29,4 +29,7 @@ case object PartnerEmploymentStatusPage extends QuestionPage[Set[PartnerEmployme
 
   override def route(waypoints: Waypoints): Call =
     routes.PartnerEmploymentStatusController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    PartnerEntitledToChildBenefitPage
 }

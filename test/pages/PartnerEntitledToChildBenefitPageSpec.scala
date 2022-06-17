@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import pages.behaviours.PageBehaviours
 
 class PartnerEntitledToChildBenefitPageSpec extends PageBehaviours {
@@ -27,5 +28,31 @@ class PartnerEntitledToChildBenefitPageSpec extends PageBehaviours {
     beSettable[Boolean](PartnerEntitledToChildBenefitPage)
 
     beRemovable[Boolean](PartnerEntitledToChildBenefitPage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Partner Eldest Child Name when the answer is yes" in {
+
+          val answers = emptyUserAnswers.set(PartnerEntitledToChildBenefitPage, true).success.value
+
+          PartnerEntitledToChildBenefitPage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.PartnerEldestChildNameController.onPageLoad(waypoints))
+        }
+
+        "to Partner Waiting when the answer is no" in {
+
+          val answers = emptyUserAnswers.set(PartnerEntitledToChildBenefitPage, false).success.value
+
+          PartnerEntitledToChildBenefitPage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.PartnerWaitingForEntitlementDecisionController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }

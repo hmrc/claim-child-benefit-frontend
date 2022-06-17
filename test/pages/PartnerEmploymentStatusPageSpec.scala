@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import models.PartnerEmploymentStatus
 import pages.behaviours.PageBehaviours
 
@@ -28,5 +29,20 @@ class PartnerEmploymentStatusPageSpec extends PageBehaviours {
     beSettable[Set[PartnerEmploymentStatus]](PartnerEmploymentStatusPage)
 
     beRemovable[Set[PartnerEmploymentStatus]](PartnerEmploymentStatusPage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Partner NINO Known" in {
+
+          PartnerEmploymentStatusPage
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.PartnerEntitledToChildBenefitController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }

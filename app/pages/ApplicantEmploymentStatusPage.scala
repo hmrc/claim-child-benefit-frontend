@@ -17,7 +17,8 @@
 package pages
 
 import controllers.routes
-import models.ApplicantEmploymentStatus
+import models.RelationshipStatus._
+import models.{ApplicantEmploymentStatus, UserAnswers}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -29,4 +30,13 @@ case object ApplicantEmploymentStatusPage extends QuestionPage[Set[ApplicantEmpl
 
   override def route(waypoints: Waypoints): Call =
     routes.ApplicantEmploymentStatusController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(RelationshipStatusPage).map {
+      case Married | Cohabiting =>
+        PartnerNamePage
+
+      case Single | Divorced | Separated | Widowed =>
+        IndexPage
+    }.orRecover
 }

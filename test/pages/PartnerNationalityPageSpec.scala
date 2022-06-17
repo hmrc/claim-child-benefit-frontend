@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import pages.behaviours.PageBehaviours
 
 
@@ -28,5 +29,20 @@ class PartnerNationalityPageSpec extends PageBehaviours {
     beSettable[String](PartnerNationalityPage)
 
     beRemovable[String](PartnerNationalityPage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Partner Employment Status" in {
+
+          PartnerNationalityPage
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.PartnerEmploymentStatusController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }

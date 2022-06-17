@@ -17,6 +17,7 @@
 package pages
 
 import controllers.routes
+import models.UserAnswers
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 import uk.gov.hmrc.domain.Nino
@@ -29,4 +30,7 @@ case object PartnerNinoPage extends QuestionPage[Nino] {
 
   override def route(waypoints: Waypoints): Call =
     routes.PartnerNinoController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    PartnerDateOfBirthPage
 }

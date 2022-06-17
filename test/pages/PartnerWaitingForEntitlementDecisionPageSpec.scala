@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import pages.behaviours.PageBehaviours
 
 class PartnerWaitingForEntitlementDecisionPageSpec extends PageBehaviours {
@@ -27,5 +28,31 @@ class PartnerWaitingForEntitlementDecisionPageSpec extends PageBehaviours {
     beSettable[Boolean](PartnerWaitingForEntitlementDecisionPage)
 
     beRemovable[Boolean](PartnerWaitingForEntitlementDecisionPage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Partner Eldest Child Name when the answer is yes" in {
+
+          val answers = emptyUserAnswers.set(PartnerWaitingForEntitlementDecisionPage, true).success.value
+
+          PartnerWaitingForEntitlementDecisionPage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.PartnerEldestChildNameController.onPageLoad(waypoints))
+        }
+
+        "to Index when the answer is no" in {
+
+          val answers = emptyUserAnswers.set(PartnerWaitingForEntitlementDecisionPage, false).success.value
+
+          PartnerWaitingForEntitlementDecisionPage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.IndexController.onPageLoad)
+        }
+      }
+    }
   }
 }
