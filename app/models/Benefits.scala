@@ -55,7 +55,7 @@ object Benefits extends Enumerable.Implicits {
           index = index,
           value = value.toString
         )
-    }.patch(values.size - 1, List(divider), 0)
+    }.patch(qualifyingBenefits.size, List(divider), 0)
   }
 
   implicit val enumerable: Enumerable[Benefits] =
