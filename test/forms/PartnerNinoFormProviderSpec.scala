@@ -17,37 +17,45 @@
 package forms
 
 import forms.behaviours.StringFieldBehaviours
+import org.scalacheck.Gen
 import play.api.data.FormError
 
 class PartnerNinoFormProviderSpec extends StringFieldBehaviours {
 
+  val name = "name"
   val requiredKey = "partnerNino.error.required"
   val lengthKey = "partnerNino.error.length"
   val maxLength = 100
 
-  val form = new PartnerNinoFormProvider()()
+  val form = new PartnerNinoFormProvider()(name)
 
   ".value" - {
 
     val fieldName = "value"
 
+    val ninoGen = arbitraryNino.arbitrary.map(_.value)
+    val ninoWithSpacesGen = for {
+      spaceBefore <- Gen.stringOf(Gen.const(' '))
+      spaceAfter  <- Gen.stringOf(Gen.const(' '))
+      nino        <- ninoGen
+    } yield s"$spaceBefore$nino$spaceAfter"
+    val gen = Gen.oneOf(ninoGen, ninoWithSpacesGen)
+
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
-    )
-
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      gen
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq(name))
     )
+
+    "must not bind values in the wrong format" in {
+      val result = form.bind(Map(fieldName -> "GB123456A")).apply(fieldName)
+      result.errors.head mustBe FormError(fieldName, "partnerNino.error.invalid")
+    }
   }
 }

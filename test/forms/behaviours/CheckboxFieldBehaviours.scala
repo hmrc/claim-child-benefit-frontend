@@ -46,18 +46,20 @@ trait CheckboxFieldBehaviours extends FormSpec {
 
   def mandatoryCheckboxField(form: Form[_],
                              fieldName: String,
-                             requiredKey: String): Unit = {
+                             requiredKey: String,
+                             args: Seq[String] = Nil): Unit = {
 
     "fail to bind when no answers are selected" in {
       val data = Map.empty[String, String]
-      form.bind(data).errors must contain(FormError(s"$fieldName", requiredKey))
+      val errorArgs = if (args.isEmpty) Nil else Seq(args)
+      form.bind(data).errors must contain(FormError(s"$fieldName", requiredKey, errorArgs))
     }
 
     "fail to bind when blank answer provided" in {
       val data = Map(
         s"$fieldName[0]" -> ""
       )
-      form.bind(data).errors must contain(FormError(s"$fieldName[0]", requiredKey))
+      form.bind(data).errors must contain(FormError(s"$fieldName[0]", requiredKey, args))
     }
   }
 }

@@ -24,13 +24,14 @@ import play.api.data.Form
 
 class PartnerEldestChildDateOfBirthFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[LocalDate] =
+  def apply(partnerFirstName: String): Form[LocalDate] =
     Form(
       "value" -> localDate(
         invalidKey     = "partnerEldestChildDateOfBirth.error.invalid",
         allRequiredKey = "partnerEldestChildDateOfBirth.error.required.all",
         twoRequiredKey = "partnerEldestChildDateOfBirth.error.required.two",
-        requiredKey    = "partnerEldestChildDateOfBirth.error.required"
+        requiredKey    = "partnerEldestChildDateOfBirth.error.required",
+        args           = Seq(partnerFirstName)
       )
     )
 }

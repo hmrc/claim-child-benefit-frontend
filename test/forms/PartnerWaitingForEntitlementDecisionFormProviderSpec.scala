@@ -21,10 +21,11 @@ import play.api.data.FormError
 
 class PartnerWaitingForEntitlementDecisionFormProviderSpec extends BooleanFieldBehaviours {
 
+  val name = "name"
   val requiredKey = "partnerWaitingForEntitlementDecision.error.required"
   val invalidKey = "error.boolean"
 
-  val form = new PartnerWaitingForEntitlementDecisionFormProvider()()
+  val form = new PartnerWaitingForEntitlementDecisionFormProvider()(name)
 
   ".value" - {
 
@@ -33,13 +34,13 @@ class PartnerWaitingForEntitlementDecisionFormProviderSpec extends BooleanFieldB
     behave like booleanField(
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+      invalidError = FormError(fieldName, invalidKey, Seq(name))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq(name))
     )
   }
 }

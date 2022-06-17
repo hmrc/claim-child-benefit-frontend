@@ -17,8 +17,9 @@
 package viewmodels.checkAnswers
 
 import models.UserAnswers
-import pages.{PartnerNinoKnownPage, CheckAnswersPage, Waypoints}
+import pages.{CheckAnswersPage, PartnerNamePage, PartnerNinoKnownPage, Waypoints}
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -27,18 +28,23 @@ object PartnerNinoKnownSummary  {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(PartnerNinoKnownPage).map {
-      answer =>
+    for {
+      partnerName <- answers.get(PartnerNamePage)
+      ninoKnown   <- answers.get(PartnerNinoKnownPage)
+    } yield {
 
-        val value = if (answer) "site.yes" else "site.no"
+      val safeFirstName = HtmlFormat.escape(partnerName.firstName).toString
+      val value         = if (ninoKnown) "site.yes" else "site.no"
 
-        SummaryListRowViewModel(
-          key     = "partnerNinoKnown.checkYourAnswersLabel",
-          value   = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel("site.change", PartnerNinoKnownPage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("partnerNinoKnown.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key     = "partnerNinoKnown.checkYourAnswersLabel",
+        value   = ValueViewModel(value),
+        actions = Seq(
+          ActionItemViewModel(
+            messages("site.change", safeFirstName),
+            PartnerNinoKnownPage.changeLink(waypoints, sourcePage).url
+          ).withVisuallyHiddenText(messages("partnerNinoKnown.change.hidden", safeFirstName))
         )
+      )
     }
 }

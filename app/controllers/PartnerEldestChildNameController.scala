@@ -18,10 +18,12 @@ package controllers
 
 import controllers.actions._
 import forms.PartnerEldestChildNameFormProvider
+
 import javax.inject.Inject
-import pages.{PartnerEldestChildNamePage, Waypoints}
+import pages.{PartnerEldestChildNamePage, PartnerNamePage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.twirl.api.HtmlFormat
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.PartnerEldestChildNameView
@@ -37,33 +39,47 @@ class PartnerEldestChildNameController @Inject()(
                                       formProvider: PartnerEldestChildNameFormProvider,
                                       val controllerComponents: MessagesControllerComponents,
                                       view: PartnerEldestChildNameView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                     )(implicit ec: ExecutionContext)
+  extends FrontendBaseController
+    with I18nSupport
+    with AnswerExtractor {
 
-  val form = formProvider()
+  private val form = formProvider()
 
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
+      getAnswer(PartnerNamePage) {
+        partnerName =>
 
-      val preparedForm = request.userAnswers.get(PartnerEldestChildNamePage) match {
-        case None => form
-        case Some(value) => form.fill(value)
+          val safeName = HtmlFormat.escape(partnerName.firstName).toString
+
+          val preparedForm = request.userAnswers.get(PartnerEldestChildNamePage) match {
+            case None => form
+            case Some(value) => form.fill(value)
+          }
+
+          Ok(view(preparedForm, waypoints, safeName))
       }
-
-      Ok(view(preparedForm, waypoints))
   }
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      getAnswerAsync(PartnerNamePage) {
+        partnerName =>
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints))),
+          form.bindFromRequest().fold(
+            formWithErrors => {
+              val safeName = HtmlFormat.escape(partnerName.firstName).toString
 
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerEldestChildNamePage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(PartnerEldestChildNamePage.navigate(waypoints, updatedAnswers))
-      )
+              Future.successful(BadRequest(view(formWithErrors, waypoints, safeName)))
+            },
+
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerEldestChildNamePage, value))
+                _ <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(PartnerEldestChildNamePage.navigate(waypoints, updatedAnswers))
+          )
+      }
   }
 }

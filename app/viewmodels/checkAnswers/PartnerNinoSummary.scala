@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers
 
 import models.UserAnswers
-import pages.{PartnerNinoPage, CheckAnswersPage, Waypoints}
+import pages.{CheckAnswersPage, PartnerNamePage, PartnerNinoPage, Waypoints}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -28,16 +28,22 @@ object PartnerNinoSummary  {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(PartnerNinoPage).map {
-      answer =>
+    for {
+      partnerName <- answers.get(PartnerNamePage)
+      nino        <- answers.get(PartnerNinoPage)
+    } yield {
 
-        SummaryListRowViewModel(
-          key     = "partnerNino.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = Seq(
-            ActionItemViewModel("site.change", PartnerNinoPage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("partnerNino.change.hidden"))
-          )
+      val safeFirstName = HtmlFormat.escape(partnerName.firstName).toString
+
+      SummaryListRowViewModel(
+        key     = "partnerNino.checkYourAnswersLabel",
+        value   = ValueViewModel(nino.value),
+        actions = Seq(
+          ActionItemViewModel(
+            messages("site.change", safeFirstName),
+            PartnerNinoPage.changeLink(waypoints, sourcePage).url
+          ).withVisuallyHiddenText(messages("partnerNino.change.hidden", safeFirstName))
         )
+      )
     }
 }

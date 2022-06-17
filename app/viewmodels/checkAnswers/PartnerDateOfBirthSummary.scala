@@ -41,8 +41,10 @@ object PartnerDateOfBirthSummary  {
         key = "partnerDateOfBirth.checkYourAnswersLabel",
         value = ValueViewModel(dateOfBirth.format(dateFormatter)),
         actions = Seq(
-          ActionItemViewModel("site.change", PartnerDateOfBirthPage.changeLink(waypoints, sourcePage).url)
-            .withVisuallyHiddenText(messages("partnerDateOfBirth.change.hidden", safeFirstName))
+          ActionItemViewModel(
+            messages("site.change", safeFirstName),
+            PartnerDateOfBirthPage.changeLink(waypoints, sourcePage).url
+          ).withVisuallyHiddenText(messages("partnerDateOfBirth.change.hidden", safeFirstName))
         )
       )
     }

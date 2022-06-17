@@ -17,8 +17,9 @@
 package viewmodels.checkAnswers
 
 import models.UserAnswers
-import pages.{PartnerWaitingForEntitlementDecisionPage, CheckAnswersPage, Waypoints}
+import pages.{CheckAnswersPage, PartnerNamePage, PartnerWaitingForEntitlementDecisionPage, Waypoints}
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -27,18 +28,23 @@ object PartnerWaitingForEntitlementDecisionSummary  {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(PartnerWaitingForEntitlementDecisionPage).map {
-      answer =>
+    for {
+      partnerName <- answers.get(PartnerNamePage)
+      waiting     <- answers.get(PartnerWaitingForEntitlementDecisionPage)
+    } yield {
 
-        val value = if (answer) "site.yes" else "site.no"
+      val safeFirstName = HtmlFormat.escape(partnerName.firstName).toString
+      val value         = if (waiting) "site.yes" else "site.no"
 
-        SummaryListRowViewModel(
-          key     = "partnerWaitingForEntitlementDecision.checkYourAnswersLabel",
-          value   = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel("site.change", PartnerWaitingForEntitlementDecisionPage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("partnerWaitingForEntitlementDecision.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key     = "partnerWaitingForEntitlementDecision.checkYourAnswersLabel",
+        value   = ValueViewModel(value),
+        actions = Seq(
+          ActionItemViewModel(
+            messages("site.change", safeFirstName),
+            PartnerWaitingForEntitlementDecisionPage.changeLink(waypoints, sourcePage).url
+          ).withVisuallyHiddenText(messages("partnerWaitingForEntitlementDecision.change.hidden", safeFirstName))
         )
+      )
     }
 }

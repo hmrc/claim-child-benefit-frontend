@@ -22,7 +22,7 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints, partnerFirstName: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("partnerWaitingForEntitlementDecision.title"))) {
 
@@ -35,7 +35,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("partnerWaitingForEntitlementDecision.heading")).asPageHeading()
+                legend = LegendViewModel(messages("partnerWaitingForEntitlementDecision.heading", partnerFirstName)).asPageHeading()
             )
         )
 
