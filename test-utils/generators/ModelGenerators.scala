@@ -23,6 +23,27 @@ import uk.gov.hmrc.domain.Nino
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryPartnerName: Arbitrary[PartnerName] =
+    Arbitrary {
+      for {
+        firstName <- arbitrary[String]
+        lastName <- arbitrary[String]
+      } yield PartnerName(firstName, lastName)
+    }
+
+  implicit lazy val arbitraryPartnerEmploymentStatus: Arbitrary[PartnerEmploymentStatus] =
+    Arbitrary {
+      Gen.oneOf(PartnerEmploymentStatus.values)
+    }
+
+  implicit lazy val arbitraryPartnerEldestChildName: Arbitrary[PartnerEldestChildName] =
+    Arbitrary {
+      for {
+        firstName <- arbitrary[String]
+        lastName <- arbitrary[String]
+      } yield PartnerEldestChildName(firstName, lastName)
+    }
+
   implicit lazy val arbitraryNino: Arbitrary[Nino] = Arbitrary {
     for {
       firstChar <- Gen.oneOf('A', 'C', 'E', 'H', 'J', 'L', 'M', 'O', 'P', 'R', 'S', 'W', 'X', 'Y').map(_.toString)

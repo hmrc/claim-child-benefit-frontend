@@ -25,6 +25,86 @@ import uk.gov.hmrc.domain.Nino
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
 
+  implicit lazy val arbitraryPartnerWaitingForEntitlementDecisionUserAnswersEntry: Arbitrary[(PartnerWaitingForEntitlementDecisionPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[PartnerWaitingForEntitlementDecisionPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryPartnerNinoKnownUserAnswersEntry: Arbitrary[(PartnerNinoKnownPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[PartnerNinoKnownPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryPartnerNinoUserAnswersEntry: Arbitrary[(PartnerNinoPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[PartnerNinoPage.type]
+        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryPartnerNationalityUserAnswersEntry: Arbitrary[(PartnerNationalityPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[PartnerNationalityPage.type]
+        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryPartnerNameUserAnswersEntry: Arbitrary[(PartnerNamePage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[PartnerNamePage.type]
+        value <- arbitrary[PartnerName].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryPartnerEntitledToChildBenefitUserAnswersEntry: Arbitrary[(PartnerEntitledToChildBenefitPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[PartnerEntitledToChildBenefitPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryPartnerEmploymentStatusUserAnswersEntry: Arbitrary[(PartnerEmploymentStatusPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[PartnerEmploymentStatusPage.type]
+        value <- arbitrary[PartnerEmploymentStatus].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryPartnerEldestChildNameUserAnswersEntry: Arbitrary[(PartnerEldestChildNamePage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[PartnerEldestChildNamePage.type]
+        value <- arbitrary[PartnerEldestChildName].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryPartnerEldestChildDateOfBirthUserAnswersEntry: Arbitrary[(PartnerEldestChildDateOfBirthPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[PartnerEldestChildDateOfBirthPage.type]
+        value <- arbitrary[Int].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryPartnerDateOfBirthUserAnswersEntry: Arbitrary[(PartnerDateOfBirthPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[PartnerDateOfBirthPage.type]
+        value <- arbitrary[Int].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
   implicit lazy val arbitraryBestTimeToContactUserAnswersEntry: Arbitrary[(BestTimeToContactPage.type, JsValue)] =
     Arbitrary {
       for {

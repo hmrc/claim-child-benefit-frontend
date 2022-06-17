@@ -22,6 +22,36 @@ import pages._
 
 trait PageGenerators {
 
+  implicit lazy val arbitraryPartnerWaitingForEntitlementDecisionPage: Arbitrary[PartnerWaitingForEntitlementDecisionPage.type] =
+    Arbitrary(PartnerWaitingForEntitlementDecisionPage)
+
+  implicit lazy val arbitraryPartnerNinoKnownPage: Arbitrary[PartnerNinoKnownPage.type] =
+    Arbitrary(PartnerNinoKnownPage)
+
+  implicit lazy val arbitraryPartnerNinoPage: Arbitrary[PartnerNinoPage.type] =
+    Arbitrary(PartnerNinoPage)
+
+  implicit lazy val arbitraryPartnerNationalityPage: Arbitrary[PartnerNationalityPage.type] =
+    Arbitrary(PartnerNationalityPage)
+
+  implicit lazy val arbitraryPartnerNamePage: Arbitrary[PartnerNamePage.type] =
+    Arbitrary(PartnerNamePage)
+
+  implicit lazy val arbitraryPartnerEntitledToChildBenefitPage: Arbitrary[PartnerEntitledToChildBenefitPage.type] =
+    Arbitrary(PartnerEntitledToChildBenefitPage)
+
+  implicit lazy val arbitraryPartnerEmploymentStatusPage: Arbitrary[PartnerEmploymentStatusPage.type] =
+    Arbitrary(PartnerEmploymentStatusPage)
+
+  implicit lazy val arbitraryPartnerEldestChildNamePage: Arbitrary[PartnerEldestChildNamePage.type] =
+    Arbitrary(PartnerEldestChildNamePage)
+
+  implicit lazy val arbitraryPartnerEldestChildDateOfBirthPage: Arbitrary[PartnerEldestChildDateOfBirthPage.type] =
+    Arbitrary(PartnerEldestChildDateOfBirthPage)
+
+  implicit lazy val arbitraryPartnerDateOfBirthPage: Arbitrary[PartnerDateOfBirthPage.type] =
+    Arbitrary(PartnerDateOfBirthPage)
+
   implicit lazy val arbitraryBestTimeToContactPage: Arbitrary[BestTimeToContactPage.type] =
     Arbitrary(BestTimeToContactPage)
 
