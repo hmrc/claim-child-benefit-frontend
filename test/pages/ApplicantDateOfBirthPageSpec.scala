@@ -16,8 +16,9 @@
 
 package pages
 
-import java.time.LocalDate
+import controllers.routes
 
+import java.time.LocalDate
 import org.scalacheck.Arbitrary
 import pages.behaviours.PageBehaviours
 
@@ -34,5 +35,20 @@ class ApplicantDateOfBirthPageSpec extends PageBehaviours {
     beSettable[LocalDate](ApplicantDateOfBirthPage)
 
     beRemovable[LocalDate](ApplicantDateOfBirthPage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Applicant Current Address" in {
+
+          ApplicantDateOfBirthPage
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.ApplicantCurrentAddressController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }

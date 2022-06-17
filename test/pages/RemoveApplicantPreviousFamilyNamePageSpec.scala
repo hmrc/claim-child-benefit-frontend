@@ -16,16 +16,36 @@
 
 package pages
 
+import controllers.routes
+import models.Index
 import pages.behaviours.PageBehaviours
 
 class RemoveApplicantPreviousFamilyNamePageSpec extends PageBehaviours {
 
   "RemoveApplicantPreviousFamilyNamePage" - {
 
-    beRetrievable[Boolean](RemoveApplicantPreviousFamilyNamePage)
+    "must navigate" - {
 
-    beSettable[Boolean](RemoveApplicantPreviousFamilyNamePage)
+      "when there are no waypoints" - {
 
-    beRemovable[Boolean](RemoveApplicantPreviousFamilyNamePage)
+        val waypoints = EmptyWaypoints
+
+        "to Add Applicant Previous Family Name when there are some names left" in {
+
+          val answers = emptyUserAnswers.set(ApplicantPreviousFamilyNamePage(Index(0)), "name").success.value
+
+          RemoveApplicantPreviousFamilyNamePage(Index(0))
+            .navigate(waypoints, answers)
+            .mustEqual(routes.AddApplicantPreviousFamilyNameController.onPageLoad(waypoints))
+        }
+
+        "to Applicant Has Previous Family Names when there are no names left" in {
+
+          RemoveApplicantPreviousFamilyNamePage(Index(0))
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.ApplicantHasPreviousFamilyNameController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }

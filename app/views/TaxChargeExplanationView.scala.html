@@ -16,12 +16,20 @@
 
 @this(
         layout: templates.Layout,
+        formHelper: FormWithCSRF,
         govukButton: GovukButton
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("taxChargeExplanation.title"))) {
+    @layout(pageTitle = titleNoForm(messages("taxChargeExplanation.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("taxChargeExplanation.heading")</h1>
-}
+        @formHelper(action = routes.TaxChargeExplanationController.onSubmit(waypoints)) {
+
+            <h1 class="govuk-heading-xl">@messages("taxChargeExplanation.heading")</h1>
+
+            @govukButton(
+                ButtonViewModel(messages("site.continue"))
+            )
+        }
+    }

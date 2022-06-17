@@ -21,21 +21,22 @@ import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary.arbitrary
 import pages._
 import play.api.libs.json.{JsValue, Json}
+import uk.gov.hmrc.domain.Nino
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
 
-  implicit lazy val arbitraryRemoveApplicantPreviousFamilyNameUserAnswersEntry: Arbitrary[(RemoveApplicantPreviousFamilyNamePage.type, JsValue)] =
+  implicit lazy val arbitraryBestTimeToContactUserAnswersEntry: Arbitrary[(BestTimeToContactPage.type, JsValue)] =
     Arbitrary {
       for {
-        page  <- arbitrary[RemoveApplicantPreviousFamilyNamePage.type]
-        value <- arbitrary[Boolean].map(Json.toJson(_))
+        page  <- arbitrary[BestTimeToContactPage.type]
+        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryApplicantPreviousFamilyNameUserAnswersEntry: Arbitrary[(ApplicantPreviousFamilyNamePage.type, JsValue)] =
+  implicit lazy val arbitraryApplicantPreviousFamilyNameUserAnswersEntry: Arbitrary[(ApplicantPreviousFamilyNamePage, JsValue)] =
     Arbitrary {
       for {
-        page  <- arbitrary[ApplicantPreviousFamilyNamePage.type]
+        page  <- arbitrary[ApplicantPreviousFamilyNamePage]
         value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
       } yield (page, value)
     }
@@ -68,7 +69,7 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
     Arbitrary {
       for {
         page  <- arbitrary[ApplicantNinoPage.type]
-        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
+        value <- arbitrary[Nino].map(Json.toJson(_))
       } yield (page, value)
     }
 

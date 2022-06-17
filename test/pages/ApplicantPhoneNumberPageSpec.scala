@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import pages.behaviours.PageBehaviours
 
 
@@ -28,5 +29,20 @@ class ApplicantPhoneNumberPageSpec extends PageBehaviours {
     beSettable[String](ApplicantPhoneNumberPage)
 
     beRemovable[String](ApplicantPhoneNumberPage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Best Time to Contact" in {
+
+          ApplicantPhoneNumberPage
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.BestTimeToContactController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }

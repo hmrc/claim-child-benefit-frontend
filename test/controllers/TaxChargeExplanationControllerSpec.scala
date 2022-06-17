@@ -17,11 +17,14 @@
 package controllers
 
 import base.SpecBase
+import pages.{EmptyWaypoints, TaxChargeExplanationPage}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.TaxChargeExplanationView
 
 class TaxChargeExplanationControllerSpec extends SpecBase {
+
+  private val waypoints = EmptyWaypoints
 
   "TaxChargeExplanation Controller" - {
 
@@ -37,7 +40,23 @@ class TaxChargeExplanationControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[TaxChargeExplanationView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+        contentAsString(result) mustEqual view(waypoints)(request, messages(application)).toString
+      }
+    }
+
+    "must redirect to the next page for a POST" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(POST, routes.TaxChargeExplanationController.onSubmit().url)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[TaxChargeExplanationView]
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual TaxChargeExplanationPage.navigate(waypoints, emptyUserAnswers).url
       }
     }
   }

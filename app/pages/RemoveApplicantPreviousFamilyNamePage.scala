@@ -17,15 +17,18 @@
 package pages
 
 import controllers.routes
-import play.api.libs.json.JsPath
+import models.{Index, UserAnswers}
 import play.api.mvc.Call
+import queries.DeriveNumberOfPreviousFamilyNames
 
-case object RemoveApplicantPreviousFamilyNamePage extends QuestionPage[Boolean] {
-
-  override def path: JsPath = JsPath \ toString
-
-  override def toString: String = "removeApplicantPreviousFamilyName"
+case class RemoveApplicantPreviousFamilyNamePage(index: Index) extends Page {
 
   override def route(waypoints: Waypoints): Call =
-    routes.RemoveApplicantPreviousFamilyNameController.onPageLoad(waypoints)
+    routes.RemoveApplicantPreviousFamilyNameController.onPageLoad(waypoints, index)
+
+  override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(DeriveNumberOfPreviousFamilyNames).map {
+      case n if n > 0 => AddApplicantPreviousFamilyNamePage
+      case _          => ApplicantHasPreviousFamilyNamePage
+    }.getOrElse(ApplicantHasPreviousFamilyNamePage)
 }

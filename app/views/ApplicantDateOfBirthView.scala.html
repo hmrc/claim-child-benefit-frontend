@@ -38,6 +38,7 @@
                 legend = LegendViewModel(messages("applicantDateOfBirth.heading")).asPageHeading()
             )
             .withHint(HintViewModel(messages("applicantDateOfBirth.hint")))
+            .asDateOfBirth()
         )
 
         @govukButton(

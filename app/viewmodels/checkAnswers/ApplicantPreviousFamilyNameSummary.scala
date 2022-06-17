@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers
 
-import models.UserAnswers
+import models.{Index, UserAnswers}
 import pages.{ApplicantPreviousFamilyNamePage, CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
@@ -26,16 +26,16 @@ import viewmodels.implicits._
 
 object ApplicantPreviousFamilyNameSummary  {
 
-  def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
+  def row(answers: UserAnswers, index: Index, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ApplicantPreviousFamilyNamePage).map {
+    answers.get(ApplicantPreviousFamilyNamePage(index)).map {
       answer =>
 
         SummaryListRowViewModel(
           key     = "applicantPreviousFamilyName.checkYourAnswersLabel",
           value   = ValueViewModel(HtmlFormat.escape(answer).toString),
           actions = Seq(
-            ActionItemViewModel("site.change", ApplicantPreviousFamilyNamePage.changeLink(waypoints, sourcePage).url)
+            ActionItemViewModel("site.change", ApplicantPreviousFamilyNamePage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("applicantPreviousFamilyName.change.hidden"))
           )
         )

@@ -25,12 +25,16 @@ import models.ApplicantCurrentAddress
 
 class ApplicantCurrentAddressFormProvider @Inject() extends Mappings {
 
-   def apply(): Form[ApplicantCurrentAddress] = Form(
-     mapping(
+  def apply(): Form[ApplicantCurrentAddress] = Form(
+    mapping(
       "line1" -> text("applicantCurrentAddress.error.line1.required")
         .verifying(maxLength(100, "applicantCurrentAddress.error.line1.length")),
-      "line2" -> text("applicantCurrentAddress.error.line2.required")
-        .verifying(maxLength(100, "applicantCurrentAddress.error.line2.length"))
+      "line2" -> optional(text("applicantCurrentAddress.error.line2.required")
+        .verifying(maxLength(100, "applicantCurrentAddress.error.line2.length"))),
+      "line3" -> optional(text("applicantCurrentAddress.error.line3.required")
+        .verifying(maxLength(100, "applicantCurrentAddress.error.line3.length"))),
+      "postcode" -> text("applicantCurrentAddress.error.postcode.required")
+        .verifying(maxLength(100, "applicantCurrentAddress.error.postcode.length"))
     )(ApplicantCurrentAddress.apply)(ApplicantCurrentAddress.unapply)
-   )
- }
+  )
+}

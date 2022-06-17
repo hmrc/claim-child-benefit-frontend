@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import pages.behaviours.PageBehaviours
 
 class WantToBePaidToExistingAccountPageSpec extends PageBehaviours {
@@ -27,5 +28,32 @@ class WantToBePaidToExistingAccountPageSpec extends PageBehaviours {
     beSettable[Boolean](WantToBePaidToExistingAccountPage)
 
     beRemovable[Boolean](WantToBePaidToExistingAccountPage)
+
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Applicant Name when the answer is yes" in {
+
+          val answers = emptyUserAnswers.set(WantToBePaidToExistingAccountPage, true).success.value
+
+          WantToBePaidToExistingAccountPage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.ApplicantNameController.onPageLoad(waypoints))
+        }
+
+        "to Applicant Has Suitable Account when the answer is no" in {
+
+          val answers = emptyUserAnswers.set(WantToBePaidToExistingAccountPage, false).success.value
+
+          WantToBePaidToExistingAccountPage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.ApplicantHasSuitableAccountController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }

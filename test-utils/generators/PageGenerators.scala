@@ -16,16 +16,17 @@
 
 package generators
 
+import models.Index
 import org.scalacheck.Arbitrary
 import pages._
 
 trait PageGenerators {
 
-  implicit lazy val arbitraryRemoveApplicantPreviousFamilyNamePage: Arbitrary[RemoveApplicantPreviousFamilyNamePage.type] =
-    Arbitrary(RemoveApplicantPreviousFamilyNamePage)
+  implicit lazy val arbitraryBestTimeToContactPage: Arbitrary[BestTimeToContactPage.type] =
+    Arbitrary(BestTimeToContactPage)
 
-  implicit lazy val arbitraryApplicantPreviousFamilyNamePage: Arbitrary[ApplicantPreviousFamilyNamePage.type] =
-    Arbitrary(ApplicantPreviousFamilyNamePage)
+  implicit lazy val arbitraryApplicantPreviousFamilyNamePage: Arbitrary[ApplicantPreviousFamilyNamePage] =
+    Arbitrary(ApplicantPreviousFamilyNamePage(Index(0)))
 
   implicit lazy val arbitraryApplicantPreviousAddressPage: Arbitrary[ApplicantPreviousAddressPage.type] =
     Arbitrary(ApplicantPreviousAddressPage)

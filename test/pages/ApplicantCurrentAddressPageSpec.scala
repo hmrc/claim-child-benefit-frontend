@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import models.ApplicantCurrentAddress
 import pages.behaviours.PageBehaviours
 
@@ -28,5 +29,20 @@ class ApplicantCurrentAddressPageSpec extends PageBehaviours {
     beSettable[ApplicantCurrentAddress](ApplicantCurrentAddressPage)
 
     beRemovable[ApplicantCurrentAddress](ApplicantCurrentAddressPage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Applicant Lived at Current Address One Year" in {
+
+          ApplicantCurrentAddressPage
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.ApplicantLivedAtCurrentAddressOneYearController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }

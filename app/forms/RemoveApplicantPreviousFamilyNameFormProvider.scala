@@ -23,8 +23,8 @@ import play.api.data.Form
 
 class RemoveApplicantPreviousFamilyNameFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(name: String): Form[Boolean] =
     Form(
-      "value" -> boolean("removeApplicantPreviousFamilyName.error.required")
+      "value" -> boolean("removeApplicantPreviousFamilyName.error.required", args = Seq(name))
     )
 }

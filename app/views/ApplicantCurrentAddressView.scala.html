@@ -42,6 +42,7 @@
                 label = LabelViewModel(messages("applicantCurrentAddress.line1"))
             )
             .withWidth(Full)
+            .withAutocomplete("address-line1")
         )
 
         @govukInput(
@@ -50,6 +51,25 @@
                 label = LabelViewModel(messages("applicantCurrentAddress.line2"))
             )
             .withWidth(Full)
+            .withAutocomplete("address-line2")
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("line3"),
+                label = LabelViewModel(messages("applicantCurrentAddress.line3"))
+            )
+            .withWidth(Full)
+            .withAutocomplete("address-line3")
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("postcode"),
+                label = LabelViewModel(messages("applicantCurrentAddress.postcode"))
+            )
+            .withWidth(Fixed10)
+            .withAutocomplete("postal-code")
         )
 
         @govukButton(

@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import forms.ApplicantPreviousFamilyNameFormProvider
-import models.UserAnswers
+import models.{Index, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -34,11 +34,12 @@ import scala.concurrent.Future
 class ApplicantPreviousFamilyNameControllerSpec extends SpecBase with MockitoSugar {
 
   private val waypoints = EmptyWaypoints
+  private val index = Index(0)
 
   val formProvider = new ApplicantPreviousFamilyNameFormProvider()
   val form = formProvider()
 
-  lazy val applicantPreviousFamilyNameRoute = routes.ApplicantPreviousFamilyNameController.onPageLoad(waypoints).url
+  lazy val applicantPreviousFamilyNameRoute = routes.ApplicantPreviousFamilyNameController.onPageLoad(waypoints, index).url
 
   "ApplicantPreviousFamilyName Controller" - {
 
@@ -54,13 +55,13 @@ class ApplicantPreviousFamilyNameControllerSpec extends SpecBase with MockitoSug
         val view = application.injector.instanceOf[ApplicantPreviousFamilyNameView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ApplicantPreviousFamilyNamePage, "answer").success.value
+      val userAnswers = UserAnswers(userAnswersId).set(ApplicantPreviousFamilyNamePage(index), "answer").success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -72,7 +73,7 @@ class ApplicantPreviousFamilyNameControllerSpec extends SpecBase with MockitoSug
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("answer"), waypoints, index)(request, messages(application)).toString
       }
     }
 
@@ -95,10 +96,10 @@ class ApplicantPreviousFamilyNameControllerSpec extends SpecBase with MockitoSug
             .withFormUrlEncodedBody(("value", "answer"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(ApplicantPreviousFamilyNamePage, "answer").success.value
+        val expectedAnswers = emptyUserAnswers.set(ApplicantPreviousFamilyNamePage(index), "answer").success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ApplicantPreviousFamilyNamePage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual ApplicantPreviousFamilyNamePage(index).navigate(waypoints, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -119,7 +120,7 @@ class ApplicantPreviousFamilyNameControllerSpec extends SpecBase with MockitoSug
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index)(request, messages(application)).toString
       }
     }
 

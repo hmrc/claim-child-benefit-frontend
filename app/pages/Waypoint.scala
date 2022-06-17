@@ -16,7 +16,7 @@
 
 package pages
 
-import models.Mode
+import models.{CheckMode, Mode, NormalMode}
 
 case class Waypoint (
                       page: WaypointPage,
@@ -28,7 +28,9 @@ object Waypoint {
 
   private val fragments: Map[String, Waypoint] =
     Map(
-      CheckYourAnswersPage.urlFragment -> CheckYourAnswersPage.waypoint
+      CheckYourAnswersPage.urlFragment                         -> CheckYourAnswersPage.waypoint,
+      AddApplicantPreviousFamilyNamePage.normalModeUrlFragment -> AddApplicantPreviousFamilyNamePage.waypoint(NormalMode),
+      AddApplicantPreviousFamilyNamePage.checkModeUrlFragment  -> AddApplicantPreviousFamilyNamePage.waypoint(CheckMode)
     )
 
   def fromString(s: String): Option[Waypoint] =

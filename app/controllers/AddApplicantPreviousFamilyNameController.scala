@@ -18,12 +18,14 @@ package controllers
 
 import controllers.actions._
 import forms.AddApplicantPreviousFamilyNameFormProvider
+
 import javax.inject.Inject
 import pages.{AddApplicantPreviousFamilyNamePage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.checkAnswers.AddApplicantPreviousFamilyNameSummary
 import views.html.AddApplicantPreviousFamilyNameView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -44,20 +46,20 @@ class AddApplicantPreviousFamilyNameController @Inject()(
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(AddApplicantPreviousFamilyNamePage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
+      val otherNames = AddApplicantPreviousFamilyNameSummary.rows(request.userAnswers, waypoints, AddApplicantPreviousFamilyNamePage)
 
-      Ok(view(preparedForm, waypoints))
+      Ok(view(form, waypoints, otherNames))
   }
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
       form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints))),
+        formWithErrors => {
+          val otherNames = AddApplicantPreviousFamilyNameSummary.rows(request.userAnswers, waypoints, AddApplicantPreviousFamilyNamePage)
+
+          Future.successful(BadRequest(view(formWithErrors, waypoints, otherNames)))
+        },
 
         value =>
           for {

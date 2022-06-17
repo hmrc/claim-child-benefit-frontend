@@ -16,17 +16,34 @@
 
 package pages
 
+import controllers.routes
 import pages.behaviours.PageBehaviours
+import uk.gov.hmrc.domain.Nino
 
 
 class ApplicantNinoPageSpec extends PageBehaviours {
 
   "ApplicantNinoPage" - {
 
-    beRetrievable[String](ApplicantNinoPage)
+    beRetrievable[Nino](ApplicantNinoPage)
 
-    beSettable[String](ApplicantNinoPage)
+    beSettable[Nino](ApplicantNinoPage)
 
-    beRemovable[String](ApplicantNinoPage)
+    beRemovable[Nino](ApplicantNinoPage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Applicant Date of Birth" in {
+
+          ApplicantNinoPage
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.ApplicantDateOfBirthController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }

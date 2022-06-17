@@ -17,9 +17,8 @@
 package controllers
 
 import javax.inject.Inject
-
 import controllers.actions._
-import pages.Waypoints
+import pages.{TaxChargeExplanationPage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -36,6 +35,11 @@ class TaxChargeExplanationController @Inject()(
 
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      Ok(view())
+      Ok(view(waypoints))
+  }
+
+  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
+    implicit request =>
+      Redirect(TaxChargeExplanationPage.navigate(waypoints, request.userAnswers))
   }
 }

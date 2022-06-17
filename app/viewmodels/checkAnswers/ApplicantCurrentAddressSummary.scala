@@ -32,7 +32,9 @@ object ApplicantCurrentAddressSummary  {
     answers.get(ApplicantCurrentAddressPage).map {
       answer =>
 
-      val value = HtmlFormat.escape(answer.line1).toString + "<br/>" + HtmlFormat.escape(answer.line2).toString
+        val value = List(Some(answer.line1), answer.line2, answer.line3, Some(answer.postcode))
+          .flatten.map(HtmlFormat.escape(_).toString)
+          .mkString("<br/>")
 
         SummaryListRowViewModel(
           key     = "applicantCurrentAddress.checkYourAnswersLabel",

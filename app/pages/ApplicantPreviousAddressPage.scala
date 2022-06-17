@@ -17,7 +17,7 @@
 package pages
 
 import controllers.routes
-import models.ApplicantPreviousAddress
+import models.{ApplicantPreviousAddress, UserAnswers}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -29,4 +29,7 @@ case object ApplicantPreviousAddressPage extends QuestionPage[ApplicantPreviousA
 
   override def route(waypoints: Waypoints): Call =
     routes.ApplicantPreviousAddressController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    ApplicantPhoneNumberPage
 }

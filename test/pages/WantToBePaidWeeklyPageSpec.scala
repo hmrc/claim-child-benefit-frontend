@@ -44,13 +44,13 @@ class WantToBePaidWeeklyPageSpec extends PageBehaviours {
             .mustEqual(routes.ApplicantHasSuitableAccountController.onPageLoad(waypoints))
         }
 
-        "to Index when the answer is no" in {
+        "to Applicant Name when the answer is no" in {
 
           val answers = emptyUserAnswers.set(WantToBePaidWeeklyPage, false).success.value
 
           WantToBePaidWeeklyPage
             .navigate(waypoints, answers)
-            .mustEqual(routes.IndexController.onPageLoad)
+            .mustEqual(routes.ApplicantNameController.onPageLoad(waypoints))
         }
       }
     }

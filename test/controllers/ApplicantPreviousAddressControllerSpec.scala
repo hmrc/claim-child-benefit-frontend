@@ -18,13 +18,12 @@ package controllers
 
 import base.SpecBase
 import forms.ApplicantPreviousAddressFormProvider
-import models.{ApplicantPreviousAddress, UserAnswers}
+import models.ApplicantPreviousAddress
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{ApplicantPreviousAddressPage, EmptyWaypoints}
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
@@ -40,7 +39,7 @@ class ApplicantPreviousAddressControllerSpec extends SpecBase with MockitoSugar 
 
   lazy val applicantPreviousAddressRoute = routes.ApplicantPreviousAddressController.onPageLoad(waypoints).url
 
-  private val validAnswer = ApplicantPreviousAddress("value 1", "value 2")
+  private val validAnswer = ApplicantPreviousAddress("line 1", None, None, "postcode")
   private val userAnswers = emptyUserAnswers.set(ApplicantPreviousAddressPage, validAnswer).success.value
 
   "ApplicantPreviousAddress Controller" - {
@@ -73,7 +72,7 @@ class ApplicantPreviousAddressControllerSpec extends SpecBase with MockitoSugar 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(ApplicantPreviousAddress("value 1", "value 2")), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints)(request, messages(application)).toString
       }
     }
 
@@ -93,7 +92,7 @@ class ApplicantPreviousAddressControllerSpec extends SpecBase with MockitoSugar 
       running(application) {
         val request =
           FakeRequest(POST, applicantPreviousAddressRoute)
-            .withFormUrlEncodedBody(("line1", "value 1"), ("line2", "value 2"))
+            .withFormUrlEncodedBody(("line1", "line 1"), ("postcode", "postcode"))
 
         val result = route(application, request).value
         val expectedAnswers = emptyUserAnswers.set(ApplicantPreviousAddressPage, validAnswer).success.value
@@ -145,7 +144,7 @@ class ApplicantPreviousAddressControllerSpec extends SpecBase with MockitoSugar 
       running(application) {
         val request =
           FakeRequest(POST, applicantPreviousAddressRoute)
-            .withFormUrlEncodedBody(("line1", "value 1"), ("line2", "value 2"))
+            .withFormUrlEncodedBody(("line1", "line 1"), ("postcode", "postcode"))
 
         val result = route(application, request).value
 

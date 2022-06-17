@@ -17,13 +17,12 @@
 package forms
 
 import forms.behaviours.StringFieldBehaviours
+import org.scalacheck.Gen
 import play.api.data.FormError
 
 class ApplicantNinoFormProviderSpec extends StringFieldBehaviours {
 
   val requiredKey = "applicantNino.error.required"
-  val lengthKey = "applicantNino.error.length"
-  val maxLength = 100
 
   val form = new ApplicantNinoFormProvider()()
 
@@ -31,17 +30,18 @@ class ApplicantNinoFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName = "value"
 
+    val ninoGen = arbitraryNino.arbitrary.map(_.value)
+    val ninoWithSpacesGen = for {
+      spaceBefore <- Gen.stringOf(Gen.const(' '))
+      spaceAfter  <- Gen.stringOf(Gen.const(' '))
+      nino        <- ninoGen
+    } yield s"$spaceBefore$nino$spaceAfter"
+    val gen = Gen.oneOf(ninoGen, ninoWithSpacesGen)
+
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
-    )
-
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      gen
     )
 
     behave like mandatoryField(
@@ -49,5 +49,10 @@ class ApplicantNinoFormProviderSpec extends StringFieldBehaviours {
       fieldName,
       requiredError = FormError(fieldName, requiredKey)
     )
+
+    "must not bind values in the wrong format" in {
+      val result = form.bind(Map(fieldName -> "GB123456A")).apply(fieldName)
+      result.errors.head mustBe FormError(fieldName, "applicantNino.error.invalid")
+    }
   }
 }

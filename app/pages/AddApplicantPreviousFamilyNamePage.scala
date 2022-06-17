@@ -17,10 +17,15 @@
 package pages
 
 import controllers.routes
+import models.{Index, UserAnswers}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+import queries.DeriveNumberOfPreviousFamilyNames
 
-case object AddApplicantPreviousFamilyNamePage extends QuestionPage[Boolean] {
+case object AddApplicantPreviousFamilyNamePage extends QuestionPage[Boolean] with AddItemPage {
+
+  override val normalModeUrlFragment: String = "add-other-name"
+  override val checkModeUrlFragment: String = "change-other-name"
 
   override def path: JsPath = JsPath \ toString
 
@@ -28,4 +33,16 @@ case object AddApplicantPreviousFamilyNamePage extends QuestionPage[Boolean] {
 
   override def route(waypoints: Waypoints): Call =
     routes.AddApplicantPreviousFamilyNameController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true =>
+        answers
+          .get(DeriveNumberOfPreviousFamilyNames)
+          .map(n => ApplicantPreviousFamilyNamePage(Index(n)))
+          .orRecover
+
+      case false =>
+        ApplicantNinoKnownPage
+    }.orRecover
 }

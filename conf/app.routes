@@ -93,6 +93,7 @@ GET        /eldestChildName                        controllers.EldestChildNameCo
 POST       /eldestChildName                        controllers.EldestChildNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /taxChargeExplanation                       controllers.TaxChargeExplanationController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /taxChargeExplanation                       controllers.TaxChargeExplanationController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /wantToBePaid                        controllers.WantToBePaidController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /wantToBePaid                        controllers.WantToBePaidController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
@@ -139,8 +140,11 @@ POST       /applicantPhoneNumber                        controllers.ApplicantPho
 GET        /applicantPreviousAddress                        controllers.ApplicantPreviousAddressController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /applicantPreviousAddress                        controllers.ApplicantPreviousAddressController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /applicantPreviousFamilyName                        controllers.ApplicantPreviousFamilyNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /applicantPreviousFamilyName                        controllers.ApplicantPreviousFamilyNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /applicantPreviousFamilyName/:index                        controllers.ApplicantPreviousFamilyNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /applicantPreviousFamilyName/:index                        controllers.ApplicantPreviousFamilyNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
-GET        /removeApplicantPreviousFamilyName                        controllers.RemoveApplicantPreviousFamilyNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /removeApplicantPreviousFamilyName                        controllers.RemoveApplicantPreviousFamilyNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /removeApplicantPreviousFamilyName/:index                        controllers.RemoveApplicantPreviousFamilyNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /removeApplicantPreviousFamilyName/:index                        controllers.RemoveApplicantPreviousFamilyNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+
+GET        /bestTimeToContact                        controllers.BestTimeToContactController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /bestTimeToContact                        controllers.BestTimeToContactController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

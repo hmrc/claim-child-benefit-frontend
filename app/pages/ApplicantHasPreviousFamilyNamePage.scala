@@ -17,6 +17,7 @@
 package pages
 
 import controllers.routes
+import models.{Index, UserAnswers}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -28,4 +29,10 @@ case object ApplicantHasPreviousFamilyNamePage extends QuestionPage[Boolean] {
 
   override def route(waypoints: Waypoints): Call =
     routes.ApplicantHasPreviousFamilyNameController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true  => ApplicantPreviousFamilyNamePage(Index(0))
+      case false => ApplicantNinoKnownPage
+    }.orRecover
 }

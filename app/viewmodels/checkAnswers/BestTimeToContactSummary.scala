@@ -17,27 +17,26 @@
 package viewmodels.checkAnswers
 
 import models.UserAnswers
-import pages.{RemoveApplicantPreviousFamilyNamePage, CheckAnswersPage, Waypoints}
+import pages.{BestTimeToContactPage, CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object RemoveApplicantPreviousFamilyNameSummary  {
+object BestTimeToContactSummary  {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(RemoveApplicantPreviousFamilyNamePage).map {
+    answers.get(BestTimeToContactPage).map {
       answer =>
 
-        val value = if (answer) "site.yes" else "site.no"
-
         SummaryListRowViewModel(
-          key     = "removeApplicantPreviousFamilyName.checkYourAnswersLabel",
-          value   = ValueViewModel(value),
+          key     = "bestTimeToContact.checkYourAnswersLabel",
+          value   = ValueViewModel(HtmlFormat.escape(answer).toString),
           actions = Seq(
-            ActionItemViewModel("site.change", RemoveApplicantPreviousFamilyNamePage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("removeApplicantPreviousFamilyName.change.hidden"))
+            ActionItemViewModel("site.change", BestTimeToContactPage.changeLink(waypoints, sourcePage).url)
+              .withVisuallyHiddenText(messages("bestTimeToContact.change.hidden"))
           )
         )
     }

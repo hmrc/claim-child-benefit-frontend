@@ -17,6 +17,7 @@
 package pages
 
 import controllers.routes
+import models.UserAnswers
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -28,4 +29,10 @@ case object WantToBePaidToExistingAccountPage extends QuestionPage[Boolean] {
 
   override def route(waypoints: Waypoints): Call =
     routes.WantToBePaidToExistingAccountController.onPageLoad(waypoints)
+
+  override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true  => ApplicantNamePage
+      case false => ApplicantHasSuitableAccountPage
+    }.orRecover
 }

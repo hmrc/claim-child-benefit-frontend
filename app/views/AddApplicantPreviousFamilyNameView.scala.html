@@ -14,17 +14,35 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.addtoalist.{ListItem, Long}
+@import viewmodels.LegendSize
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    addToList: components.addToList
 )
 
-@(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints, otherNames: Seq[ListItem])(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("addApplicantPreviousFamilyName.title"))) {
+@titleText = @{
+    otherNames.size match {
+        case 1 => messages("addApplicantPreviousFamilyName.title.singular")
+        case i => messages("addApplicantPreviousFamilyName.title.plural", i)
+    }
+}
+
+@headingText = @{
+    otherNames.size match {
+        case 1 => messages("addApplicantPreviousFamilyName.heading.singular")
+        case i => messages("addApplicantPreviousFamilyName.heading.plural", i)
+    }
+}
+
+@layout(pageTitle = title(form, titleText)) {
 
     @formHelper(action = routes.AddApplicantPreviousFamilyNameController.onSubmit(waypoints), 'autoComplete -> "off") {
 
@@ -32,10 +50,14 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        <h1 class="govuk-heading-xl">@headingText</h1>
+
+        @addToList(otherNames, Long, "addConsignor.change.hidden", "addConsignor.remove.hidden")
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("addApplicantPreviousFamilyName.heading")).asPageHeading()
+                legend = LegendViewModel(messages("addApplicantPreviousFamilyName.addAnother")).withSize(LegendSize.Medium)
             )
         )
 

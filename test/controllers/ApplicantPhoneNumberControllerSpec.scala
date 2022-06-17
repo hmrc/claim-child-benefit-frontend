@@ -60,7 +60,7 @@ class ApplicantPhoneNumberControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ApplicantPhoneNumberPage, "answer").success.value
+      val userAnswers = UserAnswers(userAnswersId).set(ApplicantPhoneNumberPage, "07777777777").success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -72,7 +72,7 @@ class ApplicantPhoneNumberControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("07777777777"), waypoints)(request, messages(application)).toString
       }
     }
 
@@ -92,10 +92,10 @@ class ApplicantPhoneNumberControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, applicantPhoneNumberRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
+            .withFormUrlEncodedBody(("value", "07777777777"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(ApplicantPhoneNumberPage, "answer").success.value
+        val expectedAnswers = emptyUserAnswers.set(ApplicantPhoneNumberPage, "07777777777").success.value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual ApplicantPhoneNumberPage.navigate(waypoints, expectedAnswers).url
@@ -144,7 +144,7 @@ class ApplicantPhoneNumberControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, applicantPhoneNumberRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
+            .withFormUrlEncodedBody(("value", "07777777777"))
 
         val result = route(application, request).value
 

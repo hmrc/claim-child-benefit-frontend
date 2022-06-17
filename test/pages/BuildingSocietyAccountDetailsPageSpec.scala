@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import models.BuildingSocietyAccountDetails
 import pages.behaviours.PageBehaviours
 
@@ -28,5 +29,20 @@ class BuildingSocietyAccountDetailsPageSpec extends PageBehaviours {
     beSettable[BuildingSocietyAccountDetails](BuildingSocietyAccountDetailsPage)
 
     beRemovable[BuildingSocietyAccountDetails](BuildingSocietyAccountDetailsPage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Applicant Name" in {
+
+          BuildingSocietyAccountDetailsPage
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.ApplicantNameController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }

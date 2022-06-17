@@ -17,7 +17,7 @@
 package pages
 
 import controllers.routes
-import models.ApplicantName
+import models.{ApplicantName, UserAnswers}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -29,4 +29,7 @@ case object ApplicantNamePage extends QuestionPage[ApplicantName] {
 
   override def route(waypoints: Waypoints): Call =
     routes.ApplicantNameController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    ApplicantHasPreviousFamilyNamePage
 }

@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import pages.behaviours.PageBehaviours
 
 class ApplicantLivedAtCurrentAddressOneYearPageSpec extends PageBehaviours {
@@ -27,5 +28,31 @@ class ApplicantLivedAtCurrentAddressOneYearPageSpec extends PageBehaviours {
     beSettable[Boolean](ApplicantLivedAtCurrentAddressOneYearPage)
 
     beRemovable[Boolean](ApplicantLivedAtCurrentAddressOneYearPage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Applicant Phone Number when the answer is yes" in {
+
+          val answers = emptyUserAnswers.set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+
+          ApplicantLivedAtCurrentAddressOneYearPage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.ApplicantPhoneNumberController.onPageLoad(waypoints))
+        }
+
+        "to Applicant Previous Address when the answer is no" in {
+
+          val answers = emptyUserAnswers.set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
+
+          ApplicantLivedAtCurrentAddressOneYearPage
+            .navigate(waypoints, answers)
+            .mustEqual(routes.ApplicantPreviousAddressController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }
