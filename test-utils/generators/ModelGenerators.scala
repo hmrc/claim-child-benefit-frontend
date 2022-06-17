@@ -26,9 +26,11 @@ trait ModelGenerators {
   implicit lazy val arbitraryPartnerName: Arbitrary[PartnerName] =
     Arbitrary {
       for {
+        title <- Gen.option(arbitrary[String])
         firstName <- arbitrary[String]
+        middleNames <- Gen.option(arbitrary[String])
         lastName <- arbitrary[String]
-      } yield PartnerName(firstName, lastName)
+      } yield PartnerName(title, firstName, middleNames, lastName)
     }
 
   implicit lazy val arbitraryPartnerEmploymentStatus: Arbitrary[PartnerEmploymentStatus] =
@@ -40,8 +42,9 @@ trait ModelGenerators {
     Arbitrary {
       for {
         firstName <- arbitrary[String]
+        middleNames <- Gen.option(arbitrary[String])
         lastName <- arbitrary[String]
-      } yield PartnerEldestChildName(firstName, lastName)
+      } yield PartnerEldestChildName(firstName, middleNames, lastName)
     }
 
   implicit lazy val arbitraryNino: Arbitrary[Nino] = Arbitrary {

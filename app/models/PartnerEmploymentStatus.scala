@@ -25,12 +25,16 @@ sealed trait PartnerEmploymentStatus
 
 object PartnerEmploymentStatus extends Enumerable.Implicits {
 
-  case object Looking extends WithName("looking") with PartnerEmploymentStatus
+  case object LookingForWork extends WithName("lookingForWork") with PartnerEmploymentStatus
   case object Employed extends WithName("employed") with PartnerEmploymentStatus
+  case object SelfEmployed extends WithName("selfEmployed") with PartnerEmploymentStatus
+  case object NoneOfThese extends WithName("noneOfThese") with PartnerEmploymentStatus
 
   val values: Seq[PartnerEmploymentStatus] = Seq(
-    Looking,
-    Employed
+    LookingForWork,
+    Employed,
+    SelfEmployed,
+    NoneOfThese
   )
 
   def checkboxItems(implicit messages: Messages): Seq[CheckboxItem] =

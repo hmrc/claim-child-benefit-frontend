@@ -455,7 +455,7 @@ partnerEldestChildName.lastName.change.hidden = lastName
 
 partnerEmploymentStatus.title = What is their employment status?
 partnerEmploymentStatus.heading = What is their employment status?
-partnerEmploymentStatus.looking = Looking for work in the UK
+partnerEmploymentStatus.lookingForWork = Looking for work in the UK
 partnerEmploymentStatus.employed = Employed in the UK
 partnerEmploymentStatus.checkYourAnswersLabel = What is their employment status?
 partnerEmploymentStatus.error.required = Select partnerEmploymentStatus

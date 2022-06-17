@@ -38,8 +38,24 @@
 
         @govukInput(
             InputViewModel(
+                field = form("title"),
+                label = LabelViewModel(messages("partnerName.title"))
+            )
+            .withWidth(Fixed10)
+        )
+
+        @govukInput(
+            InputViewModel(
                 field = form("firstName"),
                 label = LabelViewModel(messages("partnerName.firstName"))
+            )
+            .withWidth(Full)
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("middleNames"),
+                label = LabelViewModel(messages("partnerName.middleNames"))
             )
             .withWidth(Full)
         )

@@ -18,7 +18,12 @@ package models
 
 import play.api.libs.json._
 
-case class PartnerName (firstName: String, lastName: String)
+case class PartnerName (
+                         title: Option[String],
+                         firstName: String,
+                         middleNames: Option[String],
+                         lastName: String
+                       )
 
 object PartnerName {
   implicit val format = Json.format[PartnerName]

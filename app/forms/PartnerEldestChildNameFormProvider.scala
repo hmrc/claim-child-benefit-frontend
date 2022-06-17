@@ -27,10 +27,12 @@ class PartnerEldestChildNameFormProvider @Inject() extends Mappings {
 
    def apply(): Form[PartnerEldestChildName] = Form(
      mapping(
-      "firstName" -> text("partnerEldestChildName.error.firstName.required")
-        .verifying(maxLength(100, "partnerEldestChildName.error.firstName.length")),
-      "lastName" -> text("partnerEldestChildName.error.lastName.required")
-        .verifying(maxLength(100, "partnerEldestChildName.error.lastName.length"))
+       "firstName" -> text("partnerEldestChildName.error.firstName.required")
+         .verifying(maxLength(100, "partnerEldestChildName.error.firstName.length")),
+       "middleNames" -> optional(text("partnerEldestChildName.error.middleNames.required")
+         .verifying(maxLength(100, "partnerEldestChildName.error.middleNames.length"))),
+       "lastName" -> text("partnerEldestChildName.error.lastName.required")
+         .verifying(maxLength(100, "partnerEldestChildName.error.lastName.length"))
     )(PartnerEldestChildName.apply)(PartnerEldestChildName.unapply)
    )
  }

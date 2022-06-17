@@ -18,13 +18,12 @@ package controllers
 
 import base.SpecBase
 import forms.PartnerNameFormProvider
-import models.{PartnerName, UserAnswers}
+import models.PartnerName
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{PartnerNamePage, EmptyWaypoints}
+import pages.{EmptyWaypoints, PartnerNamePage}
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
@@ -40,7 +39,7 @@ class PartnerNameControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val partnerNameRoute = routes.PartnerNameController.onPageLoad(waypoints).url
 
-  private val validAnswer = PartnerName("value 1", "value 2")
+  private val validAnswer = PartnerName(None, "value 1", None, "value 2")
   private val userAnswers = emptyUserAnswers.set(PartnerNamePage, validAnswer).success.value
 
   "PartnerName Controller" - {
@@ -73,7 +72,7 @@ class PartnerNameControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(PartnerName("value 1", "value 2")), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints)(request, messages(application)).toString
       }
     }
 
