@@ -18,8 +18,9 @@ package viewmodels.checkAnswers
 
 import java.time.format.DateTimeFormatter
 import models.UserAnswers
-import pages.{PartnerDateOfBirthPage, CheckAnswersPage, Waypoints}
+import pages.{CheckAnswersPage, PartnerDateOfBirthPage, PartnerNamePage, Waypoints}
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -27,19 +28,23 @@ import viewmodels.implicits._
 object PartnerDateOfBirthSummary  {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
-         (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(PartnerDateOfBirthPage).map {
-      answer =>
+         (implicit messages: Messages): Option[SummaryListRow] = {
+    for {
+      partnerName <- answers.get(PartnerNamePage)
+      dateOfBirth <- answers.get(PartnerDateOfBirthPage)
+    } yield {
 
-        val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+      val safeFirstName = HtmlFormat.escape(partnerName.firstName).toString
+      val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
-        SummaryListRowViewModel(
-          key     = "partnerDateOfBirth.checkYourAnswersLabel",
-          value   = ValueViewModel(answer.format(dateFormatter)),
-          actions = Seq(
-            ActionItemViewModel("site.change", PartnerDateOfBirthPage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("partnerDateOfBirth.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "partnerDateOfBirth.checkYourAnswersLabel",
+        value = ValueViewModel(dateOfBirth.format(dateFormatter)),
+        actions = Seq(
+          ActionItemViewModel("site.change", PartnerDateOfBirthPage.changeLink(waypoints, sourcePage).url)
+            .withVisuallyHiddenText(messages("partnerDateOfBirth.change.hidden", safeFirstName))
         )
+      )
     }
+  }
 }
