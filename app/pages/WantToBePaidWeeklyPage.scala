@@ -31,8 +31,5 @@ case object WantToBePaidWeeklyPage extends QuestionPage[Boolean] {
     routes.WantToBePaidWeeklyController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    answers.get(this).map{
-      case true  => ApplicantHasSuitableAccountPage
-      case false => ApplicantNamePage
-    }.orRecover
+    ApplicantHasSuitableAccountPage
 }
