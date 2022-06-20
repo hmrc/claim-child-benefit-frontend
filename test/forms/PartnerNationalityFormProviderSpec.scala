@@ -21,11 +21,12 @@ import play.api.data.FormError
 
 class PartnerNationalityFormProviderSpec extends StringFieldBehaviours {
 
+  val name = "name"
   val requiredKey = "partnerNationality.error.required"
   val lengthKey = "partnerNationality.error.length"
   val maxLength = 100
 
-  val form = new PartnerNationalityFormProvider()()
+  val form = new PartnerNationalityFormProvider()(name)
 
   ".value" - {
 
@@ -47,7 +48,7 @@ class PartnerNationalityFormProviderSpec extends StringFieldBehaviours {
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq(name))
     )
   }
 }

@@ -18,11 +18,11 @@ package controllers
 
 import base.SpecBase
 import forms.PartnerEmploymentStatusFormProvider
-import models.{PartnerEmploymentStatus, UserAnswers}
+import models.{PartnerEmploymentStatus, PartnerName}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{PartnerEmploymentStatusPage, EmptyWaypoints}
+import pages.{EmptyWaypoints, PartnerEmploymentStatusPage, PartnerNamePage}
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -33,18 +33,20 @@ import scala.concurrent.Future
 
 class PartnerEmploymentStatusControllerSpec extends SpecBase with MockitoSugar {
 
+  private val name = PartnerName(None, "first", None, "last")
+  private val baseAnswers = emptyUserAnswers.set(PartnerNamePage, name).success.value
   private val waypoints = EmptyWaypoints
 
   lazy val partnerEmploymentStatusRoute = routes.PartnerEmploymentStatusController.onPageLoad(waypoints).url
 
   val formProvider = new PartnerEmploymentStatusFormProvider()
-  val form = formProvider()
+  val form = formProvider(name.firstName)
 
   "PartnerEmploymentStatus Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, partnerEmploymentStatusRoute)
@@ -55,13 +57,13 @@ class PartnerEmploymentStatusControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, name.firstName)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(PartnerEmploymentStatusPage, PartnerEmploymentStatus.values.toSet).success.value
+      val userAnswers = baseAnswers.set(PartnerEmploymentStatusPage, PartnerEmploymentStatus.values.toSet).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -73,7 +75,7 @@ class PartnerEmploymentStatusControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(PartnerEmploymentStatus.values.toSet), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(PartnerEmploymentStatus.values.toSet), waypoints, name.firstName)(request, messages(application)).toString
       }
     }
 
@@ -84,7 +86,7 @@ class PartnerEmploymentStatusControllerSpec extends SpecBase with MockitoSugar {
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
             bind[SessionRepository].toInstance(mockSessionRepository)
           )
@@ -96,7 +98,7 @@ class PartnerEmploymentStatusControllerSpec extends SpecBase with MockitoSugar {
             .withFormUrlEncodedBody(("value[0]", PartnerEmploymentStatus.values.head.toString))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(PartnerEmploymentStatusPage, Set(PartnerEmploymentStatus.values.head)).success.value
+        val expectedAnswers = baseAnswers.set(PartnerEmploymentStatusPage, Set(PartnerEmploymentStatus.values.head)).success.value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual PartnerEmploymentStatusPage.navigate(waypoints, expectedAnswers).url
@@ -106,7 +108,7 @@ class PartnerEmploymentStatusControllerSpec extends SpecBase with MockitoSugar {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request =
@@ -120,7 +122,7 @@ class PartnerEmploymentStatusControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, name.firstName)(request, messages(application)).toString
       }
     }
 

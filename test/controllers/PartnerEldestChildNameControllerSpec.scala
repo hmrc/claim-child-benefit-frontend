@@ -18,13 +18,12 @@ package controllers
 
 import base.SpecBase
 import forms.PartnerEldestChildNameFormProvider
-import models.{PartnerEldestChildName, UserAnswers}
+import models.{PartnerEldestChildName, PartnerName}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{PartnerEldestChildNamePage, EmptyWaypoints}
+import pages.{EmptyWaypoints, PartnerEldestChildNamePage, PartnerNamePage}
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
@@ -40,14 +39,16 @@ class PartnerEldestChildNameControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val partnerEldestChildNameRoute = routes.PartnerEldestChildNameController.onPageLoad(waypoints).url
 
-  private val validAnswer = PartnerEldestChildName("value 1", "value 2")
-  private val userAnswers = emptyUserAnswers.set(PartnerEldestChildNamePage, validAnswer).success.value
+  private val name = PartnerName(None, "first", None, "last")
+  private val baseAnswers = emptyUserAnswers.set(PartnerNamePage, name).success.value
+  private val validAnswer = PartnerEldestChildName("value 1", None, "value 2")
+  private val userAnswers = baseAnswers.set(PartnerEldestChildNamePage, validAnswer).success.value
 
   "PartnerEldestChildName Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, partnerEldestChildNameRoute)
@@ -57,7 +58,7 @@ class PartnerEldestChildNameControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, name.firstName)(request, messages(application)).toString
       }
     }
 
@@ -73,7 +74,7 @@ class PartnerEldestChildNameControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(PartnerEldestChildName("value 1", "value 2")), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints, name.firstName)(request, messages(application)).toString
       }
     }
 
@@ -84,7 +85,7 @@ class PartnerEldestChildNameControllerSpec extends SpecBase with MockitoSugar {
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
             bind[SessionRepository].toInstance(mockSessionRepository)
           )
@@ -96,7 +97,7 @@ class PartnerEldestChildNameControllerSpec extends SpecBase with MockitoSugar {
             .withFormUrlEncodedBody(("firstName", "value 1"), ("lastName", "value 2"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(PartnerEldestChildNamePage, validAnswer).success.value
+        val expectedAnswers = baseAnswers.set(PartnerEldestChildNamePage, validAnswer).success.value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual PartnerEldestChildNamePage.navigate(waypoints, expectedAnswers).url
@@ -106,7 +107,7 @@ class PartnerEldestChildNameControllerSpec extends SpecBase with MockitoSugar {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request =
@@ -120,7 +121,7 @@ class PartnerEldestChildNameControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, name.firstName)(request, messages(application)).toString
       }
     }
 

@@ -17,8 +17,9 @@
 package viewmodels.checkAnswers
 
 import models.UserAnswers
-import pages.{PartnerEntitledToChildBenefitPage, CheckAnswersPage, Waypoints}
+import pages.{CheckAnswersPage, PartnerEntitledToChildBenefitPage, PartnerNamePage, Waypoints}
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -27,18 +28,23 @@ object PartnerEntitledToChildBenefitSummary  {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(PartnerEntitledToChildBenefitPage).map {
-      answer =>
+    for {
+      partnerName <- answers.get(PartnerNamePage)
+      entitled    <- answers.get(PartnerEntitledToChildBenefitPage)
+    } yield {
 
-        val value = if (answer) "site.yes" else "site.no"
+      val safeFirstName = HtmlFormat.escape(partnerName.firstName).toString
+      val value         = if (entitled) "site.yes" else "site.no"
 
-        SummaryListRowViewModel(
-          key     = "partnerEntitledToChildBenefit.checkYourAnswersLabel",
-          value   = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel("site.change", PartnerEntitledToChildBenefitPage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("partnerEntitledToChildBenefit.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key     = "partnerEntitledToChildBenefit.checkYourAnswersLabel",
+        value   = ValueViewModel(value),
+        actions = Seq(
+          ActionItemViewModel(
+            messages("site.change", safeFirstName),
+            PartnerEntitledToChildBenefitPage.changeLink(waypoints, sourcePage).url
+          ).withVisuallyHiddenText(messages("partnerEntitledToChildBenefit.change.hidden", safeFirstName))
         )
+      )
     }
 }

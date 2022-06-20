@@ -18,14 +18,15 @@ package controllers
 
 import controllers.actions._
 import forms.PartnerNationalityFormProvider
-import javax.inject.Inject
-import pages.{PartnerNationalityPage, Waypoints}
+import pages.{PartnerNamePage, PartnerNationalityPage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.twirl.api.HtmlFormat
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.PartnerNationalityView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class PartnerNationalityController @Inject()(
@@ -37,33 +38,46 @@ class PartnerNationalityController @Inject()(
                                         formProvider: PartnerNationalityFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
                                         view: PartnerNationalityView
-                                    )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
-
-  val form = formProvider()
+                                    )(implicit ec: ExecutionContext)
+  extends FrontendBaseController
+    with I18nSupport
+    with AnswerExtractor {
 
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
+      getAnswer(PartnerNamePage) {
+        partnerName =>
 
-      val preparedForm = request.userAnswers.get(PartnerNationalityPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
+          val safeFirstName = HtmlFormat.escape(partnerName.firstName).toString
+          val form          = formProvider(safeFirstName)
+
+          val preparedForm = request.userAnswers.get(PartnerNationalityPage) match {
+            case None => form
+            case Some(value) => form.fill(value)
+          }
+
+          Ok(view(preparedForm, waypoints, safeFirstName))
       }
-
-      Ok(view(preparedForm, waypoints))
   }
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      getAnswerAsync(PartnerNamePage) {
+        partnerName =>
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints))),
+          val safeFirstName = HtmlFormat.escape(partnerName.firstName).toString
+          val form          = formProvider(safeFirstName)
 
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerNationalityPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(PartnerNationalityPage.navigate(waypoints, updatedAnswers))
-      )
+          form.bindFromRequest().fold(
+            formWithErrors =>
+              Future.successful(BadRequest(view(formWithErrors, waypoints, safeFirstName))),
+
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerNationalityPage, value))
+                _ <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(PartnerNationalityPage.navigate(waypoints, updatedAnswers))
+          )
+      }
   }
 }

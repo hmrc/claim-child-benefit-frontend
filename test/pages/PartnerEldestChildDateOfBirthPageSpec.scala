@@ -16,8 +16,9 @@
 
 package pages
 
-import java.time.LocalDate
+import controllers.routes
 
+import java.time.LocalDate
 import org.scalacheck.Arbitrary
 import pages.behaviours.PageBehaviours
 
@@ -34,5 +35,20 @@ class PartnerEldestChildDateOfBirthPageSpec extends PageBehaviours {
     beSettable[LocalDate](PartnerEldestChildDateOfBirthPage)
 
     beRemovable[LocalDate](PartnerEldestChildDateOfBirthPage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Index" in {
+
+          PartnerEldestChildDateOfBirthPage
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.IndexController.onPageLoad)
+        }
+      }
+    }
   }
 }

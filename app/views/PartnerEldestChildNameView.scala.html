@@ -24,7 +24,7 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints, partnerFirstName: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("partnerEldestChildName.title"))) {
 
@@ -34,12 +34,20 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <h1 class="govuk-heading-xl">@messages("partnerEldestChildName.heading")</h1>
+        <h1 class="govuk-heading-xl">@messages("partnerEldestChildName.heading", partnerFirstName)</h1>
 
         @govukInput(
             InputViewModel(
                 field = form("firstName"),
                 label = LabelViewModel(messages("partnerEldestChildName.firstName"))
+            )
+            .withWidth(Full)
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("middleNames"),
+                label = LabelViewModel(messages("partnerEldestChildName.middleNames"))
             )
             .withWidth(Full)
         )

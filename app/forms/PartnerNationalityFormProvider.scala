@@ -23,9 +23,9 @@ import play.api.data.Form
 
 class PartnerNationalityFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[String] =
+  def apply(partnerFirstName: String): Form[String] =
     Form(
-      "value" -> text("partnerNationality.error.required")
+      "value" -> text("partnerNationality.error.required", args = Seq(partnerFirstName))
         .verifying(maxLength(100, "partnerNationality.error.length"))
     )
 }

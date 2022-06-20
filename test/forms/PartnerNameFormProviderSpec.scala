@@ -23,6 +23,27 @@ class PartnerNameFormProviderSpec extends StringFieldBehaviours {
 
   val form = new PartnerNameFormProvider()()
 
+  ".title" - {
+
+    val fieldName = "title"
+    val lengthKey = "partnerName.error.titleField.length"
+    val maxLength = 20
+
+    behave like fieldThatBindsValidData(
+      form,
+      fieldName,
+      stringsWithMaxLength(maxLength)
+    )
+
+    behave like fieldWithMaxLength(
+      form,
+      fieldName,
+      maxLength = maxLength,
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+    )
+
+  }
+
   ".firstName" - {
 
     val fieldName = "firstName"
@@ -48,6 +69,27 @@ class PartnerNameFormProviderSpec extends StringFieldBehaviours {
       fieldName,
       requiredError = FormError(fieldName, requiredKey)
     )
+  }
+
+  ".middleNames" - {
+
+    val fieldName = "middleNames"
+    val lengthKey = "partnerName.error.middleNames.length"
+    val maxLength = 100
+
+    behave like fieldThatBindsValidData(
+      form,
+      fieldName,
+      stringsWithMaxLength(maxLength)
+    )
+
+    behave like fieldWithMaxLength(
+      form,
+      fieldName,
+      maxLength = maxLength,
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+    )
+
   }
 
   ".lastName" - {

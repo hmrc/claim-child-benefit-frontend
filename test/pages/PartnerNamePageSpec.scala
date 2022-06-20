@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import models.PartnerName
 import pages.behaviours.PageBehaviours
 
@@ -28,5 +29,20 @@ class PartnerNamePageSpec extends PageBehaviours {
     beSettable[PartnerName](PartnerNamePage)
 
     beRemovable[PartnerName](PartnerNamePage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Partner NINO Known" in {
+
+          PartnerNamePage
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.PartnerNinoKnownController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }

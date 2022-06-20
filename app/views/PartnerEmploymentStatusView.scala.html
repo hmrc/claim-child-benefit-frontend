@@ -22,7 +22,7 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints, partnerFirstName: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("partnerEmploymentStatus.title"))) {
 
@@ -36,7 +36,7 @@
             CheckboxesViewModel(
                 form   = form,
                 name   = "value",
-                legend = LegendViewModel(messages("partnerEmploymentStatus.heading")).asPageHeading(),
+                legend = LegendViewModel(messages("partnerEmploymentStatus.heading", partnerFirstName)).asPageHeading(),
                 items  = PartnerEmploymentStatus.checkboxItems
             )
         )

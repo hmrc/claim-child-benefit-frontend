@@ -18,11 +18,11 @@ package controllers
 
 import base.SpecBase
 import forms.PartnerWaitingForEntitlementDecisionFormProvider
-import models.UserAnswers
+import models.{PartnerName, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{PartnerWaitingForEntitlementDecisionPage, EmptyWaypoints}
+import pages.{EmptyWaypoints, PartnerNamePage, PartnerWaitingForEntitlementDecisionPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -35,9 +35,11 @@ import scala.concurrent.Future
 class PartnerWaitingForEntitlementDecisionControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
+  private val name = PartnerName(None, "first", None, "last")
+  private val baseAnswers = emptyUserAnswers.set(PartnerNamePage, name).success.value
 
   val formProvider = new PartnerWaitingForEntitlementDecisionFormProvider()
-  val form = formProvider()
+  val form = formProvider(name.firstName)
   private val waypoints = EmptyWaypoints
 
   lazy val partnerWaitingForEntitlementDecisionRoute = routes.PartnerWaitingForEntitlementDecisionController.onPageLoad(waypoints).url
@@ -46,7 +48,7 @@ class PartnerWaitingForEntitlementDecisionControllerSpec extends SpecBase with M
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, partnerWaitingForEntitlementDecisionRoute)
@@ -56,13 +58,13 @@ class PartnerWaitingForEntitlementDecisionControllerSpec extends SpecBase with M
         val view = application.injector.instanceOf[PartnerWaitingForEntitlementDecisionView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, name.firstName)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(PartnerWaitingForEntitlementDecisionPage, true).success.value
+      val userAnswers = baseAnswers.set(PartnerWaitingForEntitlementDecisionPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -74,7 +76,7 @@ class PartnerWaitingForEntitlementDecisionControllerSpec extends SpecBase with M
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), waypoints, name.firstName)(request, messages(application)).toString
       }
     }
 
@@ -85,7 +87,7 @@ class PartnerWaitingForEntitlementDecisionControllerSpec extends SpecBase with M
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
             bind[SessionRepository].toInstance(mockSessionRepository)
           )
@@ -97,7 +99,7 @@ class PartnerWaitingForEntitlementDecisionControllerSpec extends SpecBase with M
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(PartnerWaitingForEntitlementDecisionPage, true).success.value
+        val expectedAnswers = baseAnswers.set(PartnerWaitingForEntitlementDecisionPage, true).success.value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual PartnerWaitingForEntitlementDecisionPage.navigate(waypoints, expectedAnswers).url
@@ -107,7 +109,7 @@ class PartnerWaitingForEntitlementDecisionControllerSpec extends SpecBase with M
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request =
@@ -121,7 +123,7 @@ class PartnerWaitingForEntitlementDecisionControllerSpec extends SpecBase with M
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, name.firstName)(request, messages(application)).toString
       }
     }
 

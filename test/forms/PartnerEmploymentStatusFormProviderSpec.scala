@@ -22,7 +22,8 @@ import play.api.data.FormError
 
 class PartnerEmploymentStatusFormProviderSpec extends CheckboxFieldBehaviours {
 
-  val form = new PartnerEmploymentStatusFormProvider()()
+  val name = "name"
+  val form = new PartnerEmploymentStatusFormProvider()(name)
 
   ".value" - {
 
@@ -33,13 +34,14 @@ class PartnerEmploymentStatusFormProviderSpec extends CheckboxFieldBehaviours {
       form,
       fieldName,
       validValues  = PartnerEmploymentStatus.values,
-      invalidError = FormError(s"$fieldName[0]", "error.invalid")
+      invalidError = FormError(s"$fieldName[0]", "error.invalid", Seq(name))
     )
 
     behave like mandatoryCheckboxField(
       form,
       fieldName,
-      requiredKey
+      requiredKey,
+      Seq(name)
     )
   }
 }

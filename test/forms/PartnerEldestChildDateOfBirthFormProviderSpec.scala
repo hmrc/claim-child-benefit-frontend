@@ -22,7 +22,8 @@ import forms.behaviours.DateBehaviours
 
 class PartnerEldestChildDateOfBirthFormProviderSpec extends DateBehaviours {
 
-  val form = new PartnerEldestChildDateOfBirthFormProvider()()
+  val name = "name"
+  val form = new PartnerEldestChildDateOfBirthFormProvider()(name)
 
   ".value" - {
 
@@ -33,6 +34,6 @@ class PartnerEldestChildDateOfBirthFormProviderSpec extends DateBehaviours {
 
     behave like dateField(form, "value", validData)
 
-    behave like mandatoryDateField(form, "value", "partnerEldestChildDateOfBirth.error.required.all")
+    behave like mandatoryDateField(form, "value", "partnerEldestChildDateOfBirth.error.required.all", Seq(name))
   }
 }

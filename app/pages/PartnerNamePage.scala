@@ -17,7 +17,7 @@
 package pages
 
 import controllers.routes
-import models.PartnerName
+import models.{PartnerName, UserAnswers}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -29,4 +29,7 @@ case object PartnerNamePage extends QuestionPage[PartnerName] {
 
   override def route(waypoints: Waypoints): Call =
     routes.PartnerNameController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    PartnerNinoKnownPage
 }

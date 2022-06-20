@@ -23,8 +23,8 @@ import play.api.data.Form
 
 class PartnerWaitingForEntitlementDecisionFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(partnerFirstName: String): Form[Boolean] =
     Form(
-      "value" -> boolean("partnerWaitingForEntitlementDecision.error.required")
+      "value" -> boolean("partnerWaitingForEntitlementDecision.error.required", args = Seq(partnerFirstName))
     )
 }

@@ -21,10 +21,11 @@ import play.api.data.FormError
 
 class PartnerNinoKnownFormProviderSpec extends BooleanFieldBehaviours {
 
+  val name = "name"
   val requiredKey = "partnerNinoKnown.error.required"
   val invalidKey = "error.boolean"
 
-  val form = new PartnerNinoKnownFormProvider()()
+  val form = new PartnerNinoKnownFormProvider()(name)
 
   ".value" - {
 
@@ -33,13 +34,13 @@ class PartnerNinoKnownFormProviderSpec extends BooleanFieldBehaviours {
     behave like booleanField(
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+      invalidError = FormError(fieldName, invalidKey, Seq(name))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq(name))
     )
   }
 }

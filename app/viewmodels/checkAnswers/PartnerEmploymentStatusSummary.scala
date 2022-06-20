@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers
 
 import models.UserAnswers
-import pages.{CheckAnswersPage, PartnerEmploymentStatusPage, Waypoints}
+import pages.{CheckAnswersPage, PartnerEmploymentStatusPage, PartnerNamePage, Waypoints}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
@@ -29,25 +29,31 @@ object PartnerEmploymentStatusSummary  {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(PartnerEmploymentStatusPage).map {
-      answers =>
+    for {
+      partnerName      <- answers.get(PartnerNamePage)
+      employmentStatus <- answers.get(PartnerEmploymentStatusPage)
+    } yield {
 
-        val value = ValueViewModel(
-          HtmlContent(
-            answers.map {
-              answer => HtmlFormat.escape(messages(s"partnerEmploymentStatus.$answer")).toString
-            }
-            .mkString(",<br>")
-          )
-        )
+      val safeFirstName = HtmlFormat.escape(partnerName.firstName).toString
 
-        SummaryListRowViewModel(
-          key     = "partnerEmploymentStatus.checkYourAnswersLabel",
-          value   = value,
-          actions = Seq(
-            ActionItemViewModel("site.change", PartnerEmploymentStatusPage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("partnerEmploymentStatus.change.hidden"))
-          )
+      val value = ValueViewModel(
+        HtmlContent(
+          employmentStatus.map {
+            answer => HtmlFormat.escape(messages(s"partnerEmploymentStatus.$answer")).toString
+          }
+          .mkString(",<br>")
         )
+      )
+
+      SummaryListRowViewModel(
+        key     = "partnerEmploymentStatus.checkYourAnswersLabel",
+        value   = value,
+        actions = Seq(
+          ActionItemViewModel(
+            messages("site.change", safeFirstName),
+            PartnerEmploymentStatusPage.changeLink(waypoints, sourcePage).url
+          ).withVisuallyHiddenText(messages("partnerEmploymentStatus.change.hidden", safeFirstName))
+        )
+      )
     }
 }

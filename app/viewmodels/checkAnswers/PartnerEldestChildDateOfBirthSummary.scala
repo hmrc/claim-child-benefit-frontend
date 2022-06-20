@@ -18,8 +18,9 @@ package viewmodels.checkAnswers
 
 import java.time.format.DateTimeFormatter
 import models.UserAnswers
-import pages.{PartnerEldestChildDateOfBirthPage, CheckAnswersPage, Waypoints}
+import pages.{CheckAnswersPage, PartnerEldestChildDateOfBirthPage, PartnerNamePage, Waypoints}
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -28,18 +29,23 @@ object PartnerEldestChildDateOfBirthSummary  {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(PartnerEldestChildDateOfBirthPage).map {
-      answer =>
+    for {
+      partnerName <- answers.get(PartnerNamePage)
+      dateOfBirth <- answers.get(PartnerEldestChildDateOfBirthPage)
+    } yield {
 
-        val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+      val safeFirstName = HtmlFormat.escape(partnerName.firstName).toString
+      val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
-        SummaryListRowViewModel(
-          key     = "partnerEldestChildDateOfBirth.checkYourAnswersLabel",
-          value   = ValueViewModel(answer.format(dateFormatter)),
-          actions = Seq(
-            ActionItemViewModel("site.change", PartnerEldestChildDateOfBirthPage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("partnerEldestChildDateOfBirth.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "partnerEldestChildDateOfBirth.checkYourAnswersLabel",
+        value = ValueViewModel(dateOfBirth.format(dateFormatter)),
+        actions = Seq(
+          ActionItemViewModel(
+            messages("site.change", safeFirstName),
+            PartnerEldestChildDateOfBirthPage.changeLink(waypoints, sourcePage).url
+          ).withVisuallyHiddenText(messages("partnerEldestChildDateOfBirth.change.hidden", safeFirstName))
         )
+      )
     }
 }

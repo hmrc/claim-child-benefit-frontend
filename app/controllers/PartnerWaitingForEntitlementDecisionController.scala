@@ -18,10 +18,12 @@ package controllers
 
 import controllers.actions._
 import forms.PartnerWaitingForEntitlementDecisionFormProvider
+
 import javax.inject.Inject
-import pages.{PartnerWaitingForEntitlementDecisionPage, Waypoints}
+import pages.{PartnerNamePage, PartnerWaitingForEntitlementDecisionPage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.twirl.api.HtmlFormat
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.PartnerWaitingForEntitlementDecisionView
@@ -37,33 +39,46 @@ class PartnerWaitingForEntitlementDecisionController @Inject()(
                                          formProvider: PartnerWaitingForEntitlementDecisionFormProvider,
                                          val controllerComponents: MessagesControllerComponents,
                                          view: PartnerWaitingForEntitlementDecisionView
-                                 )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
-
-  val form = formProvider()
+                                 )(implicit ec: ExecutionContext)
+  extends FrontendBaseController
+    with I18nSupport
+    with AnswerExtractor {
 
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
+      getAnswer(PartnerNamePage) {
+        partnerName =>
 
-      val preparedForm = request.userAnswers.get(PartnerWaitingForEntitlementDecisionPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
+          val safeFirstName = HtmlFormat.escape(partnerName.firstName).toString
+          val form          = formProvider(safeFirstName)
+
+          val preparedForm = request.userAnswers.get(PartnerWaitingForEntitlementDecisionPage) match {
+            case None => form
+            case Some(value) => form.fill(value)
+          }
+
+          Ok(view(preparedForm, waypoints, safeFirstName))
       }
-
-      Ok(view(preparedForm, waypoints))
   }
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      getAnswerAsync(PartnerNamePage) {
+        partnerName =>
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints))),
+          val safeFirstName = HtmlFormat.escape(partnerName.firstName).toString
+          val form          = formProvider(safeFirstName)
 
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerWaitingForEntitlementDecisionPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(PartnerWaitingForEntitlementDecisionPage.navigate(waypoints, updatedAnswers))
-      )
+          form.bindFromRequest().fold(
+            formWithErrors =>
+              Future.successful(BadRequest(view(formWithErrors, waypoints, safeFirstName))),
+
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerWaitingForEntitlementDecisionPage, value))
+                _ <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(PartnerWaitingForEntitlementDecisionPage.navigate(waypoints, updatedAnswers))
+          )
+      }
   }
 }

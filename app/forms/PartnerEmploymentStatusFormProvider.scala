@@ -25,8 +25,9 @@ import models.PartnerEmploymentStatus
 
 class PartnerEmploymentStatusFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Set[PartnerEmploymentStatus]] =
+  def apply(partnerFIitName: String): Form[Set[PartnerEmploymentStatus]] =
     Form(
-      "value" -> set(enumerable[PartnerEmploymentStatus]("partnerEmploymentStatus.error.required")).verifying(nonEmptySet("partnerEmploymentStatus.error.required"))
+      "value" -> set(enumerable[PartnerEmploymentStatus]("partnerEmploymentStatus.error.required", args = Seq(partnerFIitName)))
+        .verifying(nonEmptySet("partnerEmploymentStatus.error.required", args = Seq(partnerFIitName)))
     )
 }

@@ -16,6 +16,7 @@
 
 package pages
 
+import controllers.routes
 import models.PartnerEldestChildName
 import pages.behaviours.PageBehaviours
 
@@ -28,5 +29,20 @@ class PartnerEldestChildNamePageSpec extends PageBehaviours {
     beSettable[PartnerEldestChildName](PartnerEldestChildNamePage)
 
     beRemovable[PartnerEldestChildName](PartnerEldestChildNamePage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Partner Eldest Child Date of Birth Known" in {
+
+          PartnerEldestChildNamePage
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.PartnerEldestChildDateOfBirthController.onPageLoad(waypoints))
+        }
+      }
+    }
   }
 }

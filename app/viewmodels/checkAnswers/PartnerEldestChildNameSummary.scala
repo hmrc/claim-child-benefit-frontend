@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers
 
 import models.UserAnswers
-import pages.{PartnerEldestChildNamePage, CheckAnswersPage, Waypoints}
+import pages.{CheckAnswersPage, PartnerEldestChildNamePage, PartnerNamePage, Waypoints}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
@@ -29,18 +29,27 @@ object PartnerEldestChildNameSummary  {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(PartnerEldestChildNamePage).map {
-      answer =>
+    for {
+      partnerName <- answers.get(PartnerNamePage)
+      childName   <- answers.get(PartnerEldestChildNamePage)
+    } yield {
 
-      val value = HtmlFormat.escape(answer.firstName).toString + "<br/>" + HtmlFormat.escape(answer.lastName).toString
+      val safeFirstName = HtmlFormat.escape(partnerName.firstName).toString
 
-        SummaryListRowViewModel(
-          key     = "partnerEldestChildName.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlContent(value)),
-          actions = Seq(
-            ActionItemViewModel("site.change", PartnerEldestChildNamePage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("partnerEldestChildName.change.hidden"))
-          )
+      val value =
+        List(Some(childName.firstName), childName.middleNames, Some(childName.lastName))
+          .flatten.map(HtmlFormat.escape(_).toString())
+          .mkString("<br/>")
+
+      SummaryListRowViewModel(
+        key = "partnerEldestChildName.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlContent(value)),
+        actions = Seq(
+          ActionItemViewModel(
+            messages("site.change", safeFirstName),
+            PartnerEldestChildNamePage.changeLink(waypoints, sourcePage).url
+          ).withVisuallyHiddenText(messages("partnerEldestChildName.change.hidden", safeFirstName))
         )
+      )
     }
 }

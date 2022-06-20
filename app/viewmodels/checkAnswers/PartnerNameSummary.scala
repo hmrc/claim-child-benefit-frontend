@@ -32,7 +32,10 @@ object PartnerNameSummary  {
     answers.get(PartnerNamePage).map {
       answer =>
 
-      val value = HtmlFormat.escape(answer.firstName).toString + "<br/>" + HtmlFormat.escape(answer.lastName).toString
+        val value =
+          List(answer.title, Some(answer.firstName), answer.middleNames, Some(answer.lastName))
+            .flatten.map(HtmlFormat.escape(_).toString)
+            .mkString("<br/>")
 
         SummaryListRowViewModel(
           key     = "partnerName.checkYourAnswersLabel",

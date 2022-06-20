@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers
 
 import models.UserAnswers
-import pages.{PartnerNationalityPage, CheckAnswersPage, Waypoints}
+import pages.{CheckAnswersPage, PartnerNamePage, PartnerNationalityPage, Waypoints}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -28,16 +28,22 @@ object PartnerNationalitySummary  {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(PartnerNationalityPage).map {
-      answer =>
+    for {
+      partnerName <- answers.get(PartnerNamePage)
+      nationality <- answers.get(PartnerNationalityPage)
+    } yield {
 
-        SummaryListRowViewModel(
-          key     = "partnerNationality.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = Seq(
-            ActionItemViewModel("site.change", PartnerNationalityPage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("partnerNationality.change.hidden"))
-          )
+      val safeFirstName = HtmlFormat.escape(partnerName.firstName).toString
+
+      SummaryListRowViewModel(
+        key     = "partnerNationality.checkYourAnswersLabel",
+        value   = ValueViewModel(HtmlFormat.escape(nationality).toString),
+        actions = Seq(
+          ActionItemViewModel(
+            messages("site.change", safeFirstName),
+            PartnerNationalityPage.changeLink(waypoints, sourcePage).url
+          ).withVisuallyHiddenText(messages("partnerNationality.change.hidden", safeFirstName))
         )
+      )
     }
 }

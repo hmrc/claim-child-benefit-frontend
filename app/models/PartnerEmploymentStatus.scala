@@ -25,24 +25,34 @@ sealed trait PartnerEmploymentStatus
 
 object PartnerEmploymentStatus extends Enumerable.Implicits {
 
-  case object Looking extends WithName("looking") with PartnerEmploymentStatus
+  case object LookingForWork extends WithName("lookingForWork") with PartnerEmploymentStatus
   case object Employed extends WithName("employed") with PartnerEmploymentStatus
+  case object SelfEmployed extends WithName("selfEmployed") with PartnerEmploymentStatus
+  case object NoneOfThese extends WithName("noneOfThese") with PartnerEmploymentStatus
 
   val values: Seq[PartnerEmploymentStatus] = Seq(
-    Looking,
-    Employed
+    LookingForWork,
+    Employed,
+    SelfEmployed,
+    NoneOfThese
   )
 
-  def checkboxItems(implicit messages: Messages): Seq[CheckboxItem] =
+  val activeStatuses: Set[PartnerEmploymentStatus] = values.toSet - NoneOfThese
+
+  def checkboxItems(implicit messages: Messages): Seq[CheckboxItem] = {
+
+    val divider = CheckboxItem(divider = Some(messages("site.or")))
+
     values.zipWithIndex.map {
       case (value, index) =>
         CheckboxItemViewModel(
           content = Text(messages(s"partnerEmploymentStatus.${value.toString}")),
           fieldId = "value",
-          index   = index,
-          value   = value.toString
+          index = index,
+          value = value.toString
         )
-    }
+    }.patch(activeStatuses.size, List(divider), 0)
+  }
 
   implicit val enumerable: Enumerable[PartnerEmploymentStatus] =
     Enumerable(values.map(v => v.toString -> v): _*)

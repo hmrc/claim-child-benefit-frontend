@@ -23,8 +23,8 @@ import play.api.data.Form
 
 class PartnerNinoKnownFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(partnerFirstName: String): Form[Boolean] =
     Form(
-      "value" -> boolean("partnerNinoKnown.error.required")
+      "value" -> boolean("partnerNinoKnown.error.required", args = Seq(partnerFirstName))
     )
 }
