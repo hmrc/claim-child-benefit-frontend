@@ -24,11 +24,13 @@ sealed trait ApplicantRelationshipToChild
 
 object ApplicantRelationshipToChild extends Enumerable.Implicits {
 
-  case object Birthchild extends WithName("birthChild") with ApplicantRelationshipToChild
-  case object Adoptedchild extends WithName("adoptedChild") with ApplicantRelationshipToChild
+  case object BirthChild extends WithName("birthChild") with ApplicantRelationshipToChild
+  case object AdoptedChild extends WithName("adoptedChild") with ApplicantRelationshipToChild
+  case object StepChild extends WithName("stepChild") with ApplicantRelationshipToChild
+  case object Other extends WithName("other") with ApplicantRelationshipToChild
 
   val values: Seq[ApplicantRelationshipToChild] = Seq(
-    Birthchild, Adoptedchild
+    BirthChild, AdoptedChild, StepChild, Other
   )
 
   def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {

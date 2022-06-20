@@ -25,12 +25,16 @@ import models.PreviousClaimantAddress
 
 class PreviousClaimantAddressFormProvider @Inject() extends Mappings {
 
-   def apply(): Form[PreviousClaimantAddress] = Form(
-     mapping(
+  def apply(): Form[PreviousClaimantAddress] = Form(
+    mapping(
       "line1" -> text("previousClaimantAddress.error.line1.required")
         .verifying(maxLength(100, "previousClaimantAddress.error.line1.length")),
-      "line2" -> text("previousClaimantAddress.error.line2.required")
-        .verifying(maxLength(100, "previousClaimantAddress.error.line2.length"))
+      "line2" -> optional(text("previousClaimantAddress.error.line2.required")
+        .verifying(maxLength(100, "previousClaimantAddress.error.line2.length"))),
+      "line3" -> optional(text("previousClaimantAddress.error.line3.required")
+        .verifying(maxLength(100, "previousClaimantAddress.error.line3.length"))),
+      "postcode" -> text("previousClaimantAddress.error.postcode.required")
+        .verifying(maxLength(100, "previousClaimantAddress.error.postcode.length"))
     )(PreviousClaimantAddress.apply)(PreviousClaimantAddress.unapply)
-   )
- }
+  )
+}

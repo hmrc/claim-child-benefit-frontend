@@ -18,13 +18,12 @@ package controllers
 
 import base.SpecBase
 import forms.ChildScottishBirthCertificateDetailsFormProvider
-import models.{ChildScottishBirthCertificateDetails, UserAnswers}
+import models.ChildScottishBirthCertificateDetails
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{ChildScottishBirthCertificateDetailsPage, EmptyWaypoints}
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
@@ -40,7 +39,7 @@ class ChildScottishBirthCertificateDetailsControllerSpec extends SpecBase with M
 
   lazy val childScottishBirthCertificateDetailsRoute = routes.ChildScottishBirthCertificateDetailsController.onPageLoad(waypoints, index).url
 
-  private val validAnswer = ChildScottishBirthCertificateDetails("1", "2")
+  private val validAnswer = ChildScottishBirthCertificateDetails("123", "2022", "456")
   private val userAnswers = emptyUserAnswers.set(ChildScottishBirthCertificateDetailsPage(index), validAnswer).success.value
 
   "ChildScottishBirthCertificateDetails Controller" - {
@@ -93,7 +92,7 @@ class ChildScottishBirthCertificateDetailsControllerSpec extends SpecBase with M
       running(application) {
         val request =
           FakeRequest(POST, childScottishBirthCertificateDetailsRoute)
-            .withFormUrlEncodedBody(("district", "1"), ("year", "2"))
+            .withFormUrlEncodedBody(("district", "123"), ("year", "2022"), ("entryNumber", "456"))
 
         val result = route(application, request).value
         val expectedAnswers = emptyUserAnswers.set(ChildScottishBirthCertificateDetailsPage(index), validAnswer).success.value
@@ -145,7 +144,7 @@ class ChildScottishBirthCertificateDetailsControllerSpec extends SpecBase with M
       running(application) {
         val request =
           FakeRequest(POST, childScottishBirthCertificateDetailsRoute)
-            .withFormUrlEncodedBody(("district", "1"), ("year", "2"))
+            .withFormUrlEncodedBody(("district", "123"), ("year", "2022"), ("entryNumber", "456"))
 
         val result = route(application, request).value
 

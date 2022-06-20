@@ -26,17 +26,21 @@ trait ModelGenerators {
   implicit lazy val arbitraryPreviousClaimantName: Arbitrary[PreviousClaimantName] =
     Arbitrary {
       for {
+        title <- Gen.option(arbitrary[String])
         firstName <- arbitrary[String]
+        middleNames <- Gen.option(arbitrary[String])
         lastName <- arbitrary[String]
-      } yield PreviousClaimantName(firstName, lastName)
+      } yield PreviousClaimantName(title, firstName, middleNames, lastName)
     }
 
   implicit lazy val arbitraryPreviousClaimantAddress: Arbitrary[PreviousClaimantAddress] =
     Arbitrary {
       for {
         line1 <- arbitrary[String]
-        line2 <- arbitrary[String]
-      } yield PreviousClaimantAddress(line1, line2)
+        line2 <- Gen.option(arbitrary[String])
+        line3 <- Gen.option(arbitrary[String])
+        postcode <- arbitrary[String]
+      } yield PreviousClaimantAddress(line1, line2, line3, postcode)
     }
 
   implicit lazy val arbitraryIncludedDocuments: Arbitrary[IncludedDocuments] =
@@ -49,23 +53,26 @@ trait ModelGenerators {
       for {
         district <- arbitrary[String]
         year <- arbitrary[String]
-      } yield ChildScottishBirthCertificateDetails(district, year)
+        entryNumber <- arbitrary[String]
+      } yield ChildScottishBirthCertificateDetails(district, year, entryNumber)
     }
 
   implicit lazy val arbitraryChildPreviousName: Arbitrary[ChildPreviousName] =
     Arbitrary {
       for {
         firstName <- arbitrary[String]
+        middleNames <- Gen.option(arbitrary[String])
         lastName <- arbitrary[String]
-      } yield ChildPreviousName(firstName, lastName)
+      } yield ChildPreviousName(firstName, middleNames, lastName)
     }
 
   implicit lazy val arbitraryChildName: Arbitrary[ChildName] =
     Arbitrary {
       for {
         firstName <- arbitrary[String]
+        middleNames <- Gen.option(arbitrary[String])
         lastName <- arbitrary[String]
-      } yield ChildName(firstName, lastName)
+      } yield ChildName(firstName, middleNames, lastName)
     }
 
   implicit lazy val arbitraryChildBirthRegistrationCountry: Arbitrary[ChildBirthRegistrationCountry] =

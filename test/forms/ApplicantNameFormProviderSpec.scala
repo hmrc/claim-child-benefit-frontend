@@ -26,7 +26,7 @@ class ApplicantNameFormProviderSpec extends StringFieldBehaviours {
   ".title" - {
 
     val fieldName = "title"
-    val lengthKey = "applicantName.error.titleField.length"
+    val lengthKey = "applicantName.error.title.length"
     val maxLength = 20
 
     behave like fieldThatBindsValidData(

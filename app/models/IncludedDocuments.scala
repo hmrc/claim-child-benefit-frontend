@@ -25,12 +25,16 @@ sealed trait IncludedDocuments
 
 object IncludedDocuments extends Enumerable.Implicits {
 
-  case object Birthcertificate extends WithName("birthCertificate") with IncludedDocuments
+  case object BirthCertificate extends WithName("birthCertificate") with IncludedDocuments
   case object Passport extends WithName("passport") with IncludedDocuments
+  case object TravelDocuments extends WithName("travelDocuments") with IncludedDocuments
+  case object AdoptionCertificate extends WithName("adoptionCertificate") with IncludedDocuments
 
   val values: Seq[IncludedDocuments] = Seq(
-    Birthcertificate,
-    Passport
+    BirthCertificate,
+    Passport,
+    TravelDocuments,
+    AdoptionCertificate
   )
 
   def checkboxItems(implicit messages: Messages): Seq[CheckboxItem] =

@@ -26,9 +26,12 @@ object ChildBirthRegistrationCountry extends Enumerable.Implicits {
 
   case object England extends WithName("england") with ChildBirthRegistrationCountry
   case object Scotland extends WithName("scotland") with ChildBirthRegistrationCountry
+  case object Wales extends WithName("wales") with ChildBirthRegistrationCountry
+  case object Other extends WithName("other") with ChildBirthRegistrationCountry
+  case object Unknown extends WithName("unknown") with ChildBirthRegistrationCountry
 
   val values: Seq[ChildBirthRegistrationCountry] = Seq(
-    England, Scotland
+    England, Scotland, Wales, Other, Unknown
   )
 
   def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {

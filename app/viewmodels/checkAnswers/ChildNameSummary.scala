@@ -32,7 +32,11 @@ object ChildNameSummary  {
     answers.get(ChildNamePage(index)).map {
       answer =>
 
-      val value = HtmlFormat.escape(answer.firstName).toString + "<br/>" + HtmlFormat.escape(answer.lastName).toString
+      val value =
+        Seq(Some(answer.firstName), answer.middleNames, Some(answer.lastName))
+          .flatten
+          .map(HtmlFormat.escape(_).toString)
+          .mkString(" ")
 
         SummaryListRowViewModel(
           key     = "childName.checkYourAnswersLabel",

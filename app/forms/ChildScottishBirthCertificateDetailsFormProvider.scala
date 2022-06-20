@@ -25,12 +25,14 @@ import models.ChildScottishBirthCertificateDetails
 
 class ChildScottishBirthCertificateDetailsFormProvider @Inject() extends Mappings {
 
-   def apply(): Form[ChildScottishBirthCertificateDetails] = Form(
-     mapping(
+  def apply(): Form[ChildScottishBirthCertificateDetails] = Form(
+    mapping(
       "district" -> text("childScottishBirthCertificateDetails.error.district.required")
         .verifying(maxLength(3, "childScottishBirthCertificateDetails.error.district.length")),
       "year" -> text("childScottishBirthCertificateDetails.error.year.required")
-        .verifying(maxLength(4, "childScottishBirthCertificateDetails.error.year.length"))
+        .verifying(maxLength(4, "childScottishBirthCertificateDetails.error.year.length")),
+      "entryNumber" -> text("childScottishBirthCertificateDetails.error.entryNumber.required")
+        .verifying(maxLength(3, "childScottishBirthCertificateDetails.error.entryNumber.length"))
     )(ChildScottishBirthCertificateDetails.apply)(ChildScottishBirthCertificateDetails.unapply)
-   )
- }
+  )
+}

@@ -76,4 +76,32 @@ class ChildScottishBirthCertificateDetailsFormProviderSpec extends StringFieldBe
       requiredError = FormError(fieldName, requiredKey)
     )
   }
+
+  ".entryNumber" - {
+
+    val fieldName = "entryNumber"
+    val requiredKey = "childScottishBirthCertificateDetails.error.entryNumber.required"
+    val lengthKey = "childScottishBirthCertificateDetails.error.entryNumber.length"
+    val maxLength = 3
+
+    behave like fieldThatBindsValidData(
+      form,
+      fieldName,
+      stringsWithMaxLength(maxLength)
+    )
+
+    behave like fieldWithMaxLength(
+      form,
+      fieldName,
+      maxLength = maxLength,
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+    )
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
+  }
+
 }
