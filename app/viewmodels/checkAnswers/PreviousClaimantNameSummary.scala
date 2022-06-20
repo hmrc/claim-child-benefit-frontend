@@ -16,8 +16,8 @@
 
 package viewmodels.checkAnswers
 
-import models.UserAnswers
-import pages.{PreviousClaimantNamePage, CheckAnswersPage, Waypoints}
+import models.{Index, UserAnswers}
+import pages.{CheckAnswersPage, PreviousClaimantNamePage, Waypoints}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
@@ -27,9 +27,9 @@ import viewmodels.implicits._
 
 object PreviousClaimantNameSummary  {
 
-  def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
+  def row(answers: UserAnswers, index: Index, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(PreviousClaimantNamePage).map {
+    answers.get(PreviousClaimantNamePage(index)).map {
       answer =>
 
       val value = HtmlFormat.escape(answer.firstName).toString + "<br/>" + HtmlFormat.escape(answer.lastName).toString
@@ -38,7 +38,7 @@ object PreviousClaimantNameSummary  {
           key     = "previousClaimantName.checkYourAnswersLabel",
           value   = ValueViewModel(HtmlContent(value)),
           actions = Seq(
-            ActionItemViewModel("site.change", PreviousClaimantNamePage.changeLink(waypoints, sourcePage).url)
+            ActionItemViewModel("site.change", PreviousClaimantNamePage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("previousClaimantName.change.hidden"))
           )
         )

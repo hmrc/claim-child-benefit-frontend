@@ -18,6 +18,8 @@ package controllers
 
 import controllers.actions._
 import forms.ChildNameChangedByDeedPollFormProvider
+import models.Index
+
 import javax.inject.Inject
 import pages.{ChildNameChangedByDeedPollPage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -41,29 +43,29 @@ class ChildNameChangedByDeedPollController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(ChildNameChangedByDeedPollPage) match {
+      val preparedForm = request.userAnswers.get(ChildNameChangedByDeedPollPage(index)) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, waypoints))
+      Ok(view(preparedForm, waypoints, index))
   }
 
-  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints))),
+          Future.successful(BadRequest(view(formWithErrors, waypoints, index))),
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(ChildNameChangedByDeedPollPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(ChildNameChangedByDeedPollPage(index), value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(ChildNameChangedByDeedPollPage.navigate(waypoints, updatedAnswers))
+          } yield Redirect(ChildNameChangedByDeedPollPage(index).navigate(waypoints, updatedAnswers))
       )
   }
 }

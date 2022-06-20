@@ -16,8 +16,8 @@
 
 package viewmodels.checkAnswers
 
-import models.UserAnswers
-import pages.{ChildScottishBirthCertificateDetailsPage, CheckAnswersPage, Waypoints}
+import models.{Index, UserAnswers}
+import pages.{CheckAnswersPage, ChildScottishBirthCertificateDetailsPage, Waypoints}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
@@ -27,9 +27,9 @@ import viewmodels.implicits._
 
 object ChildScottishBirthCertificateDetailsSummary  {
 
-  def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
+  def row(answers: UserAnswers, index: Index, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ChildScottishBirthCertificateDetailsPage).map {
+    answers.get(ChildScottishBirthCertificateDetailsPage(index)).map {
       answer =>
 
       val value = HtmlFormat.escape(answer.district).toString + "<br/>" + HtmlFormat.escape(answer.year).toString
@@ -38,7 +38,7 @@ object ChildScottishBirthCertificateDetailsSummary  {
           key     = "childScottishBirthCertificateDetails.checkYourAnswersLabel",
           value   = ValueViewModel(HtmlContent(value)),
           actions = Seq(
-            ActionItemViewModel("site.change", ChildScottishBirthCertificateDetailsPage.changeLink(waypoints, sourcePage).url)
+            ActionItemViewModel("site.change", ChildScottishBirthCertificateDetailsPage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("childScottishBirthCertificateDetails.change.hidden"))
           )
         )

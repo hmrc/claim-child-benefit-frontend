@@ -17,16 +17,16 @@
 package pages
 
 import controllers.routes
-import models.ApplicantRelationshipToChild
+import models.{ApplicantRelationshipToChild, Index}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object ApplicantRelationshipToChildPage extends QuestionPage[ApplicantRelationshipToChild] {
+final case class ApplicantRelationshipToChildPage(index: Index) extends QuestionPage[ApplicantRelationshipToChild] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ "children" \ index.position \ toString
 
   override def toString: String = "applicantRelationshipToChild"
 
   override def route(waypoints: Waypoints): Call =
-    routes.ApplicantRelationshipToChildController.onPageLoad(waypoints)
+    routes.ApplicantRelationshipToChildController.onPageLoad(waypoints, index)
 }

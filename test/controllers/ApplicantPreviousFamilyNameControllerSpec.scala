@@ -34,7 +34,6 @@ import scala.concurrent.Future
 class ApplicantPreviousFamilyNameControllerSpec extends SpecBase with MockitoSugar {
 
   private val waypoints = EmptyWaypoints
-  private val index = Index(0)
 
   val formProvider = new ApplicantPreviousFamilyNameFormProvider()
   val form = formProvider()

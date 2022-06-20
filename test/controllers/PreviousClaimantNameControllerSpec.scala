@@ -18,13 +18,12 @@ package controllers
 
 import base.SpecBase
 import forms.PreviousClaimantNameFormProvider
-import models.{PreviousClaimantName, UserAnswers}
+import models.PreviousClaimantName
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{PreviousClaimantNamePage, EmptyWaypoints}
+import pages.{EmptyWaypoints, PreviousClaimantNamePage}
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
@@ -38,10 +37,10 @@ class PreviousClaimantNameControllerSpec extends SpecBase with MockitoSugar {
   val form = formProvider()
   private val waypoints = EmptyWaypoints
 
-  lazy val previousClaimantNameRoute = routes.PreviousClaimantNameController.onPageLoad(waypoints).url
+  lazy val previousClaimantNameRoute = routes.PreviousClaimantNameController.onPageLoad(waypoints, index).url
 
   private val validAnswer = PreviousClaimantName("value 1", "value 2")
-  private val userAnswers = emptyUserAnswers.set(PreviousClaimantNamePage, validAnswer).success.value
+  private val userAnswers = emptyUserAnswers.set(PreviousClaimantNamePage(index), validAnswer).success.value
 
   "PreviousClaimantName Controller" - {
 
@@ -57,7 +56,7 @@ class PreviousClaimantNameControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index)(request, messages(application)).toString
       }
     }
 
@@ -73,7 +72,7 @@ class PreviousClaimantNameControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(PreviousClaimantName("value 1", "value 2")), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(PreviousClaimantName("value 1", "value 2")), waypoints, index)(request, messages(application)).toString
       }
     }
 
@@ -96,10 +95,10 @@ class PreviousClaimantNameControllerSpec extends SpecBase with MockitoSugar {
             .withFormUrlEncodedBody(("firstName", "value 1"), ("lastName", "value 2"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(PreviousClaimantNamePage, validAnswer).success.value
+        val expectedAnswers = emptyUserAnswers.set(PreviousClaimantNamePage(index), validAnswer).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual PreviousClaimantNamePage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual PreviousClaimantNamePage(index).navigate(waypoints, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -120,7 +119,7 @@ class PreviousClaimantNameControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index)(request, messages(application)).toString
       }
     }
 

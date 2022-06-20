@@ -17,16 +17,16 @@
 package pages
 
 import controllers.routes
-import models.ChildBiologicalSex
+import models.{ChildBiologicalSex, Index}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object ChildBiologicalSexPage extends QuestionPage[ChildBiologicalSex] {
+final case class ChildBiologicalSexPage(index: Index) extends QuestionPage[ChildBiologicalSex] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ "children" \ index.position \ toString
 
   override def toString: String = "childBiologicalSex"
 
   override def route(waypoints: Waypoints): Call =
-    routes.ChildBiologicalSexController.onPageLoad(waypoints)
+    routes.ChildBiologicalSexController.onPageLoad(waypoints, index)
 }

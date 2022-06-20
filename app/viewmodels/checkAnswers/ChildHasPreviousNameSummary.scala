@@ -16,8 +16,8 @@
 
 package viewmodels.checkAnswers
 
-import models.UserAnswers
-import pages.{ChildHasPreviousNamePage, CheckAnswersPage, Waypoints}
+import models.{Index, UserAnswers}
+import pages.{CheckAnswersPage, ChildHasPreviousNamePage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -25,9 +25,9 @@ import viewmodels.implicits._
 
 object ChildHasPreviousNameSummary  {
 
-  def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
+  def row(answers: UserAnswers, index: Index, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ChildHasPreviousNamePage).map {
+    answers.get(ChildHasPreviousNamePage(index)).map {
       answer =>
 
         val value = if (answer) "site.yes" else "site.no"
@@ -36,7 +36,7 @@ object ChildHasPreviousNameSummary  {
           key     = "childHasPreviousName.checkYourAnswersLabel",
           value   = ValueViewModel(value),
           actions = Seq(
-            ActionItemViewModel("site.change", ChildHasPreviousNamePage.changeLink(waypoints, sourcePage).url)
+            ActionItemViewModel("site.change", ChildHasPreviousNamePage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("childHasPreviousName.change.hidden"))
           )
         )

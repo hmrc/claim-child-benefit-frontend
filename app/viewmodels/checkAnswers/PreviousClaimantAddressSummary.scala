@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers
 
-import models.UserAnswers
+import models.{Index, UserAnswers}
 import pages.{PreviousClaimantAddressPage, CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
@@ -27,9 +27,9 @@ import viewmodels.implicits._
 
 object PreviousClaimantAddressSummary  {
 
-  def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
+  def row(answers: UserAnswers, index: Index, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(PreviousClaimantAddressPage).map {
+    answers.get(PreviousClaimantAddressPage(index)).map {
       answer =>
 
       val value = HtmlFormat.escape(answer.line1).toString + "<br/>" + HtmlFormat.escape(answer.line2).toString
@@ -38,7 +38,7 @@ object PreviousClaimantAddressSummary  {
           key     = "previousClaimantAddress.checkYourAnswersLabel",
           value   = ValueViewModel(HtmlContent(value)),
           actions = Seq(
-            ActionItemViewModel("site.change", PreviousClaimantAddressPage.changeLink(waypoints, sourcePage).url)
+            ActionItemViewModel("site.change", PreviousClaimantAddressPage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("previousClaimantAddress.change.hidden"))
           )
         )

@@ -19,14 +19,14 @@ package pages
 import models.AnyoneClaimedForChildBefore
 import pages.behaviours.PageBehaviours
 
-class AnyoneClaimedForChildBeforeSpec extends PageBehaviours {
+class AnyoneClaimedForChildBeforePageSpec extends PageBehaviours {
 
   "AnyoneClaimedForChildBeforePage" - {
 
-    beRetrievable[AnyoneClaimedForChildBefore](AnyoneClaimedForChildBeforePage)
+    beRetrievable[AnyoneClaimedForChildBefore](AnyoneClaimedForChildBeforePage(index))
 
-    beSettable[AnyoneClaimedForChildBefore](AnyoneClaimedForChildBeforePage)
+    beSettable[AnyoneClaimedForChildBefore](AnyoneClaimedForChildBeforePage(index))
 
-    beRemovable[AnyoneClaimedForChildBefore](AnyoneClaimedForChildBeforePage)
+    beRemovable[AnyoneClaimedForChildBefore](AnyoneClaimedForChildBeforePage(index))
   }
 }

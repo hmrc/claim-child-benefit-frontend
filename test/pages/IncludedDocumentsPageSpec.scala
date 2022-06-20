@@ -23,10 +23,10 @@ class IncludedDocumentsPageSpec extends PageBehaviours {
 
   "IncludedDocumentsPage" - {
 
-    beRetrievable[Set[IncludedDocuments]](IncludedDocumentsPage)
+    beRetrievable[Set[IncludedDocuments]](IncludedDocumentsPage(index))
 
-    beSettable[Set[IncludedDocuments]](IncludedDocumentsPage)
+    beSettable[Set[IncludedDocuments]](IncludedDocumentsPage(index))
 
-    beRemovable[Set[IncludedDocuments]](IncludedDocumentsPage)
+    beRemovable[Set[IncludedDocuments]](IncludedDocumentsPage(index))
   }
 }

@@ -23,10 +23,10 @@ class ChildBirthCertificateSystemNumberPageSpec extends PageBehaviours {
 
   "ChildBirthCertificateSystemNumberPage" - {
 
-    beRetrievable[String](ChildBirthCertificateSystemNumberPage)
+    beRetrievable[String](ChildBirthCertificateSystemNumberPage(index))
 
-    beSettable[String](ChildBirthCertificateSystemNumberPage)
+    beSettable[String](ChildBirthCertificateSystemNumberPage(index))
 
-    beRemovable[String](ChildBirthCertificateSystemNumberPage)
+    beRemovable[String](ChildBirthCertificateSystemNumberPage(index))
   }
 }

@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers
 
-import models.UserAnswers
+import models.{Index, UserAnswers}
 import pages.{AdoptingChildPage, CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -25,9 +25,9 @@ import viewmodels.implicits._
 
 object AdoptingChildSummary  {
 
-  def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
+  def row(answers: UserAnswers, index: Index, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AdoptingChildPage).map {
+    answers.get(AdoptingChildPage(index)).map {
       answer =>
 
         val value = if (answer) "site.yes" else "site.no"
@@ -36,7 +36,7 @@ object AdoptingChildSummary  {
           key     = "adoptingChild.checkYourAnswersLabel",
           value   = ValueViewModel(value),
           actions = Seq(
-            ActionItemViewModel("site.change", AdoptingChildPage.changeLink(waypoints, sourcePage).url)
+            ActionItemViewModel("site.change", AdoptingChildPage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("adoptingChild.change.hidden"))
           )
         )

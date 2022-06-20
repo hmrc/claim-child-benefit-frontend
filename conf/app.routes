@@ -182,56 +182,56 @@ POST       /partnerWaitingForEntitlementDecision                        controll
 GET        /addChild                        controllers.AddChildController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /addChild                        controllers.AddChildController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /addChildPreviousName                        controllers.AddChildPreviousNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /addChildPreviousName                        controllers.AddChildPreviousNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /addChildPreviousName/:index                        controllers.AddChildPreviousNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /addChildPreviousName/:index                        controllers.AddChildPreviousNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
-GET        /anyoneClaimedForChildBefore                        controllers.AnyoneClaimedForChildBeforeController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /anyoneClaimedForChildBefore                        controllers.AnyoneClaimedForChildBeforeController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /anyoneClaimedForChildBefore/:index                        controllers.AnyoneClaimedForChildBeforeController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /anyoneClaimedForChildBefore/:index                        controllers.AnyoneClaimedForChildBeforeController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
-GET        /applicantRelationshipToChild                        controllers.ApplicantRelationshipToChildController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /applicantRelationshipToChild                        controllers.ApplicantRelationshipToChildController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /applicantRelationshipToChild/:index                        controllers.ApplicantRelationshipToChildController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /applicantRelationshipToChild/:index                        controllers.ApplicantRelationshipToChildController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
-GET        /childBiologicalSex                        controllers.ChildBiologicalSexController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /childBiologicalSex                        controllers.ChildBiologicalSexController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /childBiologicalSex/:index                        controllers.ChildBiologicalSexController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /childBiologicalSex/:index                        controllers.ChildBiologicalSexController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
-GET        /childBirthCertificateSystemNumber                        controllers.ChildBirthCertificateSystemNumberController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /childBirthCertificateSystemNumber                        controllers.ChildBirthCertificateSystemNumberController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /childBirthCertificateSystemNumber/:index                        controllers.ChildBirthCertificateSystemNumberController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /childBirthCertificateSystemNumber/:index                        controllers.ChildBirthCertificateSystemNumberController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
-GET        /childBirthRegistrationCountry                        controllers.ChildBirthRegistrationCountryController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /childBirthRegistrationCountry                        controllers.ChildBirthRegistrationCountryController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /childBirthRegistrationCountry/:index                        controllers.ChildBirthRegistrationCountryController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /childBirthRegistrationCountry/:index                        controllers.ChildBirthRegistrationCountryController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
-GET        /childDateOfBirth                  controllers.ChildDateOfBirthController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /childDateOfBirth                  controllers.ChildDateOfBirthController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /childDateOfBirth/:index                  controllers.ChildDateOfBirthController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /childDateOfBirth/:index                  controllers.ChildDateOfBirthController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
-GET        /childHasPreviousName                        controllers.ChildHasPreviousNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /childHasPreviousName                        controllers.ChildHasPreviousNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /childHasPreviousName/:index                        controllers.ChildHasPreviousNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /childHasPreviousName/:index                        controllers.ChildHasPreviousNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
-GET        /childName                        controllers.ChildNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /childName                        controllers.ChildNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /childName/:index                        controllers.ChildNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /childName/:index                        controllers.ChildNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
-GET        /childNameChangedByDeedPoll                        controllers.ChildNameChangedByDeedPollController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /childNameChangedByDeedPoll                        controllers.ChildNameChangedByDeedPollController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /childNameChangedByDeedPoll/:index                        controllers.ChildNameChangedByDeedPollController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /childNameChangedByDeedPoll/:index                        controllers.ChildNameChangedByDeedPollController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
-GET        /childPreviousName                        controllers.ChildPreviousNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /childPreviousName                        controllers.ChildPreviousNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /childPreviousName/:childIndex/:nameIndex                        controllers.ChildPreviousNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, childIndex: Index, nameIndex: Index)
+POST       /childPreviousName/:childIndex/:nameIndex                        controllers.ChildPreviousNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, childIndex: Index, nameIndex: Index)
 
-GET        /childScottishBirthCertificateDetails                        controllers.ChildScottishBirthCertificateDetailsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /childScottishBirthCertificateDetails                        controllers.ChildScottishBirthCertificateDetailsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /childScottishBirthCertificateDetails/:index                        controllers.ChildScottishBirthCertificateDetailsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /childScottishBirthCertificateDetails/:index                        controllers.ChildScottishBirthCertificateDetailsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
-GET        /includedDocuments                        controllers.IncludedDocumentsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /includedDocuments                        controllers.IncludedDocumentsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /includedDocuments/:index                        controllers.IncludedDocumentsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /includedDocuments/:index                        controllers.IncludedDocumentsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
-GET        /previousClaimantAddress                        controllers.PreviousClaimantAddressController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /previousClaimantAddress                        controllers.PreviousClaimantAddressController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /previousClaimantAddress/:index                        controllers.PreviousClaimantAddressController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /previousClaimantAddress/:index                        controllers.PreviousClaimantAddressController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
-GET        /previousClaimantName                        controllers.PreviousClaimantNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /previousClaimantName                        controllers.PreviousClaimantNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /previousClaimantName/:index                        controllers.PreviousClaimantNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /previousClaimantName/:index                        controllers.PreviousClaimantNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
-GET        /removeChild                        controllers.RemoveChildController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /removeChild                        controllers.RemoveChildController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /removeChild/:index                        controllers.RemoveChildController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /removeChild/:index                        controllers.RemoveChildController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
-GET        /removeChildPreviousName                        controllers.RemoveChildPreviousNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /removeChildPreviousName                        controllers.RemoveChildPreviousNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /removeChildPreviousName/:childIndex/:nameIndex                        controllers.RemoveChildPreviousNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, childIndex: Index, nameIndex: Index)
+POST       /removeChildPreviousName/:childIndex/:nameIndex                        controllers.RemoveChildPreviousNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, childIndex: Index, nameIndex: Index)
 
-GET        /adoptingChild                        controllers.AdoptingChildController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /adoptingChild                        controllers.AdoptingChildController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /adoptingChild/:index                        controllers.AdoptingChildController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /adoptingChild/:index                        controllers.AdoptingChildController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)

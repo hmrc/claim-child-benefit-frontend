@@ -18,6 +18,8 @@ package controllers
 
 import controllers.actions._
 import forms.RemoveChildPreviousNameFormProvider
+import models.Index
+
 import javax.inject.Inject
 import pages.{RemoveChildPreviousNamePage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -41,29 +43,29 @@ class RemoveChildPreviousNameController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints, childIndex: Index, nameIndex: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(RemoveChildPreviousNamePage) match {
+      val preparedForm = request.userAnswers.get(RemoveChildPreviousNamePage(childIndex, nameIndex)) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, waypoints))
+      Ok(view(preparedForm, waypoints, childIndex, nameIndex))
   }
 
-  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(waypoints: Waypoints, childIndex: Index, nameIndex: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints))),
+          Future.successful(BadRequest(view(formWithErrors, waypoints, childIndex, nameIndex))),
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(RemoveChildPreviousNamePage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(RemoveChildPreviousNamePage(childIndex, nameIndex), value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(RemoveChildPreviousNamePage.navigate(waypoints, updatedAnswers))
+          } yield Redirect(RemoveChildPreviousNamePage(childIndex, nameIndex).navigate(waypoints, updatedAnswers))
       )
   }
 }

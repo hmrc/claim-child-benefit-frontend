@@ -16,8 +16,8 @@
 
 package viewmodels.checkAnswers
 
-import models.UserAnswers
-import pages.{ChildBiologicalSexPage, CheckAnswersPage, Waypoints}
+import models.{Index, UserAnswers}
+import pages.{CheckAnswersPage, ChildBiologicalSexPage, Waypoints}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
@@ -27,9 +27,9 @@ import viewmodels.implicits._
 
 object ChildBiologicalSexSummary  {
 
-  def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
+  def row(answers: UserAnswers, index: Index, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ChildBiologicalSexPage).map {
+    answers.get(ChildBiologicalSexPage(index)).map {
       answer =>
 
         val value = ValueViewModel(
@@ -42,7 +42,7 @@ object ChildBiologicalSexSummary  {
           key     = "childBiologicalSex.checkYourAnswersLabel",
           value   = value,
           actions = Seq(
-            ActionItemViewModel("site.change", ChildBiologicalSexPage.changeLink(waypoints, sourcePage).url)
+            ActionItemViewModel("site.change", ChildBiologicalSexPage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("childBiologicalSex.change.hidden"))
           )
         )

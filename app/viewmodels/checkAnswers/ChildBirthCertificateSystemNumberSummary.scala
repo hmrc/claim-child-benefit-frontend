@@ -16,8 +16,8 @@
 
 package viewmodels.checkAnswers
 
-import models.UserAnswers
-import pages.{ChildBirthCertificateSystemNumberPage, CheckAnswersPage, Waypoints}
+import models.{Index, UserAnswers}
+import pages.{CheckAnswersPage, ChildBirthCertificateSystemNumberPage, Waypoints}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -26,16 +26,16 @@ import viewmodels.implicits._
 
 object ChildBirthCertificateSystemNumberSummary  {
 
-  def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
+  def row(answers: UserAnswers, index: Index, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ChildBirthCertificateSystemNumberPage).map {
+    answers.get(ChildBirthCertificateSystemNumberPage(index)).map {
       answer =>
 
         SummaryListRowViewModel(
           key     = "childBirthCertificateSystemNumber.checkYourAnswersLabel",
           value   = ValueViewModel(HtmlFormat.escape(answer).toString),
           actions = Seq(
-            ActionItemViewModel("site.change", ChildBirthCertificateSystemNumberPage.changeLink(waypoints, sourcePage).url)
+            ActionItemViewModel("site.change", ChildBirthCertificateSystemNumberPage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("childBirthCertificateSystemNumber.change.hidden"))
           )
         )

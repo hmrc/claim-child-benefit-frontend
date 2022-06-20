@@ -38,10 +38,10 @@ class ChildScottishBirthCertificateDetailsControllerSpec extends SpecBase with M
   val form = formProvider()
   private val waypoints = EmptyWaypoints
 
-  lazy val childScottishBirthCertificateDetailsRoute = routes.ChildScottishBirthCertificateDetailsController.onPageLoad(waypoints).url
+  lazy val childScottishBirthCertificateDetailsRoute = routes.ChildScottishBirthCertificateDetailsController.onPageLoad(waypoints, index).url
 
   private val validAnswer = ChildScottishBirthCertificateDetails("1", "2")
-  private val userAnswers = emptyUserAnswers.set(ChildScottishBirthCertificateDetailsPage, validAnswer).success.value
+  private val userAnswers = emptyUserAnswers.set(ChildScottishBirthCertificateDetailsPage(index), validAnswer).success.value
 
   "ChildScottishBirthCertificateDetails Controller" - {
 
@@ -57,7 +57,7 @@ class ChildScottishBirthCertificateDetailsControllerSpec extends SpecBase with M
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index)(request, messages(application)).toString
       }
     }
 
@@ -73,7 +73,7 @@ class ChildScottishBirthCertificateDetailsControllerSpec extends SpecBase with M
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints, index)(request, messages(application)).toString
       }
     }
 
@@ -96,10 +96,10 @@ class ChildScottishBirthCertificateDetailsControllerSpec extends SpecBase with M
             .withFormUrlEncodedBody(("district", "1"), ("year", "2"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(ChildScottishBirthCertificateDetailsPage, validAnswer).success.value
+        val expectedAnswers = emptyUserAnswers.set(ChildScottishBirthCertificateDetailsPage(index), validAnswer).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ChildScottishBirthCertificateDetailsPage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual ChildScottishBirthCertificateDetailsPage(index).navigate(waypoints, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -120,7 +120,7 @@ class ChildScottishBirthCertificateDetailsControllerSpec extends SpecBase with M
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index)(request, messages(application)).toString
       }
     }
 

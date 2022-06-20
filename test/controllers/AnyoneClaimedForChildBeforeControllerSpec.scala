@@ -35,7 +35,7 @@ class AnyoneClaimedForChildBeforeControllerSpec extends SpecBase with MockitoSug
 
   private val waypoints = EmptyWaypoints
 
-  lazy val anyoneClaimedForChildBeforeRoute = routes.AnyoneClaimedForChildBeforeController.onPageLoad(waypoints).url
+  lazy val anyoneClaimedForChildBeforeRoute = routes.AnyoneClaimedForChildBeforeController.onPageLoad(waypoints, index).url
 
   val formProvider = new AnyoneClaimedForChildBeforeFormProvider()
   val form = formProvider()
@@ -54,13 +54,13 @@ class AnyoneClaimedForChildBeforeControllerSpec extends SpecBase with MockitoSug
         val view = application.injector.instanceOf[AnyoneClaimedForChildBeforeView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(AnyoneClaimedForChildBeforePage, AnyoneClaimedForChildBefore.values.head).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(AnyoneClaimedForChildBeforePage(index), AnyoneClaimedForChildBefore.values.head).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -72,7 +72,7 @@ class AnyoneClaimedForChildBeforeControllerSpec extends SpecBase with MockitoSug
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(AnyoneClaimedForChildBefore.values.head), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(AnyoneClaimedForChildBefore.values.head), waypoints, index)(request, messages(application)).toString
       }
     }
 
@@ -95,10 +95,10 @@ class AnyoneClaimedForChildBeforeControllerSpec extends SpecBase with MockitoSug
             .withFormUrlEncodedBody(("value", AnyoneClaimedForChildBefore.values.head.toString))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(AnyoneClaimedForChildBeforePage, AnyoneClaimedForChildBefore.values.head).success.value
+        val expectedAnswers = emptyUserAnswers.set(AnyoneClaimedForChildBeforePage(index), AnyoneClaimedForChildBefore.values.head).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual AnyoneClaimedForChildBeforePage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual AnyoneClaimedForChildBeforePage(index).navigate(waypoints, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -119,7 +119,7 @@ class AnyoneClaimedForChildBeforeControllerSpec extends SpecBase with MockitoSug
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index)(request, messages(application)).toString
       }
     }
 

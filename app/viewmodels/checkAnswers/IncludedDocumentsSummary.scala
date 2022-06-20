@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers
 
-import models.UserAnswers
+import models.{Index, UserAnswers}
 import pages.{CheckAnswersPage, IncludedDocumentsPage, Waypoints}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
@@ -27,9 +27,9 @@ import viewmodels.implicits._
 
 object IncludedDocumentsSummary  {
 
-  def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
+  def row(answers: UserAnswers, index: Index, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(IncludedDocumentsPage).map {
+    answers.get(IncludedDocumentsPage(index)).map {
       answers =>
 
         val value = ValueViewModel(
@@ -45,7 +45,7 @@ object IncludedDocumentsSummary  {
           key     = "includedDocuments.checkYourAnswersLabel",
           value   = value,
           actions = Seq(
-            ActionItemViewModel("site.change", IncludedDocumentsPage.changeLink(waypoints, sourcePage).url)
+            ActionItemViewModel("site.change", IncludedDocumentsPage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("includedDocuments.change.hidden"))
           )
         )

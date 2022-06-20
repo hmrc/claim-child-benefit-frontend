@@ -19,14 +19,14 @@ package pages
 import models.ChildBiologicalSex
 import pages.behaviours.PageBehaviours
 
-class ChildBiologicalSexSpec extends PageBehaviours {
+class ChildBiologicalSexPageSpec extends PageBehaviours {
 
   "ChildBiologicalSexPage" - {
 
-    beRetrievable[ChildBiologicalSex](ChildBiologicalSexPage)
+    beRetrievable[ChildBiologicalSex](ChildBiologicalSexPage(index))
 
-    beSettable[ChildBiologicalSex](ChildBiologicalSexPage)
+    beSettable[ChildBiologicalSex](ChildBiologicalSexPage(index))
 
-    beRemovable[ChildBiologicalSex](ChildBiologicalSexPage)
+    beRemovable[ChildBiologicalSex](ChildBiologicalSexPage(index))
   }
 }

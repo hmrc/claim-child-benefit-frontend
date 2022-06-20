@@ -17,16 +17,16 @@
 package pages
 
 import controllers.routes
-import models.ChildPreviousName
+import models.{ChildPreviousName, Index}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object ChildPreviousNamePage extends QuestionPage[ChildPreviousName] {
+final case class ChildPreviousNamePage(childIndex: Index, nameIndex: Index) extends QuestionPage[ChildPreviousName] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ "children" \ childIndex.position \ "previousNames" \ nameIndex.position
 
   override def toString: String = "childPreviousName"
 
   override def route(waypoints: Waypoints): Call =
-    routes.ChildPreviousNameController.onPageLoad(waypoints)
+    routes.ChildPreviousNameController.onPageLoad(waypoints, childIndex, nameIndex)
 }

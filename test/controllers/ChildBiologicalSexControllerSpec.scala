@@ -35,7 +35,7 @@ class ChildBiologicalSexControllerSpec extends SpecBase with MockitoSugar {
 
   private val waypoints = EmptyWaypoints
 
-  lazy val childBiologicalSexRoute = routes.ChildBiologicalSexController.onPageLoad(waypoints).url
+  lazy val childBiologicalSexRoute = routes.ChildBiologicalSexController.onPageLoad(waypoints, index).url
 
   val formProvider = new ChildBiologicalSexFormProvider()
   val form = formProvider()
@@ -54,13 +54,13 @@ class ChildBiologicalSexControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[ChildBiologicalSexView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ChildBiologicalSexPage, ChildBiologicalSex.values.head).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(ChildBiologicalSexPage(index), ChildBiologicalSex.values.head).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -72,7 +72,7 @@ class ChildBiologicalSexControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(ChildBiologicalSex.values.head), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(ChildBiologicalSex.values.head), waypoints, index)(request, messages(application)).toString
       }
     }
 
@@ -95,10 +95,10 @@ class ChildBiologicalSexControllerSpec extends SpecBase with MockitoSugar {
             .withFormUrlEncodedBody(("value", ChildBiologicalSex.values.head.toString))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(ChildBiologicalSexPage, ChildBiologicalSex.values.head).success.value
+        val expectedAnswers = emptyUserAnswers.set(ChildBiologicalSexPage(index), ChildBiologicalSex.values.head).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ChildBiologicalSexPage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual ChildBiologicalSexPage(index).navigate(waypoints, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -119,7 +119,7 @@ class ChildBiologicalSexControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index)(request, messages(application)).toString
       }
     }
 

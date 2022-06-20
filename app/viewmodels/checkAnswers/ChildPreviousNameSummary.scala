@@ -16,8 +16,8 @@
 
 package viewmodels.checkAnswers
 
-import models.UserAnswers
-import pages.{ChildPreviousNamePage, CheckAnswersPage, Waypoints}
+import models.{Index, UserAnswers}
+import pages.{CheckAnswersPage, ChildPreviousNamePage, Waypoints}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
@@ -27,9 +27,9 @@ import viewmodels.implicits._
 
 object ChildPreviousNameSummary  {
 
-  def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
+  def row(answers: UserAnswers, childIndex: Index, nameIndex: Index, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ChildPreviousNamePage).map {
+    answers.get(ChildPreviousNamePage(childIndex,nameIndex)).map {
       answer =>
 
       val value = HtmlFormat.escape(answer.firstName).toString + "<br/>" + HtmlFormat.escape(answer.lastName).toString
@@ -38,7 +38,7 @@ object ChildPreviousNameSummary  {
           key     = "childPreviousName.checkYourAnswersLabel",
           value   = ValueViewModel(HtmlContent(value)),
           actions = Seq(
-            ActionItemViewModel("site.change", ChildPreviousNamePage.changeLink(waypoints, sourcePage).url)
+            ActionItemViewModel("site.change", ChildPreviousNamePage(childIndex, nameIndex).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("childPreviousName.change.hidden"))
           )
         )
