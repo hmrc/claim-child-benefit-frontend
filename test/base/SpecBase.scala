@@ -17,7 +17,7 @@
 package base
 
 import controllers.actions._
-import models.UserAnswers
+import models.{Index, UserAnswers}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -37,6 +37,8 @@ trait SpecBase
     with OptionValues
     with ScalaFutures
     with IntegrationPatience {
+
+  protected val index: Index = Index(0)
 
   protected val userAnswersId: String = "id"
 

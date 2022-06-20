@@ -22,10 +22,10 @@ class AdoptingChildPageSpec extends PageBehaviours {
 
   "AdoptingChildPage" - {
 
-    beRetrievable[Boolean](AdoptingChildPage)
+    beRetrievable[Boolean](AdoptingChildPage(index))
 
-    beSettable[Boolean](AdoptingChildPage)
+    beSettable[Boolean](AdoptingChildPage(index))
 
-    beRemovable[Boolean](AdoptingChildPage)
+    beRemovable[Boolean](AdoptingChildPage(index))
   }
 }

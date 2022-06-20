@@ -23,10 +23,10 @@ class PreviousClaimantAddressPageSpec extends PageBehaviours {
 
   "PreviousClaimantAddressPage" - {
 
-    beRetrievable[PreviousClaimantAddress](PreviousClaimantAddressPage)
+    beRetrievable[PreviousClaimantAddress](PreviousClaimantAddressPage(index))
 
-    beSettable[PreviousClaimantAddress](PreviousClaimantAddressPage)
+    beSettable[PreviousClaimantAddress](PreviousClaimantAddressPage(index))
 
-    beRemovable[PreviousClaimantAddress](PreviousClaimantAddressPage)
+    beRemovable[PreviousClaimantAddress](PreviousClaimantAddressPage(index))
   }
 }

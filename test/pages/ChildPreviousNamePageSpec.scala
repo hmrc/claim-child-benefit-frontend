@@ -23,10 +23,10 @@ class ChildPreviousNamePageSpec extends PageBehaviours {
 
   "ChildPreviousNamePage" - {
 
-    beRetrievable[ChildPreviousName](ChildPreviousNamePage)
+    beRetrievable[ChildPreviousName](ChildPreviousNamePage(index, index))
 
-    beSettable[ChildPreviousName](ChildPreviousNamePage)
+    beSettable[ChildPreviousName](ChildPreviousNamePage(index, index))
 
-    beRemovable[ChildPreviousName](ChildPreviousNamePage)
+    beRemovable[ChildPreviousName](ChildPreviousNamePage(index, index))
   }
 }

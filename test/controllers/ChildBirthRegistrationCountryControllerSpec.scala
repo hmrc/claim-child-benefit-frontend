@@ -35,7 +35,7 @@ class ChildBirthRegistrationCountryControllerSpec extends SpecBase with MockitoS
 
   private val waypoints = EmptyWaypoints
 
-  lazy val childBirthRegistrationCountryRoute = routes.ChildBirthRegistrationCountryController.onPageLoad(waypoints).url
+  lazy val childBirthRegistrationCountryRoute = routes.ChildBirthRegistrationCountryController.onPageLoad(waypoints, index).url
 
   val formProvider = new ChildBirthRegistrationCountryFormProvider()
   val form = formProvider()
@@ -54,13 +54,13 @@ class ChildBirthRegistrationCountryControllerSpec extends SpecBase with MockitoS
         val view = application.injector.instanceOf[ChildBirthRegistrationCountryView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ChildBirthRegistrationCountryPage, ChildBirthRegistrationCountry.values.head).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(ChildBirthRegistrationCountryPage(index), ChildBirthRegistrationCountry.values.head).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -72,7 +72,7 @@ class ChildBirthRegistrationCountryControllerSpec extends SpecBase with MockitoS
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(ChildBirthRegistrationCountry.values.head), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(ChildBirthRegistrationCountry.values.head), waypoints, index)(request, messages(application)).toString
       }
     }
 
@@ -95,10 +95,10 @@ class ChildBirthRegistrationCountryControllerSpec extends SpecBase with MockitoS
             .withFormUrlEncodedBody(("value", ChildBirthRegistrationCountry.values.head.toString))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(ChildBirthRegistrationCountryPage, ChildBirthRegistrationCountry.values.head).success.value
+        val expectedAnswers = emptyUserAnswers.set(ChildBirthRegistrationCountryPage(index), ChildBirthRegistrationCountry.values.head).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ChildBirthRegistrationCountryPage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual ChildBirthRegistrationCountryPage(index).navigate(waypoints, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -119,7 +119,7 @@ class ChildBirthRegistrationCountryControllerSpec extends SpecBase with MockitoS
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index)(request, messages(application)).toString
       }
     }
 

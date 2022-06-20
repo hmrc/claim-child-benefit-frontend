@@ -18,6 +18,8 @@ package controllers
 
 import controllers.actions._
 import forms.ChildNameFormProvider
+import models.Index
+
 import javax.inject.Inject
 import pages.{ChildNamePage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -41,29 +43,29 @@ class ChildNameController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(ChildNamePage) match {
+      val preparedForm = request.userAnswers.get(ChildNamePage(index)) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, waypoints))
+      Ok(view(preparedForm, waypoints, index))
   }
 
-  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints))),
+          Future.successful(BadRequest(view(formWithErrors, waypoints, index))),
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(ChildNamePage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(ChildNamePage(index), value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(ChildNamePage.navigate(waypoints, updatedAnswers))
+          } yield Redirect(ChildNamePage(index).navigate(waypoints, updatedAnswers))
       )
   }
 }

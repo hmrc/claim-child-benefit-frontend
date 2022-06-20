@@ -17,15 +17,16 @@
 package pages
 
 import controllers.routes
+import models.Index
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object RemoveChildPage extends QuestionPage[Boolean] {
+final case class RemoveChildPage(index: Index) extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "removeChild"
 
   override def route(waypoints: Waypoints): Call =
-    routes.RemoveChildController.onPageLoad(waypoints)
+    routes.RemoveChildController.onPageLoad(waypoints, index)
 }

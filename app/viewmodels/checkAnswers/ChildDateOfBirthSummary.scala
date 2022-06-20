@@ -17,8 +17,8 @@
 package viewmodels.checkAnswers
 
 import java.time.format.DateTimeFormatter
-import models.UserAnswers
-import pages.{ChildDateOfBirthPage, CheckAnswersPage, Waypoints}
+import models.{Index, UserAnswers}
+import pages.{CheckAnswersPage, ChildDateOfBirthPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -26,9 +26,9 @@ import viewmodels.implicits._
 
 object ChildDateOfBirthSummary  {
 
-  def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
+  def row(answers: UserAnswers, index: Index, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ChildDateOfBirthPage).map {
+    answers.get(ChildDateOfBirthPage(index)).map {
       answer =>
 
         val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
@@ -37,7 +37,7 @@ object ChildDateOfBirthSummary  {
           key     = "childDateOfBirth.checkYourAnswersLabel",
           value   = ValueViewModel(answer.format(dateFormatter)),
           actions = Seq(
-            ActionItemViewModel("site.change", ChildDateOfBirthPage.changeLink(waypoints, sourcePage).url)
+            ActionItemViewModel("site.change", ChildDateOfBirthPage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("childDateOfBirth.change.hidden"))
           )
         )

@@ -16,8 +16,8 @@
 
 package viewmodels.checkAnswers
 
-import models.UserAnswers
-import pages.{ChildBirthRegistrationCountryPage, CheckAnswersPage, Waypoints}
+import models.{Index, UserAnswers}
+import pages.{CheckAnswersPage, ChildBirthRegistrationCountryPage, Waypoints}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
@@ -27,9 +27,9 @@ import viewmodels.implicits._
 
 object ChildBirthRegistrationCountrySummary  {
 
-  def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
+  def row(answers: UserAnswers, index: Index, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ChildBirthRegistrationCountryPage).map {
+    answers.get(ChildBirthRegistrationCountryPage(index)).map {
       answer =>
 
         val value = ValueViewModel(
@@ -42,7 +42,7 @@ object ChildBirthRegistrationCountrySummary  {
           key     = "childBirthRegistrationCountry.checkYourAnswersLabel",
           value   = value,
           actions = Seq(
-            ActionItemViewModel("site.change", ChildBirthRegistrationCountryPage.changeLink(waypoints, sourcePage).url)
+            ActionItemViewModel("site.change", ChildBirthRegistrationCountryPage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("childBirthRegistrationCountry.change.hidden"))
           )
         )

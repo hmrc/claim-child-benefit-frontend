@@ -19,14 +19,14 @@ package pages
 import models.ApplicantRelationshipToChild
 import pages.behaviours.PageBehaviours
 
-class ApplicantRelationshipToChildSpec extends PageBehaviours {
+class ApplicantRelationshipToChildPageSpec extends PageBehaviours {
 
   "ApplicantRelationshipToChildPage" - {
 
-    beRetrievable[ApplicantRelationshipToChild](ApplicantRelationshipToChildPage)
+    beRetrievable[ApplicantRelationshipToChild](ApplicantRelationshipToChildPage(index))
 
-    beSettable[ApplicantRelationshipToChild](ApplicantRelationshipToChildPage)
+    beSettable[ApplicantRelationshipToChild](ApplicantRelationshipToChildPage(index))
 
-    beRemovable[ApplicantRelationshipToChild](ApplicantRelationshipToChildPage)
+    beRemovable[ApplicantRelationshipToChild](ApplicantRelationshipToChildPage(index))
   }
 }

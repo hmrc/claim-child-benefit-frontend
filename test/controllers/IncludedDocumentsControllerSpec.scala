@@ -35,7 +35,7 @@ class IncludedDocumentsControllerSpec extends SpecBase with MockitoSugar {
 
   private val waypoints = EmptyWaypoints
 
-  lazy val includedDocumentsRoute = routes.IncludedDocumentsController.onPageLoad(waypoints).url
+  lazy val includedDocumentsRoute = routes.IncludedDocumentsController.onPageLoad(waypoints, index).url
 
   val formProvider = new IncludedDocumentsFormProvider()
   val form = formProvider()
@@ -55,13 +55,13 @@ class IncludedDocumentsControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(IncludedDocumentsPage, IncludedDocuments.values.toSet).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(IncludedDocumentsPage(index), IncludedDocuments.values.toSet).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -73,7 +73,7 @@ class IncludedDocumentsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(IncludedDocuments.values.toSet), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(IncludedDocuments.values.toSet), waypoints, index)(request, messages(application)).toString
       }
     }
 
@@ -96,10 +96,10 @@ class IncludedDocumentsControllerSpec extends SpecBase with MockitoSugar {
             .withFormUrlEncodedBody(("value[0]", IncludedDocuments.values.head.toString))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(IncludedDocumentsPage, Set(IncludedDocuments.values.head)).success.value
+        val expectedAnswers = emptyUserAnswers.set(IncludedDocumentsPage(index), Set(IncludedDocuments.values.head)).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual IncludedDocumentsPage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual IncludedDocumentsPage(index).navigate(waypoints, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -120,7 +120,7 @@ class IncludedDocumentsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index)(request, messages(application)).toString
       }
     }
 

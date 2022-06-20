@@ -35,7 +35,7 @@ class ApplicantRelationshipToChildControllerSpec extends SpecBase with MockitoSu
 
   private val waypoints = EmptyWaypoints
 
-  lazy val applicantRelationshipToChildRoute = routes.ApplicantRelationshipToChildController.onPageLoad(waypoints).url
+  lazy val applicantRelationshipToChildRoute = routes.ApplicantRelationshipToChildController.onPageLoad(waypoints, index).url
 
   val formProvider = new ApplicantRelationshipToChildFormProvider()
   val form = formProvider()
@@ -54,13 +54,13 @@ class ApplicantRelationshipToChildControllerSpec extends SpecBase with MockitoSu
         val view = application.injector.instanceOf[ApplicantRelationshipToChildView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ApplicantRelationshipToChildPage, ApplicantRelationshipToChild.values.head).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(ApplicantRelationshipToChildPage(index), ApplicantRelationshipToChild.values.head).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -72,7 +72,7 @@ class ApplicantRelationshipToChildControllerSpec extends SpecBase with MockitoSu
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(ApplicantRelationshipToChild.values.head), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(ApplicantRelationshipToChild.values.head), waypoints, index)(request, messages(application)).toString
       }
     }
 
@@ -95,10 +95,10 @@ class ApplicantRelationshipToChildControllerSpec extends SpecBase with MockitoSu
             .withFormUrlEncodedBody(("value", ApplicantRelationshipToChild.values.head.toString))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(ApplicantRelationshipToChildPage, ApplicantRelationshipToChild.values.head).success.value
+        val expectedAnswers = emptyUserAnswers.set(ApplicantRelationshipToChildPage(index), ApplicantRelationshipToChild.values.head).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ApplicantRelationshipToChildPage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual ApplicantRelationshipToChildPage(index).navigate(waypoints, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -119,7 +119,7 @@ class ApplicantRelationshipToChildControllerSpec extends SpecBase with MockitoSu
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index)(request, messages(application)).toString
       }
     }
 

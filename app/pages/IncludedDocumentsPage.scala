@@ -17,16 +17,16 @@
 package pages
 
 import controllers.routes
-import models.IncludedDocuments
+import models.{IncludedDocuments, Index}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object IncludedDocumentsPage extends QuestionPage[Set[IncludedDocuments]] {
+final case class IncludedDocumentsPage(index: Index) extends QuestionPage[Set[IncludedDocuments]] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ "children" \ index.position \ toString
 
   override def toString: String = "includedDocuments"
 
   override def route(waypoints: Waypoints): Call =
-    routes.IncludedDocumentsController.onPageLoad(waypoints)
+    routes.IncludedDocumentsController.onPageLoad(waypoints, index)
 }

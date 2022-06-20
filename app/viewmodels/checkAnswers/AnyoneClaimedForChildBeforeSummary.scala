@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers
 
-import models.UserAnswers
+import models.{Index, UserAnswers}
 import pages.{AnyoneClaimedForChildBeforePage, CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
@@ -27,9 +27,9 @@ import viewmodels.implicits._
 
 object AnyoneClaimedForChildBeforeSummary  {
 
-  def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
+  def row(answers: UserAnswers, index: Index, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AnyoneClaimedForChildBeforePage).map {
+    answers.get(AnyoneClaimedForChildBeforePage(index)).map {
       answer =>
 
         val value = ValueViewModel(
@@ -42,7 +42,7 @@ object AnyoneClaimedForChildBeforeSummary  {
           key     = "anyoneClaimedForChildBefore.checkYourAnswersLabel",
           value   = value,
           actions = Seq(
-            ActionItemViewModel("site.change", AnyoneClaimedForChildBeforePage.changeLink(waypoints, sourcePage).url)
+            ActionItemViewModel("site.change", AnyoneClaimedForChildBeforePage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("anyoneClaimedForChildBefore.change.hidden"))
           )
         )

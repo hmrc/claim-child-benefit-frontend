@@ -17,17 +17,17 @@
 package pages
 
 import java.time.LocalDate
-
 import controllers.routes
+import models.Index
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object ChildDateOfBirthPage extends QuestionPage[LocalDate] {
+final case class ChildDateOfBirthPage(index: Index) extends QuestionPage[LocalDate] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ "children" \ index.position \ toString
 
   override def toString: String = "childDateOfBirth"
 
   override def route(waypoints: Waypoints): Call =
-    routes.ChildDateOfBirthController.onPageLoad(waypoints)
+    routes.ChildDateOfBirthController.onPageLoad(waypoints, index)
 }

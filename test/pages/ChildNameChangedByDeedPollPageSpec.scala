@@ -22,10 +22,10 @@ class ChildNameChangedByDeedPollPageSpec extends PageBehaviours {
 
   "ChildNameChangedByDeedPollPage" - {
 
-    beRetrievable[Boolean](ChildNameChangedByDeedPollPage)
+    beRetrievable[Boolean](ChildNameChangedByDeedPollPage(index))
 
-    beSettable[Boolean](ChildNameChangedByDeedPollPage)
+    beSettable[Boolean](ChildNameChangedByDeedPollPage(index))
 
-    beRemovable[Boolean](ChildNameChangedByDeedPollPage)
+    beRemovable[Boolean](ChildNameChangedByDeedPollPage(index))
   }
 }

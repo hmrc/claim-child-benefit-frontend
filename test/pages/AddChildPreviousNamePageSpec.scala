@@ -22,10 +22,10 @@ class AddChildPreviousNamePageSpec extends PageBehaviours {
 
   "AddChildPreviousNamePage" - {
 
-    beRetrievable[Boolean](AddChildPreviousNamePage)
+    beRetrievable[Boolean](AddChildPreviousNamePage(index))
 
-    beSettable[Boolean](AddChildPreviousNamePage)
+    beSettable[Boolean](AddChildPreviousNamePage(index))
 
-    beRemovable[Boolean](AddChildPreviousNamePage)
+    beRemovable[Boolean](AddChildPreviousNamePage(index))
   }
 }

@@ -22,10 +22,5 @@ class RemoveChildPreviousNamePageSpec extends PageBehaviours {
 
   "RemoveChildPreviousNamePage" - {
 
-    beRetrievable[Boolean](RemoveChildPreviousNamePage)
-
-    beSettable[Boolean](RemoveChildPreviousNamePage)
-
-    beRemovable[Boolean](RemoveChildPreviousNamePage)
   }
 }

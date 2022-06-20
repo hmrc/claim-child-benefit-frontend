@@ -19,14 +19,14 @@ package pages
 import models.ChildBirthRegistrationCountry
 import pages.behaviours.PageBehaviours
 
-class ChildBirthRegistrationCountrySpec extends PageBehaviours {
+class ChildBirthRegistrationCountryPageSpec extends PageBehaviours {
 
   "ChildBirthRegistrationCountryPage" - {
 
-    beRetrievable[ChildBirthRegistrationCountry](ChildBirthRegistrationCountryPage)
+    beRetrievable[ChildBirthRegistrationCountry](ChildBirthRegistrationCountryPage(index))
 
-    beSettable[ChildBirthRegistrationCountry](ChildBirthRegistrationCountryPage)
+    beSettable[ChildBirthRegistrationCountry](ChildBirthRegistrationCountryPage(index))
 
-    beRemovable[ChildBirthRegistrationCountry](ChildBirthRegistrationCountryPage)
+    beRemovable[ChildBirthRegistrationCountry](ChildBirthRegistrationCountryPage(index))
   }
 }

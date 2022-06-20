@@ -22,10 +22,5 @@ class RemoveChildPageSpec extends PageBehaviours {
 
   "RemoveChildPage" - {
 
-    beRetrievable[Boolean](RemoveChildPage)
-
-    beSettable[Boolean](RemoveChildPage)
-
-    beRemovable[Boolean](RemoveChildPage)
   }
 }

@@ -23,10 +23,10 @@ class ChildScottishBirthCertificateDetailsPageSpec extends PageBehaviours {
 
   "ChildScottishBirthCertificateDetailsPage" - {
 
-    beRetrievable[ChildScottishBirthCertificateDetails](ChildScottishBirthCertificateDetailsPage)
+    beRetrievable[ChildScottishBirthCertificateDetails](ChildScottishBirthCertificateDetailsPage(index))
 
-    beSettable[ChildScottishBirthCertificateDetails](ChildScottishBirthCertificateDetailsPage)
+    beSettable[ChildScottishBirthCertificateDetails](ChildScottishBirthCertificateDetailsPage(index))
 
-    beRemovable[ChildScottishBirthCertificateDetails](ChildScottishBirthCertificateDetailsPage)
+    beRemovable[ChildScottishBirthCertificateDetails](ChildScottishBirthCertificateDetailsPage(index))
   }
 }

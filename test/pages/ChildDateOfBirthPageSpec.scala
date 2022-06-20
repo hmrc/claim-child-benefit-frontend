@@ -29,10 +29,10 @@ class ChildDateOfBirthPageSpec extends PageBehaviours {
       datesBetween(LocalDate.of(1900, 1, 1), LocalDate.of(2100, 1, 1))
     }
 
-    beRetrievable[LocalDate](ChildDateOfBirthPage)
+    beRetrievable[LocalDate](ChildDateOfBirthPage(index))
 
-    beSettable[LocalDate](ChildDateOfBirthPage)
+    beSettable[LocalDate](ChildDateOfBirthPage(index))
 
-    beRemovable[LocalDate](ChildDateOfBirthPage)
+    beRemovable[LocalDate](ChildDateOfBirthPage(index))
   }
 }

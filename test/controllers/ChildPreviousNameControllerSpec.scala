@@ -18,13 +18,12 @@ package controllers
 
 import base.SpecBase
 import forms.ChildPreviousNameFormProvider
-import models.{ChildPreviousName, UserAnswers}
+import models.ChildPreviousName
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{ChildPreviousNamePage, EmptyWaypoints}
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
@@ -38,10 +37,10 @@ class ChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
   val form = formProvider()
   private val waypoints = EmptyWaypoints
 
-  lazy val childPreviousNameRoute = routes.ChildPreviousNameController.onPageLoad(waypoints).url
+  lazy val childPreviousNameRoute = routes.ChildPreviousNameController.onPageLoad(waypoints, index, index).url
 
   private val validAnswer = ChildPreviousName("value 1", "value 2")
-  private val userAnswers = emptyUserAnswers.set(ChildPreviousNamePage, validAnswer).success.value
+  private val userAnswers = emptyUserAnswers.set(ChildPreviousNamePage(index, index), validAnswer).success.value
 
   "ChildPreviousName Controller" - {
 
@@ -57,7 +56,7 @@ class ChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index, index)(request, messages(application)).toString
       }
     }
 
@@ -73,7 +72,7 @@ class ChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(ChildPreviousName("value 1", "value 2")), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(ChildPreviousName("value 1", "value 2")), waypoints, index, index)(request, messages(application)).toString
       }
     }
 
@@ -96,10 +95,10 @@ class ChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
             .withFormUrlEncodedBody(("firstName", "value 1"), ("lastName", "value 2"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(ChildPreviousNamePage, validAnswer).success.value
+        val expectedAnswers = emptyUserAnswers.set(ChildPreviousNamePage(index, index), validAnswer).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ChildPreviousNamePage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual ChildPreviousNamePage(index, index).navigate(waypoints, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -120,7 +119,7 @@ class ChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index, index)(request, messages(application)).toString
       }
     }
 

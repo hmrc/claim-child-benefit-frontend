@@ -27,24 +27,22 @@ trait UserAnswersGenerator extends TryValues {
   self: Generators =>
 
   val generators: Seq[Gen[(QuestionPage[_], JsValue)]] =
-    arbitrary[(AdoptingChildPage.type, JsValue)] ::
-    arbitrary[(RemoveChildPreviousNamePage.type, JsValue)] ::
-    arbitrary[(RemoveChildPage.type, JsValue)] ::
-    arbitrary[(PreviousClaimantNamePage.type, JsValue)] ::
-    arbitrary[(PreviousClaimantAddressPage.type, JsValue)] ::
-    arbitrary[(IncludedDocumentsPage.type, JsValue)] ::
-    arbitrary[(ChildScottishBirthCertificateDetailsPage.type, JsValue)] ::
-    arbitrary[(ChildPreviousNamePage.type, JsValue)] ::
-    arbitrary[(ChildNameChangedByDeedPollPage.type, JsValue)] ::
-    arbitrary[(ChildNamePage.type, JsValue)] ::
-    arbitrary[(ChildHasPreviousNamePage.type, JsValue)] ::
-    arbitrary[(ChildDateOfBirthPage.type, JsValue)] ::
-    arbitrary[(ChildBirthRegistrationCountryPage.type, JsValue)] ::
-    arbitrary[(ChildBirthCertificateSystemNumberPage.type, JsValue)] ::
-    arbitrary[(ChildBiologicalSexPage.type, JsValue)] ::
-    arbitrary[(ApplicantRelationshipToChildPage.type, JsValue)] ::
-    arbitrary[(AnyoneClaimedForChildBeforePage.type, JsValue)] ::
-    arbitrary[(AddChildPreviousNamePage.type, JsValue)] ::
+    arbitrary[(AdoptingChildPage, JsValue)] ::
+    arbitrary[(PreviousClaimantNamePage, JsValue)] ::
+    arbitrary[(PreviousClaimantAddressPage, JsValue)] ::
+    arbitrary[(IncludedDocumentsPage, JsValue)] ::
+    arbitrary[(ChildScottishBirthCertificateDetailsPage, JsValue)] ::
+    arbitrary[(ChildPreviousNamePage, JsValue)] ::
+    arbitrary[(ChildNameChangedByDeedPollPage, JsValue)] ::
+    arbitrary[(ChildNamePage, JsValue)] ::
+    arbitrary[(ChildHasPreviousNamePage, JsValue)] ::
+    arbitrary[(ChildDateOfBirthPage, JsValue)] ::
+    arbitrary[(ChildBirthRegistrationCountryPage, JsValue)] ::
+    arbitrary[(ChildBirthCertificateSystemNumberPage, JsValue)] ::
+    arbitrary[(ChildBiologicalSexPage, JsValue)] ::
+    arbitrary[(ApplicantRelationshipToChildPage, JsValue)] ::
+    arbitrary[(AnyoneClaimedForChildBeforePage, JsValue)] ::
+    arbitrary[(AddChildPreviousNamePage, JsValue)] ::
     arbitrary[(AddChildPage.type, JsValue)] ::
     arbitrary[(PartnerWaitingForEntitlementDecisionPage.type, JsValue)] ::
     arbitrary[(PartnerNinoKnownPage.type, JsValue)] ::

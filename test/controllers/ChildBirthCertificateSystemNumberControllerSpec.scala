@@ -38,7 +38,7 @@ class ChildBirthCertificateSystemNumberControllerSpec extends SpecBase with Mock
   val formProvider = new ChildBirthCertificateSystemNumberFormProvider()
   val form = formProvider()
 
-  lazy val childBirthCertificateSystemNumberRoute = routes.ChildBirthCertificateSystemNumberController.onPageLoad(waypoints).url
+  lazy val childBirthCertificateSystemNumberRoute = routes.ChildBirthCertificateSystemNumberController.onPageLoad(waypoints, index).url
 
   "ChildBirthCertificateSystemNumber Controller" - {
 
@@ -54,13 +54,13 @@ class ChildBirthCertificateSystemNumberControllerSpec extends SpecBase with Mock
         val view = application.injector.instanceOf[ChildBirthCertificateSystemNumberView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ChildBirthCertificateSystemNumberPage, "answer").success.value
+      val userAnswers = UserAnswers(userAnswersId).set(ChildBirthCertificateSystemNumberPage(index), "answer").success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -72,7 +72,7 @@ class ChildBirthCertificateSystemNumberControllerSpec extends SpecBase with Mock
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("answer"), waypoints, index)(request, messages(application)).toString
       }
     }
 
@@ -95,10 +95,10 @@ class ChildBirthCertificateSystemNumberControllerSpec extends SpecBase with Mock
             .withFormUrlEncodedBody(("value", "answer"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(ChildBirthCertificateSystemNumberPage, "answer").success.value
+        val expectedAnswers = emptyUserAnswers.set(ChildBirthCertificateSystemNumberPage(index), "answer").success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ChildBirthCertificateSystemNumberPage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual ChildBirthCertificateSystemNumberPage(index).navigate(waypoints, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -119,7 +119,7 @@ class ChildBirthCertificateSystemNumberControllerSpec extends SpecBase with Mock
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index)(request, messages(application)).toString
       }
     }
 

@@ -17,16 +17,16 @@
 package pages
 
 import controllers.routes
-import models.AnyoneClaimedForChildBefore
+import models.{AnyoneClaimedForChildBefore, Index}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object AnyoneClaimedForChildBeforePage extends QuestionPage[AnyoneClaimedForChildBefore] {
+final case class AnyoneClaimedForChildBeforePage(index: Index) extends QuestionPage[AnyoneClaimedForChildBefore] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ "children" \ index.position \ toString
 
   override def toString: String = "anyoneClaimedForChildBefore"
 
   override def route(waypoints: Waypoints): Call =
-    routes.AnyoneClaimedForChildBeforeController.onPageLoad(waypoints)
+    routes.AnyoneClaimedForChildBeforeController.onPageLoad(waypoints, index)
 }

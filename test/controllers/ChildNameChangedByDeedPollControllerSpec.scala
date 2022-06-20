@@ -40,7 +40,7 @@ class ChildNameChangedByDeedPollControllerSpec extends SpecBase with MockitoSuga
   val form = formProvider()
   private val waypoints = EmptyWaypoints
 
-  lazy val childNameChangedByDeedPollRoute = routes.ChildNameChangedByDeedPollController.onPageLoad(waypoints).url
+  lazy val childNameChangedByDeedPollRoute = routes.ChildNameChangedByDeedPollController.onPageLoad(waypoints, index).url
 
   "ChildNameChangedByDeedPoll Controller" - {
 
@@ -56,13 +56,13 @@ class ChildNameChangedByDeedPollControllerSpec extends SpecBase with MockitoSuga
         val view = application.injector.instanceOf[ChildNameChangedByDeedPollView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ChildNameChangedByDeedPollPage, true).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(ChildNameChangedByDeedPollPage(index), true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -74,7 +74,7 @@ class ChildNameChangedByDeedPollControllerSpec extends SpecBase with MockitoSuga
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), waypoints, index)(request, messages(application)).toString
       }
     }
 
@@ -97,10 +97,10 @@ class ChildNameChangedByDeedPollControllerSpec extends SpecBase with MockitoSuga
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(ChildNameChangedByDeedPollPage, true).success.value
+        val expectedAnswers = emptyUserAnswers.set(ChildNameChangedByDeedPollPage(index), true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ChildNameChangedByDeedPollPage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual ChildNameChangedByDeedPollPage(index).navigate(waypoints, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -121,7 +121,7 @@ class ChildNameChangedByDeedPollControllerSpec extends SpecBase with MockitoSuga
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index)(request, messages(application)).toString
       }
     }
 
