@@ -178,3 +178,60 @@ POST       /partnerNinoKnown                        controllers.PartnerNinoKnown
 
 GET        /partnerWaitingForEntitlementDecision                        controllers.PartnerWaitingForEntitlementDecisionController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /partnerWaitingForEntitlementDecision                        controllers.PartnerWaitingForEntitlementDecisionController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /addChild                        controllers.AddChildController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /addChild                        controllers.AddChildController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /addChildPreviousName                        controllers.AddChildPreviousNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /addChildPreviousName                        controllers.AddChildPreviousNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /anyoneClaimedForChildBefore                        controllers.AnyoneClaimedForChildBeforeController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /anyoneClaimedForChildBefore                        controllers.AnyoneClaimedForChildBeforeController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /applicantRelationshipToChild                        controllers.ApplicantRelationshipToChildController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /applicantRelationshipToChild                        controllers.ApplicantRelationshipToChildController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /childBiologicalSex                        controllers.ChildBiologicalSexController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /childBiologicalSex                        controllers.ChildBiologicalSexController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /childBirthCertificateSystemNumber                        controllers.ChildBirthCertificateSystemNumberController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /childBirthCertificateSystemNumber                        controllers.ChildBirthCertificateSystemNumberController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /childBirthRegistrationCountry                        controllers.ChildBirthRegistrationCountryController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /childBirthRegistrationCountry                        controllers.ChildBirthRegistrationCountryController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /childDateOfBirth                  controllers.ChildDateOfBirthController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /childDateOfBirth                  controllers.ChildDateOfBirthController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /childHasPreviousName                        controllers.ChildHasPreviousNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /childHasPreviousName                        controllers.ChildHasPreviousNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /childName                        controllers.ChildNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /childName                        controllers.ChildNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /childNameChangedByDeedPoll                        controllers.ChildNameChangedByDeedPollController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /childNameChangedByDeedPoll                        controllers.ChildNameChangedByDeedPollController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /childPreviousName                        controllers.ChildPreviousNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /childPreviousName                        controllers.ChildPreviousNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /childScottishBirthCertificateDetails                        controllers.ChildScottishBirthCertificateDetailsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /childScottishBirthCertificateDetails                        controllers.ChildScottishBirthCertificateDetailsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /includedDocuments                        controllers.IncludedDocumentsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /includedDocuments                        controllers.IncludedDocumentsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /previousClaimantAddress                        controllers.PreviousClaimantAddressController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /previousClaimantAddress                        controllers.PreviousClaimantAddressController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /previousClaimantName                        controllers.PreviousClaimantNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /previousClaimantName                        controllers.PreviousClaimantNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /removeChild                        controllers.RemoveChildController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /removeChild                        controllers.RemoveChildController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /removeChildPreviousName                        controllers.RemoveChildPreviousNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /removeChildPreviousName                        controllers.RemoveChildPreviousNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /adoptingChild                        controllers.AdoptingChildController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /adoptingChild                        controllers.AdoptingChildController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

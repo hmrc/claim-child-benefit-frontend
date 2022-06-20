@@ -23,6 +23,71 @@ import uk.gov.hmrc.domain.Nino
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryPreviousClaimantName: Arbitrary[PreviousClaimantName] =
+    Arbitrary {
+      for {
+        firstName <- arbitrary[String]
+        lastName <- arbitrary[String]
+      } yield PreviousClaimantName(firstName, lastName)
+    }
+
+  implicit lazy val arbitraryPreviousClaimantAddress: Arbitrary[PreviousClaimantAddress] =
+    Arbitrary {
+      for {
+        line1 <- arbitrary[String]
+        line2 <- arbitrary[String]
+      } yield PreviousClaimantAddress(line1, line2)
+    }
+
+  implicit lazy val arbitraryIncludedDocuments: Arbitrary[IncludedDocuments] =
+    Arbitrary {
+      Gen.oneOf(IncludedDocuments.values)
+    }
+
+  implicit lazy val arbitraryChildScottishBirthCertificateDetails: Arbitrary[ChildScottishBirthCertificateDetails] =
+    Arbitrary {
+      for {
+        district <- arbitrary[String]
+        year <- arbitrary[String]
+      } yield ChildScottishBirthCertificateDetails(district, year)
+    }
+
+  implicit lazy val arbitraryChildPreviousName: Arbitrary[ChildPreviousName] =
+    Arbitrary {
+      for {
+        firstName <- arbitrary[String]
+        lastName <- arbitrary[String]
+      } yield ChildPreviousName(firstName, lastName)
+    }
+
+  implicit lazy val arbitraryChildName: Arbitrary[ChildName] =
+    Arbitrary {
+      for {
+        firstName <- arbitrary[String]
+        lastName <- arbitrary[String]
+      } yield ChildName(firstName, lastName)
+    }
+
+  implicit lazy val arbitraryChildBirthRegistrationCountry: Arbitrary[ChildBirthRegistrationCountry] =
+    Arbitrary {
+      Gen.oneOf(ChildBirthRegistrationCountry.values.toSeq)
+    }
+
+  implicit lazy val arbitraryChildBiologicalSex: Arbitrary[ChildBiologicalSex] =
+    Arbitrary {
+      Gen.oneOf(ChildBiologicalSex.values.toSeq)
+    }
+
+  implicit lazy val arbitraryApplicantRelationshipToChild: Arbitrary[ApplicantRelationshipToChild] =
+    Arbitrary {
+      Gen.oneOf(ApplicantRelationshipToChild.values.toSeq)
+    }
+
+  implicit lazy val arbitraryAnyoneClaimedForChildBefore: Arbitrary[AnyoneClaimedForChildBefore] =
+    Arbitrary {
+      Gen.oneOf(AnyoneClaimedForChildBefore.values.toSeq)
+    }
+
   implicit lazy val arbitraryPartnerName: Arbitrary[PartnerName] =
     Arbitrary {
       for {

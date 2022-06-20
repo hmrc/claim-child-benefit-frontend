@@ -511,3 +511,162 @@ partnerWaitingForEntitlementDecision.heading = Is {0} waiting to hear if they ar
 partnerWaitingForEntitlementDecision.checkYourAnswersLabel = Is {0} waiting to hear if they are entitled to Child Benefit?
 partnerWaitingForEntitlementDecision.error.required = Select yes if {0} is waiting to hear if they are entitled to Child Benefit
 partnerWaitingForEntitlementDecision.change.hidden = if {0} is waiting to hear if they are entitled to Child Benefit
+
+addChild.title = addChild
+addChild.heading = addChild
+addChild.checkYourAnswersLabel = addChild
+addChild.error.required = Select yes if addChild
+addChild.change.hidden = AddChild
+
+addChildPreviousName.title = addChildPreviousName
+addChildPreviousName.heading = addChildPreviousName
+addChildPreviousName.checkYourAnswersLabel = addChildPreviousName
+addChildPreviousName.error.required = Select yes if addChildPreviousName
+addChildPreviousName.change.hidden = AddChildPreviousName
+
+anyoneClaimedForChildBefore.title = Have you or anyone else ever claimed Child Benefit for {0}?
+anyoneClaimedForChildBefore.heading = Have you or anyone else ever claimed Child Benefit for {0}?
+anyoneClaimedForChildBefore.applicant = Yes, I have claimed
+anyoneClaimedForChildBefore.someoneElse = Yes, someone else has claimed
+anyoneClaimedForChildBefore.checkYourAnswersLabel = Have you or anyone else ever claimed Child Benefit for {0}?
+anyoneClaimedForChildBefore.error.required = Select anyoneClaimedForChildBefore
+anyoneClaimedForChildBefore.change.hidden = AnyoneClaimedForChildBefore
+
+applicantRelationshipToChild.title = How would you describe your relationship to {0}?
+applicantRelationshipToChild.heading = How would you describe your relationship to {0}?
+applicantRelationshipToChild.birthChild = Birth child
+applicantRelationshipToChild.adoptedChild = Adopted child
+applicantRelationshipToChild.checkYourAnswersLabel = How would you describe your relationship to {0}?
+applicantRelationshipToChild.error.required = Select applicantRelationshipToChild
+applicantRelationshipToChild.change.hidden = ApplicantRelationshipToChild
+
+childBiologicalSex.title = What is the childs sex?
+childBiologicalSex.heading = What is the childs sex?
+childBiologicalSex.female = Femals
+childBiologicalSex.male = Male
+childBiologicalSex.checkYourAnswersLabel = What is the childs sex?
+childBiologicalSex.error.required = Select childBiologicalSex
+childBiologicalSex.change.hidden = ChildBiologicalSex
+
+childBirthCertificateSystemNumber.title = childBirthCertificateSystemNumber
+childBirthCertificateSystemNumber.heading = childBirthCertificateSystemNumber
+childBirthCertificateSystemNumber.checkYourAnswersLabel = childBirthCertificateSystemNumber
+childBirthCertificateSystemNumber.error.required = Enter childBirthCertificateSystemNumber
+childBirthCertificateSystemNumber.error.length = ChildBirthCertificateSystemNumber must be 9 characters or less
+childBirthCertificateSystemNumber.change.hidden = ChildBirthCertificateSystemNumber
+
+childBirthRegistrationCountry.title = When was {0}’s birth registered?
+childBirthRegistrationCountry.heading = When was {0}’s birth registered?
+childBirthRegistrationCountry.england = England
+childBirthRegistrationCountry.scotland = Scotland
+childBirthRegistrationCountry.checkYourAnswersLabel = When was {0}’s birth registered?
+childBirthRegistrationCountry.error.required = Select childBirthRegistrationCountry
+childBirthRegistrationCountry.change.hidden = ChildBirthRegistrationCountry
+
+childDateOfBirth.title = ChildDateOfBirth
+childDateOfBirth.heading = ChildDateOfBirth
+childDateOfBirth.hint = For example, 12 11 2007
+childDateOfBirth.checkYourAnswersLabel = ChildDateOfBirth
+childDateOfBirth.error.required.all = Enter the childDateOfBirth
+childDateOfBirth.error.required.two = The childDateOfBirth must include {0} and {1}
+childDateOfBirth.error.required = The childDateOfBirth must include {0}
+childDateOfBirth.error.invalid = Enter a real ChildDateOfBirth
+childDateOfBirth.change.hidden = ChildDateOfBirth
+
+childHasPreviousName.title = childHasPreviousName
+childHasPreviousName.heading = childHasPreviousName
+childHasPreviousName.checkYourAnswersLabel = childHasPreviousName
+childHasPreviousName.error.required = Select yes if childHasPreviousName
+childHasPreviousName.change.hidden = ChildHasPreviousName
+
+childName.title = childName
+childName.heading = childName
+childName.firstName = firstName
+childName.lastName = lastName
+childName.checkYourAnswersLabel = ChildName
+childName.error.firstName.required = Enter firstName
+childName.error.lastName.required = Enter lastName
+childName.error.firstName.length = firstName must be 100 characters or less
+childName.error.lastName.length = lastName must be 100 characters or less
+childName.firstName.change.hidden = firstName
+childName.lastName.change.hidden = lastName
+
+childNameChangedByDeedPoll.title = childNameChangedByDeedPoll
+childNameChangedByDeedPoll.heading = childNameChangedByDeedPoll
+childNameChangedByDeedPoll.checkYourAnswersLabel = childNameChangedByDeedPoll
+childNameChangedByDeedPoll.error.required = Select yes if childNameChangedByDeedPoll
+childNameChangedByDeedPoll.change.hidden = ChildNameChangedByDeedPoll
+
+childPreviousName.title = childPreviousName
+childPreviousName.heading = childPreviousName
+childPreviousName.firstName = firstName
+childPreviousName.lastName = lastName
+childPreviousName.checkYourAnswersLabel = ChildPreviousName
+childPreviousName.error.firstName.required = Enter firstName
+childPreviousName.error.lastName.required = Enter lastName
+childPreviousName.error.firstName.length = firstName must be 100 characters or less
+childPreviousName.error.lastName.length = lastName must be 100 characters or less
+childPreviousName.firstName.change.hidden = firstName
+childPreviousName.lastName.change.hidden = lastName
+
+childScottishBirthCertificateDetails.title = childScottishBirthCertificateDetails
+childScottishBirthCertificateDetails.heading = childScottishBirthCertificateDetails
+childScottishBirthCertificateDetails.district = district
+childScottishBirthCertificateDetails.year = year
+childScottishBirthCertificateDetails.checkYourAnswersLabel = ChildScottishBirthCertificateDetails
+childScottishBirthCertificateDetails.error.district.required = Enter district
+childScottishBirthCertificateDetails.error.year.required = Enter year
+childScottishBirthCertificateDetails.error.district.length = district must be 3 characters or less
+childScottishBirthCertificateDetails.error.year.length = year must be 4 characters or less
+childScottishBirthCertificateDetails.district.change.hidden = district
+childScottishBirthCertificateDetails.year.change.hidden = year
+
+includedDocuments.title = What documents will you be sending for this child?
+includedDocuments.heading = What documents will you be sending for this child?
+includedDocuments.birthCertificate = Birth certificate
+includedDocuments.passport = Passport
+includedDocuments.checkYourAnswersLabel = What documents will you be sending for this child?
+includedDocuments.error.required = Select includedDocuments
+includedDocuments.change.hidden = IncludedDocuments
+
+previousClaimantAddress.title = previousClaimantAddress
+previousClaimantAddress.heading = previousClaimantAddress
+previousClaimantAddress.line1 = line1
+previousClaimantAddress.line2 = line2
+previousClaimantAddress.checkYourAnswersLabel = PreviousClaimantAddress
+previousClaimantAddress.error.line1.required = Enter line1
+previousClaimantAddress.error.line2.required = Enter line2
+previousClaimantAddress.error.line1.length = line1 must be 100 characters or less
+previousClaimantAddress.error.line2.length = line2 must be 100 characters or less
+previousClaimantAddress.line1.change.hidden = line1
+previousClaimantAddress.line2.change.hidden = line2
+
+previousClaimantName.title = previousClaimantName
+previousClaimantName.heading = previousClaimantName
+previousClaimantName.firstName = firstName
+previousClaimantName.lastName = lastName
+previousClaimantName.checkYourAnswersLabel = PreviousClaimantName
+previousClaimantName.error.firstName.required = Enter firstName
+previousClaimantName.error.lastName.required = Enter lastName
+previousClaimantName.error.firstName.length = firstName must be 100 characters or less
+previousClaimantName.error.lastName.length = lastName must be 100 characters or less
+previousClaimantName.firstName.change.hidden = firstName
+previousClaimantName.lastName.change.hidden = lastName
+
+removeChild.title = removeChild
+removeChild.heading = removeChild
+removeChild.checkYourAnswersLabel = removeChild
+removeChild.error.required = Select yes if removeChild
+removeChild.change.hidden = RemoveChild
+
+removeChildPreviousName.title = removeChildPreviousName
+removeChildPreviousName.heading = removeChildPreviousName
+removeChildPreviousName.checkYourAnswersLabel = removeChildPreviousName
+removeChildPreviousName.error.required = Select yes if removeChildPreviousName
+removeChildPreviousName.change.hidden = RemoveChildPreviousName
+
+adoptingChild.title = adoptingChild
+adoptingChild.heading = adoptingChild
+adoptingChild.checkYourAnswersLabel = adoptingChild
+adoptingChild.error.required = Select yes if adoptingChild
+adoptingChild.change.hidden = adoptingChild

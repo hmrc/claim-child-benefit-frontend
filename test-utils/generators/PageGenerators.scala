@@ -22,6 +22,63 @@ import pages._
 
 trait PageGenerators {
 
+  implicit lazy val arbitraryAdoptingChildPage: Arbitrary[AdoptingChildPage.type] =
+    Arbitrary(AdoptingChildPage)
+
+  implicit lazy val arbitraryRemoveChildPreviousNamePage: Arbitrary[RemoveChildPreviousNamePage.type] =
+    Arbitrary(RemoveChildPreviousNamePage)
+
+  implicit lazy val arbitraryRemoveChildPage: Arbitrary[RemoveChildPage.type] =
+    Arbitrary(RemoveChildPage)
+
+  implicit lazy val arbitraryPreviousClaimantNamePage: Arbitrary[PreviousClaimantNamePage.type] =
+    Arbitrary(PreviousClaimantNamePage)
+
+  implicit lazy val arbitraryPreviousClaimantAddressPage: Arbitrary[PreviousClaimantAddressPage.type] =
+    Arbitrary(PreviousClaimantAddressPage)
+
+  implicit lazy val arbitraryIncludedDocumentsPage: Arbitrary[IncludedDocumentsPage.type] =
+    Arbitrary(IncludedDocumentsPage)
+
+  implicit lazy val arbitraryChildScottishBirthCertificateDetailsPage: Arbitrary[ChildScottishBirthCertificateDetailsPage.type] =
+    Arbitrary(ChildScottishBirthCertificateDetailsPage)
+
+  implicit lazy val arbitraryChildPreviousNamePage: Arbitrary[ChildPreviousNamePage.type] =
+    Arbitrary(ChildPreviousNamePage)
+
+  implicit lazy val arbitraryChildNameChangedByDeedPollPage: Arbitrary[ChildNameChangedByDeedPollPage.type] =
+    Arbitrary(ChildNameChangedByDeedPollPage)
+
+  implicit lazy val arbitraryChildNamePage: Arbitrary[ChildNamePage.type] =
+    Arbitrary(ChildNamePage)
+
+  implicit lazy val arbitraryChildHasPreviousNamePage: Arbitrary[ChildHasPreviousNamePage.type] =
+    Arbitrary(ChildHasPreviousNamePage)
+
+  implicit lazy val arbitraryChildDateOfBirthPage: Arbitrary[ChildDateOfBirthPage.type] =
+    Arbitrary(ChildDateOfBirthPage)
+
+  implicit lazy val arbitraryChildBirthRegistrationCountryPage: Arbitrary[ChildBirthRegistrationCountryPage.type] =
+    Arbitrary(ChildBirthRegistrationCountryPage)
+
+  implicit lazy val arbitraryChildBirthCertificateSystemNumberPage: Arbitrary[ChildBirthCertificateSystemNumberPage.type] =
+    Arbitrary(ChildBirthCertificateSystemNumberPage)
+
+  implicit lazy val arbitraryChildBiologicalSexPage: Arbitrary[ChildBiologicalSexPage.type] =
+    Arbitrary(ChildBiologicalSexPage)
+
+  implicit lazy val arbitraryApplicantRelationshipToChildPage: Arbitrary[ApplicantRelationshipToChildPage.type] =
+    Arbitrary(ApplicantRelationshipToChildPage)
+
+  implicit lazy val arbitraryAnyoneClaimedForChildBeforePage: Arbitrary[AnyoneClaimedForChildBeforePage.type] =
+    Arbitrary(AnyoneClaimedForChildBeforePage)
+
+  implicit lazy val arbitraryAddChildPreviousNamePage: Arbitrary[AddChildPreviousNamePage.type] =
+    Arbitrary(AddChildPreviousNamePage)
+
+  implicit lazy val arbitraryAddChildPage: Arbitrary[AddChildPage.type] =
+    Arbitrary(AddChildPage)
+
   implicit lazy val arbitraryPartnerWaitingForEntitlementDecisionPage: Arbitrary[PartnerWaitingForEntitlementDecisionPage.type] =
     Arbitrary(PartnerWaitingForEntitlementDecisionPage)
 
