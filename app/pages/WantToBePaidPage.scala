@@ -48,6 +48,6 @@ case object WantToBePaidPage extends QuestionPage[Boolean] {
         }.orRecover
 
       case false =>
-        ApplicantNamePage
+        ApplicantHasPreviousFamilyNamePage
     }.orRecover
 }

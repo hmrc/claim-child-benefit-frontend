@@ -31,5 +31,5 @@ case object BankAccountDetailsPage extends QuestionPage[BankAccountDetails] {
     routes.BankAccountDetailsController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantNamePage
+    ApplicantHasPreviousFamilyNamePage
 }

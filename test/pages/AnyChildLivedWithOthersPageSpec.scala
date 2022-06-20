@@ -44,13 +44,13 @@ class AnyChildLivedWithOthersPageSpec extends PageBehaviours {
             .mustEqual(routes.UsePrintAndPostFormController.onPageLoad(waypoints))
         }
 
-        "to Any Child Lived With Others when the answer is no" in {
+        "to Applicant Name when the answer is no" in {
 
           val answers = emptyUserAnswers.set(AnyChildLivedWithOthersPage, false).success.value
 
           AnyChildLivedWithOthersPage
             .navigate(waypoints, answers)
-            .mustEqual(routes.RelationshipStatusController.onPageLoad(waypoints))
+            .mustEqual(routes.ApplicantNameController.onPageLoad(waypoints))
         }
       }
     }
