@@ -115,13 +115,13 @@ class WantToBePaidPageSpec extends PageBehaviours {
 
         "when the answer is no" - {
 
-          "to Applicant Name" in {
+          "to Applicant Has Previous Family Name" in {
 
             val answers = emptyUserAnswers.set(WantToBePaidPage, false).success.value
 
             WantToBePaidPage
               .navigate(waypoints, answers)
-              .mustEqual(routes.ApplicantNameController.onPageLoad(waypoints))
+              .mustEqual(routes.ApplicantHasPreviousFamilyNameController.onPageLoad(waypoints))
           }
         }
       }

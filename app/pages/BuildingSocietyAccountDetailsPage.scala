@@ -31,5 +31,5 @@ case object BuildingSocietyAccountDetailsPage extends QuestionPage[BuildingSocie
     routes.BuildingSocietyAccountDetailsController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantNamePage
+    ApplicantHasPreviousFamilyNamePage
 }

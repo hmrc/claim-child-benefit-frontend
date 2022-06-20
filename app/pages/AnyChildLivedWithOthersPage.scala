@@ -33,6 +33,6 @@ case object AnyChildLivedWithOthersPage extends QuestionPage[Boolean] {
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case true  => UsePrintAndPostFormPage
-      case false => RelationshipStatusPage
+      case false => ApplicantNamePage
     }.orRecover
 }

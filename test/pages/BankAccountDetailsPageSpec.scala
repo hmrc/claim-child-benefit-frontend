@@ -36,11 +36,11 @@ class BankAccountDetailsPageSpec extends PageBehaviours {
 
         val waypoints = EmptyWaypoints
 
-        "to Applicant Name" in {
+        "to Applicant Has Previous Family Name" in {
 
           BankAccountDetailsPage
             .navigate(waypoints, emptyUserAnswers)
-            .mustEqual(routes.ApplicantNameController.onPageLoad(waypoints))
+            .mustEqual(routes.ApplicantHasPreviousFamilyNameController.onPageLoad(waypoints))
         }
       }
     }

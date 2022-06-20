@@ -35,22 +35,11 @@ class WantToBePaidWeeklyPageSpec extends PageBehaviours {
 
         val waypoints = EmptyWaypoints
 
-        "to Applicant has Suitable Account when the answer is yes" in {
-
-          val answers = emptyUserAnswers.set(WantToBePaidWeeklyPage, true).success.value
+        "to Applicant has Suitable Account" in {
 
           WantToBePaidWeeklyPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, emptyUserAnswers)
             .mustEqual(routes.ApplicantHasSuitableAccountController.onPageLoad(waypoints))
-        }
-
-        "to Applicant Name when the answer is no" in {
-
-          val answers = emptyUserAnswers.set(WantToBePaidWeeklyPage, false).success.value
-
-          WantToBePaidWeeklyPage
-            .navigate(waypoints, answers)
-            .mustEqual(routes.ApplicantNameController.onPageLoad(waypoints))
         }
       }
     }

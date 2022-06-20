@@ -36,11 +36,11 @@ class ApplicantNamePageSpec extends PageBehaviours {
 
         val waypoints = EmptyWaypoints
 
-        "to Applicant has Previous Family Name" in {
+        "to Applicant Employment Status" in {
 
           ApplicantNamePage
             .navigate(waypoints, emptyUserAnswers)
-            .mustEqual(routes.ApplicantHasPreviousFamilyNameController.onPageLoad(waypoints))
+            .mustEqual(routes.ApplicantEmploymentStatusController.onPageLoad(waypoints))
         }
       }
     }

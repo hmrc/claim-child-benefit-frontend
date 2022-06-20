@@ -31,5 +31,5 @@ case object ApplicantNamePage extends QuestionPage[ApplicantName] {
     routes.ApplicantNameController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantHasPreviousFamilyNamePage
+    ApplicantEmploymentStatusPage
 }
