@@ -17,7 +17,7 @@
 package pages
 
 import controllers.routes
-import models.Index
+import models.{Index, UserAnswers}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -29,4 +29,7 @@ final case class ChildBirthCertificateSystemNumberPage(index: Index) extends Que
 
   override def route(waypoints: Waypoints): Call =
     routes.ChildBirthCertificateSystemNumberController.onPageLoad(waypoints, index)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    ApplicantRelationshipToChildPage(index)
 }

@@ -17,7 +17,8 @@
 package pages
 
 import controllers.routes
-import models.{ChildBirthRegistrationCountry, Index}
+import models.{ChildBirthRegistrationCountry, Index, UserAnswers}
+import models.ChildBirthRegistrationCountry._
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -29,4 +30,16 @@ final case class ChildBirthRegistrationCountryPage(index: Index) extends Questio
 
   override def route(waypoints: Waypoints): Call =
     routes.ChildBirthRegistrationCountryController.onPageLoad(waypoints, index)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case England | Wales =>
+        ChildBirthCertificateSystemNumberPage(index)
+
+      case Scotland =>
+        ChildScottishBirthCertificateDetailsPage(index)
+
+      case Other | Unknown =>
+        ApplicantRelationshipToChildPage(index)
+    }.orRecover
 }

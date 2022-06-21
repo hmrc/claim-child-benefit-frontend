@@ -670,3 +670,7 @@ adoptingChild.heading = adoptingChild
 adoptingChild.checkYourAnswersLabel = adoptingChild
 adoptingChild.error.required = Select yes if adoptingChild
 adoptingChild.change.hidden = adoptingChild
+
+checkChildDetails.title = Check Child Details
+checkChildDetails.heading = Check Child Details
+

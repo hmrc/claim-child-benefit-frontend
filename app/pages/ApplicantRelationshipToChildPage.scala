@@ -17,7 +17,7 @@
 package pages
 
 import controllers.routes
-import models.{ApplicantRelationshipToChild, Index}
+import models.{ApplicantRelationshipToChild, Index, UserAnswers}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -29,4 +29,7 @@ final case class ApplicantRelationshipToChildPage(index: Index) extends Question
 
   override def route(waypoints: Waypoints): Call =
     routes.ApplicantRelationshipToChildController.onPageLoad(waypoints, index)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    AnyoneClaimedForChildBeforePage(index)
 }

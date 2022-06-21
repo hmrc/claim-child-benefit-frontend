@@ -17,7 +17,7 @@
 package pages
 
 import controllers.routes
-import models.{Index, PreviousClaimantAddress}
+import models.{Index, PreviousClaimantAddress, UserAnswers}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -29,4 +29,7 @@ final case class PreviousClaimantAddressPage(index: Index) extends QuestionPage[
 
   override def route(waypoints: Waypoints): Call =
     routes.PreviousClaimantAddressController.onPageLoad(waypoints, index)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    AdoptingChildPage(index)
 }

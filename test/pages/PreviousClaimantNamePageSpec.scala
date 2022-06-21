@@ -16,7 +16,8 @@
 
 package pages
 
-import models.PreviousClaimantName
+import controllers.routes
+import models.{Index, PreviousClaimantName}
 import pages.behaviours.PageBehaviours
 
 class PreviousClaimantNamePageSpec extends PageBehaviours {
@@ -28,5 +29,24 @@ class PreviousClaimantNamePageSpec extends PageBehaviours {
     beSettable[PreviousClaimantName](PreviousClaimantNamePage(index))
 
     beRemovable[PreviousClaimantName](PreviousClaimantNamePage(index))
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Previous Claimant Address" in {
+
+          PreviousClaimantNamePage(Index(0))
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.PreviousClaimantAddressController.onPageLoad(waypoints, Index(0)))
+
+          PreviousClaimantNamePage(Index(1))
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.PreviousClaimantAddressController.onPageLoad(waypoints, Index(1)))
+        }
+      }
+    }
   }
 }

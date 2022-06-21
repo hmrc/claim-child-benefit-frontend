@@ -16,6 +16,8 @@
 
 package pages
 
+import controllers.routes
+import models.Index
 import pages.behaviours.PageBehaviours
 
 class ChildHasPreviousNamePageSpec extends PageBehaviours {
@@ -27,5 +29,46 @@ class ChildHasPreviousNamePageSpec extends PageBehaviours {
     beSettable[Boolean](ChildHasPreviousNamePage(index))
 
     beRemovable[Boolean](ChildHasPreviousNamePage(index))
+
+
+    "must navigate" - {
+
+      "when there are no waypoints" -{
+
+        val waypoints = EmptyWaypoints
+
+        "to Child Previous Name for the same index when the answer is yes" in {
+
+          val answers =
+            emptyUserAnswers
+              .set(ChildHasPreviousNamePage(Index(0)), true).success.value
+              .set(ChildHasPreviousNamePage(Index(1)), true).success.value
+
+          ChildHasPreviousNamePage(Index(0))
+            .navigate(waypoints, answers)
+            .mustEqual(routes.ChildNameChangedByDeedPollController.onPageLoad(waypoints, Index(0)))
+
+          ChildHasPreviousNamePage(Index(1))
+            .navigate(waypoints, answers)
+            .mustEqual(routes.ChildNameChangedByDeedPollController.onPageLoad(waypoints, Index(1)))
+        }
+
+        "to Child Biological Sex for the same index when the answer is no" in {
+
+          val answers =
+            emptyUserAnswers
+              .set(ChildHasPreviousNamePage(Index(0)), false).success.value
+              .set(ChildHasPreviousNamePage(Index(1)), false).success.value
+
+          ChildHasPreviousNamePage(Index(0))
+            .navigate(waypoints, answers)
+            .mustEqual(routes.ChildBiologicalSexController.onPageLoad(waypoints, Index(0)))
+
+          ChildHasPreviousNamePage(Index(1))
+            .navigate(waypoints, answers)
+            .mustEqual(routes.ChildBiologicalSexController.onPageLoad(waypoints, Index(1)))
+        }
+      }
+    }
   }
 }

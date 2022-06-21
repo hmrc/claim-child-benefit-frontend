@@ -17,7 +17,7 @@
 package pages
 
 import controllers.routes
-import models.Index
+import models.{Index, UserAnswers}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -29,4 +29,7 @@ final case class ChildNameChangedByDeedPollPage(index: Index) extends QuestionPa
 
   override def route(waypoints: Waypoints): Call =
     routes.ChildNameChangedByDeedPollController.onPageLoad(waypoints, index)
+
+  override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    ChildPreviousNamePage(index, Index(0))
 }

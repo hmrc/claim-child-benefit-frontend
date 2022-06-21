@@ -16,6 +16,8 @@
 
 package pages
 
+import controllers.routes
+import models.{ChildName, Index}
 import pages.behaviours.PageBehaviours
 
 class AddChildPageSpec extends PageBehaviours {
@@ -27,5 +29,54 @@ class AddChildPageSpec extends PageBehaviours {
     beSettable[Boolean](AddChildPage)
 
     beRemovable[Boolean](AddChildPage)
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+        val childName = ChildName("first", None, "last")
+
+        "when the answer is yes" - {
+
+          "to Child Name for index 1 when there are already details for one child" in {
+
+            val answers =
+              emptyUserAnswers
+                .set(ChildNamePage(Index(0)), childName).success.value
+                .set(AddChildPage, true).success.value
+
+            AddChildPage
+              .navigate(waypoints, answers)
+              .mustEqual(routes.ChildNameController.onPageLoad(waypoints, Index(1)))
+          }
+
+          "to Child Name for index 2 when there are already details for two children" in {
+
+            val answers =
+              emptyUserAnswers
+                .set(ChildNamePage(Index(0)), childName).success.value
+                .set(ChildNamePage(Index(1)), childName).success.value
+                .set(AddChildPage, true).success.value
+
+            AddChildPage
+              .navigate(waypoints, answers)
+              .mustEqual(routes.ChildNameController.onPageLoad(waypoints, Index(2)))
+          }
+        }
+
+        "when the answer is no" - {
+
+          "to Check Your Answers" in {
+
+            val answers =emptyUserAnswers.set(AddChildPage, false).success.value
+
+            AddChildPage
+              .navigate(waypoints, answers)
+              .mustEqual(routes.CheckYourAnswersController.onPageLoad)
+          }
+        }
+      }
+    }
   }
 }

@@ -17,6 +17,7 @@
 package pages
 
 import controllers.routes
+import models.Index
 import pages.behaviours.PageBehaviours
 
 class PartnerWaitingForEntitlementDecisionPageSpec extends PageBehaviours {
@@ -44,13 +45,13 @@ class PartnerWaitingForEntitlementDecisionPageSpec extends PageBehaviours {
             .mustEqual(routes.PartnerEldestChildNameController.onPageLoad(waypoints))
         }
 
-        "to Index when the answer is no" in {
+        "to Child Name for index 0 when the answer is no" in {
 
           val answers = emptyUserAnswers.set(PartnerWaitingForEntitlementDecisionPage, false).success.value
 
           PartnerWaitingForEntitlementDecisionPage
             .navigate(waypoints, answers)
-            .mustEqual(routes.IndexController.onPageLoad)
+            .mustEqual(routes.ChildNameController.onPageLoad(waypoints, Index(0)))
         }
       }
     }

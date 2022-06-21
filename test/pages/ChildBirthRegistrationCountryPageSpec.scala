@@ -16,7 +16,9 @@
 
 package pages
 
-import models.ChildBirthRegistrationCountry
+import controllers.routes
+import models.{ChildBirthRegistrationCountry, Index}
+import models.ChildBirthRegistrationCountry._
 import pages.behaviours.PageBehaviours
 
 class ChildBirthRegistrationCountryPageSpec extends PageBehaviours {
@@ -28,5 +30,94 @@ class ChildBirthRegistrationCountryPageSpec extends PageBehaviours {
     beSettable[ChildBirthRegistrationCountry](ChildBirthRegistrationCountryPage(index))
 
     beRemovable[ChildBirthRegistrationCountry](ChildBirthRegistrationCountryPage(index))
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Child Birth Certificate System Number for the same index when the answer is England" in {
+
+          val answers =
+            emptyUserAnswers
+              .set(ChildBirthRegistrationCountryPage(Index(0)), England).success.value
+              .set(ChildBirthRegistrationCountryPage(Index(1)), England).success.value
+
+          ChildBirthRegistrationCountryPage(Index(0))
+            .navigate(waypoints, answers)
+            .mustEqual(routes.ChildBirthCertificateSystemNumberController.onPageLoad(waypoints, Index(0)))
+
+          ChildBirthRegistrationCountryPage(Index(1))
+            .navigate(waypoints, answers)
+            .mustEqual(routes.ChildBirthCertificateSystemNumberController.onPageLoad(waypoints, Index(1)))
+        }
+
+        "to Child Birth Certificate System Number for the same index when the answer is Wales" in {
+
+          val answers =
+            emptyUserAnswers
+              .set(ChildBirthRegistrationCountryPage(Index(0)), Wales).success.value
+              .set(ChildBirthRegistrationCountryPage(Index(1)), Wales).success.value
+
+          ChildBirthRegistrationCountryPage(Index(0))
+            .navigate(waypoints, answers)
+            .mustEqual(routes.ChildBirthCertificateSystemNumberController.onPageLoad(waypoints, Index(0)))
+
+          ChildBirthRegistrationCountryPage(Index(1))
+            .navigate(waypoints, answers)
+            .mustEqual(routes.ChildBirthCertificateSystemNumberController.onPageLoad(waypoints, Index(1)))
+        }
+
+        "to Child Scottish Birth Certificate Details for the same index when the answer is Scotland" in {
+
+          val answers =
+            emptyUserAnswers
+              .set(ChildBirthRegistrationCountryPage(Index(0)), Scotland).success.value
+              .set(ChildBirthRegistrationCountryPage(Index(1)), Scotland).success.value
+
+          ChildBirthRegistrationCountryPage(Index(0))
+            .navigate(waypoints, answers)
+            .mustEqual(routes.ChildScottishBirthCertificateDetailsController.onPageLoad(waypoints, Index(0)))
+
+          ChildBirthRegistrationCountryPage(Index(1))
+            .navigate(waypoints, answers)
+            .mustEqual(routes.ChildScottishBirthCertificateDetailsController.onPageLoad(waypoints, Index(1)))
+        }
+
+        "to Applicant Relationship to Child for the same index when the answer is Other" in {
+
+          val answers =
+            emptyUserAnswers
+              .set(ChildBirthRegistrationCountryPage(Index(0)), Other).success.value
+              .set(ChildBirthRegistrationCountryPage(Index(1)), Other).success.value
+
+          ChildBirthRegistrationCountryPage(Index(0))
+            .navigate(waypoints, answers)
+            .mustEqual(routes.ApplicantRelationshipToChildController.onPageLoad(waypoints, Index(0)))
+
+          ChildBirthRegistrationCountryPage(Index(1))
+            .navigate(waypoints, answers)
+            .mustEqual(routes.ApplicantRelationshipToChildController.onPageLoad(waypoints, Index(1)))
+        }
+
+
+        "to Applicant Relationship to Child for the same index when the answer is Unknown" in {
+
+          val answers =
+            emptyUserAnswers
+              .set(ChildBirthRegistrationCountryPage(Index(0)), Unknown).success.value
+              .set(ChildBirthRegistrationCountryPage(Index(1)), Unknown).success.value
+
+          ChildBirthRegistrationCountryPage(Index(0))
+            .navigate(waypoints, answers)
+            .mustEqual(routes.ApplicantRelationshipToChildController.onPageLoad(waypoints, Index(0)))
+
+          ChildBirthRegistrationCountryPage(Index(1))
+            .navigate(waypoints, answers)
+            .mustEqual(routes.ApplicantRelationshipToChildController.onPageLoad(waypoints, Index(1)))
+        }
+      }
+    }
   }
 }

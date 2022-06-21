@@ -16,7 +16,8 @@
 
 package pages
 
-import models.ChildName
+import controllers.routes
+import models.{ChildName, Index}
 import pages.behaviours.PageBehaviours
 
 class ChildNamePageSpec extends PageBehaviours {
@@ -28,5 +29,24 @@ class ChildNamePageSpec extends PageBehaviours {
     beSettable[ChildName](ChildNamePage(index))
 
     beRemovable[ChildName](ChildNamePage(index))
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Child Has Previous Name for the same index" in {
+
+          ChildNamePage(Index(0))
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.ChildHasPreviousNameController.onPageLoad(waypoints, Index(0)))
+
+          ChildNamePage(Index(1))
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.ChildHasPreviousNameController.onPageLoad(waypoints, Index(1)))
+        }
+      }
+    }
   }
 }

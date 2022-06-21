@@ -16,6 +16,9 @@
 
 package pages
 
+import controllers.routes
+import models.Index
+import models.ChildBirthRegistrationCountry._
 import pages.behaviours.PageBehaviours
 
 class AdoptingChildPageSpec extends PageBehaviours {
@@ -27,5 +30,108 @@ class AdoptingChildPageSpec extends PageBehaviours {
     beSettable[Boolean](AdoptingChildPage(index))
 
     beRemovable[Boolean](AdoptingChildPage(index))
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "when the birth was registered in England" - {
+
+          "to Check Child Details for the same index" in {
+
+            val answers =
+              emptyUserAnswers
+                .set(ChildBirthRegistrationCountryPage(Index(0)), England).success.value
+                .set(ChildBirthRegistrationCountryPage(Index(1)), England).success.value
+
+            AdoptingChildPage(Index(0))
+              .navigate(waypoints, answers)
+              .mustEqual(routes.CheckChildDetailsController.onPageLoad(waypoints, Index(0)))
+
+            AdoptingChildPage(Index(1))
+              .navigate(waypoints, answers)
+              .mustEqual(routes.CheckChildDetailsController.onPageLoad(waypoints, Index(1)))
+          }
+        }
+
+        "when the birth was registered in Wales" - {
+
+          "to Check Child Details for the same index" in {
+
+            val answers =
+              emptyUserAnswers
+                .set(ChildBirthRegistrationCountryPage(Index(0)), Wales).success.value
+                .set(ChildBirthRegistrationCountryPage(Index(1)), Wales).success.value
+
+            AdoptingChildPage(Index(0))
+              .navigate(waypoints, answers)
+              .mustEqual(routes.CheckChildDetailsController.onPageLoad(waypoints, Index(0)))
+
+            AdoptingChildPage(Index(1))
+              .navigate(waypoints, answers)
+              .mustEqual(routes.CheckChildDetailsController.onPageLoad(waypoints, Index(1)))
+          }
+        }
+
+        "when the birth was registered in Scotland" - {
+
+          "to Check Child Details for the same index" in {
+
+            val answers =
+              emptyUserAnswers
+                .set(ChildBirthRegistrationCountryPage(Index(0)), Scotland).success.value
+                .set(ChildBirthRegistrationCountryPage(Index(1)), Scotland).success.value
+
+            AdoptingChildPage(Index(0))
+              .navigate(waypoints, answers)
+              .mustEqual(routes.CheckChildDetailsController.onPageLoad(waypoints, Index(0)))
+
+            AdoptingChildPage(Index(1))
+              .navigate(waypoints, answers)
+              .mustEqual(routes.CheckChildDetailsController.onPageLoad(waypoints, Index(1)))
+          }
+        }
+
+        "when the birth was registered in another country" - {
+
+          "to Included Documents for the same index" in {
+
+            val answers =
+              emptyUserAnswers
+                .set(ChildBirthRegistrationCountryPage(Index(0)), Other).success.value
+                .set(ChildBirthRegistrationCountryPage(Index(1)), Other).success.value
+
+            AdoptingChildPage(Index(0))
+              .navigate(waypoints, answers)
+              .mustEqual(routes.IncludedDocumentsController.onPageLoad(waypoints, Index(0)))
+
+            AdoptingChildPage(Index(1))
+              .navigate(waypoints, answers)
+              .mustEqual(routes.IncludedDocumentsController.onPageLoad(waypoints, Index(1)))
+          }
+        }
+
+        "when the birth registration country is unknown" - {
+
+          "to Included Documents for the same index" in {
+
+            val answers =
+              emptyUserAnswers
+                .set(ChildBirthRegistrationCountryPage(Index(0)), Unknown).success.value
+                .set(ChildBirthRegistrationCountryPage(Index(1)), Unknown).success.value
+
+            AdoptingChildPage(Index(0))
+              .navigate(waypoints, answers)
+              .mustEqual(routes.IncludedDocumentsController.onPageLoad(waypoints, Index(0)))
+
+            AdoptingChildPage(Index(1))
+              .navigate(waypoints, answers)
+              .mustEqual(routes.IncludedDocumentsController.onPageLoad(waypoints, Index(1)))
+          }
+        }
+      }
+    }
   }
 }

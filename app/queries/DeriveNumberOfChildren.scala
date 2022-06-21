@@ -14,23 +14,13 @@
  * limitations under the License.
  */
 
-package pages
+package queries
 
-import java.time.LocalDate
-import controllers.routes
-import models.{Index, UserAnswers}
-import play.api.libs.json.JsPath
-import play.api.mvc.Call
+import play.api.libs.json.{JsObject, JsPath}
 
-case object PartnerEldestChildDateOfBirthPage extends QuestionPage[LocalDate] {
+case object DeriveNumberOfChildren extends Derivable[List[JsObject], Int] {
 
-  override def path: JsPath = JsPath \ toString
+  override val derive: List[JsObject] => Int = _.size
 
-  override def toString: String = "partnerEldestChildDateOfBirth"
-
-  override def route(waypoints: Waypoints): Call =
-    routes.PartnerEldestChildDateOfBirthController.onPageLoad(waypoints)
-
-  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ChildNamePage(Index(0))
+  override def path: JsPath = JsPath \ "children"
 }

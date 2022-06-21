@@ -17,6 +17,7 @@
 package pages
 
 import controllers.routes
+import models.Index
 
 import java.time.LocalDate
 import org.scalacheck.Arbitrary
@@ -42,11 +43,11 @@ class PartnerEldestChildDateOfBirthPageSpec extends PageBehaviours {
 
         val waypoints = EmptyWaypoints
 
-        "to Index" in {
+        "to Child Name for index 0" in {
 
           PartnerEldestChildDateOfBirthPage
             .navigate(waypoints, emptyUserAnswers)
-            .mustEqual(routes.IndexController.onPageLoad)
+            .mustEqual(routes.ChildNameController.onPageLoad(waypoints, Index(0)))
         }
       }
     }

@@ -16,6 +16,8 @@
 
 package pages
 
+import controllers.routes
+import models.Index
 import pages.behaviours.PageBehaviours
 
 class ChildNameChangedByDeedPollPageSpec extends PageBehaviours {
@@ -27,5 +29,24 @@ class ChildNameChangedByDeedPollPageSpec extends PageBehaviours {
     beSettable[Boolean](ChildNameChangedByDeedPollPage(index))
 
     beRemovable[Boolean](ChildNameChangedByDeedPollPage(index))
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Child Previous Name for the same child index, and for name index 0" in {
+
+          ChildNameChangedByDeedPollPage(Index(0))
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.ChildPreviousNameController.onPageLoad(waypoints, Index(0), Index(0)))
+
+          ChildNameChangedByDeedPollPage(Index(1))
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.ChildPreviousNameController.onPageLoad(waypoints, Index(1), Index(0)))
+        }
+      }
+    }
   }
 }
