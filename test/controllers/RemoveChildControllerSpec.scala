@@ -87,7 +87,7 @@ class RemoveChildControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
-    "must not remove the child and redirect to the next page when the answer is yes" in {
+    "must not remove the child and redirect to the next page when the answer is no" in {
 
       val mockSessionRepository = mock[SessionRepository]
 
