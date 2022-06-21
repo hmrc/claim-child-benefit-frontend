@@ -16,8 +16,10 @@
 
 package pages
 
-import java.time.LocalDate
+import controllers.routes
+import models.Index
 
+import java.time.LocalDate
 import org.scalacheck.Arbitrary
 import pages.behaviours.PageBehaviours
 
@@ -34,5 +36,24 @@ class ChildDateOfBirthPageSpec extends PageBehaviours {
     beSettable[LocalDate](ChildDateOfBirthPage(index))
 
     beRemovable[LocalDate](ChildDateOfBirthPage(index))
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Child Birth Registration Country for the same index" in {
+
+          ChildDateOfBirthPage(Index(0))
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.ChildBirthRegistrationCountryController.onPageLoad(waypoints, Index(0)))
+
+          ChildDateOfBirthPage(Index(1))
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.ChildBirthRegistrationCountryController.onPageLoad(waypoints, Index(1)))
+        }
+      }
+    }
   }
 }

@@ -16,7 +16,8 @@
 
 package pages
 
-import models.ChildScottishBirthCertificateDetails
+import controllers.routes
+import models.{ChildScottishBirthCertificateDetails, Index}
 import pages.behaviours.PageBehaviours
 
 class ChildScottishBirthCertificateDetailsPageSpec extends PageBehaviours {
@@ -28,5 +29,24 @@ class ChildScottishBirthCertificateDetailsPageSpec extends PageBehaviours {
     beSettable[ChildScottishBirthCertificateDetails](ChildScottishBirthCertificateDetailsPage(index))
 
     beRemovable[ChildScottishBirthCertificateDetails](ChildScottishBirthCertificateDetailsPage(index))
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Applicant Relationship to Child for the same index" in {
+
+          ChildScottishBirthCertificateDetailsPage(Index(0))
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.ApplicantRelationshipToChildController.onPageLoad(waypoints, Index(0)))
+
+          ChildScottishBirthCertificateDetailsPage(Index(1))
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.ApplicantRelationshipToChildController.onPageLoad(waypoints, Index(1)))
+        }
+      }
+    }
   }
 }

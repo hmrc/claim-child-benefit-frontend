@@ -16,7 +16,8 @@
 
 package pages
 
-import models.ApplicantRelationshipToChild
+import controllers.routes
+import models.{ApplicantRelationshipToChild, Index}
 import pages.behaviours.PageBehaviours
 
 class ApplicantRelationshipToChildPageSpec extends PageBehaviours {
@@ -28,5 +29,24 @@ class ApplicantRelationshipToChildPageSpec extends PageBehaviours {
     beSettable[ApplicantRelationshipToChild](ApplicantRelationshipToChildPage(index))
 
     beRemovable[ApplicantRelationshipToChild](ApplicantRelationshipToChildPage(index))
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Anyone Claimed for Child Before with the same index" in {
+
+          ApplicantRelationshipToChildPage(Index(0))
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.AnyoneClaimedForChildBeforeController.onPageLoad(waypoints, Index(0)))
+
+          ApplicantRelationshipToChildPage(Index(1))
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.AnyoneClaimedForChildBeforeController.onPageLoad(waypoints, Index(1)))
+        }
+      }
+    }
   }
 }

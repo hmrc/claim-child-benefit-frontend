@@ -17,7 +17,7 @@
 package pages
 
 import controllers.routes
-import models.Index
+import models.{Index, UserAnswers}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -29,4 +29,10 @@ final case class ChildHasPreviousNamePage(index: Index) extends QuestionPage[Boo
 
   override def route(waypoints: Waypoints): Call =
     routes.ChildHasPreviousNameController.onPageLoad(waypoints, index)
+
+  override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true  => ChildNameChangedByDeedPollPage(index)
+      case false => ChildBiologicalSexPage(index)
+    }.orRecover
 }

@@ -17,7 +17,8 @@
 package pages
 
 import controllers.routes
-import models.Index
+import models.{Index, UserAnswers}
+import models.ChildBirthRegistrationCountry._
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -29,4 +30,13 @@ final case class AdoptingChildPage(index: Index) extends QuestionPage[Boolean] {
 
   override def route(waypoints: Waypoints): Call =
     routes.AdoptingChildController.onPageLoad(waypoints, index)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(ChildBirthRegistrationCountryPage(index)).map {
+      case England | Wales | Scotland =>
+        CheckChildDetailsPage(index)
+
+      case Other | Unknown =>
+        IncludedDocumentsPage(index)
+    }.orRecover
 }

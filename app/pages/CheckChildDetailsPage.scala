@@ -16,21 +16,14 @@
 
 package pages
 
-import java.time.LocalDate
 import controllers.routes
-import models.{Index, UserAnswers}
-import play.api.libs.json.JsPath
+import models.Index
 import play.api.mvc.Call
 
-case object PartnerEldestChildDateOfBirthPage extends QuestionPage[LocalDate] {
+final case class CheckChildDetailsPage(index: Index) extends CheckAnswersPage {
 
-  override def path: JsPath = JsPath \ toString
-
-  override def toString: String = "partnerEldestChildDateOfBirth"
+  override val urlFragment: String = s"check-child-${index.display}"
 
   override def route(waypoints: Waypoints): Call =
-    routes.PartnerEldestChildDateOfBirthController.onPageLoad(waypoints)
-
-  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ChildNamePage(Index(0))
+    routes.CheckChildDetailsController.onPageLoad(waypoints, index)
 }

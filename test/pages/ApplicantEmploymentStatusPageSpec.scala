@@ -17,7 +17,7 @@
 package pages
 
 import controllers.routes
-import models.ApplicantEmploymentStatus
+import models.{ApplicantEmploymentStatus, Index}
 import models.RelationshipStatus._
 import pages.behaviours.PageBehaviours
 
@@ -37,40 +37,40 @@ class ApplicantEmploymentStatusPageSpec extends PageBehaviours {
 
         val waypoints = EmptyWaypoints
 
-        "to Index when the relationship status is Single" in {
+        "to Child Name with index 0 when the relationship status is Single" in {
 
           val answers = emptyUserAnswers.set(RelationshipStatusPage, Single).success.value
 
           ApplicantEmploymentStatusPage
             .navigate(waypoints, answers)
-            .mustEqual(routes.IndexController.onPageLoad)
+            .mustEqual(routes.ChildNameController.onPageLoad(waypoints, Index(0)))
         }
 
-        "to Index when the relationship status is Widowed" in {
+        "to Child Name with index 0 when the relationship status is Widowed" in {
 
           val answers = emptyUserAnswers.set(RelationshipStatusPage, Widowed).success.value
 
           ApplicantEmploymentStatusPage
             .navigate(waypoints, answers)
-            .mustEqual(routes.IndexController.onPageLoad)
+            .mustEqual(routes.ChildNameController.onPageLoad(waypoints, Index(0)))
         }
 
-        "to Index when the relationship status is Divorced" in {
+        "to Child Name with index 0 when the relationship status is Divorced" in {
 
           val answers = emptyUserAnswers.set(RelationshipStatusPage, Divorced).success.value
 
           ApplicantEmploymentStatusPage
             .navigate(waypoints, answers)
-            .mustEqual(routes.IndexController.onPageLoad)
+            .mustEqual(routes.ChildNameController.onPageLoad(waypoints, Index(0)))
         }
 
-        "to Index when the relationship status is Separated" in {
+        "to Child Name with index 0 when the relationship status is Separated" in {
 
           val answers = emptyUserAnswers.set(RelationshipStatusPage, Separated).success.value
 
           ApplicantEmploymentStatusPage
             .navigate(waypoints, answers)
-            .mustEqual(routes.IndexController.onPageLoad)
+            .mustEqual(routes.ChildNameController.onPageLoad(waypoints, Index(0)))
         }
 
         "to Partner Name when the relationship status is Married" in {

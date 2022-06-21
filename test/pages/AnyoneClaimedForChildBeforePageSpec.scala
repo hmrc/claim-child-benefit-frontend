@@ -16,7 +16,9 @@
 
 package pages
 
-import models.AnyoneClaimedForChildBefore
+import controllers.routes
+import models.{AnyoneClaimedForChildBefore, Index}
+import models.AnyoneClaimedForChildBefore._
 import pages.behaviours.PageBehaviours
 
 class AnyoneClaimedForChildBeforePageSpec extends PageBehaviours {
@@ -28,5 +30,77 @@ class AnyoneClaimedForChildBeforePageSpec extends PageBehaviours {
     beSettable[AnyoneClaimedForChildBefore](AnyoneClaimedForChildBeforePage(index))
 
     beRemovable[AnyoneClaimedForChildBefore](AnyoneClaimedForChildBeforePage(index))
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Previous Claimant Name with the same index when the answer is Someone Else" in {
+
+          val answers =
+            emptyUserAnswers
+              .set(AnyoneClaimedForChildBeforePage(Index(0)), SomeoneElse).success.value
+              .set(AnyoneClaimedForChildBeforePage(Index(1)), SomeoneElse).success.value
+
+          AnyoneClaimedForChildBeforePage(Index(0))
+            .navigate(waypoints, answers)
+            .mustEqual(routes.PreviousClaimantNameController.onPageLoad(waypoints, Index(0)))
+
+          AnyoneClaimedForChildBeforePage(Index(1))
+            .navigate(waypoints, answers)
+            .mustEqual(routes.PreviousClaimantNameController.onPageLoad(waypoints, Index(1)))
+        }
+
+        "to Adopting Child with the same index when the answer is Applicant" in {
+
+          val answers =
+            emptyUserAnswers
+              .set(AnyoneClaimedForChildBeforePage(Index(0)), Applicant).success.value
+              .set(AnyoneClaimedForChildBeforePage(Index(1)), Applicant).success.value
+
+          AnyoneClaimedForChildBeforePage(Index(0))
+            .navigate(waypoints, answers)
+            .mustEqual(routes.AdoptingChildController.onPageLoad(waypoints, Index(0)))
+
+          AnyoneClaimedForChildBeforePage(Index(1))
+            .navigate(waypoints, answers)
+            .mustEqual(routes.AdoptingChildController.onPageLoad(waypoints, Index(1)))
+        }
+
+        "to Adopting Child with the same index when the answer is Partner" in {
+
+          val answers =
+            emptyUserAnswers
+              .set(AnyoneClaimedForChildBeforePage(Index(0)), Partner).success.value
+              .set(AnyoneClaimedForChildBeforePage(Index(1)), Partner).success.value
+
+          AnyoneClaimedForChildBeforePage(Index(0))
+            .navigate(waypoints, answers)
+            .mustEqual(routes.AdoptingChildController.onPageLoad(waypoints, Index(0)))
+
+          AnyoneClaimedForChildBeforePage(Index(1))
+            .navigate(waypoints, answers)
+            .mustEqual(routes.AdoptingChildController.onPageLoad(waypoints, Index(1)))
+        }
+
+        "to Adopting Child with the same index when the answer is No" in {
+
+          val answers =
+            emptyUserAnswers
+              .set(AnyoneClaimedForChildBeforePage(Index(0)), No).success.value
+              .set(AnyoneClaimedForChildBeforePage(Index(1)), No).success.value
+
+          AnyoneClaimedForChildBeforePage(Index(0))
+            .navigate(waypoints, answers)
+            .mustEqual(routes.AdoptingChildController.onPageLoad(waypoints, Index(0)))
+
+          AnyoneClaimedForChildBeforePage(Index(1))
+            .navigate(waypoints, answers)
+            .mustEqual(routes.AdoptingChildController.onPageLoad(waypoints, Index(1)))
+        }
+      }
+    }
   }
 }

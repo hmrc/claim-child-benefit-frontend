@@ -16,7 +16,8 @@
 
 package pages
 
-import models.ChildBiologicalSex
+import controllers.routes
+import models.{ChildBiologicalSex, Index}
 import pages.behaviours.PageBehaviours
 
 class ChildBiologicalSexPageSpec extends PageBehaviours {
@@ -28,5 +29,24 @@ class ChildBiologicalSexPageSpec extends PageBehaviours {
     beSettable[ChildBiologicalSex](ChildBiologicalSexPage(index))
 
     beRemovable[ChildBiologicalSex](ChildBiologicalSexPage(index))
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Child Date of Birth for the same index" in {
+
+          ChildBiologicalSexPage(Index(0))
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.ChildDateOfBirthController.onPageLoad(waypoints, Index(0)))
+
+          ChildBiologicalSexPage(Index(1))
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.ChildDateOfBirthController.onPageLoad(waypoints, Index(1)))
+        }
+      }
+    }
   }
 }

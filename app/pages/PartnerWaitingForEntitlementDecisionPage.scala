@@ -17,7 +17,7 @@
 package pages
 
 import controllers.routes
-import models.UserAnswers
+import models.{Index, UserAnswers}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -33,6 +33,6 @@ case object PartnerWaitingForEntitlementDecisionPage extends QuestionPage[Boolea
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case true  => PartnerEldestChildNamePage
-      case false => IndexPage
+      case false => ChildNamePage(Index(0))
     }.orRecover
 }

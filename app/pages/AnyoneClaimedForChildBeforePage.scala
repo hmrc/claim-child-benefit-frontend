@@ -17,7 +17,8 @@
 package pages
 
 import controllers.routes
-import models.{AnyoneClaimedForChildBefore, Index}
+import models.{AnyoneClaimedForChildBefore, Index, UserAnswers}
+import models.AnyoneClaimedForChildBefore._
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -29,4 +30,13 @@ final case class AnyoneClaimedForChildBeforePage(index: Index) extends QuestionP
 
   override def route(waypoints: Waypoints): Call =
     routes.AnyoneClaimedForChildBeforeController.onPageLoad(waypoints, index)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case Applicant | Partner | No =>
+        AdoptingChildPage(index)
+
+      case SomeoneElse =>
+        PreviousClaimantNamePage(index)
+    }.orRecover
 }

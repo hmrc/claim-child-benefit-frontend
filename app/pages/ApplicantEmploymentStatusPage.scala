@@ -18,7 +18,7 @@ package pages
 
 import controllers.routes
 import models.RelationshipStatus._
-import models.{ApplicantEmploymentStatus, UserAnswers}
+import models.{ApplicantEmploymentStatus, Index, UserAnswers}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -37,6 +37,6 @@ case object ApplicantEmploymentStatusPage extends QuestionPage[Set[ApplicantEmpl
         PartnerNamePage
 
       case Single | Divorced | Separated | Widowed =>
-        IndexPage
+        ChildNamePage(Index(0))
     }.orRecover
 }

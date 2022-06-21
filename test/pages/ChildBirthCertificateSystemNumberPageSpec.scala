@@ -16,6 +16,8 @@
 
 package pages
 
+import controllers.routes
+import models.Index
 import pages.behaviours.PageBehaviours
 
 
@@ -28,5 +30,24 @@ class ChildBirthCertificateSystemNumberPageSpec extends PageBehaviours {
     beSettable[String](ChildBirthCertificateSystemNumberPage(index))
 
     beRemovable[String](ChildBirthCertificateSystemNumberPage(index))
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Applicant Relationship to Child for the same index" in {
+
+          ChildBirthCertificateSystemNumberPage(Index(0))
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.ApplicantRelationshipToChildController.onPageLoad(waypoints, Index(0)))
+
+          ChildBirthCertificateSystemNumberPage(Index(1))
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.ApplicantRelationshipToChildController.onPageLoad(waypoints, Index(1)))
+        }
+      }
+    }
   }
 }

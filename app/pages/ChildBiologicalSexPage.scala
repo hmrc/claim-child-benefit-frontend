@@ -17,7 +17,7 @@
 package pages
 
 import controllers.routes
-import models.{ChildBiologicalSex, Index}
+import models.{ChildBiologicalSex, Index, UserAnswers}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -29,4 +29,7 @@ final case class ChildBiologicalSexPage(index: Index) extends QuestionPage[Child
 
   override def route(waypoints: Waypoints): Call =
     routes.ChildBiologicalSexController.onPageLoad(waypoints, index)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    ChildDateOfBirthPage(index)
 }

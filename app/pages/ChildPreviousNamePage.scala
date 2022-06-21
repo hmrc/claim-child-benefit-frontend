@@ -17,7 +17,7 @@
 package pages
 
 import controllers.routes
-import models.{ChildPreviousName, Index}
+import models.{ChildPreviousName, Index, UserAnswers}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -29,4 +29,7 @@ final case class ChildPreviousNamePage(childIndex: Index, nameIndex: Index) exte
 
   override def route(waypoints: Waypoints): Call =
     routes.ChildPreviousNameController.onPageLoad(waypoints, childIndex, nameIndex)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    AddChildPreviousNamePage(childIndex)
 }

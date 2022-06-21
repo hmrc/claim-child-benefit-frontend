@@ -26,10 +26,11 @@ object AnyoneClaimedForChildBefore extends Enumerable.Implicits {
 
   case object Applicant extends WithName("applicant") with AnyoneClaimedForChildBefore
   case object SomeoneElse extends WithName("someoneElse") with AnyoneClaimedForChildBefore
+  case object Partner extends WithName("partner") with AnyoneClaimedForChildBefore
   case object No extends WithName("no") with AnyoneClaimedForChildBefore
 
   val values: Seq[AnyoneClaimedForChildBefore] = Seq(
-    Applicant, SomeoneElse, No
+    Applicant, Partner, SomeoneElse, No
   )
 
   def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {

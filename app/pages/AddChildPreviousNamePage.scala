@@ -17,9 +17,10 @@
 package pages
 
 import controllers.routes
-import models.Index
+import models.{Index, UserAnswers}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+import queries.DeriveNumberOfChildPreviousNames
 
 final case class AddChildPreviousNamePage(index: Index) extends QuestionPage[Boolean] {
 
@@ -29,4 +30,16 @@ final case class AddChildPreviousNamePage(index: Index) extends QuestionPage[Boo
 
   override def route(waypoints: Waypoints): Call =
     routes.AddChildPreviousNameController.onPageLoad(waypoints, index)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true =>
+        answers
+          .get(DeriveNumberOfChildPreviousNames(index))
+          .map(n => ChildPreviousNamePage(index, Index(n)))
+          .orRecover
+
+      case false =>
+        ChildBiologicalSexPage(index)
+    }.orRecover
 }

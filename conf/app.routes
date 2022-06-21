@@ -235,3 +235,6 @@ POST       /removeChildPreviousName/:childIndex/:nameIndex                      
 
 GET        /adoptingChild/:index                        controllers.AdoptingChildController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /adoptingChild/:index                        controllers.AdoptingChildController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+
+GET        /check-child-details/:index                 controllers.CheckChildDetailsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /check-child-details/:index                 controllers.CheckChildDetailsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
