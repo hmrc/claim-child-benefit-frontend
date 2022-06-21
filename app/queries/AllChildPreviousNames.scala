@@ -19,8 +19,7 @@ package queries
 import models.{ChildName, Index}
 import play.api.libs.json.JsPath
 
-case class DeriveNumberOfChildPreviousNames(childIndex: Index) extends Derivable[List[ChildName], Int] {
-  override val derive: List[ChildName] => Int = _.size
+final case class AllChildPreviousNames(index: Index) extends Gettable[List[ChildName]] {
 
-  override def path: JsPath = JsPath \ "children" \ childIndex.position \ "previousNames"
+  override def path: JsPath = JsPath \ "children" \ index.position \ "previousNames"
 }

@@ -521,13 +521,17 @@ addChild.checkYourAnswersLabel = Children
 addChild.addAnother = Do you need to add another child?
 addChild.error.required = Select yes if you need to add another child
 addChild.change.hidden = the details for {0}
-addChild.remove.hidden = {0} from this claim
+addChild.remove.hidden = {0}
 
-addChildPreviousName.title = addChildPreviousName
-addChildPreviousName.heading = addChildPreviousName
-addChildPreviousName.checkYourAnswersLabel = addChildPreviousName
-addChildPreviousName.error.required = Select yes if addChildPreviousName
-addChildPreviousName.change.hidden = AddChildPreviousName
+addChildPreviousName.title.plural = You have added {0} previous names
+addChildPreviousName.title.singular = You have added 1 previous name
+addChildPreviousName.heading.plural = You have added {0} previous names for {0}
+addChildPreviousName.heading.singular = You have added 1 previous name for {0}
+addChildPreviousName.checkYourAnswersLabel = Previous names
+addChildPreviousName.addAnother = Do you need to add another previous name for {0}?
+addChildPreviousName.error.required = Select yes if you need to add another previous name
+addChildPreviousName.change.hidden = the previous name {0}
+addChildPreviousName.remove.hidden = {0}
 
 anyoneClaimedForChildBefore.title = Have you or anyone else ever claimed Child Benefit for {0}?
 anyoneClaimedForChildBefore.heading = Have you or anyone else ever claimed Child Benefit for {0}?

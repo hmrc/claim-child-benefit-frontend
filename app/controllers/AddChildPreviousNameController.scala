@@ -21,11 +21,13 @@ import forms.AddChildPreviousNameFormProvider
 import models.Index
 
 import javax.inject.Inject
-import pages.{AddChildPreviousNamePage, Waypoints}
+import pages.{AddChildPreviousNamePage, ChildNamePage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.twirl.api.HtmlFormat
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.checkAnswers.AddChildPreviousNameSummary
 import views.html.AddChildPreviousNameView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -39,28 +41,46 @@ class AddChildPreviousNameController @Inject()(
                                          formProvider: AddChildPreviousNameFormProvider,
                                          val controllerComponents: MessagesControllerComponents,
                                          view: AddChildPreviousNameView
-                                 )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                 )(implicit ec: ExecutionContext)
+  extends FrontendBaseController
+    with I18nSupport
+    with AnswerExtractor {
 
   val form = formProvider()
 
   def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
+      getAnswer(ChildNamePage(index)) {
+        childName =>
 
-      Ok(view(form, waypoints, index))
+          val safeName = HtmlFormat.escape(childName.firstName).toString
+
+          val previousNames = AddChildPreviousNameSummary.rows(request.userAnswers, index, waypoints, AddChildPreviousNamePage(index))
+
+          Ok(view(form, waypoints, index, safeName, previousNames))
+      }
   }
 
   def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      getAnswerAsync(ChildNamePage(index)) {
+        childName =>
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints, index))),
+          val safeName = HtmlFormat.escape(childName.firstName).toString
 
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(AddChildPreviousNamePage(index), value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(AddChildPreviousNamePage(index).navigate(waypoints, updatedAnswers))
-      )
+          form.bindFromRequest().fold(
+            formWithErrors => {
+              val previousNames = AddChildPreviousNameSummary.rows(request.userAnswers, index, waypoints, AddChildPreviousNamePage(index))
+
+              Future.successful(BadRequest(view(formWithErrors, waypoints, index, safeName, previousNames)))
+            },
+
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(AddChildPreviousNamePage(index), value))
+                _ <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(AddChildPreviousNamePage(index).navigate(waypoints, updatedAnswers))
+          )
+      }
   }
 }

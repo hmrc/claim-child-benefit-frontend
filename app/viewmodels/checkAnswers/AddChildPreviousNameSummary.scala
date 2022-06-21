@@ -16,27 +16,42 @@
 
 package viewmodels.checkAnswers
 
+import controllers.routes
 import models.{Index, UserAnswers}
-import pages.{AddChildPreviousNamePage, CheckAnswersPage, Waypoints}
+import pages.{AddChildPreviousNamePage, AddItemPage, CheckAnswersPage, ChildPreviousNamePage, Waypoints}
 import play.api.i18n.Messages
+import queries.AllChildPreviousNames
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.hmrcfrontend.views.viewmodels.addtoalist.ListItem
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object AddChildPreviousNameSummary  {
 
-  def row(answers: UserAnswers, index: Index, waypoints: Waypoints, sourcePage: CheckAnswersPage)
-         (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AddChildPreviousNamePage(index)).map {
-      answer =>
+  def rows(answers: UserAnswers, childIndex: Index, waypoints: Waypoints, sourcePage: AddItemPage)
+          (implicit messages: Messages): Seq[ListItem] =
+    answers.get(AllChildPreviousNames(childIndex)).getOrElse(Nil).zipWithIndex.map {
+      case (previousName, index) =>
 
-        val value = if (answer) "site.yes" else "site.no"
+        ListItem(
+          name      = previousName.displayName,
+          changeUrl = ChildPreviousNamePage(childIndex, Index(index)).changeLink(waypoints, sourcePage).url,
+          removeUrl = routes.RemoveChildPreviousNameController.onPageLoad(waypoints, childIndex, Index(index)).url
+        )
+    }
+
+  def checkAnswersRow(answers: UserAnswers, childIndex: Index, waypoints: Waypoints, sourcePage: CheckAnswersPage)
+                     (implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(AllChildPreviousNames(childIndex)).map {
+      names =>
+
+        val value = names.map(_.displayName).mkString("<br/>")
 
         SummaryListRowViewModel(
           key     = "addChildPreviousName.checkYourAnswersLabel",
           value   = ValueViewModel(value),
           actions = Seq(
-            ActionItemViewModel("site.change", AddChildPreviousNamePage(index).changeLink(waypoints, sourcePage).url)
+            ActionItemViewModel("site.change", AddChildPreviousNamePage(childIndex).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("addChildPreviousName.change.hidden"))
           )
         )

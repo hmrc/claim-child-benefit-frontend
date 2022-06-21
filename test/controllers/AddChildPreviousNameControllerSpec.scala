@@ -18,16 +18,18 @@ package controllers
 
 import base.SpecBase
 import forms.AddChildPreviousNameFormProvider
-import models.UserAnswers
+import models.{ChildName, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{AddChildPreviousNamePage, EmptyWaypoints}
+import pages.{AddChildPreviousNamePage, ChildNamePage, EmptyWaypoints}
+import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
+import viewmodels.checkAnswers.AddChildPreviousNameSummary
 import views.html.AddChildPreviousNameView
 
 import scala.concurrent.Future
@@ -40,13 +42,16 @@ class AddChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
   val form = formProvider()
   private val waypoints = EmptyWaypoints
 
+  private val childName = ChildName("first", None, "last")
+  private val baseAnswers = emptyUserAnswers.set(ChildNamePage(index), childName).success.value
+
   lazy val addChildPreviousNameRoute = routes.AddChildPreviousNameController.onPageLoad(waypoints, index).url
 
   "AddChildPreviousName Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, addChildPreviousNameRoute)
@@ -55,14 +60,17 @@ class AddChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
 
         val view = application.injector.instanceOf[AddChildPreviousNameView]
 
+        implicit val msgs: Messages = messages(application)
+        val previousNames = AddChildPreviousNameSummary.rows(baseAnswers, index, waypoints, AddChildPreviousNamePage(index))
+
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, index)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index, childName.firstName, previousNames)(request,implicitly).toString
       }
     }
 
     "must not repopulate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(AddChildPreviousNamePage(index), true).success.value
+      val userAnswers = baseAnswers.set(AddChildPreviousNamePage(index), true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -71,10 +79,13 @@ class AddChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
 
         val view = application.injector.instanceOf[AddChildPreviousNameView]
 
+        implicit val msgs: Messages = messages(application)
+        val previousNames = AddChildPreviousNameSummary.rows(baseAnswers, index, waypoints, AddChildPreviousNamePage(index))
+
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, index)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index, childName.firstName, previousNames)(request, implicitly).toString
       }
     }
 
@@ -85,7 +96,7 @@ class AddChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
             bind[SessionRepository].toInstance(mockSessionRepository)
           )
@@ -97,7 +108,7 @@ class AddChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(AddChildPreviousNamePage(index), true).success.value
+        val expectedAnswers = baseAnswers.set(AddChildPreviousNamePage(index), true).success.value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual AddChildPreviousNamePage(index).navigate(waypoints, expectedAnswers).url
@@ -107,7 +118,7 @@ class AddChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request =
@@ -118,10 +129,13 @@ class AddChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
 
         val view = application.injector.instanceOf[AddChildPreviousNameView]
 
+        implicit val msgs: Messages = messages(application)
+        val previousNames = AddChildPreviousNameSummary.rows(baseAnswers, index, waypoints, AddChildPreviousNamePage(index))
+
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, index)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index, childName.firstName, previousNames)(request, implicitly).toString
       }
     }
 

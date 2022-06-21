@@ -16,16 +16,16 @@
 
 package forms
 
-import javax.inject.Inject
-
 import forms.mappings.Mappings
+import models.ChildName
 import play.api.data.Form
 import play.api.data.Forms._
-import models.ChildPreviousName
+
+import javax.inject.Inject
 
 class ChildPreviousNameFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[ChildPreviousName] = Form(
+  def apply(): Form[ChildName] = Form(
     mapping(
       "firstName" -> text("childPreviousName.error.firstName.required")
         .verifying(maxLength(100, "childPreviousName.error.firstName.length")),
@@ -33,6 +33,6 @@ class ChildPreviousNameFormProvider @Inject() extends Mappings {
         .verifying(maxLength(100, "childPreviousName.error.middleNames.length"))),
       "lastName" -> text("childPreviousName.error.lastName.required")
         .verifying(maxLength(100, "childPreviousName.error.lastName.length"))
-    )(ChildPreviousName.apply)(ChildPreviousName.unapply)
+    )(ChildName.apply)(ChildName.unapply)
   )
 }
