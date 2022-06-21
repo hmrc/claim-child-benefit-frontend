@@ -17,7 +17,7 @@
 package pages
 
 import controllers.routes
-import models.{ChildPreviousName, Index}
+import models.{ChildName, Index}
 import pages.behaviours.PageBehaviours
 
 class AddChildPreviousNamePageSpec extends PageBehaviours {
@@ -35,7 +35,7 @@ class AddChildPreviousNamePageSpec extends PageBehaviours {
       "when there are no waypoints" - {
 
         val waypoints = EmptyWaypoints
-        val childPreviousName = ChildPreviousName("first", None, "last")
+        val childPreviousName = ChildName("first", None, "last")
 
         "when the answer is yes" - {
 

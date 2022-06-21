@@ -57,15 +57,6 @@ trait ModelGenerators {
       } yield ChildScottishBirthCertificateDetails(district, year, entryNumber)
     }
 
-  implicit lazy val arbitraryChildPreviousName: Arbitrary[ChildPreviousName] =
-    Arbitrary {
-      for {
-        firstName <- arbitrary[String]
-        middleNames <- Gen.option(arbitrary[String])
-        lastName <- arbitrary[String]
-      } yield ChildPreviousName(firstName, middleNames, lastName)
-    }
-
   implicit lazy val arbitraryChildName: Arbitrary[ChildName] =
     Arbitrary {
       for {

@@ -14,22 +14,13 @@
  * limitations under the License.
  */
 
-package pages
+package models
 
-import controllers.routes
-import models.{ApplicantName, UserAnswers}
-import play.api.libs.json.JsPath
-import play.api.mvc.Call
+import play.api.libs.json.{Json, OFormat}
 
-case object ApplicantNamePage extends QuestionPage[ApplicantName] {
+case class ChildSummary(childName: ChildName)
 
-  override def path: JsPath = JsPath \ toString
+object ChildSummary {
 
-  override def toString: String = "applicantName"
-
-  override def route(waypoints: Waypoints): Call =
-    routes.ApplicantNameController.onPageLoad(waypoints)
-
-  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    RelationshipStatusPage
+  implicit val format: OFormat[ChildSummary] = Json.format[ChildSummary]
 }

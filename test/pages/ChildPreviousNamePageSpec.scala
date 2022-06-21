@@ -17,18 +17,18 @@
 package pages
 
 import controllers.routes
-import models.{ChildPreviousName, Index}
+import models.{ChildName, Index}
 import pages.behaviours.PageBehaviours
 
 class ChildPreviousNamePageSpec extends PageBehaviours {
 
   "ChildPreviousNamePage" - {
 
-    beRetrievable[ChildPreviousName](ChildPreviousNamePage(index, index))
+    beRetrievable[ChildName](ChildPreviousNamePage(index, index))
 
-    beSettable[ChildPreviousName](ChildPreviousNamePage(index, index))
+    beSettable[ChildName](ChildPreviousNamePage(index, index))
 
-    beRemovable[ChildPreviousName](ChildPreviousNamePage(index, index))
+    beRemovable[ChildName](ChildPreviousNamePage(index, index))
 
     "must navigate" - {
 

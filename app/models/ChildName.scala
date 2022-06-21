@@ -18,7 +18,12 @@ package models
 
 import play.api.libs.json._
 
-case class ChildName (firstName: String, middleNames: Option[String], lastName: String)
+case class ChildName (firstName: String, middleNames: Option[String], lastName: String) {
+
+  val displayName: String =
+    List(Some(firstName), middleNames, Some(lastName))
+      .flatten.mkString(" ")
+}
 
 object ChildName {
   implicit val format = Json.format[ChildName]

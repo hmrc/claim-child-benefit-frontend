@@ -22,7 +22,10 @@ import play.api.libs.json.JsPath
 import play.api.mvc.Call
 import queries.DeriveNumberOfChildPreviousNames
 
-final case class AddChildPreviousNamePage(index: Index) extends QuestionPage[Boolean] {
+final case class AddChildPreviousNamePage(index: Index) extends QuestionPage[Boolean] with AddItemPage {
+
+  override val checkModeUrlFragment: String = s"change-child-name-${index.position}"
+  override val normalModeUrlFragment: String = s"add-child-name-${index.position}"
 
   override def path: JsPath = JsPath \ "children" \ index.position \  toString
 

@@ -21,10 +21,11 @@ import play.api.data.FormError
 
 class RemoveChildPreviousNameFormProviderSpec extends BooleanFieldBehaviours {
 
+  val name = "name"
   val requiredKey = "removeChildPreviousName.error.required"
   val invalidKey = "error.boolean"
 
-  val form = new RemoveChildPreviousNameFormProvider()()
+  val form = new RemoveChildPreviousNameFormProvider()(name)
 
   ".value" - {
 
@@ -33,13 +34,13 @@ class RemoveChildPreviousNameFormProviderSpec extends BooleanFieldBehaviours {
     behave like booleanField(
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+      invalidError = FormError(fieldName, invalidKey, Seq(name))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq(name))
     )
   }
 }

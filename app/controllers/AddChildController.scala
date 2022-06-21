@@ -18,12 +18,14 @@ package controllers
 
 import controllers.actions._
 import forms.AddChildFormProvider
+
 import javax.inject.Inject
 import pages.{AddChildPage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.checkAnswers.AddChildSummary
 import views.html.AddChildView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -44,20 +46,20 @@ class AddChildController @Inject()(
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(AddChildPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
+      val children = AddChildSummary.rows(request.userAnswers, waypoints, AddChildPage)
 
-      Ok(view(preparedForm, waypoints))
+      Ok(view(form, waypoints, children))
   }
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
       form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints))),
+        formWithErrors => {
+          val children = AddChildSummary.rows(request.userAnswers, waypoints, AddChildPage)
+
+          Future.successful(BadRequest(view(formWithErrors, waypoints, children)))
+        },
 
         value =>
           for {

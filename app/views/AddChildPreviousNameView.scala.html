@@ -14,15 +14,33 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.addtoalist.{ListItem, Long}
+@import viewmodels.LegendSize
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    addToList: components.addToList
 )
 
-@(form: Form[_], waypoints: Waypoints, index: Index)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints, index: Index, childName: String, previousNames: Seq[ListItem])(implicit request: Request[_], messages: Messages)
+
+@titleText = @{
+    previousNames.size match {
+        case 1 => messages("addChildPreviousName.title.singular")
+        case i => messages("addChildPreviousName.title.plural", i)
+    }
+}
+
+@headingText = @{
+    previousNames.size match {
+        case 1 => messages("addChildPreviousName.heading.singular", childName)
+        case i => messages("addChildPreviousName.heading.plural", i, childName)
+    }
+}
 
 @layout(pageTitle = title(form, messages("addChildPreviousName.title"))) {
 
@@ -32,10 +50,14 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        <h1 class="govuk-heading-xl">@headingText</h1>
+
+        @addToList(previousNames, Long, "addChildPreviousName.change.hidden", "addChildPreviousName.remove.hidden")
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("addChildPreviousName.heading")).asPageHeading()
+                legend = LegendViewModel(messages("addChildPreviousName.addAnother", childName)).withSize(LegendSize.Medium)
             )
         )
 

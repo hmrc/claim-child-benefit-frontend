@@ -16,11 +16,40 @@
 
 package pages
 
+import controllers.routes
+import models.{ChildName, Index}
 import pages.behaviours.PageBehaviours
 
 class RemoveChildPageSpec extends PageBehaviours {
 
   "RemoveChildPage" - {
 
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Add Child when there is at least one child left" - {
+
+          val answers = emptyUserAnswers.set(ChildNamePage(Index(0)), ChildName("first", None, "last")).success.value
+
+          RemoveChildPage(Index(0))
+            .navigate(waypoints, answers)
+            .mustEqual(routes.AddChildController.onPageLoad(waypoints))
+
+          RemoveChildPage(Index(1))
+            .navigate(waypoints, answers)
+            .mustEqual(routes.AddChildController.onPageLoad(waypoints))
+        }
+
+        "to Child Name for index 0 when there are no children left" in {
+
+          RemoveChildPage(Index(0))
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.ChildNameController.onPageLoad(waypoints, Index(0)))
+        }
+      }
+    }
   }
 }

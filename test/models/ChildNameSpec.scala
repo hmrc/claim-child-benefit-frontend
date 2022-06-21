@@ -16,10 +16,24 @@
 
 package models
 
-import play.api.libs.json._
+import base.SpecBase
 
-case class ChildPreviousName (firstName: String, middleNames: Option[String], lastName: String)
+class ChildNameSpec extends SpecBase {
 
-object ChildPreviousName {
-  implicit val format = Json.format[ChildPreviousName]
+  ".displayName" - {
+
+    "must be correct when there is a middle name" in {
+
+      val childName = ChildName("first", Some("middle"), "last")
+
+      childName.displayName mustEqual "first middle last"
+    }
+
+    "must be correct when there is no middle name" in {
+
+      val childName = ChildName("first", None, "last")
+
+      childName.displayName mustEqual "first last"
+    }
+  }
 }

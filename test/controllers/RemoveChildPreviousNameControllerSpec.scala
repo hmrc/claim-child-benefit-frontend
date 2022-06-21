@@ -18,11 +18,11 @@ package controllers
 
 import base.SpecBase
 import forms.RemoveChildPreviousNameFormProvider
-import models.UserAnswers
+import models.ChildName
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.Mockito.{times, verify, when}
+import org.mockito.Mockito.{never, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{RemoveChildPreviousNamePage, EmptyWaypoints}
+import pages.{ChildPreviousNamePage, EmptyWaypoints, RemoveChildPreviousNamePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -36,9 +36,11 @@ class RemoveChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
+  private val name = ChildName("first", None, "last")
   val formProvider = new RemoveChildPreviousNameFormProvider()
-  val form = formProvider()
+  val form = formProvider(name.displayName)
   private val waypoints = EmptyWaypoints
+  private val baseAnswers = emptyUserAnswers.set(ChildPreviousNamePage(index, index), name).success.value
 
   lazy val removeChildPreviousNameRoute = routes.RemoveChildPreviousNameController.onPageLoad(waypoints, index, index).url
 
@@ -46,7 +48,7 @@ class RemoveChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, removeChildPreviousNameRoute)
@@ -56,36 +58,18 @@ class RemoveChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[RemoveChildPreviousNameView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, index, index)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index, index, name.displayName)(request, messages(application)).toString
       }
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers = UserAnswers(userAnswersId).set(RemoveChildPreviousNamePage(index, index), true).success.value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, removeChildPreviousNameRoute)
-
-        val view = application.injector.instanceOf[RemoveChildPreviousNameView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), waypoints, index, index)(request, messages(application)).toString
-      }
-    }
-
-    "must save the answer and redirect to the next page when valid data is submitted" in {
+    "must remove the previous name and redirect to the next page when the answer is yes" in {
 
       val mockSessionRepository = mock[SessionRepository]
 
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
             bind[SessionRepository].toInstance(mockSessionRepository)
           )
@@ -97,7 +81,7 @@ class RemoveChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(RemoveChildPreviousNamePage(index, index), true).success.value
+        val expectedAnswers = baseAnswers.remove(ChildPreviousNamePage(index, index)).success.value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual RemoveChildPreviousNamePage(index, index).navigate(waypoints, expectedAnswers).url
@@ -105,9 +89,35 @@ class RemoveChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
+    "must not remove the previous name and redirect to the next page when the answer is no" in {
+
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = Some(baseAnswers))
+          .overrides(
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, removeChildPreviousNameRoute)
+            .withFormUrlEncodedBody(("value", "false"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual RemoveChildPreviousNamePage(index, index).navigate(waypoints, baseAnswers).url
+        verify(mockSessionRepository, never()).set(any())
+      }
+    }
+
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request =
@@ -121,7 +131,7 @@ class RemoveChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, index, index)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index, index, name.displayName)(request, messages(application)).toString
       }
     }
 

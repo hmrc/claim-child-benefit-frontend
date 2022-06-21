@@ -295,7 +295,8 @@ addApplicantPreviousFamilyName.heading.singular = You have added 1 other family 
 addApplicantPreviousFamilyName.checkYourAnswersLabel = Other last names
 addApplicantPreviousFamilyName.error.required = Select yes if you need to add another last names
 addApplicantPreviousFamilyName.addAnother = Do you need to add another last name?
-addApplicantPreviousFamilyName.change.hidden = your other last names
+addApplicantPreviousFamilyName.change.hidden = {0}
+addApplicantPreviousFamilyName.remove.hidden = {0}
 
 applicantCurrentAddress.title = What is your address?
 applicantCurrentAddress.heading = What is your address?
@@ -512,17 +513,25 @@ partnerWaitingForEntitlementDecision.checkYourAnswersLabel = Is {0} waiting to h
 partnerWaitingForEntitlementDecision.error.required = Select yes if {0} is waiting to hear if they are entitled to Child Benefit
 partnerWaitingForEntitlementDecision.change.hidden = if {0} is waiting to hear if they are entitled to Child Benefit
 
-addChild.title = addChild
-addChild.heading = addChild
-addChild.checkYourAnswersLabel = addChild
-addChild.error.required = Select yes if addChild
-addChild.change.hidden = AddChild
+addChild.title.plural = You have added {0} children
+addChild.title.singular = You have added 1 child
+addChild.heading.plural = You have added {0} children
+addChild.heading.singular = You have added 1 child
+addChild.checkYourAnswersLabel = Children
+addChild.addAnother = Do you need to add another child?
+addChild.error.required = Select yes if you need to add another child
+addChild.change.hidden = the details for {0}
+addChild.remove.hidden = {0}
 
-addChildPreviousName.title = addChildPreviousName
-addChildPreviousName.heading = addChildPreviousName
-addChildPreviousName.checkYourAnswersLabel = addChildPreviousName
-addChildPreviousName.error.required = Select yes if addChildPreviousName
-addChildPreviousName.change.hidden = AddChildPreviousName
+addChildPreviousName.title.plural = You have added {0} previous names
+addChildPreviousName.title.singular = You have added 1 previous name
+addChildPreviousName.heading.plural = You have added {0} previous names for {0}
+addChildPreviousName.heading.singular = You have added 1 previous name for {0}
+addChildPreviousName.checkYourAnswersLabel = Previous names
+addChildPreviousName.addAnother = Do you need to add another previous name for {0}?
+addChildPreviousName.error.required = Select yes if you need to add another previous name
+addChildPreviousName.change.hidden = the previous name {0}
+addChildPreviousName.remove.hidden = {0}
 
 anyoneClaimedForChildBefore.title = Have you or anyone else ever claimed Child Benefit for {0}?
 anyoneClaimedForChildBefore.heading = Have you or anyone else ever claimed Child Benefit for {0}?
@@ -653,17 +662,13 @@ previousClaimantName.error.lastName.length = lastName must be 100 characters or 
 previousClaimantName.firstName.change.hidden = firstName
 previousClaimantName.lastName.change.hidden = lastName
 
-removeChild.title = removeChild
-removeChild.heading = removeChild
-removeChild.checkYourAnswersLabel = removeChild
-removeChild.error.required = Select yes if removeChild
-removeChild.change.hidden = RemoveChild
+removeChild.title = Are you sure you want to remove this child?
+removeChild.heading = Are you sure you want to remove {0}?
+removeChild.error.required = Select yes if you want to remove {0}
 
-removeChildPreviousName.title = removeChildPreviousName
-removeChildPreviousName.heading = removeChildPreviousName
-removeChildPreviousName.checkYourAnswersLabel = removeChildPreviousName
-removeChildPreviousName.error.required = Select yes if removeChildPreviousName
-removeChildPreviousName.change.hidden = RemoveChildPreviousName
+removeChildPreviousName.title = Are you sure you want to remove this previous name?
+removeChildPreviousName.heading = Are you sure you want to remove {0}?
+removeChildPreviousName.error.required = Select yes if you want to remove {0}
 
 adoptingChild.title = adoptingChild
 adoptingChild.heading = adoptingChild

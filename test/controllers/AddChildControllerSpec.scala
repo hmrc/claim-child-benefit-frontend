@@ -23,11 +23,13 @@ import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{AddChildPage, EmptyWaypoints}
+import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
+import viewmodels.checkAnswers.AddChildSummary
 import views.html.AddChildView
 
 import scala.concurrent.Future
@@ -55,12 +57,15 @@ class AddChildControllerSpec extends SpecBase with MockitoSugar {
 
         val view = application.injector.instanceOf[AddChildView]
 
+        implicit val msgs: Messages = messages(application)
+        val children = AddChildSummary.rows(emptyUserAnswers, waypoints, AddChildPage)
+
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, children)(request, implicitly).toString
       }
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
+    "must not repopulate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = UserAnswers(userAnswersId).set(AddChildPage, true).success.value
 
@@ -71,10 +76,13 @@ class AddChildControllerSpec extends SpecBase with MockitoSugar {
 
         val view = application.injector.instanceOf[AddChildView]
 
+        implicit val msgs: Messages = messages(application)
+        val children = AddChildSummary.rows(emptyUserAnswers, waypoints, AddChildPage)
+
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, children)(request, implicitly).toString
       }
     }
 
@@ -118,10 +126,13 @@ class AddChildControllerSpec extends SpecBase with MockitoSugar {
 
         val view = application.injector.instanceOf[AddChildView]
 
+        implicit val msgs: Messages = messages(application)
+        val children = AddChildSummary.rows(emptyUserAnswers, waypoints, AddChildPage)
+
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, children)(request, implicitly).toString
       }
     }
 
