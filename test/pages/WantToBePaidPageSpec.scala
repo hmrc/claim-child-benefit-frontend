@@ -20,6 +20,7 @@ import controllers.routes
 import models.Benefits
 import org.scalacheck.Gen
 import pages.behaviours.PageBehaviours
+import pages.income.ApplicantOrPartnerBenefitsPage
 
 class WantToBePaidPageSpec extends PageBehaviours {
 

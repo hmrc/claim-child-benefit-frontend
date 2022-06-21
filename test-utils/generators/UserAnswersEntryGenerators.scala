@@ -20,6 +20,7 @@ import models._
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary.arbitrary
 import pages._
+import pages.income.{ApplicantBenefitsPage, ApplicantIncomeOver50kPage, ApplicantIncomeOver60kPage, ApplicantOrPartnerBenefitsPage, ApplicantOrPartnerIncomeOver50kPage, ApplicantOrPartnerIncomeOver60kPage}
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.domain.Nino
 

@@ -16,7 +16,7 @@
 
 package pages
 
-import controllers.routes
+import controllers.income.{routes => incomeRoutes}
 import models.RelationshipStatus.{Cohabiting, Separated}
 
 import java.time.LocalDate
@@ -49,7 +49,7 @@ class RelationshipStatusDatePageSpec extends PageBehaviours {
 
           RelationshipStatusDatePage
             .navigate(waypoints, answers)
-            .mustEqual(routes.ApplicantIncomeOver50kController.onPageLoad(waypoints))
+            .mustEqual(incomeRoutes.ApplicantIncomeOver50kController.onPageLoad(waypoints))
         }
 
         "to Applicant or Partner Income Over 50k when the relationship status is Cohabiting" in {
@@ -58,7 +58,7 @@ class RelationshipStatusDatePageSpec extends PageBehaviours {
 
           RelationshipStatusDatePage
             .navigate(waypoints, answers)
-            .mustEqual(routes.ApplicantOrPartnerIncomeOver50kController.onPageLoad(waypoints))
+            .mustEqual(incomeRoutes.ApplicantOrPartnerIncomeOver50kController.onPageLoad(waypoints))
         }
       }
     }

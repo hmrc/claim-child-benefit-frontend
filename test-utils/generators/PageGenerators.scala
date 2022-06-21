@@ -19,6 +19,7 @@ package generators
 import models.Index
 import org.scalacheck.Arbitrary
 import pages._
+import pages.income.{ApplicantBenefitsPage, ApplicantIncomeOver50kPage, ApplicantIncomeOver60kPage, ApplicantOrPartnerBenefitsPage, ApplicantOrPartnerIncomeOver50kPage, ApplicantOrPartnerIncomeOver60kPage}
 
 trait PageGenerators {
 
