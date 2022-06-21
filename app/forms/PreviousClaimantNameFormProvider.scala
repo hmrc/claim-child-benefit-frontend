@@ -25,12 +25,16 @@ import models.PreviousClaimantName
 
 class PreviousClaimantNameFormProvider @Inject() extends Mappings {
 
-   def apply(): Form[PreviousClaimantName] = Form(
-     mapping(
+  def apply(): Form[PreviousClaimantName] = Form(
+    mapping(
+      "title" -> optional(text("previousClaimantName.error.title.required")
+        .verifying(maxLength(20, "previousClaimantName.error.title.length"))),
       "firstName" -> text("previousClaimantName.error.firstName.required")
         .verifying(maxLength(100, "previousClaimantName.error.firstName.length")),
+      "middleNames" -> optional(text("previousClaimantName.error.middleNames.required")
+        .verifying(maxLength(100, "previousClaimantName.error.middleNames.length"))),
       "lastName" -> text("previousClaimantName.error.lastName.required")
         .verifying(maxLength(100, "previousClaimantName.error.lastName.length"))
     )(PreviousClaimantName.apply)(PreviousClaimantName.unapply)
-   )
- }
+  )
+}

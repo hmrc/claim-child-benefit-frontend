@@ -25,10 +25,11 @@ sealed trait AnyoneClaimedForChildBefore
 object AnyoneClaimedForChildBefore extends Enumerable.Implicits {
 
   case object Applicant extends WithName("applicant") with AnyoneClaimedForChildBefore
-  case object Someoneelse extends WithName("someoneElse") with AnyoneClaimedForChildBefore
+  case object SomeoneElse extends WithName("someoneElse") with AnyoneClaimedForChildBefore
+  case object No extends WithName("no") with AnyoneClaimedForChildBefore
 
   val values: Seq[AnyoneClaimedForChildBefore] = Seq(
-    Applicant, Someoneelse
+    Applicant, SomeoneElse, No
   )
 
   def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {

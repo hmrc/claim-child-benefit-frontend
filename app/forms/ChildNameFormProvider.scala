@@ -25,12 +25,14 @@ import models.ChildName
 
 class ChildNameFormProvider @Inject() extends Mappings {
 
-   def apply(): Form[ChildName] = Form(
-     mapping(
-      "firstName" -> text("childName.error.firstName.required")
-        .verifying(maxLength(100, "childName.error.firstName.length")),
-      "lastName" -> text("childName.error.lastName.required")
-        .verifying(maxLength(100, "childName.error.lastName.length"))
+  def apply(): Form[ChildName] = Form(
+    mapping(
+     "firstName" -> text("childName.error.firstName.required")
+       .verifying(maxLength(100, "childName.error.firstName.length")),
+     "middleNames" -> optional(text("childName.error.middleNames.required")
+       .verifying(maxLength(100, "childName.error.middleNames.length"))),
+     "lastName" -> text("childName.error.lastName.required")
+       .verifying(maxLength(100, "childName.error.lastName.length"))
     )(ChildName.apply)(ChildName.unapply)
-   )
- }
+  )
+}

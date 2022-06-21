@@ -32,15 +32,18 @@ object ChildScottishBirthCertificateDetailsSummary  {
     answers.get(ChildScottishBirthCertificateDetailsPage(index)).map {
       answer =>
 
-      val value = HtmlFormat.escape(answer.district).toString + "<br/>" + HtmlFormat.escape(answer.year).toString
+      val value =
+        Seq(answer.district, answer.year, answer.entryNumber)
+          .map(HtmlFormat.escape(_).toString)
+          .mkString(" ")
 
-        SummaryListRowViewModel(
-          key     = "childScottishBirthCertificateDetails.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlContent(value)),
-          actions = Seq(
-            ActionItemViewModel("site.change", ChildScottishBirthCertificateDetailsPage(index).changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("childScottishBirthCertificateDetails.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key     = "childScottishBirthCertificateDetails.checkYourAnswersLabel",
+        value   = ValueViewModel(HtmlContent(value)),
+        actions = Seq(
+          ActionItemViewModel("site.change", ChildScottishBirthCertificateDetailsPage(index).changeLink(waypoints, sourcePage).url)
+            .withVisuallyHiddenText(messages("childScottishBirthCertificateDetails.change.hidden"))
         )
+      )
     }
 }
