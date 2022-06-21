@@ -22,7 +22,10 @@ import play.api.libs.json.JsPath
 import play.api.mvc.Call
 import queries.DeriveNumberOfChildren
 
-case object AddChildPage extends QuestionPage[Boolean] {
+case object AddChildPage extends QuestionPage[Boolean] with AddItemPage {
+
+  override val normalModeUrlFragment: String = "add-child"
+  override val checkModeUrlFragment: String = "change-child"
 
   override def path: JsPath = JsPath \ toString
 
@@ -41,4 +44,5 @@ case object AddChildPage extends QuestionPage[Boolean] {
       case false =>
         CheckYourAnswersPage
     }.orRecover
+
 }

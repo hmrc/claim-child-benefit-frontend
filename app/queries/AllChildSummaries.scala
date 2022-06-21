@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-package models
+package queries
 
-import play.api.libs.json._
+import models.ChildSummary
+import play.api.libs.json.JsPath
 
-case class ChildName (firstName: String, middleNames: Option[String], lastName: String) {
+case object AllChildSummaries extends Gettable[List[ChildSummary]] {
 
-  val displayName: String =
-    List(Some(firstName), middleNames, Some(lastName))
-      .flatten.mkString(" ")
-}
-
-object ChildName {
-  implicit val format = Json.format[ChildName]
+  override def path: JsPath = JsPath \ "children"
 }

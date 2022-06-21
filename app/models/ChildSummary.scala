@@ -16,15 +16,11 @@
 
 package models
 
-import play.api.libs.json._
+import play.api.libs.json.{Json, OFormat}
 
-case class ChildName (firstName: String, middleNames: Option[String], lastName: String) {
+case class ChildSummary(childName: ChildName)
 
-  val displayName: String =
-    List(Some(firstName), middleNames, Some(lastName))
-      .flatten.mkString(" ")
-}
+object ChildSummary {
 
-object ChildName {
-  implicit val format = Json.format[ChildName]
+  implicit val format: OFormat[ChildSummary] = Json.format[ChildSummary]
 }

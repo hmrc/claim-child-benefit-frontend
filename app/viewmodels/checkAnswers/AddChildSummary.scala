@@ -16,21 +16,36 @@
 
 package viewmodels.checkAnswers
 
-import models.UserAnswers
-import pages.{AddChildPage, CheckAnswersPage, Waypoints}
+import controllers.routes
+import models.{Index, UserAnswers}
+import pages.{AddChildPage, AddItemPage, CheckAnswersPage, CheckChildDetailsPage, Waypoints}
 import play.api.i18n.Messages
+import queries.AllChildSummaries
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.hmrcfrontend.views.viewmodels.addtoalist.ListItem
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object AddChildSummary  {
 
-  def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
-         (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AddChildPage).map {
-      answer =>
+  def rows(answers: UserAnswers, waypoints: Waypoints, sourcePage: AddItemPage)
+          (implicit messages: Messages): Seq[ListItem] =
+    answers.get(AllChildSummaries).getOrElse(Nil).zipWithIndex.map {
+      case (summary, index) =>
 
-        val value = if (answer) "site.yes" else "site.no"
+        ListItem(
+          name      = summary.childName.displayName,
+          changeUrl = CheckChildDetailsPage(Index(index)).changeLink(waypoints, sourcePage).url,
+          removeUrl = routes.RemoveChildController.onPageLoad(waypoints, Index(index)).url
+        )
+    }
+
+  def checkAnswersRow(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
+                     (implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(AllChildSummaries).map {
+      summaries =>
+
+        val value = summaries.map(_.childName.displayName).mkString("<br/>")
 
         SummaryListRowViewModel(
           key     = "addChild.checkYourAnswersLabel",
