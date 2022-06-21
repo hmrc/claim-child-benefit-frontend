@@ -22,7 +22,7 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], waypoints: Waypoints, childIndex: Index, nameIndex: Index)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints, childIndex: Index, nameIndex: Index, previousName: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("removeChildPreviousName.title"))) {
 
@@ -35,7 +35,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("removeChildPreviousName.heading")).asPageHeading()
+                legend = LegendViewModel(messages("removeChildPreviousName.heading", previousName)).asPageHeading()
             )
         )
 

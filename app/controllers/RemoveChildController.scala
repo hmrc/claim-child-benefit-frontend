@@ -19,15 +19,16 @@ package controllers
 import controllers.actions._
 import forms.RemoveChildFormProvider
 import models.Index
-
-import javax.inject.Inject
-import pages.{RemoveChildPage, Waypoints}
+import pages.{ChildNamePage, RemoveChildPage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.twirl.api.HtmlFormat
+import queries.ChildQuery
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.RemoveChildView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class RemoveChildController @Inject()(
@@ -39,33 +40,50 @@ class RemoveChildController @Inject()(
                                          formProvider: RemoveChildFormProvider,
                                          val controllerComponents: MessagesControllerComponents,
                                          view: RemoveChildView
-                                 )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
-
-  val form = formProvider()
+                                 )(implicit ec: ExecutionContext)
+  extends FrontendBaseController
+    with I18nSupport
+    with AnswerExtractor {
 
   def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
+      getAnswer(ChildNamePage(index)) {
+        childName =>
 
-      val preparedForm = request.userAnswers.get(RemoveChildPage(index)) match {
-        case None => form
-        case Some(value) => form.fill(value)
+          val safeName = HtmlFormat.escape(childName.firstName).toString()
+          val form = formProvider(safeName)
+
+          val preparedForm = request.userAnswers.get(RemoveChildPage(index)) match {
+            case None => form
+            case Some(value) => form.fill(value)
+          }
+
+          Ok(view(preparedForm, waypoints, index, safeName))
       }
-
-      Ok(view(preparedForm, waypoints, index))
   }
 
   def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      getAnswerAsync(ChildNamePage(index)) {
+        childName =>
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints, index))),
+          val safeName = HtmlFormat.escape(childName.firstName).toString
+          val form = formProvider(safeName)
 
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(RemoveChildPage(index), value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(RemoveChildPage(index).navigate(waypoints, updatedAnswers))
-      )
+          form.bindFromRequest().fold(
+            formWithErrors =>
+              Future.successful(BadRequest(view(formWithErrors, waypoints, index, safeName))),
+
+            value =>
+              if (value) {
+                for {
+                  updatedAnswers <- Future.fromTry(request.userAnswers.remove(ChildQuery(index)))
+                  _ <- sessionRepository.set(updatedAnswers)
+                } yield Redirect(RemoveChildPage(index).navigate(waypoints, updatedAnswers))
+              } else {
+                Future.successful(Redirect(RemoveChildPage(index).navigate(waypoints, request.userAnswers)))
+              }
+          )
+      }
   }
 }

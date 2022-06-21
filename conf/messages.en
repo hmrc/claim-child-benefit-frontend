@@ -662,17 +662,13 @@ previousClaimantName.error.lastName.length = lastName must be 100 characters or 
 previousClaimantName.firstName.change.hidden = firstName
 previousClaimantName.lastName.change.hidden = lastName
 
-removeChild.title = removeChild
-removeChild.heading = removeChild
-removeChild.checkYourAnswersLabel = removeChild
-removeChild.error.required = Select yes if removeChild
-removeChild.change.hidden = RemoveChild
+removeChild.title = Are you sure you want to remove this child?
+removeChild.heading = Are you sure you want to remove {0}?
+removeChild.error.required = Select yes if you want to remove {0}
 
-removeChildPreviousName.title = removeChildPreviousName
-removeChildPreviousName.heading = removeChildPreviousName
-removeChildPreviousName.checkYourAnswersLabel = removeChildPreviousName
-removeChildPreviousName.error.required = Select yes if removeChildPreviousName
-removeChildPreviousName.change.hidden = RemoveChildPreviousName
+removeChildPreviousName.title = Are you sure you want to remove this previous name?
+removeChildPreviousName.heading = Are you sure you want to remove {0}?
+removeChildPreviousName.error.required = Select yes if you want to remove {0}
 
 adoptingChild.title = adoptingChild
 adoptingChild.heading = adoptingChild
