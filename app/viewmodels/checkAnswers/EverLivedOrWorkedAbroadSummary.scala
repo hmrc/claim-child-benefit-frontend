@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers
 
 import models.UserAnswers
-import pages.{EverLivedOrWorkedAbroadPage, CheckAnswersPage, Waypoints}
+import pages.{CheckAnswersPage, EverLivedOrWorkedAbroadPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
