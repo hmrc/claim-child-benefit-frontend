@@ -25,7 +25,7 @@
 
 @layout(pageTitle = titleNoForm(messages("checkChildDetails.title"))) {
 
-    @formHelper(action = routes.TaxChargeExplanationController.onSubmit(waypoints)) {
+    @formHelper(action = routes.CheckChildDetailsController.onSubmit(waypoints, index)) {
 
         <h1 class="govuk-heading-xl">@messages("checkChildDetails.heading")</h1>
 

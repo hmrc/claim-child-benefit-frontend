@@ -22,7 +22,7 @@ import models.UserAnswers
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{EverLivedOrWorkedAbroadPage, EmptyWaypoints}
+import pages.{EmptyWaypoints, EverLivedOrWorkedAbroadPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest

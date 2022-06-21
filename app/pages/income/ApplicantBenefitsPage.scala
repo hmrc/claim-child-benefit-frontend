@@ -18,7 +18,8 @@ package pages.income
 
 import controllers.income.routes
 import models.{Benefits, UserAnswers}
-import pages.{ClaimedChildBenefitBeforePage, Page, QuestionPage, Waypoints}
+import pages.payments.ClaimedChildBenefitBeforePage
+import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 

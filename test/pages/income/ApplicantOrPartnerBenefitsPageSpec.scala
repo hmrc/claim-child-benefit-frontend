@@ -16,7 +16,7 @@
 
 package pages.income
 
-import controllers.{routes => baseRoutes}
+import controllers.payments.{routes => paymentsRoutes}
 import models.Benefits
 import pages.EmptyWaypoints
 import pages.behaviours.PageBehaviours
@@ -41,7 +41,7 @@ class ApplicantOrPartnerBenefitsPageSpec extends PageBehaviours {
 
           ApplicantOrPartnerBenefitsPage
             .navigate(waypoints, emptyUserAnswers)
-            .mustEqual(baseRoutes.ClaimedChildBenefitBeforeController.onPageLoad(waypoints))
+            .mustEqual(paymentsRoutes.ClaimedChildBenefitBeforeController.onPageLoad(waypoints))
         }
       }
     }
