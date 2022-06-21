@@ -17,6 +17,7 @@
 package pages
 
 import controllers.routes
+import controllers.income.{routes => incomeRoutes}
 import models.RelationshipStatus
 import pages.behaviours.PageBehaviours
 
@@ -62,7 +63,7 @@ class RelationshipStatusPageSpec extends PageBehaviours {
 
           RelationshipStatusPage
             .navigate(waypoints, answers)
-            .mustEqual(routes.ApplicantOrPartnerIncomeOver50kController.onPageLoad(waypoints))
+            .mustEqual(incomeRoutes.ApplicantOrPartnerIncomeOver50kController.onPageLoad(waypoints))
         }
 
         "to Applicant Income Over 50k when the answer is Widowed" in {
@@ -71,7 +72,7 @@ class RelationshipStatusPageSpec extends PageBehaviours {
 
           RelationshipStatusPage
             .navigate(waypoints, answers)
-            .mustEqual(routes.ApplicantIncomeOver50kController.onPageLoad(waypoints))
+            .mustEqual(incomeRoutes.ApplicantIncomeOver50kController.onPageLoad(waypoints))
         }
 
         "to Applicant Income Over 50k when the answer is Divorced" in {
@@ -80,7 +81,7 @@ class RelationshipStatusPageSpec extends PageBehaviours {
 
           RelationshipStatusPage
             .navigate(waypoints, answers)
-            .mustEqual(routes.ApplicantIncomeOver50kController.onPageLoad(waypoints))
+            .mustEqual(incomeRoutes.ApplicantIncomeOver50kController.onPageLoad(waypoints))
         }
 
         "to Applicant Income Over 50k when the answer is Single" in {
@@ -89,7 +90,7 @@ class RelationshipStatusPageSpec extends PageBehaviours {
 
           RelationshipStatusPage
             .navigate(waypoints, answers)
-            .mustEqual(routes.ApplicantIncomeOver50kController.onPageLoad(waypoints))
+            .mustEqual(incomeRoutes.ApplicantIncomeOver50kController.onPageLoad(waypoints))
         }
       }
     }

@@ -21,6 +21,27 @@ GET         /account/signed-out                          controllers.auth.Signed
 
 GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
+# Income section
+GET        /applicantBenefits                        controllers.income.ApplicantBenefitsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /applicantBenefits                        controllers.income.ApplicantBenefitsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /applicantIncomeOver50k                        controllers.income.ApplicantIncomeOver50kController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /applicantIncomeOver50k                        controllers.income.ApplicantIncomeOver50kController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /applicantIncomeOver60k                        controllers.income.ApplicantIncomeOver60kController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /applicantIncomeOver60k                        controllers.income.ApplicantIncomeOver60kController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /applicantOrPartnerBenefits                        controllers.income.ApplicantOrPartnerBenefitsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /applicantOrPartnerBenefits                        controllers.income.ApplicantOrPartnerBenefitsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /applicantOrPartnerIncomeOver50k                        controllers.income.ApplicantOrPartnerIncomeOver50kController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /applicantOrPartnerIncomeOver50k                        controllers.income.ApplicantOrPartnerIncomeOver50kController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /applicantOrPartnerIncomeOver60k                        controllers.income.ApplicantOrPartnerIncomeOver60kController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /applicantOrPartnerIncomeOver60k                        controllers.income.ApplicantOrPartnerIncomeOver60kController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+
+
 GET        /anyChildLivedWithOthers                        controllers.AnyChildLivedWithOthersController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /anyChildLivedWithOthers                        controllers.AnyChildLivedWithOthersController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
@@ -34,24 +55,6 @@ GET        /relationshipStatus                        controllers.RelationshipSt
 POST       /relationshipStatus                        controllers.RelationshipStatusController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /usePrintAndPostForm                       controllers.UsePrintAndPostFormController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /applicantBenefits                        controllers.ApplicantBenefitsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /applicantBenefits                        controllers.ApplicantBenefitsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /applicantIncomeOver50k                        controllers.ApplicantIncomeOver50kController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /applicantIncomeOver50k                        controllers.ApplicantIncomeOver50kController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /applicantIncomeOver60k                        controllers.ApplicantIncomeOver60kController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /applicantIncomeOver60k                        controllers.ApplicantIncomeOver60kController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /applicantOrPartnerBenefits                        controllers.ApplicantOrPartnerBenefitsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /applicantOrPartnerBenefits                        controllers.ApplicantOrPartnerBenefitsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /applicantOrPartnerIncomeOver50k                        controllers.ApplicantOrPartnerIncomeOver50kController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /applicantOrPartnerIncomeOver50k                        controllers.ApplicantOrPartnerIncomeOver50kController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /applicantOrPartnerIncomeOver60k                        controllers.ApplicantOrPartnerIncomeOver60kController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /applicantOrPartnerIncomeOver60k                        controllers.ApplicantOrPartnerIncomeOver60kController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /accountHolderName                        controllers.AccountHolderNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /accountHolderName                        controllers.AccountHolderNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

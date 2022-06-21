@@ -20,6 +20,7 @@ import controllers.routes
 import models.Benefits.qualifyingBenefits
 import models.RelationshipStatus._
 import models.UserAnswers
+import pages.income.ApplicantOrPartnerBenefitsPage
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 

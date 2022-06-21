@@ -14,29 +14,23 @@
  * limitations under the License.
  */
 
-package pages
+package pages.income
 
-import java.time.LocalDate
-import controllers.routes
-import models.RelationshipStatus.{Cohabiting, Separated}
+import controllers.income.routes
 import models.UserAnswers
-import pages.income.{ApplicantIncomeOver50kPage, ApplicantOrPartnerIncomeOver50kPage}
+import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object RelationshipStatusDatePage extends QuestionPage[LocalDate] {
+case object ApplicantIncomeOver60kPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "relationshipStatusDate"
+  override def toString: String = "applicantIncomeOver60k"
 
   override def route(waypoints: Waypoints): Call =
-    routes.RelationshipStatusDateController.onPageLoad(waypoints)
+    routes.ApplicantIncomeOver60kController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    answers.get(RelationshipStatusPage).map {
-      case Separated  => ApplicantIncomeOver50kPage
-      case Cohabiting => ApplicantOrPartnerIncomeOver50kPage
-      case _          => JourneyRecoveryPage
-    }.orRecover
+    ApplicantBenefitsPage
 }
