@@ -33,6 +33,6 @@ case object ApplicantHasSuitableAccountPage extends QuestionPage[Boolean] {
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case true  => AccountInApplicantsNamePage
-      case false => ApplicantNamePage
+      case false => ApplicantHasPreviousFamilyNamePage
     }.orRecover
 }

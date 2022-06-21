@@ -50,7 +50,7 @@ class ApplicantHasSuitableAccountPageSpec extends PageBehaviours {
 
           ApplicantHasSuitableAccountPage
             .navigate(waypoints, answers)
-            .mustEqual(routes.ApplicantNameController.onPageLoad(waypoints))
+            .mustEqual(routes.ApplicantHasPreviousFamilyNameController.onPageLoad(waypoints))
         }
       }
     }
