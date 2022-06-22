@@ -21,6 +21,7 @@ import org.scalacheck.Arbitrary
 import pages._
 import pages.applicant._
 import pages.income._
+import pages.partner._
 import pages.payments._
 
 trait PageGenerators {
