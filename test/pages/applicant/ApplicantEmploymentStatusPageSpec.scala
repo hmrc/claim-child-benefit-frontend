@@ -17,6 +17,7 @@
 package pages.applicant
 
 import controllers.{routes => baseRoutes}
+import controllers.partner.{routes => partnerRoutes}
 import models.RelationshipStatus._
 import models.{ApplicantEmploymentStatus, Index}
 import pages.behaviours.PageBehaviours
@@ -80,7 +81,7 @@ class ApplicantEmploymentStatusPageSpec extends PageBehaviours {
 
           ApplicantEmploymentStatusPage
             .navigate(waypoints, answers)
-            .mustEqual(baseRoutes.PartnerNameController.onPageLoad(waypoints))
+            .mustEqual(partnerRoutes.PartnerNameController.onPageLoad(waypoints))
         }
 
         "to Partner Name when the relationship status is Cohabiting" in {
@@ -89,7 +90,7 @@ class ApplicantEmploymentStatusPageSpec extends PageBehaviours {
 
           ApplicantEmploymentStatusPage
             .navigate(waypoints, answers)
-            .mustEqual(baseRoutes.PartnerNameController.onPageLoad(waypoints))
+            .mustEqual(partnerRoutes.PartnerNameController.onPageLoad(waypoints))
         }
       }
     }

@@ -14,31 +14,24 @@
  * limitations under the License.
  */
 
-package pages.applicant
+package pages.partner
 
-import controllers.applicant.routes
-import models.RelationshipStatus.{Cohabiting, Divorced, Married, Separated, Single, Widowed}
-import models.{ApplicantEmploymentStatus, Index, UserAnswers}
-import pages.partner.PartnerNamePage
-import pages.{ChildNamePage, Page, QuestionPage, RelationshipStatusPage, Waypoints}
+import controllers.partner.routes
+import models.UserAnswers
+import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+import uk.gov.hmrc.domain.Nino
 
-case object ApplicantEmploymentStatusPage extends QuestionPage[Set[ApplicantEmploymentStatus]] {
+case object PartnerNinoPage extends QuestionPage[Nino] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "applicantEmploymentStatus"
+  override def toString: String = "partnerNino"
 
   override def route(waypoints: Waypoints): Call =
-    routes.ApplicantEmploymentStatusController.onPageLoad(waypoints)
+    routes.PartnerNinoController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    answers.get(RelationshipStatusPage).map {
-      case Married | Cohabiting =>
-        PartnerNamePage
-
-      case Single | Divorced | Separated | Widowed =>
-        ChildNamePage(Index(0))
-    }.orRecover
+    PartnerDateOfBirthPage
 }

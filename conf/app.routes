@@ -136,7 +136,37 @@ POST       /removeApplicantPreviousFamilyName/:index                        cont
 GET        /bestTimeToContact                        controllers.applicant.BestTimeToContactController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /bestTimeToContact                        controllers.applicant.BestTimeToContactController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
+# Partner section
 
+GET        /partnerDateOfBirth                  controllers.partner.PartnerDateOfBirthController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /partnerDateOfBirth                  controllers.partner.PartnerDateOfBirthController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /partnerEldestChildDateOfBirth                  controllers.partner.PartnerEldestChildDateOfBirthController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /partnerEldestChildDateOfBirth                  controllers.partner.PartnerEldestChildDateOfBirthController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /partnerEldestChildName                        controllers.partner.PartnerEldestChildNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /partnerEldestChildName                        controllers.partner.PartnerEldestChildNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /partnerEmploymentStatus                        controllers.partner.PartnerEmploymentStatusController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /partnerEmploymentStatus                        controllers.partner.PartnerEmploymentStatusController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /partnerEntitledToChildBenefit                        controllers.partner.PartnerEntitledToChildBenefitController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /partnerEntitledToChildBenefit                        controllers.partner.PartnerEntitledToChildBenefitController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /partnerName                        controllers.partner.PartnerNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /partnerName                        controllers.partner.PartnerNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /partnerNationality                        controllers.partner.PartnerNationalityController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /partnerNationality                        controllers.partner.PartnerNationalityController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /partnerNino                        controllers.partner.PartnerNinoController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /partnerNino                        controllers.partner.PartnerNinoController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /partnerNinoKnown                        controllers.partner.PartnerNinoKnownController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /partnerNinoKnown                        controllers.partner.PartnerNinoKnownController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /partnerWaitingForEntitlementDecision                        controllers.partner.PartnerWaitingForEntitlementDecisionController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /partnerWaitingForEntitlementDecision                        controllers.partner.PartnerWaitingForEntitlementDecisionController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 
 
@@ -156,36 +186,6 @@ GET        /usePrintAndPostForm                       controllers.UsePrintAndPos
 
 GET        /applicantName                        controllers.ApplicantNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /applicantName                        controllers.ApplicantNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /partnerDateOfBirth                  controllers.PartnerDateOfBirthController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /partnerDateOfBirth                  controllers.PartnerDateOfBirthController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /partnerEldestChildDateOfBirth                  controllers.PartnerEldestChildDateOfBirthController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /partnerEldestChildDateOfBirth                  controllers.PartnerEldestChildDateOfBirthController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /partnerEldestChildName                        controllers.PartnerEldestChildNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /partnerEldestChildName                        controllers.PartnerEldestChildNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /partnerEmploymentStatus                        controllers.PartnerEmploymentStatusController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /partnerEmploymentStatus                        controllers.PartnerEmploymentStatusController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /partnerEntitledToChildBenefit                        controllers.PartnerEntitledToChildBenefitController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /partnerEntitledToChildBenefit                        controllers.PartnerEntitledToChildBenefitController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /partnerName                        controllers.PartnerNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /partnerName                        controllers.PartnerNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /partnerNationality                        controllers.PartnerNationalityController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /partnerNationality                        controllers.PartnerNationalityController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /partnerNino                        controllers.PartnerNinoController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /partnerNino                        controllers.PartnerNinoController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /partnerNinoKnown                        controllers.PartnerNinoKnownController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /partnerNinoKnown                        controllers.PartnerNinoKnownController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /partnerWaitingForEntitlementDecision                        controllers.PartnerWaitingForEntitlementDecisionController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /partnerWaitingForEntitlementDecision                        controllers.PartnerWaitingForEntitlementDecisionController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /addChild                        controllers.AddChildController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /addChild                        controllers.AddChildController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
