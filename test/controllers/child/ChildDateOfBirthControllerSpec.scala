@@ -47,7 +47,7 @@ class ChildDateOfBirthControllerSpec extends SpecBase with MockitoSugar {
   val validAnswer = LocalDate.now(ZoneOffset.UTC)
 
   lazy val childDateOfBirthRoute = routes.ChildDateOfBirthController.onPageLoad(waypoints, index).url
-  
+
   def getRequest(): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, childDateOfBirthRoute)
 
