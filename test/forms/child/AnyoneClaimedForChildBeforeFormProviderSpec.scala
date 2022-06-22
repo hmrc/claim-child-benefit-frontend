@@ -17,12 +17,13 @@
 package forms.child
 
 import forms.behaviours.OptionFieldBehaviours
-import models.AnyoneClaimedForChildBefore
+import models.{AnyoneClaimedForChildBefore, ChildName}
 import play.api.data.FormError
 
 class AnyoneClaimedForChildBeforeFormProviderSpec extends OptionFieldBehaviours {
 
-  val form = new AnyoneClaimedForChildBeforeFormProvider()()
+  private val childName = ChildName("first", None, "last")
+  val form = new AnyoneClaimedForChildBeforeFormProvider()(childName)
 
   ".value" - {
 
@@ -33,13 +34,13 @@ class AnyoneClaimedForChildBeforeFormProviderSpec extends OptionFieldBehaviours 
       form,
       fieldName,
       validValues  = AnyoneClaimedForChildBefore.values,
-      invalidError = FormError(fieldName, "error.invalid")
+      invalidError = FormError(fieldName, "error.invalid", Seq(childName.safeFirstName))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq(childName.safeFirstName))
     )
   }
 }
