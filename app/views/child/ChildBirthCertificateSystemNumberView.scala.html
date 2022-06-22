@@ -25,7 +25,7 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], waypoints: Waypoints, index: Index)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints, index: Index, childName: ChildName)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("childBirthCertificateSystemNumber.title"))) {
 
@@ -38,7 +38,7 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("childBirthCertificateSystemNumber.heading")).asPageHeading()
+                label = LabelViewModel(messages("childBirthCertificateSystemNumber.heading", childName.safeFirstName)).asPageHeading()
             )
             .withWidth(Full)
         )

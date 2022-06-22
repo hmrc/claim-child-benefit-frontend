@@ -17,15 +17,19 @@
 package forms.child
 
 import forms.behaviours.StringFieldBehaviours
+import models.ChildName
+import pages.child.ChildNamePage
 import play.api.data.FormError
 
 class ChildBirthCertificateSystemNumberFormProviderSpec extends StringFieldBehaviours {
+
+  private val childName = ChildName("first", None, "last")
 
   val requiredKey = "childBirthCertificateSystemNumber.error.required"
   val lengthKey = "childBirthCertificateSystemNumber.error.length"
   val maxLength = 9
 
-  val form = new ChildBirthCertificateSystemNumberFormProvider()()
+  val form = new ChildBirthCertificateSystemNumberFormProvider()(childName)
 
   ".value" - {
 
@@ -47,7 +51,7 @@ class ChildBirthCertificateSystemNumberFormProviderSpec extends StringFieldBehav
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq(childName.safeFirstName))
     )
   }
 }
