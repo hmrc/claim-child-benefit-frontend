@@ -17,7 +17,7 @@
 package pages.partner
 
 import controllers.partner.routes
-import controllers.{routes => baseRoutes}
+import controllers.child.{routes => childRoutes}
 import models.Index
 import pages.EmptyWaypoints
 import pages.behaviours.PageBehaviours
@@ -53,7 +53,7 @@ class PartnerWaitingForEntitlementDecisionPageSpec extends PageBehaviours {
 
           PartnerWaitingForEntitlementDecisionPage
             .navigate(waypoints, answers)
-            .mustEqual(baseRoutes.ChildNameController.onPageLoad(waypoints, Index(0)))
+            .mustEqual(childRoutes.ChildNameController.onPageLoad(waypoints, Index(0)))
         }
       }
     }

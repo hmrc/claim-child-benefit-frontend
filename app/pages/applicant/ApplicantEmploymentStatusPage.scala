@@ -19,8 +19,9 @@ package pages.applicant
 import controllers.applicant.routes
 import models.RelationshipStatus.{Cohabiting, Divorced, Married, Separated, Single, Widowed}
 import models.{ApplicantEmploymentStatus, Index, UserAnswers}
+import pages.child.ChildNamePage
 import pages.partner.PartnerNamePage
-import pages.{ChildNamePage, Page, QuestionPage, RelationshipStatusPage, Waypoints}
+import pages.{Page, QuestionPage, RelationshipStatusPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 

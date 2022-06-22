@@ -17,7 +17,7 @@
 package pages.partner
 
 import controllers.partner.routes
-import controllers.{routes => baseRoutes}
+import controllers.child.{routes => childRoutes}
 import models.Index
 import org.scalacheck.Arbitrary
 import pages.EmptyWaypoints
@@ -49,7 +49,7 @@ class PartnerEldestChildDateOfBirthPageSpec extends PageBehaviours {
 
           PartnerEldestChildDateOfBirthPage
             .navigate(waypoints, emptyUserAnswers)
-            .mustEqual(baseRoutes.ChildNameController.onPageLoad(waypoints, Index(0)))
+            .mustEqual(childRoutes.ChildNameController.onPageLoad(waypoints, Index(0)))
         }
       }
     }
