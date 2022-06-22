@@ -26,14 +26,14 @@ class ChildNameSpec extends SpecBase {
 
       val childName = ChildName("first", Some("middle"), "last")
 
-      childName.displayName mustEqual "first middle last"
+      childName.fullName mustEqual "first middle last"
     }
 
     "must be correct when there is no middle name" in {
 
       val childName = ChildName("first", None, "last")
 
-      childName.displayName mustEqual "first last"
+      childName.fullName mustEqual "first last"
     }
   }
 }

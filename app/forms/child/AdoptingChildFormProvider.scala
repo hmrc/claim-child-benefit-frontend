@@ -17,14 +17,15 @@
 package forms.child
 
 import forms.mappings.Mappings
+import models.ChildName
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class AdoptingChildFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(childName: ChildName): Form[Boolean] =
     Form(
-      "value" -> boolean("adoptingChild.error.required")
+      "value" -> boolean("adoptingChild.error.required", args = Seq(childName.safeFirstName))
     )
 }

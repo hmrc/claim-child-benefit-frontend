@@ -35,7 +35,7 @@ object AddChildSummary {
       case (summary, index) =>
 
         ListItem(
-          name = summary.childName.displayName,
+          name = summary.childName.fullName,
           changeUrl = CheckChildDetailsPage(Index(index)).changeLink(waypoints, sourcePage).url,
           removeUrl = routes.RemoveChildController.onPageLoad(waypoints, Index(index)).url
         )
@@ -46,7 +46,7 @@ object AddChildSummary {
     answers.get(AllChildSummaries).map {
       summaries =>
 
-        val value = summaries.map(_.childName.displayName).mkString("<br/>")
+        val value = summaries.map(_.childName.fullName).mkString("<br/>")
 
         SummaryListRowViewModel(
           key = "addChild.checkYourAnswersLabel",

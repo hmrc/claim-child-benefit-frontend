@@ -35,7 +35,7 @@ object AddChildPreviousNameSummary {
       case (previousName, index) =>
 
         ListItem(
-          name = previousName.displayName,
+          name = previousName.fullName,
           changeUrl = ChildPreviousNamePage(childIndex, Index(index)).changeLink(waypoints, sourcePage).url,
           removeUrl = routes.RemoveChildPreviousNameController.onPageLoad(waypoints, childIndex, Index(index)).url
         )
@@ -46,7 +46,7 @@ object AddChildPreviousNameSummary {
     answers.get(AllChildPreviousNames(childIndex)).map {
       names =>
 
-        val value = names.map(_.displayName).mkString("<br/>")
+        val value = names.map(_.fullName).mkString("<br/>")
 
         SummaryListRowViewModel(
           key = "addChildPreviousName.checkYourAnswersLabel",

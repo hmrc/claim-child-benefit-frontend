@@ -51,7 +51,7 @@ class RemoveChildPreviousNameController @Inject()(
       getAnswer(ChildPreviousNamePage(childIndex, nameIndex)) {
         previousName =>
 
-          val safeName = HtmlFormat.escape(previousName.displayName).toString
+          val safeName = HtmlFormat.escape(previousName.fullName).toString
           val form = formProvider(safeName)
 
           val preparedForm = request.userAnswers.get(RemoveChildPreviousNamePage(childIndex, nameIndex)) match {
@@ -68,7 +68,7 @@ class RemoveChildPreviousNameController @Inject()(
       getAnswerAsync(ChildPreviousNamePage(childIndex, nameIndex)) {
         previousName =>
 
-          val safeName = HtmlFormat.escape(previousName.displayName).toString
+          val safeName = HtmlFormat.escape(previousName.fullName).toString
           val form = formProvider(safeName)
 
           form.bindFromRequest().fold(
