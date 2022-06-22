@@ -17,15 +17,15 @@
 package forms.child
 
 import forms.mappings.Mappings
-import models.ChildBiologicalSex
+import models.{ChildBiologicalSex, ChildName}
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class ChildBiologicalSexFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[ChildBiologicalSex] =
+  def apply(childName: ChildName): Form[ChildBiologicalSex] =
     Form(
-      "value" -> enumerable[ChildBiologicalSex]("childBiologicalSex.error.required")
+      "value" -> enumerable[ChildBiologicalSex]("childBiologicalSex.error.required", args = Seq(childName.safeFirstName))
     )
 }
