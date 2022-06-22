@@ -17,12 +17,15 @@
 package forms.child
 
 import forms.behaviours.OptionFieldBehaviours
-import models.ApplicantRelationshipToChild
+import models.{ApplicantRelationshipToChild, ChildName}
+import pages.child.ChildNamePage
 import play.api.data.FormError
 
 class ApplicantRelationshipToChildFormProviderSpec extends OptionFieldBehaviours {
 
-  val form = new ApplicantRelationshipToChildFormProvider()()
+  private val childName = ChildName("first", None, "last")
+
+  val form = new ApplicantRelationshipToChildFormProvider()(childName)
 
   ".value" - {
 
@@ -33,13 +36,13 @@ class ApplicantRelationshipToChildFormProviderSpec extends OptionFieldBehaviours
       form,
       fieldName,
       validValues  = ApplicantRelationshipToChild.values,
-      invalidError = FormError(fieldName, "error.invalid")
+      invalidError = FormError(fieldName, "error.invalid", Seq(childName.safeFirstName))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq(childName.safeFirstName))
     )
   }
 }
