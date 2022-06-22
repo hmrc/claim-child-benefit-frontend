@@ -19,14 +19,13 @@ package controllers.child
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.child.ChildNameChangedByDeedPollFormProvider
-import models.{ChildName, UserAnswers}
+import models.ChildName
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.child.{ChildNameChangedByDeedPollPage, ChildNamePage}
 import pages.{EmptyWaypoints, child}
 import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
