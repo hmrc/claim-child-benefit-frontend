@@ -20,6 +20,7 @@ import models._
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary.arbitrary
 import pages._
+import pages.applicant._
 import pages.income._
 import pages.payments._
 import play.api.libs.json.{JsValue, Json}

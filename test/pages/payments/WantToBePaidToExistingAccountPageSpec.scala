@@ -16,8 +16,8 @@
 
 package pages.payments
 
+import controllers.applicant.{routes => applicantRoutes}
 import controllers.payments.routes
-import controllers.{routes => baseRoutes}
 import pages.EmptyWaypoints
 import pages.behaviours.PageBehaviours
 
@@ -44,7 +44,7 @@ class WantToBePaidToExistingAccountPageSpec extends PageBehaviours {
 
           WantToBePaidToExistingAccountPage
             .navigate(waypoints, answers)
-            .mustEqual(baseRoutes.ApplicantHasPreviousFamilyNameController.onPageLoad(waypoints))
+            .mustEqual(applicantRoutes.ApplicantHasPreviousFamilyNameController.onPageLoad(waypoints))
         }
 
         "to Applicant Has Suitable Account when the answer is no" in {

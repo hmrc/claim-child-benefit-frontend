@@ -22,7 +22,7 @@ import models.{ApplicantRelationshipToChild, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{ApplicantRelationshipToChildPage, EmptyWaypoints}
+import pages.{ApplicantRelationshipToChildPage, EmptyWaypoints, applicant}
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -60,7 +60,7 @@ class ApplicantRelationshipToChildControllerSpec extends SpecBase with MockitoSu
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ApplicantRelationshipToChildPage(index), ApplicantRelationshipToChild.values.head).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(pages.ApplicantRelationshipToChildPage(index), ApplicantRelationshipToChild.values.head).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -95,10 +95,10 @@ class ApplicantRelationshipToChildControllerSpec extends SpecBase with MockitoSu
             .withFormUrlEncodedBody(("value", ApplicantRelationshipToChild.values.head.toString))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(ApplicantRelationshipToChildPage(index), ApplicantRelationshipToChild.values.head).success.value
+        val expectedAnswers = emptyUserAnswers.set(pages.ApplicantRelationshipToChildPage(index), ApplicantRelationshipToChild.values.head).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ApplicantRelationshipToChildPage(index).navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual pages.ApplicantRelationshipToChildPage(index).navigate(waypoints, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }

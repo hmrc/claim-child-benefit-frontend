@@ -19,6 +19,7 @@ package generators
 import models.Index
 import org.scalacheck.Arbitrary
 import pages._
+import pages.applicant._
 import pages.income._
 import pages.payments._
 
@@ -70,7 +71,7 @@ trait PageGenerators {
     Arbitrary(ChildBiologicalSexPage(Index(0)))
 
   implicit lazy val arbitraryApplicantRelationshipToChildPage: Arbitrary[ApplicantRelationshipToChildPage] =
-    Arbitrary(ApplicantRelationshipToChildPage(Index(0)))
+    Arbitrary(pages.ApplicantRelationshipToChildPage(Index(0)))
 
   implicit lazy val arbitraryAnyoneClaimedForChildBeforePage: Arbitrary[AnyoneClaimedForChildBeforePage] =
     Arbitrary(AnyoneClaimedForChildBeforePage(Index(0)))
@@ -115,7 +116,7 @@ trait PageGenerators {
     Arbitrary(BestTimeToContactPage)
 
   implicit lazy val arbitraryApplicantPreviousFamilyNamePage: Arbitrary[ApplicantPreviousFamilyNamePage] =
-    Arbitrary(ApplicantPreviousFamilyNamePage(Index(0)))
+    Arbitrary(applicant.ApplicantPreviousFamilyNamePage(Index(0)))
 
   implicit lazy val arbitraryApplicantPreviousAddressPage: Arbitrary[ApplicantPreviousAddressPage.type] =
     Arbitrary(ApplicantPreviousAddressPage)

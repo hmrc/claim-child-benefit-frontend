@@ -18,7 +18,8 @@ package pages.payments
 
 import controllers.payments.routes
 import models.{BuildingSocietyAccountDetails, UserAnswers}
-import pages.{ApplicantHasPreviousFamilyNamePage, Page, QuestionPage, Waypoints}
+import pages.applicant.ApplicantHasPreviousFamilyNamePage
+import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 

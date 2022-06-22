@@ -21,7 +21,7 @@ import forms.ApplicantRelationshipToChildFormProvider
 import models.Index
 
 import javax.inject.Inject
-import pages.{ApplicantRelationshipToChildPage, Waypoints}
+import pages.{ApplicantRelationshipToChildPage, Waypoints, applicant}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -46,7 +46,7 @@ class ApplicantRelationshipToChildController @Inject()(
   def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(ApplicantRelationshipToChildPage(index)) match {
+      val preparedForm = request.userAnswers.get(pages.ApplicantRelationshipToChildPage(index)) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -63,9 +63,9 @@ class ApplicantRelationshipToChildController @Inject()(
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(ApplicantRelationshipToChildPage(index), value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(pages.ApplicantRelationshipToChildPage(index), value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(ApplicantRelationshipToChildPage(index).navigate(waypoints, updatedAnswers))
+          } yield Redirect(pages.ApplicantRelationshipToChildPage(index).navigate(waypoints, updatedAnswers))
       )
   }
 }

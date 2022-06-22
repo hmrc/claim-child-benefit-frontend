@@ -17,6 +17,7 @@
 package pages
 
 import models.{CheckMode, Mode, NormalMode}
+import pages.applicant.AddApplicantPreviousFamilyNamePage
 
 case class Waypoint (
                       page: WaypointPage,

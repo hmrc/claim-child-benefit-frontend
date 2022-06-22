@@ -24,11 +24,11 @@ class ApplicantRelationshipToChildPageSpec extends PageBehaviours {
 
   "ApplicantRelationshipToChildPage" - {
 
-    beRetrievable[ApplicantRelationshipToChild](ApplicantRelationshipToChildPage(index))
+    beRetrievable[ApplicantRelationshipToChild](pages.ApplicantRelationshipToChildPage(index))
 
-    beSettable[ApplicantRelationshipToChild](ApplicantRelationshipToChildPage(index))
+    beSettable[ApplicantRelationshipToChild](pages.ApplicantRelationshipToChildPage(index))
 
-    beRemovable[ApplicantRelationshipToChild](ApplicantRelationshipToChildPage(index))
+    beRemovable[ApplicantRelationshipToChild](pages.ApplicantRelationshipToChildPage(index))
 
     "must navigate" - {
 
@@ -38,11 +38,11 @@ class ApplicantRelationshipToChildPageSpec extends PageBehaviours {
 
         "to Anyone Claimed for Child Before with the same index" in {
 
-          ApplicantRelationshipToChildPage(Index(0))
+          pages.ApplicantRelationshipToChildPage(Index(0))
             .navigate(waypoints, emptyUserAnswers)
             .mustEqual(routes.AnyoneClaimedForChildBeforeController.onPageLoad(waypoints, Index(0)))
 
-          ApplicantRelationshipToChildPage(Index(1))
+          pages.ApplicantRelationshipToChildPage(Index(1))
             .navigate(waypoints, emptyUserAnswers)
             .mustEqual(routes.AnyoneClaimedForChildBeforeController.onPageLoad(waypoints, Index(1)))
         }

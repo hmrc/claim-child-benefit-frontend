@@ -16,8 +16,8 @@
 
 package pages.payments
 
+import controllers.applicant.{routes => applicantRoutes}
 import controllers.payments.routes
-import controllers.{routes => baseRoutes}
 import models.Benefits
 import org.scalacheck.Gen
 import pages.behaviours.PageBehaviours
@@ -124,7 +124,7 @@ class WantToBePaidPageSpec extends PageBehaviours {
 
             WantToBePaidPage
               .navigate(waypoints, answers)
-              .mustEqual(baseRoutes.ApplicantHasPreviousFamilyNameController.onPageLoad(waypoints))
+              .mustEqual(applicantRoutes.ApplicantHasPreviousFamilyNameController.onPageLoad(waypoints))
           }
         }
       }
