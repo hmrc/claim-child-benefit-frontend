@@ -19,7 +19,7 @@ package controllers.applicant
 import controllers.actions._
 import forms.applicant.ApplicantPreviousFamilyNameFormProvider
 import models.Index
-import pages.{Waypoints, applicant}
+import pages.Waypoints
 import pages.applicant.ApplicantPreviousFamilyNamePage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -63,9 +63,9 @@ class ApplicantPreviousFamilyNameController @Inject()(
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(applicant.ApplicantPreviousFamilyNamePage(index), value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(ApplicantPreviousFamilyNamePage(index), value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(applicant.ApplicantPreviousFamilyNamePage(index).navigate(waypoints, updatedAnswers))
+          } yield Redirect(ApplicantPreviousFamilyNamePage(index).navigate(waypoints, updatedAnswers))
       )
   }
 }
