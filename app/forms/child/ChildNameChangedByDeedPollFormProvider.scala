@@ -17,14 +17,15 @@
 package forms.child
 
 import forms.mappings.Mappings
+import models.ChildName
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class ChildNameChangedByDeedPollFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(childName: ChildName): Form[Boolean] =
     Form(
-      "value" -> boolean("childNameChangedByDeedPoll.error.required")
+      "value" -> boolean("childNameChangedByDeedPoll.error.required", args = Seq(childName.safeFirstName))
     )
 }
