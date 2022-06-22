@@ -22,6 +22,7 @@ import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.TryValues
 import pages._
 import pages.applicant._
+import pages.child._
 import pages.income._
 import pages.partner._
 import pages.payments._

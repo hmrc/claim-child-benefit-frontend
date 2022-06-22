@@ -16,7 +16,7 @@
 
 package pages.applicant
 
-import controllers.{routes => baseRoutes}
+import controllers.child.{routes => childRoutes}
 import controllers.partner.{routes => partnerRoutes}
 import models.RelationshipStatus._
 import models.{ApplicantEmploymentStatus, Index}
@@ -45,7 +45,7 @@ class ApplicantEmploymentStatusPageSpec extends PageBehaviours {
 
           ApplicantEmploymentStatusPage
             .navigate(waypoints, answers)
-            .mustEqual(baseRoutes.ChildNameController.onPageLoad(waypoints, Index(0)))
+            .mustEqual(childRoutes.ChildNameController.onPageLoad(waypoints, Index(0)))
         }
 
         "to Child Name with index 0 when the relationship status is Widowed" in {
@@ -54,7 +54,7 @@ class ApplicantEmploymentStatusPageSpec extends PageBehaviours {
 
           ApplicantEmploymentStatusPage
             .navigate(waypoints, answers)
-            .mustEqual(baseRoutes.ChildNameController.onPageLoad(waypoints, Index(0)))
+            .mustEqual(childRoutes.ChildNameController.onPageLoad(waypoints, Index(0)))
         }
 
         "to Child Name with index 0 when the relationship status is Divorced" in {
@@ -63,7 +63,7 @@ class ApplicantEmploymentStatusPageSpec extends PageBehaviours {
 
           ApplicantEmploymentStatusPage
             .navigate(waypoints, answers)
-            .mustEqual(baseRoutes.ChildNameController.onPageLoad(waypoints, Index(0)))
+            .mustEqual(childRoutes.ChildNameController.onPageLoad(waypoints, Index(0)))
         }
 
         "to Child Name with index 0 when the relationship status is Separated" in {
@@ -72,7 +72,7 @@ class ApplicantEmploymentStatusPageSpec extends PageBehaviours {
 
           ApplicantEmploymentStatusPage
             .navigate(waypoints, answers)
-            .mustEqual(baseRoutes.ChildNameController.onPageLoad(waypoints, Index(0)))
+            .mustEqual(childRoutes.ChildNameController.onPageLoad(waypoints, Index(0)))
         }
 
         "to Partner Name when the relationship status is Married" in {

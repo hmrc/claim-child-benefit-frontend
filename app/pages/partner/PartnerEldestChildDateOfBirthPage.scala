@@ -18,7 +18,8 @@ package pages.partner
 
 import controllers.partner.routes
 import models.{Index, UserAnswers}
-import pages.{ChildNamePage, Page, QuestionPage, Waypoints}
+import pages.child.ChildNamePage
+import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
