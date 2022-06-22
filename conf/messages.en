@@ -561,7 +561,7 @@ childBiologicalSex.checkYourAnswersLabel = What is this child’s sex?
 childBiologicalSex.error.required = Select {0}’s sex
 childBiologicalSex.change.hidden = this child’s sex
 
-childBirthCertificateSystemNumber.title = What is the system number on {0}’s birth certificate?
+childBirthCertificateSystemNumber.title = What is the system number on this child’s birth certificate?
 childBirthCertificateSystemNumber.heading = What is the system number on {0}’s birth certificate?
 childBirthCertificateSystemNumber.checkYourAnswersLabel = What is the system number on this child’s birth certificate?
 childBirthCertificateSystemNumber.error.required = Enter the system number on {0}’s birth certificate
