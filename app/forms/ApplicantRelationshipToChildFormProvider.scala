@@ -16,11 +16,11 @@
 
 package forms
 
-import javax.inject.Inject
-
 import forms.mappings.Mappings
-import play.api.data.Form
 import models.ApplicantRelationshipToChild
+import play.api.data.Form
+
+import javax.inject.Inject
 
 class ApplicantRelationshipToChildFormProvider @Inject() extends Mappings {
 

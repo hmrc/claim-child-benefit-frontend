@@ -16,7 +16,7 @@
 
 package pages.payments
 
-import controllers.{routes => baseRoutes}
+import controllers.applicant.{routes => applicantRoutes}
 import models.BankAccountDetails
 import pages.EmptyWaypoints
 import pages.behaviours.PageBehaviours
@@ -41,7 +41,7 @@ class BankAccountDetailsPageSpec extends PageBehaviours {
 
           BankAccountDetailsPage
             .navigate(waypoints, emptyUserAnswers)
-            .mustEqual(baseRoutes.ApplicantHasPreviousFamilyNameController.onPageLoad(waypoints))
+            .mustEqual(applicantRoutes.ApplicantHasPreviousFamilyNameController.onPageLoad(waypoints))
         }
       }
     }

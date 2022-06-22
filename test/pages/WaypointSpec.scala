@@ -20,6 +20,7 @@ import models.{CheckMode, NormalMode}
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import pages.applicant.AddApplicantPreviousFamilyNamePage
 
 class WaypointSpec extends AnyFreeSpec with Matchers with OptionValues {
 

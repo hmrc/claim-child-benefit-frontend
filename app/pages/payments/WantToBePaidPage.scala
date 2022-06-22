@@ -20,8 +20,9 @@ import controllers.payments.routes
 import models.Benefits.qualifyingBenefits
 import models.RelationshipStatus.{Cohabiting, Married}
 import models.UserAnswers
+import pages.applicant.ApplicantHasPreviousFamilyNamePage
 import pages.income.ApplicantOrPartnerBenefitsPage
-import pages.{ApplicantHasPreviousFamilyNamePage, Page, QuestionPage, RelationshipStatusPage, Waypoints}
+import pages.{Page, QuestionPage, RelationshipStatusPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
