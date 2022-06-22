@@ -24,7 +24,6 @@ import pages.Waypoints
 import pages.child.{ChildPreviousNamePage, RemoveChildPreviousNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import play.twirl.api.HtmlFormat
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.child.RemoveChildPreviousNameView
@@ -51,15 +50,14 @@ class RemoveChildPreviousNameController @Inject()(
       getAnswer(ChildPreviousNamePage(childIndex, nameIndex)) {
         previousName =>
 
-          val safeName = HtmlFormat.escape(previousName.fullName).toString
-          val form = formProvider(safeName)
+          val form = formProvider(previousName)
 
           val preparedForm = request.userAnswers.get(RemoveChildPreviousNamePage(childIndex, nameIndex)) match {
             case None => form
             case Some(value) => form.fill(value)
           }
 
-          Ok(view(preparedForm, waypoints, childIndex, nameIndex, safeName))
+          Ok(view(preparedForm, waypoints, childIndex, nameIndex, previousName))
       }
   }
 
@@ -68,12 +66,11 @@ class RemoveChildPreviousNameController @Inject()(
       getAnswerAsync(ChildPreviousNamePage(childIndex, nameIndex)) {
         previousName =>
 
-          val safeName = HtmlFormat.escape(previousName.fullName).toString
-          val form = formProvider(safeName)
+          val form = formProvider(previousName)
 
           form.bindFromRequest().fold(
             formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, waypoints, childIndex, nameIndex, safeName))),
+              Future.successful(BadRequest(view(formWithErrors, waypoints, childIndex, nameIndex, previousName))),
 
             value =>
               if (value) {

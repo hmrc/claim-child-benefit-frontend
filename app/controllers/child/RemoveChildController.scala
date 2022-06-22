@@ -24,7 +24,6 @@ import pages.Waypoints
 import pages.child.{ChildNamePage, RemoveChildPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import play.twirl.api.HtmlFormat
 import queries.ChildQuery
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -52,15 +51,14 @@ class RemoveChildController @Inject()(
       getAnswer(ChildNamePage(index)) {
         childName =>
 
-          val safeName = HtmlFormat.escape(childName.firstName).toString()
-          val form = formProvider(safeName)
+          val form = formProvider(childName)
 
           val preparedForm = request.userAnswers.get(RemoveChildPage(index)) match {
             case None => form
             case Some(value) => form.fill(value)
           }
 
-          Ok(view(preparedForm, waypoints, index, safeName))
+          Ok(view(preparedForm, waypoints, index, childName))
       }
   }
 
@@ -69,12 +67,11 @@ class RemoveChildController @Inject()(
       getAnswerAsync(ChildNamePage(index)) {
         childName =>
 
-          val safeName = HtmlFormat.escape(childName.firstName).toString
-          val form = formProvider(safeName)
+          val form = formProvider(childName)
 
           form.bindFromRequest().fold(
             formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, waypoints, index, safeName))),
+              Future.successful(BadRequest(view(formWithErrors, waypoints, index, childName))),
 
             value =>
               if (value) {
