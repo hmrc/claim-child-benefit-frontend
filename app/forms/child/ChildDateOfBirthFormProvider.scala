@@ -17,6 +17,7 @@
 package forms.child
 
 import forms.mappings.Mappings
+import models.ChildName
 import play.api.data.Form
 
 import java.time.LocalDate
@@ -24,13 +25,14 @@ import javax.inject.Inject
 
 class ChildDateOfBirthFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[LocalDate] =
+  def apply(childName: ChildName): Form[LocalDate] =
     Form(
       "value" -> localDate(
         invalidKey     = "childDateOfBirth.error.invalid",
         allRequiredKey = "childDateOfBirth.error.required.all",
         twoRequiredKey = "childDateOfBirth.error.required.two",
-        requiredKey    = "childDateOfBirth.error.required"
+        requiredKey    = "childDateOfBirth.error.required",
+        args           = Seq(childName.safeFirstName)
       )
     )
 }

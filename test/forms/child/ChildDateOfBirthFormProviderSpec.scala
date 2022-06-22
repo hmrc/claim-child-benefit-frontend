@@ -17,12 +17,16 @@
 package forms.child
 
 import forms.behaviours.DateBehaviours
+import models.ChildName
+import pages.child.ChildNamePage
 
 import java.time.{LocalDate, ZoneOffset}
 
 class ChildDateOfBirthFormProviderSpec extends DateBehaviours {
 
-  val form = new ChildDateOfBirthFormProvider()()
+  private val childName = ChildName("first", None, "last")
+
+  val form = new ChildDateOfBirthFormProvider()(childName)
 
   ".value" - {
 
@@ -33,6 +37,6 @@ class ChildDateOfBirthFormProviderSpec extends DateBehaviours {
 
     behave like dateField(form, "value", validData)
 
-    behave like mandatoryDateField(form, "value", "childDateOfBirth.error.required.all")
+    behave like mandatoryDateField(form, "value", "childDateOfBirth.error.required.all", Seq(childName.safeFirstName))
   }
 }
