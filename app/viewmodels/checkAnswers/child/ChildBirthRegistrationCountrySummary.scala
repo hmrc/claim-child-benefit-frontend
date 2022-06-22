@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.child
 
 import models.{Index, UserAnswers}
 import pages.child.ChildBirthRegistrationCountryPage
-import pages.{CheckAnswersPage, Waypoints, child}
+import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
@@ -43,7 +43,7 @@ object ChildBirthRegistrationCountrySummary {
           key = "childBirthRegistrationCountry.checkYourAnswersLabel",
           value = value,
           actions = Seq(
-            ActionItemViewModel("site.change", child.ChildBirthRegistrationCountryPage(index).changeLink(waypoints, sourcePage).url)
+            ActionItemViewModel("site.change", ChildBirthRegistrationCountryPage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("childBirthRegistrationCountry.change.hidden"))
           )
         )

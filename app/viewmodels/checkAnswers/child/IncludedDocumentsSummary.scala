@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.child
 
 import models.{Index, UserAnswers}
 import pages.child.IncludedDocumentsPage
-import pages.{CheckAnswersPage, Waypoints, child}
+import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
@@ -46,7 +46,7 @@ object IncludedDocumentsSummary {
           key = "includedDocuments.checkYourAnswersLabel",
           value = value,
           actions = Seq(
-            ActionItemViewModel("site.change", child.IncludedDocumentsPage(index).changeLink(waypoints, sourcePage).url)
+            ActionItemViewModel("site.change", IncludedDocumentsPage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("includedDocuments.change.hidden"))
           )
         )

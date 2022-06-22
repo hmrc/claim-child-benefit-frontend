@@ -18,13 +18,13 @@ package viewmodels.checkAnswers.child
 
 import models.{Index, UserAnswers}
 import pages.child.ChildDateOfBirthPage
-import pages.{CheckAnswersPage, Waypoints, child}
+import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-
-import java.time.format.DateTimeFormatter
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+
+import java.time.format.DateTimeFormatter
 
 object ChildDateOfBirthSummary {
 
@@ -39,7 +39,7 @@ object ChildDateOfBirthSummary {
           key = "childDateOfBirth.checkYourAnswersLabel",
           value = ValueViewModel(answer.format(dateFormatter)),
           actions = Seq(
-            ActionItemViewModel("site.change", child.ChildDateOfBirthPage(index).changeLink(waypoints, sourcePage).url)
+            ActionItemViewModel("site.change", ChildDateOfBirthPage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("childDateOfBirth.change.hidden"))
           )
         )

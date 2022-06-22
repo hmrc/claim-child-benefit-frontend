@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.child
 
 import models.{Index, UserAnswers}
 import pages.child.ChildHasPreviousNamePage
-import pages.{CheckAnswersPage, Waypoints, child}
+import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -37,7 +37,7 @@ object ChildHasPreviousNameSummary {
           key = "childHasPreviousName.checkYourAnswersLabel",
           value = ValueViewModel(value),
           actions = Seq(
-            ActionItemViewModel("site.change", child.ChildHasPreviousNamePage(index).changeLink(waypoints, sourcePage).url)
+            ActionItemViewModel("site.change", ChildHasPreviousNamePage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("childHasPreviousName.change.hidden"))
           )
         )

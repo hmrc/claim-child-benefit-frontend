@@ -20,7 +20,7 @@ import controllers.AnswerExtractor
 import controllers.actions._
 import forms.child.AddChildPreviousNameFormProvider
 import models.Index
-import pages.{Waypoints, child}
+import pages.Waypoints
 import pages.child.{AddChildPreviousNamePage, ChildNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -71,7 +71,7 @@ class AddChildPreviousNameController @Inject()(
 
           form.bindFromRequest().fold(
             formWithErrors => {
-              val previousNames = AddChildPreviousNameSummary.rows(request.userAnswers, index, waypoints, child.AddChildPreviousNamePage(index))
+              val previousNames = AddChildPreviousNameSummary.rows(request.userAnswers, index, waypoints, AddChildPreviousNamePage(index))
 
               Future.successful(BadRequest(view(formWithErrors, waypoints, index, safeName, previousNames)))
             },

@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.child
 
 import models.{Index, UserAnswers}
 import pages.child.PreviousClaimantNamePage
-import pages.{CheckAnswersPage, Waypoints, child}
+import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
@@ -43,7 +43,7 @@ object PreviousClaimantNameSummary {
           key = "previousClaimantName.checkYourAnswersLabel",
           value = ValueViewModel(HtmlContent(value)),
           actions = Seq(
-            ActionItemViewModel("site.change", child.PreviousClaimantNamePage(index).changeLink(waypoints, sourcePage).url)
+            ActionItemViewModel("site.change", PreviousClaimantNamePage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("previousClaimantName.change.hidden"))
           )
         )
