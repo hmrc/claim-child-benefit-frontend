@@ -17,12 +17,14 @@
 package forms.child
 
 import forms.behaviours.OptionFieldBehaviours
-import models.ChildBiologicalSex
+import models.{ChildBiologicalSex, ChildName}
+import pages.child.ChildNamePage
 import play.api.data.FormError
 
 class ChildBiologicalSexFormProviderSpec extends OptionFieldBehaviours {
 
-  val form = new ChildBiologicalSexFormProvider()()
+  private val childName = ChildName("first", None, "last")
+  val form = new ChildBiologicalSexFormProvider()(childName)
 
   ".value" - {
 
@@ -33,13 +35,13 @@ class ChildBiologicalSexFormProviderSpec extends OptionFieldBehaviours {
       form,
       fieldName,
       validValues  = ChildBiologicalSex.values,
-      invalidError = FormError(fieldName, "error.invalid")
+      invalidError = FormError(fieldName, "error.invalid", Seq(childName.safeFirstName))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq(childName.safeFirstName))
     )
   }
 }

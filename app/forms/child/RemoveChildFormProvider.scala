@@ -17,14 +17,15 @@
 package forms.child
 
 import forms.mappings.Mappings
+import models.ChildName
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class RemoveChildFormProvider @Inject() extends Mappings {
 
-  def apply(childName: String): Form[Boolean] =
+  def apply(childName: ChildName): Form[Boolean] =
     Form(
-      "value" -> boolean("removeChild.error.required", args = Seq(childName))
+      "value" -> boolean("removeChild.error.required", args = Seq(childName.safeFirstName))
     )
 }

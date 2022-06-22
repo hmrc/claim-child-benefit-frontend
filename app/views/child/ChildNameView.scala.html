@@ -47,6 +47,14 @@
 
         @govukInput(
             InputViewModel(
+                field = form("middleNames"),
+                label = LabelViewModel(messages("childName.middleNames"))
+            )
+            .withWidth(Full)
+        )
+
+        @govukInput(
+            InputViewModel(
                 field = form("lastName"),
                 label = LabelViewModel(messages("childName.lastName"))
             )

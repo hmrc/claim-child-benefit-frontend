@@ -16,11 +16,12 @@
 
 package controllers.child
 
+import controllers.AnswerExtractor
 import controllers.actions._
 import forms.child.ChildScottishBirthCertificateDetailsFormProvider
 import models.Index
 import pages.Waypoints
-import pages.child.ChildScottishBirthCertificateDetailsPage
+import pages.child.{ChildNamePage, ChildScottishBirthCertificateDetailsPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -39,33 +40,42 @@ class ChildScottishBirthCertificateDetailsController @Inject()(
                                       formProvider: ChildScottishBirthCertificateDetailsFormProvider,
                                       val controllerComponents: MessagesControllerComponents,
                                       view: ChildScottishBirthCertificateDetailsView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                     )(implicit ec: ExecutionContext)
+  extends FrontendBaseController
+    with I18nSupport
+    with AnswerExtractor {
 
-  val form = formProvider()
+  private val form = formProvider()
 
   def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
+      getAnswer(ChildNamePage(index)) {
+        childName =>
 
-      val preparedForm = request.userAnswers.get(ChildScottishBirthCertificateDetailsPage(index)) match {
-        case None => form
-        case Some(value) => form.fill(value)
+          val preparedForm = request.userAnswers.get(ChildScottishBirthCertificateDetailsPage(index)) match {
+            case None => form
+            case Some(value) => form.fill(value)
+          }
+
+          Ok(view(preparedForm, waypoints, index, childName))
       }
-
-      Ok(view(preparedForm, waypoints, index))
   }
 
   def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      getAnswerAsync(ChildNamePage(index)) {
+        childName =>
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints, index))),
+          form.bindFromRequest().fold(
+            formWithErrors =>
+              Future.successful(BadRequest(view(formWithErrors, waypoints, index, childName))),
 
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(ChildScottishBirthCertificateDetailsPage(index), value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(ChildScottishBirthCertificateDetailsPage(index).navigate(waypoints, updatedAnswers))
-      )
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(ChildScottishBirthCertificateDetailsPage(index), value))
+                _ <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(ChildScottishBirthCertificateDetailsPage(index).navigate(waypoints, updatedAnswers))
+          )
+      }
   }
 }

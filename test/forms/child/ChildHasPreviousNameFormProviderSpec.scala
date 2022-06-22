@@ -17,6 +17,8 @@
 package forms.child
 
 import forms.behaviours.BooleanFieldBehaviours
+import models.ChildName
+import pages.child.ChildNamePage
 import play.api.data.FormError
 
 class ChildHasPreviousNameFormProviderSpec extends BooleanFieldBehaviours {
@@ -24,7 +26,8 @@ class ChildHasPreviousNameFormProviderSpec extends BooleanFieldBehaviours {
   val requiredKey = "childHasPreviousName.error.required"
   val invalidKey = "error.boolean"
 
-  val form = new ChildHasPreviousNameFormProvider()()
+  private val childName = ChildName("first", None, "last")
+  val form = new ChildHasPreviousNameFormProvider()(childName)
 
   ".value" - {
 
@@ -33,13 +36,13 @@ class ChildHasPreviousNameFormProviderSpec extends BooleanFieldBehaviours {
     behave like booleanField(
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+      invalidError = FormError(fieldName, invalidKey, Seq(childName.safeFirstName))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq(childName.safeFirstName))
     )
   }
 }

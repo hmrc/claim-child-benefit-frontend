@@ -17,15 +17,15 @@
 package forms.child
 
 import forms.mappings.Mappings
-import models.AnyoneClaimedForChildBefore
+import models.{AnyoneClaimedForChildBefore, ChildName}
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class AnyoneClaimedForChildBeforeFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[AnyoneClaimedForChildBefore] =
+  def apply(childName: ChildName): Form[AnyoneClaimedForChildBefore] =
     Form(
-      "value" -> enumerable[AnyoneClaimedForChildBefore]("anyoneClaimedForChildBefore.error.required")
+      "value" -> enumerable[AnyoneClaimedForChildBefore]("anyoneClaimedForChildBefore.error.required", args = Seq(childName.safeFirstName))
     )
 }

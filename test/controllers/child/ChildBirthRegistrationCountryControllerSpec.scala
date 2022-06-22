@@ -19,11 +19,11 @@ package controllers.child
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.child.ChildBirthRegistrationCountryFormProvider
-import models.{ChildBirthRegistrationCountry, UserAnswers}
+import models.{ChildBirthRegistrationCountry, ChildName, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.child.ChildBirthRegistrationCountryPage
+import pages.child.{ChildBirthRegistrationCountryPage, ChildNamePage}
 import pages.{EmptyWaypoints, child}
 import play.api.inject.bind
 import play.api.test.FakeRequest
@@ -36,17 +36,19 @@ import scala.concurrent.Future
 class ChildBirthRegistrationCountryControllerSpec extends SpecBase with MockitoSugar {
 
   private val waypoints = EmptyWaypoints
+  private val childName = ChildName("first", None, "last")
+  private val baseAnswers = emptyUserAnswers.set(ChildNamePage(index), childName).success.value
 
   lazy val childBirthRegistrationCountryRoute = routes.ChildBirthRegistrationCountryController.onPageLoad(waypoints, index).url
 
   val formProvider = new ChildBirthRegistrationCountryFormProvider()
-  val form = formProvider()
+  val form = formProvider(childName)
 
   "ChildBirthRegistrationCountry Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, childBirthRegistrationCountryRoute)
@@ -56,13 +58,13 @@ class ChildBirthRegistrationCountryControllerSpec extends SpecBase with MockitoS
         val view = application.injector.instanceOf[ChildBirthRegistrationCountryView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, index)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index, childName)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ChildBirthRegistrationCountryPage(index), ChildBirthRegistrationCountry.values.head).success.value
+      val userAnswers = baseAnswers.set(ChildBirthRegistrationCountryPage(index), ChildBirthRegistrationCountry.values.head).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -74,7 +76,7 @@ class ChildBirthRegistrationCountryControllerSpec extends SpecBase with MockitoS
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(ChildBirthRegistrationCountry.values.head), waypoints, index)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(ChildBirthRegistrationCountry.values.head), waypoints, index, childName)(request, messages(application)).toString
       }
     }
 
@@ -85,7 +87,7 @@ class ChildBirthRegistrationCountryControllerSpec extends SpecBase with MockitoS
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
             bind[SessionRepository].toInstance(mockSessionRepository)
           )
@@ -97,7 +99,7 @@ class ChildBirthRegistrationCountryControllerSpec extends SpecBase with MockitoS
             .withFormUrlEncodedBody(("value", ChildBirthRegistrationCountry.values.head.toString))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(child.ChildBirthRegistrationCountryPage(index), ChildBirthRegistrationCountry.values.head).success.value
+        val expectedAnswers = baseAnswers.set(child.ChildBirthRegistrationCountryPage(index), ChildBirthRegistrationCountry.values.head).success.value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual child.ChildBirthRegistrationCountryPage(index).navigate(waypoints, expectedAnswers).url
@@ -107,7 +109,7 @@ class ChildBirthRegistrationCountryControllerSpec extends SpecBase with MockitoS
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request =
@@ -121,7 +123,7 @@ class ChildBirthRegistrationCountryControllerSpec extends SpecBase with MockitoS
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, index)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index, childName)(request, messages(application)).toString
       }
     }
 

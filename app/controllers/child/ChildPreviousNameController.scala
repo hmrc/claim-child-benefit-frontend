@@ -16,11 +16,12 @@
 
 package controllers.child
 
+import controllers.AnswerExtractor
 import controllers.actions._
 import forms.child.ChildPreviousNameFormProvider
 import models.Index
 import pages.Waypoints
-import pages.child.ChildPreviousNamePage
+import pages.child.{ChildNamePage, ChildPreviousNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -39,33 +40,42 @@ class ChildPreviousNameController @Inject()(
                                       formProvider: ChildPreviousNameFormProvider,
                                       val controllerComponents: MessagesControllerComponents,
                                       view: ChildPreviousNameView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                     )(implicit ec: ExecutionContext)
+  extends FrontendBaseController
+    with I18nSupport
+    with AnswerExtractor {
 
-  val form = formProvider()
+  private val form = formProvider()
 
   def onPageLoad(waypoints: Waypoints, childIndex: Index, nameIndex: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
+      getAnswer(ChildNamePage(childIndex)) {
+        childName =>
 
-      val preparedForm = request.userAnswers.get(ChildPreviousNamePage(childIndex, nameIndex)) match {
-        case None => form
-        case Some(value) => form.fill(value)
+          val preparedForm = request.userAnswers.get(ChildPreviousNamePage(childIndex, nameIndex)) match {
+            case None => form
+            case Some(value) => form.fill(value)
+          }
+
+          Ok(view(preparedForm, waypoints, childIndex, nameIndex, childName))
       }
-
-      Ok(view(preparedForm, waypoints, childIndex, nameIndex))
   }
 
   def onSubmit(waypoints: Waypoints, childIndex: Index, nameIndex: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      getAnswerAsync(ChildNamePage(childIndex)) {
+        childName =>
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints, childIndex, nameIndex))),
+          form.bindFromRequest().fold(
+            formWithErrors =>
+              Future.successful(BadRequest(view(formWithErrors, waypoints, childIndex, nameIndex, childName))),
 
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(ChildPreviousNamePage(childIndex, nameIndex), value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(ChildPreviousNamePage(childIndex, nameIndex).navigate(waypoints, updatedAnswers))
-      )
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(ChildPreviousNamePage(childIndex, nameIndex), value))
+                _ <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(ChildPreviousNamePage(childIndex, nameIndex).navigate(waypoints, updatedAnswers))
+          )
+      }
   }
 }

@@ -17,7 +17,7 @@
 package forms.child
 
 import forms.mappings.Mappings
-import models.IncludedDocuments
+import models.{ChildName, IncludedDocuments}
 import play.api.data.Form
 import play.api.data.Forms.set
 
@@ -25,8 +25,9 @@ import javax.inject.Inject
 
 class IncludedDocumentsFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Set[IncludedDocuments]] =
+  def apply(childName: ChildName): Form[Set[IncludedDocuments]] =
     Form(
-      "value" -> set(enumerable[IncludedDocuments]("includedDocuments.error.required")).verifying(nonEmptySet("includedDocuments.error.required"))
+      "value" -> set(enumerable[IncludedDocuments]("includedDocuments.error.required", args = Seq(childName.safeFirstName)))
+        .verifying(nonEmptySet("includedDocuments.error.required", args = Seq(childName.safeFirstName)))
     )
 }

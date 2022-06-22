@@ -17,15 +17,16 @@
 package forms.child
 
 import forms.mappings.Mappings
+import models.ChildName
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class ChildBirthCertificateSystemNumberFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[String] =
+  def apply(childName: ChildName): Form[String] =
     Form(
-      "value" -> text("childBirthCertificateSystemNumber.error.required")
+      "value" -> text("childBirthCertificateSystemNumber.error.required", args = Seq(childName.safeFirstName))
         .verifying(maxLength(9, "childBirthCertificateSystemNumber.error.length"))
     )
 }

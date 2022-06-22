@@ -16,11 +16,12 @@
 
 package controllers.child
 
+import controllers.AnswerExtractor
 import controllers.actions._
 import forms.child.PreviousClaimantAddressFormProvider
 import models.Index
 import pages.Waypoints
-import pages.child.PreviousClaimantAddressPage
+import pages.child.{PreviousClaimantAddressPage, PreviousClaimantNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -39,33 +40,42 @@ class PreviousClaimantAddressController @Inject()(
                                       formProvider: PreviousClaimantAddressFormProvider,
                                       val controllerComponents: MessagesControllerComponents,
                                       view: PreviousClaimantAddressView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                     )(implicit ec: ExecutionContext)
+  extends FrontendBaseController
+    with I18nSupport
+    with AnswerExtractor {
 
-  val form = formProvider()
+  private val form = formProvider()
 
   def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
+      getAnswer(PreviousClaimantNamePage(index)) {
+        previousClaimantName =>
 
-      val preparedForm = request.userAnswers.get(PreviousClaimantAddressPage(index)) match {
-        case None => form
-        case Some(value) => form.fill(value)
+          val preparedForm = request.userAnswers.get(PreviousClaimantAddressPage(index)) match {
+            case None => form
+            case Some(value) => form.fill(value)
+          }
+
+          Ok(view(preparedForm, waypoints, index, previousClaimantName))
       }
-
-      Ok(view(preparedForm, waypoints, index))
   }
 
   def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      getAnswerAsync(PreviousClaimantNamePage(index)) {
+        previousClaimantName =>
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints, index))),
+          form.bindFromRequest().fold(
+          formWithErrors =>
+            Future.successful(BadRequest(view(formWithErrors, waypoints, index, previousClaimantName))),
 
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(PreviousClaimantAddressPage(index), value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(PreviousClaimantAddressPage(index).navigate(waypoints, updatedAnswers))
-      )
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(PreviousClaimantAddressPage(index), value))
+              _ <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(PreviousClaimantAddressPage(index).navigate(waypoints, updatedAnswers))
+        )
+      }
   }
 }

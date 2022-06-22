@@ -17,14 +17,15 @@
 package forms.child
 
 import forms.mappings.Mappings
+import models.ChildName
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class RemoveChildPreviousNameFormProvider @Inject() extends Mappings {
 
-  def apply(previousName: String): Form[Boolean] =
+  def apply(previousName: ChildName): Form[Boolean] =
     Form(
-      "value" -> boolean("removeChildPreviousName.error.required", args = Seq(previousName))
+      "value" -> boolean("removeChildPreviousName.error.required", args = Seq(previousName.safeFirstName))
     )
 }

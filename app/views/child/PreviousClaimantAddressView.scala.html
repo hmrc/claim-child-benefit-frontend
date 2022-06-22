@@ -25,7 +25,7 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], waypoints: Waypoints, index: Index)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints, index: Index, previousClaimantName: PreviousClaimantName)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("previousClaimantAddress.title"))) {
 
@@ -35,7 +35,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <h1 class="govuk-heading-xl">@messages("previousClaimantAddress.heading")</h1>
+        <h1 class="govuk-heading-xl">@messages("previousClaimantAddress.heading", previousClaimantName.safeFirstName)</h1>
 
         @govukInput(
             InputViewModel(

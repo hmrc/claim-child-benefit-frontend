@@ -17,12 +17,17 @@
 package models
 
 import play.api.libs.json._
+import play.twirl.api.HtmlFormat
 
 case class ChildName (firstName: String, middleNames: Option[String], lastName: String) {
 
-  val displayName: String =
+  val fullName: String =
     List(Some(firstName), middleNames, Some(lastName))
       .flatten.mkString(" ")
+
+  val safeFirstName: String = HtmlFormat.escape(firstName).toString
+
+  val safeFullName: String = HtmlFormat.escape(fullName).toString
 }
 
 object ChildName {

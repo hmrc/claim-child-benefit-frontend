@@ -17,6 +17,8 @@
 package forms.child
 
 import forms.behaviours.BooleanFieldBehaviours
+import models.ChildName
+import pages.child.ChildNamePage
 import play.api.data.FormError
 
 class ChildNameChangedByDeedPollFormProviderSpec extends BooleanFieldBehaviours {
@@ -24,7 +26,8 @@ class ChildNameChangedByDeedPollFormProviderSpec extends BooleanFieldBehaviours 
   val requiredKey = "childNameChangedByDeedPoll.error.required"
   val invalidKey = "error.boolean"
 
-  val form = new ChildNameChangedByDeedPollFormProvider()()
+  private val childName = ChildName("first", None, "last")
+  val form = new ChildNameChangedByDeedPollFormProvider()(childName)
 
   ".value" - {
 
@@ -33,13 +36,13 @@ class ChildNameChangedByDeedPollFormProviderSpec extends BooleanFieldBehaviours 
     behave like booleanField(
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+      invalidError = FormError(fieldName, invalidKey, Seq(childName.safeFirstName))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq(childName.safeFirstName))
     )
   }
 }

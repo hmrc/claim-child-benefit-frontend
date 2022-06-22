@@ -17,15 +17,15 @@
 package forms.child
 
 import forms.mappings.Mappings
-import models.ApplicantRelationshipToChild
+import models.{ApplicantRelationshipToChild, ChildName}
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class ApplicantRelationshipToChildFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[ApplicantRelationshipToChild] =
+  def apply(childName: ChildName): Form[ApplicantRelationshipToChild] =
     Form(
-      "value" -> enumerable[ApplicantRelationshipToChild]("applicantRelationshipToChild.error.required")
+      "value" -> enumerable[ApplicantRelationshipToChild]("applicantRelationshipToChild.error.required", args = Seq(childName.safeFirstName))
     )
 }

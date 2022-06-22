@@ -16,11 +16,12 @@
 
 package controllers.child
 
+import controllers.AnswerExtractor
 import controllers.actions._
 import forms.child.ApplicantRelationshipToChildFormProvider
 import models.Index
 import pages.Waypoints
-import pages.child.ApplicantRelationshipToChildPage
+import pages.child.{ApplicantRelationshipToChildPage, ChildNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -39,33 +40,44 @@ class ApplicantRelationshipToChildController @Inject()(
                                        formProvider: ApplicantRelationshipToChildFormProvider,
                                        val controllerComponents: MessagesControllerComponents,
                                        view: ApplicantRelationshipToChildView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
-
-  val form = formProvider()
+                                     )(implicit ec: ExecutionContext)
+  extends FrontendBaseController
+    with I18nSupport
+    with AnswerExtractor {
 
   def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
+      getAnswer(ChildNamePage(index)) {
+        childName =>
 
-      val preparedForm = request.userAnswers.get(ApplicantRelationshipToChildPage(index)) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
+          val form = formProvider(childName)
 
-      Ok(view(preparedForm, waypoints, index))
+          val preparedForm = request.userAnswers.get(ApplicantRelationshipToChildPage(index)) match {
+            case None => form
+            case Some(value) => form.fill(value)
+          }
+
+          Ok(view(preparedForm, waypoints, index, childName))
+        }
   }
 
   def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      getAnswerAsync(ChildNamePage(index)) {
+        childName =>
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints, index))),
+          val form = formProvider(childName)
 
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(ApplicantRelationshipToChildPage(index), value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(ApplicantRelationshipToChildPage(index).navigate(waypoints, updatedAnswers))
-      )
+          form.bindFromRequest().fold(
+            formWithErrors =>
+              Future.successful(BadRequest(view(formWithErrors, waypoints, index, childName))),
+
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(ApplicantRelationshipToChildPage(index), value))
+                _ <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(ApplicantRelationshipToChildPage(index).navigate(waypoints, updatedAnswers))
+          )
+      }
   }
 }

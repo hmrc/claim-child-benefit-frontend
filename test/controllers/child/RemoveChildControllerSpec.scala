@@ -38,7 +38,7 @@ class RemoveChildControllerSpec extends SpecBase with MockitoSugar {
 
   private val name = ChildName("first", None, "last")
   val formProvider = new RemoveChildFormProvider()
-  val form = formProvider(name.firstName)
+  val form = formProvider(name)
   private val waypoints = EmptyWaypoints
   private val baseAnswers = emptyUserAnswers.set(ChildNamePage(index), name).success.value
 
@@ -58,7 +58,7 @@ class RemoveChildControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[RemoveChildView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, index, name.firstName)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index, name)(request, messages(application)).toString
       }
     }
 
@@ -131,7 +131,7 @@ class RemoveChildControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, index, name.firstName)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index, name)(request, messages(application)).toString
       }
     }
 

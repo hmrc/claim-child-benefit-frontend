@@ -25,7 +25,7 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], waypoints: Waypoints, index: Index)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints, index: Index, childName: ChildName)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("childScottishBirthCertificateDetails.title"))) {
 
@@ -35,14 +35,14 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <h1 class="govuk-heading-xl">@messages("childScottishBirthCertificateDetails.heading")</h1>
+        <h1 class="govuk-heading-xl">@messages("childScottishBirthCertificateDetails.heading", childName.safeFirstName)</h1>
 
         @govukInput(
             InputViewModel(
                 field = form("district"),
                 label = LabelViewModel(messages("childScottishBirthCertificateDetails.district"))
             )
-            .withWidth(Full)
+            .withWidth(Fixed5)
         )
 
         @govukInput(
@@ -50,7 +50,15 @@
                 field = form("year"),
                 label = LabelViewModel(messages("childScottishBirthCertificateDetails.year"))
             )
-            .withWidth(Full)
+                    .withWidth(Fixed5)
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("entryNumber"),
+                label = LabelViewModel(messages("childScottishBirthCertificateDetails.entryNumber"))
+            )
+            .withWidth(Fixed5)
         )
 
         @govukButton(
