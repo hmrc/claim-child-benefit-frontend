@@ -17,12 +17,15 @@
 package forms.child
 
 import forms.behaviours.CheckboxFieldBehaviours
-import models.IncludedDocuments
+import models.{ChildName, IncludedDocuments}
+import pages.child.ChildNamePage
 import play.api.data.FormError
 
 class IncludedDocumentsFormProviderSpec extends CheckboxFieldBehaviours {
 
-  val form = new IncludedDocumentsFormProvider()()
+  private val childName = ChildName("first", None, "last")
+
+  val form = new IncludedDocumentsFormProvider()(childName)
 
   ".value" - {
 
@@ -33,13 +36,14 @@ class IncludedDocumentsFormProviderSpec extends CheckboxFieldBehaviours {
       form,
       fieldName,
       validValues  = IncludedDocuments.values,
-      invalidError = FormError(s"$fieldName[0]", "error.invalid")
+      invalidError = FormError(s"$fieldName[0]", "error.invalid", Seq(childName.safeFirstName))
     )
 
     behave like mandatoryCheckboxField(
       form,
       fieldName,
-      requiredKey
+      requiredKey,
+      Seq(childName.safeFirstName)
     )
   }
 }

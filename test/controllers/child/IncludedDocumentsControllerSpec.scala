@@ -19,11 +19,11 @@ package controllers.child
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.child.IncludedDocumentsFormProvider
-import models.{IncludedDocuments, UserAnswers}
+import models.{ChildName, IncludedDocuments, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.child.IncludedDocumentsPage
+import pages.child.{ChildNamePage, IncludedDocumentsPage}
 import pages.{EmptyWaypoints, child}
 import play.api.inject.bind
 import play.api.test.FakeRequest
@@ -39,14 +39,17 @@ class IncludedDocumentsControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val includedDocumentsRoute = routes.IncludedDocumentsController.onPageLoad(waypoints, index).url
 
+  private val childName = ChildName("first", None, "last")
+  private val baseAnswers = emptyUserAnswers.set(ChildNamePage(index), childName).success.value
+
   val formProvider = new IncludedDocumentsFormProvider()
-  val form = formProvider()
+  val form = formProvider(childName)
 
   "IncludedDocuments Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, includedDocumentsRoute)
@@ -57,13 +60,13 @@ class IncludedDocumentsControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(form, waypoints, index)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index, childName)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(IncludedDocumentsPage(index), IncludedDocuments.values.toSet).success.value
+      val userAnswers = baseAnswers.set(IncludedDocumentsPage(index), IncludedDocuments.values.toSet).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -75,7 +78,7 @@ class IncludedDocumentsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(IncludedDocuments.values.toSet), waypoints, index)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(IncludedDocuments.values.toSet), waypoints, index, childName)(request, messages(application)).toString
       }
     }
 
@@ -86,7 +89,7 @@ class IncludedDocumentsControllerSpec extends SpecBase with MockitoSugar {
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
             bind[SessionRepository].toInstance(mockSessionRepository)
           )
@@ -98,7 +101,7 @@ class IncludedDocumentsControllerSpec extends SpecBase with MockitoSugar {
             .withFormUrlEncodedBody(("value[0]", IncludedDocuments.values.head.toString))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(child.IncludedDocumentsPage(index), Set(IncludedDocuments.values.head)).success.value
+        val expectedAnswers = baseAnswers.set(child.IncludedDocumentsPage(index), Set(IncludedDocuments.values.head)).success.value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual child.IncludedDocumentsPage(index).navigate(waypoints, expectedAnswers).url
@@ -108,7 +111,7 @@ class IncludedDocumentsControllerSpec extends SpecBase with MockitoSugar {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request =
@@ -122,7 +125,7 @@ class IncludedDocumentsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, index)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index, childName)(request, messages(application)).toString
       }
     }
 
