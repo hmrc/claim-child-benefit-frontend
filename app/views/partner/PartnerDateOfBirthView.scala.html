@@ -37,7 +37,10 @@
         @govukDateInput(
             DateViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(messages("partnerDateOfBirth.heading", partnerFirstName)).asPageHeading()
+                legend = HmrcPageHeadingLegend(
+                    content = messages("partnerDateOfBirth.heading", partnerFirstName),
+                    caption = messages("section.partner")
+                )
             )
             .withHint(HintViewModel(messages("partnerDateOfBirth.hint")))
         )

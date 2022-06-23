@@ -37,7 +37,10 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("partnerWaitingForEntitlementDecision.heading", partnerFirstName)).asPageHeading()
+                legend = HmrcPageHeadingLegend(
+                    content = messages("partnerWaitingForEntitlementDecision.heading", partnerFirstName),
+                    caption = messages("section.partner")
+                )
             )
         )
 

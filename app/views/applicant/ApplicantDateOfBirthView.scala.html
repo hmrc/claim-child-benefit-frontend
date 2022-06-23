@@ -37,7 +37,10 @@
         @govukDateInput(
             DateViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(messages("applicantDateOfBirth.heading")).asPageHeading()
+                legend = HmrcPageHeadingLegend(
+                    content = messages("applicantDateOfBirth.heading"),
+                    caption = HmrcSectionCaption(messages("section.applicant"))
+                )
             )
             .withHint(HintViewModel(messages("applicantDateOfBirth.hint")))
             .asDateOfBirth()

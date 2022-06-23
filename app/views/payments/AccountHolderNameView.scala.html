@@ -38,7 +38,10 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("accountHolderName.heading")).asPageHeading()
+                label = HmrcPageHeadingLabel(
+                    content = messages("accountHolderName.heading"),
+                    caption = messages("section.payments")
+                )
             )
             .withWidth(Full)
         )

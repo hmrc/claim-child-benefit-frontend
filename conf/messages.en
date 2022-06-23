@@ -36,6 +36,13 @@ error.number = Please enter a valid number
 error.required = Please enter a value
 error.summary.title = There is a problem
 
+thisSectionIs = This section is
+section.income = Income details
+section.payment = Payment details
+section.applicant = About you
+section.partner = About your partner
+section.child = Children you want to claim for
+
 index.title = claim-child-benefit-frontend
 index.heading = claim-child-benefit-frontend
 index.guidance = Welcome to your new frontend. Please see the README file for a guide to getting started.

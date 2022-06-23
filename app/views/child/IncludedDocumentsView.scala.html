@@ -38,7 +38,10 @@
             CheckboxesViewModel(
                 form   = form,
                 name   = "value",
-                legend = LegendViewModel(messages("includedDocuments.heading", childName.safeFirstName)).asPageHeading(),
+                legend = HmrcPageHeadingLegend(
+                    content = messages("includedDocuments.heading", childName.safeFirstName),
+                    caption = messages("section.child")
+                ),
                 items  = IncludedDocuments.checkboxItems
             )
         )
