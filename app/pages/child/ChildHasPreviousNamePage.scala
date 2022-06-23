@@ -53,7 +53,9 @@ final case class ChildHasPreviousNamePage(index: Index) extends ChildQuestionPag
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
     if (value.contains(false)) {
-      userAnswers.remove(AllChildPreviousNames(index))
+      userAnswers
+        .remove(AllChildPreviousNames(index))
+        .flatMap(_.remove(ChildNameChangedByDeedPollPage(index)))
     } else {
       super.cleanup(value, userAnswers)
     }

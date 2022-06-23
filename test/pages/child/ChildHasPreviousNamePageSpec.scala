@@ -142,7 +142,7 @@ class ChildHasPreviousNamePageSpec extends PageBehaviours {
       }
     }
 
-    "must remove all of this child's previous names when the answer is no" - {
+    "must remove all of this child's previous names and whether it was changed by deed poll when the answer is no" - {
 
       val childName = ChildName("first", None, "last")
 
@@ -152,6 +152,8 @@ class ChildHasPreviousNamePageSpec extends PageBehaviours {
           .set(ChildPreviousNamePage(Index(0), Index(1)), childName).success.value
           .set(ChildPreviousNamePage(Index(1), Index(0)), childName).success.value
           .set(ChildPreviousNamePage(Index(1), Index(1)), childName).success.value
+          .set(ChildNameChangedByDeedPollPage(Index(0)), true).success.value
+          .set(ChildNameChangedByDeedPollPage(Index(1)), true).success.value
 
       "for index 0" in {
 
@@ -159,8 +161,10 @@ class ChildHasPreviousNamePageSpec extends PageBehaviours {
 
         result.get(ChildPreviousNamePage(Index(0), Index(0))) must not be defined
         result.get(ChildPreviousNamePage(Index(0), Index(1))) must not be defined
+        result.get(ChildNameChangedByDeedPollPage(Index(0))) must not be defined
         result.get(ChildPreviousNamePage(Index(1), Index(0))) mustBe defined
         result.get(ChildPreviousNamePage(Index(1), Index(1))) mustBe defined
+        result.get(ChildNameChangedByDeedPollPage(Index(1))) mustBe defined
       }
 
       "for index 1" in {
@@ -169,8 +173,10 @@ class ChildHasPreviousNamePageSpec extends PageBehaviours {
 
         result.get(ChildPreviousNamePage(Index(0), Index(0))) mustBe defined
         result.get(ChildPreviousNamePage(Index(0), Index(1))) mustBe defined
+        result.get(ChildNameChangedByDeedPollPage(Index(0))) mustBe defined
         result.get(ChildPreviousNamePage(Index(1), Index(0))) must not be defined
         result.get(ChildPreviousNamePage(Index(1), Index(1))) must not be defined
+        result.get(ChildNameChangedByDeedPollPage(Index(1))) must not be defined
       }
     }
   }
