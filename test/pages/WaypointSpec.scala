@@ -16,11 +16,12 @@
 
 package pages
 
-import models.{CheckMode, NormalMode}
+import models.{CheckMode, Index, NormalMode}
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import pages.applicant.AddApplicantPreviousFamilyNamePage
+import pages.child.{AddChildPage, AddChildPreviousNamePage, CheckChildDetailsPage}
 
 class WaypointSpec extends AnyFreeSpec with Matchers with OptionValues {
 
@@ -39,6 +40,34 @@ class WaypointSpec extends AnyFreeSpec with Matchers with OptionValues {
     "must return Add Applicant Previous Family Name when given its check mode waypoint" in {
 
       Waypoint.fromString("change-other-name").value mustEqual AddApplicantPreviousFamilyNamePage.waypoint(CheckMode)
+    }
+
+    "must return Add Child when given its normal mode waypoints" in {
+
+      Waypoint.fromString("add-child").value mustEqual AddChildPage.waypoint(NormalMode)
+    }
+
+    "must return Add Child when given its check mode waypoints" in {
+
+      Waypoint.fromString("change-child").value mustEqual AddChildPage.waypoint(CheckMode)
+    }
+
+    "must return Check Child Details when given its waypoint" in {
+
+      Waypoint.fromString("check-child-1").value mustEqual CheckChildDetailsPage(Index(0)).waypoint
+      Waypoint.fromString("check-child-2").value mustEqual CheckChildDetailsPage(Index(1)).waypoint
+    }
+
+    "must return Add Child Previous Name when given its normal mode waypoint" in {
+
+      Waypoint.fromString("add-child-name-1").value mustEqual AddChildPreviousNamePage(Index(0)).waypoint(NormalMode)
+      Waypoint.fromString("add-child-name-2").value mustEqual AddChildPreviousNamePage(Index(1)).waypoint(NormalMode)
+    }
+
+    "must return Add Child Previous Name when given its check mode waypoint" in {
+
+      Waypoint.fromString("change-child-name-1").value mustEqual AddChildPreviousNamePage(Index(0)).waypoint(CheckMode)
+      Waypoint.fromString("change-child-name-2").value mustEqual AddChildPreviousNamePage(Index(1)).waypoint(CheckMode)
     }
   }
 }

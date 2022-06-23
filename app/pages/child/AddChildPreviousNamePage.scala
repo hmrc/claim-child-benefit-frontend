@@ -17,8 +17,8 @@
 package pages.child
 
 import controllers.child.routes
-import models.{Index, UserAnswers}
-import pages.{AddItemPage, Page, QuestionPage, Waypoints}
+import models.{CheckMode, Index, NormalMode, UserAnswers}
+import pages.{AddItemPage, Page, QuestionPage, Waypoint, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 import queries.DeriveNumberOfChildPreviousNames
@@ -46,4 +46,24 @@ final case class AddChildPreviousNamePage(index: Index) extends QuestionPage[Boo
       case false =>
         ChildBiologicalSexPage(index)
     }.orRecover
+}
+
+object AddChildPreviousNamePage {
+
+  def waypointFromString(s: String): Option[Waypoint] = {
+
+    val normalModePattern = """add-child-name-(\d{1,3})""".r.anchored
+    val checkModePattern = """change-child-name-(\d{1,3})""".r.anchored
+
+    s match {
+      case normalModePattern(indexDisplay) =>
+        Some(AddChildPreviousNamePage(Index(indexDisplay.toInt - 1)).waypoint(NormalMode))
+
+      case checkModePattern(indexDisplay) =>
+        Some(AddChildPreviousNamePage(Index(indexDisplay.toInt - 1)).waypoint(CheckMode))
+
+      case _ =>
+        None
+    }
+  }
 }

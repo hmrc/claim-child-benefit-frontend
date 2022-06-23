@@ -16,18 +16,12 @@
 
 package pages.child
 
-import controllers.child.routes
-import models.{IncludedDocuments, Index}
-import pages.Waypoints
-import play.api.libs.json.JsPath
-import play.api.mvc.Call
+import models.NormalMode
+import pages.{AddToListQuestionPage, AddToListSection, ChildSection, QuestionPage, Waypoint}
 
-final case class IncludedDocumentsPage(index: Index) extends ChildQuestionPage[Set[IncludedDocuments]] {
+trait ChildQuestionPage[A] extends QuestionPage[A] with AddToListQuestionPage {
 
-  override def path: JsPath = JsPath \ "children" \ index.position \ toString
+  override val addItemWaypoint: Waypoint = AddChildPage.waypoint(NormalMode)
 
-  override def toString: String = "includedDocuments"
-
-  override def route(waypoints: Waypoints): Call =
-    routes.IncludedDocumentsController.onPageLoad(waypoints, index)
+  override val section: AddToListSection = ChildSection
 }

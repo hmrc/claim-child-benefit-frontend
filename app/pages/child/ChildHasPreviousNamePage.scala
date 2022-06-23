@@ -18,11 +18,11 @@ package pages.child
 
 import controllers.child.routes
 import models.{Index, UserAnswers}
-import pages.{Page, QuestionPage, Waypoints}
+import pages.{Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-final case class ChildHasPreviousNamePage(index: Index) extends QuestionPage[Boolean] {
+final case class ChildHasPreviousNamePage(index: Index) extends ChildQuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ "children" \ index.position \ toString
 

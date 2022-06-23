@@ -18,13 +18,13 @@ package pages.child
 
 import controllers.child.routes
 import models.{Index, UserAnswers}
-import pages.{Page, QuestionPage, Waypoints}
+import pages.{Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
 import java.time.LocalDate
 
-final case class ChildDateOfBirthPage(index: Index) extends QuestionPage[LocalDate] {
+final case class ChildDateOfBirthPage(index: Index) extends ChildQuestionPage[LocalDate] {
 
   override def path: JsPath = JsPath \ "children" \ index.position \ toString
 

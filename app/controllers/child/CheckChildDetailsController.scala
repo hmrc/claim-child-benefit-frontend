@@ -24,6 +24,7 @@ import pages.child.CheckChildDetailsPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.checkAnswers.child._
 import viewmodels.govuk.summarylist._
 import views.html.child.CheckChildDetailsView
 
@@ -40,7 +41,23 @@ class CheckChildDetailsController @Inject()(
     implicit request =>
 
       val list = SummaryListViewModel(
-        rows = Seq.empty
+        rows = Seq(
+          ChildNameSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+          ChildHasPreviousNameSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+          ChildNameChangedByDeedPollSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+          AddChildPreviousNameSummary.checkAnswersRow(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+          ChildBiologicalSexSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+          ChildDateOfBirthSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+          ChildBirthRegistrationCountrySummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+          ChildBirthCertificateSystemNumberSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+          ChildScottishBirthCertificateDetailsSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+          ApplicantRelationshipToChildSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+          AnyoneClaimedForChildBeforeSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+          PreviousClaimantNameSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+          PreviousClaimantAddressSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+          AdoptingChildSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+          IncludedDocumentsSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index))
+        ).flatten
       )
 
       Ok(view(list, waypoints, index))

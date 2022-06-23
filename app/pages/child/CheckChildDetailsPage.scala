@@ -17,8 +17,8 @@
 package pages.child
 
 import controllers.child.routes
-import models.Index
-import pages.{CheckAnswersPage, Waypoints}
+import models.{Index, UserAnswers}
+import pages.{CheckAnswersPage, Page, Waypoint, Waypoints}
 import play.api.mvc.Call
 
 final case class CheckChildDetailsPage(index: Index) extends CheckAnswersPage {
@@ -27,4 +27,23 @@ final case class CheckChildDetailsPage(index: Index) extends CheckAnswersPage {
 
   override def route(waypoints: Waypoints): Call =
     routes.CheckChildDetailsController.onPageLoad(waypoints, index)
+
+  override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    AddChildPage
+}
+
+object CheckChildDetailsPage {
+
+  def waypointFromString(s: String): Option[Waypoint] = {
+
+    val pattern = """check-child-(\d{1,3})""".r.anchored
+
+    s match {
+      case pattern(indexDisplay) =>
+        Some(CheckChildDetailsPage(Index(indexDisplay.toInt - 1)).waypoint)
+
+      case _ =>
+        None
+    }
+  }
 }

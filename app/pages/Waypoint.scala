@@ -18,6 +18,7 @@ package pages
 
 import models.{CheckMode, Mode, NormalMode}
 import pages.applicant.AddApplicantPreviousFamilyNamePage
+import pages.child.{AddChildPage, AddChildPreviousNamePage, CheckChildDetailsPage}
 
 case class Waypoint (
                       page: WaypointPage,
@@ -31,9 +32,13 @@ object Waypoint {
     Map(
       CheckYourAnswersPage.urlFragment                         -> CheckYourAnswersPage.waypoint,
       AddApplicantPreviousFamilyNamePage.normalModeUrlFragment -> AddApplicantPreviousFamilyNamePage.waypoint(NormalMode),
-      AddApplicantPreviousFamilyNamePage.checkModeUrlFragment  -> AddApplicantPreviousFamilyNamePage.waypoint(CheckMode)
+      AddApplicantPreviousFamilyNamePage.checkModeUrlFragment  -> AddApplicantPreviousFamilyNamePage.waypoint(CheckMode),
+      AddChildPage.normalModeUrlFragment                       -> AddChildPage.waypoint(NormalMode),
+      AddChildPage.checkModeUrlFragment                        -> AddChildPage.waypoint(CheckMode)
     )
 
   def fromString(s: String): Option[Waypoint] =
     fragments.get(s)
+      .orElse(CheckChildDetailsPage.waypointFromString(s))
+      .orElse(AddChildPreviousNamePage.waypointFromString(s))
 }

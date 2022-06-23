@@ -22,7 +22,7 @@ import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-final case class ChildNamePage(index: Index) extends QuestionPage[ChildName] {
+final case class ChildNamePage(index: Index) extends ChildQuestionPage[ChildName] {
 
   override def path: JsPath = JsPath \ "children" \ index.position \ toString
 

@@ -16,21 +16,32 @@
 
 package pages.child
 
+import base.SpecBase
 import controllers.child.routes
-import models.{ChildBiologicalSex, Index, UserAnswers}
-import pages.{Page, Waypoints}
-import play.api.libs.json.JsPath
-import play.api.mvc.Call
+import models.Index
+import pages.EmptyWaypoints
 
-final case class ChildBiologicalSexPage(index: Index) extends ChildQuestionPage[ChildBiologicalSex] {
+class CheckChildDetailsPageSpec extends SpecBase {
 
-  override def path: JsPath = JsPath \ "children" \ index.position \ toString
+  "Check Child Details Page" -{
 
-  override def toString: String = "childBiologicalSex"
+    "must navigate" - {
 
-  override def route(waypoints: Waypoints): Call =
-    routes.ChildBiologicalSexController.onPageLoad(waypoints, index)
+      "when there are no waypoints" - {
 
-  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ChildDateOfBirthPage(index)
+        val waypoints = EmptyWaypoints
+
+        "to Add Child" in {
+
+          CheckChildDetailsPage(Index(0))
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.AddChildController.onPageLoad(waypoints))
+
+          CheckChildDetailsPage(Index(1))
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.AddChildController.onPageLoad(waypoints))
+        }
+      }
+    }
+  }
 }
