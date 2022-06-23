@@ -16,7 +16,9 @@
 
 package pages.child
 
-import models.IncludedDocuments
+import controllers.child.routes
+import models.{IncludedDocuments, Index}
+import pages.EmptyWaypoints
 import pages.behaviours.PageBehaviours
 
 class IncludedDocumentsPageSpec extends PageBehaviours {
@@ -28,5 +30,41 @@ class IncludedDocumentsPageSpec extends PageBehaviours {
     beSettable[Set[IncludedDocuments]](IncludedDocumentsPage(index))
 
     beRemovable[Set[IncludedDocuments]](IncludedDocumentsPage(index))
+
+    "must navigate" - {
+
+      "when there are no waypoints" - {
+
+        val waypoints = EmptyWaypoints
+
+        "to Check Child Details for the same index" in {
+
+          IncludedDocumentsPage(Index(0))
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.CheckChildDetailsController.onPageLoad(waypoints, Index(0)))
+
+          IncludedDocumentsPage(Index(1))
+            .navigate(waypoints, emptyUserAnswers)
+            .mustEqual(routes.CheckChildDetailsController.onPageLoad(waypoints, Index(1)))
+        }
+      }
+
+      "when the current waypoint is Check Child Details" - {
+
+        def waypoints(index: Index) =
+          EmptyWaypoints.setNextWaypoint(CheckChildDetailsPage(index).waypoint)
+
+        "to Check Child Details with the current waypoint removed" in {
+
+          IncludedDocumentsPage(Index(0))
+            .navigate(waypoints(Index(0)), emptyUserAnswers)
+            .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(0)))
+
+          IncludedDocumentsPage(Index(1))
+            .navigate(waypoints(Index(1)), emptyUserAnswers)
+            .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(1)))
+        }
+      }
+    }
   }
 }

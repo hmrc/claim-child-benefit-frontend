@@ -48,6 +48,23 @@ class ChildNameChangedByDeedPollPageSpec extends PageBehaviours {
             .mustEqual(routes.ChildPreviousNameController.onPageLoad(waypoints, Index(1), Index(0)))
         }
       }
+
+      "when the current waypoint is Check Child Details" - {
+
+        def waypoints(index: Index) =
+          EmptyWaypoints.setNextWaypoint(CheckChildDetailsPage(index).waypoint)
+
+        "to Check Child Details with the current waypoint removed" in {
+
+          ChildNameChangedByDeedPollPage(Index(0))
+            .navigate(waypoints(Index(0)), emptyUserAnswers)
+            .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(0)))
+
+          ChildNameChangedByDeedPollPage(Index(1))
+            .navigate(waypoints(Index(1)), emptyUserAnswers)
+            .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(1)))
+        }
+      }
     }
   }
 }

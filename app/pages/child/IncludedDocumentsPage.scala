@@ -17,8 +17,8 @@
 package pages.child
 
 import controllers.child.routes
-import models.{IncludedDocuments, Index}
-import pages.Waypoints
+import models.{IncludedDocuments, Index, UserAnswers}
+import pages.{Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -30,4 +30,7 @@ final case class IncludedDocumentsPage(index: Index) extends ChildQuestionPage[S
 
   override def route(waypoints: Waypoints): Call =
     routes.IncludedDocumentsController.onPageLoad(waypoints, index)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    CheckChildDetailsPage(index)
 }
