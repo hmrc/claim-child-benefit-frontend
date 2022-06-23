@@ -17,7 +17,7 @@
 package pages.child
 
 import controllers.child.routes
-import models.{ChildName, Index}
+import models.{ChildName, Index, NormalMode}
 import pages.EmptyWaypoints
 import pages.behaviours.PageBehaviours
 
@@ -54,6 +54,31 @@ class ChildPreviousNamePageSpec extends PageBehaviours {
           ChildPreviousNamePage(Index(1), Index(1))
             .navigate(waypoints, emptyUserAnswers)
             .mustEqual(routes.AddChildPreviousNameController.onPageLoad(waypoints, Index(1)))
+        }
+      }
+
+      "when the current waypoint is Add Child Previous Name" - {
+
+        def waypoints(index: Index) =
+          EmptyWaypoints.setNextWaypoint(AddChildPreviousNamePage(index).waypoint(NormalMode))
+
+        "to Add Child Previous Name with the current waypoint removed" in {
+
+          ChildPreviousNamePage(Index(0), Index(0))
+            .navigate(waypoints(Index(0)), emptyUserAnswers)
+            .mustEqual(routes.AddChildPreviousNameController.onPageLoad(EmptyWaypoints, Index(0)))
+
+          ChildPreviousNamePage(Index(0), Index(1))
+            .navigate(waypoints(Index(0)), emptyUserAnswers)
+            .mustEqual(routes.AddChildPreviousNameController.onPageLoad(EmptyWaypoints, Index(0)))
+
+          ChildPreviousNamePage(Index(1), Index(0))
+            .navigate(waypoints(Index(1)), emptyUserAnswers)
+            .mustEqual(routes.AddChildPreviousNameController.onPageLoad(EmptyWaypoints, Index(1)))
+
+          ChildPreviousNamePage(Index(1), Index(1))
+            .navigate(waypoints(Index(1)), emptyUserAnswers)
+            .mustEqual(routes.AddChildPreviousNameController.onPageLoad(EmptyWaypoints, Index(1)))
         }
       }
     }
