@@ -39,7 +39,7 @@
                 field  = form("value"),
                 legend = HmrcPageHeadingLegend(
                     content = messages("bankAccountType.heading"),
-                    caption = messages("section.payments")
+                    caption = HmrcSectionCaption(messages("section.payments"))
                 ),
                 items  = BankAccountType.options
             )

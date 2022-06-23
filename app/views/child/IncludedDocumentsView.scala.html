@@ -40,7 +40,7 @@
                 name   = "value",
                 legend = HmrcPageHeadingLegend(
                     content = messages("includedDocuments.heading", childName.safeFirstName),
-                    caption = messages("section.child")
+                    caption = HmrcSectionCaption(messages("section.child"))
                 ),
                 items  = IncludedDocuments.checkboxItems
             )

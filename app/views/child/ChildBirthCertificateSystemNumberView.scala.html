@@ -40,7 +40,7 @@
                 field = form("value"),
                 label = HmrcPageHeadingLabel(
                     content = messages("childBirthCertificateSystemNumber.heading", childName.safeFirstName),
-                    caption = messages("section.child")
+                    caption = HmrcSectionCaption(messages("section.child"))
                 )
             )
             .withWidth(Full)

@@ -39,7 +39,7 @@
                 field  = form("value"),
                 legend = HmrcPageHeadingLegend(
                     content = messages("partnerEldestChildDateOfBirth.heading", partnerFirstName),
-                    caption = messages("section.partner")
+                    caption = HmrcSectionCaption(messages("section.partner"))
                 )
             )
             .withHint(HintViewModel(messages("partnerEldestChildDateOfBirth.hint")))

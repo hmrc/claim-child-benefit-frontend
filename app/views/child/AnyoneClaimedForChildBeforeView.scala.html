@@ -39,7 +39,7 @@
                 field  = form("value"),
                 legend = HmrcPageHeadingLegend(
                     content = messages("anyoneClaimedForChildBefore.heading", childName.safeFirstName),
-                    caption = messages("section.child")
+                    caption = HmrcSectionCaption(messages("section.child"))
                 ),
                 items  = AnyoneClaimedForChildBefore.options
             )
