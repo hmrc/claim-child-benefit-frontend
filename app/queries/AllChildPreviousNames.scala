@@ -19,7 +19,7 @@ package queries
 import models.{ChildName, Index}
 import play.api.libs.json.JsPath
 
-final case class AllChildPreviousNames(index: Index) extends Gettable[List[ChildName]] {
+final case class AllChildPreviousNames(index: Index) extends Gettable[List[ChildName]] with Settable[List[ChildName]] {
 
   override def path: JsPath = JsPath \ "children" \ index.position \ "previousNames"
 }

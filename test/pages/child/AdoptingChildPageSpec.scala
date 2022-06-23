@@ -19,7 +19,7 @@ package pages.child
 import controllers.child.routes
 import models.ChildBirthRegistrationCountry._
 import models.Index
-import pages.EmptyWaypoints
+import pages.{EmptyWaypoints, Waypoints}
 import pages.behaviours.PageBehaviours
 
 class AdoptingChildPageSpec extends PageBehaviours {
@@ -131,6 +131,23 @@ class AdoptingChildPageSpec extends PageBehaviours {
               .navigate(waypoints, answers)
               .mustEqual(routes.IncludedDocumentsController.onPageLoad(waypoints, Index(1)))
           }
+        }
+      }
+
+      "when the current waypoint is Check Child Details" - {
+
+        def waypoints(index: Index) =
+          EmptyWaypoints.setNextWaypoint(CheckChildDetailsPage(index).waypoint)
+
+        "to Check Child Details with the current waypoint removed" in {
+
+          AdoptingChildPage(Index(0))
+            .navigate(waypoints(Index(0)), emptyUserAnswers)
+            .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(0)))
+
+          AdoptingChildPage(Index(1))
+            .navigate(waypoints(Index(1)), emptyUserAnswers)
+            .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(1)))
         }
       }
     }
