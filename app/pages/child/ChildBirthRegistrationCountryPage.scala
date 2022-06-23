@@ -19,9 +19,11 @@ package pages.child
 import controllers.child.routes
 import models.ChildBirthRegistrationCountry.{England, Other, Scotland, Unknown, Wales}
 import models.{ChildBirthRegistrationCountry, Index, UserAnswers}
-import pages.{Page, Waypoints}
+import pages.{NonEmptyWaypoints, Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+
+import scala.util.Try
 
 final case class ChildBirthRegistrationCountryPage(index: Index) extends ChildQuestionPage[ChildBirthRegistrationCountry] {
 
@@ -43,4 +45,35 @@ final case class ChildBirthRegistrationCountryPage(index: Index) extends ChildQu
       case Other | Unknown =>
         ApplicantRelationshipToChildPage(index)
     }.orRecover
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case England | Wales =>
+        answers.get(ChildBirthCertificateSystemNumberPage(index))
+          .map(_ => waypoints.next.page)
+          .getOrElse(ChildBirthCertificateSystemNumberPage(index))
+
+      case Scotland =>
+        answers.get(ChildScottishBirthCertificateDetailsPage(index))
+          .map(_ => waypoints.next.page)
+          .getOrElse(ChildScottishBirthCertificateDetailsPage(index))
+
+      case Other | Unknown =>
+        waypoints.next.page
+    }.orRecover
+
+  override def cleanup(value: Option[ChildBirthRegistrationCountry], userAnswers: UserAnswers): Try[UserAnswers] =
+    value.map {
+      case England | Wales =>
+        userAnswers.remove(ChildScottishBirthCertificateDetailsPage(index))
+
+      case Scotland =>
+        userAnswers.remove(ChildBirthCertificateSystemNumberPage(index))
+
+      case Other | Unknown =>
+        userAnswers
+          .remove(ChildBirthCertificateSystemNumberPage(index))
+          .flatMap(_.remove(ChildScottishBirthCertificateDetailsPage(index)))
+
+    }.getOrElse(super.cleanup(value, userAnswers))
 }
