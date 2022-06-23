@@ -38,7 +38,10 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("childBirthCertificateSystemNumber.heading", childName.safeFirstName)).asPageHeading()
+                label = HmrcPageHeadingLabel(
+                    content = messages("childBirthCertificateSystemNumber.heading", childName.safeFirstName),
+                    caption = HmrcSectionCaption(messages("section.child"))
+                )
             )
             .withWidth(Full)
         )

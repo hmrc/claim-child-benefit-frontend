@@ -19,7 +19,8 @@
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        h1WithCaption: components.h1WithCaption
 )
 
 @(waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
@@ -28,8 +29,10 @@
 
         @formHelper(action = routes.TaxChargeExplanationController.onSubmit(waypoints)) {
 
-            <h1 class="govuk-heading-xl">@messages("taxChargeExplanation.heading")</h1>
-
+            @h1WithCaption(
+                content = messages("taxChargeExplanation.heading"),
+                caption = messages("section.payments")
+            )
             @govukButton(
                 ButtonViewModel(messages("site.continue"))
             )

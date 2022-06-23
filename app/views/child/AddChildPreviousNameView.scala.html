@@ -24,7 +24,8 @@
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
     govukButton: GovukButton,
-    addToList: components.addToList
+    addToList: components.addToList,
+    h1WithCaption: components.h1WithCaption
 )
 
 @(form: Form[_], waypoints: Waypoints, index: Index, childName: String, previousNames: Seq[ListItem])(implicit request: Request[_], messages: Messages)
@@ -51,7 +52,10 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <h1 class="govuk-heading-xl">@headingText</h1>
+        @h1WithCaption(
+            content = headingText,
+            caption = messages("section.child")
+        )
 
         @addToList(previousNames, Long, "addChildPreviousName.change.hidden", "addChildPreviousName.remove.hidden")
 

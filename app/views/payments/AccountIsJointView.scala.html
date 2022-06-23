@@ -37,7 +37,10 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("accountIsJoint.heading")).asPageHeading()
+                legend = HmrcPageHeadingLegend(
+                    content = messages("accountIsJoint.heading"),
+                    caption = HmrcSectionCaption(messages("section.payments"))
+                )
             )
         )
 

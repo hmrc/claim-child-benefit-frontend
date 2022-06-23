@@ -38,7 +38,10 @@
             CheckboxesViewModel(
                 form   = form,
                 name   = "value",
-                legend = LegendViewModel(messages("applicantEmploymentStatus.heading")).asPageHeading(),
+                legend = HmrcPageHeadingLegend(
+                    content = messages("applicantEmploymentStatus.heading"),
+                    caption = HmrcSectionCaption(messages("section.applicant"))
+                ),
                 items  = ApplicantEmploymentStatus.checkboxItems
             )
         )

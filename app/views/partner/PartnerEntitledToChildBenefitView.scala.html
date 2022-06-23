@@ -37,7 +37,10 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("partnerEntitledToChildBenefit.heading", partnerFirstName)).asPageHeading()
+                legend = HmrcPageHeadingLegend(
+                    content = messages("partnerEntitledToChildBenefit.heading", partnerFirstName),
+                    caption = HmrcSectionCaption(messages("section.partner"))
+                )
             )
         )
 

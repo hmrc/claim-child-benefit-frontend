@@ -38,7 +38,10 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("bestTimeToContact.heading")).asPageHeading()
+                label = HmrcPageHeadingLabel(
+                    content = messages("bestTimeToContact.heading"),
+                    caption = HmrcSectionCaption(messages("section.applicant"))
+                )
             )
             .withWidth(Full)
         )
