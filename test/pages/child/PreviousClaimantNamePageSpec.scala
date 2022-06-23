@@ -17,7 +17,7 @@
 package pages.child
 
 import controllers.child.routes
-import models.{Index, PreviousClaimantName}
+import models.{Index, PreviousClaimantAddress, PreviousClaimantName}
 import pages.EmptyWaypoints
 import pages.behaviours.PageBehaviours
 
@@ -46,6 +46,41 @@ class PreviousClaimantNamePageSpec extends PageBehaviours {
           PreviousClaimantNamePage(Index(1))
             .navigate(waypoints, emptyUserAnswers)
             .mustEqual(routes.PreviousClaimantAddressController.onPageLoad(waypoints, Index(1)))
+        }
+      }
+
+      "when the current waypoint is Check Child Details" - {
+
+        def waypoints(index: Index) =
+          EmptyWaypoints.setNextWaypoint(CheckChildDetailsPage(index).waypoint)
+
+        "to Check Child Details with the current waypoint removed when Previous Claimant Address has been answered" in {
+
+          val address = PreviousClaimantAddress("line 1", None, None, "postcode")
+
+          val answers =
+            emptyUserAnswers
+              .set(PreviousClaimantAddressPage(Index(0)), address).success.value
+              .set(PreviousClaimantAddressPage(Index(1)), address).success.value
+
+          PreviousClaimantNamePage(Index(0))
+            .navigate(waypoints(Index(0)), answers)
+            .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(0)))
+
+          PreviousClaimantNamePage(Index(1))
+            .navigate(waypoints(Index(1)), answers)
+            .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(1)))
+        }
+
+        "to Previous Claimant Address when it has not already been answered" in {
+
+          PreviousClaimantNamePage(Index(0))
+            .navigate(waypoints(Index(0)), emptyUserAnswers)
+            .mustEqual(routes.PreviousClaimantAddressController.onPageLoad(waypoints(Index(0)), Index(0)))
+
+          PreviousClaimantNamePage(Index(1))
+            .navigate(waypoints(Index(1)), emptyUserAnswers)
+            .mustEqual(routes.PreviousClaimantAddressController.onPageLoad(waypoints(Index(1)), Index(1)))
         }
       }
     }
