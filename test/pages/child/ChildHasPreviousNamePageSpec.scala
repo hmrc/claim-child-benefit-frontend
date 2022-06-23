@@ -17,7 +17,7 @@
 package pages.child
 
 import controllers.child.routes
-import models.{ChildName, Index}
+import models.{ChildName, Index, NormalMode}
 import pages.EmptyWaypoints
 import pages.behaviours.PageBehaviours
 
@@ -77,44 +77,77 @@ class ChildHasPreviousNamePageSpec extends PageBehaviours {
 
         "when the answer is yes" - {
 
-          "to Child Name Changed by Deed Poll when that question has not been answered" in {
+          "and Child Name Changed by Deed poll has been answered" - {
 
-            val answers =
-              emptyUserAnswers
-                .set(ChildHasPreviousNamePage(Index(0)), true).success.value
-                .set(ChildHasPreviousNamePage(Index(1)), true).success.value
+            "to Check Child Details with the current waypoint removed when there is at least one previous child name" in {
 
-            val index0Waypoints = waypoints(Index(0))
-            val index1Waypoints = waypoints(Index(1))
+              val childPreviousName = ChildName("first", None, "last")
 
-            ChildHasPreviousNamePage(Index(0))
-              .navigate(index0Waypoints, answers)
-              .mustEqual(routes.ChildNameChangedByDeedPollController.onPageLoad(index0Waypoints, Index(0)))
+              val answers =
+                emptyUserAnswers
+                  .set(ChildHasPreviousNamePage(Index(0)), true).success.value
+                  .set(ChildHasPreviousNamePage(Index(1)), true).success.value
+                  .set(ChildNameChangedByDeedPollPage(Index(0)), true).success.value
+                  .set(ChildNameChangedByDeedPollPage(Index(1)), true).success.value
+                  .set(ChildPreviousNamePage(Index(0), Index(0)), childPreviousName).success.value
+                  .set(ChildPreviousNamePage(Index(1), Index(0)), childPreviousName).success.value
 
-            ChildHasPreviousNamePage(Index(1))
-              .navigate(index1Waypoints, answers)
-              .mustEqual(routes.ChildNameChangedByDeedPollController.onPageLoad(index1Waypoints, Index(1)))
+              val index0Waypoints = waypoints(Index(0))
+              val index1Waypoints = waypoints(Index(1))
+
+              ChildHasPreviousNamePage(Index(0))
+                .navigate(index0Waypoints, answers)
+                .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(0)))
+
+              ChildHasPreviousNamePage(Index(1))
+                .navigate(index1Waypoints, answers)
+                .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(1)))
+            }
+
+            "to Child Previous Name with name index 0 and add-child-name added to the waypoints when there are no previous names" in {
+
+              val answers =
+                emptyUserAnswers
+                  .set(ChildHasPreviousNamePage(Index(0)), true).success.value
+                  .set(ChildHasPreviousNamePage(Index(1)), true).success.value
+                  .set(ChildNameChangedByDeedPollPage(Index(0)), true).success.value
+                  .set(ChildNameChangedByDeedPollPage(Index(1)), true).success.value
+
+              val index0Waypoints = waypoints(Index(0))
+              val index1Waypoints = waypoints(Index(1))
+              val expectedIndex0Waypoints = index0Waypoints.setNextWaypoint(AddChildPreviousNamePage(Index(0)).waypoint(NormalMode))
+              val expectedIndex1Waypoints = index1Waypoints.setNextWaypoint(AddChildPreviousNamePage(Index(1)).waypoint(NormalMode))
+
+              ChildHasPreviousNamePage(Index(0))
+                .navigate(index0Waypoints, answers)
+                .mustEqual(routes.ChildPreviousNameController.onPageLoad(expectedIndex0Waypoints, Index(0), Index(0)))
+
+              ChildHasPreviousNamePage(Index(1))
+                .navigate(index1Waypoints, answers)
+                .mustEqual(routes.ChildPreviousNameController.onPageLoad(expectedIndex1Waypoints, Index(1), Index(0)))
+            }
           }
 
-          "to Check Child Details with the current waypoint removed when that question has been answered" in {
+          "and Child Name Changed by Deed Poll has not been answered" - {
 
-            val answers =
-              emptyUserAnswers
-                .set(ChildHasPreviousNamePage(Index(0)), true).success.value
-                .set(ChildHasPreviousNamePage(Index(1)), true).success.value
-                .set(ChildNameChangedByDeedPollPage(Index(0)), true).success.value
-                .set(ChildNameChangedByDeedPollPage(Index(1)), true).success.value
+            "to Child Name Changed by Deed Poll" in {
 
-            val index0Waypoints = waypoints(Index(0))
-            val index1Waypoints = waypoints(Index(1))
+              val answers =
+                emptyUserAnswers
+                  .set(ChildHasPreviousNamePage(Index(0)), true).success.value
+                  .set(ChildHasPreviousNamePage(Index(1)), true).success.value
 
-            ChildHasPreviousNamePage(Index(0))
-              .navigate(index0Waypoints, answers)
-              .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(0)))
+              val index0Waypoints = waypoints(Index(0))
+              val index1Waypoints = waypoints(Index(1))
 
-            ChildHasPreviousNamePage(Index(1))
-              .navigate(index1Waypoints, answers)
-              .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(1)))
+              ChildHasPreviousNamePage(Index(0))
+                .navigate(index0Waypoints, answers)
+                .mustEqual(routes.ChildNameChangedByDeedPollController.onPageLoad(index0Waypoints, Index(0)))
+
+              ChildHasPreviousNamePage(Index(1))
+                .navigate(index1Waypoints, answers)
+                .mustEqual(routes.ChildNameChangedByDeedPollController.onPageLoad(index1Waypoints, Index(1)))
+            }
           }
         }
 

@@ -21,7 +21,7 @@ import models.{Index, UserAnswers}
 import pages.{NonEmptyWaypoints, Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
-import queries.AllChildPreviousNames
+import queries.{AllChildPreviousNames, DeriveNumberOfChildPreviousNames}
 
 import scala.util.Try
 
@@ -44,8 +44,13 @@ final case class ChildHasPreviousNamePage(index: Index) extends ChildQuestionPag
     answers.get(this).map {
       case true =>
         answers.get(ChildNameChangedByDeedPollPage(index))
-          .map(_ => waypoints.next.page)
-          .getOrElse(ChildNameChangedByDeedPollPage(index))
+          .map {
+            _ =>
+              answers.get(DeriveNumberOfChildPreviousNames(index)).map {
+                case n if n > 0 => waypoints.next.page
+                case _          => ChildPreviousNamePage(index, Index(0))
+              }.getOrElse(ChildPreviousNamePage(index, Index(0)))
+          }.getOrElse(ChildNameChangedByDeedPollPage(index))
 
       case false =>
         waypoints.next.page
