@@ -48,6 +48,23 @@ class ChildScottishBirthCertificateDetailsPageSpec extends PageBehaviours {
             .mustEqual(routes.ApplicantRelationshipToChildController.onPageLoad(waypoints, Index(1)))
         }
       }
+
+      "when the current waypoint is Check Child Details" - {
+
+        def waypoints(index: Index) =
+          EmptyWaypoints.setNextWaypoint(CheckChildDetailsPage(index).waypoint)
+
+        "to Check Child Details with the current waypoint removed" in {
+
+          ChildScottishBirthCertificateDetailsPage(Index(0))
+            .navigate(waypoints(Index(0)), emptyUserAnswers)
+            .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(0)))
+
+          ChildScottishBirthCertificateDetailsPage(Index(1))
+            .navigate(waypoints(Index(1)), emptyUserAnswers)
+            .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(1)))
+        }
+      }
     }
   }
 }
