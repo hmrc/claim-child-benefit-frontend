@@ -18,4 +18,6 @@ package pages
 
 trait AddToListSection
 
+object ChildSection extends AddToListSection
+object ChildPreviousNameSection extends AddToListSection
 object PreviousFamilyNamesSection extends AddToListSection

@@ -19,11 +19,11 @@ package pages.child
 import controllers.child.routes
 import models.ChildBirthRegistrationCountry.{England, Other, Scotland, Unknown, Wales}
 import models.{Index, UserAnswers}
-import pages.{Page, QuestionPage, Waypoints}
+import pages.{Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-final case class AdoptingChildPage(index: Index) extends QuestionPage[Boolean] {
+final case class AdoptingChildPage(index: Index) extends ChildQuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ "children" \ index.position \ toString
 

@@ -19,11 +19,11 @@ package pages.child
 import controllers.child.routes
 import models.AnyoneClaimedForChildBefore.{Applicant, No, Partner, SomeoneElse}
 import models.{AnyoneClaimedForChildBefore, Index, UserAnswers}
-import pages.{Page, QuestionPage, Waypoints}
+import pages.{Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-final case class AnyoneClaimedForChildBeforePage(index: Index) extends QuestionPage[AnyoneClaimedForChildBefore] {
+final case class AnyoneClaimedForChildBeforePage(index: Index) extends ChildQuestionPage[AnyoneClaimedForChildBefore] {
 
   override def path: JsPath = JsPath \ "children" \ index.position \ toString
 

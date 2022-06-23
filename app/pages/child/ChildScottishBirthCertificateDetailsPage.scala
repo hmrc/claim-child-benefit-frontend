@@ -18,11 +18,11 @@ package pages.child
 
 import controllers.child.routes
 import models.{ChildScottishBirthCertificateDetails, Index, UserAnswers}
-import pages.{Page, QuestionPage, Waypoints}
+import pages.{Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-final case class ChildScottishBirthCertificateDetailsPage(index: Index) extends QuestionPage[ChildScottishBirthCertificateDetails] {
+final case class ChildScottishBirthCertificateDetailsPage(index: Index) extends ChildQuestionPage[ChildScottishBirthCertificateDetails] {
 
   override def path: JsPath = JsPath \ "children" \ index.position \ toString
 

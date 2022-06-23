@@ -17,12 +17,19 @@
 package pages.child
 
 import controllers.child.routes
-import models.{ChildName, Index, UserAnswers}
-import pages.{Page, QuestionPage, Waypoints}
+import models.{ChildName, Index, NormalMode, UserAnswers}
+import pages.{AddToListQuestionPage, AddToListSection, ChildPreviousNameSection, Page, QuestionPage, Waypoint, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-final case class ChildPreviousNamePage(childIndex: Index, nameIndex: Index) extends QuestionPage[ChildName] {
+final case class ChildPreviousNamePage(
+                                        childIndex: Index,
+                                        nameIndex: Index
+                                      ) extends QuestionPage[ChildName] with AddToListQuestionPage {
+
+  override val section: AddToListSection = ChildPreviousNameSection
+
+  override val addItemWaypoint: Waypoint = AddChildPreviousNamePage(childIndex).waypoint(NormalMode)
 
   override def path: JsPath = JsPath \ "children" \ childIndex.position \ "previousNames" \ nameIndex.position
 
@@ -33,4 +40,5 @@ final case class ChildPreviousNamePage(childIndex: Index, nameIndex: Index) exte
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     AddChildPreviousNamePage(childIndex)
+
 }
