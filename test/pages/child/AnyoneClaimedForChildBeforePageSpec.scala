@@ -18,11 +18,14 @@ package pages.child
 
 import controllers.child.routes
 import models.AnyoneClaimedForChildBefore._
-import models.{AnyoneClaimedForChildBefore, Index}
+import models.{AnyoneClaimedForChildBefore, Index, PreviousClaimantAddress, PreviousClaimantName}
 import pages.EmptyWaypoints
 import pages.behaviours.PageBehaviours
 
 class AnyoneClaimedForChildBeforePageSpec extends PageBehaviours {
+
+  private val previousClaimantName    = PreviousClaimantName(None, "first", None, "last")
+  private val previousClaimantAddress = PreviousClaimantAddress("line 1", None, None, "postcode")
 
   "AnyoneClaimedForChildBeforePage" - {
 
@@ -101,6 +104,226 @@ class AnyoneClaimedForChildBeforePageSpec extends PageBehaviours {
             .navigate(waypoints, answers)
             .mustEqual(routes.AdoptingChildController.onPageLoad(waypoints, Index(1)))
         }
+      }
+
+      "when the current waypoint is Check Child Details" - {
+
+        def waypoints(index: Index) =
+          EmptyWaypoints.setNextWaypoint(CheckChildDetailsPage(index).waypoint)
+
+        "when the answer is Applicant" - {
+
+          "to Check Child Details with the current waypoint removed" in {
+
+            val answers =
+              emptyUserAnswers
+                .set(AnyoneClaimedForChildBeforePage(Index(0)), Applicant).success.value
+                .set(AnyoneClaimedForChildBeforePage(Index(1)), Applicant).success.value
+
+            AnyoneClaimedForChildBeforePage(Index(0))
+              .navigate(waypoints(Index(0)), answers)
+              .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(0)))
+
+            AnyoneClaimedForChildBeforePage(Index(1))
+              .navigate(waypoints(Index(1)), answers)
+              .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(1)))
+          }
+        }
+
+        "when the answer is Partner" - {
+
+          "to Check Child Details with the current waypoint removed" in {
+
+            val answers =
+              emptyUserAnswers
+                .set(AnyoneClaimedForChildBeforePage(Index(0)), Partner).success.value
+                .set(AnyoneClaimedForChildBeforePage(Index(1)), Partner).success.value
+
+            AnyoneClaimedForChildBeforePage(Index(0))
+              .navigate(waypoints(Index(0)), answers)
+              .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(0)))
+
+            AnyoneClaimedForChildBeforePage(Index(1))
+              .navigate(waypoints(Index(1)), answers)
+              .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(1)))
+          }
+        }
+
+        "when the answer is Someone Else" - {
+
+          "to Check Child Details with the current waypoint removed when Previous ClaimantName has been answered" in {
+
+            val answers =
+              emptyUserAnswers
+                .set(AnyoneClaimedForChildBeforePage(Index(0)), Applicant).success.value
+                .set(AnyoneClaimedForChildBeforePage(Index(1)), Applicant).success.value
+                .set(PreviousClaimantNamePage(Index(0)), previousClaimantName).success.value
+                .set(PreviousClaimantNamePage(Index(1)), previousClaimantName).success.value
+
+            AnyoneClaimedForChildBeforePage(Index(0))
+              .navigate(waypoints(Index(0)), answers)
+              .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(0)))
+
+            AnyoneClaimedForChildBeforePage(Index(1))
+              .navigate(waypoints(Index(1)), answers)
+              .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(1)))
+          }
+
+          "to Previous Claimant Name when it has not already been answered" in {
+
+            val answers =
+              emptyUserAnswers
+                .set(AnyoneClaimedForChildBeforePage(Index(0)), SomeoneElse).success.value
+                .set(AnyoneClaimedForChildBeforePage(Index(1)), SomeoneElse).success.value
+
+            AnyoneClaimedForChildBeforePage(Index(0))
+              .navigate(waypoints(Index(0)), answers)
+              .mustEqual(routes.PreviousClaimantNameController.onPageLoad(waypoints(Index(0)), Index(0)))
+
+            AnyoneClaimedForChildBeforePage(Index(1))
+              .navigate(waypoints(Index(1)), answers)
+              .mustEqual(routes.PreviousClaimantNameController.onPageLoad(waypoints(Index(1)), Index(1)))
+          }
+        }
+
+        "when the answer is No" - {
+
+          "to Check Child Details with the current waypoint removed" in {
+
+            val answers =
+              emptyUserAnswers
+                .set(AnyoneClaimedForChildBeforePage(Index(0)), No).success.value
+                .set(AnyoneClaimedForChildBeforePage(Index(1)), No).success.value
+
+            AnyoneClaimedForChildBeforePage(Index(0))
+              .navigate(waypoints(Index(0)), answers)
+              .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(0)))
+
+            AnyoneClaimedForChildBeforePage(Index(1))
+              .navigate(waypoints(Index(1)), answers)
+              .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(1)))
+          }
+        }
+      }
+    }
+
+    "must remove Previous Claimant details when the answer is Applicant" - {
+
+      val answers =
+        emptyUserAnswers
+          .set(PreviousClaimantNamePage(Index(0)), previousClaimantName).success.value
+          .set(PreviousClaimantAddressPage(Index(0)), previousClaimantAddress).success.value
+          .set(PreviousClaimantNamePage(Index(1)), previousClaimantName).success.value
+          .set(PreviousClaimantAddressPage(Index(1)), previousClaimantAddress).success.value
+
+      "for index 0" in {
+
+        val result = answers.set(AnyoneClaimedForChildBeforePage(Index(0)), Applicant).success.value
+
+        result.get(PreviousClaimantNamePage(Index(0))) must not be defined
+        result.get(PreviousClaimantAddressPage(Index(0))) must not be defined
+        result.get(PreviousClaimantNamePage(Index(1))) mustBe defined
+        result.get(PreviousClaimantAddressPage(Index(1))) mustBe defined
+      }
+
+      "for index 1" in {
+
+        val result = answers.set(AnyoneClaimedForChildBeforePage(Index(1)), Applicant).success.value
+
+        result.get(PreviousClaimantNamePage(Index(0))) mustBe defined
+        result.get(PreviousClaimantAddressPage(Index(0))) mustBe defined
+        result.get(PreviousClaimantNamePage(Index(1))) must not be defined
+        result.get(PreviousClaimantAddressPage(Index(1))) must not be defined
+      }
+    }
+
+    "must remove Previous Claimant details when the answer is Partner" - {
+
+      val answers =
+        emptyUserAnswers
+          .set(PreviousClaimantNamePage(Index(0)), previousClaimantName).success.value
+          .set(PreviousClaimantAddressPage(Index(0)), previousClaimantAddress).success.value
+          .set(PreviousClaimantNamePage(Index(1)), previousClaimantName).success.value
+          .set(PreviousClaimantAddressPage(Index(1)), previousClaimantAddress).success.value
+
+      "for index 0" in {
+
+        val result = answers.set(AnyoneClaimedForChildBeforePage(Index(0)), Partner).success.value
+
+        result.get(PreviousClaimantNamePage(Index(0))) must not be defined
+        result.get(PreviousClaimantAddressPage(Index(0))) must not be defined
+        result.get(PreviousClaimantNamePage(Index(1))) mustBe defined
+        result.get(PreviousClaimantAddressPage(Index(1))) mustBe defined
+      }
+
+      "for index 1" in {
+
+        val result = answers.set(AnyoneClaimedForChildBeforePage(Index(1)), Partner).success.value
+
+        result.get(PreviousClaimantNamePage(Index(0))) mustBe defined
+        result.get(PreviousClaimantAddressPage(Index(0))) mustBe defined
+        result.get(PreviousClaimantNamePage(Index(1))) must not be defined
+        result.get(PreviousClaimantAddressPage(Index(1))) must not be defined
+      }
+    }
+
+    "must remove Previous Claimant details when the answer is No" - {
+
+      val answers =
+        emptyUserAnswers
+          .set(PreviousClaimantNamePage(Index(0)), previousClaimantName).success.value
+          .set(PreviousClaimantAddressPage(Index(0)), previousClaimantAddress).success.value
+          .set(PreviousClaimantNamePage(Index(1)), previousClaimantName).success.value
+          .set(PreviousClaimantAddressPage(Index(1)), previousClaimantAddress).success.value
+
+      "for index 0" in {
+
+        val result = answers.set(AnyoneClaimedForChildBeforePage(Index(0)), No).success.value
+
+        result.get(PreviousClaimantNamePage(Index(0))) must not be defined
+        result.get(PreviousClaimantAddressPage(Index(0))) must not be defined
+        result.get(PreviousClaimantNamePage(Index(1))) mustBe defined
+        result.get(PreviousClaimantAddressPage(Index(1))) mustBe defined
+      }
+
+      "for index 1" in {
+
+        val result = answers.set(AnyoneClaimedForChildBeforePage(Index(1)), No).success.value
+
+        result.get(PreviousClaimantNamePage(Index(0))) mustBe defined
+        result.get(PreviousClaimantAddressPage(Index(0))) mustBe defined
+        result.get(PreviousClaimantNamePage(Index(1))) must not be defined
+        result.get(PreviousClaimantAddressPage(Index(1))) must not be defined
+      }
+    }
+
+    "must not remove Previous Claimant details when the answer is Someone Else" - {
+
+      val answers =
+        emptyUserAnswers
+          .set(PreviousClaimantNamePage(Index(0)), previousClaimantName).success.value
+          .set(PreviousClaimantAddressPage(Index(0)), previousClaimantAddress).success.value
+          .set(PreviousClaimantNamePage(Index(1)), previousClaimantName).success.value
+          .set(PreviousClaimantAddressPage(Index(1)), previousClaimantAddress).success.value
+
+      "for index 0" in {
+
+        val result = answers.set(AnyoneClaimedForChildBeforePage(Index(0)), SomeoneElse).success.value
+
+        result.get(PreviousClaimantNamePage(Index(0))) mustBe defined
+        result.get(PreviousClaimantAddressPage(Index(0))) mustBe defined
+        result.get(PreviousClaimantNamePage(Index(1))) mustBe defined
+        result.get(PreviousClaimantAddressPage(Index(1))) mustBe defined
+      }
+
+      "for index 1" in {
+
+        val result = answers.set(AnyoneClaimedForChildBeforePage(Index(1)), SomeoneElse).success.value
+
+        result.get(PreviousClaimantNamePage(Index(0))) mustBe defined
+        result.get(PreviousClaimantAddressPage(Index(0))) mustBe defined
+        result.get(PreviousClaimantNamePage(Index(1))) mustBe defined
+        result.get(PreviousClaimantAddressPage(Index(1))) mustBe defined
       }
     }
   }
