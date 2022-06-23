@@ -18,13 +18,14 @@ package pages.child
 
 import controllers.child.routes
 import models.ChildBirthRegistrationCountry._
-import models.{ChildBirthRegistrationCountry, ChildScottishBirthCertificateDetails, Index}
+import models.{ChildBirthRegistrationCountry, ChildScottishBirthCertificateDetails, IncludedDocuments, Index}
 import pages.EmptyWaypoints
 import pages.behaviours.PageBehaviours
 
 class ChildBirthRegistrationCountryPageSpec extends PageBehaviours {
 
   private val scottishBirthCertificateDetails = ChildScottishBirthCertificateDetails("123", "2022", "456")
+  private val includedDocuments               = Set(IncludedDocuments.values.head)
 
   "ChildBirthRegistrationCountryPage" - {
 
@@ -243,7 +244,25 @@ class ChildBirthRegistrationCountryPageSpec extends PageBehaviours {
 
         "and the answer is Other" - {
 
-          "to Check Child Details with the current waypoint removed" in {
+          "to Check Child Details with the current waypoint removed when Included Documents has been answered" in {
+
+            val answers =
+              emptyUserAnswers
+                .set(ChildBirthRegistrationCountryPage(Index(0)), Other).success.value
+                .set(ChildBirthRegistrationCountryPage(Index(1)), Other).success.value
+                .set(IncludedDocumentsPage(Index(0)), includedDocuments).success.value
+                .set(IncludedDocumentsPage(Index(1)), includedDocuments).success.value
+
+            ChildBirthRegistrationCountryPage(Index(0))
+              .navigate(index0Waypoints, answers)
+              .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(0)))
+
+            ChildBirthRegistrationCountryPage(Index(1))
+              .navigate(index1Waypoints, answers)
+              .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(1)))
+          }
+
+          "to Included Documents when it has not been answered" in {
 
             val answers =
               emptyUserAnswers
@@ -252,22 +271,24 @@ class ChildBirthRegistrationCountryPageSpec extends PageBehaviours {
 
             ChildBirthRegistrationCountryPage(Index(0))
               .navigate(index0Waypoints, answers)
-              .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(0)))
+              .mustEqual(routes.IncludedDocumentsController.onPageLoad(index0Waypoints, Index(0)))
 
             ChildBirthRegistrationCountryPage(Index(1))
               .navigate(index1Waypoints, answers)
-              .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(1)))
+              .mustEqual(routes.IncludedDocumentsController.onPageLoad(index1Waypoints, Index(1)))
           }
         }
 
         "and the answer is Unknown" - {
 
-          "to Check Child Details with the current waypoint removed" in {
+          "to Check Child Details with the current waypoint removed when Included Documents has been answered" in {
 
             val answers =
               emptyUserAnswers
                 .set(ChildBirthRegistrationCountryPage(Index(0)), Unknown).success.value
                 .set(ChildBirthRegistrationCountryPage(Index(1)), Unknown).success.value
+                .set(IncludedDocumentsPage(Index(0)), includedDocuments).success.value
+                .set(IncludedDocumentsPage(Index(1)), includedDocuments).success.value
 
             ChildBirthRegistrationCountryPage(Index(0))
               .navigate(index0Waypoints, answers)
@@ -277,108 +298,111 @@ class ChildBirthRegistrationCountryPageSpec extends PageBehaviours {
               .navigate(index1Waypoints, answers)
               .mustEqual(routes.CheckChildDetailsController.onPageLoad(EmptyWaypoints, Index(1)))
           }
+
+          "to Included Documents when it has not been answered" in {
+
+            val answers =
+              emptyUserAnswers
+                .set(ChildBirthRegistrationCountryPage(Index(0)), Unknown).success.value
+                .set(ChildBirthRegistrationCountryPage(Index(1)), Unknown).success.value
+
+            ChildBirthRegistrationCountryPage(Index(0))
+              .navigate(index0Waypoints, answers)
+              .mustEqual(routes.IncludedDocumentsController.onPageLoad(index0Waypoints, Index(0)))
+
+            ChildBirthRegistrationCountryPage(Index(1))
+              .navigate(index1Waypoints, answers)
+              .mustEqual(routes.IncludedDocumentsController.onPageLoad(index1Waypoints, Index(1)))
+          }
         }
       }
     }
 
-    "must remove Scottish Birth Certificate Details when the answer is England" in {
+    "cleanup" - {
 
-      val answers =
+      val fullAnswers =
         emptyUserAnswers
           .set(ChildBirthCertificateSystemNumberPage(Index(0)), "000000000").success.value
           .set(ChildBirthCertificateSystemNumberPage(Index(1)), "000000000").success.value
           .set(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBirthCertificateDetails).success.value
           .set(ChildScottishBirthCertificateDetailsPage(Index(1)), scottishBirthCertificateDetails).success.value
+          .set(IncludedDocumentsPage(Index(0)), includedDocuments).success.value
+          .set(IncludedDocumentsPage(Index(1)), includedDocuments).success.value
 
-      val result =
-        answers
-          .set(ChildBirthRegistrationCountryPage(Index(0)), England).success.value
-          .set(ChildBirthRegistrationCountryPage(Index(1)), England).success.value
+      "must remove Scottish Birth Certificate Details and Included Documents when the answer is England" in {
 
-      result.get(ChildBirthCertificateSystemNumberPage(Index(0))) mustBe defined
-      result.get(ChildBirthCertificateSystemNumberPage(Index(1))) mustBe defined
-      result.get(ChildScottishBirthCertificateDetailsPage(Index(0))) must not be defined
-      result.get(ChildScottishBirthCertificateDetailsPage(Index(1))) must not be defined
-    }
+        val result =
+          fullAnswers
+            .set(ChildBirthRegistrationCountryPage(Index(0)), England).success.value
+            .set(ChildBirthRegistrationCountryPage(Index(1)), England).success.value
 
-    "must remove Scottish Birth Certificate Details when the answer is Wales" in {
+        result.get(ChildBirthCertificateSystemNumberPage(Index(0))) mustBe defined
+        result.get(ChildBirthCertificateSystemNumberPage(Index(1))) mustBe defined
+        result.get(ChildScottishBirthCertificateDetailsPage(Index(0))) must not be defined
+        result.get(ChildScottishBirthCertificateDetailsPage(Index(1))) must not be defined
+        result.get(IncludedDocumentsPage(Index(0))) must not be defined
+        result.get(IncludedDocumentsPage(Index(1))) must not be defined
+      }
 
-      val answers =
-        emptyUserAnswers
-          .set(ChildBirthCertificateSystemNumberPage(Index(0)), "000000000").success.value
-          .set(ChildBirthCertificateSystemNumberPage(Index(1)), "000000000").success.value
-          .set(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBirthCertificateDetails).success.value
-          .set(ChildScottishBirthCertificateDetailsPage(Index(1)), scottishBirthCertificateDetails).success.value
+      "must remove Scottish Birth Certificate Details and Included Documents when the answer is Wales" in {
 
-      val result =
-        answers
-          .set(ChildBirthRegistrationCountryPage(Index(0)), Wales).success.value
-          .set(ChildBirthRegistrationCountryPage(Index(1)), Wales).success.value
+        val result =
+          fullAnswers
+            .set(ChildBirthRegistrationCountryPage(Index(0)), Wales).success.value
+            .set(ChildBirthRegistrationCountryPage(Index(1)), Wales).success.value
 
-      result.get(ChildBirthCertificateSystemNumberPage(Index(0))) mustBe defined
-      result.get(ChildBirthCertificateSystemNumberPage(Index(1))) mustBe defined
-      result.get(ChildScottishBirthCertificateDetailsPage(Index(0))) must not be defined
-      result.get(ChildScottishBirthCertificateDetailsPage(Index(1))) must not be defined
-    }
+        result.get(ChildBirthCertificateSystemNumberPage(Index(0))) mustBe defined
+        result.get(ChildBirthCertificateSystemNumberPage(Index(1))) mustBe defined
+        result.get(ChildScottishBirthCertificateDetailsPage(Index(0))) must not be defined
+        result.get(ChildScottishBirthCertificateDetailsPage(Index(1))) must not be defined
+        result.get(IncludedDocumentsPage(Index(0))) must not be defined
+        result.get(IncludedDocumentsPage(Index(1))) must not be defined
+      }
 
-    "must remove Birth Certificate System Number when the answer is Scotland" in {
+      "must remove Birth Certificate System Number and Included Documents when the answer is Scotland" in {
 
-      val answers =
-        emptyUserAnswers
-          .set(ChildBirthCertificateSystemNumberPage(Index(0)), "000000000").success.value
-          .set(ChildBirthCertificateSystemNumberPage(Index(1)), "000000000").success.value
-          .set(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBirthCertificateDetails).success.value
-          .set(ChildScottishBirthCertificateDetailsPage(Index(1)), scottishBirthCertificateDetails).success.value
+        val result =
+          fullAnswers
+            .set(ChildBirthRegistrationCountryPage(Index(0)), Scotland).success.value
+            .set(ChildBirthRegistrationCountryPage(Index(1)), Scotland).success.value
 
-      val result =
-        answers
-          .set(ChildBirthRegistrationCountryPage(Index(0)), Scotland).success.value
-          .set(ChildBirthRegistrationCountryPage(Index(1)), Scotland).success.value
+        result.get(ChildBirthCertificateSystemNumberPage(Index(0))) must not be defined
+        result.get(ChildBirthCertificateSystemNumberPage(Index(1))) must not be defined
+        result.get(ChildScottishBirthCertificateDetailsPage(Index(0))) mustBe defined
+        result.get(ChildScottishBirthCertificateDetailsPage(Index(1))) mustBe defined
+        result.get(IncludedDocumentsPage(Index(0))) must not be defined
+        result.get(IncludedDocumentsPage(Index(1))) must not be defined
+      }
 
-      result.get(ChildBirthCertificateSystemNumberPage(Index(0))) must not be defined
-      result.get(ChildBirthCertificateSystemNumberPage(Index(1))) must not be defined
-      result.get(ChildScottishBirthCertificateDetailsPage(Index(0))) mustBe defined
-      result.get(ChildScottishBirthCertificateDetailsPage(Index(1))) mustBe defined
-    }
+      "must remove Birth Certificate System Number and Scottish Birth Certificate Details when the answer is Other" in {
 
-    "must remove Birth Certificate System Number and Scottish Birth Certificate Details when the answer is Other" in {
+        val result =
+          fullAnswers
+            .set(ChildBirthRegistrationCountryPage(Index(0)), Other).success.value
+            .set(ChildBirthRegistrationCountryPage(Index(1)), Other).success.value
 
-      val answers =
-        emptyUserAnswers
-          .set(ChildBirthCertificateSystemNumberPage(Index(0)), "000000000").success.value
-          .set(ChildBirthCertificateSystemNumberPage(Index(1)), "000000000").success.value
-          .set(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBirthCertificateDetails).success.value
-          .set(ChildScottishBirthCertificateDetailsPage(Index(1)), scottishBirthCertificateDetails).success.value
+        result.get(ChildBirthCertificateSystemNumberPage(Index(0))) must not be defined
+        result.get(ChildBirthCertificateSystemNumberPage(Index(1))) must not be defined
+        result.get(ChildScottishBirthCertificateDetailsPage(Index(0))) must not be defined
+        result.get(ChildScottishBirthCertificateDetailsPage(Index(1))) must not be defined
+        result.get(IncludedDocumentsPage(Index(0))) mustBe defined
+        result.get(IncludedDocumentsPage(Index(1))) mustBe defined
+      }
 
-      val result =
-        answers
-          .set(ChildBirthRegistrationCountryPage(Index(0)), Other).success.value
-          .set(ChildBirthRegistrationCountryPage(Index(1)), Other).success.value
+      "must remove Birth Certificate System Number and Scottish Birth Certificate Details when the answer is Unknown" in {
 
-      result.get(ChildBirthCertificateSystemNumberPage(Index(0))) must not be defined
-      result.get(ChildBirthCertificateSystemNumberPage(Index(1))) must not be defined
-      result.get(ChildScottishBirthCertificateDetailsPage(Index(0))) must not be defined
-      result.get(ChildScottishBirthCertificateDetailsPage(Index(1))) must not be defined
-    }
+        val result =
+          fullAnswers
+            .set(ChildBirthRegistrationCountryPage(Index(0)), Unknown).success.value
+            .set(ChildBirthRegistrationCountryPage(Index(1)), Unknown).success.value
 
-    "must remove Birth Certificate System Number and Scottish Birth Certificate Details when the answer is Unknown" in {
-
-      val answers =
-        emptyUserAnswers
-          .set(ChildBirthCertificateSystemNumberPage(Index(0)), "000000000").success.value
-          .set(ChildBirthCertificateSystemNumberPage(Index(1)), "000000000").success.value
-          .set(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBirthCertificateDetails).success.value
-          .set(ChildScottishBirthCertificateDetailsPage(Index(1)), scottishBirthCertificateDetails).success.value
-
-      val result =
-        answers
-          .set(ChildBirthRegistrationCountryPage(Index(0)), Unknown).success.value
-          .set(ChildBirthRegistrationCountryPage(Index(1)), Unknown).success.value
-
-      result.get(ChildBirthCertificateSystemNumberPage(Index(0))) must not be defined
-      result.get(ChildBirthCertificateSystemNumberPage(Index(1))) must not be defined
-      result.get(ChildScottishBirthCertificateDetailsPage(Index(0))) must not be defined
-      result.get(ChildScottishBirthCertificateDetailsPage(Index(1))) must not be defined
+        result.get(ChildBirthCertificateSystemNumberPage(Index(0))) must not be defined
+        result.get(ChildBirthCertificateSystemNumberPage(Index(1))) must not be defined
+        result.get(ChildScottishBirthCertificateDetailsPage(Index(0))) must not be defined
+        result.get(ChildScottishBirthCertificateDetailsPage(Index(1))) must not be defined
+        result.get(IncludedDocumentsPage(Index(0))) mustBe defined
+        result.get(IncludedDocumentsPage(Index(1))) mustBe defined
+      }
     }
   }
 }
