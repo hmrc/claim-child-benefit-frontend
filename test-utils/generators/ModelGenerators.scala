@@ -33,16 +33,6 @@ trait ModelGenerators {
       } yield PreviousClaimantName(title, firstName, middleNames, lastName)
     }
 
-  implicit lazy val arbitraryPreviousClaimantAddress: Arbitrary[PreviousClaimantAddress] =
-    Arbitrary {
-      for {
-        line1 <- arbitrary[String]
-        line2 <- Gen.option(arbitrary[String])
-        line3 <- Gen.option(arbitrary[String])
-        postcode <- arbitrary[String]
-      } yield PreviousClaimantAddress(line1, line2, line3, postcode)
-    }
-
   implicit lazy val arbitraryIncludedDocuments: Arbitrary[IncludedDocuments] =
     Arbitrary {
       Gen.oneOf(IncludedDocuments.values)
@@ -119,16 +109,6 @@ trait ModelGenerators {
     } yield Nino(firstChar ++ secondChar ++ digits :+ lastChar)
   }
 
-  implicit lazy val arbitraryApplicantPreviousAddress: Arbitrary[ApplicantPreviousAddress] =
-    Arbitrary {
-      for {
-        line1    <- arbitrary[String]
-        line2    <- Gen.option(arbitrary[String])
-        line3    <- Gen.option(arbitrary[String])
-        postcode <- arbitrary[String]
-      } yield ApplicantPreviousAddress(line1, line2, line3, postcode)
-    }
-
   implicit lazy val arbitraryApplicantName: Arbitrary[ApplicantName] =
     Arbitrary {
       for {
@@ -144,14 +124,15 @@ trait ModelGenerators {
       Gen.oneOf(ApplicantEmploymentStatus.values)
     }
 
-  implicit lazy val arbitraryApplicantCurrentAddress: Arbitrary[ApplicantCurrentAddress] =
+  implicit lazy val arbitraryAddress: Arbitrary[Address] =
     Arbitrary {
       for {
         line1    <- arbitrary[String]
         line2    <- Gen.option(arbitrary[String])
-        line3    <- Gen.option(arbitrary[String])
+        town     <- arbitrary[String]
+        county   <- Gen.option(arbitrary[String])
         postcode <- arbitrary[String]
-      } yield ApplicantCurrentAddress(line1, line2, line3, postcode)
+      } yield Address(line1, line2, town, county, postcode)
     }
 
   implicit lazy val arbitraryEldestChildName: Arbitrary[EldestChildName] =

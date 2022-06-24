@@ -17,7 +17,7 @@
 package pages.child
 
 import controllers.child.routes
-import models.{Index, PreviousClaimantAddress}
+import models.{Address, Index}
 import pages.EmptyWaypoints
 import pages.behaviours.PageBehaviours
 
@@ -25,11 +25,11 @@ class PreviousClaimantAddressPageSpec extends PageBehaviours {
 
   "PreviousClaimantAddressPage" - {
 
-    beRetrievable[PreviousClaimantAddress](PreviousClaimantAddressPage(index))
+    beRetrievable[Address](PreviousClaimantAddressPage(index))
 
-    beSettable[PreviousClaimantAddress](PreviousClaimantAddressPage(index))
+    beSettable[Address](PreviousClaimantAddressPage(index))
 
-    beRemovable[PreviousClaimantAddress](PreviousClaimantAddressPage(index))
+    beRemovable[Address](PreviousClaimantAddressPage(index))
 
     "must navigate" - {
 

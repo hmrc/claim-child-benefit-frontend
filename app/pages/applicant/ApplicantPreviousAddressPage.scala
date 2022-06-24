@@ -17,12 +17,12 @@
 package pages.applicant
 
 import controllers.applicant.routes
-import models.{ApplicantPreviousAddress, UserAnswers}
+import models.{Address, UserAnswers}
 import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object ApplicantPreviousAddressPage extends QuestionPage[ApplicantPreviousAddress] {
+case object ApplicantPreviousAddressPage extends QuestionPage[Address] {
 
   override def path: JsPath = JsPath \ toString
 

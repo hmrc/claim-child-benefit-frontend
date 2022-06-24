@@ -59,10 +59,18 @@
 
         @govukInput(
             InputViewModel(
-                field = form("line3"),
-                label = LabelViewModel(messages("applicantPreviousAddress.line3"))
+                field = form("town"),
+                label = LabelViewModel(messages("applicantPreviousAddress.town"))
             )
-            .withWidth(Full)
+            .withWidth(TwoThirds)
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("county"),
+                label = LabelViewModel(messages("applicantPreviousAddress.county"))
+            )
+            .withWidth(TwoThirds)
         )
 
         @govukInput(

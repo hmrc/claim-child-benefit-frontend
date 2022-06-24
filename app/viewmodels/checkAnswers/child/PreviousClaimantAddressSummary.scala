@@ -34,8 +34,7 @@ object PreviousClaimantAddressSummary {
       answer =>
 
         val value =
-          Seq(Some(answer.line1), answer.line2, answer.line3, Some(answer.postcode))
-            .flatten
+          answer.lines
             .map(HtmlFormat.escape(_).toString)
             .mkString("<br/>")
 
