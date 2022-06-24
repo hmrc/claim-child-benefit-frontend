@@ -17,15 +17,23 @@
 package forms.child
 
 import forms.mappings.Mappings
-import models.{AnyoneClaimedForChildBefore, ChildName}
+import models.{AnyoneClaimedForChildBefore, ChildName, RelationshipStatus}
 import play.api.data.Form
+import play.api.i18n.Messages
 
 import javax.inject.Inject
 
 class AnyoneClaimedForChildBeforeFormProvider @Inject() extends Mappings {
 
-  def apply(childName: ChildName): Form[AnyoneClaimedForChildBefore] =
+  def apply(childName: ChildName, relationshipStatus: RelationshipStatus)(implicit messages: Messages): Form[AnyoneClaimedForChildBefore] = {
+
+    val allowedValues = AnyoneClaimedForChildBefore.values(relationshipStatus)
+
     Form(
-      "value" -> enumerable[AnyoneClaimedForChildBefore]("anyoneClaimedForChildBefore.error.required", args = Seq(childName.safeFirstName))
+      "value" -> enumerable[AnyoneClaimedForChildBefore](
+        "anyoneClaimedForChildBefore.error.required",
+        args = Seq(childName.safeFirstName)
+      ).verifying(messages("anyoneClaimedForChildBefore.error.required", childName.safeFirstName), x => allowedValues.contains(x))
     )
+  }
 }

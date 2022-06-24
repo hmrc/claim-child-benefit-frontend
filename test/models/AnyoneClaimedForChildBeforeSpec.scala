@@ -30,7 +30,7 @@ class AnyoneClaimedForChildBeforeSpec extends AnyFreeSpec with Matchers with Sca
 
     "must deserialise valid values" in {
 
-      val gen = Gen.oneOf(AnyoneClaimedForChildBefore.values.toSeq)
+      val gen = Gen.oneOf(AnyoneClaimedForChildBefore.allValues.toSeq)
 
       forAll(gen) {
         anyoneClaimedForChildBefore =>
@@ -41,7 +41,7 @@ class AnyoneClaimedForChildBeforeSpec extends AnyFreeSpec with Matchers with Sca
 
     "must fail to deserialise invalid values" in {
 
-      val gen = arbitrary[String] suchThat (!AnyoneClaimedForChildBefore.values.map(_.toString).contains(_))
+      val gen = arbitrary[String] suchThat (!AnyoneClaimedForChildBefore.allValues.map(_.toString).contains(_))
 
       forAll(gen) {
         invalidValue =>
@@ -52,7 +52,7 @@ class AnyoneClaimedForChildBeforeSpec extends AnyFreeSpec with Matchers with Sca
 
     "must serialise" in {
 
-      val gen = Gen.oneOf(AnyoneClaimedForChildBefore.values.toSeq)
+      val gen = Gen.oneOf(AnyoneClaimedForChildBefore.allValues.toSeq)
 
       forAll(gen) {
         anyoneClaimedForChildBefore =>
