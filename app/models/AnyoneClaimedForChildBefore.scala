@@ -16,6 +16,7 @@
 
 package models
 
+
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
@@ -32,6 +33,29 @@ object AnyoneClaimedForChildBefore extends Enumerable.Implicits {
   val values: Seq[AnyoneClaimedForChildBefore] = Seq(
     Applicant, Partner, SomeoneElse, No
   )
+
+  def values(relationshipStatus: RelationshipStatus): Seq[AnyoneClaimedForChildBefore] = {
+
+    import models.RelationshipStatus._
+
+    relationshipStatus match {
+      case Married | Cohabiting =>
+        Seq(Applicant, Partner, SomeoneElse, No)
+
+      case Single | Divorced | Separated | Widowed =>
+        Seq(Applicant, SomeoneElse, No)
+    }
+  }
+
+  def options(relationshipStatus: RelationshipStatus)(implicit messages: Messages): Seq[RadioItem] =
+    values(relationshipStatus).zipWithIndex.map {
+      case (value, index) =>
+        RadioItem(
+          content = Text(messages(s"anyoneClaimedForChildBefore.${value.toString}")),
+          value   = Some(value.toString),
+          id      = Some(s"value_$index")
+        )
+    }
 
   def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
     case (value, index) =>

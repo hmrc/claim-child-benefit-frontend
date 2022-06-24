@@ -20,7 +20,7 @@ import controllers.AnswerExtractor
 import controllers.actions._
 import forms.child.AnyoneClaimedForChildBeforeFormProvider
 import models.Index
-import pages.Waypoints
+import pages.{RelationshipStatusPage, Waypoints}
 import pages.child.{AnyoneClaimedForChildBeforePage, ChildNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -49,35 +49,41 @@ class AnyoneClaimedForChildBeforeController @Inject()(
     implicit request =>
       getAnswer(ChildNamePage(index)) {
         childName =>
+          getAnswer(RelationshipStatusPage) {
+            relationshipStatus =>
 
-          val form = formProvider(childName)
+              val form = formProvider(childName, relationshipStatus)
 
-          val preparedForm = request.userAnswers.get(AnyoneClaimedForChildBeforePage(index)) match {
-            case None => form
-            case Some(value) => form.fill(value)
-          }
+              val preparedForm = request.userAnswers.get(AnyoneClaimedForChildBeforePage(index)) match {
+                case None => form
+                case Some(value) => form.fill(value)
+              }
 
-          Ok(view(preparedForm, waypoints, index, childName))
-        }
+              Ok(view(preparedForm, waypoints, index, childName, relationshipStatus))
+            }
+      }
   }
 
   def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       getAnswerAsync(ChildNamePage(index)) {
         childName =>
+          getAnswerAsync(RelationshipStatusPage) {
+            relationshipStatus =>
 
-        val form = formProvider(childName)
+              val form = formProvider(childName, relationshipStatus)
 
-        form.bindFromRequest().fold(
-          formWithErrors =>
-            Future.successful(BadRequest(view(formWithErrors, waypoints, index, childName))),
+              form.bindFromRequest().fold(
+                formWithErrors =>
+                  Future.successful(BadRequest(view(formWithErrors, waypoints, index, childName, relationshipStatus))),
 
-          value =>
-            for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(AnyoneClaimedForChildBeforePage(index), value))
-              _ <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(AnyoneClaimedForChildBeforePage(index).navigate(waypoints, updatedAnswers))
-        )
+                value =>
+                  for {
+                    updatedAnswers <- Future.fromTry(request.userAnswers.set(AnyoneClaimedForChildBeforePage(index), value))
+                    _ <- sessionRepository.set(updatedAnswers)
+                  } yield Redirect(AnyoneClaimedForChildBeforePage(index).navigate(waypoints, updatedAnswers))
+              )
+          }
       }
   }
 }
