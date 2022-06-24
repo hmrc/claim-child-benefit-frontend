@@ -83,7 +83,7 @@ trait ModelGenerators {
 
   implicit lazy val arbitraryAnyoneClaimedForChildBefore: Arbitrary[AnyoneClaimedForChildBefore] =
     Arbitrary {
-      Gen.oneOf(AnyoneClaimedForChildBefore.values.toSeq)
+      Gen.oneOf(AnyoneClaimedForChildBefore.allValues.toSeq)
     }
 
   implicit lazy val arbitraryPartnerName: Arbitrary[PartnerName] =

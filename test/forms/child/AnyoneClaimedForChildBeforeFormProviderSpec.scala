@@ -41,7 +41,7 @@ class AnyoneClaimedForChildBeforeFormProviderSpec extends OptionFieldBehaviours 
     behave like optionsField[AnyoneClaimedForChildBefore](
       form,
       fieldName,
-      validValues  = AnyoneClaimedForChildBefore.values,
+      validValues  = AnyoneClaimedForChildBefore.allValues,
       invalidError = FormError(fieldName, "error.invalid", Seq(childName.safeFirstName))
     )
 

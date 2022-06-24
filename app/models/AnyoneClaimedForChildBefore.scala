@@ -30,7 +30,7 @@ object AnyoneClaimedForChildBefore extends Enumerable.Implicits {
   case object Partner extends WithName("partner") with AnyoneClaimedForChildBefore
   case object No extends WithName("no") with AnyoneClaimedForChildBefore
 
-  val values: Seq[AnyoneClaimedForChildBefore] = Seq(
+  val allValues: Seq[AnyoneClaimedForChildBefore] = Seq(
     Applicant, Partner, SomeoneElse, No
   )
 
@@ -57,15 +57,6 @@ object AnyoneClaimedForChildBefore extends Enumerable.Implicits {
         )
     }
 
-  def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
-    case (value, index) =>
-      RadioItem(
-        content = Text(messages(s"anyoneClaimedForChildBefore.${value.toString}")),
-        value   = Some(value.toString),
-        id      = Some(s"value_$index")
-      )
-  }
-
   implicit val enumerable: Enumerable[AnyoneClaimedForChildBefore] =
-    Enumerable(values.map(v => v.toString -> v): _*)
+    Enumerable(allValues.map(v => v.toString -> v): _*)
 }

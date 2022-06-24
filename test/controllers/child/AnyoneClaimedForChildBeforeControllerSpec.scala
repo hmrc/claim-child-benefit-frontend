@@ -72,7 +72,7 @@ class AnyoneClaimedForChildBeforeControllerSpec extends SpecBase with MockitoSug
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = baseAnswers.set(AnyoneClaimedForChildBeforePage(index), AnyoneClaimedForChildBefore.values.head).success.value
+      val userAnswers = baseAnswers.set(AnyoneClaimedForChildBeforePage(index), AnyoneClaimedForChildBefore.allValues.head).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -85,7 +85,7 @@ class AnyoneClaimedForChildBeforeControllerSpec extends SpecBase with MockitoSug
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
-          form.fill(AnyoneClaimedForChildBefore.values.head),
+          form.fill(AnyoneClaimedForChildBefore.allValues.head),
           waypoints,
           index,
           childName,
@@ -110,10 +110,10 @@ class AnyoneClaimedForChildBeforeControllerSpec extends SpecBase with MockitoSug
       running(application) {
         val request =
           FakeRequest(POST, anyoneClaimedForChildBeforeRoute)
-            .withFormUrlEncodedBody(("value", AnyoneClaimedForChildBefore.values.head.toString))
+            .withFormUrlEncodedBody(("value", AnyoneClaimedForChildBefore.allValues.head.toString))
 
         val result = route(application, request).value
-        val expectedAnswers = baseAnswers.set(child.AnyoneClaimedForChildBeforePage(index), AnyoneClaimedForChildBefore.values.head).success.value
+        val expectedAnswers = baseAnswers.set(child.AnyoneClaimedForChildBeforePage(index), AnyoneClaimedForChildBefore.allValues.head).success.value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual child.AnyoneClaimedForChildBeforePage(index).navigate(waypoints, expectedAnswers).url
@@ -162,7 +162,7 @@ class AnyoneClaimedForChildBeforeControllerSpec extends SpecBase with MockitoSug
       running(application) {
         val request =
           FakeRequest(POST, anyoneClaimedForChildBeforeRoute)
-            .withFormUrlEncodedBody(("value", AnyoneClaimedForChildBefore.values.head.toString))
+            .withFormUrlEncodedBody(("value", AnyoneClaimedForChildBefore.allValues.head.toString))
 
         val result = route(application, request).value
 
