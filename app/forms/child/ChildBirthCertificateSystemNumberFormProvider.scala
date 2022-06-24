@@ -16,6 +16,7 @@
 
 package forms.child
 
+import forms.Validation
 import forms.mappings.Mappings
 import models.ChildName
 import play.api.data.Form
@@ -27,6 +28,7 @@ class ChildBirthCertificateSystemNumberFormProvider @Inject() extends Mappings {
   def apply(childName: ChildName): Form[String] =
     Form(
       "value" -> text("childBirthCertificateSystemNumber.error.required", args = Seq(childName.safeFirstName))
-        .verifying(maxLength(9, "childBirthCertificateSystemNumber.error.length"))
+        .verifying(regexp(Validation.systemNumberPattern.toString, "childBirthCertificateSystemNumber.error.invalid"))
+        .transform[String](x => x.replace(" ", ""), x => x)
     )
 }

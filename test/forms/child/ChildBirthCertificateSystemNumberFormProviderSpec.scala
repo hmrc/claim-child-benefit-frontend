@@ -16,9 +16,11 @@
 
 package forms.child
 
+import forms.Validation
 import forms.behaviours.StringFieldBehaviours
 import models.ChildName
-import pages.child.ChildNamePage
+import org.scalacheck.Arbitrary.arbitrary
+import org.scalacheck.Gen
 import play.api.data.FormError
 
 class ChildBirthCertificateSystemNumberFormProviderSpec extends StringFieldBehaviours {
@@ -26,7 +28,7 @@ class ChildBirthCertificateSystemNumberFormProviderSpec extends StringFieldBehav
   private val childName = ChildName("first", None, "last")
 
   val requiredKey = "childBirthCertificateSystemNumber.error.required"
-  val lengthKey = "childBirthCertificateSystemNumber.error.length"
+  val invalidKey = "childBirthCertificateSystemNumber.error.invalid"
   val maxLength = 9
 
   val form = new ChildBirthCertificateSystemNumberFormProvider()(childName)
@@ -35,18 +37,69 @@ class ChildBirthCertificateSystemNumberFormProviderSpec extends StringFieldBehav
 
     val fieldName = "value"
 
-    behave like fieldThatBindsValidData(
-      form,
-      fieldName,
-      stringsWithMaxLength(maxLength)
-    )
+    "must bind 9 digit strings" in {
 
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
-    )
+      val gen = Gen.listOfN(9, Gen.numChar).map(_.mkString)
+
+      forAll(gen) {
+        dataItem: String =>
+          val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
+          result.value.value mustBe dataItem
+          result.errors mustBe empty
+      }
+    }
+
+    "must bind 9 digit strings that include spaces" in {
+
+      val gen = Gen.listOfN(9, Gen.numChar).map(_.mkString(" "))
+
+      forAll(gen) {
+        dataItem: String =>
+          val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
+          result.value.value mustBe dataItem
+          result.errors mustBe empty
+      }
+    }
+
+    "must not bind values with fewer than 9 digits" in {
+
+      val gen = for {
+        charCount <- Gen.choose(1, 8)
+        chars     <- Gen.listOfN(charCount, Gen.numChar)
+      } yield chars.mkString
+
+      forAll(gen) {
+        dataItem =>
+          val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
+          result.errors must contain only FormError(fieldName, invalidKey, Seq(Validation.systemNumberPattern.toString))
+      }
+    }
+
+    "must not bind values with more than 9 digits" in {
+
+      val gen = for {
+        charCount <- Gen.choose(10, 100)
+        chars     <- Gen.listOfN(charCount, Gen.numChar)
+      } yield chars.mkString
+
+      forAll(gen) {
+        dataItem =>
+          val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
+          result.errors must contain only FormError(fieldName, invalidKey, Seq(Validation.systemNumberPattern.toString))
+      }
+    }
+
+    "must not bind vales that contain characters other than digits" in {
+
+      forAll(arbitrary[String]) {
+        value =>
+
+          whenever (!value.forall(_.isDigit) && !value.forall(_ == ' ')) {
+            val result = form.bind(Map(fieldName -> value)).apply(fieldName)
+            result.errors must contain only FormError(fieldName, invalidKey, Seq(Validation.systemNumberPattern.toString))
+          }
+      }
+    }
 
     behave like mandatoryField(
       form,
