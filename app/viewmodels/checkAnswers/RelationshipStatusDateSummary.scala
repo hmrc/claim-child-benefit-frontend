@@ -18,7 +18,7 @@ package viewmodels.checkAnswers
 
 import java.time.format.DateTimeFormatter
 import models.UserAnswers
-import pages.{RelationshipStatusDatePage, CheckAnswersPage, Waypoints}
+import pages.{CheckAnswersPage, RelationshipStatusDatePage, RelationshipStatusPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -28,18 +28,21 @@ object RelationshipStatusDateSummary  {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(RelationshipStatusDatePage).map {
-      answer =>
+    answers.get(RelationshipStatusDatePage).flatMap {
+      date =>
+        answers.get(RelationshipStatusPage).map {
+          status =>
 
-        val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+            val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
-        SummaryListRowViewModel(
-          key     = "relationshipStatusDate.checkYourAnswersLabel",
-          value   = ValueViewModel(answer.format(dateFormatter)),
-          actions = Seq(
-            ActionItemViewModel("site.change", RelationshipStatusDatePage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("relationshipStatusDate.change.hidden"))
-          )
-        )
+            SummaryListRowViewModel(
+              key     = s"relationshipStatusDate.${status.toString}.checkYourAnswersLabel",
+              value   = ValueViewModel(date.format(dateFormatter)),
+              actions = Seq(
+                ActionItemViewModel("site.change", RelationshipStatusDatePage.changeLink(waypoints, sourcePage).url)
+                  .withVisuallyHiddenText(messages(s"relationshipStatusDate.${status.toString}.change.hidden"))
+              )
+            )
+        }
     }
 }
