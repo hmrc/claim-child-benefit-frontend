@@ -66,7 +66,7 @@ object EmptyWaypoints extends Waypoints {
 
   override val currentMode: Mode = NormalMode
 
-  override def setNextWaypoint(waypoint: Waypoint): Waypoints =
+  override def setNextWaypoint(waypoint: Waypoint): NonEmptyWaypoints =
     NonEmptyWaypoints(NonEmptyList(waypoint, Nil))
 
   override def recalibrate(currentPage: Page, targetPage: Page): Waypoints = this

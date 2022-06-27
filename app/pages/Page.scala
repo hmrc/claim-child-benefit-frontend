@@ -19,12 +19,27 @@ package pages
 import models.{CheckMode, NormalMode, UserAnswers}
 import play.api.mvc.Call
 
+import scala.language.implicitConversions
+
+case class PageAndWaypoints(page: Page, waypoints: Waypoints) {
+
+  lazy val route: Call = page.route(waypoints)
+
+  def next(answers: UserAnswers): PageAndWaypoints =
+    page.navigate(waypoints, answers)
+}
+
+object PageAndWaypoints {
+
+  implicit def toCall(p: PageAndWaypoints): Call = p.route
+}
+
 trait Page {
-  def navigate(waypoints: Waypoints, answers: UserAnswers): Call = {
+  def navigate(waypoints: Waypoints, answers: UserAnswers): PageAndWaypoints = {
     val targetPage            = nextPage(waypoints, answers)
     val recalibratedWaypoints = waypoints.recalibrate(this, targetPage)
 
-    targetPage.route(recalibratedWaypoints)
+    PageAndWaypoints(targetPage, recalibratedWaypoints)
   }
 
   protected def nextPage(waypoints: Waypoints, answers: UserAnswers): Page =
