@@ -27,22 +27,22 @@ import viewmodels.implicits._
 object RelationshipStatusDateSummary  {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
-         (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(RelationshipStatusDatePage).flatMap {
-      date =>
-        answers.get(RelationshipStatusPage).map {
-          status =>
+         (implicit messages: Messages): Option[SummaryListRow] = {
+    for {
+      date   <- answers.get(RelationshipStatusDatePage)
+      status <- answers.get(RelationshipStatusPage)
+    } yield {
+      
+      val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
-            val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
-
-            SummaryListRowViewModel(
-              key     = s"relationshipStatusDate.${status.toString}.checkYourAnswersLabel",
-              value   = ValueViewModel(date.format(dateFormatter)),
-              actions = Seq(
-                ActionItemViewModel("site.change", RelationshipStatusDatePage.changeLink(waypoints, sourcePage).url)
-                  .withVisuallyHiddenText(messages(s"relationshipStatusDate.${status.toString}.change.hidden"))
-              )
-            )
-        }
+      SummaryListRowViewModel(
+        key = s"relationshipStatusDate.${status.toString}.checkYourAnswersLabel",
+        value = ValueViewModel(date.format(dateFormatter)),
+        actions = Seq(
+          ActionItemViewModel("site.change", RelationshipStatusDatePage.changeLink(waypoints, sourcePage).url)
+            .withVisuallyHiddenText(messages(s"relationshipStatusDate.${status.toString}.change.hidden"))
+        )
+      )
     }
+  }
 }
