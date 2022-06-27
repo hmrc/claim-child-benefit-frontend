@@ -70,10 +70,37 @@ class ApplicantPreviousAddressFormProviderSpec extends StringFieldBehaviours {
     )
   }
 
-  ".line3" - {
+  ".town" - {
 
-    val fieldName = "line3"
-    val lengthKey = "applicantPreviousAddress.error.line3.length"
+    val fieldName = "town"
+    val requiredKey = "applicantPreviousAddress.error.town.required"
+    val lengthKey = "applicantPreviousAddress.error.town.length"
+    val maxLength = 100
+
+    behave like fieldThatBindsValidData(
+      form,
+      fieldName,
+      stringsWithMaxLength(maxLength)
+    )
+
+    behave like fieldWithMaxLength(
+      form,
+      fieldName,
+      maxLength = maxLength,
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+    )
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
+  }
+
+  ".county" - {
+
+    val fieldName = "county"
+    val lengthKey = "applicantPreviousAddress.error.county.length"
     val maxLength = 100
 
     behave like fieldThatBindsValidData(

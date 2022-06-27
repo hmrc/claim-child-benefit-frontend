@@ -17,7 +17,7 @@
 package pages.applicant
 
 import controllers.applicant.routes
-import models.ApplicantPreviousAddress
+import models.Address
 import pages.EmptyWaypoints
 import pages.behaviours.PageBehaviours
 
@@ -25,11 +25,11 @@ class ApplicantPreviousAddressPageSpec extends PageBehaviours {
 
   "ApplicantPreviousAddressPage" - {
 
-    beRetrievable[ApplicantPreviousAddress](ApplicantPreviousAddressPage)
+    beRetrievable[Address](ApplicantPreviousAddressPage)
 
-    beSettable[ApplicantPreviousAddress](ApplicantPreviousAddressPage)
+    beSettable[Address](ApplicantPreviousAddressPage)
 
-    beRemovable[ApplicantPreviousAddress](ApplicantPreviousAddressPage)
+    beRemovable[Address](ApplicantPreviousAddressPage)
 
     "must navigate" - {
 

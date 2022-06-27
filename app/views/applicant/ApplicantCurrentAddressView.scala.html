@@ -61,11 +61,19 @@
 
         @govukInput(
             InputViewModel(
-                field = form("line3"),
-                label = LabelViewModel(messages("applicantCurrentAddress.line3"))
+                field = form("town"),
+                label = LabelViewModel(messages("applicantCurrentAddress.town"))
             )
-            .withWidth(Full)
-            .withAutocomplete("address-line3")
+            .withWidth(TwoThirds)
+            .withAutocomplete("address-level2")
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("county"),
+                label = LabelViewModel(messages("applicantCurrentAddress.county"))
+            )
+            .withWidth(TwoThirds)
         )
 
         @govukInput(

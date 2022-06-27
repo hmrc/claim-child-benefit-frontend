@@ -17,7 +17,7 @@
 package forms.child
 
 import forms.mappings.Mappings
-import models.PreviousClaimantAddress
+import models.Address
 import play.api.data.Form
 import play.api.data.Forms._
 
@@ -25,16 +25,18 @@ import javax.inject.Inject
 
 class PreviousClaimantAddressFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[PreviousClaimantAddress] = Form(
+  def apply(): Form[Address] = Form(
     mapping(
       "line1" -> text("previousClaimantAddress.error.line1.required")
         .verifying(maxLength(100, "previousClaimantAddress.error.line1.length")),
       "line2" -> optional(text("previousClaimantAddress.error.line2.required")
         .verifying(maxLength(100, "previousClaimantAddress.error.line2.length"))),
-      "line3" -> optional(text("previousClaimantAddress.error.line3.required")
-        .verifying(maxLength(100, "previousClaimantAddress.error.line3.length"))),
+      "town" -> text("previousClaimantAddress.error.town.required")
+        .verifying(maxLength(100, "previousClaimantAddress.error.town.length")),
+      "county" -> optional(text("previousClaimantAddress.error.county.required")
+        .verifying(maxLength(100, "previousClaimantAddress.error.county.length"))),
       "postcode" -> text("previousClaimantAddress.error.postcode.required")
         .verifying(maxLength(100, "previousClaimantAddress.error.postcode.length"))
-    )(PreviousClaimantAddress.apply)(PreviousClaimantAddress.unapply)
+    )(Address.apply)(Address.unapply)
   )
 }
