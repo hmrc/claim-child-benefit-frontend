@@ -34,11 +34,11 @@ class CheckChildDetailsPageSpec extends SpecBase {
         "to Add Child" in {
 
           CheckChildDetailsPage(Index(0))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.AddChildController.onPageLoad(waypoints))
 
           CheckChildDetailsPage(Index(1))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.AddChildController.onPageLoad(waypoints))
         }
       }

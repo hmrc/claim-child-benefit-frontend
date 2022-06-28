@@ -40,7 +40,7 @@ class ApplicantPhoneNumberPageSpec extends PageBehaviours {
         "to Best Time to Contact" in {
 
           ApplicantPhoneNumberPage
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.BestTimeToContactController.onPageLoad(waypoints))
         }
       }

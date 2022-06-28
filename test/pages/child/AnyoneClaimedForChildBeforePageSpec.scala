@@ -46,11 +46,11 @@ class AnyoneClaimedForChildBeforePageSpec extends PageBehaviours {
               .set(AnyoneClaimedForChildBeforePage(Index(1)), SomeoneElse).success.value
 
           AnyoneClaimedForChildBeforePage(Index(0))
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.PreviousClaimantNameController.onPageLoad(waypoints, Index(0)))
 
           AnyoneClaimedForChildBeforePage(Index(1))
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.PreviousClaimantNameController.onPageLoad(waypoints, Index(1)))
         }
 
@@ -62,11 +62,11 @@ class AnyoneClaimedForChildBeforePageSpec extends PageBehaviours {
               .set(AnyoneClaimedForChildBeforePage(Index(1)), Applicant).success.value
 
           AnyoneClaimedForChildBeforePage(Index(0))
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.AdoptingChildController.onPageLoad(waypoints, Index(0)))
 
           AnyoneClaimedForChildBeforePage(Index(1))
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.AdoptingChildController.onPageLoad(waypoints, Index(1)))
         }
 
@@ -78,11 +78,11 @@ class AnyoneClaimedForChildBeforePageSpec extends PageBehaviours {
               .set(AnyoneClaimedForChildBeforePage(Index(1)), Partner).success.value
 
           AnyoneClaimedForChildBeforePage(Index(0))
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.AdoptingChildController.onPageLoad(waypoints, Index(0)))
 
           AnyoneClaimedForChildBeforePage(Index(1))
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.AdoptingChildController.onPageLoad(waypoints, Index(1)))
         }
 
@@ -94,11 +94,11 @@ class AnyoneClaimedForChildBeforePageSpec extends PageBehaviours {
               .set(AnyoneClaimedForChildBeforePage(Index(1)), No).success.value
 
           AnyoneClaimedForChildBeforePage(Index(0))
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.AdoptingChildController.onPageLoad(waypoints, Index(0)))
 
           AnyoneClaimedForChildBeforePage(Index(1))
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.AdoptingChildController.onPageLoad(waypoints, Index(1)))
         }
       }

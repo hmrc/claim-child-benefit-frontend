@@ -42,7 +42,7 @@ class BankAccountTypePageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(BankAccountTypePage, BankAccountType.Bank).success.value
 
           BankAccountTypePage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.BankAccountDetailsController.onPageLoad(waypoints))
         }
 
@@ -51,7 +51,7 @@ class BankAccountTypePageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(BankAccountTypePage, BankAccountType.BuildingSociety).success.value
 
           BankAccountTypePage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.BuildingSocietyAccountDetailsController.onPageLoad(waypoints))
         }
       }

@@ -63,7 +63,7 @@ class ApplicantNameController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(ApplicantNamePage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(ApplicantNamePage.navigate(waypoints, updatedAnswers))
+          } yield Redirect(ApplicantNamePage.navigate(waypoints, updatedAnswers).route)
       )
   }
 }

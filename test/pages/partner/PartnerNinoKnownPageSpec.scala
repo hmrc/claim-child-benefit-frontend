@@ -41,7 +41,7 @@ class PartnerNinoKnownPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(PartnerNinoKnownPage, true).success.value
 
           PartnerNinoKnownPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.PartnerNinoController.onPageLoad(waypoints))
         }
 
@@ -50,7 +50,7 @@ class PartnerNinoKnownPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(PartnerNinoKnownPage, false).success.value
 
           PartnerNinoKnownPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.PartnerDateOfBirthController.onPageLoad(waypoints))
         }
       }

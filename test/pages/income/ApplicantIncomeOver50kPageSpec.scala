@@ -41,7 +41,7 @@ class ApplicantIncomeOver50kPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(ApplicantIncomeOver50kPage, true).success.value
 
           ApplicantIncomeOver50kPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.ApplicantIncomeOver60kController.onPageLoad(waypoints))
         }
 
@@ -50,7 +50,7 @@ class ApplicantIncomeOver50kPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(ApplicantIncomeOver50kPage, false).success.value
 
           ApplicantIncomeOver50kPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.ApplicantBenefitsController.onPageLoad(waypoints))
         }
       }

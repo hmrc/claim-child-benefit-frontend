@@ -74,7 +74,7 @@ class PreviousClaimantAddressController @Inject()(
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(PreviousClaimantAddressPage(index), value))
               _ <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(PreviousClaimantAddressPage(index).navigate(waypoints, updatedAnswers))
+            } yield Redirect(PreviousClaimantAddressPage(index).navigate(waypoints, updatedAnswers).route)
         )
       }
   }

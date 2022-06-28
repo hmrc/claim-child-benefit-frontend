@@ -40,7 +40,7 @@ class ApplicantOrPartnerBenefitsPageSpec extends PageBehaviours {
         "to Claimed Child Benefit Before" in {
 
           ApplicantOrPartnerBenefitsPage
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(paymentsRoutes.ClaimedChildBenefitBeforeController.onPageLoad(waypoints))
         }
       }

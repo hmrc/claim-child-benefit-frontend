@@ -81,7 +81,7 @@ class AnyoneClaimedForChildBeforeController @Inject()(
                   for {
                     updatedAnswers <- Future.fromTry(request.userAnswers.set(AnyoneClaimedForChildBeforePage(index), value))
                     _ <- sessionRepository.set(updatedAnswers)
-                  } yield Redirect(AnyoneClaimedForChildBeforePage(index).navigate(waypoints, updatedAnswers))
+                  } yield Redirect(AnyoneClaimedForChildBeforePage(index).navigate(waypoints, updatedAnswers).route)
               )
           }
       }

@@ -42,7 +42,7 @@ class ApplicantHasPreviousFamilyNamePageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(ApplicantHasPreviousFamilyNamePage, true).success.value
 
           ApplicantHasPreviousFamilyNamePage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.ApplicantPreviousFamilyNameController.onPageLoad(waypoints, Index(0)))
         }
 
@@ -51,7 +51,7 @@ class ApplicantHasPreviousFamilyNamePageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(ApplicantHasPreviousFamilyNamePage, false).success.value
 
           ApplicantHasPreviousFamilyNamePage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.ApplicantNinoKnownController.onPageLoad(waypoints))
         }
       }

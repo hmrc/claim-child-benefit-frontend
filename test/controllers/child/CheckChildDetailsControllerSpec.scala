@@ -58,7 +58,7 @@ class CheckChildDetailsControllerSpec extends SpecBase with SummaryListFluency {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual CheckChildDetailsPage(index).navigate(waypoints, emptyUserAnswers).url
+        redirectLocation(result).value mustEqual CheckChildDetailsPage(index).navigate(waypoints, emptyUserAnswers).route.url
       }
     }
 

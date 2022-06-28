@@ -55,7 +55,7 @@ class WantToBePaidPageSpec extends PageBehaviours {
               val answers = baseAnswers.set(RelationshipStatusPage, Single).success.value
 
               WantToBePaidPage
-                .navigate(waypoints, answers)
+                .navigate(waypoints, answers).route
                 .mustEqual(routes.WantToBePaidWeeklyController.onPageLoad(waypoints))
             }
 
@@ -64,7 +64,7 @@ class WantToBePaidPageSpec extends PageBehaviours {
               val answers = baseAnswers.set(RelationshipStatusPage, Divorced).success.value
 
               WantToBePaidPage
-                .navigate(waypoints, answers)
+                .navigate(waypoints, answers).route
                 .mustEqual(routes.WantToBePaidWeeklyController.onPageLoad(waypoints))
             }
 
@@ -73,7 +73,7 @@ class WantToBePaidPageSpec extends PageBehaviours {
               val answers = baseAnswers.set(RelationshipStatusPage, Widowed).success.value
 
               WantToBePaidPage
-                .navigate(waypoints, answers)
+                .navigate(waypoints, answers).route
                 .mustEqual(routes.WantToBePaidWeeklyController.onPageLoad(waypoints))
             }
 
@@ -82,7 +82,7 @@ class WantToBePaidPageSpec extends PageBehaviours {
               val answers = baseAnswers.set(RelationshipStatusPage, Separated).success.value
 
               WantToBePaidPage
-                .navigate(waypoints, answers)
+                .navigate(waypoints, answers).route
                 .mustEqual(routes.WantToBePaidWeeklyController.onPageLoad(waypoints))
             }
 
@@ -96,7 +96,7 @@ class WantToBePaidPageSpec extends PageBehaviours {
                   .set(ApplicantOrPartnerBenefitsPage, benefits).success.value
 
               WantToBePaidPage
-                .navigate(waypoints, answers)
+                .navigate(waypoints, answers).route
                 .mustEqual(routes.WantToBePaidWeeklyController.onPageLoad(waypoints))
             }
             
@@ -110,7 +110,7 @@ class WantToBePaidPageSpec extends PageBehaviours {
                   .set(ApplicantOrPartnerBenefitsPage, benefits).success.value
 
               WantToBePaidPage
-                .navigate(waypoints, answers)
+                .navigate(waypoints, answers).route
                 .mustEqual(routes.WantToBePaidWeeklyController.onPageLoad(waypoints))
             }
           }
@@ -123,7 +123,7 @@ class WantToBePaidPageSpec extends PageBehaviours {
             val answers = emptyUserAnswers.set(WantToBePaidPage, false).success.value
 
             WantToBePaidPage
-              .navigate(waypoints, answers)
+              .navigate(waypoints, answers).route
               .mustEqual(applicantRoutes.ApplicantHasPreviousFamilyNameController.onPageLoad(waypoints))
           }
         }

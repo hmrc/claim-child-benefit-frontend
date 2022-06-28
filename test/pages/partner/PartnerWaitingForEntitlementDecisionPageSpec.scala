@@ -43,7 +43,7 @@ class PartnerWaitingForEntitlementDecisionPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(PartnerWaitingForEntitlementDecisionPage, true).success.value
 
           PartnerWaitingForEntitlementDecisionPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.PartnerEldestChildNameController.onPageLoad(waypoints))
         }
 
@@ -52,7 +52,7 @@ class PartnerWaitingForEntitlementDecisionPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(PartnerWaitingForEntitlementDecisionPage, false).success.value
 
           PartnerWaitingForEntitlementDecisionPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(childRoutes.ChildNameController.onPageLoad(waypoints, Index(0)))
         }
       }

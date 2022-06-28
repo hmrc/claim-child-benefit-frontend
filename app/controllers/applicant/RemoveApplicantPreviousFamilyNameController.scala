@@ -75,9 +75,9 @@ class RemoveApplicantPreviousFamilyNameController @Inject()(
                 for {
                   updatedAnswers <- Future.fromTry(request.userAnswers.remove(ApplicantPreviousFamilyNamePage(index)))
                   _ <- sessionRepository.set(updatedAnswers)
-                } yield Redirect(RemoveApplicantPreviousFamilyNamePage(index).navigate(waypoints, updatedAnswers))
+                } yield Redirect(RemoveApplicantPreviousFamilyNamePage(index).navigate(waypoints, updatedAnswers).route)
               } else {
-                Future.successful(Redirect(RemoveApplicantPreviousFamilyNamePage(index).navigate(waypoints, request.userAnswers)))
+                Future.successful(Redirect(RemoveApplicantPreviousFamilyNamePage(index).navigate(waypoints, request.userAnswers).route))
               }
           )
       }

@@ -40,7 +40,7 @@ class PartnerNationalityPageSpec extends PageBehaviours {
         "to Partner Employment Status" in {
 
           PartnerNationalityPage
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.PartnerEmploymentStatusController.onPageLoad(waypoints))
         }
       }

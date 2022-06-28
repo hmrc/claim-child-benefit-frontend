@@ -76,7 +76,7 @@ class ChildHasPreviousNameController @Inject()(
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(ChildHasPreviousNamePage(index), value))
                 _ <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(ChildHasPreviousNamePage(index).navigate(waypoints, updatedAnswers))
+              } yield Redirect(ChildHasPreviousNamePage(index).navigate(waypoints, updatedAnswers).route)
           )
       }
   }

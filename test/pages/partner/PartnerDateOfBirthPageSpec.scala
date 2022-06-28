@@ -46,7 +46,7 @@ class PartnerDateOfBirthPageSpec extends PageBehaviours {
         "to Partner Nationality" in {
 
           PartnerDateOfBirthPage
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.PartnerNationalityController.onPageLoad(waypoints))
         }
       }

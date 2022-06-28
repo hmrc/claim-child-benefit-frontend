@@ -22,8 +22,9 @@ import models.UserAnswers
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import pages.QuestionPage
+import pages.{PageAndWaypoints, QuestionPage}
 import play.api.libs.json._
+import play.api.mvc.Call
 
 trait PageBehaviours extends SpecBase with ScalaCheckPropertyChecks with Generators {
 

@@ -64,7 +64,7 @@ class AccountHolderNameController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(AccountHolderNamePage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(AccountHolderNamePage.navigate(waypoints, updatedAnswers))
+          } yield Redirect(AccountHolderNamePage.navigate(waypoints, updatedAnswers).route)
       )
   }
 }

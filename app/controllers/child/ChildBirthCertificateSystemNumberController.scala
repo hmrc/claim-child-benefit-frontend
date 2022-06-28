@@ -76,7 +76,7 @@ class ChildBirthCertificateSystemNumberController @Inject()(
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(ChildBirthCertificateSystemNumberPage(index), value))
                 _ <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(ChildBirthCertificateSystemNumberPage(index).navigate(waypoints, updatedAnswers))
+              } yield Redirect(ChildBirthCertificateSystemNumberPage(index).navigate(waypoints, updatedAnswers).route)
           )
       }
   }

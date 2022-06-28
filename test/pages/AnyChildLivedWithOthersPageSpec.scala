@@ -40,7 +40,7 @@ class AnyChildLivedWithOthersPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(AnyChildLivedWithOthersPage, true).success.value
 
           AnyChildLivedWithOthersPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.UsePrintAndPostFormController.onPageLoad(waypoints))
         }
 
@@ -49,7 +49,7 @@ class AnyChildLivedWithOthersPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(AnyChildLivedWithOthersPage, false).success.value
 
           AnyChildLivedWithOthersPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.ApplicantNameController.onPageLoad(waypoints))
         }
       }

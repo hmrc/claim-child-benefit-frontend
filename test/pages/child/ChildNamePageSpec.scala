@@ -40,11 +40,11 @@ class ChildNamePageSpec extends PageBehaviours {
         "to Child Has Previous Name for the same index" in {
 
           ChildNamePage(Index(0))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.ChildHasPreviousNameController.onPageLoad(waypoints, Index(0)))
 
           ChildNamePage(Index(1))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.ChildHasPreviousNameController.onPageLoad(waypoints, Index(1)))
         }
       }

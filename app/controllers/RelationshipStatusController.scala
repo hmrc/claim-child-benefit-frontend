@@ -63,7 +63,7 @@ class RelationshipStatusController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(RelationshipStatusPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(RelationshipStatusPage.navigate(waypoints, updatedAnswers))
+          } yield Redirect(RelationshipStatusPage.navigate(waypoints, updatedAnswers).route)
       )
   }
 }

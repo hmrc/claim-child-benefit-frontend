@@ -77,9 +77,9 @@ class RemoveChildPreviousNameController @Inject()(
                 for {
                   updatedAnswers <- Future.fromTry(request.userAnswers.remove(ChildPreviousNamePage(childIndex, nameIndex)))
                   _ <- sessionRepository.set(updatedAnswers)
-                } yield Redirect(RemoveChildPreviousNamePage(childIndex, nameIndex).navigate(waypoints, updatedAnswers))
+                } yield Redirect(RemoveChildPreviousNamePage(childIndex, nameIndex).navigate(waypoints, updatedAnswers).route)
               } else {
-                Future.successful(Redirect(RemoveChildPreviousNamePage(childIndex, nameIndex).navigate(waypoints, request.userAnswers)))
+                Future.successful(Redirect(RemoveChildPreviousNamePage(childIndex, nameIndex).navigate(waypoints, request.userAnswers).route))
               }
           )
       }

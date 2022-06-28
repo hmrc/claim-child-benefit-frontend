@@ -64,7 +64,7 @@ class WantToBePaidToExistingAccountController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(WantToBePaidToExistingAccountPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(WantToBePaidToExistingAccountPage.navigate(waypoints, updatedAnswers))
+          } yield Redirect(WantToBePaidToExistingAccountPage.navigate(waypoints, updatedAnswers).route)
       )
   }
 }

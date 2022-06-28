@@ -36,21 +36,21 @@ class AccountInApplicantsNamePageSpec extends PageBehaviours {
 
         val waypoints = EmptyWaypoints
 
-        "to Account is Joint when the answer is yes" in {
-
-          val answers = emptyUserAnswers.set(AccountInApplicantsNamePage, true).success.value
-
-          AccountInApplicantsNamePage
-            .navigate(waypoints, answers)
-            .mustEqual(routes.AccountIsJointController.onPageLoad(waypoints))
-        }
-
-        "to Bank Account Type when the answer is no" in {
+        "to Account is Joint when the answer is no" in {
 
           val answers = emptyUserAnswers.set(AccountInApplicantsNamePage, false).success.value
 
           AccountInApplicantsNamePage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
+            .mustEqual(routes.AccountIsJointController.onPageLoad(waypoints))
+        }
+
+        "to Bank Account Type when the answer is yes" in {
+
+          val answers = emptyUserAnswers.set(AccountInApplicantsNamePage, true).success.value
+
+          AccountInApplicantsNamePage
+            .navigate(waypoints, answers).route
             .mustEqual(routes.BankAccountTypeController.onPageLoad(waypoints))
         }
       }

@@ -49,7 +49,7 @@ class AddChildPageSpec extends PageBehaviours {
                 .set(AddChildPage, true).success.value
 
             AddChildPage
-              .navigate(waypoints, answers)
+              .navigate(waypoints, answers).route
               .mustEqual(routes.ChildNameController.onPageLoad(waypoints, Index(1)))
           }
 
@@ -62,7 +62,7 @@ class AddChildPageSpec extends PageBehaviours {
                 .set(AddChildPage, true).success.value
 
             AddChildPage
-              .navigate(waypoints, answers)
+              .navigate(waypoints, answers).route
               .mustEqual(routes.ChildNameController.onPageLoad(waypoints, Index(2)))
           }
         }
@@ -74,7 +74,7 @@ class AddChildPageSpec extends PageBehaviours {
             val answers =emptyUserAnswers.set(AddChildPage, false).success.value
 
             AddChildPage
-              .navigate(waypoints, answers)
+              .navigate(waypoints, answers).route
               .mustEqual(baseRoutes.CheckYourAnswersController.onPageLoad)
           }
         }

@@ -39,14 +39,14 @@ class RemoveChildPreviousNamePageSpec extends PageBehaviours {
             val answers = emptyUserAnswers.set(ChildPreviousNamePage(Index(0), Index(0)), childName).success.value
 
             RemoveChildPreviousNamePage(Index(0), Index(0))
-              .navigate(waypoints, answers)
+              .navigate(waypoints, answers).route
               .mustEqual(routes.AddChildPreviousNameController.onPageLoad(waypoints, Index(0)))
           }
 
           "to Child Has Previous Name when there are no previous names left" in {
 
             RemoveChildPreviousNamePage(Index(0), Index(0))
-              .navigate(waypoints, emptyUserAnswers)
+              .navigate(waypoints, emptyUserAnswers).route
               .mustEqual(routes.ChildHasPreviousNameController.onPageLoad(waypoints, Index(0)))
           }
         }
@@ -61,22 +61,22 @@ class RemoveChildPreviousNamePageSpec extends PageBehaviours {
                 .set(ChildPreviousNamePage(Index(1), Index(0)), childName).success.value
 
             RemoveChildPreviousNamePage(Index(0), Index(0))
-              .navigate(waypoints, answers)
+              .navigate(waypoints, answers).route
               .mustEqual(routes.AddChildPreviousNameController.onPageLoad(waypoints, Index(0)))
 
             RemoveChildPreviousNamePage(Index(1), Index(0))
-              .navigate(waypoints, answers)
+              .navigate(waypoints, answers).route
               .mustEqual(routes.AddChildPreviousNameController.onPageLoad(waypoints, Index(1)))
           }
 
           "to Child Has Previous Name when there are no previous names left" in {
 
             RemoveChildPreviousNamePage(Index(0), Index(0))
-              .navigate(waypoints, emptyUserAnswers)
+              .navigate(waypoints, emptyUserAnswers).route
               .mustEqual(routes.ChildHasPreviousNameController.onPageLoad(waypoints, Index(0)))
 
             RemoveChildPreviousNamePage(Index(1), Index(0))
-              .navigate(waypoints, emptyUserAnswers)
+              .navigate(waypoints, emptyUserAnswers).route
               .mustEqual(routes.ChildHasPreviousNameController.onPageLoad(waypoints, Index(1)))
           }
         }

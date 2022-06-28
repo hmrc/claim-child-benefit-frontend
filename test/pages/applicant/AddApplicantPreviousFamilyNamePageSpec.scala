@@ -45,7 +45,7 @@ class AddApplicantPreviousFamilyNamePageSpec extends PageBehaviours {
               .set(AddApplicantPreviousFamilyNamePage, true).success.value
 
           AddApplicantPreviousFamilyNamePage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.ApplicantPreviousFamilyNameController.onPageLoad(waypoints, Index(1)))
         }
 
@@ -57,7 +57,7 @@ class AddApplicantPreviousFamilyNamePageSpec extends PageBehaviours {
               .set(AddApplicantPreviousFamilyNamePage, false).success.value
 
           AddApplicantPreviousFamilyNamePage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.ApplicantNinoKnownController.onPageLoad(waypoints))
         }
       }

@@ -39,7 +39,7 @@ class ApplicantNamePageSpec extends PageBehaviours {
         "to Applicant Employment Status" in {
 
           ApplicantNamePage
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.RelationshipStatusController.onPageLoad(waypoints))
         }
       }

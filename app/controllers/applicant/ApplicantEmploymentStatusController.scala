@@ -64,7 +64,7 @@ class ApplicantEmploymentStatusController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(ApplicantEmploymentStatusPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(ApplicantEmploymentStatusPage.navigate(waypoints, updatedAnswers))
+          } yield Redirect(ApplicantEmploymentStatusPage.navigate(waypoints, updatedAnswers).route)
       )
   }
 }

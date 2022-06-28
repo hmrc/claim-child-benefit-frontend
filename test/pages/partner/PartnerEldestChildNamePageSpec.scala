@@ -40,7 +40,7 @@ class PartnerEldestChildNamePageSpec extends PageBehaviours {
         "to Partner Eldest Child Date of Birth Known" in {
 
           PartnerEldestChildNamePage
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.PartnerEldestChildDateOfBirthController.onPageLoad(waypoints))
         }
       }

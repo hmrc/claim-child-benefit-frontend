@@ -46,11 +46,11 @@ class ChildHasPreviousNamePageSpec extends PageBehaviours {
               .set(ChildHasPreviousNamePage(Index(1)), true).success.value
 
           ChildHasPreviousNamePage(Index(0))
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.ChildNameChangedByDeedPollController.onPageLoad(waypoints, Index(0)))
 
           ChildHasPreviousNamePage(Index(1))
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.ChildNameChangedByDeedPollController.onPageLoad(waypoints, Index(1)))
         }
 
@@ -62,11 +62,11 @@ class ChildHasPreviousNamePageSpec extends PageBehaviours {
               .set(ChildHasPreviousNamePage(Index(1)), false).success.value
 
           ChildHasPreviousNamePage(Index(0))
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.ChildBiologicalSexController.onPageLoad(waypoints, Index(0)))
 
           ChildHasPreviousNamePage(Index(1))
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.ChildBiologicalSexController.onPageLoad(waypoints, Index(1)))
         }
       }

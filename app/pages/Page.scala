@@ -19,12 +19,21 @@ package pages
 import models.{CheckMode, NormalMode, UserAnswers}
 import play.api.mvc.Call
 
+final case class PageAndWaypoints(page: Page, waypoints: Waypoints) {
+
+  lazy val route: Call = page.route(waypoints)
+  lazy val url: String = route.url
+
+  def next(answers: UserAnswers): PageAndWaypoints =
+    page.navigate(waypoints, answers)
+}
+
 trait Page {
-  def navigate(waypoints: Waypoints, answers: UserAnswers): Call = {
+  def navigate(waypoints: Waypoints, answers: UserAnswers): PageAndWaypoints = {
     val targetPage            = nextPage(waypoints, answers)
     val recalibratedWaypoints = waypoints.recalibrate(this, targetPage)
 
-    targetPage.route(recalibratedWaypoints)
+    PageAndWaypoints(targetPage, recalibratedWaypoints)
   }
 
   protected def nextPage(waypoints: Waypoints, answers: UserAnswers): Page =
@@ -47,9 +56,9 @@ trait Page {
 
   def route(waypoints: Waypoints): Call
 
-  def changeLink(waypoints: Waypoints, sourcePage: CheckAnswersPage): Call =
-    route(waypoints.setNextWaypoint(sourcePage.waypoint))
+  def changeLink(waypoints: Waypoints, sourcePage: CheckAnswersPage): PageAndWaypoints =
+    PageAndWaypoints(this, waypoints.setNextWaypoint(sourcePage.waypoint))
 
-  def changeLink(waypoints: Waypoints, sourcePage: AddItemPage): Call =
-    route(waypoints.setNextWaypoint(sourcePage.waypoint(CheckMode)))
+  def changeLink(waypoints: Waypoints, sourcePage: AddItemPage): PageAndWaypoints =
+    PageAndWaypoints(this, waypoints.setNextWaypoint(sourcePage.waypoint(CheckMode)))
 }

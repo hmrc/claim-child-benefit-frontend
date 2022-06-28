@@ -46,7 +46,7 @@ class ApplicantDateOfBirthPageSpec extends PageBehaviours {
         "to Applicant Current Address" in {
 
           ApplicantDateOfBirthPage
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.ApplicantCurrentAddressController.onPageLoad(waypoints))
         }
       }

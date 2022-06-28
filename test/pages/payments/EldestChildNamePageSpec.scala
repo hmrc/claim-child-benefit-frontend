@@ -40,7 +40,7 @@ class EldestChildNamePageSpec extends PageBehaviours {
         "to Eldest Child Date of Birth" in {
 
           EldestChildNamePage
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.EldestChildDateOfBirthController.onPageLoad(waypoints))
         }
       }

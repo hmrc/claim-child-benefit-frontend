@@ -41,7 +41,7 @@ class AccountIsJointPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(AccountIsJointPage, true).success.value
 
           AccountIsJointPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.AccountHolderNamesController.onPageLoad(waypoints))
         }
 
@@ -50,7 +50,7 @@ class AccountIsJointPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(AccountIsJointPage, false).success.value
 
           AccountIsJointPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.AccountHolderNameController.onPageLoad(waypoints))
         }
       }

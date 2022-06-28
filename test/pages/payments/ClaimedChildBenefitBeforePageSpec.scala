@@ -41,7 +41,7 @@ class ClaimedChildBenefitBeforePageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(ClaimedChildBenefitBeforePage, true).success.value
 
           ClaimedChildBenefitBeforePage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.CurrentlyEntitledToChildBenefitController.onPageLoad(waypoints))
         }
 
@@ -50,7 +50,7 @@ class ClaimedChildBenefitBeforePageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(ClaimedChildBenefitBeforePage, false).success.value
 
           ClaimedChildBenefitBeforePage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.TaxChargeExplanationController.onPageLoad(waypoints))
         }
       }

@@ -40,7 +40,7 @@ class ApplicantNationalityPageSpec extends PageBehaviours {
         "to Applicant Employment Status" in {
 
           ApplicantNationalityPage
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.ApplicantEmploymentStatusController.onPageLoad(waypoints))
         }
       }

@@ -50,7 +50,7 @@ class AddChildPreviousNamePageSpec extends PageBehaviours {
                   .set(AddChildPreviousNamePage(Index(0)), true).success.value
 
               AddChildPreviousNamePage(Index(0))
-                .navigate(waypoints, answers)
+                .navigate(waypoints, answers).route
                 .mustEqual(routes.ChildPreviousNameController.onPageLoad(waypoints, Index(0), Index(1)))
             }
           }
@@ -66,7 +66,7 @@ class AddChildPreviousNamePageSpec extends PageBehaviours {
                   .set(AddChildPreviousNamePage(Index(0)), true).success.value
 
               AddChildPreviousNamePage(Index(0))
-                .navigate(waypoints, answers)
+                .navigate(waypoints, answers).route
                 .mustEqual(routes.ChildPreviousNameController.onPageLoad(waypoints, Index(0), Index(2)))
             }
           }
@@ -82,7 +82,7 @@ class AddChildPreviousNamePageSpec extends PageBehaviours {
                   .set(AddChildPreviousNamePage(Index(1)), true).success.value
 
               AddChildPreviousNamePage(Index(1))
-                .navigate(waypoints, answers)
+                .navigate(waypoints, answers).route
                 .mustEqual(routes.ChildPreviousNameController.onPageLoad(waypoints, Index(1), Index(1)))
             }
           }
@@ -99,7 +99,7 @@ class AddChildPreviousNamePageSpec extends PageBehaviours {
                   .set(AddChildPreviousNamePage(Index(1)), true).success.value
 
               AddChildPreviousNamePage(Index(1))
-                .navigate(waypoints, answers)
+                .navigate(waypoints, answers).route
                 .mustEqual(routes.ChildPreviousNameController.onPageLoad(waypoints, Index(1), Index(2)))
             }
           }
@@ -115,11 +115,11 @@ class AddChildPreviousNamePageSpec extends PageBehaviours {
                 .set(AddChildPreviousNamePage(Index(1)), false).success.value
 
             AddChildPreviousNamePage(Index(0))
-              .navigate(waypoints, answers)
+              .navigate(waypoints, answers).route
               .mustEqual(routes.ChildBiologicalSexController.onPageLoad(waypoints, Index(0)))
 
             AddChildPreviousNamePage(Index(1))
-              .navigate(waypoints, answers)
+              .navigate(waypoints, answers).route
               .mustEqual(routes.ChildBiologicalSexController.onPageLoad(waypoints, Index(1)))
           }
         }

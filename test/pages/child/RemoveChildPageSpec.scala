@@ -36,18 +36,18 @@ class RemoveChildPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(ChildNamePage(Index(0)), ChildName("first", None, "last")).success.value
 
           RemoveChildPage(Index(0))
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.AddChildController.onPageLoad(waypoints))
 
           RemoveChildPage(Index(1))
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.AddChildController.onPageLoad(waypoints))
         }
 
         "to Child Name for index 0 when there are no children left" in {
 
           RemoveChildPage(Index(0))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.ChildNameController.onPageLoad(waypoints, Index(0)))
         }
       }

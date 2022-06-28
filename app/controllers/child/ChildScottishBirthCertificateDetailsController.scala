@@ -74,7 +74,7 @@ class ChildScottishBirthCertificateDetailsController @Inject()(
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(ChildScottishBirthCertificateDetailsPage(index), value))
                 _ <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(ChildScottishBirthCertificateDetailsPage(index).navigate(waypoints, updatedAnswers))
+              } yield Redirect(ChildScottishBirthCertificateDetailsPage(index).navigate(waypoints, updatedAnswers).route)
           )
       }
   }

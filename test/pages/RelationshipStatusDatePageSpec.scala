@@ -48,7 +48,7 @@ class RelationshipStatusDatePageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(RelationshipStatusPage, Separated).success.value
 
           RelationshipStatusDatePage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(incomeRoutes.ApplicantIncomeOver50kController.onPageLoad(waypoints))
         }
 
@@ -57,7 +57,7 @@ class RelationshipStatusDatePageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(RelationshipStatusPage, Cohabiting).success.value
 
           RelationshipStatusDatePage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(incomeRoutes.ApplicantOrPartnerIncomeOver50kController.onPageLoad(waypoints))
         }
       }

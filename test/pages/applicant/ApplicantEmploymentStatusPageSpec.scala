@@ -44,7 +44,7 @@ class ApplicantEmploymentStatusPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(RelationshipStatusPage, Single).success.value
 
           ApplicantEmploymentStatusPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(childRoutes.ChildNameController.onPageLoad(waypoints, Index(0)))
         }
 
@@ -53,7 +53,7 @@ class ApplicantEmploymentStatusPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(RelationshipStatusPage, Widowed).success.value
 
           ApplicantEmploymentStatusPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(childRoutes.ChildNameController.onPageLoad(waypoints, Index(0)))
         }
 
@@ -62,7 +62,7 @@ class ApplicantEmploymentStatusPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(RelationshipStatusPage, Divorced).success.value
 
           ApplicantEmploymentStatusPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(childRoutes.ChildNameController.onPageLoad(waypoints, Index(0)))
         }
 
@@ -71,7 +71,7 @@ class ApplicantEmploymentStatusPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(RelationshipStatusPage, Separated).success.value
 
           ApplicantEmploymentStatusPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(childRoutes.ChildNameController.onPageLoad(waypoints, Index(0)))
         }
 
@@ -80,7 +80,7 @@ class ApplicantEmploymentStatusPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(RelationshipStatusPage, Married).success.value
 
           ApplicantEmploymentStatusPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(partnerRoutes.PartnerNameController.onPageLoad(waypoints))
         }
 
@@ -89,7 +89,7 @@ class ApplicantEmploymentStatusPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(RelationshipStatusPage, Cohabiting).success.value
 
           ApplicantEmploymentStatusPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(partnerRoutes.PartnerNameController.onPageLoad(waypoints))
         }
       }

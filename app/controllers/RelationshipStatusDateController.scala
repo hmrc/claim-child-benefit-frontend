@@ -74,7 +74,7 @@ class RelationshipStatusDateController @Inject()(
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(RelationshipStatusDatePage, value))
                 _ <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(RelationshipStatusDatePage.navigate(waypoints, updatedAnswers))
+              } yield Redirect(RelationshipStatusDatePage.navigate(waypoints, updatedAnswers).route)
           )
       }
   }

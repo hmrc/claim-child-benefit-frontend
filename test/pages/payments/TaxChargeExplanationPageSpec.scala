@@ -33,7 +33,7 @@ class TaxChargeExplanationPageSpec extends SpecBase {
         "to Want to be paid" in {
 
           TaxChargeExplanationPage
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.WantToBePaidController.onPageLoad(waypoints))
         }
       }

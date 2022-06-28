@@ -41,11 +41,11 @@ class ChildBirthCertificateSystemNumberPageSpec extends PageBehaviours {
         "to Applicant Relationship to Child for the same index" in {
 
           ChildBirthCertificateSystemNumberPage(Index(0))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.ApplicantRelationshipToChildController.onPageLoad(waypoints, Index(0)))
 
           ChildBirthCertificateSystemNumberPage(Index(1))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.ApplicantRelationshipToChildController.onPageLoad(waypoints, Index(1)))
         }
       }

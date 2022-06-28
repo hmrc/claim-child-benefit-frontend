@@ -40,11 +40,11 @@ class ChildNameChangedByDeedPollPageSpec extends PageBehaviours {
         "to Child Previous Name for the same child index, and for name index 0" in {
 
           ChildNameChangedByDeedPollPage(Index(0))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.ChildPreviousNameController.onPageLoad(waypoints, Index(0), Index(0)))
 
           ChildNameChangedByDeedPollPage(Index(1))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.ChildPreviousNameController.onPageLoad(waypoints, Index(1), Index(0)))
         }
       }

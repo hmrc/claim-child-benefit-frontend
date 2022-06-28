@@ -40,7 +40,7 @@ class AccountHolderNamePageSpec extends PageBehaviours {
         "to Bank Account Type" in {
 
           AccountHolderNamePage
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.BankAccountTypeController.onPageLoad(waypoints))
         }
       }
