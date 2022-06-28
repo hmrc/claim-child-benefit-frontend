@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-package pages.applicant
+package journey
 
 import generators.ModelGenerators
 import models.RelationshipStatus._
 import models.{Address, ApplicantEmploymentStatus, Index, UserAnswers}
 import org.scalacheck.Arbitrary.arbitrary
-import pages.{JourneyHelpers, RelationshipStatusPage}
-import pages.JourneyState.startingFrom
+import org.scalatest.freespec.AnyFreeSpec
+import pages.RelationshipStatusPage
+import pages.applicant._
 import pages.child.ChildNamePage
 import pages.partner.PartnerNamePage
 import uk.gov.hmrc.domain.Nino
 
 import java.time.LocalDate
 
-class ApplicantJourneySpec extends JourneyHelpers with ModelGenerators {
+class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
   "users without any previous names or previous addresses, who do not know their NINO" - {
 
@@ -37,7 +38,7 @@ class ApplicantJourneySpec extends JourneyHelpers with ModelGenerators {
       val address = Address("line 1", None, "town", None, "postcode")
 
       startingFrom(ApplicantHasPreviousFamilyNamePage)
-        .steps(
+        .run(
           answerPage(ApplicantHasPreviousFamilyNamePage, false, ApplicantNinoKnownPage),
           answerPage(ApplicantNinoKnownPage, false, ApplicantDateOfBirthPage),
           answerPage(ApplicantDateOfBirthPage, LocalDate.now, ApplicantCurrentAddressPage),
@@ -55,7 +56,7 @@ class ApplicantJourneySpec extends JourneyHelpers with ModelGenerators {
     val nino = arbitrary[Nino].sample.value
 
     startingFrom(ApplicantNinoKnownPage)
-      .steps(
+      .run(
         answerPage(ApplicantNinoKnownPage, true, ApplicantNinoPage),
         answerPage(ApplicantNinoPage, nino, ApplicantDateOfBirthPage)
       )
@@ -64,7 +65,7 @@ class ApplicantJourneySpec extends JourneyHelpers with ModelGenerators {
   "users with previous names must be asked for as many as necessary" in {
 
     startingFrom(ApplicantHasPreviousFamilyNamePage)
-      .steps(
+      .run(
         answerPage(ApplicantHasPreviousFamilyNamePage, true, ApplicantPreviousFamilyNamePage(Index(0))),
         answerPage(ApplicantPreviousFamilyNamePage(Index(0)), "name", AddApplicantPreviousFamilyNamePage),
         answerPage(AddApplicantPreviousFamilyNamePage, true, ApplicantPreviousFamilyNamePage(Index(1))),
@@ -76,7 +77,7 @@ class ApplicantJourneySpec extends JourneyHelpers with ModelGenerators {
   "users with previous names must be able to remove them" in {
 
     startingFrom(ApplicantHasPreviousFamilyNamePage)
-      .steps(
+      .run(
         answerPage(ApplicantHasPreviousFamilyNamePage, true, ApplicantPreviousFamilyNamePage(Index(0))),
         answerPage(ApplicantPreviousFamilyNamePage(Index(0)), "name", AddApplicantPreviousFamilyNamePage),
         answerPage(AddApplicantPreviousFamilyNamePage, true, ApplicantPreviousFamilyNamePage(Index(1))),
@@ -97,7 +98,7 @@ class ApplicantJourneySpec extends JourneyHelpers with ModelGenerators {
     val address = Address("line 1", None, "town", None, "postcode")
 
     startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
-      .steps(
+      .run(
         answerPage(ApplicantLivedAtCurrentAddressOneYearPage, false, ApplicantPreviousAddressPage),
         answerPage(ApplicantPreviousAddressPage, address, ApplicantPhoneNumberPage)
       )
@@ -111,7 +112,7 @@ class ApplicantJourneySpec extends JourneyHelpers with ModelGenerators {
       val employmentStatus = Set(arbitrary[ApplicantEmploymentStatus].sample.value)
 
       startingFrom(ApplicantEmploymentStatusPage, answers = answers)
-        .steps(
+        .run(
           answerPage(ApplicantEmploymentStatusPage, employmentStatus, PartnerNamePage)
         )
     }
@@ -122,7 +123,7 @@ class ApplicantJourneySpec extends JourneyHelpers with ModelGenerators {
       val employmentStatus = Set(arbitrary[ApplicantEmploymentStatus].sample.value)
 
       startingFrom(ApplicantEmploymentStatusPage, answers = answers)
-        .steps(
+        .run(
           answerPage(ApplicantEmploymentStatusPage, employmentStatus, PartnerNamePage)
         )
     }
@@ -133,7 +134,7 @@ class ApplicantJourneySpec extends JourneyHelpers with ModelGenerators {
       val employmentStatus = Set(arbitrary[ApplicantEmploymentStatus].sample.value)
 
       startingFrom(ApplicantEmploymentStatusPage, answers = answers)
-        .steps(
+        .run(
           answerPage(ApplicantEmploymentStatusPage, employmentStatus, ChildNamePage(Index(0)))
         )
     }
@@ -144,7 +145,7 @@ class ApplicantJourneySpec extends JourneyHelpers with ModelGenerators {
       val employmentStatus = Set(arbitrary[ApplicantEmploymentStatus].sample.value)
 
       startingFrom(ApplicantEmploymentStatusPage, answers = answers)
-        .steps(
+        .run(
           answerPage(ApplicantEmploymentStatusPage, employmentStatus, ChildNamePage(Index(0)))
         )
     }
@@ -155,7 +156,7 @@ class ApplicantJourneySpec extends JourneyHelpers with ModelGenerators {
       val employmentStatus = Set(arbitrary[ApplicantEmploymentStatus].sample.value)
 
       startingFrom(ApplicantEmploymentStatusPage, answers = answers)
-        .steps(
+        .run(
           answerPage(ApplicantEmploymentStatusPage, employmentStatus, ChildNamePage(Index(0)))
         )
     }
@@ -166,7 +167,7 @@ class ApplicantJourneySpec extends JourneyHelpers with ModelGenerators {
       val employmentStatus = Set(arbitrary[ApplicantEmploymentStatus].sample.value)
 
       startingFrom(ApplicantEmploymentStatusPage, answers = answers)
-        .steps(
+        .run(
           answerPage(ApplicantEmploymentStatusPage, employmentStatus, ChildNamePage(Index(0)))
         )
     }

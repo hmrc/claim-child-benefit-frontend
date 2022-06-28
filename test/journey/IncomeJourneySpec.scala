@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package pages.income
+package journey
 
 import models.Benefits
 import org.scalacheck.Gen
-import pages.JourneyHelpers
-import pages.JourneyState.startingFrom
+import org.scalatest.freespec.AnyFreeSpec
+import pages.income._
 import pages.payments.ClaimedChildBenefitBeforePage
 
-class IncomeJourneySpec extends JourneyHelpers {
+class IncomeJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
   "users with a partner" - {
 
@@ -31,7 +31,7 @@ class IncomeJourneySpec extends JourneyHelpers {
     "and an income below 50k must proceed to the payments section" in {
 
       startingFrom(ApplicantOrPartnerIncomeOver50kPage)
-        .steps(
+        .run(
           answerPage(ApplicantOrPartnerIncomeOver50kPage, false, ApplicantOrPartnerBenefitsPage),
           answerPage(ApplicantOrPartnerBenefitsPage, benefits, ClaimedChildBenefitBeforePage)
         )
@@ -40,7 +40,7 @@ class IncomeJourneySpec extends JourneyHelpers {
     "and an income between 50k and 60k must proceed to the payments section" in {
 
       startingFrom(ApplicantOrPartnerIncomeOver50kPage)
-        .steps(
+        .run(
           answerPage(ApplicantOrPartnerIncomeOver50kPage, true, ApplicantOrPartnerIncomeOver60kPage),
           answerPage(ApplicantOrPartnerIncomeOver60kPage, false, ApplicantOrPartnerBenefitsPage),
           answerPage(ApplicantOrPartnerBenefitsPage, benefits, ClaimedChildBenefitBeforePage)
@@ -50,7 +50,7 @@ class IncomeJourneySpec extends JourneyHelpers {
     "and an income above 60k must proceed to the payments section" in {
 
       startingFrom(ApplicantOrPartnerIncomeOver50kPage)
-        .steps(
+        .run(
           answerPage(ApplicantOrPartnerIncomeOver50kPage, true, ApplicantOrPartnerIncomeOver60kPage),
           answerPage(ApplicantOrPartnerIncomeOver60kPage, true, ApplicantOrPartnerBenefitsPage),
           answerPage(ApplicantOrPartnerBenefitsPage, benefits, ClaimedChildBenefitBeforePage)
@@ -65,7 +65,7 @@ class IncomeJourneySpec extends JourneyHelpers {
     "and an income below 50k must proceed to the payments section" in {
 
       startingFrom(ApplicantIncomeOver50kPage)
-        .steps(
+        .run(
           answerPage(ApplicantIncomeOver50kPage, false, ApplicantBenefitsPage),
           answerPage(ApplicantBenefitsPage, benefits, ClaimedChildBenefitBeforePage)
         )
@@ -74,7 +74,7 @@ class IncomeJourneySpec extends JourneyHelpers {
     "and an income between 50k and 60k must proceed to the payments section" in {
 
       startingFrom(ApplicantIncomeOver50kPage)
-        .steps(
+        .run(
           answerPage(ApplicantIncomeOver50kPage, true, ApplicantIncomeOver60kPage),
           answerPage(ApplicantIncomeOver60kPage, false, ApplicantBenefitsPage),
           answerPage(ApplicantBenefitsPage, benefits, ClaimedChildBenefitBeforePage)
@@ -84,7 +84,7 @@ class IncomeJourneySpec extends JourneyHelpers {
     "and an income above 60k must proceed to the payments section" in {
 
       startingFrom(ApplicantIncomeOver50kPage)
-        .steps(
+        .run(
           answerPage(ApplicantIncomeOver50kPage, true, ApplicantIncomeOver60kPage),
           answerPage(ApplicantIncomeOver60kPage, true, ApplicantBenefitsPage),
           answerPage(ApplicantBenefitsPage, benefits, ClaimedChildBenefitBeforePage)

@@ -14,25 +14,26 @@
  * limitations under the License.
  */
 
-package pages.payments
+package journey
 
 import models.RelationshipStatus._
 import models.{AccountHolderNames, BankAccountDetails, BankAccountType, Benefits, BuildingSocietyAccountDetails, EldestChildName, UserAnswers}
-import pages.{JourneyHelpers, RelationshipStatusPage}
-import pages.JourneyState.startingFrom
+import org.scalatest.freespec.AnyFreeSpec
+import pages.RelationshipStatusPage
 import pages.applicant.ApplicantHasPreviousFamilyNamePage
 import pages.income.ApplicantOrPartnerBenefitsPage
+import pages.payments._
 
 import java.time.LocalDate
 
-class PaymentsJourneySpec extends JourneyHelpers {
+class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
   "users who have not claimed Child Benefit before" - {
 
     "must be shown the tax charge explanation and asked if they want to be paid Child Benefit" in {
 
       startingFrom(ClaimedChildBenefitBeforePage)
-        .steps(
+        .run(
           answerPage(ClaimedChildBenefitBeforePage, false, TaxChargeExplanationPage),
           next,
           pageMustBe(WantToBePaidPage)
@@ -47,7 +48,7 @@ class PaymentsJourneySpec extends JourneyHelpers {
       "must be shown the tax charge explanation and asked if they want to be paid Child Benefit" in {
 
         startingFrom(ClaimedChildBenefitBeforePage)
-          .steps(
+          .run(
             answerPage(ClaimedChildBenefitBeforePage, true, CurrentlyEntitledToChildBenefitPage),
             answerPage(CurrentlyEntitledToChildBenefitPage, false, TaxChargeExplanationPage),
             next,
@@ -61,7 +62,7 @@ class PaymentsJourneySpec extends JourneyHelpers {
       "must be shown the tax charge explanation and asked if they want to be paid Child Benefit" in {
 
         startingFrom(ClaimedChildBenefitBeforePage)
-          .steps(
+          .run(
             answerPage(ClaimedChildBenefitBeforePage, true, CurrentlyEntitledToChildBenefitPage),
             answerPage(CurrentlyEntitledToChildBenefitPage, true, CurrentlyReceivingChildBenefitPage),
             answerPage(CurrentlyReceivingChildBenefitPage, false, TaxChargeExplanationPage),
@@ -81,7 +82,7 @@ class PaymentsJourneySpec extends JourneyHelpers {
         "must proceed to the Applicant section" in {
 
           startingFrom(ClaimedChildBenefitBeforePage)
-            .steps(
+            .run(
               answerPage(ClaimedChildBenefitBeforePage, true, CurrentlyEntitledToChildBenefitPage),
               answerPage(CurrentlyEntitledToChildBenefitPage, true, CurrentlyReceivingChildBenefitPage),
               answerPage(CurrentlyReceivingChildBenefitPage, true, EldestChildNamePage),
@@ -97,7 +98,7 @@ class PaymentsJourneySpec extends JourneyHelpers {
         "must be asked for bank account details" in {
 
           startingFrom(ClaimedChildBenefitBeforePage)
-            .steps(
+            .run(
               answerPage(ClaimedChildBenefitBeforePage, true, CurrentlyEntitledToChildBenefitPage),
               answerPage(CurrentlyEntitledToChildBenefitPage, true, CurrentlyReceivingChildBenefitPage),
               answerPage(CurrentlyReceivingChildBenefitPage, true, EldestChildNamePage),
@@ -122,7 +123,7 @@ class PaymentsJourneySpec extends JourneyHelpers {
             .set(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)).success.value
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
-          .steps(
+          .run(
             answerPage(WantToBePaidPage, true, ApplicantHasSuitableAccountPage)
           )
       }
@@ -135,7 +136,7 @@ class PaymentsJourneySpec extends JourneyHelpers {
             .set(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.qualifyingBenefits.head)).success.value
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
-          .steps(
+          .run(
             answerPage(WantToBePaidPage, true, WantToBePaidWeeklyPage),
             answerPage(WantToBePaidWeeklyPage, true, ApplicantHasSuitableAccountPage)
           )
@@ -152,7 +153,7 @@ class PaymentsJourneySpec extends JourneyHelpers {
             .set(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)).success.value
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
-          .steps(
+          .run(
             answerPage(WantToBePaidPage, true, ApplicantHasSuitableAccountPage)
           )
       }
@@ -166,7 +167,7 @@ class PaymentsJourneySpec extends JourneyHelpers {
             .set(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.qualifyingBenefits.head)).success.value
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
-          .steps(
+          .run(
             answerPage(WantToBePaidPage, true, WantToBePaidWeeklyPage),
             answerPage(WantToBePaidWeeklyPage, true, ApplicantHasSuitableAccountPage)
           )
@@ -183,7 +184,7 @@ class PaymentsJourneySpec extends JourneyHelpers {
             .set(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)).success.value
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
-          .steps(
+          .run(
             answerPage(WantToBePaidPage, true, WantToBePaidWeeklyPage),
             answerPage(WantToBePaidWeeklyPage, true, ApplicantHasSuitableAccountPage)
           )
@@ -200,7 +201,7 @@ class PaymentsJourneySpec extends JourneyHelpers {
             .set(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)).success.value
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
-          .steps(
+          .run(
             answerPage(WantToBePaidPage, true, WantToBePaidWeeklyPage),
             answerPage(WantToBePaidWeeklyPage, true, ApplicantHasSuitableAccountPage)
           )
@@ -217,7 +218,7 @@ class PaymentsJourneySpec extends JourneyHelpers {
             .set(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)).success.value
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
-          .steps(
+          .run(
             answerPage(WantToBePaidPage, true, WantToBePaidWeeklyPage),
             answerPage(WantToBePaidWeeklyPage, true, ApplicantHasSuitableAccountPage)
           )
@@ -234,7 +235,7 @@ class PaymentsJourneySpec extends JourneyHelpers {
             .set(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)).success.value
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
-          .steps(
+          .run(
             answerPage(WantToBePaidPage, true, WantToBePaidWeeklyPage),
             answerPage(WantToBePaidWeeklyPage, true, ApplicantHasSuitableAccountPage)
           )
@@ -247,7 +248,7 @@ class PaymentsJourneySpec extends JourneyHelpers {
     "must proceed to the Applicant section" in {
 
       startingFrom(WantToBePaidPage)
-        .steps(
+        .run(
           answerPage(WantToBePaidPage, false, ApplicantHasPreviousFamilyNamePage)
         )
     }
@@ -258,7 +259,7 @@ class PaymentsJourneySpec extends JourneyHelpers {
     "must proceed to the Applicant section" in {
 
       startingFrom(ApplicantHasSuitableAccountPage)
-        .steps(
+        .run(
           answerPage(ApplicantHasSuitableAccountPage, false, ApplicantHasPreviousFamilyNamePage)
         )
     }
@@ -271,7 +272,7 @@ class PaymentsJourneySpec extends JourneyHelpers {
       "must be asked if it is a bank or building society account" in {
 
         startingFrom(AccountInApplicantsNamePage)
-          .steps(
+          .run(
             answerPage(AccountInApplicantsNamePage, true, BankAccountTypePage)
           )
       }
@@ -284,7 +285,7 @@ class PaymentsJourneySpec extends JourneyHelpers {
         "must be asked for the account holder name, then the type of account" in {
 
           startingFrom(AccountInApplicantsNamePage)
-            .steps(
+            .run(
               answerPage(AccountInApplicantsNamePage, false, AccountIsJointPage),
               answerPage(AccountIsJointPage, false, AccountHolderNamePage),
               answerPage(AccountHolderNamePage, "name", BankAccountTypePage)
@@ -299,7 +300,7 @@ class PaymentsJourneySpec extends JourneyHelpers {
           val accountHolderNames = AccountHolderNames("name 1", "name 2")
 
           startingFrom(AccountInApplicantsNamePage)
-            .steps(
+            .run(
               answerPage(AccountInApplicantsNamePage, false, AccountIsJointPage),
               answerPage(AccountIsJointPage, true, AccountHolderNamesPage),
               answerPage(AccountHolderNamesPage, accountHolderNames, BankAccountTypePage)
@@ -314,7 +315,7 @@ class PaymentsJourneySpec extends JourneyHelpers {
     val bankDetails = BankAccountDetails("bank name", "12345678", "123456")
 
     startingFrom(BankAccountTypePage)
-      .steps(
+      .run(
         answerPage(BankAccountTypePage, BankAccountType.Bank, BankAccountDetailsPage),
         answerPage(BankAccountDetailsPage, bankDetails, ApplicantHasPreviousFamilyNamePage)
       )
@@ -325,7 +326,7 @@ class PaymentsJourneySpec extends JourneyHelpers {
     val buildingSocietyDetails = BuildingSocietyAccountDetails("building society name", "12345678", "123456", None)
 
     startingFrom(BankAccountTypePage)
-      .steps(
+      .run(
         answerPage(BankAccountTypePage, BankAccountType.BuildingSociety, BuildingSocietyAccountDetailsPage),
         answerPage(BuildingSocietyAccountDetailsPage, buildingSocietyDetails, ApplicantHasPreviousFamilyNamePage)
       )

@@ -14,19 +14,43 @@
  * limitations under the License.
  */
 
-package pages
+package journey
 
 import cats.data.State
 import cats.implicits._
 import models.UserAnswers
-import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{OptionValues, TryValues}
-import pages.JourneyState.JourneyStep
+import pages.{CheckAnswersPage, EmptyWaypoints, Page, PageAndWaypoints, Waypoints}
 import play.api.libs.json.{Reads, Writes}
 import queries.{Gettable, Settable}
 
-trait JourneyHelpers extends AnyFreeSpec with Matchers with TryValues with OptionValues {
+trait JourneyHelpers extends Matchers with TryValues with OptionValues {
+
+  type JourneyStep[A] = State[JourneyState, A]
+
+  final case class JourneyState(page: Page, waypoints: Waypoints, answers: UserAnswers) {
+
+    def next: JourneyState = {
+      val PageAndWaypoints(nextPage, newWaypoints) = page.navigate(waypoints, answers)
+      JourneyState(nextPage, newWaypoints, answers)
+    }
+
+    def run(steps: JourneyStep[Unit]*): Unit =
+      journeyOf(steps: _*).run(this).value
+  }
+
+  def journeyOf(steps: JourneyStep[Unit]*): JourneyStep[Unit] =
+    steps.fold(State.pure(())) {
+      _ >> _
+    }
+
+  def startingFrom(
+                    page: Page,
+                    waypoints: Waypoints = EmptyWaypoints,
+                    answers: UserAnswers = UserAnswers("id")
+                  ): JourneyState =
+    JourneyState(page, waypoints, answers)
 
   def next: JourneyStep[Unit] =
     State.modify(_.next)
@@ -88,6 +112,6 @@ trait JourneyHelpers extends AnyFreeSpec with Matchers with TryValues with Optio
   def goToCheckMode(page: Page): JourneyStep[Unit] =
     for {
       currentPage <- getPage
-      _           <- goToCheckMode(page, currentPage.asInstanceOf[CheckAnswersPage])
+      _ <- goToCheckMode(page, currentPage.asInstanceOf[CheckAnswersPage])
     } yield ()
 }

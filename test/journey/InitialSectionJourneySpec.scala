@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 
-package pages
+package journey
 
 import models.{ApplicantName, RelationshipStatus}
-import pages.JourneyState.startingFrom
+import org.scalatest.freespec.AnyFreeSpec
 import pages.income.{ApplicantIncomeOver50kPage, ApplicantOrPartnerIncomeOver50kPage}
+import pages.{AnyChildLivedWithOthersPage, ApplicantNamePage, EverLivedOrWorkedAbroadPage, RelationshipStatusDatePage, RelationshipStatusPage, UsePrintAndPostFormPage}
 
 import java.time.LocalDate
 
-class InitialSectionJourneySpec extends JourneyHelpers {
+class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
   
   private val applicantName = ApplicantName(None, "first", None, "last")
 
   "eligible Married users must continue to the income section" in {
 
     startingFrom(EverLivedOrWorkedAbroadPage)
-      .steps(
+      .run(
         answerPage(EverLivedOrWorkedAbroadPage, false, AnyChildLivedWithOthersPage),
         answerPage(AnyChildLivedWithOthersPage, false, ApplicantNamePage),
         answerPage(ApplicantNamePage, applicantName, RelationshipStatusPage),
@@ -40,7 +41,7 @@ class InitialSectionJourneySpec extends JourneyHelpers {
   "eligible Cohabiting users must continue to the income section" in {
 
     startingFrom(EverLivedOrWorkedAbroadPage)
-      .steps(
+      .run(
         answerPage(EverLivedOrWorkedAbroadPage, false, AnyChildLivedWithOthersPage),
         answerPage(AnyChildLivedWithOthersPage, false, ApplicantNamePage),
         answerPage(ApplicantNamePage, applicantName, RelationshipStatusPage),
@@ -52,7 +53,7 @@ class InitialSectionJourneySpec extends JourneyHelpers {
   "eligible Single users must continue to the income section" in {
 
     startingFrom(EverLivedOrWorkedAbroadPage)
-      .steps(
+      .run(
         answerPage(EverLivedOrWorkedAbroadPage, false, AnyChildLivedWithOthersPage),
         answerPage(AnyChildLivedWithOthersPage, false, ApplicantNamePage),
         answerPage(ApplicantNamePage, applicantName, RelationshipStatusPage),
@@ -63,7 +64,7 @@ class InitialSectionJourneySpec extends JourneyHelpers {
   "eligible Separated users must continue to the income section" in {
 
     startingFrom(EverLivedOrWorkedAbroadPage)
-      .steps(
+      .run(
         answerPage(EverLivedOrWorkedAbroadPage, false, AnyChildLivedWithOthersPage),
         answerPage(AnyChildLivedWithOthersPage, false, ApplicantNamePage),
         answerPage(ApplicantNamePage, applicantName, RelationshipStatusPage),
@@ -75,7 +76,7 @@ class InitialSectionJourneySpec extends JourneyHelpers {
   "eligible Divorced users must continue to the income section" in {
 
     startingFrom(EverLivedOrWorkedAbroadPage)
-      .steps(
+      .run(
         answerPage(EverLivedOrWorkedAbroadPage, false, AnyChildLivedWithOthersPage),
         answerPage(AnyChildLivedWithOthersPage, false, ApplicantNamePage),
         answerPage(ApplicantNamePage, applicantName, RelationshipStatusPage),
@@ -86,7 +87,7 @@ class InitialSectionJourneySpec extends JourneyHelpers {
   "eligible Widowed users must continue to the income section" in {
 
     startingFrom(EverLivedOrWorkedAbroadPage)
-      .steps(
+      .run(
         answerPage(EverLivedOrWorkedAbroadPage, false, AnyChildLivedWithOthersPage),
         answerPage(AnyChildLivedWithOthersPage, false, ApplicantNamePage),
         answerPage(ApplicantNamePage, applicantName, RelationshipStatusPage),
@@ -97,7 +98,7 @@ class InitialSectionJourneySpec extends JourneyHelpers {
   "users who have lived or worked abroad must go to the Use Print and Post Form page" in {
 
     startingFrom(EverLivedOrWorkedAbroadPage)
-      .steps(
+      .run(
         answerPage(EverLivedOrWorkedAbroadPage, true, UsePrintAndPostFormPage)
       )
   }
@@ -105,7 +106,7 @@ class InitialSectionJourneySpec extends JourneyHelpers {
   "users claiming for a child who has recently lived with someone else must go to the Use Print and Post Form page" in {
 
     startingFrom(EverLivedOrWorkedAbroadPage)
-      .steps(
+      .run(
         answerPage(EverLivedOrWorkedAbroadPage, false, AnyChildLivedWithOthersPage),
         answerPage(AnyChildLivedWithOthersPage, true, UsePrintAndPostFormPage)
       )
