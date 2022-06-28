@@ -48,6 +48,11 @@ trait JourneyHelpers extends AnyFreeSpec with Matchers with TryValues with Optio
       journeyState.copy(answers = journeyState.answers.set(page, answer).success.value)
     }
 
+  def remove[A](page: Page with Settable[A]): JourneyStep[Unit] =
+    State.modify { journeyState =>
+      journeyState.copy(answers = journeyState.answers.remove(page).success.value)
+    }
+
   def pageMustBe(expectedPage: Page): JourneyStep[Unit] =
     getPage.map { page =>
       page mustEqual expectedPage
