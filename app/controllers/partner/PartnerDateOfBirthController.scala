@@ -78,7 +78,7 @@ class PartnerDateOfBirthController @Inject()(
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerDateOfBirthPage, value))
                 _ <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(PartnerDateOfBirthPage.navigate(waypoints, updatedAnswers))
+              } yield Redirect(PartnerDateOfBirthPage.navigate(waypoints, updatedAnswers).route)
           )
       }
   }

@@ -43,7 +43,7 @@ class WantToBePaidToExistingAccountPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(WantToBePaidToExistingAccountPage, true).success.value
 
           WantToBePaidToExistingAccountPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(applicantRoutes.ApplicantHasPreviousFamilyNameController.onPageLoad(waypoints))
         }
 
@@ -52,7 +52,7 @@ class WantToBePaidToExistingAccountPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(WantToBePaidToExistingAccountPage, false).success.value
 
           WantToBePaidToExistingAccountPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.ApplicantHasSuitableAccountController.onPageLoad(waypoints))
         }
       }

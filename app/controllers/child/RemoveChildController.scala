@@ -78,9 +78,9 @@ class RemoveChildController @Inject()(
                 for {
                   updatedAnswers <- Future.fromTry(request.userAnswers.remove(ChildQuery(index)))
                   _ <- sessionRepository.set(updatedAnswers)
-                } yield Redirect(RemoveChildPage(index).navigate(waypoints, updatedAnswers))
+                } yield Redirect(RemoveChildPage(index).navigate(waypoints, updatedAnswers).route)
               } else {
-                Future.successful(Redirect(RemoveChildPage(index).navigate(waypoints, request.userAnswers)))
+                Future.successful(Redirect(RemoveChildPage(index).navigate(waypoints, request.userAnswers).route))
               }
           )
       }

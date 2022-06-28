@@ -64,7 +64,7 @@ class BankAccountTypeController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(BankAccountTypePage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(BankAccountTypePage.navigate(waypoints, updatedAnswers))
+          } yield Redirect(BankAccountTypePage.navigate(waypoints, updatedAnswers).route)
       )
   }
 }

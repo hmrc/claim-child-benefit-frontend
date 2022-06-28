@@ -36,14 +36,14 @@ class RemoveApplicantPreviousFamilyNamePageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(ApplicantPreviousFamilyNamePage(Index(0)), "name").success.value
 
           RemoveApplicantPreviousFamilyNamePage(Index(0))
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.AddApplicantPreviousFamilyNameController.onPageLoad(waypoints))
         }
 
         "to Applicant Has Previous Family Names when there are no names left" in {
 
           applicant.RemoveApplicantPreviousFamilyNamePage(Index(0))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.ApplicantHasPreviousFamilyNameController.onPageLoad(waypoints))
         }
       }

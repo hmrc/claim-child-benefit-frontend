@@ -47,11 +47,11 @@ class ChildDateOfBirthPageSpec extends PageBehaviours {
         "to Child Birth Registration Country for the same index" in {
 
           ChildDateOfBirthPage(Index(0))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.ChildBirthRegistrationCountryController.onPageLoad(waypoints, Index(0)))
 
           ChildDateOfBirthPage(Index(1))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.ChildBirthRegistrationCountryController.onPageLoad(waypoints, Index(1)))
         }
       }

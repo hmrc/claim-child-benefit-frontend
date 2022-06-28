@@ -41,7 +41,7 @@ class PartnerNinoPageSpec extends PageBehaviours {
         "to Partner Date of Birth" in {
 
           PartnerNinoPage
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.PartnerDateOfBirthController.onPageLoad(waypoints))
         }
       }

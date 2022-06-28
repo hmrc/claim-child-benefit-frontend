@@ -40,7 +40,7 @@ class BuildingSocietyAccountDetailsPageSpec extends PageBehaviours {
         "to Applicant Has Previous Family Name" in {
 
           BuildingSocietyAccountDetailsPage
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(applicantRoutes.ApplicantHasPreviousFamilyNameController.onPageLoad(waypoints))
         }
       }

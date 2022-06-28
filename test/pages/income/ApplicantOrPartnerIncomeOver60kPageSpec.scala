@@ -40,7 +40,7 @@ class ApplicantOrPartnerIncomeOver60kPageSpec extends PageBehaviours {
         "to Applicant or Partner Benefits" in {
 
           ApplicantOrPartnerIncomeOver60kPage
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.ApplicantOrPartnerBenefitsController.onPageLoad(waypoints))
         }
       }

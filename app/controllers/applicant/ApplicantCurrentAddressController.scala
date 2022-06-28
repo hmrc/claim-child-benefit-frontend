@@ -64,7 +64,7 @@ class ApplicantCurrentAddressController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(ApplicantCurrentAddressPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(ApplicantCurrentAddressPage.navigate(waypoints, updatedAnswers))
+          } yield Redirect(ApplicantCurrentAddressPage.navigate(waypoints, updatedAnswers).route)
       )
   }
 }

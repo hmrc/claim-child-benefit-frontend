@@ -64,7 +64,7 @@ class BestTimeToContactController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(BestTimeToContactPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(BestTimeToContactPage.navigate(waypoints, updatedAnswers))
+          } yield Redirect(BestTimeToContactPage.navigate(waypoints, updatedAnswers).route)
       )
   }
 }

@@ -76,7 +76,7 @@ class AdoptingChildController @Inject()(
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(AdoptingChildPage(index), value))
                 _ <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(AdoptingChildPage(index).navigate(waypoints, updatedAnswers))
+              } yield Redirect(AdoptingChildPage(index).navigate(waypoints, updatedAnswers).route)
           )
       }
   }

@@ -64,7 +64,7 @@ class ApplicantOrPartnerBenefitsController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(ApplicantOrPartnerBenefitsPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(ApplicantOrPartnerBenefitsPage.navigate(waypoints, updatedAnswers))
+          } yield Redirect(ApplicantOrPartnerBenefitsPage.navigate(waypoints, updatedAnswers).route)
       )
   }
 }

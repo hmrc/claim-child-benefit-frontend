@@ -40,7 +40,7 @@ class ApplicantCurrentAddressPageSpec extends PageBehaviours {
         "to Applicant Lived at Current Address One Year" in {
 
           ApplicantCurrentAddressPage
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.ApplicantLivedAtCurrentAddressOneYearController.onPageLoad(waypoints))
         }
       }

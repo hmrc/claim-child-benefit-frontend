@@ -64,7 +64,7 @@ class ApplicantNinoKnownController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(ApplicantNinoKnownPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(ApplicantNinoKnownPage.navigate(waypoints, updatedAnswers))
+          } yield Redirect(ApplicantNinoKnownPage.navigate(waypoints, updatedAnswers).route)
       )
   }
 }

@@ -41,7 +41,7 @@ class ApplicantPreviousFamilyNamePageSpec extends PageBehaviours {
         "to Add Previous Family name" in {
 
           applicant.ApplicantPreviousFamilyNamePage(Index(0))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.AddApplicantPreviousFamilyNameController.onPageLoad(waypoints))
         }
       }

@@ -40,11 +40,11 @@ class PreviousClaimantNamePageSpec extends PageBehaviours {
         "to Previous Claimant Address" in {
 
           PreviousClaimantNamePage(Index(0))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.PreviousClaimantAddressController.onPageLoad(waypoints, Index(0)))
 
           PreviousClaimantNamePage(Index(1))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.PreviousClaimantAddressController.onPageLoad(waypoints, Index(1)))
         }
       }

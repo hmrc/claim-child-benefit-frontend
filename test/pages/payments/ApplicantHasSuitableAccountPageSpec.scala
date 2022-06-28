@@ -42,7 +42,7 @@ class ApplicantHasSuitableAccountPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(ApplicantHasSuitableAccountPage, true).success.value
 
           ApplicantHasSuitableAccountPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.AccountInApplicantsNameController.onPageLoad(waypoints))
         }
 
@@ -51,7 +51,7 @@ class ApplicantHasSuitableAccountPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(ApplicantHasSuitableAccountPage, false).success.value
 
           ApplicantHasSuitableAccountPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(applicantRoutes.ApplicantHasPreviousFamilyNameController.onPageLoad(waypoints))
         }
       }

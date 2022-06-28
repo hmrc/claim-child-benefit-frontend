@@ -40,7 +40,7 @@ class PartnerNamePageSpec extends PageBehaviours {
         "to Partner NINO Known" in {
 
           PartnerNamePage
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.PartnerNinoKnownController.onPageLoad(waypoints))
         }
       }

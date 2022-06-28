@@ -40,7 +40,7 @@ class BestTimeToContactPageSpec extends PageBehaviours {
         "to Applicant Nationality" in {
 
           BestTimeToContactPage
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.ApplicantNationalityController.onPageLoad(waypoints))
         }
       }

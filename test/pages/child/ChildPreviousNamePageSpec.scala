@@ -40,19 +40,19 @@ class ChildPreviousNamePageSpec extends PageBehaviours {
         "to Add Child Previous Name for the same child index" in {
 
           ChildPreviousNamePage(Index(0), Index(0))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.AddChildPreviousNameController.onPageLoad(waypoints, Index(0)))
 
           ChildPreviousNamePage(Index(0), Index(1))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.AddChildPreviousNameController.onPageLoad(waypoints, Index(0)))
 
           ChildPreviousNamePage(Index(1), Index(0))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.AddChildPreviousNameController.onPageLoad(waypoints, Index(1)))
 
           ChildPreviousNamePage(Index(1), Index(1))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.AddChildPreviousNameController.onPageLoad(waypoints, Index(1)))
         }
       }

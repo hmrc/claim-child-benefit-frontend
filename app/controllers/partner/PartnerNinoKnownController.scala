@@ -78,7 +78,7 @@ class PartnerNinoKnownController @Inject()(
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerNinoKnownPage, value))
                 _ <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(PartnerNinoKnownPage.navigate(waypoints, updatedAnswers))
+              } yield Redirect(PartnerNinoKnownPage.navigate(waypoints, updatedAnswers).route)
           )
       }
   }

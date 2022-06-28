@@ -40,11 +40,11 @@ class ChildScottishBirthCertificateDetailsPageSpec extends PageBehaviours {
         "to Applicant Relationship to Child for the same index" in {
 
           ChildScottishBirthCertificateDetailsPage(Index(0))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.ApplicantRelationshipToChildController.onPageLoad(waypoints, Index(0)))
 
           ChildScottishBirthCertificateDetailsPage(Index(1))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.ApplicantRelationshipToChildController.onPageLoad(waypoints, Index(1)))
         }
       }

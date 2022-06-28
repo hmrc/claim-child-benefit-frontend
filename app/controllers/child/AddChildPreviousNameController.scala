@@ -80,7 +80,7 @@ class AddChildPreviousNameController @Inject()(
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(AddChildPreviousNamePage(index), value))
                 _ <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(AddChildPreviousNamePage(index).navigate(waypoints, updatedAnswers))
+              } yield Redirect(AddChildPreviousNamePage(index).navigate(waypoints, updatedAnswers).route)
           )
       }
   }

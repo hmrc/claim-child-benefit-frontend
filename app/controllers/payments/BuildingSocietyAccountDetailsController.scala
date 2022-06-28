@@ -64,7 +64,7 @@ class BuildingSocietyAccountDetailsController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(BuildingSocietyAccountDetailsPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(BuildingSocietyAccountDetailsPage.navigate(waypoints, updatedAnswers))
+          } yield Redirect(BuildingSocietyAccountDetailsPage.navigate(waypoints, updatedAnswers).route)
       )
   }
 }

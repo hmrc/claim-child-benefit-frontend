@@ -65,7 +65,7 @@ class AddChildController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(AddChildPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(AddChildPage.navigate(waypoints, updatedAnswers))
+          } yield Redirect(AddChildPage.navigate(waypoints, updatedAnswers).route)
       )
   }
 }

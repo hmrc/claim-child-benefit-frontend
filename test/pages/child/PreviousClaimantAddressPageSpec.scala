@@ -40,11 +40,11 @@ class PreviousClaimantAddressPageSpec extends PageBehaviours {
         "to Adopting Child" in {
 
           PreviousClaimantAddressPage(Index(0))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.AdoptingChildController.onPageLoad(waypoints, Index(0)))
 
           PreviousClaimantAddressPage(Index(1))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.AdoptingChildController.onPageLoad(waypoints, Index(1)))
         }
       }

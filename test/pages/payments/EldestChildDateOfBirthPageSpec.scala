@@ -46,7 +46,7 @@ class EldestChildDateOfBirthPageSpec extends PageBehaviours {
         "to Want to be paid to existing account" in {
 
           EldestChildDateOfBirthPage
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.WantToBePaidToExistingAccountController.onPageLoad(waypoints))
         }
       }

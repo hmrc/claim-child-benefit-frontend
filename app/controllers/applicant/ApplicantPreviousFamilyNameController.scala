@@ -65,7 +65,7 @@ class ApplicantPreviousFamilyNameController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(ApplicantPreviousFamilyNamePage(index), value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(ApplicantPreviousFamilyNamePage(index).navigate(waypoints, updatedAnswers))
+          } yield Redirect(ApplicantPreviousFamilyNamePage(index).navigate(waypoints, updatedAnswers).route)
       )
   }
 }

@@ -40,11 +40,11 @@ class ApplicantRelationshipToChildPageSpec extends PageBehaviours {
         "to Anyone Claimed for Child Before with the same index" in {
 
           ApplicantRelationshipToChildPage(Index(0))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.AnyoneClaimedForChildBeforeController.onPageLoad(waypoints, Index(0)))
 
           ApplicantRelationshipToChildPage(Index(1))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.AnyoneClaimedForChildBeforeController.onPageLoad(waypoints, Index(1)))
         }
       }

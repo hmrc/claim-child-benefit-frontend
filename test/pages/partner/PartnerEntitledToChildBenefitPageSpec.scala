@@ -41,7 +41,7 @@ class PartnerEntitledToChildBenefitPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(PartnerEntitledToChildBenefitPage, true).success.value
 
           PartnerEntitledToChildBenefitPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.PartnerEldestChildNameController.onPageLoad(waypoints))
         }
 
@@ -50,7 +50,7 @@ class PartnerEntitledToChildBenefitPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(PartnerEntitledToChildBenefitPage, false).success.value
 
           PartnerEntitledToChildBenefitPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.PartnerWaitingForEntitlementDecisionController.onPageLoad(waypoints))
         }
       }

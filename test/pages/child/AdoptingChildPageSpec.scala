@@ -48,11 +48,11 @@ class AdoptingChildPageSpec extends PageBehaviours {
                 .set(ChildBirthRegistrationCountryPage(Index(1)), England).success.value
 
             AdoptingChildPage(Index(0))
-              .navigate(waypoints, answers)
+              .navigate(waypoints, answers).route
               .mustEqual(routes.CheckChildDetailsController.onPageLoad(waypoints, Index(0)))
 
             AdoptingChildPage(Index(1))
-              .navigate(waypoints, answers)
+              .navigate(waypoints, answers).route
               .mustEqual(routes.CheckChildDetailsController.onPageLoad(waypoints, Index(1)))
           }
         }
@@ -67,11 +67,11 @@ class AdoptingChildPageSpec extends PageBehaviours {
                 .set(ChildBirthRegistrationCountryPage(Index(1)), Wales).success.value
 
             AdoptingChildPage(Index(0))
-              .navigate(waypoints, answers)
+              .navigate(waypoints, answers).route
               .mustEqual(routes.CheckChildDetailsController.onPageLoad(waypoints, Index(0)))
 
             AdoptingChildPage(Index(1))
-              .navigate(waypoints, answers)
+              .navigate(waypoints, answers).route
               .mustEqual(routes.CheckChildDetailsController.onPageLoad(waypoints, Index(1)))
           }
         }
@@ -86,11 +86,11 @@ class AdoptingChildPageSpec extends PageBehaviours {
                 .set(ChildBirthRegistrationCountryPage(Index(1)), Scotland).success.value
 
             AdoptingChildPage(Index(0))
-              .navigate(waypoints, answers)
+              .navigate(waypoints, answers).route
               .mustEqual(routes.CheckChildDetailsController.onPageLoad(waypoints, Index(0)))
 
             AdoptingChildPage(Index(1))
-              .navigate(waypoints, answers)
+              .navigate(waypoints, answers).route
               .mustEqual(routes.CheckChildDetailsController.onPageLoad(waypoints, Index(1)))
           }
         }
@@ -105,11 +105,11 @@ class AdoptingChildPageSpec extends PageBehaviours {
                 .set(ChildBirthRegistrationCountryPage(Index(1)), Other).success.value
 
             AdoptingChildPage(Index(0))
-              .navigate(waypoints, answers)
+              .navigate(waypoints, answers).route
               .mustEqual(routes.IncludedDocumentsController.onPageLoad(waypoints, Index(0)))
 
             AdoptingChildPage(Index(1))
-              .navigate(waypoints, answers)
+              .navigate(waypoints, answers).route
               .mustEqual(routes.IncludedDocumentsController.onPageLoad(waypoints, Index(1)))
           }
         }
@@ -124,11 +124,11 @@ class AdoptingChildPageSpec extends PageBehaviours {
                 .set(ChildBirthRegistrationCountryPage(Index(1)), Unknown).success.value
 
             AdoptingChildPage(Index(0))
-              .navigate(waypoints, answers)
+              .navigate(waypoints, answers).route
               .mustEqual(routes.IncludedDocumentsController.onPageLoad(waypoints, Index(0)))
 
             AdoptingChildPage(Index(1))
-              .navigate(waypoints, answers)
+              .navigate(waypoints, answers).route
               .mustEqual(routes.IncludedDocumentsController.onPageLoad(waypoints, Index(1)))
           }
         }

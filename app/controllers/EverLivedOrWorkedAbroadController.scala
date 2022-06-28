@@ -64,7 +64,7 @@ class EverLivedOrWorkedAbroadController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(EverLivedOrWorkedAbroadPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(EverLivedOrWorkedAbroadPage.navigate(waypoints, updatedAnswers))
+          } yield Redirect(EverLivedOrWorkedAbroadPage.navigate(waypoints, updatedAnswers).route)
       )
   }
 }

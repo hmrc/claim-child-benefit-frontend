@@ -41,7 +41,7 @@ class ApplicantLivedAtCurrentAddressOneYearPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
 
           ApplicantLivedAtCurrentAddressOneYearPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.ApplicantPhoneNumberController.onPageLoad(waypoints))
         }
 
@@ -50,7 +50,7 @@ class ApplicantLivedAtCurrentAddressOneYearPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
 
           ApplicantLivedAtCurrentAddressOneYearPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.ApplicantPreviousAddressController.onPageLoad(waypoints))
         }
       }

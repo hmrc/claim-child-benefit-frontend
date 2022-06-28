@@ -19,19 +19,13 @@ package pages
 import models.{CheckMode, NormalMode, UserAnswers}
 import play.api.mvc.Call
 
-import scala.language.implicitConversions
-
-case class PageAndWaypoints(page: Page, waypoints: Waypoints) {
+final case class PageAndWaypoints(page: Page, waypoints: Waypoints) {
 
   lazy val route: Call = page.route(waypoints)
+  lazy val url: String = route.url
 
   def next(answers: UserAnswers): PageAndWaypoints =
     page.navigate(waypoints, answers)
-}
-
-object PageAndWaypoints {
-
-  implicit def toCall(p: PageAndWaypoints): Call = p.route
 }
 
 trait Page {

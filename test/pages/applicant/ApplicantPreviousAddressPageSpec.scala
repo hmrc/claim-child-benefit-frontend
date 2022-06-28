@@ -40,7 +40,7 @@ class ApplicantPreviousAddressPageSpec extends PageBehaviours {
         "to Applicant Phone Number" in {
 
           ApplicantPreviousAddressPage
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.ApplicantPhoneNumberController.onPageLoad(waypoints))
         }
       }

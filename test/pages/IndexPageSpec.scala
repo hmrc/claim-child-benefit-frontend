@@ -26,7 +26,7 @@ class IndexPageSpec extends SpecBase {
     "must navigate to Ever Lived or Worked Abroad" in {
 
       IndexPage
-        .navigate(EmptyWaypoints, emptyUserAnswers)
+        .navigate(EmptyWaypoints, emptyUserAnswers).route
         .mustEqual(routes.EverLivedOrWorkedAbroadController.onPageLoad(EmptyWaypoints))
     }
   }

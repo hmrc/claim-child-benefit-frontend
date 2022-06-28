@@ -39,7 +39,7 @@ class WantToBePaidWeeklyPageSpec extends PageBehaviours {
         "to Applicant has Suitable Account" in {
 
           WantToBePaidWeeklyPage
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.ApplicantHasSuitableAccountController.onPageLoad(waypoints))
         }
       }

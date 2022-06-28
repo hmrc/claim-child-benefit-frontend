@@ -40,11 +40,11 @@ class ChildBiologicalSexPageSpec extends PageBehaviours {
         "to Child Date of Birth for the same index" in {
 
           ChildBiologicalSexPage(Index(0))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.ChildDateOfBirthController.onPageLoad(waypoints, Index(0)))
 
           ChildBiologicalSexPage(Index(1))
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.ChildDateOfBirthController.onPageLoad(waypoints, Index(1)))
         }
       }

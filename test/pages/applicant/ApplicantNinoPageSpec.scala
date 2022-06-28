@@ -41,7 +41,7 @@ class ApplicantNinoPageSpec extends PageBehaviours {
         "to Applicant Date of Birth" in {
 
           ApplicantNinoPage
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.ApplicantDateOfBirthController.onPageLoad(waypoints))
         }
       }

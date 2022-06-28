@@ -40,7 +40,7 @@ class EverLivedOrWorkedAbroadPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(EverLivedOrWorkedAbroadPage, true).success.value
 
           EverLivedOrWorkedAbroadPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.UsePrintAndPostFormController.onPageLoad(waypoints))
         }
 
@@ -49,7 +49,7 @@ class EverLivedOrWorkedAbroadPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(EverLivedOrWorkedAbroadPage, false).success.value
 
           EverLivedOrWorkedAbroadPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.AnyChildLivedWithOthersController.onPageLoad(waypoints))
         }
       }

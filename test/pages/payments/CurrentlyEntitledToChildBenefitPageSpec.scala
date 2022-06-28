@@ -41,7 +41,7 @@ class CurrentlyEntitledToChildBenefitPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(CurrentlyEntitledToChildBenefitPage, true).success.value
 
           CurrentlyEntitledToChildBenefitPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.CurrentlyReceivingChildBenefitController.onPageLoad(waypoints))
         }
 
@@ -50,7 +50,7 @@ class CurrentlyEntitledToChildBenefitPageSpec extends PageBehaviours {
           val answers = emptyUserAnswers.set(CurrentlyEntitledToChildBenefitPage, false).success.value
 
           CurrentlyEntitledToChildBenefitPage
-            .navigate(waypoints, answers)
+            .navigate(waypoints, answers).route
             .mustEqual(routes.TaxChargeExplanationController.onPageLoad(waypoints))
         }
       }

@@ -40,7 +40,7 @@ class PartnerEmploymentStatusPageSpec extends PageBehaviours {
         "to Partner NINO Known" in {
 
           PartnerEmploymentStatusPage
-            .navigate(waypoints, emptyUserAnswers)
+            .navigate(waypoints, emptyUserAnswers).route
             .mustEqual(routes.PartnerEntitledToChildBenefitController.onPageLoad(waypoints))
         }
       }

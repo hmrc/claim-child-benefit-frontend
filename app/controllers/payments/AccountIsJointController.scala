@@ -64,7 +64,7 @@ class AccountIsJointController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(AccountIsJointPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(AccountIsJointPage.navigate(waypoints, updatedAnswers))
+          } yield Redirect(AccountIsJointPage.navigate(waypoints, updatedAnswers).route)
       )
   }
 }
