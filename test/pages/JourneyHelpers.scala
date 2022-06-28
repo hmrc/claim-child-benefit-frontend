@@ -19,33 +19,14 @@ package pages
 import cats.data.State
 import cats.implicits._
 import models.UserAnswers
-import org.scalatest.{OptionValues, TryValues}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import org.scalatest.{OptionValues, TryValues}
 import pages.JourneyState.JourneyStep
-import play.api.libs.json.Writes
-import queries.Settable
+import play.api.libs.json.{Reads, Writes}
+import queries.{Gettable, Settable}
 
-final case class JourneyState(page: Page, waypoints: Waypoints, answers: UserAnswers) {
-
-  def next: JourneyState = {
-    val PageAndWaypoints(nextPage, newWaypoints) = page.navigate(waypoints, answers)
-    JourneyState(nextPage, newWaypoints, answers)
-  }
-
-  def steps(steps: JourneyStep[Unit]*): Unit =
-    steps.fold(State.pure(())) { _ >> _ }.run(this).value
-}
-
-object JourneyState {
-
-  type JourneyStep[A] = State[JourneyState, A]
-
-  def startingFrom(page: Page): JourneyState =
-    JourneyState(page, EmptyWaypoints, UserAnswers("id"))
-}
-
-class JourneySpec extends AnyFreeSpec with Matchers with TryValues with OptionValues {
+trait JourneyHelpers extends AnyFreeSpec with Matchers with TryValues with OptionValues {
 
   def next: JourneyStep[Unit] =
     State.modify(_.next)
@@ -58,6 +39,9 @@ class JourneySpec extends AnyFreeSpec with Matchers with TryValues with OptionVa
 
   def getWaypoints: JourneyStep[Waypoints] =
     State.inspect(_.waypoints)
+
+  def getAnswers: JourneyStep[UserAnswers] =
+    State.inspect(_.answers)
 
   def answer[A](page: Page with Settable[A], answer: A)(implicit writes: Writes[A]): JourneyStep[Unit] =
     State.modify { journeyState =>
@@ -74,8 +58,18 @@ class JourneySpec extends AnyFreeSpec with Matchers with TryValues with OptionVa
       waypoints mustEqual expectedWaypoints
     }
 
-  def singlePageAssertion[A](page: Page with Settable[A], value: A, expectedPage: Page)(implicit writes: Writes[A]): JourneyStep[Unit] =
-    answer(page, value) >> next >> pageMustBe(expectedPage)
+  def answersMustContain[A](gettable: Gettable[A])(implicit reads: Reads[A]): JourneyStep[Unit] =
+    getAnswers.map { answers =>
+      answers.get(gettable) mustBe defined
+    }
+
+  def answersMustNotContain[A](gettable: Gettable[A])(implicit reads: Reads[A]): JourneyStep[Unit] =
+    getAnswers.map { answers =>
+      answers.get(gettable) must not be defined
+    }
+
+  def answerPage[A](page: Page with Settable[A], value: A, expectedDestination: Page)(implicit writes: Writes[A]): JourneyStep[Unit] =
+    answer(page, value) >> next >> pageMustBe(expectedDestination)
 
   def goTo(page: Page): JourneyStep[Unit] =
     State.modify(_.copy(page = page))
@@ -91,13 +85,4 @@ class JourneySpec extends AnyFreeSpec with Matchers with TryValues with OptionVa
       currentPage <- getPage
       _           <- goToCheckMode(page, currentPage.asInstanceOf[CheckAnswersPage])
     } yield ()
-
-  "foo" in {
-
-    JourneyState.startingFrom(EverLivedOrWorkedAbroadPage).steps(
-      answer(EverLivedOrWorkedAbroadPage, false),
-      next(1),
-      pageMustBe(AnyChildLivedWithOthersPage)
-    )
-  }
 }
