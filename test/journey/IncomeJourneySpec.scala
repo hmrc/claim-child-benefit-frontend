@@ -33,7 +33,8 @@ class IncomeJourneySpec extends AnyFreeSpec with JourneyHelpers {
       startingFrom(ApplicantOrPartnerIncomeOver50kPage)
         .run(
           submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
-          submitAnswer(ApplicantOrPartnerBenefitsPage, benefits)
+          submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
+          pageMustBe(ClaimedChildBenefitBeforePage)
         )
     }
 
@@ -43,7 +44,8 @@ class IncomeJourneySpec extends AnyFreeSpec with JourneyHelpers {
         .run(
           submitAnswer(ApplicantOrPartnerIncomeOver50kPage, true),
           submitAnswer(ApplicantOrPartnerIncomeOver60kPage, false),
-          submitAnswer(ApplicantOrPartnerBenefitsPage, benefits)
+          submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
+          pageMustBe(ClaimedChildBenefitBeforePage)
         )
     }
 
@@ -53,7 +55,8 @@ class IncomeJourneySpec extends AnyFreeSpec with JourneyHelpers {
         .run(
           submitAnswer(ApplicantOrPartnerIncomeOver50kPage, true),
           submitAnswer(ApplicantOrPartnerIncomeOver60kPage, true),
-          submitAnswer(ApplicantOrPartnerBenefitsPage, benefits)
+          submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
+          pageMustBe(ClaimedChildBenefitBeforePage)
         )
     }
   }
@@ -67,7 +70,8 @@ class IncomeJourneySpec extends AnyFreeSpec with JourneyHelpers {
       startingFrom(ApplicantIncomeOver50kPage)
         .run(
           submitAnswer(ApplicantIncomeOver50kPage, false),
-          submitAnswer(ApplicantBenefitsPage, benefits)
+          submitAnswer(ApplicantBenefitsPage, benefits),
+          pageMustBe(ClaimedChildBenefitBeforePage)
         )
     }
 
@@ -77,7 +81,8 @@ class IncomeJourneySpec extends AnyFreeSpec with JourneyHelpers {
         .run(
           submitAnswer(ApplicantIncomeOver50kPage, true),
           submitAnswer(ApplicantIncomeOver60kPage, false),
-          submitAnswer(ApplicantBenefitsPage, benefits)
+          submitAnswer(ApplicantBenefitsPage, benefits),
+          pageMustBe(ClaimedChildBenefitBeforePage)
         )
     }
 
@@ -87,7 +92,8 @@ class IncomeJourneySpec extends AnyFreeSpec with JourneyHelpers {
         .run(
           submitAnswer(ApplicantIncomeOver50kPage, true),
           submitAnswer(ApplicantIncomeOver60kPage, true),
-          submitAnswer(ApplicantBenefitsPage, benefits)
+          submitAnswer(ApplicantBenefitsPage, benefits),
+          pageMustBe(ClaimedChildBenefitBeforePage)
         )
     }
   }

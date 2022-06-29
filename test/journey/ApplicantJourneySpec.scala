@@ -46,7 +46,8 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
           submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
           submitAnswer(ApplicantPhoneNumberPage, "07777 7777777"),
           submitAnswer(BestTimeToContactPage, "morning"),
-          submitAnswer(ApplicantNationalityPage, "nationality")
+          submitAnswer(ApplicantNationalityPage, "nationality"),
+          pageMustBe(ApplicantEmploymentStatusPage)
         )
     }
   }
@@ -58,7 +59,8 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
     startingFrom(ApplicantNinoKnownPage)
       .run(
         submitAnswer(ApplicantNinoKnownPage, true),
-        submitAnswer(ApplicantNinoPage, nino)
+        submitAnswer(ApplicantNinoPage, nino),
+        pageMustBe(ApplicantDateOfBirthPage)
       )
   }
 
@@ -70,7 +72,8 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
         submitAnswer(ApplicantPreviousFamilyNamePage(Index(0)), "name"),
         submitAnswer(AddApplicantPreviousFamilyNamePage, true),
         submitAnswer(ApplicantPreviousFamilyNamePage(Index(1)), "name"),
-        submitAnswer(AddApplicantPreviousFamilyNamePage, false)
+        submitAnswer(AddApplicantPreviousFamilyNamePage, false),
+        pageMustBe(ApplicantNinoKnownPage)
       )
   }
 
@@ -83,12 +86,10 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
         submitAnswer(AddApplicantPreviousFamilyNamePage, true),
         submitAnswer(ApplicantPreviousFamilyNamePage(Index(1)), "name"),
         goTo(RemoveApplicantPreviousFamilyNamePage(Index(1))),
-        remove(ApplicantPreviousFamilyNamePage(Index(1))),
-        next,
+        removeAddToListItem(ApplicantPreviousFamilyNamePage(Index(1))),
         pageMustBe(AddApplicantPreviousFamilyNamePage),
         goTo(RemoveApplicantPreviousFamilyNamePage(Index(0))),
-        remove(ApplicantPreviousFamilyNamePage(Index(0))),
-        next,
+        removeAddToListItem(ApplicantPreviousFamilyNamePage(Index(0))),
         pageMustBe(ApplicantHasPreviousFamilyNamePage)
       )
   }
@@ -100,7 +101,8 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
     startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
       .run(
         submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
-        submitAnswer(ApplicantPreviousAddressPage, address)
+        submitAnswer(ApplicantPreviousAddressPage, address),
+        pageMustBe(ApplicantPhoneNumberPage)
       )
   }
 
@@ -113,7 +115,8 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
       startingFrom(ApplicantEmploymentStatusPage, answers = answers)
         .run(
-          submitAnswer(ApplicantEmploymentStatusPage, employmentStatus)
+          submitAnswer(ApplicantEmploymentStatusPage, employmentStatus),
+          pageMustBe(PartnerNamePage)
         )
     }
 
@@ -124,7 +127,8 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
       startingFrom(ApplicantEmploymentStatusPage, answers = answers)
         .run(
-          submitAnswer(ApplicantEmploymentStatusPage, employmentStatus)
+          submitAnswer(ApplicantEmploymentStatusPage, employmentStatus),
+          pageMustBe(PartnerNamePage)
         )
     }
 
@@ -135,7 +139,8 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
       startingFrom(ApplicantEmploymentStatusPage, answers = answers)
         .run(
-          submitAnswer(ApplicantEmploymentStatusPage, employmentStatus)
+          submitAnswer(ApplicantEmploymentStatusPage, employmentStatus),
+          pageMustBe(ChildNamePage(Index(0)))
         )
     }
 
@@ -146,8 +151,9 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
       startingFrom(ApplicantEmploymentStatusPage, answers = answers)
         .run(
-          submitAnswer(ApplicantEmploymentStatusPage, employmentStatus)
-        )
+          submitAnswer(ApplicantEmploymentStatusPage, employmentStatus),
+          pageMustBe(ChildNamePage(Index(0)))
+      )
     }
 
     "must go to Child Name (for index 0) if they are Divorced" in {
@@ -157,7 +163,8 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
       startingFrom(ApplicantEmploymentStatusPage, answers = answers)
         .run(
-          submitAnswer(ApplicantEmploymentStatusPage, employmentStatus)
+          submitAnswer(ApplicantEmploymentStatusPage, employmentStatus),
+          pageMustBe(ChildNamePage(Index(0)))
         )
     }
 
@@ -168,7 +175,8 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
       startingFrom(ApplicantEmploymentStatusPage, answers = answers)
         .run(
-          submitAnswer(ApplicantEmploymentStatusPage, employmentStatus)
+          submitAnswer(ApplicantEmploymentStatusPage, employmentStatus),
+          pageMustBe(ChildNamePage(Index(0)))
         )
     }
   }

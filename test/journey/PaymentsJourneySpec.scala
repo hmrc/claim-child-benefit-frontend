@@ -35,6 +35,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
       startingFrom(ClaimedChildBenefitBeforePage)
         .run(
           submitAnswer(ClaimedChildBenefitBeforePage, false),
+          pageMustBe(TaxChargeExplanationPage),
           next,
           pageMustBe(WantToBePaidPage)
         )
@@ -51,6 +52,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
           .run(
             submitAnswer(ClaimedChildBenefitBeforePage, true),
             submitAnswer(CurrentlyEntitledToChildBenefitPage, false),
+            pageMustBe(TaxChargeExplanationPage),
             next,
             pageMustBe(WantToBePaidPage)
           )
@@ -66,6 +68,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
             submitAnswer(ClaimedChildBenefitBeforePage, true),
             submitAnswer(CurrentlyEntitledToChildBenefitPage, true),
             submitAnswer(CurrentlyReceivingChildBenefitPage, false),
+            pageMustBe(TaxChargeExplanationPage),
             next,
             pageMustBe(WantToBePaidPage)
           )
@@ -88,14 +91,15 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
               submitAnswer(CurrentlyReceivingChildBenefitPage, true),
               submitAnswer(EldestChildNamePage, childName),
               submitAnswer(EldestChildDateOfBirthPage, childDob),
-              submitAnswer(WantToBePaidToExistingAccountPage, true)
+              submitAnswer(WantToBePaidToExistingAccountPage, true),
+              pageMustBe(ApplicantHasPreviousFamilyNamePage)
             )
         }
       }
 
       "who do not want to be paid to their existing bank account" -{
 
-        "must be asked for bank account details" in {
+        "must proceed to the bank details section" in {
 
           startingFrom(ClaimedChildBenefitBeforePage)
             .run(
@@ -104,7 +108,8 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
               submitAnswer(CurrentlyReceivingChildBenefitPage, true),
               submitAnswer(EldestChildNamePage, childName),
               submitAnswer(EldestChildDateOfBirthPage, childDob),
-              submitAnswer(WantToBePaidToExistingAccountPage, false)
+              submitAnswer(WantToBePaidToExistingAccountPage, false),
+              pageMustBe(ApplicantHasSuitableAccountPage)
             )
         }
       }
@@ -124,11 +129,12 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
-            submitAnswer(WantToBePaidPage, true)
+            submitAnswer(WantToBePaidPage, true),
+            pageMustBe(ApplicantHasSuitableAccountPage)
           )
       }
 
-      "and receive qualifying benefits must be asked if they want to be paid weekly" in {
+      "and receive qualifying benefits must be asked if they want to be paid weekly then be asked their bank account details" in {
 
         val initialAnswers =
           UserAnswers("id")
@@ -138,14 +144,15 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
             submitAnswer(WantToBePaidPage, true),
-            submitAnswer(WantToBePaidWeeklyPage, true)
+            submitAnswer(WantToBePaidWeeklyPage, true),
+            pageMustBe(ApplicantHasSuitableAccountPage)
           )
       }
     }
 
     "who are Cohabiting" - {
 
-      "and not receiving qualifying benefits  must be asked for bank account details" in {
+      "and not receiving qualifying benefits must be asked for bank account details" in {
 
         val initialAnswers =
           UserAnswers("id")
@@ -154,12 +161,13 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
-            submitAnswer(WantToBePaidPage, true)
+            submitAnswer(WantToBePaidPage, true),
+            pageMustBe(ApplicantHasSuitableAccountPage)
           )
       }
 
 
-      "and receive qualifying benefits must be asked if they want to be paid weekly" in {
+      "and receiving qualifying benefits must be asked if they want to be paid weekly" in {
 
         val initialAnswers =
           UserAnswers("id")
@@ -169,7 +177,8 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
             submitAnswer(WantToBePaidPage, true),
-            submitAnswer(WantToBePaidWeeklyPage, true)
+            submitAnswer(WantToBePaidWeeklyPage, true),
+            pageMustBe(ApplicantHasSuitableAccountPage)
           )
       }
     }
@@ -186,7 +195,8 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
             submitAnswer(WantToBePaidPage, true),
-            submitAnswer(WantToBePaidWeeklyPage, true)
+            submitAnswer(WantToBePaidWeeklyPage, true),
+            pageMustBe(ApplicantHasSuitableAccountPage)
           )
       }
     }
@@ -203,7 +213,8 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
             submitAnswer(WantToBePaidPage, true),
-            submitAnswer(WantToBePaidWeeklyPage, true)
+            submitAnswer(WantToBePaidWeeklyPage, true),
+            pageMustBe(ApplicantHasSuitableAccountPage)
           )
       }
     }
@@ -220,7 +231,8 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
             submitAnswer(WantToBePaidPage, true),
-            submitAnswer(WantToBePaidWeeklyPage, true)
+            submitAnswer(WantToBePaidWeeklyPage, true),
+            pageMustBe(ApplicantHasSuitableAccountPage)
           )
       }
     }
@@ -237,7 +249,8 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
             submitAnswer(WantToBePaidPage, true),
-            submitAnswer(WantToBePaidWeeklyPage, true)
+            submitAnswer(WantToBePaidWeeklyPage, true),
+            pageMustBe(ApplicantHasSuitableAccountPage)
           )
       }
     }
@@ -249,7 +262,8 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
       startingFrom(WantToBePaidPage)
         .run(
-          submitAnswer(WantToBePaidPage, false)
+          submitAnswer(WantToBePaidPage, false),
+          pageMustBe(ApplicantHasPreviousFamilyNamePage)
         )
     }
   }
@@ -260,7 +274,8 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
       startingFrom(ApplicantHasSuitableAccountPage)
         .run(
-          submitAnswer(ApplicantHasSuitableAccountPage, false)
+          submitAnswer(ApplicantHasSuitableAccountPage, false),
+          pageMustBe(ApplicantHasPreviousFamilyNamePage)
         )
     }
   }
@@ -273,7 +288,8 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
         startingFrom(AccountInApplicantsNamePage)
           .run(
-            submitAnswer(AccountInApplicantsNamePage, true)
+            submitAnswer(AccountInApplicantsNamePage, true),
+            pageMustBe(BankAccountTypePage)
           )
       }
     }
@@ -288,7 +304,8 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
             .run(
               submitAnswer(AccountInApplicantsNamePage, false),
               submitAnswer(AccountIsJointPage, false),
-              submitAnswer(AccountHolderNamePage, "name")
+              submitAnswer(AccountHolderNamePage, "name"),
+              pageMustBe(BankAccountTypePage)
             )
         }
       }
@@ -303,7 +320,8 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
             .run(
               submitAnswer(AccountInApplicantsNamePage, false),
               submitAnswer(AccountIsJointPage, true),
-              submitAnswer(AccountHolderNamesPage, accountHolderNames)
+              submitAnswer(AccountHolderNamesPage, accountHolderNames),
+              pageMustBe(BankAccountTypePage)
             )
         }
       }
@@ -317,7 +335,8 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
     startingFrom(BankAccountTypePage)
       .run(
         submitAnswer(BankAccountTypePage, BankAccountType.Bank),
-        submitAnswer(BankAccountDetailsPage, bankDetails)
+        submitAnswer(BankAccountDetailsPage, bankDetails),
+        pageMustBe(ApplicantHasPreviousFamilyNamePage)
       )
   }
 
@@ -328,7 +347,8 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
     startingFrom(BankAccountTypePage)
       .run(
         submitAnswer(BankAccountTypePage, BankAccountType.BuildingSociety),
-        submitAnswer(BuildingSocietyAccountDetailsPage, buildingSocietyDetails)
+        submitAnswer(BuildingSocietyAccountDetailsPage, buildingSocietyDetails),
+        pageMustBe(ApplicantHasPreviousFamilyNamePage)
       )
   }
 }

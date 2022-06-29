@@ -62,8 +62,8 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             basicChildJourney,
             goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
             submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), Applicant),
-            answerMustEqual(AnyoneClaimedForChildBeforePage(Index(0)), Applicant)
-          )
+            pageMustBe(CheckChildDetailsPage(Index(0)))
+        )
       }
 
       "changing `Anyone claimed before` to `Partner` must update that answer and return the user to the Check page" in{
@@ -73,7 +73,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             basicChildJourney,
             goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
             submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), Partner),
-            answerMustEqual(AnyoneClaimedForChildBeforePage(Index(0)), Partner)
+            pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }
 
@@ -86,7 +86,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), SomeoneElse),
             submitAnswer(PreviousClaimantNamePage(Index(0)), claimantName),
             submitAnswer(PreviousClaimantAddressPage(Index(0)), claimantAddress),
-            answerMustEqual(AnyoneClaimedForChildBeforePage(Index(0)), SomeoneElse)
+            pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }
     }
@@ -108,6 +108,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             initialState,
             goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
             submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), No),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(PreviousClaimantNamePage(Index(0))),
             answersMustNotContain(PreviousClaimantAddressPage(Index(0)))
           )
@@ -120,6 +121,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             initialState,
             goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
             submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), Applicant),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(PreviousClaimantNamePage(Index(0))),
             answersMustNotContain(PreviousClaimantAddressPage(Index(0)))
           )
@@ -132,6 +134,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             initialState,
             goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
             submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), Partner),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(PreviousClaimantNamePage(Index(0))),
             answersMustNotContain(PreviousClaimantAddressPage(Index(0)))
           )
@@ -146,7 +149,8 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           .run(
             basicChildJourney,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
-            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Wales)
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Wales),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }
 
@@ -158,11 +162,12 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
             submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBcDetails),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(ChildBirthCertificateSystemNumberPage(Index(0)))
           )
       }
 
-      "changing the country to Other must remove Birth Certificate System Number, collect Included Documents, then return to Child Benefit" in {
+      "changing the country to Other must remove Birth Certificate System Number, collect Included Documents, then return to Check Child Details" in {
 
         startingFrom(ChildNamePage(Index(0)))
           .run(
@@ -170,11 +175,12 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Other),
             submitAnswer(IncludedDocumentsPage(Index(0)), includedDocuments),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(ChildBirthCertificateSystemNumberPage(Index(0)))
           )
       }
 
-      "changing the country to unknown must remove Birth Certificate System Number, collect Included Documents, then return to Child Benefit" in {
+      "changing the country to unknown must remove Birth Certificate System Number, collect Included Documents, then return to Check Child Details" in {
 
         startingFrom(ChildNamePage(Index(0)))
           .run(
@@ -182,6 +188,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Unknown),
             submitAnswer(IncludedDocumentsPage(Index(0)), includedDocuments),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(ChildBirthCertificateSystemNumberPage(Index(0)))
           )
       }
@@ -201,7 +208,8 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           .run(
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
-            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England)
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }
 
@@ -213,11 +221,12 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
             submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBcDetails),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(ChildBirthCertificateSystemNumberPage(Index(0)))
           )
       }
 
-      "changing the country to Other must remove Birth Certificate System Number, collect Included Documents, then return to Child Benefit" in {
+      "changing the country to Other must remove Birth Certificate System Number, collect Included Documents, then return to Check Child Details" in {
 
         startingFrom(ChildNamePage(Index(0)))
           .run(
@@ -225,11 +234,12 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Other),
             submitAnswer(IncludedDocumentsPage(Index(0)), includedDocuments),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(ChildBirthCertificateSystemNumberPage(Index(0)))
           )
       }
 
-      "changing the country to unknown must remove Birth Certificate System Number, collect Included Documents, then return to Child Benefit" in {
+      "changing the country to unknown must remove Birth Certificate System Number, collect Included Documents, then return to Check Child Details" in {
 
         startingFrom(ChildNamePage(Index(0)))
           .run(
@@ -237,6 +247,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Unknown),
             submitAnswer(IncludedDocumentsPage(Index(0)), includedDocuments),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(ChildBirthCertificateSystemNumberPage(Index(0)))
           )
       }
@@ -260,6 +271,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
             submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(ChildScottishBirthCertificateDetailsPage(Index(0)))
           )
       }
@@ -272,11 +284,12 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Wales),
             submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(ChildScottishBirthCertificateDetailsPage(Index(0)))
           )
       }
 
-      "changing the country to Other must collect Included Documents, remove Scottish  Details, then return to Child Benefit" in {
+      "changing the country to Other must collect Included Documents, remove Scottish  Details, then return to Check Child Details" in {
 
         startingFrom(ChildNamePage(Index(0)))
           .run(
@@ -284,11 +297,12 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Other),
             submitAnswer(IncludedDocumentsPage(Index(0)), includedDocuments),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(ChildScottishBirthCertificateDetailsPage(Index(0)))
           )
       }
 
-      "changing the country to unknown must collect Included Documents, remove Scottish Details, then return to Child Benefit" in {
+      "changing the country to unknown must collect Included Documents, remove Scottish Details, then return to Check Child Details" in {
 
         startingFrom(ChildNamePage(Index(0)))
           .run(
@@ -296,6 +310,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Unknown),
             submitAnswer(IncludedDocumentsPage(Index(0)), includedDocuments),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(ChildScottishBirthCertificateDetailsPage(Index(0)))
           )
       }
@@ -319,6 +334,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
             submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(IncludedDocumentsPage(Index(0)))
           )
       }
@@ -331,6 +347,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Wales),
             submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(IncludedDocumentsPage(Index(0)))
           )
       }
@@ -343,17 +360,19 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
             submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBcDetails),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(IncludedDocumentsPage(Index(0)))
           )
       }
 
-      "changing the country to Unknown must return to Child Benefit" in {
+      "changing the country to Unknown must return to Check Child Details" in {
 
         startingFrom(ChildNamePage(Index(0)))
           .run(
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
-            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Unknown)
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Unknown),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }
     }
@@ -376,6 +395,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
             submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(IncludedDocumentsPage(Index(0)))
           )
       }
@@ -388,6 +408,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Wales),
             submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(IncludedDocumentsPage(Index(0)))
           )
       }
@@ -400,17 +421,19 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
             submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBcDetails),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(IncludedDocumentsPage(Index(0)))
           )
       }
 
-      "changing the country to Other must return to Child Benefit" in {
+      "changing the country to Other must return to Check Child Details" in {
 
         startingFrom(ChildNamePage(Index(0)))
           .run(
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
-            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Other)
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Other),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }
     }
@@ -426,7 +449,8 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             submitAnswer(ChildHasPreviousNamePage(Index(0)), true),
             submitAnswer(ChildNameChangedByDeedPollPage(Index(0)), true),
             submitAnswer(ChildPreviousNamePage(Index(0), Index(0)), childName),
-            submitAnswer(AddChildPreviousNamePage(Index(0)), false)
+            submitAnswer(AddChildPreviousNamePage(Index(0)), false),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }
     }
@@ -439,7 +463,8 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           setUserAnswersTo(ChildHasPreviousNamePage(Index(0)), true),
           setUserAnswersTo(ChildNameChangedByDeedPollPage(Index(0)), true),
           setUserAnswersTo(ChildPreviousNamePage(Index(0), Index(0)), childName),
-          setUserAnswersTo(ChildPreviousNamePage(Index(0), Index(1)), childName)
+          setUserAnswersTo(ChildPreviousNamePage(Index(0), Index(1)), childName),
+          pageMustBe(CheckChildDetailsPage(Index(0)))
         )
 
       "changing to say they had no previous names must remove all names, and whether the name was changed by deed poll, then return to Check Child Details" in {
@@ -449,6 +474,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             initialState,
             goToChangeAnswer(ChildHasPreviousNamePage(Index(0))),
             submitAnswer(ChildHasPreviousNamePage(Index(0)), false),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(ChildNameChangedByDeedPollPage(Index(0))),
             answersMustNotContain(ChildPreviousNamePage(Index(0), Index(0))),
             answersMustNotContain(ChildPreviousNamePage(Index(0), Index(1)))
@@ -462,10 +488,10 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             initialState,
             goToChangeAnswer(AddChildPreviousNamePage(Index(0))),
             goTo(RemoveChildPreviousNamePage(Index(0), Index(1))),
-            remove(ChildPreviousNamePage(Index(0), Index(1))),
-            next,
+            removeAddToListItem(ChildPreviousNamePage(Index(0), Index(1))),
             pageMustBe(AddChildPreviousNamePage(Index(0))),
-            submitAnswer(AddChildPreviousNamePage(Index(0)), false)
+            submitAnswer(AddChildPreviousNamePage(Index(0)), false),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }
 
@@ -476,14 +502,13 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             initialState,
             goToChangeAnswer(AddChildPreviousNamePage(Index(0))),
             goTo(RemoveChildPreviousNamePage(Index(0), Index(1))),
-            remove(ChildPreviousNamePage(Index(0), Index(1))),
-            next,
+            removeAddToListItem(ChildPreviousNamePage(Index(0), Index(1))),
             pageMustBe(AddChildPreviousNamePage(Index(0))),
             goTo(RemoveChildPreviousNamePage(Index(0), Index(0))),
-            remove(ChildPreviousNamePage(Index(0), Index(0))),
-            next,
+            removeAddToListItem(ChildPreviousNamePage(Index(0), Index(0))),
             pageMustBe(ChildHasPreviousNamePage(Index(0))),
-            answersMustNotContain(ChildNameChangedByDeedPollPage(Index(0)))
+            answersMustNotContain(ChildNameChangedByDeedPollPage(Index(0))),
+            pageMustBe(ChildHasPreviousNamePage(Index(0)))
           )
       }
 
@@ -495,7 +520,8 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(AddChildPreviousNamePage(Index(0))),
             submitAnswer(AddChildPreviousNamePage(Index(0)), true),
             submitAnswer(ChildPreviousNamePage(Index(0), Index(2)), childName),
-            submitAnswer(AddChildPreviousNamePage(Index(0)), false)
+            submitAnswer(AddChildPreviousNamePage(Index(0)), false),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }
 
@@ -507,7 +533,8 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(AddChildPreviousNamePage(Index(0))),
             goToChangeAnswer(ChildPreviousNamePage(Index(0), Index(0))),
             submitAnswer(ChildPreviousNamePage(Index(0), Index(0)), childName),
-            submitAnswer(AddChildPreviousNamePage(Index(0)), false)
+            submitAnswer(AddChildPreviousNamePage(Index(0)), false),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }
     }

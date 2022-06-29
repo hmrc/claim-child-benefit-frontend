@@ -39,7 +39,8 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
         submitAnswer(ChildNamePage(Index(0)), childName),
         submitAnswer(ChildHasPreviousNamePage(Index(0)), false),
         submitAnswer(ChildBiologicalSexPage(Index(0)), sex),
-        submitAnswer(ChildDateOfBirthPage(Index(0)), LocalDate.now)
+        submitAnswer(ChildDateOfBirthPage(Index(0)), LocalDate.now),
+        pageMustBe(ChildBirthRegistrationCountryPage(Index(0)))
       )
   }
 
@@ -55,7 +56,8 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
         submitAnswer(ChildPreviousNamePage(Index(0), Index(0)), childName),
         submitAnswer(AddChildPreviousNamePage(Index(0)), true),
         submitAnswer(ChildPreviousNamePage(Index(0), Index(1)), childName),
-        submitAnswer(AddChildPreviousNamePage(Index(0)), false)
+        submitAnswer(AddChildPreviousNamePage(Index(0)), false),
+        pageMustBe(ChildBiologicalSexPage(Index(0)))
       )
   }
 
@@ -72,12 +74,10 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
         submitAnswer(AddChildPreviousNamePage(Index(0)), true),
         submitAnswer(ChildPreviousNamePage(Index(0), Index(1)), childName),
         goTo(RemoveChildPreviousNamePage(Index(0), Index(1))),
-        remove(ChildPreviousNamePage(Index(0), Index(1))),
-        next,
+        removeAddToListItem(ChildPreviousNamePage(Index(0), Index(1))),
         pageMustBe(AddChildPreviousNamePage(Index(0))),
         goTo(RemoveChildPreviousNamePage(Index(0), Index(0))),
-        remove(ChildPreviousNamePage(Index(0), Index(0))),
-        next,
+        removeAddToListItem(ChildPreviousNamePage(Index(0), Index(0))),
         pageMustBe(ChildHasPreviousNamePage(Index(0))),
         answersMustNotContain(ChildNameChangedByDeedPollPage(Index(0)))
       )
@@ -95,7 +95,8 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
           submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), "123456789"),
           submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
           submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.No),
-          submitAnswer(AdoptingChildPage(Index(0)), false)
+          submitAnswer(AdoptingChildPage(Index(0)), false),
+          pageMustBe(CheckChildDetailsPage(Index(0)))
         )
     }
   }
@@ -112,7 +113,8 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
           submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), "123456789"),
           submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
           submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.No),
-          submitAnswer(AdoptingChildPage(Index(0)), false)
+          submitAnswer(AdoptingChildPage(Index(0)), false),
+          pageMustBe(CheckChildDetailsPage(Index(0)))
         )
     }
   }
@@ -130,7 +132,46 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
           submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), certificateDetails),
           submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
           submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.No),
-          submitAnswer(AdoptingChildPage(Index(0)), false)
+          submitAnswer(AdoptingChildPage(Index(0)), false),
+          pageMustBe(CheckChildDetailsPage(Index(0)))
+        )
+    }
+  }
+
+  "users whose child was registered outside of Great Britain" - {
+
+    "must be asked for documents" in {
+
+      val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
+      val documents = Set(arbitrary[IncludedDocuments].sample.value)
+
+      startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
+        .run(
+          submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Other),
+          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.No),
+          submitAnswer(AdoptingChildPage(Index(0)), false),
+          submitAnswer(IncludedDocumentsPage(Index(0)), documents),
+          pageMustBe(CheckChildDetailsPage(Index(0)))
+        )
+    }
+  }
+
+  "users whose child's country of registration is unknown" - {
+
+    "must be asked for documents" in {
+
+      val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
+      val documents = Set(arbitrary[IncludedDocuments].sample.value)
+
+      startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
+        .run(
+          submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Unknown),
+          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.No),
+          submitAnswer(AdoptingChildPage(Index(0)), false),
+          submitAnswer(IncludedDocumentsPage(Index(0)), documents),
+          pageMustBe(CheckChildDetailsPage(Index(0)))
         )
     }
   }
@@ -148,7 +189,8 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
         startingFrom(AnyoneClaimedForChildBeforePage(Index(0)), answers = answers)
           .run(
-            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.Applicant)
+            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.Applicant),
+            pageMustBe(AdoptingChildPage(Index(0)))
           )
       }
     }
@@ -164,7 +206,8 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
         startingFrom(AnyoneClaimedForChildBeforePage(Index(0)), answers = answers)
           .run(
-            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.Partner)
+            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.Partner),
+            pageMustBe(AdoptingChildPage(Index(0)))
           )
       }
     }
@@ -184,45 +227,11 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
           .run(
             submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.SomeoneElse),
             submitAnswer(PreviousClaimantNamePage(Index(0)), claimantName),
-            submitAnswer(PreviousClaimantAddressPage(Index(0)), claimantAddress)
+            submitAnswer(PreviousClaimantAddressPage(Index(0)), claimantAddress),
+            pageMustBe(AdoptingChildPage(Index(0)))
           )
       }
     }
   }
 
-  "users whose child was registered outside of Great Britain" - {
-
-    "must be asked for documents" in {
-
-      val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
-      val documents = Set(arbitrary[IncludedDocuments].sample.value)
-
-      startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
-        .run(
-          submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Other),
-          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.No),
-          submitAnswer(AdoptingChildPage(Index(0)), false),
-          submitAnswer(IncludedDocumentsPage(Index(0)), documents)
-        )
-    }
-  }
-
-  "users whose child's country of registration is unknown" - {
-
-    "must be asked for documents" in {
-
-      val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
-      val documents = Set(arbitrary[IncludedDocuments].sample.value)
-
-      startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
-        .run(
-          submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Unknown),
-          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.No),
-          submitAnswer(AdoptingChildPage(Index(0)), false),
-          submitAnswer(IncludedDocumentsPage(Index(0)), documents)
-        )
-    }
-  }
 }

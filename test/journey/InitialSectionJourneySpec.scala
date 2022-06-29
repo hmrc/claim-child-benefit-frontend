@@ -18,7 +18,8 @@ package journey
 
 import models.{ApplicantName, RelationshipStatus}
 import org.scalatest.freespec.AnyFreeSpec
-import pages.{AnyChildLivedWithOthersPage, ApplicantNamePage, EverLivedOrWorkedAbroadPage, RelationshipStatusDatePage, RelationshipStatusPage}
+import pages.income.{ApplicantIncomeOver50kPage, ApplicantOrPartnerIncomeOver50kPage}
+import pages.{AnyChildLivedWithOthersPage, ApplicantNamePage, EverLivedOrWorkedAbroadPage, RelationshipStatusDatePage, RelationshipStatusPage, UsePrintAndPostFormPage}
 
 import java.time.LocalDate
 
@@ -33,7 +34,8 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
         submitAnswer(EverLivedOrWorkedAbroadPage, false),
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
-        submitAnswer(RelationshipStatusPage, RelationshipStatus.Married)
+        submitAnswer(RelationshipStatusPage, RelationshipStatus.Married),
+        pageMustBe(ApplicantOrPartnerIncomeOver50kPage)
       )
   }
 
@@ -45,7 +47,8 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Cohabiting),
-        submitAnswer(RelationshipStatusDatePage, LocalDate.now.minusDays(1))
+        submitAnswer(RelationshipStatusDatePage, LocalDate.now.minusDays(1)),
+        pageMustBe(ApplicantOrPartnerIncomeOver50kPage)
       )
   }
 
@@ -56,7 +59,8 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
         submitAnswer(EverLivedOrWorkedAbroadPage, false),
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
-        submitAnswer(RelationshipStatusPage, RelationshipStatus.Single)
+        submitAnswer(RelationshipStatusPage, RelationshipStatus.Single),
+        pageMustBe(ApplicantIncomeOver50kPage)
       )
   }
 
@@ -68,7 +72,8 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Separated),
-        submitAnswer(RelationshipStatusDatePage, LocalDate.now.minusDays(1))
+        submitAnswer(RelationshipStatusDatePage, LocalDate.now.minusDays(1)),
+        pageMustBe(ApplicantIncomeOver50kPage)
       )
   }
 
@@ -79,7 +84,8 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
         submitAnswer(EverLivedOrWorkedAbroadPage, false),
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
-        submitAnswer(RelationshipStatusPage, RelationshipStatus.Divorced)
+        submitAnswer(RelationshipStatusPage, RelationshipStatus.Divorced),
+        pageMustBe(ApplicantIncomeOver50kPage)
       )
   }
 
@@ -90,7 +96,8 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
         submitAnswer(EverLivedOrWorkedAbroadPage, false),
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
-        submitAnswer(RelationshipStatusPage, RelationshipStatus.Widowed)
+        submitAnswer(RelationshipStatusPage, RelationshipStatus.Widowed),
+        pageMustBe(ApplicantIncomeOver50kPage)
       )
   }
 
@@ -98,7 +105,8 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
     startingFrom(EverLivedOrWorkedAbroadPage)
       .run(
-        submitAnswer(EverLivedOrWorkedAbroadPage, true)
+        submitAnswer(EverLivedOrWorkedAbroadPage, true),
+        pageMustBe(UsePrintAndPostFormPage)
       )
   }
 
@@ -107,7 +115,8 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
     startingFrom(EverLivedOrWorkedAbroadPage)
       .run(
         submitAnswer(EverLivedOrWorkedAbroadPage, false),
-        submitAnswer(AnyChildLivedWithOthersPage, true)
+        submitAnswer(AnyChildLivedWithOthersPage, true),
+        pageMustBe(UsePrintAndPostFormPage)
       )
   }
 }
