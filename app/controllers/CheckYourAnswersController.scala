@@ -18,9 +18,16 @@ package controllers
 
 import com.google.inject.Inject
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import pages.{CheckYourAnswersPage, EmptyWaypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.checkAnswers.{applicant, _}
+import viewmodels.checkAnswers.applicant._
+import viewmodels.checkAnswers.child._
+import viewmodels.checkAnswers.income._
+import viewmodels.checkAnswers.partner._
+import viewmodels.checkAnswers.payments._
 import viewmodels.govuk.summarylist._
 import views.html.CheckYourAnswersView
 
@@ -36,10 +43,91 @@ class CheckYourAnswersController @Inject()(
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
+      val thisPage  = CheckYourAnswersPage
+      val waypoints = EmptyWaypoints
+
+      val personalDetails = SummaryListViewModel(
+        rows = Seq(
+          ApplicantNameSummary.row(request.userAnswers, waypoints, thisPage),
+          RelationshipStatusSummary.row(request.userAnswers, waypoints, thisPage),
+          RelationshipStatusDateSummary.row(request.userAnswers, waypoints, thisPage)
+        ).flatten
+      )
+
+      val incomeDetails = SummaryListViewModel(
+        rows = Seq(
+          ApplicantIncomeOver50kSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantIncomeOver60kSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantBenefitsSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantOrPartnerIncomeOver50kSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantOrPartnerIncomeOver60kSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantOrPartnerBenefitsSummary.row(request.userAnswers, waypoints, thisPage)
+        ).flatten
+      )
+
+      val paymentDetails = SummaryListViewModel(
+        rows = Seq(
+          ClaimedChildBenefitBeforeSummary.row(request.userAnswers, waypoints, thisPage),
+          CurrentlyEntitledToChildBenefitSummary.row(request.userAnswers, waypoints, thisPage),
+          CurrentlyReceivingChildBenefitSummary.row(request.userAnswers, waypoints, thisPage),
+          EldestChildNameSummary.row(request.userAnswers, waypoints, thisPage),
+          EldestChildDateOfBirthSummary.row(request.userAnswers, waypoints, thisPage),
+          WantToBePaidToExistingAccountSummary.row(request.userAnswers, waypoints, thisPage),
+          WantToBePaidSummary.row(request.userAnswers, waypoints, thisPage),
+          WantToBePaidWeeklySummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantHasSuitableAccountSummary.row(request.userAnswers, waypoints, thisPage),
+          AccountInApplicantsNameSummary.row(request.userAnswers, waypoints, thisPage),
+          AccountIsJointSummary.row(request.userAnswers, waypoints, thisPage),
+          AccountHolderNameSummary.row(request.userAnswers, waypoints, thisPage),
+          AccountHolderNamesSummary.row(request.userAnswers, waypoints, thisPage),
+          BankAccountTypeSummary.row(request.userAnswers, waypoints, thisPage),
+          BankAccountDetailsSummary.row(request.userAnswers, waypoints, thisPage),
+          BuildingSocietyAccountDetailsSummary.row(request.userAnswers, waypoints, thisPage)
+        ).flatten
+      )
+
+      val applicantDetails = SummaryListViewModel(
+        rows = Seq(
+          ApplicantHasPreviousFamilyNameSummary.row(request.userAnswers, waypoints, thisPage),
+          AddApplicantPreviousFamilyNameSummary.checkAnswersRow(request.userAnswers, waypoints, thisPage),
+          ApplicantNinoKnownSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantNinoSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantDateOfBirthSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantCurrentAddressSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantLivedAtCurrentAddressOneYearSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantPreviousAddressSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantPhoneNumberSummary.row(request.userAnswers, waypoints, thisPage),
+          BestTimeToContactSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantNationalitySummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantEmploymentStatusSummary.row(request.userAnswers, waypoints, thisPage)
+        ).flatten
+      )
+
+      val partnerDetails = SummaryListViewModel(
+        rows = Seq(
+          PartnerNameSummary.row(request.userAnswers, waypoints, thisPage),
+          PartnerNinoKnownSummary.row(request.userAnswers, waypoints, thisPage),
+          PartnerNinoSummary.row(request.userAnswers, waypoints, thisPage),
+          PartnerDateOfBirthSummary.row(request.userAnswers, waypoints, thisPage),
+          PartnerNationalitySummary.row(request.userAnswers, waypoints, thisPage),
+          PartnerEmploymentStatusSummary.row(request.userAnswers, waypoints, thisPage),
+          PartnerEntitledToChildBenefitSummary.row(request.userAnswers, waypoints, thisPage),
+          PartnerWaitingForEntitlementDecisionSummary.row(request.userAnswers, waypoints, thisPage),
+          PartnerEldestChildNameSummary.row(request.userAnswers, waypoints, thisPage),
+          PartnerEldestChildDateOfBirthSummary.row(request.userAnswers, waypoints, thisPage)
+        ).flatten
+      )
+
+      val childDetails = SummaryListViewModel(
+        rows = Seq(
+          AddChildSummary.checkAnswersRow(request.userAnswers, waypoints, thisPage)
+        ).flatten
+      )
+
       val list = SummaryListViewModel(
         rows = Seq.empty
       )
 
-      Ok(view(list))
+      Ok(view(personalDetails, incomeDetails, paymentDetails, applicantDetails, partnerDetails, childDetails))
   }
 }

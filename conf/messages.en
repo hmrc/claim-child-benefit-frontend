@@ -49,6 +49,12 @@ index.guidance = Welcome to your new frontend. Please see the README file for a 
 
 checkYourAnswers.title = Check Your Answers
 checkYourAnswers.heading = Check Your Answers
+checkYourAnswers.personalDetails = Personal details
+checkYourAnswers.incomeDetails = Income details
+checkYourAnswers.paymentDetails = Payment details
+checkYourAnswers.applicantDetails = About you
+checkYourAnswers.partnerDetails = About your partner
+checkYourAnswers.childDetails = Children you want to claim for
 
 journeyRecovery.continue.title = Sorry, there is a problem with the service
 journeyRecovery.continue.heading = Sorry, there is a problem with the service
