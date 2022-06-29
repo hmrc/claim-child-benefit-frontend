@@ -286,9 +286,9 @@ taxChargeExplanation.heading = Tax charge explanation
 
 wantToBePaid.title = Do you want to be paid Child Benefit?
 wantToBePaid.heading = Do you want to be paid Child Benefit?
-wantToBePaid.checkYourAnswersLabel = wantToBePaid
-wantToBePaid.error.required = Select yes if wantToBePaid
-wantToBePaid.change.hidden = WantToBePaid
+wantToBePaid.checkYourAnswersLabel = Do you want to be paid Child Benefit?
+wantToBePaid.error.required = Select yes if you want to be paid Child Benefit
+wantToBePaid.change.hidden = if you want to be paid Child Benefit
 
 wantToBePaidToExistingAccount.title = Do you want your claim to be paid to your existing account?
 wantToBePaidToExistingAccount.heading = Do you want your claim to be paid to your existing account?
