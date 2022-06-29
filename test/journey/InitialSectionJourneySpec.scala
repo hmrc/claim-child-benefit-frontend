@@ -18,8 +18,7 @@ package journey
 
 import models.{ApplicantName, RelationshipStatus}
 import org.scalatest.freespec.AnyFreeSpec
-import pages.income.{ApplicantIncomeOver50kPage, ApplicantOrPartnerIncomeOver50kPage}
-import pages.{AnyChildLivedWithOthersPage, ApplicantNamePage, EverLivedOrWorkedAbroadPage, RelationshipStatusDatePage, RelationshipStatusPage, UsePrintAndPostFormPage}
+import pages.{AnyChildLivedWithOthersPage, ApplicantNamePage, EverLivedOrWorkedAbroadPage, RelationshipStatusDatePage, RelationshipStatusPage}
 
 import java.time.LocalDate
 
@@ -31,10 +30,10 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
     startingFrom(EverLivedOrWorkedAbroadPage)
       .run(
-        answerPage(EverLivedOrWorkedAbroadPage, false, AnyChildLivedWithOthersPage),
-        answerPage(AnyChildLivedWithOthersPage, false, ApplicantNamePage),
-        answerPage(ApplicantNamePage, applicantName, RelationshipStatusPage),
-        answerPage(RelationshipStatusPage, RelationshipStatus.Married, ApplicantOrPartnerIncomeOver50kPage)
+        submitAnswer(EverLivedOrWorkedAbroadPage, false),
+        submitAnswer(AnyChildLivedWithOthersPage, false),
+        submitAnswer(ApplicantNamePage, applicantName),
+        submitAnswer(RelationshipStatusPage, RelationshipStatus.Married)
       )
   }
 
@@ -42,11 +41,11 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
     startingFrom(EverLivedOrWorkedAbroadPage)
       .run(
-        answerPage(EverLivedOrWorkedAbroadPage, false, AnyChildLivedWithOthersPage),
-        answerPage(AnyChildLivedWithOthersPage, false, ApplicantNamePage),
-        answerPage(ApplicantNamePage, applicantName, RelationshipStatusPage),
-        answerPage(RelationshipStatusPage, RelationshipStatus.Cohabiting, RelationshipStatusDatePage),
-        answerPage(RelationshipStatusDatePage, LocalDate.now.minusDays(1), ApplicantOrPartnerIncomeOver50kPage)
+        submitAnswer(EverLivedOrWorkedAbroadPage, false),
+        submitAnswer(AnyChildLivedWithOthersPage, false),
+        submitAnswer(ApplicantNamePage, applicantName),
+        submitAnswer(RelationshipStatusPage, RelationshipStatus.Cohabiting),
+        submitAnswer(RelationshipStatusDatePage, LocalDate.now.minusDays(1))
       )
   }
 
@@ -54,10 +53,10 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
     startingFrom(EverLivedOrWorkedAbroadPage)
       .run(
-        answerPage(EverLivedOrWorkedAbroadPage, false, AnyChildLivedWithOthersPage),
-        answerPage(AnyChildLivedWithOthersPage, false, ApplicantNamePage),
-        answerPage(ApplicantNamePage, applicantName, RelationshipStatusPage),
-        answerPage(RelationshipStatusPage, RelationshipStatus.Single, ApplicantIncomeOver50kPage)
+        submitAnswer(EverLivedOrWorkedAbroadPage, false),
+        submitAnswer(AnyChildLivedWithOthersPage, false),
+        submitAnswer(ApplicantNamePage, applicantName),
+        submitAnswer(RelationshipStatusPage, RelationshipStatus.Single)
       )
   }
 
@@ -65,11 +64,11 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
     startingFrom(EverLivedOrWorkedAbroadPage)
       .run(
-        answerPage(EverLivedOrWorkedAbroadPage, false, AnyChildLivedWithOthersPage),
-        answerPage(AnyChildLivedWithOthersPage, false, ApplicantNamePage),
-        answerPage(ApplicantNamePage, applicantName, RelationshipStatusPage),
-        answerPage(RelationshipStatusPage, RelationshipStatus.Separated, RelationshipStatusDatePage),
-        answerPage(RelationshipStatusDatePage, LocalDate.now.minusDays(1), ApplicantIncomeOver50kPage)
+        submitAnswer(EverLivedOrWorkedAbroadPage, false),
+        submitAnswer(AnyChildLivedWithOthersPage, false),
+        submitAnswer(ApplicantNamePage, applicantName),
+        submitAnswer(RelationshipStatusPage, RelationshipStatus.Separated),
+        submitAnswer(RelationshipStatusDatePage, LocalDate.now.minusDays(1))
       )
   }
 
@@ -77,10 +76,10 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
     startingFrom(EverLivedOrWorkedAbroadPage)
       .run(
-        answerPage(EverLivedOrWorkedAbroadPage, false, AnyChildLivedWithOthersPage),
-        answerPage(AnyChildLivedWithOthersPage, false, ApplicantNamePage),
-        answerPage(ApplicantNamePage, applicantName, RelationshipStatusPage),
-        answerPage(RelationshipStatusPage, RelationshipStatus.Divorced, ApplicantIncomeOver50kPage)
+        submitAnswer(EverLivedOrWorkedAbroadPage, false),
+        submitAnswer(AnyChildLivedWithOthersPage, false),
+        submitAnswer(ApplicantNamePage, applicantName),
+        submitAnswer(RelationshipStatusPage, RelationshipStatus.Divorced)
       )
   }
 
@@ -88,10 +87,10 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
     startingFrom(EverLivedOrWorkedAbroadPage)
       .run(
-        answerPage(EverLivedOrWorkedAbroadPage, false, AnyChildLivedWithOthersPage),
-        answerPage(AnyChildLivedWithOthersPage, false, ApplicantNamePage),
-        answerPage(ApplicantNamePage, applicantName, RelationshipStatusPage),
-        answerPage(RelationshipStatusPage, RelationshipStatus.Widowed, ApplicantIncomeOver50kPage)
+        submitAnswer(EverLivedOrWorkedAbroadPage, false),
+        submitAnswer(AnyChildLivedWithOthersPage, false),
+        submitAnswer(ApplicantNamePage, applicantName),
+        submitAnswer(RelationshipStatusPage, RelationshipStatus.Widowed)
       )
   }
 
@@ -99,7 +98,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
     startingFrom(EverLivedOrWorkedAbroadPage)
       .run(
-        answerPage(EverLivedOrWorkedAbroadPage, true, UsePrintAndPostFormPage)
+        submitAnswer(EverLivedOrWorkedAbroadPage, true)
       )
   }
 
@@ -107,8 +106,8 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
     startingFrom(EverLivedOrWorkedAbroadPage)
       .run(
-        answerPage(EverLivedOrWorkedAbroadPage, false, AnyChildLivedWithOthersPage),
-        answerPage(AnyChildLivedWithOthersPage, true, UsePrintAndPostFormPage)
+        submitAnswer(EverLivedOrWorkedAbroadPage, false),
+        submitAnswer(AnyChildLivedWithOthersPage, true)
       )
   }
 }

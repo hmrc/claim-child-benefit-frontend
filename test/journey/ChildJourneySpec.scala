@@ -36,10 +36,10 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
     startingFrom(ChildNamePage(Index(0)))
       .run(
-        answerPage(ChildNamePage(Index(0)), childName, ChildHasPreviousNamePage(Index(0))),
-        answerPage(ChildHasPreviousNamePage(Index(0)), false, ChildBiologicalSexPage(Index(0))),
-        answerPage(ChildBiologicalSexPage(Index(0)), sex, ChildDateOfBirthPage(Index(0))),
-        answerPage(ChildDateOfBirthPage(Index(0)), LocalDate.now, ChildBirthRegistrationCountryPage(Index(0)))
+        submitAnswer(ChildNamePage(Index(0)), childName),
+        submitAnswer(ChildHasPreviousNamePage(Index(0)), false),
+        submitAnswer(ChildBiologicalSexPage(Index(0)), sex),
+        submitAnswer(ChildDateOfBirthPage(Index(0)), LocalDate.now)
       )
   }
 
@@ -49,13 +49,13 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
     startingFrom(ChildNamePage(Index(0)))
       .run(
-        answerPage(ChildNamePage(Index(0)), childName, ChildHasPreviousNamePage(Index(0))),
-        answerPage(ChildHasPreviousNamePage(Index(0)), true, ChildNameChangedByDeedPollPage(Index(0))),
-        answerPage(ChildNameChangedByDeedPollPage(Index(0)), true, ChildPreviousNamePage(Index(0), Index(0))),
-        answerPage(ChildPreviousNamePage(Index(0), Index(0)), childName, AddChildPreviousNamePage(Index(0))),
-        answerPage(AddChildPreviousNamePage(Index(0)), true, ChildPreviousNamePage(Index(0), Index(1))),
-        answerPage(ChildPreviousNamePage(Index(0), Index(1)), childName, AddChildPreviousNamePage(Index(0))),
-        answerPage(AddChildPreviousNamePage(Index(0)), false, ChildBiologicalSexPage(Index(0)))
+        submitAnswer(ChildNamePage(Index(0)), childName),
+        submitAnswer(ChildHasPreviousNamePage(Index(0)), true),
+        submitAnswer(ChildNameChangedByDeedPollPage(Index(0)), true),
+        submitAnswer(ChildPreviousNamePage(Index(0), Index(0)), childName),
+        submitAnswer(AddChildPreviousNamePage(Index(0)), true),
+        submitAnswer(ChildPreviousNamePage(Index(0), Index(1)), childName),
+        submitAnswer(AddChildPreviousNamePage(Index(0)), false)
       )
   }
 
@@ -65,12 +65,12 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
     startingFrom(ChildNamePage(Index(0)))
       .run(
-        answerPage(ChildNamePage(Index(0)), childName, ChildHasPreviousNamePage(Index(0))),
-        answerPage(ChildHasPreviousNamePage(Index(0)), true, ChildNameChangedByDeedPollPage(Index(0))),
-        answerPage(ChildNameChangedByDeedPollPage(Index(0)), true, ChildPreviousNamePage(Index(0), Index(0))),
-        answerPage(ChildPreviousNamePage(Index(0), Index(0)), childName, AddChildPreviousNamePage(Index(0))),
-        answerPage(AddChildPreviousNamePage(Index(0)), true, ChildPreviousNamePage(Index(0), Index(1))),
-        answerPage(ChildPreviousNamePage(Index(0), Index(1)), childName, AddChildPreviousNamePage(Index(0))),
+        submitAnswer(ChildNamePage(Index(0)), childName),
+        submitAnswer(ChildHasPreviousNamePage(Index(0)), true),
+        submitAnswer(ChildNameChangedByDeedPollPage(Index(0)), true),
+        submitAnswer(ChildPreviousNamePage(Index(0), Index(0)), childName),
+        submitAnswer(AddChildPreviousNamePage(Index(0)), true),
+        submitAnswer(ChildPreviousNamePage(Index(0), Index(1)), childName),
         goTo(RemoveChildPreviousNamePage(Index(0), Index(1))),
         remove(ChildPreviousNamePage(Index(0), Index(1))),
         next,
@@ -91,11 +91,11 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
       startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
         .run(
-          answerPage(ChildBirthRegistrationCountryPage(Index(0)), England, ChildBirthCertificateSystemNumberPage(Index(0))),
-          answerPage(ChildBirthCertificateSystemNumberPage(Index(0)), "123456789", ApplicantRelationshipToChildPage(Index(0))),
-          answerPage(ApplicantRelationshipToChildPage(Index(0)), relationship, AnyoneClaimedForChildBeforePage(Index(0))),
-          answerPage(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.No, AdoptingChildPage(Index(0))),
-          answerPage(AdoptingChildPage(Index(0)), false, CheckChildDetailsPage(Index(0)))
+          submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
+          submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), "123456789"),
+          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.No),
+          submitAnswer(AdoptingChildPage(Index(0)), false)
         )
     }
   }
@@ -108,11 +108,11 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
       startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
         .run(
-          answerPage(ChildBirthRegistrationCountryPage(Index(0)), Wales, ChildBirthCertificateSystemNumberPage(Index(0))),
-          answerPage(ChildBirthCertificateSystemNumberPage(Index(0)), "123456789", ApplicantRelationshipToChildPage(Index(0))),
-          answerPage(ApplicantRelationshipToChildPage(Index(0)), relationship, AnyoneClaimedForChildBeforePage(Index(0))),
-          answerPage(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.No, AdoptingChildPage(Index(0))),
-          answerPage(AdoptingChildPage(Index(0)), false, CheckChildDetailsPage(Index(0)))
+          submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Wales),
+          submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), "123456789"),
+          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.No),
+          submitAnswer(AdoptingChildPage(Index(0)), false)
         )
     }
   }
@@ -126,11 +126,11 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
       startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
         .run(
-          answerPage(ChildBirthRegistrationCountryPage(Index(0)), Scotland, ChildScottishBirthCertificateDetailsPage(Index(0))),
-          answerPage(ChildScottishBirthCertificateDetailsPage(Index(0)), certificateDetails, ApplicantRelationshipToChildPage(Index(0))),
-          answerPage(ApplicantRelationshipToChildPage(Index(0)), relationship, AnyoneClaimedForChildBeforePage(Index(0))),
-          answerPage(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.No, AdoptingChildPage(Index(0))),
-          answerPage(AdoptingChildPage(Index(0)), false, CheckChildDetailsPage(Index(0)))
+          submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
+          submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), certificateDetails),
+          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.No),
+          submitAnswer(AdoptingChildPage(Index(0)), false)
         )
     }
   }
@@ -148,7 +148,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
         startingFrom(AnyoneClaimedForChildBeforePage(Index(0)), answers = answers)
           .run(
-            answerPage(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.Applicant, AdoptingChildPage(Index(0)))
+            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.Applicant)
           )
       }
     }
@@ -164,7 +164,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
         startingFrom(AnyoneClaimedForChildBeforePage(Index(0)), answers = answers)
           .run(
-            answerPage(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.Partner, AdoptingChildPage(Index(0)))
+            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.Partner)
           )
       }
     }
@@ -182,9 +182,9 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
         startingFrom(AnyoneClaimedForChildBeforePage(Index(0)), answers = answers)
           .run(
-            answerPage(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.SomeoneElse, PreviousClaimantNamePage(Index(0))),
-            answerPage(PreviousClaimantNamePage(Index(0)), claimantName, PreviousClaimantAddressPage(Index(0))),
-            answerPage(PreviousClaimantAddressPage(Index(0)), claimantAddress, AdoptingChildPage(Index(0)))
+            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.SomeoneElse),
+            submitAnswer(PreviousClaimantNamePage(Index(0)), claimantName),
+            submitAnswer(PreviousClaimantAddressPage(Index(0)), claimantAddress)
           )
       }
     }
@@ -199,11 +199,11 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
       startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
         .run(
-          answerPage(ChildBirthRegistrationCountryPage(Index(0)), Other, ApplicantRelationshipToChildPage(Index(0))),
-          answerPage(ApplicantRelationshipToChildPage(Index(0)), relationship, AnyoneClaimedForChildBeforePage(Index(0))),
-          answerPage(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.No, AdoptingChildPage(Index(0))),
-          answerPage(AdoptingChildPage(Index(0)), false, IncludedDocumentsPage(Index(0))),
-          answerPage(IncludedDocumentsPage(Index(0)), documents, CheckChildDetailsPage(Index(0)))
+          submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Other),
+          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.No),
+          submitAnswer(AdoptingChildPage(Index(0)), false),
+          submitAnswer(IncludedDocumentsPage(Index(0)), documents)
         )
     }
   }
@@ -217,11 +217,11 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
       startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
         .run(
-          answerPage(ChildBirthRegistrationCountryPage(Index(0)), Unknown, ApplicantRelationshipToChildPage(Index(0))),
-          answerPage(ApplicantRelationshipToChildPage(Index(0)), relationship, AnyoneClaimedForChildBeforePage(Index(0))),
-          answerPage(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.No, AdoptingChildPage(Index(0))),
-          answerPage(AdoptingChildPage(Index(0)), false, IncludedDocumentsPage(Index(0))),
-          answerPage(IncludedDocumentsPage(Index(0)), documents, CheckChildDetailsPage(Index(0)))
+          submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Unknown),
+          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.No),
+          submitAnswer(AdoptingChildPage(Index(0)), false),
+          submitAnswer(IncludedDocumentsPage(Index(0)), documents)
         )
     }
   }

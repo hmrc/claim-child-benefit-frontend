@@ -34,7 +34,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
       startingFrom(ClaimedChildBenefitBeforePage)
         .run(
-          answerPage(ClaimedChildBenefitBeforePage, false, TaxChargeExplanationPage),
+          submitAnswer(ClaimedChildBenefitBeforePage, false),
           next,
           pageMustBe(WantToBePaidPage)
         )
@@ -49,8 +49,8 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
         startingFrom(ClaimedChildBenefitBeforePage)
           .run(
-            answerPage(ClaimedChildBenefitBeforePage, true, CurrentlyEntitledToChildBenefitPage),
-            answerPage(CurrentlyEntitledToChildBenefitPage, false, TaxChargeExplanationPage),
+            submitAnswer(ClaimedChildBenefitBeforePage, true),
+            submitAnswer(CurrentlyEntitledToChildBenefitPage, false),
             next,
             pageMustBe(WantToBePaidPage)
           )
@@ -63,9 +63,9 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
         startingFrom(ClaimedChildBenefitBeforePage)
           .run(
-            answerPage(ClaimedChildBenefitBeforePage, true, CurrentlyEntitledToChildBenefitPage),
-            answerPage(CurrentlyEntitledToChildBenefitPage, true, CurrentlyReceivingChildBenefitPage),
-            answerPage(CurrentlyReceivingChildBenefitPage, false, TaxChargeExplanationPage),
+            submitAnswer(ClaimedChildBenefitBeforePage, true),
+            submitAnswer(CurrentlyEntitledToChildBenefitPage, true),
+            submitAnswer(CurrentlyReceivingChildBenefitPage, false),
             next,
             pageMustBe(WantToBePaidPage)
           )
@@ -83,12 +83,12 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
           startingFrom(ClaimedChildBenefitBeforePage)
             .run(
-              answerPage(ClaimedChildBenefitBeforePage, true, CurrentlyEntitledToChildBenefitPage),
-              answerPage(CurrentlyEntitledToChildBenefitPage, true, CurrentlyReceivingChildBenefitPage),
-              answerPage(CurrentlyReceivingChildBenefitPage, true, EldestChildNamePage),
-              answerPage(EldestChildNamePage, childName, EldestChildDateOfBirthPage),
-              answerPage(EldestChildDateOfBirthPage, childDob, WantToBePaidToExistingAccountPage),
-              answerPage(WantToBePaidToExistingAccountPage, true, ApplicantHasPreviousFamilyNamePage)
+              submitAnswer(ClaimedChildBenefitBeforePage, true),
+              submitAnswer(CurrentlyEntitledToChildBenefitPage, true),
+              submitAnswer(CurrentlyReceivingChildBenefitPage, true),
+              submitAnswer(EldestChildNamePage, childName),
+              submitAnswer(EldestChildDateOfBirthPage, childDob),
+              submitAnswer(WantToBePaidToExistingAccountPage, true)
             )
         }
       }
@@ -99,12 +99,12 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
           startingFrom(ClaimedChildBenefitBeforePage)
             .run(
-              answerPage(ClaimedChildBenefitBeforePage, true, CurrentlyEntitledToChildBenefitPage),
-              answerPage(CurrentlyEntitledToChildBenefitPage, true, CurrentlyReceivingChildBenefitPage),
-              answerPage(CurrentlyReceivingChildBenefitPage, true, EldestChildNamePage),
-              answerPage(EldestChildNamePage, childName, EldestChildDateOfBirthPage),
-              answerPage(EldestChildDateOfBirthPage, childDob, WantToBePaidToExistingAccountPage),
-              answerPage(WantToBePaidToExistingAccountPage, false, ApplicantHasSuitableAccountPage)
+              submitAnswer(ClaimedChildBenefitBeforePage, true),
+              submitAnswer(CurrentlyEntitledToChildBenefitPage, true),
+              submitAnswer(CurrentlyReceivingChildBenefitPage, true),
+              submitAnswer(EldestChildNamePage, childName),
+              submitAnswer(EldestChildDateOfBirthPage, childDob),
+              submitAnswer(WantToBePaidToExistingAccountPage, false)
             )
         }
       }
@@ -124,7 +124,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
-            answerPage(WantToBePaidPage, true, ApplicantHasSuitableAccountPage)
+            submitAnswer(WantToBePaidPage, true)
           )
       }
 
@@ -137,8 +137,8 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
-            answerPage(WantToBePaidPage, true, WantToBePaidWeeklyPage),
-            answerPage(WantToBePaidWeeklyPage, true, ApplicantHasSuitableAccountPage)
+            submitAnswer(WantToBePaidPage, true),
+            submitAnswer(WantToBePaidWeeklyPage, true)
           )
       }
     }
@@ -154,7 +154,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
-            answerPage(WantToBePaidPage, true, ApplicantHasSuitableAccountPage)
+            submitAnswer(WantToBePaidPage, true)
           )
       }
 
@@ -168,8 +168,8 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
-            answerPage(WantToBePaidPage, true, WantToBePaidWeeklyPage),
-            answerPage(WantToBePaidWeeklyPage, true, ApplicantHasSuitableAccountPage)
+            submitAnswer(WantToBePaidPage, true),
+            submitAnswer(WantToBePaidWeeklyPage, true)
           )
       }
     }
@@ -185,8 +185,8 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
-            answerPage(WantToBePaidPage, true, WantToBePaidWeeklyPage),
-            answerPage(WantToBePaidWeeklyPage, true, ApplicantHasSuitableAccountPage)
+            submitAnswer(WantToBePaidPage, true),
+            submitAnswer(WantToBePaidWeeklyPage, true)
           )
       }
     }
@@ -202,8 +202,8 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
-            answerPage(WantToBePaidPage, true, WantToBePaidWeeklyPage),
-            answerPage(WantToBePaidWeeklyPage, true, ApplicantHasSuitableAccountPage)
+            submitAnswer(WantToBePaidPage, true),
+            submitAnswer(WantToBePaidWeeklyPage, true)
           )
       }
     }
@@ -219,8 +219,8 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
-            answerPage(WantToBePaidPage, true, WantToBePaidWeeklyPage),
-            answerPage(WantToBePaidWeeklyPage, true, ApplicantHasSuitableAccountPage)
+            submitAnswer(WantToBePaidPage, true),
+            submitAnswer(WantToBePaidWeeklyPage, true)
           )
       }
     }
@@ -236,8 +236,8 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
-            answerPage(WantToBePaidPage, true, WantToBePaidWeeklyPage),
-            answerPage(WantToBePaidWeeklyPage, true, ApplicantHasSuitableAccountPage)
+            submitAnswer(WantToBePaidPage, true),
+            submitAnswer(WantToBePaidWeeklyPage, true)
           )
       }
     }
@@ -249,7 +249,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
       startingFrom(WantToBePaidPage)
         .run(
-          answerPage(WantToBePaidPage, false, ApplicantHasPreviousFamilyNamePage)
+          submitAnswer(WantToBePaidPage, false)
         )
     }
   }
@@ -260,7 +260,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
       startingFrom(ApplicantHasSuitableAccountPage)
         .run(
-          answerPage(ApplicantHasSuitableAccountPage, false, ApplicantHasPreviousFamilyNamePage)
+          submitAnswer(ApplicantHasSuitableAccountPage, false)
         )
     }
   }
@@ -273,7 +273,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
         startingFrom(AccountInApplicantsNamePage)
           .run(
-            answerPage(AccountInApplicantsNamePage, true, BankAccountTypePage)
+            submitAnswer(AccountInApplicantsNamePage, true)
           )
       }
     }
@@ -286,9 +286,9 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
           startingFrom(AccountInApplicantsNamePage)
             .run(
-              answerPage(AccountInApplicantsNamePage, false, AccountIsJointPage),
-              answerPage(AccountIsJointPage, false, AccountHolderNamePage),
-              answerPage(AccountHolderNamePage, "name", BankAccountTypePage)
+              submitAnswer(AccountInApplicantsNamePage, false),
+              submitAnswer(AccountIsJointPage, false),
+              submitAnswer(AccountHolderNamePage, "name")
             )
         }
       }
@@ -301,9 +301,9 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
           startingFrom(AccountInApplicantsNamePage)
             .run(
-              answerPage(AccountInApplicantsNamePage, false, AccountIsJointPage),
-              answerPage(AccountIsJointPage, true, AccountHolderNamesPage),
-              answerPage(AccountHolderNamesPage, accountHolderNames, BankAccountTypePage)
+              submitAnswer(AccountInApplicantsNamePage, false),
+              submitAnswer(AccountIsJointPage, true),
+              submitAnswer(AccountHolderNamesPage, accountHolderNames)
             )
         }
       }
@@ -316,8 +316,8 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
     startingFrom(BankAccountTypePage)
       .run(
-        answerPage(BankAccountTypePage, BankAccountType.Bank, BankAccountDetailsPage),
-        answerPage(BankAccountDetailsPage, bankDetails, ApplicantHasPreviousFamilyNamePage)
+        submitAnswer(BankAccountTypePage, BankAccountType.Bank),
+        submitAnswer(BankAccountDetailsPage, bankDetails)
       )
   }
 
@@ -327,8 +327,8 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
     startingFrom(BankAccountTypePage)
       .run(
-        answerPage(BankAccountTypePage, BankAccountType.BuildingSociety, BuildingSocietyAccountDetailsPage),
-        answerPage(BuildingSocietyAccountDetailsPage, buildingSocietyDetails, ApplicantHasPreviousFamilyNamePage)
+        submitAnswer(BankAccountTypePage, BankAccountType.BuildingSociety),
+        submitAnswer(BuildingSocietyAccountDetailsPage, buildingSocietyDetails)
       )
   }
 }

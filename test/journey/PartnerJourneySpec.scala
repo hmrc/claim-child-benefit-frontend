@@ -35,13 +35,13 @@ class PartnerJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGener
 
     startingFrom(PartnerNamePage)
       .run(
-        answerPage(PartnerNamePage, partnerName, PartnerNinoKnownPage),
-        answerPage(PartnerNinoKnownPage, false, PartnerDateOfBirthPage),
-        answerPage(PartnerDateOfBirthPage, LocalDate.now, PartnerNationalityPage),
-        answerPage(PartnerNationalityPage, "nationality", PartnerEmploymentStatusPage),
-        answerPage(PartnerEmploymentStatusPage, employmentStatus, PartnerEntitledToChildBenefitPage),
-        answerPage(PartnerEntitledToChildBenefitPage, false, PartnerWaitingForEntitlementDecisionPage),
-        answerPage(PartnerWaitingForEntitlementDecisionPage, false, ChildNamePage(Index(0)))
+        submitAnswer(PartnerNamePage, partnerName),
+        submitAnswer(PartnerNinoKnownPage, false),
+        submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
+        submitAnswer(PartnerNationalityPage, "nationality"),
+        submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
+        submitAnswer(PartnerEntitledToChildBenefitPage, false),
+        submitAnswer(PartnerWaitingForEntitlementDecisionPage, false)
       )
   }
 
@@ -51,8 +51,8 @@ class PartnerJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGener
 
     startingFrom(PartnerNinoKnownPage)
       .run(
-        answerPage(PartnerNinoKnownPage, true, PartnerNinoPage),
-        answerPage(PartnerNinoPage, nino, PartnerDateOfBirthPage)
+        submitAnswer(PartnerNinoKnownPage, true),
+        submitAnswer(PartnerNinoPage, nino)
       )
   }
 
@@ -62,9 +62,9 @@ class PartnerJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGener
 
     startingFrom(PartnerEntitledToChildBenefitPage)
       .run(
-        answerPage(PartnerEntitledToChildBenefitPage, true, PartnerEldestChildNamePage),
-        answerPage(PartnerEldestChildNamePage, childName, PartnerEldestChildDateOfBirthPage),
-        answerPage(PartnerEldestChildDateOfBirthPage, LocalDate.now, ChildNamePage(Index(0)))
+        submitAnswer(PartnerEntitledToChildBenefitPage, true),
+        submitAnswer(PartnerEldestChildNamePage, childName),
+        submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now)
       )
   }
 
@@ -74,10 +74,10 @@ class PartnerJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGener
 
     startingFrom(PartnerEntitledToChildBenefitPage)
       .run(
-        answerPage(PartnerEntitledToChildBenefitPage, false, PartnerWaitingForEntitlementDecisionPage),
-        answerPage(PartnerWaitingForEntitlementDecisionPage, true, PartnerEldestChildNamePage),
-        answerPage(PartnerEldestChildNamePage, childName, PartnerEldestChildDateOfBirthPage),
-        answerPage(PartnerEldestChildDateOfBirthPage, LocalDate.now, ChildNamePage(Index(0)))
+        submitAnswer(PartnerEntitledToChildBenefitPage, false),
+        submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
+        submitAnswer(PartnerEldestChildNamePage, childName),
+        submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now)
       )
   }
 }
