@@ -19,9 +19,11 @@ package pages.child
 import controllers.child.routes
 import models.AnyoneClaimedForChildBefore.{Applicant, No, Partner, SomeoneElse}
 import models.{AnyoneClaimedForChildBefore, Index, UserAnswers}
-import pages.{Page, Waypoints}
+import pages.{NonEmptyWaypoints, Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+
+import scala.util.Try
 
 final case class AnyoneClaimedForChildBeforePage(index: Index) extends ChildQuestionPage[AnyoneClaimedForChildBefore] {
 
@@ -40,4 +42,28 @@ final case class AnyoneClaimedForChildBeforePage(index: Index) extends ChildQues
       case SomeoneElse =>
         PreviousClaimantNamePage(index)
     }.orRecover
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case Applicant | Partner | No =>
+        waypoints.next.page
+
+      case SomeoneElse =>
+        answers.get(PreviousClaimantNamePage(index))
+          .map(_ => waypoints.next.page)
+          .getOrElse(PreviousClaimantNamePage(index))
+    }.orRecover
+
+  override def cleanup(value: Option[AnyoneClaimedForChildBefore], userAnswers: UserAnswers): Try[UserAnswers] =
+    value.map {
+      case Applicant | Partner | No =>
+        userAnswers
+          .remove(PreviousClaimantNamePage(index))
+        .flatMap(_.remove(PreviousClaimantAddressPage(index)))
+
+      case SomeoneElse =>
+        super.cleanup(value, userAnswers)
+    }.getOrElse {
+      super.cleanup(value, userAnswers)
+    }
 }
