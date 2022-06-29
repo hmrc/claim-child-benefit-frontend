@@ -21,7 +21,7 @@ import cats.implicits._
 import models.UserAnswers
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{OptionValues, TryValues}
-import pages.{CheckAnswersPage, EmptyWaypoints, Page, PageAndWaypoints, Waypoints}
+import pages.{CheckAnswersPage, EmptyWaypoints, Page, PageAndWaypoints, WaypointPage, Waypoints}
 import play.api.libs.json.{Reads, Writes}
 import queries.{Gettable, Settable}
 
@@ -108,7 +108,7 @@ trait JourneyHelpers extends Matchers with TryValues with OptionValues {
   def goTo(page: Page): JourneyStep[Unit] =
     State.modify(_.copy(page = page))
 
-  def goToChangeAnswer(page: Page, sourcePage: CheckAnswersPage): JourneyStep[Unit] =
+  def goToChangeAnswer(page: Page, sourcePage: WaypointPage): JourneyStep[Unit] =
     State.modify { journeyState =>
       val PageAndWaypoints(nextPage, waypoints) = page.changeLink(journeyState.waypoints, sourcePage)
       journeyState.copy(page = nextPage, waypoints = waypoints)
@@ -117,6 +117,6 @@ trait JourneyHelpers extends Matchers with TryValues with OptionValues {
   def goToChangeAnswer(page: Page): JourneyStep[Unit] =
     for {
       currentPage <- getPage
-      _ <- goToChangeAnswer(page, currentPage.asInstanceOf[CheckAnswersPage])
+      _ <- goToChangeAnswer(page, currentPage.asInstanceOf[WaypointPage])
     } yield ()
 }

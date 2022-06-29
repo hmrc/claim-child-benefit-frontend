@@ -415,6 +415,101 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
       }
     }
 
+    "that the user said had no previous names" - {
 
+      "changing that answer must collect whether the name was changed by deed poll, and the name(s)" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            basicChildJourney,
+            goToChangeAnswer(ChildHasPreviousNamePage(Index(0))),
+            answerPage(ChildHasPreviousNamePage(Index(0)), true, ChildNameChangedByDeedPollPage(Index(0))),
+            answerPage(ChildNameChangedByDeedPollPage(Index(0)), true, ChildPreviousNamePage(Index(0), Index(0))),
+            answerPage(ChildPreviousNamePage(Index(0), Index(0)), childName, AddChildPreviousNamePage(Index(0))),
+            answerPage(AddChildPreviousNamePage(Index(0)), false, CheckChildDetailsPage(Index(0)))
+          )
+      }
+    }
+
+    "that they provided previous names for" - {
+
+      val initialState =
+        journeyOf(
+          basicChildJourney,
+          answer(ChildHasPreviousNamePage(Index(0)), true),
+          answer(ChildNameChangedByDeedPollPage(Index(0)), true),
+          answer(ChildPreviousNamePage(Index(0), Index(0)), childName),
+          answer(ChildPreviousNamePage(Index(0), Index(1)), childName)
+        )
+
+      "changing to say they had no previous names must remove all names, and whether the name was changed by deed poll, then return to Check Child Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(ChildHasPreviousNamePage(Index(0))),
+            answerPage(ChildHasPreviousNamePage(Index(0)), false, CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(ChildNameChangedByDeedPollPage(Index(0))),
+            answersMustNotContain(ChildPreviousNamePage(Index(0), Index(0))),
+            answersMustNotContain(ChildPreviousNamePage(Index(0), Index(1)))
+          )
+      }
+
+      "must allow the user to remove a name, leaving at least one" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(AddChildPreviousNamePage(Index(0))),
+            goTo(RemoveChildPreviousNamePage(Index(0), Index(1))),
+            remove(ChildPreviousNamePage(Index(0), Index(1))),
+            next,
+            pageMustBe(AddChildPreviousNamePage(Index(0))),
+            answerPage(AddChildPreviousNamePage(Index(0)), false, CheckChildDetailsPage(Index(0)))
+          )
+      }
+
+      "removing the last name must also remove whether the name was changed by deed poll, and go to Child Has Previous Name" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(AddChildPreviousNamePage(Index(0))),
+            goTo(RemoveChildPreviousNamePage(Index(0), Index(1))),
+            remove(ChildPreviousNamePage(Index(0), Index(1))),
+            next,
+            pageMustBe(AddChildPreviousNamePage(Index(0))),
+            goTo(RemoveChildPreviousNamePage(Index(0), Index(0))),
+            remove(ChildPreviousNamePage(Index(0), Index(0))),
+            next,
+            pageMustBe(ChildHasPreviousNamePage(Index(0))),
+            answersMustNotContain(ChildNameChangedByDeedPollPage(Index(0)))
+          )
+      }
+
+      "must allow the user to add another previous name" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(AddChildPreviousNamePage(Index(0))),
+            answerPage(AddChildPreviousNamePage(Index(0)), true, ChildPreviousNamePage(Index(0), Index(2))),
+            answerPage(ChildPreviousNamePage(Index(0), Index(2)), childName, AddChildPreviousNamePage(Index(0))),
+            answerPage(AddChildPreviousNamePage(Index(0)), false, CheckChildDetailsPage(Index(0)))
+          )
+      }
+
+      "must allow the user to change a name" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(AddChildPreviousNamePage(Index(0))),
+            goToChangeAnswer(ChildPreviousNamePage(Index(0), Index(0))),
+            answerPage(ChildPreviousNamePage(Index(0), Index(0)), childName, AddChildPreviousNamePage(Index(0))),
+            answerPage(AddChildPreviousNamePage(Index(0)), false, CheckChildDetailsPage(Index(0)))
+          )
+      }
+    }
   }
 }

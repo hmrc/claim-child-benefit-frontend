@@ -18,9 +18,10 @@ package pages.child
 
 import controllers.child.routes
 import models.{Index, UserAnswers}
-import pages.{Page, Waypoints}
+import pages.{NonEmptyWaypoints, Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+import queries.DeriveNumberOfChildPreviousNames
 
 final case class ChildNameChangedByDeedPollPage(index: Index) extends ChildQuestionPage[Boolean] {
 
@@ -31,6 +32,12 @@ final case class ChildNameChangedByDeedPollPage(index: Index) extends ChildQuest
   override def route(waypoints: Waypoints): Call =
     routes.ChildNameChangedByDeedPollController.onPageLoad(waypoints, index)
 
-  override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     ChildPreviousNamePage(index, Index(0))
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    answers.get(DeriveNumberOfChildPreviousNames(index)).map {
+      case n if n > 0 => waypoints.next.page
+      case _          => ChildPreviousNamePage(index, Index(0))
+    }.getOrElse(ChildPreviousNamePage(index, Index(0)))
 }
