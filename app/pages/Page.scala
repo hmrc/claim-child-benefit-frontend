@@ -56,9 +56,12 @@ trait Page {
 
   def route(waypoints: Waypoints): Call
 
-  def changeLink(waypoints: Waypoints, sourcePage: CheckAnswersPage): PageAndWaypoints =
-    PageAndWaypoints(this, waypoints.setNextWaypoint(sourcePage.waypoint))
-
-  def changeLink(waypoints: Waypoints, sourcePage: AddItemPage): PageAndWaypoints =
-    PageAndWaypoints(this, waypoints.setNextWaypoint(sourcePage.waypoint(CheckMode)))
+  def changeLink(waypoints: Waypoints, sourcePage: WaypointPage): PageAndWaypoints = {
+    sourcePage match {
+      case p: CheckAnswersPage =>
+        PageAndWaypoints(this, waypoints.setNextWaypoint(p.waypoint))
+      case p: AddItemPage =>
+        PageAndWaypoints(this, waypoints.setNextWaypoint(p.waypoint(CheckMode)))
+    }
+  }
 }

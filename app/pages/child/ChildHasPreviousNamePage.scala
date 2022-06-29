@@ -18,9 +18,12 @@ package pages.child
 
 import controllers.child.routes
 import models.{Index, UserAnswers}
-import pages.{Page, Waypoints}
+import pages.{NonEmptyWaypoints, Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+import queries.AllChildPreviousNames
+
+import scala.util.Try
 
 final case class ChildHasPreviousNamePage(index: Index) extends ChildQuestionPage[Boolean] {
 
@@ -36,4 +39,28 @@ final case class ChildHasPreviousNamePage(index: Index) extends ChildQuestionPag
       case true => ChildNameChangedByDeedPollPage(index)
       case false => ChildBiologicalSexPage(index)
     }.orRecover
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true =>
+        answers.get(ChildNameChangedByDeedPollPage(index))
+        .map(_ => waypoints.next.page)
+        .getOrElse(ChildNameChangedByDeedPollPage(index))
+
+      case false =>
+        waypoints.next.page
+
+    }.orRecover
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    value.map {
+      case false =>
+        userAnswers
+          .remove(ChildNameChangedByDeedPollPage(index))
+          .flatMap(_.remove(AllChildPreviousNames(index)))
+
+      case true =>
+        super.cleanup(value, userAnswers)
+
+    }.getOrElse(super.cleanup(value, userAnswers))
 }

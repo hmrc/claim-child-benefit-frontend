@@ -21,7 +21,7 @@ import cats.implicits._
 import models.UserAnswers
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{OptionValues, TryValues}
-import pages.{CheckAnswersPage, EmptyWaypoints, Page, PageAndWaypoints, Waypoints}
+import pages.{CheckAnswersPage, EmptyWaypoints, Page, PageAndWaypoints, WaypointPage, Waypoints}
 import play.api.libs.json.{Reads, Writes}
 import queries.{Gettable, Settable}
 
@@ -97,21 +97,26 @@ trait JourneyHelpers extends Matchers with TryValues with OptionValues {
       answers.get(gettable) must not be defined
     }
 
+  def answerMustEqual[A](gettable: Gettable[A], expectedAnswer: A)(implicit reads: Reads[A]): JourneyStep[Unit] =
+    getAnswers.map { answers =>
+      answers.get(gettable).value mustEqual expectedAnswer
+    }
+
   def answerPage[A](page: Page with Settable[A], value: A, expectedDestination: Page)(implicit writes: Writes[A]): JourneyStep[Unit] =
     answer(page, value) >> next >> pageMustBe(expectedDestination)
 
   def goTo(page: Page): JourneyStep[Unit] =
     State.modify(_.copy(page = page))
 
-  def goToCheckMode(page: Page, sourcePage: CheckAnswersPage): JourneyStep[Unit] =
+  def goToChangeAnswer(page: Page, sourcePage: WaypointPage): JourneyStep[Unit] =
     State.modify { journeyState =>
       val PageAndWaypoints(nextPage, waypoints) = page.changeLink(journeyState.waypoints, sourcePage)
       journeyState.copy(page = nextPage, waypoints = waypoints)
     }
 
-  def goToCheckMode(page: Page): JourneyStep[Unit] =
+  def goToChangeAnswer(page: Page): JourneyStep[Unit] =
     for {
       currentPage <- getPage
-      _ <- goToCheckMode(page, currentPage.asInstanceOf[CheckAnswersPage])
+      _ <- goToChangeAnswer(page, currentPage.asInstanceOf[WaypointPage])
     } yield ()
 }

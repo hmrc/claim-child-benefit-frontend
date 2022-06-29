@@ -18,7 +18,7 @@ package pages.child
 
 import controllers.child.routes
 import models.{CheckMode, Index, NormalMode, UserAnswers}
-import pages.{AddItemPage, Page, QuestionPage, Waypoint, Waypoints}
+import pages.{AddItemPage, NonEmptyWaypoints, Page, QuestionPage, Waypoint, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 import queries.DeriveNumberOfChildPreviousNames
@@ -45,6 +45,17 @@ final case class AddChildPreviousNamePage(index: Index) extends QuestionPage[Boo
 
       case false =>
         ChildBiologicalSexPage(index)
+    }.orRecover
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true =>
+        answers.get(DeriveNumberOfChildPreviousNames(index))
+          .map(n => ChildPreviousNamePage(index, Index(n)))
+          .orRecover
+
+      case false =>
+        waypoints.next.page
     }.orRecover
 }
 
