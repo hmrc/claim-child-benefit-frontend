@@ -21,6 +21,9 @@ import models.{ChildName, Index, NormalMode, UserAnswers}
 import pages.{AddToListQuestionPage, AddToListSection, ChildPreviousNameSection, Page, QuestionPage, Waypoint, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+import queries.DeriveNumberOfChildPreviousNames
+
+import scala.util.Try
 
 final case class ChildPreviousNamePage(
                                         childIndex: Index,
@@ -41,4 +44,11 @@ final case class ChildPreviousNamePage(
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     AddChildPreviousNamePage(childIndex)
 
+  override def cleanup(value: Option[ChildName], userAnswers: UserAnswers): Try[UserAnswers] =
+    userAnswers.get(DeriveNumberOfChildPreviousNames(childIndex)).map {
+      case n if n > 0 => super.cleanup(value, userAnswers)
+      case _          => userAnswers.remove(ChildNameChangedByDeedPollPage(childIndex))
+    }.getOrElse(
+      userAnswers.remove(ChildNameChangedByDeedPollPage(childIndex))
+    )
 }
