@@ -38,11 +38,11 @@ object PartnerEntitledToChildBenefitSummary {
       val value = if (entitled) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
-        key = "partnerEntitledToChildBenefit.checkYourAnswersLabel",
+        key = messages("partnerEntitledToChildBenefit.checkYourAnswersLabel", safeFirstName),
         value = ValueViewModel(value),
         actions = Seq(
           ActionItemViewModel(
-            messages("site.change", safeFirstName),
+            messages("site.change"),
             PartnerEntitledToChildBenefitPage.changeLink(waypoints, sourcePage).url
           ).withVisuallyHiddenText(messages("partnerEntitledToChildBenefit.change.hidden", safeFirstName))
         )

@@ -47,11 +47,11 @@ object PartnerEmploymentStatusSummary {
       )
 
       SummaryListRowViewModel(
-        key = "partnerEmploymentStatus.checkYourAnswersLabel",
+        key = messages("partnerEmploymentStatus.checkYourAnswersLabel", safeFirstName),
         value = value,
         actions = Seq(
           ActionItemViewModel(
-            messages("site.change", safeFirstName),
+            messages("site.change"),
             PartnerEmploymentStatusPage.changeLink(waypoints, sourcePage).url
           ).withVisuallyHiddenText(messages("partnerEmploymentStatus.change.hidden", safeFirstName))
         )

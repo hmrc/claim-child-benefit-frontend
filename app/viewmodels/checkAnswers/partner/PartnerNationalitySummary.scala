@@ -37,11 +37,11 @@ object PartnerNationalitySummary {
       val safeFirstName = HtmlFormat.escape(partnerName.firstName).toString
 
       SummaryListRowViewModel(
-        key = "partnerNationality.checkYourAnswersLabel",
+        key = messages("partnerNationality.checkYourAnswersLabel", safeFirstName),
         value = ValueViewModel(HtmlFormat.escape(nationality).toString),
         actions = Seq(
           ActionItemViewModel(
-            messages("site.change", safeFirstName),
+            messages("site.change"),
             PartnerNationalityPage.changeLink(waypoints, sourcePage).url
           ).withVisuallyHiddenText(messages("partnerNationality.change.hidden", safeFirstName))
         )

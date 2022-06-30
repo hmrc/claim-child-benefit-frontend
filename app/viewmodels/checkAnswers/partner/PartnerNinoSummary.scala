@@ -37,11 +37,11 @@ object PartnerNinoSummary {
       val safeFirstName = HtmlFormat.escape(partnerName.firstName).toString
 
       SummaryListRowViewModel(
-        key = "partnerNino.checkYourAnswersLabel",
+        key = messages("partnerNino.checkYourAnswersLabel", safeFirstName),
         value = ValueViewModel(nino.value),
         actions = Seq(
           ActionItemViewModel(
-            messages("site.change", safeFirstName),
+            messages("site.change"),
             PartnerNinoPage.changeLink(waypoints, sourcePage).url
           ).withVisuallyHiddenText(messages("partnerNino.change.hidden", safeFirstName))
         )
