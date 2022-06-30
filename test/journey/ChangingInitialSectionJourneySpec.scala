@@ -16,38 +16,30 @@
 
 package journey
 
-import models.RelationshipStatus
+import models.Benefits
 import models.RelationshipStatus._
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
+import pages.income._
 import pages.{CheckYourAnswersPage, RelationshipStatusDatePage, RelationshipStatusPage}
 
 import java.time.LocalDate
 
 class ChangingInitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
-  "when a user initially said they were Married, Single, Widowed or Divorced" - {
+  "when a user initially said they were Married" - {
 
-    def status: RelationshipStatus = Gen.oneOf(Married, Single, Widowed, Divorced).sample.value
+    def benefits = Set(Gen.oneOf(Benefits.values).sample.value)
 
     val initialise = journeyOf(
-      submitAnswer(RelationshipStatusPage, status),
+      submitAnswer(RelationshipStatusPage, Married),
+      submitAnswer(ApplicantOrPartnerIncomeOver50kPage, true),
+      submitAnswer(ApplicantOrPartnerIncomeOver60kPage, true),
+      submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
       goTo(CheckYourAnswersPage)
     )
 
-    "changing the answer to Separated must collect the separation date then return to Check Answers" in {
-
-      startingFrom(RelationshipStatusPage)
-        .run(
-          initialise,
-          goToChangeAnswer(RelationshipStatusPage),
-          submitAnswer(RelationshipStatusPage, Separated),
-          submitAnswer(RelationshipStatusDatePage, LocalDate.now),
-          pageMustBe(CheckYourAnswersPage)
-        )
-    }
-
-    "changing the answer to Cohabiting must collect the separation date then return to Check Answers" in {
+    "changing the answer to Cohabiting must collect the date then return to Check Answers" in {
 
       startingFrom(RelationshipStatusPage)
         .run(
@@ -59,85 +51,72 @@ class ChangingInitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
         )
     }
 
-    "changing the answer to Married, Single, Divorced or Widowed must return to Check Answers" in {
+    "changing the answer to Separated must collect the date and single income details, remove joint income details, then return to Check Answers" in {
 
       startingFrom(RelationshipStatusPage)
         .run(
           initialise,
           goToChangeAnswer(RelationshipStatusPage),
-          submitAnswer(RelationshipStatusPage, status),
-          pageMustBe(CheckYourAnswersPage)
-        )
-    }
-  }
-
-  "when a user initially said they were Cohabiting or Separated" - {
-
-    def status: RelationshipStatus = Gen.oneOf(Cohabiting, Separated).sample.value
-
-    val initialise = journeyOf(
-      submitAnswer(RelationshipStatusPage, status),
-      submitAnswer(RelationshipStatusDatePage, LocalDate.now),
-      goTo(CheckYourAnswersPage)
-    )
-
-    "changing the answer to Married must remove Relationship Status Date and return to Check Answers" in {
-
-      startingFrom(RelationshipStatusPage)
-        .run(
-          initialise,
-          goToChangeAnswer(RelationshipStatusPage),
-          submitAnswer(RelationshipStatusPage, Married),
+          submitAnswer(RelationshipStatusPage, Separated),
+          submitAnswer(RelationshipStatusDatePage, LocalDate.now),
+          submitAnswer(ApplicantIncomeOver50kPage, true),
+          submitAnswer(ApplicantIncomeOver60kPage, true),
+          submitAnswer(ApplicantBenefitsPage, benefits),
           pageMustBe(CheckYourAnswersPage),
-          answersMustNotContain(RelationshipStatusDatePage)
+          answersMustNotContain(ApplicantOrPartnerIncomeOver50kPage),
+          answersMustNotContain(ApplicantOrPartnerIncomeOver60kPage),
+          answersMustNotContain(ApplicantOrPartnerBenefitsPage)
         )
     }
 
-    "changing the answer to Single must remove Relationship Status Date and return to Check Answers" in {
+    "changing the answer to Single must collect single income details, remove joint income details, then return to Check Answers" in {
 
       startingFrom(RelationshipStatusPage)
         .run(
           initialise,
           goToChangeAnswer(RelationshipStatusPage),
           submitAnswer(RelationshipStatusPage, Single),
+          submitAnswer(ApplicantIncomeOver50kPage, true),
+          submitAnswer(ApplicantIncomeOver60kPage, true),
+          submitAnswer(ApplicantBenefitsPage, benefits),
           pageMustBe(CheckYourAnswersPage),
-          answersMustNotContain(RelationshipStatusDatePage)
+          answersMustNotContain(ApplicantOrPartnerIncomeOver50kPage),
+          answersMustNotContain(ApplicantOrPartnerIncomeOver60kPage),
+          answersMustNotContain(ApplicantOrPartnerBenefitsPage)
         )
     }
 
-    "changing the answer to Divorced must remove Relationship Status Date and return to Check Answers" in {
+    "changing the answer to Divorced must collect single income details, remove joint income details, then return to Check Answers" in {
 
       startingFrom(RelationshipStatusPage)
         .run(
           initialise,
           goToChangeAnswer(RelationshipStatusPage),
           submitAnswer(RelationshipStatusPage, Divorced),
+          submitAnswer(ApplicantIncomeOver50kPage, true),
+          submitAnswer(ApplicantIncomeOver60kPage, true),
+          submitAnswer(ApplicantBenefitsPage, benefits),
           pageMustBe(CheckYourAnswersPage),
-          answersMustNotContain(RelationshipStatusDatePage)
+          answersMustNotContain(ApplicantOrPartnerIncomeOver50kPage),
+          answersMustNotContain(ApplicantOrPartnerIncomeOver60kPage),
+          answersMustNotContain(ApplicantOrPartnerBenefitsPage)
         )
     }
 
-    "changing the answer to Widowed must remove Relationship Status Date and return to Check Answers" in {
+    "changing the answer to Widowed must collect single income details, remove joint income details, then return to Check Answers" in {
 
       startingFrom(RelationshipStatusPage)
         .run(
           initialise,
           goToChangeAnswer(RelationshipStatusPage),
           submitAnswer(RelationshipStatusPage, Widowed),
+          submitAnswer(ApplicantIncomeOver50kPage, true),
+          submitAnswer(ApplicantIncomeOver60kPage, true),
+          submitAnswer(ApplicantBenefitsPage, benefits),
           pageMustBe(CheckYourAnswersPage),
-          answersMustNotContain(RelationshipStatusDatePage)
-        )
-    }
-
-    "changing the answer to Cohabiting or Separated must return to Check Answers" in {
-
-      startingFrom(RelationshipStatusPage)
-        .run(
-          initialise,
-          goToChangeAnswer(RelationshipStatusPage),
-          submitAnswer(RelationshipStatusPage, status),
-          pageMustBe(CheckYourAnswersPage),
-          answersMustContain(RelationshipStatusDatePage)
+          answersMustNotContain(ApplicantOrPartnerIncomeOver50kPage),
+          answersMustNotContain(ApplicantOrPartnerIncomeOver60kPage),
+          answersMustNotContain(ApplicantOrPartnerBenefitsPage)
         )
     }
   }

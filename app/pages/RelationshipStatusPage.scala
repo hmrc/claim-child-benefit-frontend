@@ -44,6 +44,10 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
 
   override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
     answers.get(this).map {
+      case Cohabiting =>
+        answers.get(RelationshipStatusDatePage)
+          .map()
+
       case Separated | Cohabiting =>
         answers.get(RelationshipStatusDatePage)
           .map(_ => waypoints.next.page)
