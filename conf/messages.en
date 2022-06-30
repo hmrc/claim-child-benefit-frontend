@@ -432,8 +432,10 @@ removeApplicantPreviousFamilyName.error.required = Select yes if you want to rem
 bestTimeToContact.title = What time of day is the best time to call you?
 bestTimeToContact.heading = What time of day is the best time to call you?
 bestTimeToContact.checkYourAnswersLabel = What time of day is the best time to call you?
-bestTimeToContact.error.required = Enter the best time of day to call you
-bestTimeToContact.error.length = The time of day must be 100 characters or less
+bestTimeToContact.morning = Morning
+bestTimeToContact.afternoon = Afternoon
+bestTimeToContact.evening = Evening (we’re only able to call up to 8pm)
+bestTimeToContact.error.required = Select the best time of day to call you
 bestTimeToContact.change.hidden = the time of day that is best to call you
 
 partnerDateOfBirth.title = What is your partner’s date of birth?
@@ -549,10 +551,6 @@ addChildPreviousName.remove.hidden = {0}
 
 anyoneClaimedForChildBefore.title = Have you or anyone else ever claimed Child Benefit for this child?
 anyoneClaimedForChildBefore.heading = Have you or anyone else ever claimed Child Benefit for {0}?
-anyoneClaimedForChildBefore.applicant = Yes, I have claimed
-anyoneClaimedForChildBefore.partner = Yes, my partner has claimed
-anyoneClaimedForChildBefore.someoneElse = Yes, someone else has claimed
-anyoneClaimedForChildBefore.no = No
 anyoneClaimedForChildBefore.checkYourAnswersLabel = Have you or anyone else ever claimed Child Benefit for this child?
 anyoneClaimedForChildBefore.error.required = Select if you or anyone else has ever claimed Child Benefit for {0}
 anyoneClaimedForChildBefore.change.hidden = if you or anyone else has ever claimed Child Benefit for this child

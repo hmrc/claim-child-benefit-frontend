@@ -15,35 +15,31 @@
  *@
 
 @import controllers.applicant.routes
-@import viewmodels.InputWidth._
 
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
-    govukButton: GovukButton
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukRadios: GovukRadios,
+        govukButton: GovukButton
 )
 
 @(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("bestTimeToContact.title"))) {
 
-    @formHelper(action = routes.BestTimeToContactController.onSubmit(waypoints)) {
+    @formHelper(action = routes.BestTimeToContactController.onSubmit(waypoints), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
+            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
 
-        @govukInput(
-            InputViewModel(
-                field = form("value"),
-                label = HmrcPageHeadingLabel(
-                    content = messages("bestTimeToContact.heading"),
-                    caption = HmrcSectionCaption(messages("section.applicant"))
-                )
+        @govukRadios(
+            RadiosViewModel(
+                field  = form("value"),
+                legend = LegendViewModel(messages("bestTimeToContact.heading")).asPageHeading(),
+                items  = BestTimeToContact.options
             )
-            .withWidth(Full)
         )
 
         @govukButton(

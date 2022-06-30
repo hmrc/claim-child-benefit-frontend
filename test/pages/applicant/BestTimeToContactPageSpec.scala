@@ -17,6 +17,7 @@
 package pages.applicant
 
 import controllers.applicant.routes
+import models.BestTimeToContact
 import pages.EmptyWaypoints
 import pages.behaviours.PageBehaviours
 
@@ -25,11 +26,11 @@ class BestTimeToContactPageSpec extends PageBehaviours {
 
   "BestTimeToContactPage" - {
 
-    beRetrievable[String](BestTimeToContactPage)
+    beRetrievable[BestTimeToContact](BestTimeToContactPage)
 
-    beSettable[String](BestTimeToContactPage)
+    beSettable[BestTimeToContact](BestTimeToContactPage)
 
-    beRemovable[String](BestTimeToContactPage)
+    beRemovable[BestTimeToContact](BestTimeToContactPage)
 
     "must navigate" - {
 

@@ -17,15 +17,15 @@
 package forms.applicant
 
 import forms.mappings.Mappings
+import models.BestTimeToContact
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class BestTimeToContactFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[String] =
+  def apply(): Form[BestTimeToContact] =
     Form(
-      "value" -> text("bestTimeToContact.error.required")
-        .verifying(maxLength(100, "bestTimeToContact.error.length"))
+      "value" -> enumerable[BestTimeToContact]("bestTimeToContact.error.required")
     )
 }

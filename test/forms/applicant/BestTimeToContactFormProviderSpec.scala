@@ -16,32 +16,24 @@
 
 package forms.applicant
 
-import forms.behaviours.StringFieldBehaviours
+import forms.behaviours.OptionFieldBehaviours
+import models.BestTimeToContact
 import play.api.data.FormError
 
-class BestTimeToContactFormProviderSpec extends StringFieldBehaviours {
-
-  val requiredKey = "bestTimeToContact.error.required"
-  val lengthKey = "bestTimeToContact.error.length"
-  val maxLength = 100
+class BestTimeToContactFormProviderSpec extends OptionFieldBehaviours {
 
   val form = new BestTimeToContactFormProvider()()
 
   ".value" - {
 
     val fieldName = "value"
+    val requiredKey = "bestTimeToContact.error.required"
 
-    behave like fieldThatBindsValidData(
+    behave like optionsField[BestTimeToContact](
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
-    )
-
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      validValues  = BestTimeToContact.values,
+      invalidError = FormError(fieldName, "error.invalid")
     )
 
     behave like mandatoryField(
