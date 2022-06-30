@@ -71,10 +71,11 @@ trait ModelGenerators {
       Gen.oneOf(ApplicantRelationshipToChild.values.toSeq)
     }
 
-  implicit lazy val arbitraryAnyoneClaimedForChildBefore: Arbitrary[AnyoneClaimedForChildBefore] =
+  implicit lazy val arbitraryBestTimeToContact: Arbitrary[BestTimeToContact] = {
     Arbitrary {
-      Gen.oneOf(AnyoneClaimedForChildBefore.allValues.toSeq)
+      Gen.oneOf(BestTimeToContact.values)
     }
+  }
 
   implicit lazy val arbitraryPartnerName: Arbitrary[PartnerName] =
     Arbitrary {

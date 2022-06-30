@@ -19,7 +19,7 @@ package controllers.applicant
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.applicant.BestTimeToContactFormProvider
-import models.UserAnswers
+import models.{BestTimeToContact, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -39,6 +39,7 @@ class BestTimeToContactControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new BestTimeToContactFormProvider()
   val form = formProvider()
+  val validAnswer = BestTimeToContact.values.head
 
   lazy val bestTimeToContactRoute = routes.BestTimeToContactController.onPageLoad(waypoints).url
 
@@ -62,7 +63,7 @@ class BestTimeToContactControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(BestTimeToContactPage, "answer").success.value
+      val userAnswers = UserAnswers(userAnswersId).set(BestTimeToContactPage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -74,7 +75,7 @@ class BestTimeToContactControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints)(request, messages(application)).toString
       }
     }
 
@@ -94,10 +95,10 @@ class BestTimeToContactControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, bestTimeToContactRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
+            .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(BestTimeToContactPage, "answer").success.value
+        val expectedAnswers = emptyUserAnswers.set(BestTimeToContactPage, validAnswer).success.value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual BestTimeToContactPage.navigate(waypoints, expectedAnswers).url
@@ -146,7 +147,7 @@ class BestTimeToContactControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, bestTimeToContactRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
+            .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value
 

@@ -146,7 +146,7 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
     Arbitrary {
       for {
         page  <- arbitrary[AnyoneClaimedForChildBeforePage]
-        value <- arbitrary[AnyoneClaimedForChildBefore].map(Json.toJson(_))
+        value <- arbitrary[Boolean].map(Json.toJson(_))
       } yield (page, value)
     }
 
@@ -250,7 +250,7 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
     Arbitrary {
       for {
         page  <- arbitrary[BestTimeToContactPage.type]
-        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
+        value <- arbitrary[BestTimeToContact].map(Json.toJson(_))
       } yield (page, value)
     }
 

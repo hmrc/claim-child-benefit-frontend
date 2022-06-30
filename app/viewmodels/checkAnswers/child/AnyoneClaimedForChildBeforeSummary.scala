@@ -20,8 +20,6 @@ import models.{Index, UserAnswers}
 import pages.child.AnyoneClaimedForChildBeforePage
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -33,15 +31,11 @@ object AnyoneClaimedForChildBeforeSummary {
     answers.get(AnyoneClaimedForChildBeforePage(index)).map {
       answer =>
 
-        val value = ValueViewModel(
-          HtmlContent(
-            HtmlFormat.escape(messages(s"anyoneClaimedForChildBefore.$answer"))
-          )
-        )
+        val value = if (answer) "site.yes" else "site.no"
 
         SummaryListRowViewModel(
           key = "anyoneClaimedForChildBefore.checkYourAnswersLabel",
-          value = value,
+          value = ValueViewModel(value),
           actions = Seq(
             ActionItemViewModel("site.change", AnyoneClaimedForChildBeforePage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("anyoneClaimedForChildBefore.change.hidden"))
