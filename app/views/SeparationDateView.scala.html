@@ -15,18 +15,18 @@
  *@
 
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukDateInput: GovukDateInput,
-    govukButton: GovukButton
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukDateInput: GovukDateInput,
+        govukButton: GovukButton
 )
 
-@(form: Form[_], waypoints: Waypoints, relationshipStatus: RelationshipStatus)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages(s"relationshipStatusDate.${relationshipStatus.toString}.title"))) {
+@layout(pageTitle = title(form, messages("separationDate.title"))) {
 
-    @formHelper(action = routes.RelationshipStatusDateController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.SeparationDateController.onSubmit(waypoints), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value.day")))
@@ -35,9 +35,9 @@
         @govukDateInput(
             DateViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(messages(s"relationshipStatusDate.${relationshipStatus.toString}.heading")).asPageHeading()
+                legend = LegendViewModel(messages("separationDate.heading")).asPageHeading()
             )
-            .withHint(HintViewModel(messages("relationshipStatusDate.hint")))
+                    .withHint(HintViewModel(messages("separationDate.hint")))
         )
 
         @govukButton(

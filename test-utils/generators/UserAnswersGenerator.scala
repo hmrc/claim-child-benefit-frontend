@@ -96,7 +96,7 @@ trait UserAnswersGenerator extends TryValues {
     arbitrary[(ApplicantIncomeOver50kPage.type, JsValue)] ::
     arbitrary[(ApplicantBenefitsPage.type, JsValue)] ::
     arbitrary[(RelationshipStatusPage.type, JsValue)] ::
-    arbitrary[(RelationshipStatusDatePage.type, JsValue)] ::
+    arbitrary[(CohabitationDatePage.type, JsValue)] ::
     arbitrary[(EverLivedOrWorkedAbroadPage.type, JsValue)] ::
     arbitrary[(AnyChildLivedWithOthersPage.type, JsValue)] ::
     Nil

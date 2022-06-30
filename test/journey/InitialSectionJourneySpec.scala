@@ -19,7 +19,7 @@ package journey
 import models.{ApplicantName, RelationshipStatus}
 import org.scalatest.freespec.AnyFreeSpec
 import pages.income.{ApplicantIncomeOver50kPage, ApplicantOrPartnerIncomeOver50kPage}
-import pages.{AnyChildLivedWithOthersPage, ApplicantNamePage, EverLivedOrWorkedAbroadPage, RelationshipStatusDatePage, RelationshipStatusPage, UsePrintAndPostFormPage}
+import pages.{AnyChildLivedWithOthersPage, ApplicantNamePage, CohabitationDatePage, EverLivedOrWorkedAbroadPage, RelationshipStatusPage, SeparationDatePage, UsePrintAndPostFormPage}
 
 import java.time.LocalDate
 
@@ -47,7 +47,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Cohabiting),
-        submitAnswer(RelationshipStatusDatePage, LocalDate.now.minusDays(1)),
+        submitAnswer(CohabitationDatePage, LocalDate.now.minusDays(1)),
         pageMustBe(ApplicantOrPartnerIncomeOver50kPage)
       )
   }
@@ -72,7 +72,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Separated),
-        submitAnswer(RelationshipStatusDatePage, LocalDate.now.minusDays(1)),
+        submitAnswer(SeparationDatePage, LocalDate.now.minusDays(1)),
         pageMustBe(ApplicantIncomeOver50kPage)
       )
   }
