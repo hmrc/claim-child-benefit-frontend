@@ -23,6 +23,8 @@ import pages.income.{ApplicantIncomeOver50kPage, ApplicantOrPartnerIncomeOver50k
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
+import scala.util.Try
+
 case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
 
   override def path: JsPath = JsPath \ toString
@@ -39,4 +41,24 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
       case Married                     => ApplicantOrPartnerIncomeOver50kPage
       case Single | Divorced | Widowed => ApplicantIncomeOver50kPage
     }.orRecover
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case Separated | Cohabiting =>
+        answers.get(RelationshipStatusDatePage)
+          .map(_ => waypoints.next.page)
+          .getOrElse(RelationshipStatusDatePage)
+
+      case Married | Single | Divorced | Widowed =>
+        waypoints.next.page
+    }.orRecover
+
+  override def cleanup(value: Option[RelationshipStatus], userAnswers: UserAnswers): Try[UserAnswers] =
+    value.map {
+      case Married | Single | Divorced | Widowed =>
+        userAnswers.remove(RelationshipStatusDatePage)
+
+      case Cohabiting | Separated =>
+        super.cleanup(value, userAnswers)
+    }.getOrElse(super.cleanup(value, userAnswers))
 }
