@@ -38,11 +38,11 @@ object PartnerWaitingForEntitlementDecisionSummary {
       val value = if (waiting) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
-        key = "partnerWaitingForEntitlementDecision.checkYourAnswersLabel",
+        key = messages("partnerWaitingForEntitlementDecision.checkYourAnswersLabel", safeFirstName),
         value = ValueViewModel(value),
         actions = Seq(
           ActionItemViewModel(
-            messages("site.change", safeFirstName),
+            messages("site.change"),
             PartnerWaitingForEntitlementDecisionPage.changeLink(waypoints, sourcePage).url
           ).withVisuallyHiddenText(messages("partnerWaitingForEntitlementDecision.change.hidden", safeFirstName))
         )

@@ -38,11 +38,11 @@ object PartnerNinoKnownSummary {
       val value = if (ninoKnown) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
-        key = "partnerNinoKnown.checkYourAnswersLabel",
+        key = messages("partnerNinoKnown.checkYourAnswersLabel", safeFirstName),
         value = ValueViewModel(value),
         actions = Seq(
           ActionItemViewModel(
-            messages("site.change", safeFirstName),
+            messages("site.change"),
             PartnerNinoKnownPage.changeLink(waypoints, sourcePage).url
           ).withVisuallyHiddenText(messages("partnerNinoKnown.change.hidden", safeFirstName))
         )

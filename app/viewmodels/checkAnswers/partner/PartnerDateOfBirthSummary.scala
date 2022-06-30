@@ -40,11 +40,11 @@ object PartnerDateOfBirthSummary {
       val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
       SummaryListRowViewModel(
-        key = "partnerDateOfBirth.checkYourAnswersLabel",
+        key = messages("partnerDateOfBirth.checkYourAnswersLabel", safeFirstName),
         value = ValueViewModel(dateOfBirth.format(dateFormatter)),
         actions = Seq(
           ActionItemViewModel(
-            messages("site.change", safeFirstName),
+            messages("site.change"),
             PartnerDateOfBirthPage.changeLink(waypoints, sourcePage).url
           ).withVisuallyHiddenText(messages("partnerDateOfBirth.change.hidden", safeFirstName))
         )

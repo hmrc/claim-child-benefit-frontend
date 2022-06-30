@@ -43,11 +43,11 @@ object PartnerEldestChildNameSummary {
           .mkString("<br/>")
 
       SummaryListRowViewModel(
-        key = "partnerEldestChildName.checkYourAnswersLabel",
+        key = messages("partnerEldestChildName.checkYourAnswersLabel", safeFirstName),
         value = ValueViewModel(HtmlContent(value)),
         actions = Seq(
           ActionItemViewModel(
-            messages("site.change", safeFirstName),
+            messages("site.change"),
             PartnerEldestChildNamePage.changeLink(waypoints, sourcePage).url
           ).withVisuallyHiddenText(messages("partnerEldestChildName.change.hidden", safeFirstName))
         )

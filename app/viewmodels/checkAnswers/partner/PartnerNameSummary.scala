@@ -36,7 +36,7 @@ object PartnerNameSummary {
         val value =
           List(answer.title, Some(answer.firstName), answer.middleNames, Some(answer.lastName))
             .flatten.map(HtmlFormat.escape(_).toString)
-            .mkString("<br/>")
+            .mkString(" ")
 
         SummaryListRowViewModel(
           key = "partnerName.checkYourAnswersLabel",
