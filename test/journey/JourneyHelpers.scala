@@ -22,7 +22,7 @@ import models.UserAnswers
 import org.scalactic.source.Position
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{OptionValues, TryValues}
-import pages.{CheckAnswersPage, EmptyWaypoints, Page, PageAndWaypoints, WaypointPage, Waypoints}
+import pages.{EmptyWaypoints, Page, PageAndWaypoints, WaypointPage, Waypoints}
 import play.api.libs.json.{Reads, Writes}
 import queries.{Gettable, Settable}
 
@@ -81,32 +81,32 @@ trait JourneyHelpers extends Matchers with TryValues with OptionValues {
       journeyState.copy(answers = journeyState.answers.remove(page).success.value)
     }
 
-  def pageMustBe(expectedPage: Page): JourneyStep[Unit] =
+  def pageMustBe(expectedPage: Page)(implicit position: Position): JourneyStep[Unit] =
     getPage.map { page =>
       page mustEqual expectedPage
     }
 
-  def waypointsMustBe(expectedWaypoints: Waypoints): JourneyStep[Unit] =
+  def waypointsMustBe(expectedWaypoints: Waypoints)(implicit position: Position): JourneyStep[Unit] =
     getWaypoints.map { waypoints =>
       waypoints mustEqual expectedWaypoints
     }
 
-  def answersMustContain[A](gettable: Gettable[A])(implicit reads: Reads[A]): JourneyStep[Unit] =
+  def answersMustContain[A](gettable: Gettable[A])(implicit reads: Reads[A], position: Position): JourneyStep[Unit] =
     getAnswers.map { answers =>
       answers.get(gettable) mustBe defined
     }
 
-  def answersMustNotContain[A](gettable: Gettable[A])(implicit reads: Reads[A]): JourneyStep[Unit] =
+  def answersMustNotContain[A](gettable: Gettable[A])(implicit reads: Reads[A], position: Position): JourneyStep[Unit] =
     getAnswers.map { answers =>
       answers.get(gettable) must not be defined
     }
 
-  def answerMustEqual[A](gettable: Gettable[A], expectedAnswer: A)(implicit reads: Reads[A]): JourneyStep[Unit] =
+  def answerMustEqual[A](gettable: Gettable[A], expectedAnswer: A)(implicit reads: Reads[A], position: Position): JourneyStep[Unit] =
     getAnswers.map { answers =>
       answers.get(gettable).value mustEqual expectedAnswer
     }
 
-  def submitAnswer[A](page: Page with Settable[A], value: A)(implicit writes: Writes[A]): JourneyStep[Unit] =
+  def submitAnswer[A](page: Page with Settable[A], value: A)(implicit writes: Writes[A], position: Position): JourneyStep[Unit] =
     pageMustBe(page) >> setUserAnswersTo(page, value) >> next
 
   def removeAddToListItem[A](page: Page with Settable[A])(implicit writes: Writes[A], position: Position): JourneyStep[Unit] =
