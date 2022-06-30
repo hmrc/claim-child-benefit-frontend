@@ -20,7 +20,6 @@ import generators.ModelGenerators
 import models.ChildBirthRegistrationCountry.{England, Other, Scotland, Unknown, Wales}
 import models._
 import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import pages.RelationshipStatusPage
 import pages.child._
@@ -94,7 +93,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
           submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
           submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), "123456789"),
           submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.No),
+          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
           submitAnswer(AdoptingChildPage(Index(0)), false),
           pageMustBe(CheckChildDetailsPage(Index(0)))
         )
@@ -112,7 +111,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
           submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Wales),
           submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), "123456789"),
           submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.No),
+          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
           submitAnswer(AdoptingChildPage(Index(0)), false),
           pageMustBe(CheckChildDetailsPage(Index(0)))
         )
@@ -131,7 +130,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
           submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
           submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), certificateDetails),
           submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.No),
+          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
           submitAnswer(AdoptingChildPage(Index(0)), false),
           pageMustBe(CheckChildDetailsPage(Index(0)))
         )
@@ -149,7 +148,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
         .run(
           submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Other),
           submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.No),
+          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
           submitAnswer(AdoptingChildPage(Index(0)), false),
           submitAnswer(IncludedDocumentsPage(Index(0)), documents),
           pageMustBe(CheckChildDetailsPage(Index(0)))
@@ -168,7 +167,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
         .run(
           submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Unknown),
           submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.No),
+          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
           submitAnswer(AdoptingChildPage(Index(0)), false),
           submitAnswer(IncludedDocumentsPage(Index(0)), documents),
           pageMustBe(CheckChildDetailsPage(Index(0)))
@@ -178,60 +177,22 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
   "users whose child has been claimed for before" - {
 
-    "by them" - {
+    "must be asked for details of the previous claimant" in {
 
-      "must not be asked for details of the previous claimant" in {
+      val relationshipStatus = arbitrary[RelationshipStatus].sample.value
+      val claimantName       = PreviousClaimantName(None, "first", None, "last")
+      val claimantAddress    = Address("line 1", None, "town", None, "postcode")
 
-        val relationshipStatus = arbitrary[RelationshipStatus].sample.value
+      val answers =
+        UserAnswers("id").set(RelationshipStatusPage, relationshipStatus).success.value
 
-        val answers =
-          UserAnswers("id").set(RelationshipStatusPage, relationshipStatus).success.value
-
-        startingFrom(AnyoneClaimedForChildBeforePage(Index(0)), answers = answers)
-          .run(
-            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.Applicant),
-            pageMustBe(AdoptingChildPage(Index(0)))
-          )
-      }
-    }
-
-    "by their partner" - {
-
-      "must not be asked for details of the previous claimant" in {
-
-        val relationshipStatus = Gen.oneOf(RelationshipStatus.Married, RelationshipStatus.Cohabiting).sample.value
-
-        val answers =
-          UserAnswers("id").set(RelationshipStatusPage, relationshipStatus).success.value
-
-        startingFrom(AnyoneClaimedForChildBeforePage(Index(0)), answers = answers)
-          .run(
-            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.Partner),
-            pageMustBe(AdoptingChildPage(Index(0)))
-          )
-      }
-    }
-
-    "by someone other than them or their partner" - {
-
-      "must be asked for details of the previous claimant" in {
-
-        val relationshipStatus = arbitrary[RelationshipStatus].sample.value
-        val claimantName       = PreviousClaimantName(None, "first", None, "last")
-        val claimantAddress    = Address("line 1", None, "town", None, "postcode")
-
-        val answers =
-          UserAnswers("id").set(RelationshipStatusPage, relationshipStatus).success.value
-
-        startingFrom(AnyoneClaimedForChildBeforePage(Index(0)), answers = answers)
-          .run(
-            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), AnyoneClaimedForChildBefore.SomeoneElse),
-            submitAnswer(PreviousClaimantNamePage(Index(0)), claimantName),
-            submitAnswer(PreviousClaimantAddressPage(Index(0)), claimantAddress),
-            pageMustBe(AdoptingChildPage(Index(0)))
-          )
-      }
+      startingFrom(AnyoneClaimedForChildBeforePage(Index(0)), answers = answers)
+        .run(
+          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
+          submitAnswer(PreviousClaimantNamePage(Index(0)), claimantName),
+          submitAnswer(PreviousClaimantAddressPage(Index(0)), claimantAddress),
+          pageMustBe(AdoptingChildPage(Index(0)))
+        )
     }
   }
-
 }

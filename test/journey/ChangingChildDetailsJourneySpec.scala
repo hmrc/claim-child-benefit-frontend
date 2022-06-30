@@ -17,7 +17,6 @@
 package journey
 
 import generators.ModelGenerators
-import models.AnyoneClaimedForChildBefore._
 import models.ChildBirthRegistrationCountry._
 import models._
 import org.scalacheck.Arbitrary.arbitrary
@@ -49,41 +48,19 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
         submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
         submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
         submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-        submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), No),
+        submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
         submitAnswer(AdoptingChildPage(Index(0)), false)
       )
 
     "that no one has claimed Child Benefit for previously" - {
 
-      "changing `Anyone claimed before` to `Applicant` must update that answer and return the user to the Check page" in{
+      "changing `Anyone claimed before` to `true` must gather previous claimant details then return the user to the Check page" in {
 
         startingFrom(ChildNamePage(Index(0)))
           .run(
             basicChildJourney,
             goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
-            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), Applicant),
-            pageMustBe(CheckChildDetailsPage(Index(0)))
-        )
-      }
-
-      "changing `Anyone claimed before` to `Partner` must update that answer and return the user to the Check page" in{
-
-        startingFrom(ChildNamePage(Index(0)))
-          .run(
-            basicChildJourney,
-            goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
-            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), Partner),
-            pageMustBe(CheckChildDetailsPage(Index(0)))
-          )
-      }
-
-      "changing `Anyone claimed before` to `Someone Else` must gather previous claimant details then return the user to the Check page" in {
-
-        startingFrom(ChildNamePage(Index(0)))
-          .run(
-            basicChildJourney,
-            goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
-            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), SomeoneElse),
+            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
             submitAnswer(PreviousClaimantNamePage(Index(0)), claimantName),
             submitAnswer(PreviousClaimantAddressPage(Index(0)), claimantAddress),
             pageMustBe(CheckChildDetailsPage(Index(0)))
@@ -91,49 +68,23 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
       }
     }
 
-    "that someone other than the applicant or their partner has claimed Child Benefit for previously" - {
+    "that someone has claimed Child Benefit for previously" - {
 
         val initialState =
           journeyOf(
               basicChildJourney,
-              setUserAnswersTo(AnyoneClaimedForChildBeforePage(Index(0)), SomeoneElse),
+              setUserAnswersTo(AnyoneClaimedForChildBeforePage(Index(0)), true),
               setUserAnswersTo(PreviousClaimantNamePage(Index(0)), claimantName),
               setUserAnswersTo(PreviousClaimantAddressPage(Index(0)), claimantAddress)
             )
 
-      "changing `Anyone claimed before` to `No` must remove the previous claimant details and return the user to the Check page" in {
+      "changing `Anyone claimed before` to `false` must remove the previous claimant details and return the user to the Check page" in {
 
         startingFrom(ChildNamePage(Index(0)))
           .run(
             initialState,
             goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
-            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), No),
-            pageMustBe(CheckChildDetailsPage(Index(0))),
-            answersMustNotContain(PreviousClaimantNamePage(Index(0))),
-            answersMustNotContain(PreviousClaimantAddressPage(Index(0)))
-          )
-      }
-
-      "changing `Anyone claimed before` to `Applicant` must remove the previous claimant details and return the user to the Check page" in {
-
-        startingFrom(ChildNamePage(Index(0)))
-          .run(
-            initialState,
-            goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
-            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), Applicant),
-            pageMustBe(CheckChildDetailsPage(Index(0))),
-            answersMustNotContain(PreviousClaimantNamePage(Index(0))),
-            answersMustNotContain(PreviousClaimantAddressPage(Index(0)))
-          )
-      }
-
-      "changing `Anyone claimed before` to `Partner` must remove the previous claimant details and return the user to the Check page" in {
-
-        startingFrom(ChildNamePage(Index(0)))
-          .run(
-            initialState,
-            goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
-            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), Partner),
+            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
             pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(PreviousClaimantNamePage(Index(0))),
             answersMustNotContain(PreviousClaimantAddressPage(Index(0)))

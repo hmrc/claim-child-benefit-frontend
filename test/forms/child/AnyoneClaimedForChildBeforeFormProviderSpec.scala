@@ -16,33 +16,27 @@
 
 package forms.child
 
-import forms.behaviours.OptionFieldBehaviours
-import models.{AnyoneClaimedForChildBefore, ChildName, RelationshipStatus}
-import models.AnyoneClaimedForChildBefore._
-import models.RelationshipStatus._
+import forms.behaviours.BooleanFieldBehaviours
+import models.ChildName
+import pages.child.ChildNamePage
 import play.api.data.FormError
-import play.api.i18n.Messages
-import play.api.test.Helpers.{stubMessages, stubMessagesApi}
 
-class AnyoneClaimedForChildBeforeFormProviderSpec extends OptionFieldBehaviours {
+class AnyoneClaimedForChildBeforeFormProviderSpec extends BooleanFieldBehaviours {
 
-  private implicit val messages: Messages = stubMessages(stubMessagesApi())
+  val requiredKey = "anyoneClaimedForChildBefore.error.required"
+  val invalidKey = "error.boolean"
 
-  private val childName          = ChildName("first", None, "last")
-  private val relationshipStatus = RelationshipStatus.Married
-  private val formProvider       = new AnyoneClaimedForChildBeforeFormProvider()
-  private val form               = formProvider(childName, relationshipStatus)
+  private val childName = ChildName("first", None, "last")
+  val form = new AnyoneClaimedForChildBeforeFormProvider()(childName)
 
   ".value" - {
 
     val fieldName = "value"
-    val requiredKey = "anyoneClaimedForChildBefore.error.required"
 
-    behave like optionsField[AnyoneClaimedForChildBefore](
+    behave like booleanField(
       form,
       fieldName,
-      validValues  = AnyoneClaimedForChildBefore.allValues,
-      invalidError = FormError(fieldName, "error.invalid", Seq(childName.safeFirstName))
+      invalidError = FormError(fieldName, invalidKey, Seq(childName.safeFirstName))
     )
 
     behave like mandatoryField(
@@ -50,33 +44,5 @@ class AnyoneClaimedForChildBeforeFormProviderSpec extends OptionFieldBehaviours 
       fieldName,
       requiredError = FormError(fieldName, requiredKey, Seq(childName.safeFirstName))
     )
-
-    "bind `Partner` when the relationship is Married or Cohabiting" in {
-
-      Seq(Married, Cohabiting).foreach {
-        relationshipStatus =>
-
-          val data = Map("value" -> Partner.toString)
-          val form = formProvider(childName, relationshipStatus)
-
-          val result = form.bind(data).apply(fieldName)
-          result.value.value mustEqual Partner.toString
-          result.errors mustBe empty
-      }
-    }
-
-    "not bind `Partner` when the relationship is Single, Divorced, Separated or Widowed" in {
-
-      Seq(Single, Divorced, Separated, Widowed).foreach {
-        relationshipStatus =>
-
-          val data = Map("value" -> Partner.toString)
-          val form = formProvider(childName, relationshipStatus)
-          val errorKey = messages(requiredKey, childName.safeFirstName)
-
-          val result = form.bind(data).apply(fieldName)
-          result.errors must contain only FormError(fieldName, errorKey)
-      }
-    }
   }
 }
