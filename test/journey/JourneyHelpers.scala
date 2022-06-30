@@ -19,6 +19,7 @@ package journey
 import cats.data.State
 import cats.implicits._
 import models.UserAnswers
+import org.scalactic.source.Position
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{OptionValues, TryValues}
 import pages.{CheckAnswersPage, EmptyWaypoints, Page, PageAndWaypoints, WaypointPage, Waypoints}
@@ -36,8 +37,11 @@ trait JourneyHelpers extends Matchers with TryValues with OptionValues {
       JourneyState(nextPage, newWaypoints, answers)
     }
 
-    def run(steps: JourneyStep[Unit]*): Unit =
-      journeyOf(steps: _*).run(this).value
+    def run(steps: JourneyStep[Unit]*): JourneyState =
+      journeyOf(steps: _*).runS(this).value
+
+    def check(steps: JourneyStep[Unit]*): JourneyState =
+      run(steps: _*)
   }
 
   def journeyOf(steps: JourneyStep[Unit]*): JourneyStep[Unit] =
@@ -67,7 +71,7 @@ trait JourneyHelpers extends Matchers with TryValues with OptionValues {
   def getAnswers: JourneyStep[UserAnswers] =
     State.inspect(_.answers)
 
-  def answer[A](page: Page with Settable[A], answer: A)(implicit writes: Writes[A]): JourneyStep[Unit] =
+  def setUserAnswersTo[A](page: Page with Settable[A], answer: A)(implicit writes: Writes[A]): JourneyStep[Unit] =
     State.modify { journeyState =>
       journeyState.copy(answers = journeyState.answers.set(page, answer).success.value)
     }
@@ -102,8 +106,11 @@ trait JourneyHelpers extends Matchers with TryValues with OptionValues {
       answers.get(gettable).value mustEqual expectedAnswer
     }
 
-  def answerPage[A](page: Page with Settable[A], value: A, expectedDestination: Page)(implicit writes: Writes[A]): JourneyStep[Unit] =
-    answer(page, value) >> next >> pageMustBe(expectedDestination)
+  def submitAnswer[A](page: Page with Settable[A], value: A)(implicit writes: Writes[A]): JourneyStep[Unit] =
+    pageMustBe(page) >> setUserAnswersTo(page, value) >> next
+
+  def removeAddToListItem[A](page: Page with Settable[A])(implicit writes: Writes[A], position: Position): JourneyStep[Unit] =
+    remove(page) >> next
 
   def goTo(page: Page): JourneyStep[Unit] =
     State.modify(_.copy(page = page))

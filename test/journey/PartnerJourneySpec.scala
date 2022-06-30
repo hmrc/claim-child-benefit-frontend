@@ -28,20 +28,21 @@ import java.time.LocalDate
 
 class PartnerJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
-  "users who don't know their partner's NINO, and the partner is not entitled to CB, must proceed to Chlid Name" in{
+  "users who don't know their partner's NINO, and the partner is not entitled to CB, must proceed to Child Name" in{
 
     val partnerName      = PartnerName(None, "first", None, "last")
     val employmentStatus = Set(arbitrary[PartnerEmploymentStatus].sample.value)
 
     startingFrom(PartnerNamePage)
       .run(
-        answerPage(PartnerNamePage, partnerName, PartnerNinoKnownPage),
-        answerPage(PartnerNinoKnownPage, false, PartnerDateOfBirthPage),
-        answerPage(PartnerDateOfBirthPage, LocalDate.now, PartnerNationalityPage),
-        answerPage(PartnerNationalityPage, "nationality", PartnerEmploymentStatusPage),
-        answerPage(PartnerEmploymentStatusPage, employmentStatus, PartnerEntitledToChildBenefitPage),
-        answerPage(PartnerEntitledToChildBenefitPage, false, PartnerWaitingForEntitlementDecisionPage),
-        answerPage(PartnerWaitingForEntitlementDecisionPage, false, ChildNamePage(Index(0)))
+        submitAnswer(PartnerNamePage, partnerName),
+        submitAnswer(PartnerNinoKnownPage, false),
+        submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
+        submitAnswer(PartnerNationalityPage, "nationality"),
+        submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
+        submitAnswer(PartnerEntitledToChildBenefitPage, false),
+        submitAnswer(PartnerWaitingForEntitlementDecisionPage, false),
+        pageMustBe(ChildNamePage(Index(0)))
       )
   }
 
@@ -51,33 +52,36 @@ class PartnerJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGener
 
     startingFrom(PartnerNinoKnownPage)
       .run(
-        answerPage(PartnerNinoKnownPage, true, PartnerNinoPage),
-        answerPage(PartnerNinoPage, nino, PartnerDateOfBirthPage)
+        submitAnswer(PartnerNinoKnownPage, true),
+        submitAnswer(PartnerNinoPage, nino),
+        pageMustBe(PartnerDateOfBirthPage)
       )
   }
 
-  "users whose partner is entitled to Child Benefit must be asked for their partner's eldest child's details" in {
+  "users whose partner is entitled to Child Benefit must be asked for their partner's eldest child's details then go to Child Name" in {
 
     val childName = PartnerEldestChildName("first", None, "last")
 
     startingFrom(PartnerEntitledToChildBenefitPage)
       .run(
-        answerPage(PartnerEntitledToChildBenefitPage, true, PartnerEldestChildNamePage),
-        answerPage(PartnerEldestChildNamePage, childName, PartnerEldestChildDateOfBirthPage),
-        answerPage(PartnerEldestChildDateOfBirthPage, LocalDate.now, ChildNamePage(Index(0)))
+        submitAnswer(PartnerEntitledToChildBenefitPage, true),
+        submitAnswer(PartnerEldestChildNamePage, childName),
+        submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
+        pageMustBe(ChildNamePage(Index(0)))
       )
   }
 
-  "users whose partner is waiting to hear if they are entitled to Child Benefit must be asked for their partner's eldest child's details" in {
+  "users whose partner is waiting to hear if they are entitled must be asked for their partner's eldest child's details then go to Child Name" in {
 
     val childName = PartnerEldestChildName("first", None, "last")
 
     startingFrom(PartnerEntitledToChildBenefitPage)
       .run(
-        answerPage(PartnerEntitledToChildBenefitPage, false, PartnerWaitingForEntitlementDecisionPage),
-        answerPage(PartnerWaitingForEntitlementDecisionPage, true, PartnerEldestChildNamePage),
-        answerPage(PartnerEldestChildNamePage, childName, PartnerEldestChildDateOfBirthPage),
-        answerPage(PartnerEldestChildDateOfBirthPage, LocalDate.now, ChildNamePage(Index(0)))
+        submitAnswer(PartnerEntitledToChildBenefitPage, false),
+        submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
+        submitAnswer(PartnerEldestChildNamePage, childName),
+        submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
+        pageMustBe(ChildNamePage(Index(0)))
       )
   }
 }
