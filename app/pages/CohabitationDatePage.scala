@@ -35,4 +35,9 @@ case object CohabitationDatePage extends QuestionPage[LocalDate] {
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     ApplicantOrPartnerIncomeOver50kPage
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    answers.get(ApplicantOrPartnerIncomeOver50kPage)
+      .map(_ => waypoints.next.page)
+      .getOrElse(ApplicantOrPartnerIncomeOver50kPage)
 }
