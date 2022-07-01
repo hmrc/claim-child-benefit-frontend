@@ -19,7 +19,7 @@ package pages
 import controllers.routes
 import models.RelationshipStatus._
 import models.{RelationshipStatus, UserAnswers}
-import pages.income.{ApplicantIncomeOver50kPage, ApplicantOrPartnerIncomeOver50kPage}
+import pages.income.{ApplicantBenefitsPage, ApplicantIncomeOver50kPage, ApplicantIncomeOver60kPage, ApplicantOrPartnerBenefitsPage, ApplicantOrPartnerIncomeOver50kPage, ApplicantOrPartnerIncomeOver60kPage}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -45,24 +45,62 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
   override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case Cohabiting =>
-        answers.get(RelationshipStatusDatePage)
-          .map()
+        answers.get(CohabitationDatePage)
+          .map { _ =>
+            answers.get(ApplicantOrPartnerIncomeOver50kPage)
+              .map(_ => waypoints.next.page)
+              .getOrElse(ApplicantOrPartnerIncomeOver50kPage)
+          }
+          .getOrElse(CohabitationDatePage)
 
-      case Separated | Cohabiting =>
-        answers.get(RelationshipStatusDatePage)
+      case Separated =>
+        answers.get(SeparationDatePage)
+          .map { _ =>
+            answers.get(ApplicantIncomeOver50kPage)
+              .map(_ => waypoints.next.page)
+              .getOrElse(ApplicantIncomeOver50kPage)
+          }
+          .getOrElse(SeparationDatePage)
+
+      case Married =>
+        answers.get(ApplicantOrPartnerIncomeOver50kPage)
           .map(_ => waypoints.next.page)
-          .getOrElse(RelationshipStatusDatePage)
+          .getOrElse(ApplicantOrPartnerIncomeOver50kPage)
 
-      case Married | Single | Divorced | Widowed =>
-        waypoints.next.page
+      case  Single | Divorced | Widowed =>
+        answers.get(ApplicantIncomeOver50kPage)
+        .map(_ => waypoints.next.page)
+        .getOrElse(ApplicantIncomeOver50kPage)
+
     }.orRecover
 
   override def cleanup(value: Option[RelationshipStatus], userAnswers: UserAnswers): Try[UserAnswers] =
     value.map {
-      case Married | Single | Divorced | Widowed =>
-        userAnswers.remove(RelationshipStatusDatePage)
+      case Married =>
+        userAnswers.remove(CohabitationDatePage)
+          .flatMap(_.remove(SeparationDatePage))
+          .flatMap(_.remove(ApplicantIncomeOver50kPage))
+          .flatMap(_.remove(ApplicantIncomeOver60kPage))
+          .flatMap(_.remove(ApplicantBenefitsPage))
 
-      case Cohabiting | Separated =>
-        super.cleanup(value, userAnswers)
+      case Cohabiting =>
+        userAnswers.remove(SeparationDatePage)
+          .flatMap(_.remove(ApplicantIncomeOver50kPage))
+          .flatMap(_.remove(ApplicantIncomeOver60kPage))
+          .flatMap(_.remove(ApplicantBenefitsPage))
+
+      case Separated =>
+        userAnswers.remove(CohabitationDatePage)
+          .flatMap(_.remove(ApplicantOrPartnerIncomeOver50kPage))
+          .flatMap(_.remove(ApplicantOrPartnerIncomeOver60kPage))
+          .flatMap(_.remove(ApplicantOrPartnerBenefitsPage))
+
+      case Single | Divorced | Widowed =>
+        userAnswers.remove(CohabitationDatePage)
+          .flatMap(_.remove(SeparationDatePage))
+          .flatMap(_.remove(ApplicantOrPartnerIncomeOver50kPage))
+          .flatMap(_.remove(ApplicantOrPartnerIncomeOver60kPage))
+          .flatMap(_.remove(ApplicantOrPartnerBenefitsPage))
+
     }.getOrElse(super.cleanup(value, userAnswers))
 }
