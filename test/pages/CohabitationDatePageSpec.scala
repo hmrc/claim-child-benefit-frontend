@@ -16,18 +16,24 @@
 
 package pages
 
-import models.RelationshipStatus
+import org.scalacheck.Arbitrary
 import pages.behaviours.PageBehaviours
 
-class RelationshipStatusPageSpec extends PageBehaviours {
+import java.time.LocalDate
 
-  "RelationshipStatusPage" - {
+class CohabitationDatePageSpec extends PageBehaviours {
 
-    beRetrievable[RelationshipStatus](RelationshipStatusPage)
+  "CohabitationDatePage" - {
 
-    beSettable[RelationshipStatus](RelationshipStatusPage)
+    implicit lazy val arbitraryLocalDate: Arbitrary[LocalDate] = Arbitrary {
+      datesBetween(LocalDate.of(1900, 1, 1), LocalDate.of(2100, 1, 1))
+    }
 
-    beRemovable[RelationshipStatus](RelationshipStatusPage)
+    beRetrievable[LocalDate](CohabitationDatePage)
+
+    beSettable[LocalDate](CohabitationDatePage)
+
+    beRemovable[LocalDate](CohabitationDatePage)
 
   }
 }

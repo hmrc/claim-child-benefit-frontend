@@ -16,18 +16,23 @@
 
 package pages
 
-import models.RelationshipStatus
-import pages.behaviours.PageBehaviours
+import controllers.routes
+import models.UserAnswers
+import pages.income.ApplicantOrPartnerIncomeOver50kPage
+import play.api.libs.json.JsPath
+import play.api.mvc.Call
 
-class RelationshipStatusPageSpec extends PageBehaviours {
+import java.time.LocalDate
 
-  "RelationshipStatusPage" - {
+case object CohabitationDatePage extends QuestionPage[LocalDate] {
 
-    beRetrievable[RelationshipStatus](RelationshipStatusPage)
+  override def path: JsPath = JsPath \ toString
 
-    beSettable[RelationshipStatus](RelationshipStatusPage)
+  override def toString: String = "relationshipStatusDate"
 
-    beRemovable[RelationshipStatus](RelationshipStatusPage)
+  override def route(waypoints: Waypoints): Call =
+    routes.CohabitationDateController.onPageLoad(waypoints)
 
-  }
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    ApplicantOrPartnerIncomeOver50kPage
 }

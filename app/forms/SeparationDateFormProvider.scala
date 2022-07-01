@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
-package pages
+package forms
 
-import models.RelationshipStatus
-import pages.behaviours.PageBehaviours
+import java.time.LocalDate
+import forms.mappings.Mappings
 
-class RelationshipStatusPageSpec extends PageBehaviours {
+import javax.inject.Inject
+import play.api.data.Form
 
-  "RelationshipStatusPage" - {
+class SeparationDateFormProvider @Inject() extends Mappings {
 
-    beRetrievable[RelationshipStatus](RelationshipStatusPage)
-
-    beSettable[RelationshipStatus](RelationshipStatusPage)
-
-    beRemovable[RelationshipStatus](RelationshipStatusPage)
-
-  }
+  def apply(): Form[LocalDate] =
+    Form(
+      "value" -> localDate(
+        invalidKey     = s"separationDate.error.invalid",
+        allRequiredKey = s"separationDate.error.required.all",
+        twoRequiredKey = s"separationDate.error.required.two",
+        requiredKey    = s"separationDate.error.required"
+      )
+    )
 }

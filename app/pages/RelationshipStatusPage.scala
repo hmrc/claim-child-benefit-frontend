@@ -34,8 +34,9 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
-      case Cohabiting | Separated => RelationshipStatusDatePage
-      case Married                => ApplicantOrPartnerIncomeOver50kPage
-      case _                      => ApplicantIncomeOver50kPage
+      case Cohabiting                  => CohabitationDatePage
+      case Separated                   => SeparationDatePage
+      case Married                     => ApplicantOrPartnerIncomeOver50kPage
+      case Single | Divorced | Widowed => ApplicantIncomeOver50kPage
     }.orRecover
 }

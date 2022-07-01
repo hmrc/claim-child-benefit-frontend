@@ -14,20 +14,26 @@
  * limitations under the License.
  */
 
-package pages
+package forms
 
+import java.time.{LocalDate, ZoneOffset}
+import forms.behaviours.DateBehaviours
 import models.RelationshipStatus
-import pages.behaviours.PageBehaviours
 
-class RelationshipStatusPageSpec extends PageBehaviours {
+class CohabitationDateFormProviderSpec extends DateBehaviours {
 
-  "RelationshipStatusPage" - {
+  private val formProvider = new CohabitationDateFormProvider()
+  private val form         = formProvider()
 
-    beRetrievable[RelationshipStatus](RelationshipStatusPage)
+  ".value" - {
 
-    beSettable[RelationshipStatus](RelationshipStatusPage)
+    val validData = datesBetween(
+      min = LocalDate.of(2000, 1, 1),
+      max = LocalDate.now(ZoneOffset.UTC)
+    )
 
-    beRemovable[RelationshipStatus](RelationshipStatusPage)
+    behave like dateField(form, "value", validData)
 
+    behave like mandatoryDateField(form, "value", "cohabitationDate.error.required.all")
   }
 }

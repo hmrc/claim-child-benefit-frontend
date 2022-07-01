@@ -17,65 +17,57 @@
 package controllers
 
 import controllers.actions._
-import forms.RelationshipStatusDateFormProvider
+import forms.CohabitationDateFormProvider
 
 import javax.inject.Inject
-import pages.{RelationshipStatusDatePage, RelationshipStatusPage, Waypoints}
+import pages.{CohabitationDatePage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.RelationshipStatusDateView
+import views.html.CohabitationDateView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class RelationshipStatusDateController @Inject()(
+class CohabitationDateController @Inject()(
                                                   override val messagesApi: MessagesApi,
                                                   sessionRepository: SessionRepository,
                                                   identify: IdentifierAction,
                                                   getData: DataRetrievalAction,
                                                   requireData: DataRequiredAction,
-                                                  formProvider: RelationshipStatusDateFormProvider,
+                                                  formProvider: CohabitationDateFormProvider,
                                                   val controllerComponents: MessagesControllerComponents,
-                                                  view: RelationshipStatusDateView
+                                                  view: CohabitationDateView
                                       )(implicit ec: ExecutionContext)
   extends FrontendBaseController
     with I18nSupport
     with AnswerExtractor {
 
+  private val form = formProvider()
+
     def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
-      getAnswer(RelationshipStatusPage) {
-        relationshipStatus =>
+      implicit request =>
 
-          def form = formProvider(relationshipStatus)
+        val preparedForm = request.userAnswers.get(CohabitationDatePage) match {
+          case None => form
+          case Some(value) => form.fill(value)
+        }
 
-          val preparedForm = request.userAnswers.get(RelationshipStatusDatePage) match {
-            case None => form
-            case Some(value) => form.fill(value)
-          }
-
-          Ok(view(preparedForm, waypoints, relationshipStatus))
-      }
-  }
+        Ok(view(preparedForm, waypoints))
+    }
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      getAnswerAsync(RelationshipStatusPage) {
-        relationshipStatus =>
 
-          def form = formProvider(relationshipStatus)
+      form.bindFromRequest().fold(
+        formWithErrors =>
+          Future.successful(BadRequest(view(formWithErrors, waypoints))),
 
-          form.bindFromRequest().fold(
-            formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, waypoints, relationshipStatus))),
-
-            value =>
-              for {
-                updatedAnswers <- Future.fromTry(request.userAnswers.set(RelationshipStatusDatePage, value))
-                _ <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(RelationshipStatusDatePage.navigate(waypoints, updatedAnswers).route)
-          )
-      }
+        value =>
+          for {
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(CohabitationDatePage, value))
+            _ <- sessionRepository.set(updatedAnswers)
+          } yield Redirect(CohabitationDatePage.navigate(waypoints, updatedAnswers).route)
+      )
   }
 }

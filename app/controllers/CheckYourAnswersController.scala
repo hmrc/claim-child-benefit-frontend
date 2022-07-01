@@ -50,7 +50,8 @@ class CheckYourAnswersController @Inject()(
         rows = Seq(
           ApplicantNameSummary.row(request.userAnswers, waypoints, thisPage),
           RelationshipStatusSummary.row(request.userAnswers, waypoints, thisPage),
-          RelationshipStatusDateSummary.row(request.userAnswers, waypoints, thisPage)
+          CohabitationDateSummary.row(request.userAnswers, waypoints, thisPage),
+          SeparationDateSummary.row(request.userAnswers, waypoints, thisPage)
         ).flatten
       )
 
@@ -122,10 +123,6 @@ class CheckYourAnswersController @Inject()(
         rows = Seq(
           AddChildSummary.checkAnswersRow(request.userAnswers, waypoints, thisPage)
         ).flatten
-      )
-
-      val list = SummaryListViewModel(
-        rows = Seq.empty
       )
 
       Ok(view(personalDetails, incomeDetails, paymentDetails, applicantDetails, partnerDetails, childDetails))
