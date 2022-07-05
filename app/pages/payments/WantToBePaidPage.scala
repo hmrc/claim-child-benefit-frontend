@@ -18,13 +18,15 @@ package pages.payments
 
 import controllers.payments.routes
 import models.Benefits.qualifyingBenefits
-import models.RelationshipStatus.{Cohabiting, Married}
+import models.RelationshipStatus._
 import models.UserAnswers
 import pages.applicant.ApplicantHasPreviousFamilyNamePage
 import pages.income.ApplicantOrPartnerBenefitsPage
-import pages.{Page, QuestionPage, RelationshipStatusPage, Waypoints}
+import pages.{NonEmptyWaypoints, Page, QuestionPage, RelationshipStatusPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+
+import scala.util.Try
 
 case object WantToBePaidPage extends QuestionPage[Boolean] {
 
@@ -46,11 +48,51 @@ case object WantToBePaidPage extends QuestionPage[Boolean] {
               WantToBePaidWeeklyPage
             }
 
-          case _ =>
+          case Single | Separated | Divorced | Widowed =>
             WantToBePaidWeeklyPage
         }.orRecover
 
       case false =>
         ApplicantHasPreviousFamilyNamePage
     }.orRecover
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true =>
+        answers.get(RelationshipStatusPage).map {
+          case Married | Cohabiting =>
+            if (answers.get(ApplicantOrPartnerBenefitsPage).forall(_.intersect(qualifyingBenefits).isEmpty)) {
+              answers.get(ApplicantHasSuitableAccountPage)
+                .map(_ => waypoints.next.page)
+                .getOrElse(ApplicantHasSuitableAccountPage)
+            } else {
+              answers.get(WantToBePaidWeeklyPage)
+                .map(_ => waypoints.next.page)
+                .getOrElse(WantToBePaidWeeklyPage)
+            }
+
+          case Single | Separated | Divorced | Widowed =>
+            answers.get(WantToBePaidWeeklyPage)
+              .map(_ => waypoints.next.page)
+              .getOrElse(WantToBePaidWeeklyPage)
+        }.orRecover
+
+      case false =>
+        waypoints.next.page
+    }.orRecover
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    if (value.contains(false)) {
+      userAnswers.remove(WantToBePaidWeeklyPage)
+        .flatMap(_.remove(ApplicantHasSuitableAccountPage))
+        .flatMap(_.remove(AccountInApplicantsNamePage))
+        .flatMap(_.remove(AccountIsJointPage))
+        .flatMap(_.remove(AccountHolderNamePage))
+        .flatMap(_.remove(AccountHolderNamesPage))
+        .flatMap(_.remove(BankAccountTypePage))
+        .flatMap(_.remove(BankAccountDetailsPage))
+        .flatMap(_.remove(BuildingSocietyAccountDetailsPage))
+    } else {
+      super.cleanup(value, userAnswers)
+    }
 }

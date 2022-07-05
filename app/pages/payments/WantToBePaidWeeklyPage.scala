@@ -18,7 +18,7 @@ package pages.payments
 
 import controllers.payments.routes
 import models.UserAnswers
-import pages.{Page, QuestionPage, Waypoints}
+import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -33,4 +33,9 @@ case object WantToBePaidWeeklyPage extends QuestionPage[Boolean] {
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     ApplicantHasSuitableAccountPage
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    answers.get(ApplicantHasSuitableAccountPage)
+      .map(_ => waypoints.next.page)
+      .getOrElse(ApplicantHasSuitableAccountPage)
 }

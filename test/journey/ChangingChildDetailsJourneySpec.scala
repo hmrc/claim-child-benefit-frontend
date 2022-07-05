@@ -73,9 +73,9 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
         val initialState =
           journeyOf(
               basicChildJourney,
-              setUserAnswersTo(AnyoneClaimedForChildBeforePage(Index(0)), true),
-              setUserAnswersTo(PreviousClaimantNamePage(Index(0)), claimantName),
-              setUserAnswersTo(PreviousClaimantAddressPage(Index(0)), claimantAddress)
+              setUserAnswerTo(AnyoneClaimedForChildBeforePage(Index(0)), true),
+              setUserAnswerTo(PreviousClaimantNamePage(Index(0)), claimantName),
+              setUserAnswerTo(PreviousClaimantAddressPage(Index(0)), claimantAddress)
             )
 
       "changing `Anyone claimed before` to `false` must remove the previous claimant details and return the user to the Check page" in {
@@ -150,7 +150,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
       val initialState =
         journeyOf(
           basicChildJourney,
-          setUserAnswersTo(ChildBirthRegistrationCountryPage(Index(0)), Wales)
+          setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), Wales)
         )
 
       "changing the country to England must return the user to Check Child Details" in {
@@ -209,8 +209,8 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
       val initialState =
         journeyOf(
           basicChildJourney,
-          setUserAnswersTo(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
-          setUserAnswersTo(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBcDetails),
+          setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
+          setUserAnswerTo(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBcDetails),
           remove(ChildBirthCertificateSystemNumberPage(Index(0)))
         )
 
@@ -272,8 +272,8 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
       val initialState =
         journeyOf(
           basicChildJourney,
-          setUserAnswersTo(ChildBirthRegistrationCountryPage(Index(0)), Other),
-          setUserAnswersTo(IncludedDocumentsPage(Index(0)), includedDocuments),
+          setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), Other),
+          setUserAnswerTo(IncludedDocumentsPage(Index(0)), includedDocuments),
           remove(ChildBirthCertificateSystemNumberPage(Index(0)))
         )
 
@@ -333,8 +333,8 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
       val initialState =
         journeyOf(
           basicChildJourney,
-          setUserAnswersTo(ChildBirthRegistrationCountryPage(Index(0)), Unknown),
-          setUserAnswersTo(IncludedDocumentsPage(Index(0)), includedDocuments),
+          setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), Unknown),
+          setUserAnswerTo(IncludedDocumentsPage(Index(0)), includedDocuments),
           remove(ChildBirthCertificateSystemNumberPage(Index(0)))
         )
 
@@ -411,10 +411,10 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
       val initialState =
         journeyOf(
           basicChildJourney,
-          setUserAnswersTo(ChildHasPreviousNamePage(Index(0)), true),
-          setUserAnswersTo(ChildNameChangedByDeedPollPage(Index(0)), true),
-          setUserAnswersTo(ChildPreviousNamePage(Index(0), Index(0)), childName),
-          setUserAnswersTo(ChildPreviousNamePage(Index(0), Index(1)), childName),
+          setUserAnswerTo(ChildHasPreviousNamePage(Index(0)), true),
+          setUserAnswerTo(ChildNameChangedByDeedPollPage(Index(0)), true),
+          setUserAnswerTo(ChildPreviousNamePage(Index(0), Index(0)), childName),
+          setUserAnswerTo(ChildPreviousNamePage(Index(0), Index(1)), childName),
           pageMustBe(CheckChildDetailsPage(Index(0)))
         )
 
