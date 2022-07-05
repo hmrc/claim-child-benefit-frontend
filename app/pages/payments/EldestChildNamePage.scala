@@ -18,7 +18,7 @@ package pages.payments
 
 import controllers.payments.routes
 import models.{EldestChildName, UserAnswers}
-import pages.{Page, QuestionPage, Waypoints}
+import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -33,4 +33,9 @@ case object EldestChildNamePage extends QuestionPage[EldestChildName] {
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     EldestChildDateOfBirthPage
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    answers.get(EldestChildDateOfBirthPage)
+      .map(_ => waypoints.next.page)
+      .getOrElse(EldestChildDateOfBirthPage)
 }

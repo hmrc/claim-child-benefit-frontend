@@ -18,9 +18,11 @@ package pages.payments
 
 import controllers.payments.routes
 import models.UserAnswers
-import pages.{Page, QuestionPage, Waypoints}
+import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+
+import scala.util.Try
 
 case object AccountIsJointPage extends QuestionPage[Boolean] {
 
@@ -36,4 +38,23 @@ case object AccountIsJointPage extends QuestionPage[Boolean] {
       case true => AccountHolderNamesPage
       case false => AccountHolderNamePage
     }.orRecover
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true =>
+        answers.get(AccountHolderNamesPage)
+          .map(_ => waypoints.next.page)
+          .getOrElse(AccountHolderNamesPage)
+
+      case false =>
+        answers.get(AccountHolderNamePage)
+          .map(_ => waypoints.next.page)
+          .getOrElse(AccountHolderNamePage)
+    }.orRecover
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    value.map {
+      case true  => userAnswers.remove(AccountHolderNamePage)
+      case false => userAnswers.remove(AccountHolderNamesPage)
+    }.getOrElse(super.cleanup(value, userAnswers))
 }

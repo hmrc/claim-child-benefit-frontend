@@ -18,9 +18,11 @@ package pages.payments
 
 import controllers.payments.routes
 import models.UserAnswers
-import pages.{Page, QuestionPage, Waypoints}
+import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+
+import scala.util.Try
 
 case object AccountInApplicantsNamePage extends QuestionPage[Boolean] {
 
@@ -36,4 +38,33 @@ case object AccountInApplicantsNamePage extends QuestionPage[Boolean] {
       case true  => BankAccountTypePage
       case false => AccountIsJointPage
     }.orRecover
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true =>
+        answers.get(BankAccountTypePage)
+          .map(_ => waypoints.next.page)
+          .getOrElse(BankAccountTypePage)
+
+      case false =>
+        answers.get(AccountIsJointPage)
+          .map(_ => waypoints.next.page)
+          .getOrElse(AccountIsJointPage)
+    }.orRecover
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    value.map {
+      case false =>
+        userAnswers.remove(BankAccountTypePage)
+          .flatMap(_.remove(BankAccountDetailsPage))
+          .flatMap(_.remove(BuildingSocietyAccountDetailsPage))
+
+      case true =>
+        userAnswers.remove(AccountIsJointPage)
+          .flatMap(_.remove(AccountHolderNamePage))
+          .flatMap(_.remove(AccountHolderNamesPage))
+          .flatMap(_.remove(BankAccountTypePage))
+          .flatMap(_.remove(BankAccountDetailsPage))
+          .flatMap(_.remove(BuildingSocietyAccountDetailsPage))
+    }.getOrElse(super.cleanup(value, userAnswers))
 }
