@@ -44,8 +44,8 @@ final case class ChildHasPreviousNamePage(index: Index) extends ChildQuestionPag
     answers.get(this).map {
       case true =>
         answers.get(ChildNameChangedByDeedPollPage(index))
-        .map(_ => waypoints.next.page)
-        .getOrElse(ChildNameChangedByDeedPollPage(index))
+          .map(_ => waypoints.next.page)
+          .getOrElse(ChildNameChangedByDeedPollPage(index))
 
       case false =>
         waypoints.next.page

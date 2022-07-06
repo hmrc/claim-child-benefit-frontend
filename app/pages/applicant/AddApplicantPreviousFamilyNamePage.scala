@@ -18,7 +18,7 @@ package pages.applicant
 
 import controllers.applicant.routes
 import models.{Index, UserAnswers}
-import pages.{AddItemPage, Page, QuestionPage, Waypoints}
+import pages.{AddItemPage, NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 import queries.DeriveNumberOfPreviousFamilyNames
@@ -45,5 +45,17 @@ case object AddApplicantPreviousFamilyNamePage extends QuestionPage[Boolean] wit
 
       case false =>
         ApplicantNinoKnownPage
+    }.orRecover
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true =>
+        answers
+          .get(DeriveNumberOfPreviousFamilyNames)
+        .map(n => ApplicantPreviousFamilyNamePage(Index(n)))
+        .orRecover
+
+      case false =>
+        waypoints.next.page
     }.orRecover
 }
