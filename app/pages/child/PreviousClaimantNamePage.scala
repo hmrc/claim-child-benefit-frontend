@@ -18,7 +18,7 @@ package pages.child
 
 import controllers.child.routes
 import models.{Index, PreviousClaimantName, UserAnswers}
-import pages.{NonEmptyWaypoints, Page, Waypoints}
+import pages.{Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -33,9 +33,4 @@ final case class PreviousClaimantNamePage(index: Index) extends ChildQuestionPag
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     PreviousClaimantAddressPage(index)
-
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(PreviousClaimantAddressPage(index))
-      .map(_ => waypoints.next.page)
-      .getOrElse(PreviousClaimantAddressPage(index))
 }
