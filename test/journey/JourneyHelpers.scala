@@ -76,9 +76,9 @@ trait JourneyHelpers extends Matchers with TryValues with OptionValues {
       journeyState.copy(answers = journeyState.answers.set(page, answer).success.value)
     }
 
-  def remove[A](page: Page with Settable[A]): JourneyStep[Unit] =
+  def remove[A](settable: Settable[A]): JourneyStep[Unit] =
     State.modify { journeyState =>
-      journeyState.copy(answers = journeyState.answers.remove(page).success.value)
+      journeyState.copy(answers = journeyState.answers.remove(settable).success.value)
     }
 
   def pageMustBe(expectedPage: Page)(implicit position: Position): JourneyStep[Unit] =
@@ -109,8 +109,8 @@ trait JourneyHelpers extends Matchers with TryValues with OptionValues {
   def submitAnswer[A](page: Page with Settable[A], value: A)(implicit writes: Writes[A], position: Position): JourneyStep[Unit] =
     pageMustBe(page) >> setUserAnswerTo(page, value) >> next
 
-  def removeAddToListItem[A](page: Page with Settable[A])(implicit writes: Writes[A], position: Position): JourneyStep[Unit] =
-    remove(page) >> next
+  def removeAddToListItem[A](settable: Settable[A])(implicit writes: Writes[A], position: Position): JourneyStep[Unit] =
+    remove(settable) >> next
 
   def goTo(page: Page): JourneyStep[Unit] =
     State.modify(_.copy(page = page))

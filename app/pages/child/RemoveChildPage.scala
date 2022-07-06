@@ -32,7 +32,7 @@ final case class RemoveChildPage(index: Index) extends QuestionPage[Boolean] {
   override def route(waypoints: Waypoints): Call =
     routes.RemoveChildController.onPageLoad(waypoints, index)
 
-  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+  override protected def nextPage(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(DeriveNumberOfChildren).map {
       case n if n > 0 => AddChildPage
       case _ => ChildNamePage(Index(0))

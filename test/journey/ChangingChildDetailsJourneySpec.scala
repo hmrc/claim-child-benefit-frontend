@@ -22,22 +22,24 @@ import models._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
+import pages.CheckYourAnswersPage
 import pages.child._
+import queries.ChildQuery
 
 import java.time.LocalDate
 
 class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
-  "when a user has added a child" - {
+    private val childName         = arbitrary[ChildName].sample.value
+    private val sex               = arbitrary[ChildBiologicalSex].sample.value
+    private val systemNumber      = Gen.listOfN(9, Gen.numChar).sample.value.mkString
+    private val relationship      = arbitrary[ApplicantRelationshipToChild].sample.value
+    private val claimantName      = arbitrary[PreviousClaimantName].sample.value
+    private val claimantAddress   = arbitrary[Address].sample.value
+    private val scottishBcDetails = arbitrary[ChildScottishBirthCertificateDetails].sample.value
+    private val includedDocuments = Set(arbitrary[IncludedDocuments].sample.value)
 
-    val childName         = arbitrary[ChildName].sample.value
-    val sex               = arbitrary[ChildBiologicalSex].sample.value
-    val systemNumber      = Gen.listOfN(9, Gen.numChar).sample.value.mkString
-    val relationship      = arbitrary[ApplicantRelationshipToChild].sample.value
-    val claimantName      = arbitrary[PreviousClaimantName].sample.value
-    val claimantAddress   = arbitrary[Address].sample.value
-    val scottishBcDetails = arbitrary[ChildScottishBirthCertificateDetails].sample.value
-    val includedDocuments = Set(arbitrary[IncludedDocuments].sample.value)
+  "when a user has added a child" - {
 
     val basicChildJourney =
       journeyOf(
@@ -488,6 +490,75 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }
+    }
+  }
+  
+  "when a user has added multiple children" - {
+
+    val initialise =
+      journeyOf(
+        submitAnswer(ChildNamePage(Index(0)), childName),
+        submitAnswer(ChildHasPreviousNamePage(Index(0)), false),
+        submitAnswer(ChildBiologicalSexPage(Index(0)), sex),
+        submitAnswer(ChildDateOfBirthPage(Index(0)), LocalDate.now),
+        submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
+        submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
+        submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+        submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
+        submitAnswer(AdoptingChildPage(Index(0)), false),
+        next,
+        submitAnswer(AddChildPage, true),
+        submitAnswer(ChildNamePage(Index(1)), childName),
+        submitAnswer(ChildHasPreviousNamePage(Index(1)), false),
+        submitAnswer(ChildBiologicalSexPage(Index(1)), sex),
+        submitAnswer(ChildDateOfBirthPage(Index(1)), LocalDate.now),
+        submitAnswer(ChildBirthRegistrationCountryPage(Index(1)), England),
+        submitAnswer(ChildBirthCertificateSystemNumberPage(Index(1)), systemNumber),
+        submitAnswer(ApplicantRelationshipToChildPage(Index(1)), relationship),
+        submitAnswer(AnyoneClaimedForChildBeforePage(Index(1)), false),
+        submitAnswer(AdoptingChildPage(Index(1)), false),
+        next,
+        submitAnswer(AddChildPage, false),
+        pageMustBe(CheckYourAnswersPage)
+      )
+
+    "removing one must let the user return to Check Answers" in {
+
+      startingFrom(ChildNamePage(Index(0)))
+        .run(
+          initialise,
+          goToChangeAnswer(AddChildPage),
+          goTo(RemoveChildPage(Index(1))),
+          removeAddToListItem(ChildQuery(Index(1))),
+          pageMustBe(AddChildPage),
+          submitAnswer(AddChildPage, false),
+          pageMustBe(CheckYourAnswersPage)
+        )
+    }
+
+    "removing all children must take the user to Child Name for index 0, and collect all the child's details" in {
+
+      startingFrom(ChildNamePage(Index(0)))
+        .run(
+          initialise,
+          goToChangeAnswer(AddChildPage),
+          goTo(RemoveChildPage(Index(1))),
+          removeAddToListItem(ChildQuery(Index(1))),
+          goTo(RemoveChildPage(Index(0))),
+          removeAddToListItem(ChildQuery(Index(0))),
+          submitAnswer(ChildNamePage(Index(0)), childName),
+          submitAnswer(ChildHasPreviousNamePage(Index(0)), false),
+          submitAnswer(ChildBiologicalSexPage(Index(0)), sex),
+          submitAnswer(ChildDateOfBirthPage(Index(0)), LocalDate.now),
+          submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
+          submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
+          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
+          submitAnswer(AdoptingChildPage(Index(0)), false),
+          next,
+          submitAnswer(AddChildPage, false),
+          pageMustBe(CheckYourAnswersPage)
+        )
     }
   }
 }
