@@ -19,9 +19,11 @@ package pages.partner
 import controllers.partner.routes
 import models.{Index, UserAnswers}
 import pages.child.ChildNamePage
-import pages.{Page, QuestionPage, Waypoints}
+import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+
+import scala.util.Try
 
 case object PartnerWaitingForEntitlementDecisionPage extends QuestionPage[Boolean] {
 
@@ -37,4 +39,23 @@ case object PartnerWaitingForEntitlementDecisionPage extends QuestionPage[Boolea
       case true => PartnerEldestChildNamePage
       case false => ChildNamePage(Index(0))
     }.orRecover
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true =>
+        answers.get(PartnerEldestChildNamePage)
+          .map(_ => waypoints.next.page)
+          .getOrElse(PartnerEldestChildNamePage)
+
+      case false =>
+        waypoints.next.page
+    }.orRecover
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    if (value.contains(false)) {
+      userAnswers.remove(PartnerEldestChildNamePage)
+        .flatMap(_.remove(PartnerEldestChildDateOfBirthPage))
+    } else {
+      super.cleanup(value, userAnswers)
+    }
 }
