@@ -39,17 +39,17 @@ case object ApplicantOrPartnerIncomeOver50kPage extends QuestionPage[Boolean] {
       case false => ApplicantOrPartnerBenefitsPage
     }.orRecover
 
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case true =>
-        answers.get(ApplicantOrPartnerIncomeOver60kPage)
-          .map(_ => waypoints.next.page)
-          .getOrElse(ApplicantOrPartnerIncomeOver60kPage)
-
-      case false =>
-        waypoints.next.page
-
-    }.orRecover
+//  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+//    answers.get(this).map {
+//      case true =>
+//        answers.get(ApplicantOrPartnerIncomeOver60kPage)
+//          .map(_ => waypoints.next.page)
+//          .getOrElse(ApplicantOrPartnerIncomeOver60kPage)
+//
+//      case false =>
+//        waypoints.next.page
+//
+//    }.orRecover
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
     if (value.contains(false)) {

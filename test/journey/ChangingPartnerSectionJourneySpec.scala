@@ -17,10 +17,11 @@
 package journey
 
 import generators.ModelGenerators
-import models.{ChildName, PartnerEldestChildName}
+import models.{ChildName, Index, PartnerEldestChildName}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.freespec.AnyFreeSpec
 import pages.CheckYourAnswersPage
+import pages.child.ChildNamePage
 import pages.partner._
 import uk.gov.hmrc.domain.Nino
 
@@ -28,8 +29,9 @@ import java.time.LocalDate
 
 class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
-  private def nino      = arbitrary[Nino].sample.value
-  private def childName = arbitrary[PartnerEldestChildName].sample.value
+  private def nino            = arbitrary[Nino].sample.value
+  private def eldestChildName = arbitrary[PartnerEldestChildName].sample.value
+  private def childName       = arbitrary[ChildName].sample.value
 
   "when a user initially said they knew their partner's NINO" - {
 
@@ -58,6 +60,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
 
       val initialise = journeyOf(
         submitAnswer(PartnerNinoKnownPage, false),
+        submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
         goTo(CheckYourAnswersPage)
       )
 
@@ -78,7 +81,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
 
       val initialise = journeyOf(
         submitAnswer(PartnerEntitledToChildBenefitPage, true),
-        submitAnswer(PartnerEldestChildNamePage, childName),
+        submitAnswer(PartnerEldestChildNamePage, eldestChildName),
         submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
         goTo(CheckYourAnswersPage)
       )
@@ -102,7 +105,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
       val initialise = journeyOf(
         submitAnswer(PartnerEntitledToChildBenefitPage, false),
         submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
-        submitAnswer(PartnerEldestChildNamePage, childName),
+        submitAnswer(PartnerEldestChildNamePage, eldestChildName),
         submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
         goTo(CheckYourAnswersPage)
       )
@@ -142,6 +145,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
         val initialise = journeyOf(
           submitAnswer(PartnerEntitledToChildBenefitPage, false),
           submitAnswer(PartnerWaitingForEntitlementDecisionPage, false),
+          submitAnswer(ChildNamePage(Index(0)), childName),
           goTo(CheckYourAnswersPage)
         )
 
@@ -150,7 +154,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             initialise,
             goToChangeAnswer(PartnerWaitingForEntitlementDecisionPage),
             submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
-            submitAnswer(PartnerEldestChildNamePage, childName),
+            submitAnswer(PartnerEldestChildNamePage, eldestChildName),
             submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
             pageMustBe(CheckYourAnswersPage)
           )

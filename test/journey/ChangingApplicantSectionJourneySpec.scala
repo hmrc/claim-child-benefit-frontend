@@ -24,11 +24,14 @@ import pages.CheckYourAnswersPage
 import pages.applicant._
 import uk.gov.hmrc.domain.Nino
 
+import java.time.LocalDate
+
 class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
   private def previousName = arbitrary[String].sample.value
   private def nino         = arbitrary[Nino].sample.value
   private def address      = arbitrary[Address].sample.value
+  private def phoneNumber  = arbitrary[String].sample.value
 
   "when the user initially said they had previous names" - {
 
@@ -138,6 +141,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
       val initialise = journeyOf(
         submitAnswer(ApplicantNinoKnownPage, true),
         submitAnswer(ApplicantNinoPage, nino),
+        submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
         goTo(CheckYourAnswersPage)
       )
 
@@ -158,6 +162,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
 
       val initialise = journeyOf(
         submitAnswer(ApplicantNinoKnownPage, false),
+        submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
         goTo(CheckYourAnswersPage)
       )
 
@@ -178,6 +183,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
 
       val initialise = journeyOf(
         submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+        submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
         goTo(CheckYourAnswersPage)
       )
 
