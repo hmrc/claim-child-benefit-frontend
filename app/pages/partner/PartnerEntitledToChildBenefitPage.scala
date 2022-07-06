@@ -18,7 +18,7 @@ package pages.partner
 
 import controllers.partner.routes
 import models.UserAnswers
-import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
+import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -37,19 +37,6 @@ case object PartnerEntitledToChildBenefitPage extends QuestionPage[Boolean] {
     answers.get(this).map {
       case true => PartnerEldestChildNamePage
       case false => PartnerWaitingForEntitlementDecisionPage
-    }.orRecover
-
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case true =>
-        answers.get(PartnerEldestChildNamePage)
-          .map(_ => waypoints.next.page)
-          .getOrElse(PartnerEldestChildNamePage)
-
-      case false =>
-        answers.get(PartnerWaitingForEntitlementDecisionPage)
-          .map(_ => waypoints.next.page)
-          .getOrElse(PartnerWaitingForEntitlementDecisionPage)
     }.orRecover
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =

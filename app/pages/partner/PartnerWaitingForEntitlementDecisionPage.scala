@@ -40,17 +40,6 @@ case object PartnerWaitingForEntitlementDecisionPage extends QuestionPage[Boolea
       case false => ChildNamePage(Index(0))
     }.orRecover
 
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case true =>
-        answers.get(PartnerEldestChildNamePage)
-          .map(_ => waypoints.next.page)
-          .getOrElse(PartnerEldestChildNamePage)
-
-      case false =>
-        waypoints.next.page
-    }.orRecover
-
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
     if (value.contains(false)) {
       userAnswers.remove(PartnerEldestChildNamePage)

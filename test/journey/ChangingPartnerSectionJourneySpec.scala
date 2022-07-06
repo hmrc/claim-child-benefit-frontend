@@ -40,6 +40,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
       val initialise = journeyOf(
         submitAnswer(PartnerNinoKnownPage, true),
         submitAnswer(PartnerNinoPage, nino),
+        submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
         goTo(CheckYourAnswersPage)
       )
 
@@ -107,6 +108,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
         submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
         submitAnswer(PartnerEldestChildNamePage, eldestChildName),
         submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
+        submitAnswer(ChildNamePage(Index(0)), childName),
         goTo(CheckYourAnswersPage)
       )
 
