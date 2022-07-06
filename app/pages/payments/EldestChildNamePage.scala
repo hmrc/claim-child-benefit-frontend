@@ -33,9 +33,4 @@ case object EldestChildNamePage extends QuestionPage[EldestChildName] {
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     EldestChildDateOfBirthPage
-
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(EldestChildDateOfBirthPage)
-      .map(_ => waypoints.next.page)
-      .getOrElse(EldestChildDateOfBirthPage)
 }

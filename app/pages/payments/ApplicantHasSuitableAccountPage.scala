@@ -19,7 +19,7 @@ package pages.payments
 import controllers.payments.routes
 import models.UserAnswers
 import pages.applicant.ApplicantHasPreviousFamilyNamePage
-import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
+import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -38,17 +38,6 @@ case object ApplicantHasSuitableAccountPage extends QuestionPage[Boolean] {
     answers.get(this).map {
       case true => AccountInApplicantsNamePage
       case false => ApplicantHasPreviousFamilyNamePage
-    }.orRecover
-
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case true =>
-        answers.get(AccountInApplicantsNamePage)
-          .map(_ => waypoints.next.page)
-          .getOrElse(AccountInApplicantsNamePage)
-
-      case false =>
-        waypoints.next.page
     }.orRecover
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =

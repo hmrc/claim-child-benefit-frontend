@@ -147,6 +147,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(BankAccountDetailsPage, bankDetails),
               setUserAnswerTo(AccountHolderNamesPage, accountHolderNames),
               setUserAnswerTo(BuildingSocietyAccountDetailsPage, buildingSocietyDetails),
+              setUserAnswerTo(ApplicantHasPreviousFamilyNamePage, false),
               goTo(CheckYourAnswersPage)
             )
 
@@ -455,6 +456,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
           setUserAnswerTo(AccountHolderNamePage, "name"),
           setUserAnswerTo(AccountHolderNamesPage, accountHolderNames),
           setUserAnswerTo(BuildingSocietyAccountDetailsPage, buildingSocietyDetails),
+          setUserAnswerTo(ApplicantHasPreviousFamilyNamePage, false),
           goTo(CheckYourAnswersPage)
         )
 
@@ -491,6 +493,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
         setUserAnswerTo(AccountHolderNamePage, "name"),
         setUserAnswerTo(AccountHolderNamesPage, accountHolderNames),
         setUserAnswerTo(BuildingSocietyAccountDetailsPage, buildingSocietyDetails),
+        setUserAnswerTo(ApplicantHasPreviousFamilyNamePage, false),
         goTo(CheckYourAnswersPage)
       )
 

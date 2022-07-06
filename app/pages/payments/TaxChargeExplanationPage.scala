@@ -18,7 +18,7 @@ package pages.payments
 
 import controllers.payments.routes
 import models.UserAnswers
-import pages.{NonEmptyWaypoints, Page, Waypoints}
+import pages.{Page, Waypoints}
 import play.api.mvc.Call
 
 case object TaxChargeExplanationPage extends Page {
@@ -27,8 +27,5 @@ case object TaxChargeExplanationPage extends Page {
     routes.TaxChargeExplanationController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    WantToBePaidPage
-
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
     WantToBePaidPage
 }
