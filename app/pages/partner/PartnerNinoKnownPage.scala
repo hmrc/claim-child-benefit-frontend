@@ -39,17 +39,6 @@ case object PartnerNinoKnownPage extends QuestionPage[Boolean] {
       case false => PartnerDateOfBirthPage
     }.orRecover
 
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case true =>
-        answers.get(PartnerNinoPage)
-          .map(_ => waypoints.next.page)
-          .getOrElse(PartnerNinoPage)
-
-      case false =>
-        waypoints.next.page
-    }.orRecover
-
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
     if (value.contains(false)) {
       userAnswers.remove(PartnerNinoPage)

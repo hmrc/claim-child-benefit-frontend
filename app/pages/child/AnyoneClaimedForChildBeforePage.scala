@@ -18,7 +18,7 @@ package pages.child
 
 import controllers.child.routes
 import models.{Index, UserAnswers}
-import pages.{NonEmptyWaypoints, Page, Waypoints}
+import pages.{Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -37,17 +37,6 @@ final case class AnyoneClaimedForChildBeforePage(index: Index) extends ChildQues
     answers.get(this).map {
       case true  => PreviousClaimantNamePage(index)
       case false => AdoptingChildPage(index)
-    }.orRecover
-
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case true =>
-        answers.get(PreviousClaimantNamePage(index))
-          .map(_ => waypoints.next.page)
-          .getOrElse(PreviousClaimantNamePage(index))
-
-      case false =>
-        waypoints.next.page
     }.orRecover
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =

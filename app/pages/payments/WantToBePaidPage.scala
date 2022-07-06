@@ -22,7 +22,7 @@ import models.RelationshipStatus._
 import models.UserAnswers
 import pages.applicant.ApplicantHasPreviousFamilyNamePage
 import pages.income.ApplicantOrPartnerBenefitsPage
-import pages.{NonEmptyWaypoints, Page, QuestionPage, RelationshipStatusPage, Waypoints}
+import pages.{Page, QuestionPage, RelationshipStatusPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -54,31 +54,6 @@ case object WantToBePaidPage extends QuestionPage[Boolean] {
 
       case false =>
         ApplicantHasPreviousFamilyNamePage
-    }.orRecover
-
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case true =>
-        answers.get(RelationshipStatusPage).map {
-          case Married | Cohabiting =>
-            if (answers.get(ApplicantOrPartnerBenefitsPage).forall(_.intersect(qualifyingBenefits).isEmpty)) {
-              answers.get(ApplicantHasSuitableAccountPage)
-                .map(_ => waypoints.next.page)
-                .getOrElse(ApplicantHasSuitableAccountPage)
-            } else {
-              answers.get(WantToBePaidWeeklyPage)
-                .map(_ => waypoints.next.page)
-                .getOrElse(WantToBePaidWeeklyPage)
-            }
-
-          case Single | Separated | Divorced | Widowed =>
-            answers.get(WantToBePaidWeeklyPage)
-              .map(_ => waypoints.next.page)
-              .getOrElse(WantToBePaidWeeklyPage)
-        }.orRecover
-
-      case false =>
-        waypoints.next.page
     }.orRecover
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =

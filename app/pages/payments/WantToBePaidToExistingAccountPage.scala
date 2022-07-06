@@ -19,7 +19,7 @@ package pages.payments
 import controllers.payments.routes
 import models.UserAnswers
 import pages.applicant.ApplicantHasPreviousFamilyNamePage
-import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
+import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -38,17 +38,6 @@ case object WantToBePaidToExistingAccountPage extends QuestionPage[Boolean] {
     answers.get(this).map {
       case true  => ApplicantHasPreviousFamilyNamePage
       case false => ApplicantHasSuitableAccountPage
-    }.orRecover
-
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case true =>
-        waypoints.next.page
-
-      case false =>
-        answers.get(ApplicantHasSuitableAccountPage)
-          .map(_ => waypoints.next.page)
-          .getOrElse(ApplicantHasSuitableAccountPage)
     }.orRecover
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =

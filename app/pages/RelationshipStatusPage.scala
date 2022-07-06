@@ -19,7 +19,8 @@ package pages
 import controllers.routes
 import models.RelationshipStatus._
 import models.{RelationshipStatus, UserAnswers}
-import pages.income.{ApplicantBenefitsPage, ApplicantIncomeOver50kPage, ApplicantIncomeOver60kPage, ApplicantOrPartnerBenefitsPage, ApplicantOrPartnerIncomeOver50kPage, ApplicantOrPartnerIncomeOver60kPage}
+import pages.income._
+import pages.partner._
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -94,6 +95,16 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
           .flatMap(_.remove(ApplicantOrPartnerIncomeOver50kPage))
           .flatMap(_.remove(ApplicantOrPartnerIncomeOver60kPage))
           .flatMap(_.remove(ApplicantOrPartnerBenefitsPage))
+          .flatMap(_.remove(PartnerNamePage))
+          .flatMap(_.remove(PartnerNinoKnownPage))
+          .flatMap(_.remove(PartnerNinoPage))
+          .flatMap(_.remove(PartnerDateOfBirthPage))
+          .flatMap(_.remove(PartnerNationalityPage))
+          .flatMap(_.remove(PartnerEmploymentStatusPage))
+          .flatMap(_.remove(PartnerEntitledToChildBenefitPage))
+          .flatMap(_.remove(PartnerWaitingForEntitlementDecisionPage))
+          .flatMap(_.remove(PartnerEldestChildNamePage))
+          .flatMap(_.remove(PartnerEldestChildDateOfBirthPage))
 
       case Single | Divorced | Widowed =>
         userAnswers.remove(CohabitationDatePage)
@@ -101,6 +112,16 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
           .flatMap(_.remove(ApplicantOrPartnerIncomeOver50kPage))
           .flatMap(_.remove(ApplicantOrPartnerIncomeOver60kPage))
           .flatMap(_.remove(ApplicantOrPartnerBenefitsPage))
+          .flatMap(_.remove(PartnerNamePage))
+          .flatMap(_.remove(PartnerNinoKnownPage))
+          .flatMap(_.remove(PartnerNinoPage))
+          .flatMap(_.remove(PartnerDateOfBirthPage))
+          .flatMap(_.remove(PartnerNationalityPage))
+          .flatMap(_.remove(PartnerEmploymentStatusPage))
+          .flatMap(_.remove(PartnerEntitledToChildBenefitPage))
+          .flatMap(_.remove(PartnerWaitingForEntitlementDecisionPage))
+          .flatMap(_.remove(PartnerEldestChildNamePage))
+          .flatMap(_.remove(PartnerEldestChildDateOfBirthPage))
 
     }.getOrElse(super.cleanup(value, userAnswers))
 }

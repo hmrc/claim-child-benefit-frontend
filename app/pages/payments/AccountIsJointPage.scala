@@ -18,7 +18,7 @@ package pages.payments
 
 import controllers.payments.routes
 import models.UserAnswers
-import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
+import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -37,19 +37,6 @@ case object AccountIsJointPage extends QuestionPage[Boolean] {
     answers.get(this).map {
       case true => AccountHolderNamesPage
       case false => AccountHolderNamePage
-    }.orRecover
-
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case true =>
-        answers.get(AccountHolderNamesPage)
-          .map(_ => waypoints.next.page)
-          .getOrElse(AccountHolderNamesPage)
-
-      case false =>
-        answers.get(AccountHolderNamePage)
-          .map(_ => waypoints.next.page)
-          .getOrElse(AccountHolderNamePage)
     }.orRecover
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =

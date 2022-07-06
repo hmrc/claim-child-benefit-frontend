@@ -18,7 +18,7 @@ package pages.child
 
 import controllers.child.routes
 import models.{Index, UserAnswers}
-import pages.{NonEmptyWaypoints, Page, Waypoints}
+import pages.{Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 import queries.AllChildPreviousNames
@@ -40,17 +40,6 @@ final case class ChildHasPreviousNamePage(index: Index) extends ChildQuestionPag
       case false => ChildBiologicalSexPage(index)
     }.orRecover
 
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case true =>
-        answers.get(ChildNameChangedByDeedPollPage(index))
-          .map(_ => waypoints.next.page)
-          .getOrElse(ChildNameChangedByDeedPollPage(index))
-
-      case false =>
-        waypoints.next.page
-
-    }.orRecover
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
     value.map {

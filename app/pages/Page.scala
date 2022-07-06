@@ -18,6 +18,7 @@ package pages
 
 import models.{CheckMode, NormalMode, UserAnswers}
 import play.api.mvc.Call
+import queries.Gettable
 
 final case class PageAndWaypoints(page: Page, waypoints: Waypoints) {
 
@@ -49,7 +50,13 @@ trait Page {
     }
 
   protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    waypoints.next.page
+    nextPageNormalMode(waypoints, answers) match {
+      case questionPage: Page with Gettable[_] =>
+        if (answers.isDefined(questionPage)) waypoints.next.page else questionPage
+
+      case otherPage =>
+        otherPage
+    }
 
   protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     IndexPage
