@@ -39,17 +39,6 @@ case object ApplicantLivedAtCurrentAddressOneYearPage extends QuestionPage[Boole
       case false => ApplicantPreviousAddressPage
     }.orRecover
 
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case true =>
-        waypoints.next.page
-
-      case false =>
-        answers.get(ApplicantPreviousAddressPage)
-          .map(_ => waypoints.next.page)
-          .getOrElse(ApplicantPreviousAddressPage)
-    }.orRecover
-
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
     if (value.contains(true)) {
       userAnswers.remove(ApplicantPreviousAddressPage)

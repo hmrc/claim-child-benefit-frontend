@@ -40,6 +40,8 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
         submitAnswer(ApplicantPreviousFamilyNamePage(Index(0)), previousName),
         submitAnswer(AddApplicantPreviousFamilyNamePage, true),
         submitAnswer(ApplicantPreviousFamilyNamePage(Index(1)), previousName),
+        submitAnswer(AddApplicantPreviousFamilyNamePage, false),
+        submitAnswer(ApplicantNinoKnownPage, false),
         goTo(CheckYourAnswersPage)
       )
 
@@ -119,6 +121,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
 
       val initialise = journeyOf(
         submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
+        submitAnswer(ApplicantNinoKnownPage, false),
         goTo(CheckYourAnswersPage)
       )
 
@@ -205,6 +208,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
       val initialise = journeyOf(
         submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
         submitAnswer(ApplicantPreviousAddressPage, address),
+        submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
         goTo(CheckYourAnswersPage)
       )
 
