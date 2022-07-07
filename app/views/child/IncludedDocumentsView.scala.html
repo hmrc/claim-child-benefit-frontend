@@ -24,7 +24,7 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], waypoints: Waypoints, index: Index, childName: ChildName)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints, index: Index, childName: ChildName, relationshipToChild: ApplicantRelationshipToChild)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("includedDocuments.title"))) {
 
@@ -42,7 +42,7 @@
                     content = messages("includedDocuments.heading", childName.safeFirstName),
                     caption = HmrcSectionCaption(messages("section.child"))
                 ),
-                items  = IncludedDocuments.checkboxItems
+                items  = IncludedDocuments.checkboxItems(relationshipToChild)
             )
         )
 

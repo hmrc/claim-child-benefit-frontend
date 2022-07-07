@@ -16,6 +16,7 @@
 
 package models
 
+import models.ApplicantRelationshipToChild.AdoptingChild
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -30,15 +31,25 @@ object IncludedDocuments extends Enumerable.Implicits {
   case object TravelDocuments extends WithName("travelDocuments") with IncludedDocuments
   case object AdoptionCertificate extends WithName("adoptionCertificate") with IncludedDocuments
 
-  val values: Seq[IncludedDocuments] = Seq(
+  private val allValues: Seq[IncludedDocuments] = Seq(
     BirthCertificate,
     Passport,
     TravelDocuments,
     AdoptionCertificate
   )
 
-  def checkboxItems(implicit messages: Messages): Seq[CheckboxItem] =
-    values.zipWithIndex.map {
+  def values(relationshipToChild: ApplicantRelationshipToChild): Seq[IncludedDocuments] = {
+    relationshipToChild match {
+      case AdoptingChild =>
+        allValues
+
+      case _ =>
+        allValues.filterNot(_ == AdoptionCertificate)
+    }
+  }
+
+  def checkboxItems(relationshipToChild: ApplicantRelationshipToChild)(implicit messages: Messages): Seq[CheckboxItem] =
+    values(relationshipToChild).zipWithIndex.map {
       case (value, index) =>
         CheckboxItemViewModel(
           content = Text(messages(s"includedDocuments.${value.toString}")),
@@ -49,5 +60,5 @@ object IncludedDocuments extends Enumerable.Implicits {
     }
 
   implicit val enumerable: Enumerable[IncludedDocuments] =
-    Enumerable(values.map(v => v.toString -> v): _*)
+    Enumerable(allValues.map(v => v.toString -> v): _*)
 }

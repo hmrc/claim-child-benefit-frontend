@@ -20,14 +20,24 @@ import forms.mappings.Mappings
 import models.{ChildName, IncludedDocuments}
 import play.api.data.Form
 import play.api.data.Forms.set
+import play.api.data.validation.{Constraint, Invalid, Valid}
 
 import javax.inject.Inject
 
 class IncludedDocumentsFormProvider @Inject() extends Mappings {
 
-  def apply(childName: ChildName): Form[Set[IncludedDocuments]] =
+  def apply(childName: ChildName, allowedValues: Seq[IncludedDocuments]): Form[Set[IncludedDocuments]] =
     Form(
       "value" -> set(enumerable[IncludedDocuments]("includedDocuments.error.required", args = Seq(childName.safeFirstName)))
-        .verifying(nonEmptySet("includedDocuments.error.required", args = Seq(childName.safeFirstName)))
+        .verifying(nonEmptySet("includedDocuments.error.required", args = childName.safeFirstName))
+        .verifying(validAnswer(childName, allowedValues.toSet))
     )
+
+  private def validAnswer(childName: ChildName, allowedValues: Set[IncludedDocuments]): Constraint[Set[IncludedDocuments]] =
+    Constraint {
+      case set if allowedValues.intersect(set).nonEmpty =>
+        Valid
+      case _ =>
+        Invalid("includedDocuments.error.required", args = childName.safeFirstName)
+    }
 }

@@ -19,9 +19,9 @@ package controllers.child
 import controllers.AnswerExtractor
 import controllers.actions._
 import forms.child.IncludedDocumentsFormProvider
-import models.Index
+import models.{IncludedDocuments, Index}
 import pages.Waypoints
-import pages.child.{ChildNamePage, IncludedDocumentsPage}
+import pages.child.{ApplicantRelationshipToChildPage, ChildNamePage, IncludedDocumentsPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -47,30 +47,32 @@ class IncludedDocumentsController @Inject()(
 
   def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      getAnswer(ChildNamePage(index)) {
-        childName =>
+      getAnswers(ChildNamePage(index), ApplicantRelationshipToChildPage(index)) {
+        case (childName, relationshipToChild) =>
 
-          val form = formProvider(childName)
+          val allowedValues = IncludedDocuments.values(relationshipToChild)
+          val form          = formProvider(childName, allowedValues)
 
           val preparedForm = request.userAnswers.get(IncludedDocumentsPage(index)) match {
           case None => form
           case Some(value) => form.fill(value)
         }
 
-        Ok(view(preparedForm, waypoints, index, childName))
+        Ok(view(preparedForm, waypoints, index, childName, relationshipToChild))
       }
   }
 
   def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      getAnswerAsync(ChildNamePage(index)) {
-        childName =>
+      getAnswersAsync(ChildNamePage(index), ApplicantRelationshipToChildPage(index)) {
+        case (childName, relationshipToChild) =>
 
-          val form = formProvider(childName)
+          val allowedValues = IncludedDocuments.values(relationshipToChild)
+          val form = formProvider(childName, allowedValues)
 
           form.bindFromRequest().fold(
             formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, waypoints, index, childName))),
+              Future.successful(BadRequest(view(formWithErrors, waypoints, index, childName, relationshipToChild))),
 
             value =>
               for {

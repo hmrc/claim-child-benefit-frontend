@@ -17,6 +17,7 @@
 package models
 
 import generators.ModelGenerators
+import models.ApplicantRelationshipToChild.AdoptingChild
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import org.scalatest.freespec.AnyFreeSpec
@@ -41,7 +42,7 @@ class IncludedDocumentsSpec extends AnyFreeSpec with Matchers with ScalaCheckPro
 
     "must fail to deserialise invalid values" in {
 
-      val gen = arbitrary[String] suchThat (!IncludedDocuments.values.map(_.toString).contains(_))
+      val gen = arbitrary[String] suchThat (!IncludedDocuments.values(AdoptingChild).map(_.toString).contains(_))
 
       forAll(gen) {
         invalidValue =>
