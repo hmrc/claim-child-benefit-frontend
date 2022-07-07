@@ -18,14 +18,14 @@ package journey
 
 import generators.ModelGenerators
 import models.RelationshipStatus._
-import models.{AccountHolderNames, BankAccountDetails, BankAccountType, Benefits, BuildingSocietyAccountDetails, EldestChildName, RelationshipStatus}
+import models.{BankAccountDetails, Benefits, EldestChildName, RelationshipStatus}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import pages.applicant.ApplicantHasPreviousFamilyNamePage
 import pages.income.ApplicantOrPartnerBenefitsPage
-import pages.{CheckYourAnswersPage, RelationshipStatusPage}
 import pages.payments._
+import pages.{CheckYourAnswersPage, RelationshipStatusPage}
 
 import java.time.LocalDate
 
@@ -33,10 +33,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
 
   private val childName               = arbitrary[EldestChildName].sample.value
   private val bankDetails             = arbitrary[BankAccountDetails].sample.value
-  private val buildingSocietyDetails  = arbitrary[BuildingSocietyAccountDetails].sample.value
-  private val accountHolderNames      = arbitrary[AccountHolderNames].sample.value
   private val benefits: Set[Benefits] = Set(Gen.oneOf(Benefits.values).sample.value)
-  private val accountHolderName       = arbitrary[String].sample.value
 
   "when the user initially said they had claimed Child Benefit before" - {
 
@@ -140,13 +137,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             val initialise = journeyOf(
               submitAnswer(WantToBePaidToExistingAccountPage, false),
               submitAnswer(ApplicantHasSuitableAccountPage, true),
-              submitAnswer(AccountInApplicantsNamePage, false),
-              submitAnswer(AccountIsJointPage, false),
-              submitAnswer(AccountHolderNamePage, accountHolderName),
-              submitAnswer(BankAccountTypePage, BankAccountType.Bank),
               submitAnswer(BankAccountDetailsPage, bankDetails),
-              setUserAnswerTo(AccountHolderNamesPage, accountHolderNames),
-              setUserAnswerTo(BuildingSocietyAccountDetailsPage, buildingSocietyDetails),
               setUserAnswerTo(ApplicantHasPreviousFamilyNamePage, false),
               goTo(CheckYourAnswersPage)
             )
@@ -158,13 +149,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
                 submitAnswer(WantToBePaidToExistingAccountPage, true),
                 pageMustBe(CheckYourAnswersPage),
                 answersMustNotContain(ApplicantHasSuitableAccountPage),
-                answersMustNotContain(AccountInApplicantsNamePage),
-                answersMustNotContain(AccountIsJointPage),
-                answersMustNotContain(AccountHolderNamePage),
-                answersMustNotContain(AccountHolderNamesPage),
-                answersMustNotContain(BankAccountTypePage),
-                answersMustNotContain(BankAccountDetailsPage),
-                answersMustNotContain(BuildingSocietyAccountDetailsPage),
+                answersMustNotContain(BankAccountDetailsPage)
               )
           }
         }
@@ -449,13 +434,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
           submitAnswer(WantToBePaidPage, true),
           submitAnswer(WantToBePaidWeeklyPage, arbitrary[Boolean].sample.value),
           submitAnswer(ApplicantHasSuitableAccountPage, true),
-          submitAnswer(AccountInApplicantsNamePage, true),
-          submitAnswer(BankAccountTypePage, BankAccountType.Bank),
           submitAnswer(BankAccountDetailsPage, bankDetails),
-          setUserAnswerTo(AccountIsJointPage, true),
-          setUserAnswerTo(AccountHolderNamePage, "name"),
-          setUserAnswerTo(AccountHolderNamesPage, accountHolderNames),
-          setUserAnswerTo(BuildingSocietyAccountDetailsPage, buildingSocietyDetails),
           setUserAnswerTo(ApplicantHasPreviousFamilyNamePage, false),
           goTo(CheckYourAnswersPage)
         )
@@ -468,13 +447,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             pageMustBe(CheckYourAnswersPage),
             answersMustNotContain(WantToBePaidWeeklyPage),
             answersMustNotContain(ApplicantHasSuitableAccountPage),
-            answersMustNotContain(AccountInApplicantsNamePage),
-            answersMustNotContain(AccountIsJointPage),
-            answersMustNotContain(AccountHolderNamePage),
-            answersMustNotContain(AccountHolderNamesPage),
-            answersMustNotContain(BankAccountTypePage),
-            answersMustNotContain(BankAccountDetailsPage),
-            answersMustNotContain(BuildingSocietyAccountDetailsPage),
+            answersMustNotContain(BankAccountDetailsPage)
           )
       }
     }
@@ -486,13 +459,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
 
       val initialise = journeyOf(
         submitAnswer(ApplicantHasSuitableAccountPage, true),
-        submitAnswer(AccountInApplicantsNamePage, true),
-        submitAnswer(BankAccountTypePage, BankAccountType.Bank),
         submitAnswer(BankAccountDetailsPage, bankDetails),
-        setUserAnswerTo(AccountIsJointPage, true),
-        setUserAnswerTo(AccountHolderNamePage, "name"),
-        setUserAnswerTo(AccountHolderNamesPage, accountHolderNames),
-        setUserAnswerTo(BuildingSocietyAccountDetailsPage, buildingSocietyDetails),
         setUserAnswerTo(ApplicantHasPreviousFamilyNamePage, false),
         goTo(CheckYourAnswersPage)
       )
@@ -503,13 +470,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
           goToChangeAnswer(ApplicantHasSuitableAccountPage),
           submitAnswer(ApplicantHasSuitableAccountPage, false),
           pageMustBe(CheckYourAnswersPage),
-          answersMustNotContain(AccountInApplicantsNamePage),
-          answersMustNotContain(AccountIsJointPage),
-          answersMustNotContain(AccountHolderNamePage),
-          answersMustNotContain(AccountHolderNamesPage),
-          answersMustNotContain(BankAccountTypePage),
-          answersMustNotContain(BankAccountDetailsPage),
-          answersMustNotContain(BuildingSocietyAccountDetailsPage),
+          answersMustNotContain(BankAccountDetailsPage)
         )
     }
   }
@@ -522,322 +483,16 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
       goTo(CheckYourAnswersPage)
     )
 
-    "changing the answer to `yes` must proceed to collect bank details" - {
-
-      "when the user has a bank account in their name" in {
+    "changing the answer to `yes` must proceed to collect bank details" in {
 
         startingFrom(ApplicantHasSuitableAccountPage)
           .run(
             initialise,
             goToChangeAnswer(ApplicantHasSuitableAccountPage),
             submitAnswer(ApplicantHasSuitableAccountPage, true),
-            submitAnswer(AccountInApplicantsNamePage, true),
-            submitAnswer(BankAccountTypePage, BankAccountType.Bank),
             submitAnswer(BankAccountDetailsPage, bankDetails),
             pageMustBe(CheckYourAnswersPage)
           )
-      }
-
-      "when the user has a building society account in their name" in {
-
-        startingFrom(ApplicantHasSuitableAccountPage)
-          .run(
-            initialise,
-            goToChangeAnswer(ApplicantHasSuitableAccountPage),
-            submitAnswer(ApplicantHasSuitableAccountPage, true),
-            submitAnswer(AccountInApplicantsNamePage, true),
-            submitAnswer(BankAccountTypePage, BankAccountType.BuildingSociety),
-            submitAnswer(BuildingSocietyAccountDetailsPage, buildingSocietyDetails),
-            pageMustBe(CheckYourAnswersPage)
-          )
-      }
-
-      "when the user gives details of a bank account in one other person's name" in {
-
-        startingFrom(ApplicantHasSuitableAccountPage)
-          .run(
-            initialise,
-            goToChangeAnswer(ApplicantHasSuitableAccountPage),
-            submitAnswer(ApplicantHasSuitableAccountPage, true),
-            submitAnswer(AccountInApplicantsNamePage, false),
-            submitAnswer(AccountIsJointPage, false),
-            submitAnswer(AccountHolderNamePage, accountHolderName),
-            submitAnswer(BankAccountTypePage, BankAccountType.Bank),
-            submitAnswer(BankAccountDetailsPage, bankDetails),
-            pageMustBe(CheckYourAnswersPage)
-          )
-      }
-
-      "when the user gives details of a joint bank account in other people's names" in {
-
-        startingFrom(ApplicantHasSuitableAccountPage)
-          .run(
-            initialise,
-            goToChangeAnswer(ApplicantHasSuitableAccountPage),
-            submitAnswer(ApplicantHasSuitableAccountPage, true),
-            submitAnswer(AccountInApplicantsNamePage, false),
-            submitAnswer(AccountIsJointPage, true),
-            submitAnswer(AccountHolderNamesPage, accountHolderNames),
-            submitAnswer(BankAccountTypePage, BankAccountType.Bank),
-            submitAnswer(BankAccountDetailsPage, bankDetails),
-            pageMustBe(CheckYourAnswersPage)
-          )
-      }
-
-      "when the user gives details of a building society account in one other person's name" in {
-
-        startingFrom(ApplicantHasSuitableAccountPage)
-          .run(
-            initialise,
-            goToChangeAnswer(ApplicantHasSuitableAccountPage),
-            submitAnswer(ApplicantHasSuitableAccountPage, true),
-            submitAnswer(AccountInApplicantsNamePage, false),
-            submitAnswer(AccountIsJointPage, false),
-            submitAnswer(AccountHolderNamePage, accountHolderName),
-            submitAnswer(BankAccountTypePage, BankAccountType.BuildingSociety),
-            submitAnswer(BuildingSocietyAccountDetailsPage, buildingSocietyDetails),
-            pageMustBe(CheckYourAnswersPage)
-          )
-      }
-
-      "when the user gives details of a joint building society account in other people's names" in {
-
-        startingFrom(ApplicantHasSuitableAccountPage)
-          .run(
-            initialise,
-            goToChangeAnswer(ApplicantHasSuitableAccountPage),
-            submitAnswer(ApplicantHasSuitableAccountPage, true),
-            submitAnswer(AccountInApplicantsNamePage, false),
-            submitAnswer(AccountIsJointPage, true),
-            submitAnswer(AccountHolderNamesPage, accountHolderNames),
-            submitAnswer(BankAccountTypePage, BankAccountType.BuildingSociety),
-            submitAnswer(BuildingSocietyAccountDetailsPage, buildingSocietyDetails),
-            pageMustBe(CheckYourAnswersPage)
-          )
-      }
-    }
-  }
-
-  "when the user initially said the account was in their name" - {
-
-    val initialise = journeyOf(
-      submitAnswer(AccountInApplicantsNamePage, true),
-      submitAnswer(BankAccountTypePage, arbitrary[BankAccountType].sample.value),
-      setUserAnswerTo(BankAccountDetailsPage, bankDetails),
-      setUserAnswerTo(BuildingSocietyAccountDetailsPage, buildingSocietyDetails),
-      setUserAnswerTo(ApplicantHasPreviousFamilyNamePage, false),
-      goTo(CheckYourAnswersPage)
-    )
-
-    "changing to say it's not in their name must delete the account details then collect the account holder name(s) and details" - {
-
-      "for a bank account in one person's name" in {
-
-        startingFrom(AccountInApplicantsNamePage)
-          .run(
-            initialise,
-            goToChangeAnswer(AccountInApplicantsNamePage),
-            submitAnswer(AccountInApplicantsNamePage, false),
-            submitAnswer(AccountIsJointPage, false),
-            submitAnswer(AccountHolderNamePage, accountHolderName),
-            submitAnswer(BankAccountTypePage, BankAccountType.Bank),
-            submitAnswer(BankAccountDetailsPage, bankDetails),
-            pageMustBe(CheckYourAnswersPage),
-            answersMustNotContain(BuildingSocietyAccountDetailsPage)
-          )
-      }
-
-      "for a building society account in one person's name" in {
-
-        startingFrom(AccountInApplicantsNamePage)
-          .run(
-            initialise,
-            goToChangeAnswer(AccountInApplicantsNamePage),
-            submitAnswer(AccountInApplicantsNamePage, false),
-            submitAnswer(AccountIsJointPage, false),
-            submitAnswer(AccountHolderNamePage, accountHolderName),
-            submitAnswer(BankAccountTypePage, BankAccountType.BuildingSociety),
-            submitAnswer(BuildingSocietyAccountDetailsPage, buildingSocietyDetails),
-            pageMustBe(CheckYourAnswersPage),
-            answersMustNotContain(BankAccountDetailsPage)
-          )
-      }
-
-      "for a bank account in two people's name" in {
-
-        startingFrom(AccountInApplicantsNamePage)
-          .run(
-            initialise,
-            goToChangeAnswer(AccountInApplicantsNamePage),
-            submitAnswer(AccountInApplicantsNamePage, false),
-            submitAnswer(AccountIsJointPage, true),
-            submitAnswer(AccountHolderNamesPage, accountHolderNames),
-            submitAnswer(BankAccountTypePage, BankAccountType.Bank),
-            submitAnswer(BankAccountDetailsPage, bankDetails),
-            pageMustBe(CheckYourAnswersPage),
-            answersMustNotContain(BuildingSocietyAccountDetailsPage)
-          )
-      }
-
-      "for a building society account in two people's names" in {
-
-        startingFrom(AccountInApplicantsNamePage)
-          .run(
-            initialise,
-            goToChangeAnswer(AccountInApplicantsNamePage),
-            submitAnswer(AccountInApplicantsNamePage, false),
-            submitAnswer(AccountIsJointPage, true),
-            submitAnswer(AccountHolderNamesPage, accountHolderNames),
-            submitAnswer(BankAccountTypePage, BankAccountType.BuildingSociety),
-            submitAnswer(BuildingSocietyAccountDetailsPage, buildingSocietyDetails),
-            pageMustBe(CheckYourAnswersPage),
-            answersMustNotContain(BankAccountDetailsPage)
-          )
-      }
-    }
-  }
-
-  "when the user initially said the account was not in their name" - {
-
-    val initialise = journeyOf(
-      submitAnswer(AccountInApplicantsNamePage, false),
-      submitAnswer(AccountIsJointPage, false),
-      submitAnswer(AccountHolderNamePage, accountHolderName),
-      setUserAnswerTo(AccountHolderNamesPage, accountHolderNames),
-      submitAnswer(BankAccountTypePage, arbitrary[BankAccountType].sample.value),
-      setUserAnswerTo(BankAccountDetailsPage, bankDetails),
-      setUserAnswerTo(BuildingSocietyAccountDetailsPage, buildingSocietyDetails),
-      setUserAnswerTo(ApplicantHasPreviousFamilyNamePage, false),
-      goTo(CheckYourAnswersPage)
-    )
-
-    "changing to say it is in their name must remove the name and account details information, then collect new account information" - {
-
-      "for a bank account" in {
-
-        startingFrom(AccountInApplicantsNamePage)
-          .run(
-            initialise,
-            goToChangeAnswer(AccountInApplicantsNamePage),
-            submitAnswer(AccountInApplicantsNamePage, true),
-            submitAnswer(BankAccountTypePage, BankAccountType.Bank),
-            submitAnswer(BankAccountDetailsPage, bankDetails),
-            pageMustBe(CheckYourAnswersPage),
-            answersMustNotContain(AccountIsJointPage),
-            answersMustNotContain(AccountHolderNamePage),
-            answersMustNotContain(AccountHolderNamesPage),
-            answersMustNotContain(BuildingSocietyAccountDetailsPage)
-          )
-      }
-
-      "for a building society account" in {
-
-        startingFrom(AccountInApplicantsNamePage)
-          .run(
-            initialise,
-            goToChangeAnswer(AccountInApplicantsNamePage),
-            submitAnswer(AccountInApplicantsNamePage, true),
-            submitAnswer(BankAccountTypePage, BankAccountType.BuildingSociety),
-            submitAnswer(BuildingSocietyAccountDetailsPage, buildingSocietyDetails),
-            pageMustBe(CheckYourAnswersPage),
-            answersMustNotContain(AccountIsJointPage),
-            answersMustNotContain(AccountHolderNamePage),
-            answersMustNotContain(AccountHolderNamesPage),
-            answersMustNotContain(BankAccountDetailsPage)
-          )
-      }
-    }
-  }
-
-  "when the user initially said the account was in joint names" - {
-
-    "changing to say it's in one person's name should remove the joint names, collect the single name, then return to Check Answers" in {
-
-      val initialise = journeyOf(
-        submitAnswer(AccountIsJointPage, true),
-        submitAnswer(AccountHolderNamesPage, accountHolderNames),
-        submitAnswer(BankAccountTypePage, arbitrary[BankAccountType].sample.value),
-        goTo(CheckYourAnswersPage)
-      )
-
-      startingFrom(AccountIsJointPage)
-        .run(
-          initialise,
-          goToChangeAnswer(AccountIsJointPage),
-          submitAnswer(AccountIsJointPage, false),
-          submitAnswer(AccountHolderNamePage, accountHolderName),
-          pageMustBe(CheckYourAnswersPage),
-          answersMustNotContain(AccountHolderNamesPage)
-        )
-    }
-  }
-
-  "when the user initially said the account was not in joint names" - {
-
-    "changing to say joint should remove the single name, collect the joint names, then return to Check Answers" in {
-
-      val initialise = journeyOf(
-        submitAnswer(AccountIsJointPage, false),
-        submitAnswer(AccountHolderNamePage, accountHolderName),
-        submitAnswer(BankAccountTypePage, arbitrary[BankAccountType].sample.value),
-        goTo(CheckYourAnswersPage)
-      )
-
-      startingFrom(AccountIsJointPage)
-        .run(
-          initialise,
-          goToChangeAnswer(AccountIsJointPage),
-          submitAnswer(AccountIsJointPage, true),
-          submitAnswer(AccountHolderNamesPage, accountHolderNames),
-          pageMustBe(CheckYourAnswersPage),
-          answersMustNotContain(AccountHolderNamePage)
-        )
-    }
-  }
-
-  "when the user initially gave bank details" - {
-
-    "changing the account type to `Building Society` should remove the bank details, collect Building Society details then return to Check Answers" in {
-
-      val initialise = journeyOf(
-        submitAnswer(BankAccountTypePage, BankAccountType.Bank),
-        submitAnswer(BankAccountDetailsPage, bankDetails),
-        setUserAnswerTo(ApplicantHasPreviousFamilyNamePage, false),
-        goTo(CheckYourAnswersPage)
-      )
-
-      startingFrom(BankAccountTypePage)
-        .run(
-          initialise,
-          goToChangeAnswer(BankAccountTypePage),
-          submitAnswer(BankAccountTypePage, BankAccountType.BuildingSociety),
-          submitAnswer(BuildingSocietyAccountDetailsPage, buildingSocietyDetails),
-          pageMustBe(CheckYourAnswersPage),
-          answersMustNotContain(BankAccountDetailsPage)
-        )
-    }
-  }
-
-  "when the user initially gave building society details" - {
-
-    "changing the account type to `Bank` should remove the building society details, collect Bank details then return to Check Answers" in {
-
-      val initialise = journeyOf(
-        submitAnswer(BankAccountTypePage, BankAccountType.BuildingSociety),
-        submitAnswer(BuildingSocietyAccountDetailsPage, buildingSocietyDetails),
-        setUserAnswerTo(ApplicantHasPreviousFamilyNamePage, false),
-        goTo(CheckYourAnswersPage)
-      )
-
-      startingFrom(BankAccountTypePage)
-        .run(
-          initialise,
-          goToChangeAnswer(BankAccountTypePage),
-          submitAnswer(BankAccountTypePage, BankAccountType.Bank),
-          submitAnswer(BankAccountDetailsPage, bankDetails),
-          pageMustBe(CheckYourAnswersPage),
-          answersMustNotContain(BuildingSocietyAccountDetailsPage)
-        )
     }
   }
 }

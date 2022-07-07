@@ -16,8 +16,10 @@
 
 package journey
 
+import generators.ModelGenerators
 import models.RelationshipStatus._
-import models.{AccountHolderNames, BankAccountDetails, BankAccountType, Benefits, BuildingSocietyAccountDetails, EldestChildName, UserAnswers}
+import models.{BankAccountDetails, Benefits, EldestChildName, UserAnswers}
+import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.freespec.AnyFreeSpec
 import pages.RelationshipStatusPage
 import pages.applicant.ApplicantHasPreviousFamilyNamePage
@@ -26,7 +28,9 @@ import pages.payments._
 
 import java.time.LocalDate
 
-class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
+class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
+
+  private def bankDetails = arbitrary[BankAccountDetails].sample.value
 
   "users who have not claimed Child Benefit before" - {
 
@@ -109,7 +113,9 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
               submitAnswer(EldestChildNamePage, childName),
               submitAnswer(EldestChildDateOfBirthPage, childDob),
               submitAnswer(WantToBePaidToExistingAccountPage, false),
-              pageMustBe(ApplicantHasSuitableAccountPage)
+              submitAnswer(ApplicantHasSuitableAccountPage, true),
+              submitAnswer(BankAccountDetailsPage, bankDetails),
+              pageMustBe(ApplicantHasPreviousFamilyNamePage)
             )
         }
       }
@@ -130,7 +136,9 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
             submitAnswer(WantToBePaidPage, true),
-            pageMustBe(ApplicantHasSuitableAccountPage)
+            submitAnswer(ApplicantHasSuitableAccountPage, true),
+            submitAnswer(BankAccountDetailsPage, bankDetails),
+            pageMustBe(ApplicantHasPreviousFamilyNamePage)
           )
       }
 
@@ -278,77 +286,5 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers {
           pageMustBe(ApplicantHasPreviousFamilyNamePage)
         )
     }
-  }
-
-  "users who have a suitable account" - {
-
-    "in their name" - {
-
-      "must be asked if it is a bank or building society account" in {
-
-        startingFrom(AccountInApplicantsNamePage)
-          .run(
-            submitAnswer(AccountInApplicantsNamePage, true),
-            pageMustBe(BankAccountTypePage)
-          )
-      }
-    }
-
-    "not in their name" - {
-
-      "when the account is in one name" - {
-
-        "must be asked for the account holder name, then the type of account" in {
-
-          startingFrom(AccountInApplicantsNamePage)
-            .run(
-              submitAnswer(AccountInApplicantsNamePage, false),
-              submitAnswer(AccountIsJointPage, false),
-              submitAnswer(AccountHolderNamePage, "name"),
-              pageMustBe(BankAccountTypePage)
-            )
-        }
-      }
-
-      "when the account is joint" - {
-
-        "must be asked for the account holder names, then the type of account" in {
-
-          val accountHolderNames = AccountHolderNames("name 1", "name 2")
-
-          startingFrom(AccountInApplicantsNamePage)
-            .run(
-              submitAnswer(AccountInApplicantsNamePage, false),
-              submitAnswer(AccountIsJointPage, true),
-              submitAnswer(AccountHolderNamesPage, accountHolderNames),
-              pageMustBe(BankAccountTypePage)
-            )
-        }
-      }
-    }
-  }
-
-  "users choosing to give bank details must be asked those details then proceed to the Applicant section" in {
-
-    val bankDetails = BankAccountDetails("bank name", "12345678", "123456")
-
-    startingFrom(BankAccountTypePage)
-      .run(
-        submitAnswer(BankAccountTypePage, BankAccountType.Bank),
-        submitAnswer(BankAccountDetailsPage, bankDetails),
-        pageMustBe(ApplicantHasPreviousFamilyNamePage)
-      )
-  }
-
-  "users choosing to give building society details must be asked those details then proceed to the Applicant section" in {
-
-    val buildingSocietyDetails = BuildingSocietyAccountDetails("building society name", "12345678", "123456", None)
-
-    startingFrom(BankAccountTypePage)
-      .run(
-        submitAnswer(BankAccountTypePage, BankAccountType.BuildingSociety),
-        submitAnswer(BuildingSocietyAccountDetailsPage, buildingSocietyDetails),
-        pageMustBe(ApplicantHasPreviousFamilyNamePage)
-      )
   }
 }

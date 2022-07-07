@@ -160,37 +160,6 @@ applicantOrPartnerIncomeOver60k.checkYourAnswersLabel = Is your or your partner�
 applicantOrPartnerIncomeOver60k.error.required = Select yes if your or your partner’s income is over £60,000 per year
 applicantOrPartnerIncomeOver60k.change.hidden = your or your partner’s income is over £60,000 per year
 
-accountHolderName.title = What is the name of the account holder?
-accountHolderName.heading = What is the name of the account holder?
-accountHolderName.checkYourAnswersLabel = What is the name of the account holder?
-accountHolderName.error.required = Enter the name of the account holder
-accountHolderName.error.length = Name must be 100 characters or less
-accountHolderName.change.hidden = the name of the account holder
-
-accountHolderNames.title = What are the names of the account holders?
-accountHolderNames.heading = What are the names of the account holders?
-accountHolderNames.name1 = Name of first person
-accountHolderNames.name2 = Name of second person
-accountHolderNames.checkYourAnswersLabel = What are the names of the account holders?
-accountHolderNames.error.name1.required = Enter the name of the first person
-accountHolderNames.error.name2.required = Enter the name of the second person
-accountHolderNames.error.name1.length = Name of the first person must be 100 characters or less
-accountHolderNames.error.name2.length = Name of the second person must be 100 characters or less
-accountHolderNames.name1.change.hidden = the name of the first account holder
-accountHolderNames.name2.change.hidden = the name of the second account holder
-
-accountInApplicantsName.title = Is the account in your name?
-accountInApplicantsName.heading = Is the account in your name?
-accountInApplicantsName.checkYourAnswersLabel = Is the account in your name?
-accountInApplicantsName.error.required = Select yes if the account is in your name
-accountInApplicantsName.change.hidden = if the account is in your name
-
-accountIsJoint.title = Is the account a joint account?
-accountIsJoint.heading = Is the account a joint account?
-accountIsJoint.checkYourAnswersLabel = Is the account a joint account?
-accountIsJoint.error.required = Select yes if the account is a joint account
-accountIsJoint.change.hidden = if the account is a joint account
-
 applicantHasSuitableAccount.title = Do you have an account that Child Benefit can be paid into?
 applicantHasSuitableAccount.heading = Do you have an account that Child Benefit can be paid into?
 applicantHasSuitableAccount.checkYourAnswersLabel = Do you have an account that Child Benefit can be paid into?
@@ -213,34 +182,6 @@ bankAccountDetails.error.accountNumber.invalid = Enter a valid account number li
 bankAccountDetails.error.sortCode.invalid = Sort code must be in the correct format
 bankAccountDetails.bankName.change.hidden = the bank name
 bankAccountDetails.accountNumber.change.hidden = the account number
-
-bankAccountType.title = Is the account with a bank or building society?
-bankAccountType.heading = Is the account with a bank or building society?
-bankAccountType.bank = Bank
-bankAccountType.buildingSociety = Building society
-bankAccountType.checkYourAnswersLabel = Is the account with a bank or building society?
-bankAccountType.error.required = Select if the account is with a bank or building society
-bankAccountType.change.hidden = if the account is with a bank or building society
-
-buildingSocietyAccountDetails.title = What are the building society details?
-buildingSocietyAccountDetails.heading = What are the building society details?
-buildingSocietyAccountDetails.buildingSocietyName = Building society name
-buildingSocietyAccountDetails.accountNumber = Account number
-buildingSocietyAccountDetails.accountNumber.hint = Must be between 6 and 8 digits long
-buildingSocietyAccountDetails.sortCode = Sort code
-buildingSocietyAccountDetails.sortCode.hint = Must be 6 digits long
-buildingSocietyAccountDetails.rollNumber = Building society roll number (if you have one)
-buildingSocietyAccountDetails.rollNumber.hint = You can find it on your card, statement or passbook
-buildingSocietyAccountDetails.checkYourAnswersLabel = What are the building society details?
-buildingSocietyAccountDetails.error.buildingSocietyName.required = Enter the building society name
-buildingSocietyAccountDetails.error.accountNumber.required = Enter the account number
-buildingSocietyAccountDetails.error.sortCode.required = Enter the sort code
-buildingSocietyAccountDetails.error.buildingSocietyName.length = Building society name must be 100 characters or less
-buildingSocietyAccountDetails.error.accountNumber.invalid = Enter a valid account number like 00733445
-buildingSocietyAccountDetails.error.sortCode.invalid = Sort code must be in the correct format
-buildingSocietyAccountDetails.error.rollNumber.invalid = Roll number must be in the correct format
-buildingSocietyAccountDetails.buildingSocietyName.change.hidden = the building society name
-buildingSocietyAccountDetails.accountNumber.change.hidden = the account number
 
 claimedChildBenefitBefore.title = Have you claimed Child Benefit before?
 claimedChildBenefitBefore.heading = Have you claimed Child Benefit before?

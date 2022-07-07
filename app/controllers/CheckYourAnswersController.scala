@@ -22,7 +22,7 @@ import pages.{CheckYourAnswersPage, EmptyWaypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.{applicant, _}
+import viewmodels.checkAnswers._
 import viewmodels.checkAnswers.applicant._
 import viewmodels.checkAnswers.child._
 import viewmodels.checkAnswers.income._
@@ -77,13 +77,7 @@ class CheckYourAnswersController @Inject()(
           WantToBePaidSummary.row(request.userAnswers, waypoints, thisPage),
           WantToBePaidWeeklySummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantHasSuitableAccountSummary.row(request.userAnswers, waypoints, thisPage),
-          AccountInApplicantsNameSummary.row(request.userAnswers, waypoints, thisPage),
-          AccountIsJointSummary.row(request.userAnswers, waypoints, thisPage),
-          AccountHolderNameSummary.row(request.userAnswers, waypoints, thisPage),
-          AccountHolderNamesSummary.row(request.userAnswers, waypoints, thisPage),
-          BankAccountTypeSummary.row(request.userAnswers, waypoints, thisPage),
-          BankAccountDetailsSummary.row(request.userAnswers, waypoints, thisPage),
-          BuildingSocietyAccountDetailsSummary.row(request.userAnswers, waypoints, thisPage)
+          BankAccountDetailsSummary.row(request.userAnswers, waypoints, thisPage)
         ).flatten
       )
 

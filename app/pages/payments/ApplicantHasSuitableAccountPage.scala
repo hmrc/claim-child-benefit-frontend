@@ -36,19 +36,13 @@ case object ApplicantHasSuitableAccountPage extends QuestionPage[Boolean] {
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
-      case true => AccountInApplicantsNamePage
+      case true  => BankAccountDetailsPage
       case false => ApplicantHasPreviousFamilyNamePage
     }.orRecover
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
     if (value.contains(false)) {
-      userAnswers.remove(AccountInApplicantsNamePage)
-        .flatMap(_.remove(AccountIsJointPage))
-        .flatMap(_.remove(AccountHolderNamePage))
-        .flatMap(_.remove(AccountHolderNamesPage))
-        .flatMap(_.remove(BankAccountTypePage))
-        .flatMap(_.remove(BankAccountDetailsPage))
-        .flatMap(_.remove(BuildingSocietyAccountDetailsPage))
+      userAnswers.remove(BankAccountDetailsPage)
     } else {
       super.cleanup(value, userAnswers)
     }
