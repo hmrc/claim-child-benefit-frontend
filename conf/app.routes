@@ -224,8 +224,8 @@ POST       /removeChild/:index                        controllers.child.RemoveCh
 GET        /removeChildPreviousName/:childIndex/:nameIndex                        controllers.child.RemoveChildPreviousNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, childIndex: Index, nameIndex: Index)
 POST       /removeChildPreviousName/:childIndex/:nameIndex                        controllers.child.RemoveChildPreviousNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, childIndex: Index, nameIndex: Index)
 
-GET        /adoptingChild/:index                        controllers.child.AdoptingChildController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
-POST       /adoptingChild/:index                        controllers.child.AdoptingChildController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+GET        /adoptingThroughLocalAuthority/:index                        controllers.child.AdoptingThroughLocalAuthorityController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /adoptingThroughLocalAuthority/:index                        controllers.child.AdoptingThroughLocalAuthorityController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
 GET        /check-child-details/:index                 controllers.child.CheckChildDetailsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /check-child-details/:index                 controllers.child.CheckChildDetailsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)

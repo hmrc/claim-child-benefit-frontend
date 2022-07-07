@@ -17,28 +17,28 @@
 package viewmodels.checkAnswers.child
 
 import models.{Index, UserAnswers}
-import pages.child.AdoptingChildPage
+import pages.child.AdoptingThroughLocalAuthorityPage
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object AdoptingChildSummary {
+object AdoptingThroughLocalAuthoritySummary {
 
   def row(answers: UserAnswers, index: Index, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AdoptingChildPage(index)).map {
+    answers.get(AdoptingThroughLocalAuthorityPage(index)).map {
       answer =>
 
         val value = if (answer) "site.yes" else "site.no"
 
         SummaryListRowViewModel(
-          key = "adoptingChild.checkYourAnswersLabel",
+          key = "adoptingThroughLocalAuthority.checkYourAnswersLabel",
           value = ValueViewModel(value),
           actions = Seq(
-            ActionItemViewModel("site.change", AdoptingChildPage(index).changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("adoptingChild.change.hidden"))
+            ActionItemViewModel("site.change", AdoptingThroughLocalAuthorityPage(index).changeLink(waypoints, sourcePage).url)
+              .withVisuallyHiddenText(messages("adoptingThroughLocalAuthority.change.hidden"))
           )
         )
     }

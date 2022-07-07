@@ -18,28 +18,28 @@ package controllers.child
 
 import controllers.AnswerExtractor
 import controllers.actions._
-import forms.child.AdoptingChildFormProvider
+import forms.child.AdoptingThroughLocalAuthorityFormProvider
 import models.Index
 import pages.Waypoints
-import pages.child.{AdoptingChildPage, ChildNamePage}
+import pages.child.{AdoptingThroughLocalAuthorityPage, ChildNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.child.AdoptingChildView
+import views.html.child.AdoptingThroughLocalAuthorityView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class AdoptingChildController @Inject()(
-                                         override val messagesApi: MessagesApi,
-                                         sessionRepository: SessionRepository,
-                                         identify: IdentifierAction,
-                                         getData: DataRetrievalAction,
-                                         requireData: DataRequiredAction,
-                                         formProvider: AdoptingChildFormProvider,
-                                         val controllerComponents: MessagesControllerComponents,
-                                         view: AdoptingChildView
+class AdoptingThroughLocalAuthorityController @Inject()(
+                                                         override val messagesApi: MessagesApi,
+                                                         sessionRepository: SessionRepository,
+                                                         identify: IdentifierAction,
+                                                         getData: DataRetrievalAction,
+                                                         requireData: DataRequiredAction,
+                                                         formProvider: AdoptingThroughLocalAuthorityFormProvider,
+                                                         val controllerComponents: MessagesControllerComponents,
+                                                         view: AdoptingThroughLocalAuthorityView
                                  )(implicit ec: ExecutionContext)
   extends FrontendBaseController
     with I18nSupport
@@ -52,7 +52,7 @@ class AdoptingChildController @Inject()(
 
           val form = formProvider(childName)
 
-          val preparedForm = request.userAnswers.get(AdoptingChildPage(index)) match {
+          val preparedForm = request.userAnswers.get(AdoptingThroughLocalAuthorityPage(index)) match {
             case None => form
             case Some(value) => form.fill(value)
           }
@@ -74,9 +74,9 @@ class AdoptingChildController @Inject()(
 
             value =>
               for {
-                updatedAnswers <- Future.fromTry(request.userAnswers.set(AdoptingChildPage(index), value))
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(AdoptingThroughLocalAuthorityPage(index), value))
                 _ <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(AdoptingChildPage(index).navigate(waypoints, updatedAnswers).route)
+              } yield Redirect(AdoptingThroughLocalAuthorityPage(index).navigate(waypoints, updatedAnswers).route)
           )
       }
   }

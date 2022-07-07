@@ -567,6 +567,7 @@ applicantRelationshipToChild.title = How would you describe your relationship to
 applicantRelationshipToChild.heading = How would you describe your relationship to {0}?
 applicantRelationshipToChild.birthChild = Birth child
 applicantRelationshipToChild.adoptedChild = Adopted child
+applicantRelationshipToChild.adoptingChild = Adopted or planning to adopt child
 applicantRelationshipToChild.stepChild = Step child
 applicantRelationshipToChild.other = None of these
 applicantRelationshipToChild.checkYourAnswersLabel = How would you describe your relationship to this child?
@@ -712,11 +713,11 @@ removeChildPreviousName.title = Are you sure you want to remove this previous na
 removeChildPreviousName.heading = Are you sure you want to remove {0}?
 removeChildPreviousName.error.required = Select yes if you want to remove {0}
 
-adoptingChild.title = Are you adopting or planning to adopt this child through a Local Authority?
-adoptingChild.heading = Are you adopting or planning to adopt {0} through a Local Authority?
-adoptingChild.checkYourAnswersLabel = Are you adopting or planning to adopt this child through a Local Authority?
-adoptingChild.error.required = Select yes if you are adopting or planning to adopt {0} through a Local Authority
-adoptingChild.change.hidden = if you are planning to adopt this child through a Local Authority
+adoptingThroughLocalAuthority.title = Are you adopting or planning to adopt this child through a Local Authority?
+adoptingThroughLocalAuthority.heading = Are you adopting or planning to adopt {0} through a Local Authority?
+adoptingThroughLocalAuthority.checkYourAnswersLabel = Are you adopting or planning to adopt this child through a Local Authority?
+adoptingThroughLocalAuthority.error.required = Select yes if you are adopting or planning to adopt {0} through a Local Authority
+adoptingThroughLocalAuthority.change.hidden = if you are planning to adopt this child through a Local Authority
 
 checkChildDetails.title = Check Child Details
 checkChildDetails.heading = Check Child Details

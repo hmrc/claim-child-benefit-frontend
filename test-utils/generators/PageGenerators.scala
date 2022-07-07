@@ -27,8 +27,8 @@ import pages.payments._
 
 trait PageGenerators {
 
-  implicit lazy val arbitraryAdoptingChildPage: Arbitrary[AdoptingChildPage] =
-    Arbitrary(child.AdoptingChildPage(Index(0)))
+  implicit lazy val arbitraryAdoptingChildPage: Arbitrary[AdoptingThroughLocalAuthorityPage] =
+    Arbitrary(child.AdoptingThroughLocalAuthorityPage(Index(0)))
 
   implicit lazy val arbitraryRemoveChildPreviousNamePage: Arbitrary[RemoveChildPreviousNamePage] =
     Arbitrary(child.RemoveChildPreviousNamePage(Index(0), Index(0)))

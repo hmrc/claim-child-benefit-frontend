@@ -18,46 +18,46 @@ package controllers.child
 
 import base.SpecBase
 import controllers.{routes => baseRoutes}
-import forms.child.AdoptingChildFormProvider
+import forms.child.AdoptingThroughLocalAuthorityFormProvider
 import models.ChildName
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.child.{AdoptingChildPage, ChildNamePage}
+import pages.child.{AdoptingThroughLocalAuthorityPage, ChildNamePage}
 import pages.{EmptyWaypoints, child}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
-import views.html.child.AdoptingChildView
+import views.html.child.AdoptingThroughLocalAuthorityView
 
 import scala.concurrent.Future
 
-class AdoptingChildControllerSpec extends SpecBase with MockitoSugar {
+class AdoptingThroughLocalAuthorityControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
   private val childName = ChildName("first", None, "last")
   private val baseAnswers = emptyUserAnswers.set(ChildNamePage(index), childName).success.value
 
-  val formProvider = new AdoptingChildFormProvider()
+  val formProvider = new AdoptingThroughLocalAuthorityFormProvider()
   val form = formProvider(childName)
   private val waypoints = EmptyWaypoints
 
-  lazy val adoptingChildRoute = routes.AdoptingChildController.onPageLoad(waypoints, index).url
+  lazy val adoptingThroughLocalAuthorityRoute = routes.AdoptingThroughLocalAuthorityController.onPageLoad(waypoints, index).url
 
-  "AdoptingChild Controller" - {
+  "AdoptingThroughLocalAuthority Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, adoptingChildRoute)
+        val request = FakeRequest(GET, adoptingThroughLocalAuthorityRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[AdoptingChildView]
+        val view = application.injector.instanceOf[AdoptingThroughLocalAuthorityView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, waypoints, index, childName)(request, messages(application)).toString
@@ -66,14 +66,14 @@ class AdoptingChildControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = baseAnswers.set(AdoptingChildPage(index), true).success.value
+      val userAnswers = baseAnswers.set(AdoptingThroughLocalAuthorityPage(index), true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, adoptingChildRoute)
+        val request = FakeRequest(GET, adoptingThroughLocalAuthorityRoute)
 
-        val view = application.injector.instanceOf[AdoptingChildView]
+        val view = application.injector.instanceOf[AdoptingThroughLocalAuthorityView]
 
         val result = route(application, request).value
 
@@ -97,14 +97,14 @@ class AdoptingChildControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, adoptingChildRoute)
+          FakeRequest(POST, adoptingThroughLocalAuthorityRoute)
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-        val expectedAnswers = baseAnswers.set(child.AdoptingChildPage(index), true).success.value
+        val expectedAnswers = baseAnswers.set(child.AdoptingThroughLocalAuthorityPage(index), true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual child.AdoptingChildPage(index).navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual child.AdoptingThroughLocalAuthorityPage(index).navigate(waypoints, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -115,12 +115,12 @@ class AdoptingChildControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, adoptingChildRoute)
+          FakeRequest(POST, adoptingThroughLocalAuthorityRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[AdoptingChildView]
+        val view = application.injector.instanceOf[AdoptingThroughLocalAuthorityView]
 
         val result = route(application, request).value
 
@@ -134,7 +134,7 @@ class AdoptingChildControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, adoptingChildRoute)
+        val request = FakeRequest(GET, adoptingThroughLocalAuthorityRoute)
 
         val result = route(application, request).value
 
@@ -149,7 +149,7 @@ class AdoptingChildControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, adoptingChildRoute)
+          FakeRequest(POST, adoptingThroughLocalAuthorityRoute)
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value

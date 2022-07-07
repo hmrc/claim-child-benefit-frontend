@@ -26,9 +26,9 @@
 
 @(form: Form[_], waypoints: Waypoints, index: Index, childName: ChildName)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("adoptingChild.title"))) {
+@layout(pageTitle = title(form, messages("adoptingThroughLocalAuthority.title"))) {
 
-    @formHelper(action = routes.AdoptingChildController.onSubmit(waypoints, index), 'autoComplete -> "off") {
+    @formHelper(action = routes.AdoptingThroughLocalAuthorityController.onSubmit(waypoints, index), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -38,7 +38,7 @@
             RadiosViewModel.yesNo(
                 field = form("value"),
                 legend = HmrcPageHeadingLegend(
-                    content = messages("adoptingChild.heading", childName.safeFirstName),
+                    content = messages("adoptingThroughLocalAuthority.heading", childName.safeFirstName),
                     caption = HmrcSectionCaption(messages("section.child"))
                 )
             )

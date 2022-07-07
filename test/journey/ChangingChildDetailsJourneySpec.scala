@@ -17,6 +17,7 @@
 package journey
 
 import generators.ModelGenerators
+import models.{ApplicantRelationshipToChild => Relationship}
 import models.ChildBirthRegistrationCountry._
 import models._
 import org.scalacheck.Arbitrary.arbitrary
@@ -30,14 +31,14 @@ import java.time.LocalDate
 
 class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
-    private val childName         = arbitrary[ChildName].sample.value
-    private val sex               = arbitrary[ChildBiologicalSex].sample.value
-    private val systemNumber      = Gen.listOfN(9, Gen.numChar).sample.value.mkString
-    private val relationship      = arbitrary[ApplicantRelationshipToChild].sample.value
-    private val claimantName      = arbitrary[PreviousClaimantName].sample.value
-    private val claimantAddress   = arbitrary[Address].sample.value
-    private val scottishBcDetails = arbitrary[ChildScottishBirthCertificateDetails].sample.value
-    private val includedDocuments = Set(arbitrary[IncludedDocuments].sample.value)
+    private val childName               = arbitrary[ChildName].sample.value
+    private val sex                     = arbitrary[ChildBiologicalSex].sample.value
+    private val systemNumber            = Gen.listOfN(9, Gen.numChar).sample.value.mkString
+    private val claimantName            = arbitrary[PreviousClaimantName].sample.value
+    private val claimantAddress         = arbitrary[Address].sample.value
+    private val scottishBcDetails       = arbitrary[ChildScottishBirthCertificateDetails].sample.value
+    private val includedDocuments       = Set(arbitrary[IncludedDocuments].sample.value)
+    private val notAdoptingRelationship = Gen.oneOf(Relationship.BirthChild, Relationship.StepChild, Relationship.AdoptedChild, Relationship.Other).sample.value
 
   "when a user has added a child" - {
 
@@ -49,9 +50,8 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
         submitAnswer(ChildDateOfBirthPage(Index(0)), LocalDate.now),
         submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
         submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
-        submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-        submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
-        submitAnswer(AdoptingChildPage(Index(0)), false)
+        submitAnswer(ApplicantRelationshipToChildPage(Index(0)), notAdoptingRelationship),
+        submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false)
       )
 
     "that no one has claimed Child Benefit for previously" - {
@@ -491,6 +491,43 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           )
       }
     }
+
+    "that they were not adopting or planning to adopt" - {
+
+      "changing the relationship to `adopting or planning to adopt` must ask if they are adopting through a LA, then return to check child details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            basicChildJourney,
+            goToChangeAnswer(ApplicantRelationshipToChildPage(Index(0))),
+            submitAnswer(ApplicantRelationshipToChildPage(Index(0)), Relationship.AdoptingChild),
+            submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), true),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
+          )
+      }
+    }
+
+    "that they were adopting or planning to adopt" - {
+
+      "changing the relationship to anything else must remove if they are adopting through a LA, then return to check child details" in {
+
+        val initialise = journeyOf(
+          basicChildJourney,
+          setUserAnswerTo(ApplicantRelationshipToChildPage(Index(0)), Relationship.AdoptingChild),
+          setUserAnswerTo(AdoptingThroughLocalAuthorityPage(Index(0)), false),
+          goTo(CheckChildDetailsPage(Index(0)))
+        )
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialise,
+            goToChangeAnswer(ApplicantRelationshipToChildPage(Index(0))),
+            submitAnswer(ApplicantRelationshipToChildPage(Index(0)), notAdoptingRelationship),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(AdoptingThroughLocalAuthorityPage(Index(0)))
+          )
+      }
+    }
   }
   
   "when a user has added multiple children" - {
@@ -503,9 +540,8 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
         submitAnswer(ChildDateOfBirthPage(Index(0)), LocalDate.now),
         submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
         submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
-        submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+        submitAnswer(ApplicantRelationshipToChildPage(Index(0)), notAdoptingRelationship),
         submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
-        submitAnswer(AdoptingChildPage(Index(0)), false),
         next,
         submitAnswer(AddChildPage, true),
         submitAnswer(ChildNamePage(Index(1)), childName),
@@ -514,9 +550,8 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
         submitAnswer(ChildDateOfBirthPage(Index(1)), LocalDate.now),
         submitAnswer(ChildBirthRegistrationCountryPage(Index(1)), England),
         submitAnswer(ChildBirthCertificateSystemNumberPage(Index(1)), systemNumber),
-        submitAnswer(ApplicantRelationshipToChildPage(Index(1)), relationship),
+        submitAnswer(ApplicantRelationshipToChildPage(Index(1)), notAdoptingRelationship),
         submitAnswer(AnyoneClaimedForChildBeforePage(Index(1)), false),
-        submitAnswer(AdoptingChildPage(Index(1)), false),
         next,
         submitAnswer(AddChildPage, false),
         pageMustBe(CheckYourAnswersPage)
@@ -552,9 +587,8 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           submitAnswer(ChildDateOfBirthPage(Index(0)), LocalDate.now),
           submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
           submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
-          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), notAdoptingRelationship),
           submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
-          submitAnswer(AdoptingChildPage(Index(0)), false),
           next,
           submitAnswer(AddChildPage, false),
           pageMustBe(CheckYourAnswersPage)
