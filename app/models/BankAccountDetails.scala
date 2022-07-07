@@ -19,9 +19,10 @@ package models
 import play.api.libs.json._
 
 case class BankAccountDetails (
-                                bankName: String,
+                                accountName: String,
                                 accountNumber: String,
-                                sortCode: String
+                                sortCode: String,
+                                rollNumber: Option[String]
                               )
 
 object BankAccountDetails {
