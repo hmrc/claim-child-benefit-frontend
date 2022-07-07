@@ -180,29 +180,11 @@ trait PageGenerators {
   implicit lazy val arbitraryClaimedChildBenefitBeforePage: Arbitrary[ClaimedChildBenefitBeforePage.type] =
     Arbitrary(ClaimedChildBenefitBeforePage)
 
-  implicit lazy val arbitraryBuildingSocietyAccountDetailsPage: Arbitrary[BuildingSocietyAccountDetailsPage.type] =
-    Arbitrary(BuildingSocietyAccountDetailsPage)
-
-  implicit lazy val arbitraryBankAccountTypePage: Arbitrary[BankAccountTypePage.type] =
-    Arbitrary(BankAccountTypePage)
-
   implicit lazy val arbitraryBankAccountDetailsPage: Arbitrary[BankAccountDetailsPage.type] =
     Arbitrary(BankAccountDetailsPage)
 
   implicit lazy val arbitraryApplicantHasSuitableAccountPage: Arbitrary[ApplicantHasSuitableAccountPage.type] =
     Arbitrary(ApplicantHasSuitableAccountPage)
-
-  implicit lazy val arbitraryAccountIsJointPage: Arbitrary[AccountIsJointPage.type] =
-    Arbitrary(AccountIsJointPage)
-
-  implicit lazy val arbitraryAccountInApplicantsNamePage: Arbitrary[AccountInApplicantsNamePage.type] =
-    Arbitrary(AccountInApplicantsNamePage)
-
-  implicit lazy val arbitraryAccountHolderNamesPage: Arbitrary[AccountHolderNamesPage.type] =
-    Arbitrary(AccountHolderNamesPage)
-
-  implicit lazy val arbitraryAccountHolderNamePage: Arbitrary[AccountHolderNamePage.type] =
-    Arbitrary(AccountHolderNamePage)
 
   implicit lazy val arbitraryApplicantOrPartnerIncomeOver60kPage: Arbitrary[ApplicantOrPartnerIncomeOver60kPage.type] =
     Arbitrary(ApplicantOrPartnerIncomeOver60kPage)

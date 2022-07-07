@@ -422,22 +422,6 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryBuildingSocietyAccountDetailsUserAnswersEntry: Arbitrary[(BuildingSocietyAccountDetailsPage.type, JsValue)] =
-    Arbitrary {
-      for {
-        page  <- arbitrary[BuildingSocietyAccountDetailsPage.type]
-        value <- arbitrary[BuildingSocietyAccountDetails].map(Json.toJson(_))
-      } yield (page, value)
-    }
-
-  implicit lazy val arbitraryBankAccountTypeUserAnswersEntry: Arbitrary[(BankAccountTypePage.type, JsValue)] =
-    Arbitrary {
-      for {
-        page  <- arbitrary[BankAccountTypePage.type]
-        value <- arbitrary[BankAccountType].map(Json.toJson(_))
-      } yield (page, value)
-    }
-
   implicit lazy val arbitraryBankAccountDetailsUserAnswersEntry: Arbitrary[(BankAccountDetailsPage.type, JsValue)] =
     Arbitrary {
       for {
@@ -451,38 +435,6 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       for {
         page  <- arbitrary[ApplicantHasSuitableAccountPage.type]
         value <- arbitrary[Boolean].map(Json.toJson(_))
-      } yield (page, value)
-    }
-
-  implicit lazy val arbitraryAccountIsJointUserAnswersEntry: Arbitrary[(AccountIsJointPage.type, JsValue)] =
-    Arbitrary {
-      for {
-        page  <- arbitrary[AccountIsJointPage.type]
-        value <- arbitrary[Boolean].map(Json.toJson(_))
-      } yield (page, value)
-    }
-
-  implicit lazy val arbitraryAccountInApplicantsNameUserAnswersEntry: Arbitrary[(AccountInApplicantsNamePage.type, JsValue)] =
-    Arbitrary {
-      for {
-        page  <- arbitrary[AccountInApplicantsNamePage.type]
-        value <- arbitrary[Boolean].map(Json.toJson(_))
-      } yield (page, value)
-    }
-
-  implicit lazy val arbitraryAccountHolderNamesUserAnswersEntry: Arbitrary[(AccountHolderNamesPage.type, JsValue)] =
-    Arbitrary {
-      for {
-        page  <- arbitrary[AccountHolderNamesPage.type]
-        value <- arbitrary[AccountHolderNames].map(Json.toJson(_))
-      } yield (page, value)
-    }
-
-  implicit lazy val arbitraryAccountHolderNameUserAnswersEntry: Arbitrary[(AccountHolderNamePage.type, JsValue)] =
-    Arbitrary {
-      for {
-        page  <- arbitrary[AccountHolderNamePage.type]
-        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
       } yield (page, value)
     }
 

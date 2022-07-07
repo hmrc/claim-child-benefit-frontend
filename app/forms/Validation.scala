@@ -22,6 +22,6 @@ object Validation {
 
   val accountNumberPattern: Regex = "[ -]*(?:\\d[ -]*){6,8}".r.anchored
   val sortCodePattern: Regex      = "[ -]*(?:\\d[ -]*){6}".r.anchored
-  val rollNumberPattern: Regex    = """[a-zA-Z0-9- .]{1,18}""".r.anchored
+  val rollNumberPattern: Regex    = """[a-zA-Z0-9- ./]{1,18}""".r.anchored
   val systemNumberPattern: Regex  = "(?:\\d[ -]*){9}".r.anchored
 }

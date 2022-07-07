@@ -41,29 +41,11 @@ GET        /applicantOrPartnerIncomeOver60k                        controllers.i
 POST       /applicantOrPartnerIncomeOver60k                        controllers.income.ApplicantOrPartnerIncomeOver60kController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 # Payments section
-GET        /accountHolderName                        controllers.payments.AccountHolderNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /accountHolderName                        controllers.payments.AccountHolderNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /accountHolderNames                        controllers.payments.AccountHolderNamesController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /accountHolderNames                        controllers.payments.AccountHolderNamesController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /accountInApplicantsName                        controllers.payments.AccountInApplicantsNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /accountInApplicantsName                        controllers.payments.AccountInApplicantsNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /accountIsJoint                        controllers.payments.AccountIsJointController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /accountIsJoint                        controllers.payments.AccountIsJointController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
 GET        /applicantHasSuitableAccount                        controllers.payments.ApplicantHasSuitableAccountController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /applicantHasSuitableAccount                        controllers.payments.ApplicantHasSuitableAccountController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /bankAccountDetails                        controllers.payments.BankAccountDetailsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /bankAccountDetails                        controllers.payments.BankAccountDetailsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /bankAccountType                        controllers.payments.BankAccountTypeController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /bankAccountType                        controllers.payments.BankAccountTypeController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /buildingSocietyAccountDetails                        controllers.payments.BuildingSocietyAccountDetailsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /buildingSocietyAccountDetails                        controllers.payments.BuildingSocietyAccountDetailsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /claimedChildBenefitBefore                        controllers.payments.ClaimedChildBenefitBeforeController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /claimedChildBenefitBefore                        controllers.payments.ClaimedChildBenefitBeforeController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
