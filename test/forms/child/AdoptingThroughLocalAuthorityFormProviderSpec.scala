@@ -20,13 +20,13 @@ import forms.behaviours.BooleanFieldBehaviours
 import models.ChildName
 import play.api.data.FormError
 
-class AdoptingChildFormProviderSpec extends BooleanFieldBehaviours {
+class AdoptingThroughLocalAuthorityFormProviderSpec extends BooleanFieldBehaviours {
 
-  val requiredKey = "adoptingChild.error.required"
+  val requiredKey = "adoptingThroughLocalAuthority.error.required"
   val invalidKey = "error.boolean"
 
   private val childName = ChildName("first", None, "last")
-  val form = new AdoptingChildFormProvider()(childName)
+  val form = new AdoptingThroughLocalAuthorityFormProvider()(childName)
 
   ".value" - {
 

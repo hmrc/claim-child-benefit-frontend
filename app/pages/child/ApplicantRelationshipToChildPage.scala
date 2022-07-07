@@ -37,7 +37,7 @@ final case class ApplicantRelationshipToChildPage(index: Index) extends ChildQue
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case AdoptingChild =>
-        AdoptingChildPage(index)
+        AdoptingThroughLocalAuthorityPage(index)
 
       case _ =>
         AnyoneClaimedForChildBeforePage(index)
@@ -47,6 +47,6 @@ final case class ApplicantRelationshipToChildPage(index: Index) extends ChildQue
     if (value.contains(AdoptingChild)) {
       super.cleanup(value, userAnswers)
     } else {
-      userAnswers.remove(AdoptingChildPage(index))
+      userAnswers.remove(AdoptingThroughLocalAuthorityPage(index))
     }
 }

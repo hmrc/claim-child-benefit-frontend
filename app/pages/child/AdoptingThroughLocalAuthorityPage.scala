@@ -16,32 +16,21 @@
 
 package pages.child
 
-import base.SpecBase
 import controllers.child.routes
-import models.Index
-import pages.EmptyWaypoints
+import models.{Index, UserAnswers}
+import pages.{Page, Waypoints}
+import play.api.libs.json.JsPath
+import play.api.mvc.Call
 
-class CheckChildDetailsPageSpec extends SpecBase {
+final case class AdoptingThroughLocalAuthorityPage(index: Index) extends ChildQuestionPage[Boolean] {
 
-  "Check Child Details Page" -{
+  override def path: JsPath = JsPath \ "children" \ index.position \ toString
 
-    "must navigate" - {
+  override def toString: String = "adoptingThroughLocalAuthority"
 
-      "when there are no waypoints" - {
+  override def route(waypoints: Waypoints): Call =
+    routes.AdoptingThroughLocalAuthorityController.onPageLoad(waypoints, index)
 
-        val waypoints = EmptyWaypoints
-
-        "to Add Child" in {
-
-          CheckChildDetailsPage(Index(0))
-            .navigate(waypoints, emptyUserAnswers).route
-            .mustEqual(routes.AddChildController.onPageLoad(waypoints))
-
-          CheckChildDetailsPage(Index(1))
-            .navigate(waypoints, emptyUserAnswers).route
-            .mustEqual(routes.AddChildController.onPageLoad(waypoints))
-        }
-      }
-    }
-  }
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    AnyoneClaimedForChildBeforePage(index)
 }

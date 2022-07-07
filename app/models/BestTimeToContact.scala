@@ -24,9 +24,9 @@ sealed trait BestTimeToContact
 
 object BestTimeToContact extends Enumerable.Implicits {
 
-  case object Morning extends WithName("birthChild") with BestTimeToContact
-  case object Afternoon extends WithName("adoptedChild") with BestTimeToContact
-  case object Evening extends WithName("stepChild") with BestTimeToContact
+  case object Morning extends WithName("morning") with BestTimeToContact
+  case object Afternoon extends WithName("afternoon") with BestTimeToContact
+  case object Evening extends WithName("evening") with BestTimeToContact
 
   val values: Seq[BestTimeToContact] = Seq(
     Morning, Afternoon, Evening

@@ -14,29 +14,18 @@
  * limitations under the License.
  */
 
-package pages.payments
+package forms.child
 
-import base.SpecBase
-import controllers.payments.routes
-import pages.EmptyWaypoints
+import forms.mappings.Mappings
+import models.ChildName
+import play.api.data.Form
 
-class TaxChargeExplanationPageSpec extends SpecBase {
+import javax.inject.Inject
 
-  "TaxChargeExplanationPage" - {
+class AdoptingThroughLocalAuthorityFormProvider @Inject() extends Mappings {
 
-    "must navigate" - {
-
-      "when there are no waypoints" - {
-
-        val waypoints = EmptyWaypoints
-
-        "to Want to be paid" in {
-
-          TaxChargeExplanationPage
-            .navigate(waypoints, emptyUserAnswers).route
-            .mustEqual(routes.WantToBePaidController.onPageLoad(waypoints))
-        }
-      }
-    }
-  }
+  def apply(childName: ChildName): Form[Boolean] =
+    Form(
+      "value" -> boolean("adoptingThroughLocalAuthority.error.required", args = Seq(childName.safeFirstName))
+    )
 }

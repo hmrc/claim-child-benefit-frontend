@@ -501,7 +501,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             basicChildJourney,
             goToChangeAnswer(ApplicantRelationshipToChildPage(Index(0))),
             submitAnswer(ApplicantRelationshipToChildPage(Index(0)), Relationship.AdoptingChild),
-            submitAnswer(AdoptingChildPage(Index(0)), true),
+            submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), true),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }
@@ -514,7 +514,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
         val initialise = journeyOf(
           basicChildJourney,
           setUserAnswerTo(ApplicantRelationshipToChildPage(Index(0)), Relationship.AdoptingChild),
-          setUserAnswerTo(AdoptingChildPage(Index(0)), false),
+          setUserAnswerTo(AdoptingThroughLocalAuthorityPage(Index(0)), false),
           goTo(CheckChildDetailsPage(Index(0)))
         )
 
@@ -524,7 +524,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ApplicantRelationshipToChildPage(Index(0))),
             submitAnswer(ApplicantRelationshipToChildPage(Index(0)), notAdoptingRelationship),
             pageMustBe(CheckChildDetailsPage(Index(0))),
-            answersMustNotContain(AdoptingChildPage(Index(0)))
+            answersMustNotContain(AdoptingThroughLocalAuthorityPage(Index(0)))
           )
       }
     }

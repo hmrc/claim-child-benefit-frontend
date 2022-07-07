@@ -179,7 +179,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
       startingFrom(ApplicantRelationshipToChildPage(Index(0)))
         .run(
           submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-          submitAnswer(AdoptingChildPage(Index(0)), true),
+          submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), true),
           pageMustBe(AnyoneClaimedForChildBeforePage(Index(0)))
         )
     }
