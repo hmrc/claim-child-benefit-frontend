@@ -17,6 +17,7 @@
 package pages.child
 
 import controllers.child.routes
+import models.ChildBirthRegistrationCountry._
 import models.{Index, UserAnswers}
 import pages.{Page, Waypoints}
 import play.api.libs.json.JsPath
@@ -35,8 +36,17 @@ final case class AnyoneClaimedForChildBeforePage(index: Index) extends ChildQues
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
-      case true  => PreviousClaimantNamePage(index)
-      case false => AdoptingChildPage(index)
+      case true  =>
+        PreviousClaimantNamePage(index)
+
+      case false =>
+        answers.get(ChildBirthRegistrationCountryPage(index)).map {
+          case England | Wales | Scotland =>
+            CheckChildDetailsPage(index)
+
+          case Other | Unknown =>
+            IncludedDocumentsPage(index)
+        }.orRecover
     }.orRecover
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =

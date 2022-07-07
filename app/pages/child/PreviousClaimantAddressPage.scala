@@ -17,6 +17,7 @@
 package pages.child
 
 import controllers.child.routes
+import models.ChildBirthRegistrationCountry._
 import models.{Address, Index, UserAnswers}
 import pages.{Page, Waypoints}
 import play.api.libs.json.JsPath
@@ -32,5 +33,11 @@ final case class PreviousClaimantAddressPage(index: Index) extends ChildQuestion
     routes.PreviousClaimantAddressController.onPageLoad(waypoints, index)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    AdoptingChildPage(index)
+    answers.get(ChildBirthRegistrationCountryPage(index)).map {
+      case England | Wales | Scotland =>
+        CheckChildDetailsPage(index)
+
+      case Other | Unknown =>
+        IncludedDocumentsPage(index)
+    }.orRecover
 }

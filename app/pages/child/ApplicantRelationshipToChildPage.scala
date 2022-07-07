@@ -17,10 +17,13 @@
 package pages.child
 
 import controllers.child.routes
+import models.ApplicantRelationshipToChild._
 import models.{ApplicantRelationshipToChild, Index, UserAnswers}
 import pages.{Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+
+import scala.util.Try
 
 final case class ApplicantRelationshipToChildPage(index: Index) extends ChildQuestionPage[ApplicantRelationshipToChild] {
 
@@ -32,5 +35,18 @@ final case class ApplicantRelationshipToChildPage(index: Index) extends ChildQue
     routes.ApplicantRelationshipToChildController.onPageLoad(waypoints, index)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    AnyoneClaimedForChildBeforePage(index)
+    answers.get(this).map {
+      case AdoptingChild =>
+        AdoptingChildPage(index)
+
+      case _ =>
+        AnyoneClaimedForChildBeforePage(index)
+    }.orRecover
+
+  override def cleanup(value: Option[ApplicantRelationshipToChild], userAnswers: UserAnswers): Try[UserAnswers] =
+    if (value.contains(AdoptingChild)) {
+      super.cleanup(value, userAnswers)
+    } else {
+      userAnswers.remove(AdoptingChildPage(index))
+    }
 }
