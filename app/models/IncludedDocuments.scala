@@ -16,7 +16,7 @@
 
 package models
 
-import models.ApplicantRelationshipToChild.AdoptingChild
+import models.ApplicantRelationshipToChild.AdoptedChild
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -40,7 +40,7 @@ object IncludedDocuments extends Enumerable.Implicits {
 
   def values(relationshipToChild: ApplicantRelationshipToChild): Seq[IncludedDocuments] = {
     relationshipToChild match {
-      case AdoptingChild =>
+      case AdoptedChild =>
         allValues
 
       case _ =>

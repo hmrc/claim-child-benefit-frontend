@@ -17,12 +17,12 @@
 package models
 
 import generators.ModelGenerators
-import models.ApplicantRelationshipToChild.AdoptingChild
+import models.ApplicantRelationshipToChild.AdoptedChild
 import org.scalacheck.Arbitrary.arbitrary
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import org.scalatest.OptionValues
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.libs.json.{JsError, JsString, Json}
 
 class IncludedDocumentsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues with ModelGenerators {
@@ -42,7 +42,7 @@ class IncludedDocumentsSpec extends AnyFreeSpec with Matchers with ScalaCheckPro
 
     "must fail to deserialise invalid values" in {
 
-      val gen = arbitrary[String] suchThat (!IncludedDocuments.values(AdoptingChild).map(_.toString).contains(_))
+      val gen = arbitrary[String] suchThat (!IncludedDocuments.values(AdoptedChild).map(_.toString).contains(_))
 
       forAll(gen) {
         invalidValue =>

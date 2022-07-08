@@ -17,7 +17,7 @@
 package forms.child
 
 import forms.behaviours.CheckboxFieldBehaviours
-import models.ApplicantRelationshipToChild.{AdoptingChild, BirthChild}
+import models.ApplicantRelationshipToChild.{AdoptedChild, AdoptingChild, BirthChild}
 import models.IncludedDocuments.AdoptionCertificate
 import models.{ChildName, IncludedDocuments}
 import play.api.data.FormError
@@ -34,7 +34,7 @@ class IncludedDocumentsFormProviderSpec extends CheckboxFieldBehaviours {
 
     "must bind all valid values passed to the form provider" in {
 
-      val allValues = IncludedDocuments.values(AdoptingChild)
+      val allValues = IncludedDocuments.values(AdoptedChild)
       val form      = formProvider(childName, allValues)
 
       for {
@@ -79,29 +79,3 @@ class IncludedDocumentsFormProviderSpec extends CheckboxFieldBehaviours {
     }
   }
 }
-
-/*
-
-
-    "fail to bind when the answer is invalid" in {
-      val data = Map(
-        s"$fieldName[0]" -> "invalid value"
-      )
-      form.bind(data).errors must contain(invalidError)
-    }
-
-
-
-        "fail to bind when no answers are selected" in {
-      val data = Map.empty[String, String]
-      val errorArgs = if (args.isEmpty) Nil else Seq(args)
-      form.bind(data).errors must contain(FormError(s"$fieldName", requiredKey, errorArgs))
-    }
-
-    "fail to bind when blank answer provided" in {
-      val data = Map(
-        s"$fieldName[0]" -> ""
-      )
-      form.bind(data).errors must contain(FormError(s"$fieldName[0]", requiredKey, args))
-    }
- */

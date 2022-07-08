@@ -29,7 +29,6 @@ class IncludedDocumentsFormProvider @Inject() extends Mappings {
   def apply(childName: ChildName, allowedValues: Seq[IncludedDocuments]): Form[Set[IncludedDocuments]] =
     Form(
       "value" -> set(enumerable[IncludedDocuments]("includedDocuments.error.required", args = Seq(childName.safeFirstName)))
-        .verifying(nonEmptySet("includedDocuments.error.required", args = childName.safeFirstName))
         .verifying(validAnswer(childName, allowedValues.toSet))
     )
 

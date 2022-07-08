@@ -24,7 +24,7 @@ import models.{ChildName, IncludedDocuments}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.child.{ChildNamePage, IncludedDocumentsPage}
+import pages.child.{ApplicantRelationshipToChildPage, ChildNamePage, IncludedDocumentsPage}
 import pages.{EmptyWaypoints, child}
 import play.api.inject.bind
 import play.api.test.FakeRequest
@@ -40,11 +40,14 @@ class IncludedDocumentsControllerSpec extends SpecBase with MockitoSugar {
 
   private lazy val includedDocumentsRoute = routes.IncludedDocumentsController.onPageLoad(waypoints, index).url
 
-  private val childName = ChildName("first", None, "last")
-  private val baseAnswers = emptyUserAnswers.set(ChildNamePage(index), childName).success.value
-
+  private val childName           = ChildName("first", None, "last")
   private val relationshipToChild = BirthChild
-  private val allowedValues = IncludedDocuments.values(relationshipToChild)
+  private val allowedValues       = IncludedDocuments.values(relationshipToChild)
+
+  private val baseAnswers =
+    emptyUserAnswers
+      .set(ChildNamePage(index), childName).success.value
+      .set(ApplicantRelationshipToChildPage(index), relationshipToChild).success.value
 
   private val formProvider = new IncludedDocumentsFormProvider()
   private val form = formProvider(childName, allowedValues)
