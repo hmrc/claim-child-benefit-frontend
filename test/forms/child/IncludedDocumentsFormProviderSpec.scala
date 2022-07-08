@@ -17,33 +17,65 @@
 package forms.child
 
 import forms.behaviours.CheckboxFieldBehaviours
+import models.ApplicantRelationshipToChild.{AdoptedChild, AdoptingChild, BirthChild}
+import models.IncludedDocuments.AdoptionCertificate
 import models.{ChildName, IncludedDocuments}
-import pages.child.ChildNamePage
 import play.api.data.FormError
 
 class IncludedDocumentsFormProviderSpec extends CheckboxFieldBehaviours {
 
   private val childName = ChildName("first", None, "last")
-
-  val form = new IncludedDocumentsFormProvider()(childName)
+  val formProvider = new IncludedDocumentsFormProvider()
 
   ".value" - {
 
-    val fieldName = "value"
+    val fieldName   = "value"
     val requiredKey = "includedDocuments.error.required"
 
-    behave like checkboxField[IncludedDocuments](
-      form,
-      fieldName,
-      validValues  = IncludedDocuments.values,
-      invalidError = FormError(s"$fieldName[0]", "error.invalid", Seq(childName.safeFirstName))
-    )
+    "must bind all valid values passed to the form provider" in {
 
-    behave like mandatoryCheckboxField(
-      form,
-      fieldName,
-      requiredKey,
-      Seq(childName.safeFirstName)
-    )
+      val allValues = IncludedDocuments.values(AdoptedChild)
+      val form      = formProvider(childName, allValues)
+
+      for {
+        (value, i) <- allValues.zipWithIndex
+      } yield {
+        val data = Map(s"$fieldName[$i]" -> value.toString)
+
+        val result = form.bind(data)
+        result.value.value mustEqual Set(value)
+        result.errors mustBe empty
+      }
+    }
+
+    "must not bind otherwise valid values that aren't passed to the form provider" in {
+
+      val limitedValues = IncludedDocuments.values(BirthChild)
+      val form          = formProvider(childName, limitedValues)
+
+      val data = Map(s"$fieldName[0]" -> AdoptionCertificate.toString)
+      val result = form.bind(data)
+      result.errors must contain(FormError(fieldName, requiredKey, args = Seq(childName.safeFirstName)))
+    }
+
+    "must not bind invalid values" in {
+
+      val allValues = IncludedDocuments.values(AdoptingChild)
+      val form      = formProvider(childName, allValues)
+
+      val data = Map(s"$fieldName[0]" -> "invalid value")
+      val result = form.bind(data)
+      result.errors must contain(FormError(s"$fieldName[0]", "error.invalid", args = Seq(childName.safeFirstName)))
+    }
+
+    "must not bind when no options are selected" in {
+
+      val allValues = IncludedDocuments.values(AdoptingChild)
+      val form      = formProvider(childName, allValues)
+
+      val data = Map.empty[String, String]
+      val result = form.bind(data)
+      result.errors must contain(FormError(fieldName, requiredKey, args = Seq(childName.safeFirstName)))
+    }
   }
 }

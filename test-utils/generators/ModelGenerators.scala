@@ -16,6 +16,7 @@
 
 package generators
 
+import models.ApplicantRelationshipToChild.AdoptingChild
 import models._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.{Arbitrary, Gen}
@@ -35,7 +36,7 @@ trait ModelGenerators {
 
   implicit lazy val arbitraryIncludedDocuments: Arbitrary[IncludedDocuments] =
     Arbitrary {
-      Gen.oneOf(IncludedDocuments.values)
+      Gen.oneOf(IncludedDocuments.values(AdoptingChild))
     }
 
   implicit lazy val arbitraryChildScottishBirthCertificateDetails: Arbitrary[ChildScottishBirthCertificateDetails] =
