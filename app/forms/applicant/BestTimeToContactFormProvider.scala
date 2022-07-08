@@ -19,13 +19,15 @@ package forms.applicant
 import forms.mappings.Mappings
 import models.BestTimeToContact
 import play.api.data.Form
+import play.api.data.Forms.set
 
 import javax.inject.Inject
 
 class BestTimeToContactFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[BestTimeToContact] =
+  def apply(): Form[Set[BestTimeToContact]] =
     Form(
-      "value" -> enumerable[BestTimeToContact]("bestTimeToContact.error.required")
+      "value" -> set(enumerable[BestTimeToContact]("bestTimeToContact.error.required"))
+                  .verifying(nonEmptySet("bestTimeToContact.error.required"))
     )
 }

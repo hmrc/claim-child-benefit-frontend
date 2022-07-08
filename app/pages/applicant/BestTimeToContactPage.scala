@@ -22,7 +22,7 @@ import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object BestTimeToContactPage extends QuestionPage[BestTimeToContact] {
+case object BestTimeToContactPage extends QuestionPage[Set[BestTimeToContact]] {
 
   override def path: JsPath = JsPath \ toString
 

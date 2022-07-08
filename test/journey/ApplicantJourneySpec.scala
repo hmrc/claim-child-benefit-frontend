@@ -45,7 +45,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
           submitAnswer(ApplicantCurrentAddressPage, address),
           submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
           submitAnswer(ApplicantPhoneNumberPage, "07777 7777777"),
-          submitAnswer(BestTimeToContactPage, BestTimeToContact.Morning),
+          submitAnswer(BestTimeToContactPage, Set[BestTimeToContact](BestTimeToContact.Morning)),
           submitAnswer(ApplicantNationalityPage, "nationality"),
           pageMustBe(ApplicantEmploymentStatusPage)
         )
