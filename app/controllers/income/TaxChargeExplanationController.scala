@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package controllers.payments
+package controllers.income
 
 import controllers.actions._
 import pages.Waypoints
-import pages.payments.TaxChargeExplanationPage
+import pages.income.TaxChargeExplanationPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.payments.TaxChargeExplanationView
+import views.html.income.TaxChargeExplanationView
 
 import javax.inject.Inject
 

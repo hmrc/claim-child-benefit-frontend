@@ -23,7 +23,7 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.freespec.AnyFreeSpec
 import pages.RelationshipStatusPage
 import pages.applicant.ApplicantHasPreviousFamilyNamePage
-import pages.income.ApplicantOrPartnerBenefitsPage
+import pages.income.{ApplicantOrPartnerBenefitsPage, TaxChargeExplanationPage}
 import pages.payments._
 
 import java.time.LocalDate
@@ -34,13 +34,11 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
 
   "users who have not claimed Child Benefit before" - {
 
-    "must be shown the tax charge explanation and asked if they want to be paid Child Benefit" in {
+    "must be asked if they want to be paid Child Benefit" in {
 
       startingFrom(ClaimedChildBenefitBeforePage)
         .run(
           submitAnswer(ClaimedChildBenefitBeforePage, false),
-          pageMustBe(TaxChargeExplanationPage),
-          next,
           pageMustBe(WantToBePaidPage)
         )
     }
@@ -50,14 +48,12 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
 
     "who are not currently entitled" - {
 
-      "must be shown the tax charge explanation and asked if they want to be paid Child Benefit" in {
+      "must be asked if they want to be paid Child Benefit" in {
 
         startingFrom(ClaimedChildBenefitBeforePage)
           .run(
             submitAnswer(ClaimedChildBenefitBeforePage, true),
             submitAnswer(CurrentlyEntitledToChildBenefitPage, false),
-            pageMustBe(TaxChargeExplanationPage),
-            next,
             pageMustBe(WantToBePaidPage)
           )
       }
@@ -65,15 +61,13 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
 
     "who are currently entitled but not currently receiving Child Benefit" - {
 
-      "must be shown the tax charge explanation and asked if they want to be paid Child Benefit" in {
+      "must be asked if they want to be paid Child Benefit" in {
 
         startingFrom(ClaimedChildBenefitBeforePage)
           .run(
             submitAnswer(ClaimedChildBenefitBeforePage, true),
             submitAnswer(CurrentlyEntitledToChildBenefitPage, true),
             submitAnswer(CurrentlyReceivingChildBenefitPage, false),
-            pageMustBe(TaxChargeExplanationPage),
-            next,
             pageMustBe(WantToBePaidPage)
           )
       }

@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package controllers.payments
+package controllers.income
 
 import base.SpecBase
 import pages.EmptyWaypoints
-import pages.payments.TaxChargeExplanationPage
+import pages.income.TaxChargeExplanationPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.payments.TaxChargeExplanationView
+import views.html.income.TaxChargeExplanationView
 
 class TaxChargeExplanationControllerSpec extends SpecBase {
 

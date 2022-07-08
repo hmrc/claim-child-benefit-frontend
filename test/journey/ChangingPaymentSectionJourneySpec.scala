@@ -23,7 +23,7 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import pages.applicant.ApplicantHasPreviousFamilyNamePage
-import pages.income.ApplicantOrPartnerBenefitsPage
+import pages.income.{ApplicantOrPartnerBenefitsPage, TaxChargeExplanationPage}
 import pages.payments._
 import pages.{CheckYourAnswersPage, RelationshipStatusPage}
 
@@ -39,7 +39,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
 
     "and were currently entitled" - {
 
-      "changing to say they are not entitled must remove eldest child details and `want to be paid to existing account`, show the Tax Charge explanation and ask if they want to be paid" in {
+      "changing to say they are not entitled must remove eldest child details and `want to be paid to existing account`, and ask if they want to be paid" in {
 
         val initialise = journeyOf(
           submitAnswer(ClaimedChildBenefitBeforePage, true),
@@ -56,8 +56,6 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             initialise,
             goToChangeAnswer(CurrentlyEntitledToChildBenefitPage),
             submitAnswer(CurrentlyEntitledToChildBenefitPage, false),
-            pageMustBe(TaxChargeExplanationPage),
-            next,
             pageMustBe(WantToBePaidPage),
             answersMustNotContain(EldestChildNamePage),
             answersMustNotContain(EldestChildDateOfBirthPage),
@@ -77,15 +75,13 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
           goTo(CheckYourAnswersPage)
         )
 
-        "changing to say they are not currently receiving Child Benefit must remove the relevant questions, show the Tax Charge explanation, then ask if the user want to be paid" in {
+        "changing to say they are not currently receiving Child Benefit must remove the relevant questions, then ask if the user want to be paid" in {
 
           startingFrom(ClaimedChildBenefitBeforePage)
             .run(
               initialise,
               goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
               submitAnswer(CurrentlyReceivingChildBenefitPage, false),
-              pageMustBe(TaxChargeExplanationPage),
-              next,
               pageMustBe(WantToBePaidPage),
               answersMustNotContain(EldestChildNamePage),
               answersMustNotContain(EldestChildDateOfBirthPage),
@@ -93,15 +89,13 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             )
         }
 
-        "changing `claimed before` to no must remove the relevant questions, show the Tax Charge explanation, then ask if the user wants to be paid" in {
+        "changing `claimed before` to no must remove the relevant questions, then ask if the user wants to be paid" in {
 
           startingFrom(ClaimedChildBenefitBeforePage)
             .run(
               initialise,
               goToChangeAnswer(ClaimedChildBenefitBeforePage),
               submitAnswer(ClaimedChildBenefitBeforePage, false),
-              pageMustBe(TaxChargeExplanationPage),
-              next,
               pageMustBe(WantToBePaidPage),
               answersMustNotContain(CurrentlyEntitledToChildBenefitPage),
               answersMustNotContain(CurrentlyReceivingChildBenefitPage),
@@ -162,8 +156,6 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
           submitAnswer(ClaimedChildBenefitBeforePage, true),
           submitAnswer(CurrentlyEntitledToChildBenefitPage, true),
           submitAnswer(CurrentlyReceivingChildBenefitPage, false),
-          pageMustBe(TaxChargeExplanationPage),
-          next,
           submitAnswer(WantToBePaidPage, true),
           submitAnswer(WantToBePaidWeeklyPage, true),
           submitAnswer(ApplicantHasSuitableAccountPage, true),
@@ -207,8 +199,6 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
         setUserAnswerTo(RelationshipStatusPage, RelationshipStatus.Single),
         submitAnswer(ClaimedChildBenefitBeforePage, true),
         submitAnswer(CurrentlyEntitledToChildBenefitPage, false),
-        pageMustBe(TaxChargeExplanationPage),
-        next,
         submitAnswer(WantToBePaidPage, true),
         submitAnswer(WantToBePaidWeeklyPage, true),
         goTo(CheckYourAnswersPage)
@@ -260,7 +250,6 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             val initialise = journeyOf(
               setUserAnswerTo(RelationshipStatusPage, Single),
               submitAnswer(ClaimedChildBenefitBeforePage, false),
-              next,
               submitAnswer(WantToBePaidPage, true),
               submitAnswer(WantToBePaidWeeklyPage, true),
               goTo(CheckYourAnswersPage)
@@ -289,7 +278,6 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             val initialise = journeyOf(
               setUserAnswerTo(RelationshipStatusPage, Single),
               submitAnswer(ClaimedChildBenefitBeforePage, false),
-              next,
               submitAnswer(WantToBePaidPage, true),
               submitAnswer(WantToBePaidWeeklyPage, true),
               goTo(CheckYourAnswersPage)
@@ -315,7 +303,6 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
           val initialise = journeyOf(
             setUserAnswerTo(RelationshipStatusPage, Single),
             submitAnswer(ClaimedChildBenefitBeforePage, false),
-            next,
             submitAnswer(WantToBePaidPage, true),
             submitAnswer(WantToBePaidWeeklyPage, true),
             goTo(CheckYourAnswersPage)
@@ -344,7 +331,6 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             val initialise = journeyOf(
               setUserAnswerTo(RelationshipStatusPage, status),
               submitAnswer(ClaimedChildBenefitBeforePage, false),
-              next,
               submitAnswer(WantToBePaidPage, false),
               goTo(CheckYourAnswersPage)
             )
@@ -375,7 +361,6 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
                 setUserAnswerTo(RelationshipStatusPage, status),
                 setUserAnswerTo(ApplicantOrPartnerBenefitsPage, benefits),
                 submitAnswer(ClaimedChildBenefitBeforePage, false),
-                next,
                 submitAnswer(WantToBePaidPage, false),
                 goTo(CheckYourAnswersPage)
               )
@@ -404,7 +389,6 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
                 setUserAnswerTo(RelationshipStatusPage, status),
                 setUserAnswerTo(ApplicantOrPartnerBenefitsPage, benefits),
                 submitAnswer(ClaimedChildBenefitBeforePage, false),
-                next,
                 submitAnswer(WantToBePaidPage, false),
                 goTo(CheckYourAnswersPage)
               )
@@ -430,7 +414,6 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
           setUserAnswerTo(RelationshipStatusPage, Single),
           setUserAnswerTo(ApplicantOrPartnerBenefitsPage, benefits),
           submitAnswer(ClaimedChildBenefitBeforePage, false),
-          next,
           submitAnswer(WantToBePaidPage, true),
           submitAnswer(WantToBePaidWeeklyPage, arbitrary[Boolean].sample.value),
           submitAnswer(ApplicantHasSuitableAccountPage, true),
