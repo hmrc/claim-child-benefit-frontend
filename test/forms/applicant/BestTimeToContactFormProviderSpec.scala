@@ -16,11 +16,11 @@
 
 package forms.applicant
 
-import forms.behaviours.OptionFieldBehaviours
+import forms.behaviours.CheckboxFieldBehaviours
 import models.BestTimeToContact
 import play.api.data.FormError
 
-class BestTimeToContactFormProviderSpec extends OptionFieldBehaviours {
+class BestTimeToContactFormProviderSpec extends CheckboxFieldBehaviours {
 
   val form = new BestTimeToContactFormProvider()()
 
@@ -29,17 +29,17 @@ class BestTimeToContactFormProviderSpec extends OptionFieldBehaviours {
     val fieldName = "value"
     val requiredKey = "bestTimeToContact.error.required"
 
-    behave like optionsField[BestTimeToContact](
+    behave like checkboxField[BestTimeToContact](
       form,
       fieldName,
       validValues  = BestTimeToContact.values,
-      invalidError = FormError(fieldName, "error.invalid")
+      invalidError = FormError(s"$fieldName[0]", "error.invalid")
     )
 
-    behave like mandatoryField(
+    behave like mandatoryCheckboxField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredKey
     )
   }
 }

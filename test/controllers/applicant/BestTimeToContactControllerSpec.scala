@@ -39,7 +39,7 @@ class BestTimeToContactControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new BestTimeToContactFormProvider()
   val form = formProvider()
-  val validAnswer = BestTimeToContact.values.head
+  val validAnswer = Set(BestTimeToContact.values.head)
 
   lazy val bestTimeToContactRoute = routes.BestTimeToContactController.onPageLoad(waypoints).url
 
@@ -95,7 +95,7 @@ class BestTimeToContactControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, bestTimeToContactRoute)
-            .withFormUrlEncodedBody(("value", validAnswer.toString))
+            .withFormUrlEncodedBody(("value[0]", BestTimeToContact.values.head.toString))
 
         val result = route(application, request).value
         val expectedAnswers = emptyUserAnswers.set(BestTimeToContactPage, validAnswer).success.value

@@ -31,13 +31,17 @@ object BestTimeToContactSummary  {
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
     answers.get(BestTimeToContactPage).map {
-      answer =>
+      answers =>
 
         val value = ValueViewModel(
           HtmlContent(
-            HtmlFormat.escape(messages(s"bestTimeToContact.$answer"))
+            answers.map {
+              answer => HtmlFormat.escape(messages(s"bestTimeToContact.$answer")).toString
+            }
+              .mkString(",<br>")
           )
         )
+
 
         SummaryListRowViewModel(
           key     = "bestTimeToContact.checkYourAnswersLabel",

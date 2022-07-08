@@ -17,8 +17,9 @@
 package models
 
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
+import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import viewmodels.govuk.checkbox._
 
 sealed trait BestTimeToContact
 
@@ -32,14 +33,16 @@ object BestTimeToContact extends Enumerable.Implicits {
     Morning, Afternoon, Evening
   )
 
-  def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
-    case (value, index) =>
-      RadioItem(
-        content = Text(messages(s"bestTimeToContact.${value.toString}")),
-        value   = Some(value.toString),
-        id      = Some(s"value_$index")
-      )
-  }
+  def checkboxItems(implicit messages: Messages): Seq[CheckboxItem] =
+    values.zipWithIndex.map {
+      case (value, index) =>
+        CheckboxItemViewModel(
+          content = Text(messages(s"bestTimeToContact.${value.toString}")),
+          fieldId = "value",
+          index = index,
+          value = value.toString
+        )
+    }
 
   implicit val enumerable: Enumerable[BestTimeToContact] =
     Enumerable(values.map(v => v.toString -> v): _*)
