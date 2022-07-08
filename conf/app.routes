@@ -40,6 +40,9 @@ POST       /applicantOrPartnerIncomeOver50k                        controllers.i
 GET        /applicantOrPartnerIncomeOver60k                        controllers.income.ApplicantOrPartnerIncomeOver60kController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /applicantOrPartnerIncomeOver60k                        controllers.income.ApplicantOrPartnerIncomeOver60kController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
+GET        /taxChargeExplanation                       controllers.income.TaxChargeExplanationController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /taxChargeExplanation                       controllers.income.TaxChargeExplanationController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 # Payments section
 GET        /applicantHasSuitableAccount                        controllers.payments.ApplicantHasSuitableAccountController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /applicantHasSuitableAccount                        controllers.payments.ApplicantHasSuitableAccountController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
@@ -61,9 +64,6 @@ POST       /eldestChildDateOfBirth                  controllers.payments.EldestC
 
 GET        /eldestChildName                        controllers.payments.EldestChildNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /eldestChildName                        controllers.payments.EldestChildNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /taxChargeExplanation                       controllers.payments.TaxChargeExplanationController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /taxChargeExplanation                       controllers.payments.TaxChargeExplanationController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /wantToBePaid                        controllers.payments.WantToBePaidController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /wantToBePaid                        controllers.payments.WantToBePaidController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

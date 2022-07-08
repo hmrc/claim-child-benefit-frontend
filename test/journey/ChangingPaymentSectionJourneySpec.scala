@@ -23,7 +23,7 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import pages.applicant.ApplicantHasPreviousFamilyNamePage
-import pages.income.ApplicantOrPartnerBenefitsPage
+import pages.income.{ApplicantOrPartnerBenefitsPage, TaxChargeExplanationPage}
 import pages.payments._
 import pages.{CheckYourAnswersPage, RelationshipStatusPage}
 

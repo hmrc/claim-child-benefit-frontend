@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package pages.payments
+package pages.income
 
-import controllers.payments.routes
+import controllers.income.routes
 import models.UserAnswers
+import pages.payments.WantToBePaidPage
 import pages.{Page, Waypoints}
 import play.api.mvc.Call
 

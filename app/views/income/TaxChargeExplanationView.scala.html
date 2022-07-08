@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import controllers.payments.routes
+@import controllers.income.routes
 
 @this(
         layout: templates.Layout,
@@ -31,7 +31,7 @@
 
             @h1WithCaption(
                 content = messages("taxChargeExplanation.heading"),
-                caption = messages("section.payments")
+                caption = messages("section.income")
             )
             @govukButton(
                 ButtonViewModel(messages("site.continue"))

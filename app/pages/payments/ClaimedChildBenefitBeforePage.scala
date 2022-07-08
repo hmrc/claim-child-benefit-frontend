@@ -18,6 +18,7 @@ package pages.payments
 
 import controllers.payments.routes
 import models.UserAnswers
+import pages.income.TaxChargeExplanationPage
 import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
