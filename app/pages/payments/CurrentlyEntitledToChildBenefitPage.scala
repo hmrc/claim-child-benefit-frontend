@@ -18,8 +18,7 @@ package pages.payments
 
 import controllers.payments.routes
 import models.UserAnswers
-import pages.income.TaxChargeExplanationPage
-import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
+import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -36,21 +35,8 @@ case object CurrentlyEntitledToChildBenefitPage extends QuestionPage[Boolean] {
 
   override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
-      case true => CurrentlyReceivingChildBenefitPage
-      case false => TaxChargeExplanationPage
-    }.orRecover
-
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case true =>
-        answers.get(CurrentlyReceivingChildBenefitPage)
-          .map(_ => waypoints.next.page)
-          .getOrElse(CurrentlyReceivingChildBenefitPage)
-
-      case false =>
-        answers.get(WantToBePaidPage)
-          .map(_ => waypoints.next.page)
-          .getOrElse(TaxChargeExplanationPage)
+      case true  => CurrentlyReceivingChildBenefitPage
+      case false => WantToBePaidPage
     }.orRecover
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =

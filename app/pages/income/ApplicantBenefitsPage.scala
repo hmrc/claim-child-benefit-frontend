@@ -33,5 +33,5 @@ case object ApplicantBenefitsPage extends QuestionPage[Set[Benefits]] {
     routes.ApplicantBenefitsController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ClaimedChildBenefitBeforePage
+    TaxChargeExplanationPage
 }

@@ -34,13 +34,11 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
 
   "users who have not claimed Child Benefit before" - {
 
-    "must be shown the tax charge explanation and asked if they want to be paid Child Benefit" in {
+    "must be asked if they want to be paid Child Benefit" in {
 
       startingFrom(ClaimedChildBenefitBeforePage)
         .run(
           submitAnswer(ClaimedChildBenefitBeforePage, false),
-          pageMustBe(TaxChargeExplanationPage),
-          next,
           pageMustBe(WantToBePaidPage)
         )
     }
@@ -50,14 +48,12 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
 
     "who are not currently entitled" - {
 
-      "must be shown the tax charge explanation and asked if they want to be paid Child Benefit" in {
+      "must be asked if they want to be paid Child Benefit" in {
 
         startingFrom(ClaimedChildBenefitBeforePage)
           .run(
             submitAnswer(ClaimedChildBenefitBeforePage, true),
             submitAnswer(CurrentlyEntitledToChildBenefitPage, false),
-            pageMustBe(TaxChargeExplanationPage),
-            next,
             pageMustBe(WantToBePaidPage)
           )
       }
@@ -65,15 +61,13 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
 
     "who are currently entitled but not currently receiving Child Benefit" - {
 
-      "must be shown the tax charge explanation and asked if they want to be paid Child Benefit" in {
+      "must be asked if they want to be paid Child Benefit" in {
 
         startingFrom(ClaimedChildBenefitBeforePage)
           .run(
             submitAnswer(ClaimedChildBenefitBeforePage, true),
             submitAnswer(CurrentlyEntitledToChildBenefitPage, true),
             submitAnswer(CurrentlyReceivingChildBenefitPage, false),
-            pageMustBe(TaxChargeExplanationPage),
-            next,
             pageMustBe(WantToBePaidPage)
           )
       }
