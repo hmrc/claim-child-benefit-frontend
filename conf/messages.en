@@ -476,19 +476,20 @@ partnerEldestChildName.change.hidden = {0}’s eldest child’s name
 
 partnerEmploymentStatus.title = What is your partner’s employment status?
 partnerEmploymentStatus.heading = What is {0}’s employment status?
-partnerEmploymentStatus.lookingForWork = Looking for work in the UK
-partnerEmploymentStatus.employed = Employed in the UK
-partnerEmploymentStatus.selfEmployed = Self-employed in the UK
-partnerEmploymentStatus.noneOfThese = None of these - they have enough money to support their family in the UK
+partnerEmploymentStatus.hint = Select all that apply
+partnerEmploymentStatus.lookingForWork = Looking for work
+partnerEmploymentStatus.employed = Employed
+partnerEmploymentStatus.selfEmployed = Self-employed
+partnerEmploymentStatus.noneOfThese = None of the above
 partnerEmploymentStatus.checkYourAnswersLabel = What is {0}’s employment status?
 partnerEmploymentStatus.error.required = Select {0}’s employment status
 partnerEmploymentStatus.change.hidden = {0}’s employment status
 
-partnerEntitledToChildBenefit.title = Is your partner entitled to Child Benefit now?
-partnerEntitledToChildBenefit.heading = Is {0} entitled to Child Benefit now?
-partnerEntitledToChildBenefit.checkYourAnswersLabel = Is {0} entitled to Child Benefit now?
-partnerEntitledToChildBenefit.error.required = Select yes if {0} is entitled to Child Benefit now
-partnerEntitledToChildBenefit.change.hidden = if {0} is entitled to Child Benefit now
+partnerEntitledToChildBenefit.title = Is your partner currently entitled to receive Child Benefit?
+partnerEntitledToChildBenefit.heading = Is {0} currently entitled to receive Child Benefit?
+partnerEntitledToChildBenefit.checkYourAnswersLabel = Is {0} currently entitled to receive Child Benefit?
+partnerEntitledToChildBenefit.error.required = Select yes if {0} is currently entitled to receive Child Benefit
+partnerEntitledToChildBenefit.change.hidden = if {0} is currently entitled to receive Child Benefit
 
 partnerName.title = What is your partner’s name?
 partnerName.heading = What is your partner’s name?
@@ -497,8 +498,8 @@ partnerName.firstName = First name
 partnerName.middleNames = Middle name(s)
 partnerName.lastName = Last name
 partnerName.checkYourAnswersLabel = What is your partner’s name?
-partnerName.error.firstName.required = Enter their first name
-partnerName.error.lastName.required = Enter their last name
+partnerName.error.firstName.required = Enter your partner’s first name
+partnerName.error.lastName.required = Enter your partner’s last name
 partnerName.error.title.length = Title must be 100 characters or less
 partnerName.error.firstName.length = First name must be 100 characters or less
 partnerName.error.middleNames.length = Middle name(s) must be 100 characters or less
@@ -507,6 +508,7 @@ partnerName.change.hidden = your partner’s name
 
 partnerNationality.title = What is your partner’s nationality?
 partnerNationality.heading = What is {0}’s nationality?
+partnerNationality.hint = This is shown on their passport if they have one, for example British, Irish, French, Polish
 partnerNationality.checkYourAnswersLabel = What is {0}’s nationality
 partnerNationality.error.required = Enter {0}’s nationality
 partnerNationality.error.length = Nationality must be 100 characters or less
@@ -514,7 +516,7 @@ partnerNationality.change.hidden = {0}’s nationality
 
 partnerNino.title = What is your partner’s National Insurance number?
 partnerNino.heading = What is {0}’s National Insurance number?
-partnerNino.hint = It is on your National Insurance card, benefit letter, payslip or P60. For example, QQ 12 34 56 C.
+partnerNino.hint = It’s on their National Insurance card, benefit letter, payslip or P60. For example, QQ 12 34 56 C.
 partnerNino.checkYourAnswersLabel = What is {0}’s National Insurance number?
 partnerNino.error.required = Enter {0}’s National Insurance number
 partnerNino.error.invalid = Enter the National Insurance number in the correct format
@@ -522,15 +524,16 @@ partnerNino.change.hidden = {0}’s National Insurance number
 
 partnerNinoKnown.title = Do you know your partner’s National Insurance number?
 partnerNinoKnown.heading = Do you know {0}’s National Insurance number?
+partnerNinoKnown.hint = It’s on their National Insurance card, benefit letter, payslip or P60.  For example, QQ 12 34 56 C.
 partnerNinoKnown.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
 partnerNinoKnown.error.required = Select yes if you know {0}’s National Insurance number
 partnerNinoKnown.change.hidden = if you know {0}’s National Insurance number
 
-partnerWaitingForEntitlementDecision.title = Is your partner waiting to hear if they are entitled to Child Benefit?
-partnerWaitingForEntitlementDecision.heading = Is {0} waiting to hear if they are entitled to Child Benefit?
-partnerWaitingForEntitlementDecision.checkYourAnswersLabel = Is {0} waiting to hear if they are entitled to Child Benefit?
-partnerWaitingForEntitlementDecision.error.required = Select yes if {0} is waiting to hear if they are entitled to Child Benefit
-partnerWaitingForEntitlementDecision.change.hidden = if {0} is waiting to hear if they are entitled to Child Benefit
+partnerWaitingForEntitlementDecision.title = Is your partner waiting to hear if they are entitled to receive Child Benefit?
+partnerWaitingForEntitlementDecision.heading = Is {0} waiting to hear if they are entitled to receive Child Benefit?
+partnerWaitingForEntitlementDecision.checkYourAnswersLabel = Is {0} waiting to hear if they are entitled to receive Child Benefit?
+partnerWaitingForEntitlementDecision.error.required = Select yes if {0} is waiting to hear if they are entitled to receive Child Benefit
+partnerWaitingForEntitlementDecision.change.hidden = if {0} is waiting to hear if they are entitled to receive Child Benefit
 
 addChild.title.plural = You have added {0} children
 addChild.title.singular = You have added 1 child
