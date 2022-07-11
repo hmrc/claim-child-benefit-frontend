@@ -76,7 +76,7 @@ class ApplicantRelationshipToChildController @Inject()(
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(ApplicantRelationshipToChildPage(index), value))
                 _ <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(ApplicantRelationshipToChildPage(index).navigate(waypoints, updatedAnswers).route)
+              } yield Redirect(ApplicantRelationshipToChildPage(index).navigate(waypoints, request.userAnswers, updatedAnswers).route)
           )
       }
   }

@@ -60,11 +60,14 @@ class EverLivedOrWorkedAbroadController @Inject()(
         formWithErrors =>
           Future.successful(BadRequest(view(formWithErrors, waypoints))),
 
-        value =>
+        value => {
+          val originalAnswers = request.userAnswers.getOrElse(UserAnswers(request.userId))
+
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(EverLivedOrWorkedAbroadPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(EverLivedOrWorkedAbroadPage.navigate(waypoints, updatedAnswers).route)
+            updatedAnswers <- Future.fromTry(originalAnswers.set(EverLivedOrWorkedAbroadPage, value))
+            _ <- sessionRepository.set(updatedAnswers)
+          } yield Redirect(EverLivedOrWorkedAbroadPage.navigate(waypoints, originalAnswers, updatedAnswers).route)
+        }
       )
   }
 }

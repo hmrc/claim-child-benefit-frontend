@@ -76,7 +76,7 @@ class ChildNameChangedByDeedPollController @Inject()(
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(ChildNameChangedByDeedPollPage(index), value))
                 _ <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(ChildNameChangedByDeedPollPage(index).navigate(waypoints, updatedAnswers).route)
+              } yield Redirect(ChildNameChangedByDeedPollPage(index).navigate(waypoints, request.userAnswers, updatedAnswers).route)
           )
       }
   }

@@ -65,7 +65,7 @@ class ChildNameController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(ChildNamePage(index), value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(ChildNamePage(index).navigate(waypoints, updatedAnswers).route)
+          } yield Redirect(ChildNamePage(index).navigate(waypoints, request.userAnswers, updatedAnswers).route)
       )
   }
 }

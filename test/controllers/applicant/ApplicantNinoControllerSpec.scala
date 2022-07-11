@@ -104,7 +104,7 @@ class ApplicantNinoControllerSpec extends SpecBase with MockitoSugar with Genera
         val expectedAnswers = emptyUserAnswers.set(ApplicantNinoPage, validAnswer).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ApplicantNinoPage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual ApplicantNinoPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }

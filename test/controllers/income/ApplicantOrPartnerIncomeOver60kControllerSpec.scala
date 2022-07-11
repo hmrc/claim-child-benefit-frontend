@@ -102,7 +102,7 @@ class ApplicantOrPartnerIncomeOver60kControllerSpec extends SpecBase with Mockit
         val expectedAnswers = emptyUserAnswers.set(ApplicantOrPartnerIncomeOver60kPage, true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ApplicantOrPartnerIncomeOver60kPage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual ApplicantOrPartnerIncomeOver60kPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }

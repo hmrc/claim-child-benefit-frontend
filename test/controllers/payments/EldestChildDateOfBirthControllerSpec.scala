@@ -109,7 +109,7 @@ class EldestChildDateOfBirthControllerSpec extends SpecBase with MockitoSugar {
         val expectedAnswers = baseAnswers.set(EldestChildDateOfBirthPage, validAnswer).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual EldestChildDateOfBirthPage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual EldestChildDateOfBirthPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }

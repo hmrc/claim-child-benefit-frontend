@@ -91,7 +91,7 @@ class $className$ControllerSpec extends SpecBase with MockitoSugar {
         val expectedAnswers = emptyUserAnswers.set($className$Page, validAnswer).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual $className$Page.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual $className$Page.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }

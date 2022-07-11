@@ -78,7 +78,7 @@ class PartnerWaitingForEntitlementDecisionController @Inject()(
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerWaitingForEntitlementDecisionPage, value))
                 _ <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(PartnerWaitingForEntitlementDecisionPage.navigate(waypoints, updatedAnswers).route)
+              } yield Redirect(PartnerWaitingForEntitlementDecisionPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
           )
       }
   }

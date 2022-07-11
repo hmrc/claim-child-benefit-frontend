@@ -104,7 +104,7 @@ class PartnerEntitledToChildBenefitControllerSpec extends SpecBase with MockitoS
         val expectedAnswers = baseAnswers.set(PartnerEntitledToChildBenefitPage, true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual PartnerEntitledToChildBenefitPage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual PartnerEntitledToChildBenefitPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }

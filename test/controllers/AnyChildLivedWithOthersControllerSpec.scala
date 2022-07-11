@@ -100,7 +100,7 @@ class AnyChildLivedWithOthersControllerSpec extends SpecBase with MockitoSugar {
         val expectedAnswers = emptyUserAnswers.set(AnyChildLivedWithOthersPage, true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual AnyChildLivedWithOthersPage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual AnyChildLivedWithOthersPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }

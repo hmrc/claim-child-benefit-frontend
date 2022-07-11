@@ -24,39 +24,42 @@ final case class PageAndWaypoints(page: Page, waypoints: Waypoints) {
 
   lazy val route: Call = page.route(waypoints)
   lazy val url: String = route.url
-
-  def next(answers: UserAnswers): PageAndWaypoints =
-    page.navigate(waypoints, answers)
 }
 
 trait Page {
-  def navigate(waypoints: Waypoints, answers: UserAnswers): PageAndWaypoints = {
-    val targetPage            = nextPage(waypoints, answers)
+  def navigate(waypoints: Waypoints, originalAnswers: UserAnswers, updatedAnswers: UserAnswers): PageAndWaypoints = {
+    val targetPage            = nextPage(waypoints, originalAnswers, updatedAnswers)
     val recalibratedWaypoints = waypoints.recalibrate(this, targetPage)
 
     PageAndWaypoints(targetPage, recalibratedWaypoints)
   }
 
-  protected def nextPage(waypoints: Waypoints, answers: UserAnswers): Page =
+  private def nextPage(waypoints: Waypoints, originalAnswers: UserAnswers, updatedAnswers: UserAnswers): Page =
     waypoints match {
       case EmptyWaypoints =>
-        nextPageNormalMode(waypoints, answers)
+        nextPageNormalMode(waypoints, originalAnswers, updatedAnswers)
 
       case b: NonEmptyWaypoints =>
         b.currentMode match {
-          case CheckMode  => nextPageCheckMode(b, answers)
-          case NormalMode => nextPageNormalMode(b, answers)
+          case CheckMode  => nextPageCheckMode(b, originalAnswers, updatedAnswers)
+          case NormalMode => nextPageNormalMode(b, originalAnswers, updatedAnswers)
         }
     }
 
+  protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, originalAnswers: UserAnswers, updatedAnswers: UserAnswers): Page =
+    nextPageCheckMode(waypoints, updatedAnswers)
+
   protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    nextPageNormalMode(waypoints, answers) match {
+    nextPageNormalMode(waypoints, answers, answers) match {
       case questionPage: Page with Gettable[_] =>
         if (answers.isDefined(questionPage)) waypoints.next.page else questionPage
 
       case otherPage =>
         otherPage
     }
+
+  protected def nextPageNormalMode(waypoints: Waypoints, originalAnswers: UserAnswers, updatedAnswers: UserAnswers): Page =
+    nextPageNormalMode(waypoints, updatedAnswers)
 
   protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     IndexPage

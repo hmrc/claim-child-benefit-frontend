@@ -102,7 +102,7 @@ class ChildHasPreviousNameControllerSpec extends SpecBase with MockitoSugar {
         val expectedAnswers = baseAnswers.set(child.ChildHasPreviousNamePage(index), true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual child.ChildHasPreviousNamePage(index).navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual child.ChildHasPreviousNamePage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }

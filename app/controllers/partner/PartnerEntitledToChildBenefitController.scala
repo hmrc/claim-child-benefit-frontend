@@ -78,7 +78,7 @@ class PartnerEntitledToChildBenefitController @Inject()(
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerEntitledToChildBenefitPage, value))
                 _ <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(PartnerEntitledToChildBenefitPage.navigate(waypoints, updatedAnswers).route)
+              } yield Redirect(PartnerEntitledToChildBenefitPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
           )
       }
   }

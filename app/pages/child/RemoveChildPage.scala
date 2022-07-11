@@ -18,7 +18,7 @@ package pages.child
 
 import controllers.child.routes
 import models.{Index, UserAnswers}
-import pages.{Page, QuestionPage, Waypoints}
+import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 import queries.DeriveNumberOfChildren
@@ -32,8 +32,14 @@ final case class RemoveChildPage(index: Index) extends QuestionPage[Boolean] {
   override def route(waypoints: Waypoints): Call =
     routes.RemoveChildController.onPageLoad(waypoints, index)
 
-  override protected def nextPage(waypoints: Waypoints, answers: UserAnswers): Page =
-    answers.get(DeriveNumberOfChildren).map {
+  override protected def nextPageNormalMode(waypoints: Waypoints, originalAnswers: UserAnswers): Page =
+    originalAnswers.get(DeriveNumberOfChildren).map {
+      case n if n > 0 => AddChildPage
+      case _ => ChildNamePage(Index(0))
+    }.getOrElse(ChildNamePage(Index(0)))
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, originalAnswers: UserAnswers): Page =
+    originalAnswers.get(DeriveNumberOfChildren).map {
       case n if n > 0 => AddChildPage
       case _ => ChildNamePage(Index(0))
     }.getOrElse(ChildNamePage(Index(0)))

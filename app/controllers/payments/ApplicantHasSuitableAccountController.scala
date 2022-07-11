@@ -64,7 +64,7 @@ class ApplicantHasSuitableAccountController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(ApplicantHasSuitableAccountPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(ApplicantHasSuitableAccountPage.navigate(waypoints, updatedAnswers).route)
+          } yield Redirect(ApplicantHasSuitableAccountPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
       )
   }
 }

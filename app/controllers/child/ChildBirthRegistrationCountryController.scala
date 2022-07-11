@@ -76,7 +76,7 @@ class ChildBirthRegistrationCountryController @Inject()(
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(ChildBirthRegistrationCountryPage(index), value))
                 _ <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(ChildBirthRegistrationCountryPage(index).navigate(waypoints, updatedAnswers).route)
+              } yield Redirect(ChildBirthRegistrationCountryPage(index).navigate(waypoints, request.userAnswers, updatedAnswers).route)
           )
       }
   }

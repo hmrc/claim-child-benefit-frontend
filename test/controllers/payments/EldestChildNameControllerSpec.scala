@@ -100,7 +100,7 @@ class EldestChildNameControllerSpec extends SpecBase with MockitoSugar {
         val expectedAnswers = emptyUserAnswers.set(EldestChildNamePage, validAnswer).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual EldestChildNamePage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual EldestChildNamePage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }

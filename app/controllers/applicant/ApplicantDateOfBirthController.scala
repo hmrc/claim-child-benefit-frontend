@@ -64,7 +64,7 @@ class ApplicantDateOfBirthController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(ApplicantDateOfBirthPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(ApplicantDateOfBirthPage.navigate(waypoints, updatedAnswers).route)
+          } yield Redirect(ApplicantDateOfBirthPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
       )
   }
 }

@@ -42,6 +42,6 @@ class TaxChargeExplanationController @Inject()(
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      Redirect(TaxChargeExplanationPage.navigate(waypoints, request.userAnswers).route)
+      Redirect(TaxChargeExplanationPage.navigate(waypoints, request.userAnswers, request.userAnswers).route)
   }
 }

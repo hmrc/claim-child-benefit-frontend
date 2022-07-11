@@ -103,7 +103,7 @@ class ChildBirthCertificateSystemNumberControllerSpec extends SpecBase with Mock
         val expectedAnswers = baseAnswers.set(child.ChildBirthCertificateSystemNumberPage(index), validAnswer).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual child.ChildBirthCertificateSystemNumberPage(index).navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual child.ChildBirthCertificateSystemNumberPage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }

@@ -65,6 +65,6 @@ class CheckChildDetailsController @Inject()(
 
   def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      Redirect(CheckChildDetailsPage(index).navigate(waypoints, request.userAnswers).route)
+      Redirect(CheckChildDetailsPage(index).navigate(waypoints, request.userAnswers, request.userAnswers).route)
   }
 }

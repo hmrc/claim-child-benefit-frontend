@@ -55,7 +55,7 @@ class TaxChargeExplanationControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual TaxChargeExplanationPage.navigate(waypoints, emptyUserAnswers).route.url
+        redirectLocation(result).value mustEqual TaxChargeExplanationPage.navigate(waypoints, emptyUserAnswers, emptyUserAnswers).route.url
       }
     }
   }

@@ -67,7 +67,7 @@ class SeparationDateController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(SeparationDatePage, value))
             _ <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(SeparationDatePage.navigate(waypoints, updatedAnswers).route)
+          } yield Redirect(SeparationDatePage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
       )
   }
 }

@@ -64,7 +64,7 @@ class WantToBePaidWeeklyController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(WantToBePaidWeeklyPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(WantToBePaidWeeklyPage.navigate(waypoints, updatedAnswers).route)
+          } yield Redirect(WantToBePaidWeeklyPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
       )
   }
 }

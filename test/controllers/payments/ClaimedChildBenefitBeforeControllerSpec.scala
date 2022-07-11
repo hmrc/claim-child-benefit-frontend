@@ -102,7 +102,7 @@ class ClaimedChildBenefitBeforeControllerSpec extends SpecBase with MockitoSugar
         val expectedAnswers = emptyUserAnswers.set(ClaimedChildBenefitBeforePage, true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ClaimedChildBenefitBeforePage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual ClaimedChildBenefitBeforePage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }
