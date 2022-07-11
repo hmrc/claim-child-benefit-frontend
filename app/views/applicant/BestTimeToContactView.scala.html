@@ -34,6 +34,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
 
+
         @govukCheckboxes(
             CheckboxesViewModel(
                 form   = form,
@@ -43,7 +44,7 @@
                     caption = HmrcSectionCaption(messages("section.applicant"))
                 ),
                 items  = BestTimeToContact.checkboxItems
-            )
+            ).withHint(HintViewModel(messages("bestTimeToContact.hint")))
         )
 
         @govukButton(

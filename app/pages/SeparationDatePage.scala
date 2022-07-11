@@ -31,7 +31,7 @@ case object SeparationDatePage extends QuestionPage[LocalDate] {
   override def toString: String = "separationStatusDate"
 
   override def route(waypoints: Waypoints): Call =
-    routes.CohabitationDateController.onPageLoad(waypoints)
+    routes.SeparationDateController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     ApplicantIncomeOver50kPage

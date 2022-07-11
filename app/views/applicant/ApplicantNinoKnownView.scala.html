@@ -41,7 +41,7 @@
                     content = messages("applicantNinoKnown.heading"),
                     caption = HmrcSectionCaption(messages("section.applicant"))
                 )
-            )
+            ).withHint(HintViewModel(messages("applicantNinoKnown.hint")))
         )
 
         @govukButton(

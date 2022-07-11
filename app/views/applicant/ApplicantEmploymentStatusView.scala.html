@@ -43,7 +43,7 @@
                     caption = HmrcSectionCaption(messages("section.applicant"))
                 ),
                 items  = ApplicantEmploymentStatus.checkboxItems
-            )
+            ).withHint(HintViewModel(messages("applicantEmploymentStatus.hint")))
         )
 
         @govukButton(

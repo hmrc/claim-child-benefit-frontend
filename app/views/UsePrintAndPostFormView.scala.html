@@ -16,12 +16,35 @@
 
 @this(
         layout: templates.Layout,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        govukPanel : GovukPanel,
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("usePrintAndPostForm.title"))) {
+@layout(pageTitle = titleNoForm(messages("usePrintAndPostForm.title")), showBackLink = false) {
 
-    <h1 class="govuk-heading-xl">@messages("usePrintAndPostForm.heading")</h1>
+    @govukPanel(Panel(title = messages("usePrintAndPostForm.heading")))
+
+    <p class="govuk-body">
+        @messages("usePrintAndPostForm.p1")
+    </p>
+
+    <p class="govuk-body">
+        @messages("usePrintAndPostForm.p2") <a href="@messages("usePrintAndPostForm.p2.link.href")" class="govuk-link">@messages("usePrintAndPostForm.p2.link.text")</a>.
+    </p>
+
+    <p class="govuk-body">
+        @messages("usePrintAndPostForm.p3.1")
+        <a href="@messages("usePrintAndPostForm.p3.link.href")" class="govuk-link">@messages("usePrintAndPostForm.p3.link.text")</a>
+        @messages("usePrintAndPostForm.p3.2")
+    </p>
+
+    <p class="govuk-body">
+        @messages("usePrintAndPostForm.p4") <a href="@messages("usePrintAndPostForm.p4.link.href")" class="govuk-link">@messages("usePrintAndPostForm.p4.link.text")</a>.
+    </p>
+
+    <p class="govuk-body">
+        @messages("usePrintAndPostForm.p5") <a href="@routes.EverLivedOrWorkedAbroadController.onPageLoad()" class="govuk-link">@messages("usePrintAndPostForm.p5.link.text")</a>.
+    </p>
 }
