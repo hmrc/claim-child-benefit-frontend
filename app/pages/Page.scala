@@ -24,9 +24,6 @@ final case class PageAndWaypoints(page: Page, waypoints: Waypoints) {
 
   lazy val route: Call = page.route(waypoints)
   lazy val url: String = route.url
-
-//  def next(answers: UserAnswers): PageAndWaypoints =
-//    page.navigate(waypoints, answers)
 }
 
 trait Page {
