@@ -43,6 +43,9 @@ POST       /applicantOrPartnerIncomeOver60k                        controllers.i
 GET        /taxChargeExplanation                       controllers.income.TaxChargeExplanationController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /taxChargeExplanation                       controllers.income.TaxChargeExplanationController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
+GET        /cannotBePaidWeekly                       controllers.CannotBePaidWeeklyController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /cannotBePaidWeekly                       controllers.CannotBePaidWeeklyController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 # Payments section
 GET        /applicantHasSuitableAccount                        controllers.payments.ApplicantHasSuitableAccountController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /applicantHasSuitableAccount                        controllers.payments.ApplicantHasSuitableAccountController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
