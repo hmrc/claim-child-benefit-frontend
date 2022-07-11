@@ -207,11 +207,11 @@ applicantOrPartnerIncomeOver60k.checkYourAnswersLabel = Is your or your partner�
 applicantOrPartnerIncomeOver60k.error.required = Select yes if your or your partner’s income is over £60,000 per year
 applicantOrPartnerIncomeOver60k.change.hidden = if your or your partner’s income is over £60,000 per year
 
-applicantHasSuitableAccount.title = Do you have an account that Child Benefit can be paid into?
-applicantHasSuitableAccount.heading = Do you have an account that Child Benefit can be paid into?
-applicantHasSuitableAccount.checkYourAnswersLabel = Do you have an account that Child Benefit can be paid into?
-applicantHasSuitableAccount.error.required = Select yes if you have an account that Child Benefit can be paid into
-applicantHasSuitableAccount.change.hidden = if you have an account that Child Benefit can be paid into
+applicantHasSuitableAccount.title = Do you have an account that Child Benefit can be paid to?
+applicantHasSuitableAccount.heading = Do you have an account that Child Benefit can be paid to?
+applicantHasSuitableAccount.checkYourAnswersLabel = Do you have an account that Child Benefit can be paid to?
+applicantHasSuitableAccount.error.required = Select yes if you have an account that Child Benefit can be paid to
+applicantHasSuitableAccount.change.hidden = if you have an account that Child Benefit can be paid to
 
 bankAccountDetails.title = Bank or building society account details
 bankAccountDetails.heading = Bank or building society account details
@@ -283,11 +283,11 @@ wantToBePaid.checkYourAnswersLabel = Do you want to be paid Child Benefit?
 wantToBePaid.error.required = Select yes if you want to be paid Child Benefit
 wantToBePaid.change.hidden = if you want to be paid Child Benefit
 
-wantToBePaidToExistingAccount.title = Do you want your claim to be paid to your existing account?
-wantToBePaidToExistingAccount.heading = Do you want your claim to be paid to your existing account?
-wantToBePaidToExistingAccount.checkYourAnswersLabel = Do you want your claim to be paid to your existing account?
-wantToBePaidToExistingAccount.error.required = Select yes if you want your claim to be paid to your existing account
-wantToBePaidToExistingAccount.change.hidden = if you want your claim to be paid to your existing account
+wantToBePaidToExistingAccount.title = Do you want your Child Benefit claim to be paid to your existing bank account?
+wantToBePaidToExistingAccount.heading = Do you want your Child Benefit claim to be paid to your existing bank account?
+wantToBePaidToExistingAccount.checkYourAnswersLabel = Do you want your Child Benefit claim to be paid to your existing bank account?
+wantToBePaidToExistingAccount.error.required = Select yes if you want your Child Benefit claim to be paid to your existing bank account
+wantToBePaidToExistingAccount.change.hidden = if you want your Child Benefit claim to be paid to your existing bank account
 
 wantToBePaidWeekly.title = Do you want to be paid Child Benefit every week?
 wantToBePaidWeekly.heading = Do you want to be paid Child Benefit every week?
@@ -295,24 +295,24 @@ wantToBePaidWeekly.checkYourAnswersLabel = Do you want to be paid Child Benefit 
 wantToBePaidWeekly.error.required = Select yes if you want to be paid Child Benefit every week
 wantToBePaidWeekly.change.hidden = if you want to be paid Child Benefit every week
 
-addApplicantPreviousFamilyName.title.plural = You have added {0} other family names
-addApplicantPreviousFamilyName.heading.plural = You have added {0} other family names
-addApplicantPreviousFamilyName.title.singular = You have added 1 other family name
-addApplicantPreviousFamilyName.heading.singular = You have added 1 other family name
-addApplicantPreviousFamilyName.checkYourAnswersLabel = Other last names
-addApplicantPreviousFamilyName.error.required = Select yes if you need to add another last names
-addApplicantPreviousFamilyName.addAnother = Do you need to add another last name?
+addApplicantPreviousFamilyName.title.plural = You have added {0} other last names or family names
+addApplicantPreviousFamilyName.heading.plural = You have added {0} other last names or family names
+addApplicantPreviousFamilyName.title.singular = You have added 1 other last name or family name
+addApplicantPreviousFamilyName.heading.singular = You have added 1 other last name or family name
+addApplicantPreviousFamilyName.checkYourAnswersLabel = Other last names or family names
+addApplicantPreviousFamilyName.error.required = Select yes if you need to add another last name or family names
+addApplicantPreviousFamilyName.addAnother = Do you need to add another last name or family name?
 addApplicantPreviousFamilyName.change.hidden = {0}
 addApplicantPreviousFamilyName.remove.hidden = {0}
 
-applicantCurrentAddress.title = What is your address?
-applicantCurrentAddress.heading = What is your address?
+applicantCurrentAddress.title = What is your current address?
+applicantCurrentAddress.heading = What is your current address?
 applicantCurrentAddress.line1 = Address line 1
 applicantCurrentAddress.line2 = Address line 2 (optional)
 applicantCurrentAddress.town = Town or city
 applicantCurrentAddress.county = County (optional)
 applicantCurrentAddress.postcode = Postcode
-applicantCurrentAddress.checkYourAnswersLabel = What is your address?
+applicantCurrentAddress.checkYourAnswersLabel = What is your current address?
 applicantCurrentAddress.error.line1.required = Enter address line 1
 applicantCurrentAddress.error.town.required = Enter the town or city
 applicantCurrentAddress.error.postcode.required = Enter the postcode
@@ -321,11 +321,11 @@ applicantCurrentAddress.error.line2.length = Address line 2 must be 100 characte
 applicantCurrentAddress.error.town.length = Town or city must be 100 characters or less
 applicantCurrentAddress.error.county.length = County must be 100 characters or less
 applicantCurrentAddress.error.postcode.length = Postcode must be 100 characters or less
-applicantCurrentAddress.change.hidden = your address
+applicantCurrentAddress.change.hidden = your current address
 
 applicantDateOfBirth.title = What is your date of birth?
 applicantDateOfBirth.heading = What is your date of birth?
-applicantDateOfBirth.hint = For example, 12 11 2007
+applicantDateOfBirth.hint = For example, 12 11 2001
 applicantDateOfBirth.checkYourAnswersLabel = What is your date of birth?
 applicantDateOfBirth.error.required.all = Enter your date of birth
 applicantDateOfBirth.error.required.two = The date must include {0} and {1}
@@ -335,19 +335,20 @@ applicantDateOfBirth.change.hidden = your date of birth
 
 applicantEmploymentStatus.title = What is your employment status?
 applicantEmploymentStatus.heading = What is your employment status?
-applicantEmploymentStatus.lookingForWork = Looking for work in the UK
-applicantEmploymentStatus.employed = Employed in the UK
-applicantEmploymentStatus.selfEmployed = Self-employed in the UK
-applicantEmploymentStatus.noneOfThese = None of these - I’ve enough money to support my family in the UK
+applicantEmploymentStatus.hint = Select all that apply
+applicantEmploymentStatus.lookingForWork = Looking for work
+applicantEmploymentStatus.employed = Employed
+applicantEmploymentStatus.selfEmployed = Self-employed
+applicantEmploymentStatus.noneOfThese = None of the above
 applicantEmploymentStatus.checkYourAnswersLabel = What is your employment status?
 applicantEmploymentStatus.error.required = Select your employment status
 applicantEmploymentStatus.change.hidden = your employment status
 
-applicantHasPreviousFamilyName.title = Have you used any other last names?
-applicantHasPreviousFamilyName.heading = Have you used any other last names?
-applicantHasPreviousFamilyName.checkYourAnswersLabel = Have you used any other last names?
-applicantHasPreviousFamilyName.error.required = Select yes if you have used any other last names
-applicantHasPreviousFamilyName.change.hidden = if you have used any other last names
+applicantHasPreviousFamilyName.title = Have you been known by any other last names or family names?
+applicantHasPreviousFamilyName.heading = Have you been known by any other last names or family names?
+applicantHasPreviousFamilyName.checkYourAnswersLabel = Have you been known by any other last names or family names?
+applicantHasPreviousFamilyName.error.required = Select yes if you have been known by any other last names or family names
+applicantHasPreviousFamilyName.change.hidden = if you have been known by any other last names or family names
 
 applicantLivedAtCurrentAddressOneYear.title = Have you lived at this address for more than 12 months?
 applicantLivedAtCurrentAddressOneYear.heading = Have you lived at this address for more than 12 months?
@@ -372,6 +373,7 @@ applicantName.change.hidden = your name
 
 applicantNationality.title = What is your nationality?
 applicantNationality.heading = What is your nationality?
+applicantNationality.hint = This is shown on your passport if you have one, for example British, Irish, French, Polish
 applicantNationality.checkYourAnswersLabel = What is your nationality?
 applicantNationality.error.required = Enter your nationality
 applicantNationality.error.length = Nationality must be 100 characters or less
@@ -387,16 +389,17 @@ applicantNino.change.hidden = your National Insurance number
 
 applicantNinoKnown.title = Do you know your National Insurance number?
 applicantNinoKnown.heading = Do you know your National Insurance number?
+applicantNinoKnown.hint = It is on your National Insurance card, benefit letter, payslip or P60. For example, QQ 12 34 56 C.
 applicantNinoKnown.checkYourAnswersLabel = Do you know your National Insurance number?
 applicantNinoKnown.error.required = Select yes if you know your National Insurance number
 applicantNinoKnown.change.hidden = if you know your National Insurance number
 
 applicantPhoneNumber.title = What is your telephone number?
 applicantPhoneNumber.heading = What is your telephone number?
-applicantPhoneNumber.hint = This may be used to contact you for further information.
+applicantPhoneNumber.hint = We may use this to contact you about your claim. Our number may not show up if we call you.
 applicantPhoneNumber.checkYourAnswersLabel = What is your telephone number?
 applicantPhoneNumber.error.required = Enter your telephone number
-applicantPhoneNumber.error.invalid = Enter a valid telephone number
+applicantPhoneNumber.error.invalid = Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192
 applicantPhoneNumber.change.hidden = your telephone number
 
 applicantPreviousAddress.title = What was your previous address?
@@ -417,12 +420,12 @@ applicantPreviousAddress.error.county.length = County must be 100 characters or 
 applicantPreviousAddress.error.postcode.length = Postcode must be 100 characters or less
 applicantPreviousAddress.change.hidden = your previous address
 
-applicantPreviousFamilyName.title = What was your other last name?
-applicantPreviousFamilyName.heading = What was your other last name?
-applicantPreviousFamilyName.checkYourAnswersLabel = What was your other last name?
-applicantPreviousFamilyName.error.required = Enter your other last name
-applicantPreviousFamilyName.error.length = Last name must be 100 characters or less
-applicantPreviousFamilyName.change.hidden = your other last name
+applicantPreviousFamilyName.title = What was your other name?
+applicantPreviousFamilyName.heading = What was your other name?
+applicantPreviousFamilyName.checkYourAnswersLabel = What was your other name?
+applicantPreviousFamilyName.error.required = Enter your other name
+applicantPreviousFamilyName.error.length = Name must be 100 characters or less
+applicantPreviousFamilyName.change.hidden = your other name
 
 removeApplicantPreviousFamilyName.title = Do you want to remove this other name?
 removeApplicantPreviousFamilyName.heading = Do you want to remove {0}?
@@ -430,12 +433,13 @@ removeApplicantPreviousFamilyName.error.required = Select yes if you want to rem
 
 bestTimeToContact.title = What time of day is the best time to call you?
 bestTimeToContact.heading = What time of day is the best time to call you?
+bestTimeToContact.hint = Select all that apply
 bestTimeToContact.checkYourAnswersLabel = What time of day is the best time to call you?
 bestTimeToContact.morning = Morning
 bestTimeToContact.afternoon = Afternoon
 bestTimeToContact.evening = Evening (we’re only able to call up to 8pm)
 bestTimeToContact.error.required = Select the best time of day to call you
-bestTimeToContact.change.hidden = the time of day that is best to call you
+bestTimeToContact.change.hidden = the time of day that is the best time to call you
 
 partnerDateOfBirth.title = What is your partner’s date of birth?
 partnerDateOfBirth.heading = What is {0}’s date of birth?
