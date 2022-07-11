@@ -78,7 +78,7 @@ class PartnerNationalityController @Inject()(
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerNationalityPage, value))
                 _ <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(PartnerNationalityPage.navigate(waypoints, updatedAnswers).route)
+              } yield Redirect(PartnerNationalityPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
           )
       }
   }

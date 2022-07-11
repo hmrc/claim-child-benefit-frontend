@@ -113,7 +113,7 @@ class AnyoneClaimedForChildBeforeControllerSpec extends SpecBase with MockitoSug
         val expectedAnswers = baseAnswers.set(child.AnyoneClaimedForChildBeforePage(index), true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual child.AnyoneClaimedForChildBeforePage(index).navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual child.AnyoneClaimedForChildBeforePage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }

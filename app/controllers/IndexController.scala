@@ -37,6 +37,9 @@ class IndexController @Inject()(
   }
 
   def onSubmit: Action[AnyContent] = identify { implicit request =>
-    Redirect(IndexPage.navigate(EmptyWaypoints, UserAnswers(request.userId)).route)
+
+    val userAnswers = UserAnswers(request.userId)
+
+    Redirect(IndexPage.navigate(EmptyWaypoints, userAnswers, userAnswers).route)
   }
 }

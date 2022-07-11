@@ -108,7 +108,7 @@ class ApplicantDateOfBirthControllerSpec extends SpecBase with MockitoSugar {
         val expectedAnswers = emptyUserAnswers.set(ApplicantDateOfBirthPage, validAnswer).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ApplicantDateOfBirthPage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual ApplicantDateOfBirthPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }

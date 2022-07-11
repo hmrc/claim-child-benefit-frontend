@@ -79,7 +79,7 @@ class PartnerEldestChildNameController @Inject()(
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerEldestChildNamePage, value))
                 _ <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(PartnerEldestChildNamePage.navigate(waypoints, updatedAnswers).route)
+              } yield Redirect(PartnerEldestChildNamePage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
           )
       }
   }

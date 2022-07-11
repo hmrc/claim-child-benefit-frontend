@@ -102,7 +102,7 @@ class CurrentlyReceivingChildBenefitControllerSpec extends SpecBase with Mockito
         val expectedAnswers = emptyUserAnswers.set(CurrentlyReceivingChildBenefitPage, true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual CurrentlyReceivingChildBenefitPage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual CurrentlyReceivingChildBenefitPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }

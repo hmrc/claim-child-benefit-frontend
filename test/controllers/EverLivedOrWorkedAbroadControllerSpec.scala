@@ -100,7 +100,7 @@ class EverLivedOrWorkedAbroadControllerSpec extends SpecBase with MockitoSugar {
         val expectedAnswers = emptyUserAnswers.set(EverLivedOrWorkedAbroadPage, true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual EverLivedOrWorkedAbroadPage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual EverLivedOrWorkedAbroadPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -160,7 +160,7 @@ class EverLivedOrWorkedAbroadControllerSpec extends SpecBase with MockitoSugar {
         val expectedAnswers = emptyUserAnswers.set(EverLivedOrWorkedAbroadPage, true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual EverLivedOrWorkedAbroadPage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual EverLivedOrWorkedAbroadPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
       }
     }
   }

@@ -75,7 +75,7 @@ class PreviousClaimantNameController @Inject()(
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(PreviousClaimantNamePage(index), value))
                 _ <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(PreviousClaimantNamePage(index).navigate(waypoints, updatedAnswers).route)
+              } yield Redirect(PreviousClaimantNamePage(index).navigate(waypoints, request.userAnswers, updatedAnswers).route)
           )
       }
   }

@@ -107,7 +107,7 @@ class PartnerNinoControllerSpec extends SpecBase with MockitoSugar with Generato
         val expectedAnswers = baseAnswers.set(PartnerNinoPage, nino).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual PartnerNinoPage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual PartnerNinoPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }

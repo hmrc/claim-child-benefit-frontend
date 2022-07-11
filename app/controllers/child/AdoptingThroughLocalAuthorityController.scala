@@ -76,7 +76,7 @@ class AdoptingThroughLocalAuthorityController @Inject()(
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(AdoptingThroughLocalAuthorityPage(index), value))
                 _ <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(AdoptingThroughLocalAuthorityPage(index).navigate(waypoints, updatedAnswers).route)
+              } yield Redirect(AdoptingThroughLocalAuthorityPage(index).navigate(waypoints, request.userAnswers, updatedAnswers).route)
           )
       }
   }

@@ -33,7 +33,12 @@ trait JourneyHelpers extends Matchers with TryValues with OptionValues {
   final case class JourneyState(page: Page, waypoints: Waypoints, answers: UserAnswers) {
 
     def next: JourneyState = {
-      val PageAndWaypoints(nextPage, newWaypoints) = page.navigate(waypoints, answers)
+      val PageAndWaypoints(nextPage, newWaypoints) = page.navigate(waypoints, answers, answers)
+      JourneyState(nextPage, newWaypoints, answers)
+    }
+
+    def next(originalAnswers: UserAnswers): JourneyState = {
+      val PageAndWaypoints(nextPage, newWaypoints) = page.navigate(waypoints, originalAnswers, answers)
       JourneyState(nextPage, newWaypoints, answers)
     }
 
@@ -59,8 +64,8 @@ trait JourneyHelpers extends Matchers with TryValues with OptionValues {
   def next: JourneyStep[Unit] =
     State.modify(_.next)
 
-  def next(times: Int): JourneyStep[Unit] =
-    (0 until times).foldLeft(State.pure[JourneyState, Unit](())) { (m, _) => m >> next }
+  def next(originalAnswers: UserAnswers): JourneyStep[Unit] =
+    State.modify(_.next(originalAnswers))
 
   def getPage: JourneyStep[Page] =
     State.inspect(_.page)
@@ -106,11 +111,22 @@ trait JourneyHelpers extends Matchers with TryValues with OptionValues {
       answers.get(gettable).value mustEqual expectedAnswer
     }
 
-  def submitAnswer[A](page: Page with Settable[A], value: A)(implicit writes: Writes[A], position: Position): JourneyStep[Unit] =
-    pageMustBe(page) >> setUserAnswerTo(page, value) >> next
+  def submitAnswer[A](page: Page with Settable[A], value: A)(implicit writes: Writes[A], position: Position): JourneyStep[Unit] = {
+    for {
+      _               <- pageMustBe(page)
+      originalAnswers <- getAnswers
+      _               <- setUserAnswerTo(page, value)
+      _               <- next(originalAnswers)
+    } yield ()
+  }
 
-  def removeAddToListItem[A](settable: Settable[A])(implicit writes: Writes[A], position: Position): JourneyStep[Unit] =
-    remove(settable) >> next
+  def removeAddToListItem[A](settable: Settable[A])(implicit writes: Writes[A], position: Position): JourneyStep[Unit] = {
+    for {
+      originalAnswers <- getAnswers
+      _               <- remove(settable)
+      _               <- next(originalAnswers)
+    } yield ()
+  }
 
   def goTo(page: Page): JourneyStep[Unit] =
     State.modify(_.copy(page = page))

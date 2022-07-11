@@ -64,7 +64,7 @@ class ApplicantPhoneNumberController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(ApplicantPhoneNumberPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(ApplicantPhoneNumberPage.navigate(waypoints, updatedAnswers).route)
+          } yield Redirect(ApplicantPhoneNumberPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
       )
   }
 }

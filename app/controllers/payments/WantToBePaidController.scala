@@ -64,7 +64,7 @@ class WantToBePaidController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(WantToBePaidPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(WantToBePaidPage.navigate(waypoints, updatedAnswers).route)
+          } yield Redirect(WantToBePaidPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
       )
   }
 }

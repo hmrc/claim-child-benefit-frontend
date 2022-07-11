@@ -103,7 +103,7 @@ class ChildNameChangedByDeedPollControllerSpec extends SpecBase with MockitoSuga
         val expectedAnswers = baseAnswers.set(child.ChildNameChangedByDeedPollPage(index), true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual child.ChildNameChangedByDeedPollPage(index).navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual child.ChildNameChangedByDeedPollPage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }

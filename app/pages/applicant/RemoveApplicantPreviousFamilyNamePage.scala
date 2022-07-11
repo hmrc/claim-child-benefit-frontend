@@ -18,7 +18,7 @@ package pages.applicant
 
 import controllers.applicant.routes
 import models.{Index, UserAnswers}
-import pages.{Page, Waypoints}
+import pages.{NonEmptyWaypoints, Page, Waypoints}
 import play.api.mvc.Call
 import queries.DeriveNumberOfPreviousFamilyNames
 
@@ -27,8 +27,14 @@ case class RemoveApplicantPreviousFamilyNamePage(index: Index) extends Page {
   override def route(waypoints: Waypoints): Call =
     routes.RemoveApplicantPreviousFamilyNameController.onPageLoad(waypoints, index)
 
-  override def nextPage(waypoints: Waypoints, answers: UserAnswers): Page =
-    answers.get(DeriveNumberOfPreviousFamilyNames).map {
+  override def nextPageNormalMode(waypoints: Waypoints, originalAnswers: UserAnswers): Page =
+    originalAnswers.get(DeriveNumberOfPreviousFamilyNames).map {
+      case n if n > 0 => AddApplicantPreviousFamilyNamePage
+      case _          => ApplicantHasPreviousFamilyNamePage
+    }.getOrElse(ApplicantHasPreviousFamilyNamePage)
+
+  override def nextPageCheckMode(waypoints: NonEmptyWaypoints, originalAnswers: UserAnswers): Page =
+    originalAnswers.get(DeriveNumberOfPreviousFamilyNames).map {
       case n if n > 0 => AddApplicantPreviousFamilyNamePage
       case _          => ApplicantHasPreviousFamilyNamePage
     }.getOrElse(ApplicantHasPreviousFamilyNamePage)

@@ -101,7 +101,7 @@ class ApplicantEmploymentStatusControllerSpec extends SpecBase with MockitoSugar
         val expectedAnswers = emptyUserAnswers.set(ApplicantEmploymentStatusPage, Set(ApplicantEmploymentStatus.values.head)).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ApplicantEmploymentStatusPage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual ApplicantEmploymentStatusPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }

@@ -76,7 +76,7 @@ class ChildBiologicalSexController @Inject()(
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(ChildBiologicalSexPage(index), value))
                 _ <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(ChildBiologicalSexPage(index).navigate(waypoints, updatedAnswers).route)
+              } yield Redirect(ChildBiologicalSexPage(index).navigate(waypoints, request.userAnswers, updatedAnswers).route)
           )
       }
   }

@@ -64,7 +64,7 @@ class ApplicantIncomeOver60kController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(ApplicantIncomeOver60kPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(ApplicantIncomeOver60kPage.navigate(waypoints, updatedAnswers).route)
+          } yield Redirect(ApplicantIncomeOver60kPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
       )
   }
 }

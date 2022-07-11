@@ -78,7 +78,7 @@ class IncludedDocumentsController @Inject()(
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(IncludedDocumentsPage(index), value))
                 _ <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(IncludedDocumentsPage(index).navigate(waypoints, updatedAnswers).route)
+              } yield Redirect(IncludedDocumentsPage(index).navigate(waypoints, request.userAnswers, updatedAnswers).route)
           )
       }
   }

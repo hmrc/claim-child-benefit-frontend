@@ -64,7 +64,7 @@ class CurrentlyReceivingChildBenefitController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(CurrentlyReceivingChildBenefitPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(CurrentlyReceivingChildBenefitPage.navigate(waypoints, updatedAnswers).route)
+          } yield Redirect(CurrentlyReceivingChildBenefitPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
       )
   }
 }

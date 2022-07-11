@@ -102,7 +102,7 @@ class ApplicantRelationshipToChildControllerSpec extends SpecBase with MockitoSu
         val expectedAnswers = baseAnswers.set(child.ApplicantRelationshipToChildPage(index), ApplicantRelationshipToChild.values.head).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual child.ApplicantRelationshipToChildPage(index).navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual child.ApplicantRelationshipToChildPage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }

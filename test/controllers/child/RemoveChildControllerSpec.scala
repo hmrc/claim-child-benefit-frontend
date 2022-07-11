@@ -84,7 +84,7 @@ class RemoveChildControllerSpec extends SpecBase with MockitoSugar {
         val expectedAnswers = baseAnswers.remove(ChildQuery(index)).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual RemoveChildPage(index).navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual RemoveChildPage(index).navigate(waypoints, baseAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -110,7 +110,7 @@ class RemoveChildControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual child.RemoveChildPage(index).navigate(waypoints, baseAnswers).url
+        redirectLocation(result).value mustEqual child.RemoveChildPage(index).navigate(waypoints, baseAnswers, baseAnswers).url
         verify(mockSessionRepository, never()).set(any())
       }
     }

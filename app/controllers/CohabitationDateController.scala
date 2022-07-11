@@ -67,7 +67,7 @@ class CohabitationDateController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(CohabitationDatePage, value))
             _ <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(CohabitationDatePage.navigate(waypoints, updatedAnswers).route)
+          } yield Redirect(CohabitationDatePage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
       )
   }
 }

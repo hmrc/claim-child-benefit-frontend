@@ -109,7 +109,7 @@ class PartnerEldestChildDateOfBirthControllerSpec extends SpecBase with MockitoS
         val expectedAnswers = baseAnswers.set(PartnerEldestChildDateOfBirthPage, validAnswer).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual PartnerEldestChildDateOfBirthPage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual PartnerEldestChildDateOfBirthPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }

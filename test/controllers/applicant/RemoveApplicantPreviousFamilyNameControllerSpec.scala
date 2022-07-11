@@ -83,7 +83,7 @@ class RemoveApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mock
         val expectedAnswers = baseAnswers.remove(applicant.ApplicantPreviousFamilyNamePage(index)).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual RemoveApplicantPreviousFamilyNamePage(index).navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual RemoveApplicantPreviousFamilyNamePage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -109,7 +109,7 @@ class RemoveApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mock
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual applicant.RemoveApplicantPreviousFamilyNamePage(index).navigate(waypoints, baseAnswers).url
+        redirectLocation(result).value mustEqual applicant.RemoveApplicantPreviousFamilyNamePage(index).navigate(waypoints, baseAnswers, baseAnswers).url
         verify(mockSessionRepository, never()).set(any())
       }
     }

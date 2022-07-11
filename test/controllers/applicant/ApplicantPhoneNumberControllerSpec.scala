@@ -100,7 +100,7 @@ class ApplicantPhoneNumberControllerSpec extends SpecBase with MockitoSugar {
         val expectedAnswers = emptyUserAnswers.set(ApplicantPhoneNumberPage, "07777777777").success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ApplicantPhoneNumberPage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual ApplicantPhoneNumberPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }

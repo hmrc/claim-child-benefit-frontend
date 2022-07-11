@@ -102,7 +102,7 @@ class WantToBePaidToExistingAccountControllerSpec extends SpecBase with MockitoS
         val expectedAnswers = emptyUserAnswers.set(WantToBePaidToExistingAccountPage, true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual WantToBePaidToExistingAccountPage.navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual WantToBePaidToExistingAccountPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }

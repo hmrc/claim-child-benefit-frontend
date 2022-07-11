@@ -102,7 +102,7 @@ class ChildBirthRegistrationCountryControllerSpec extends SpecBase with MockitoS
         val expectedAnswers = baseAnswers.set(child.ChildBirthRegistrationCountryPage(index), ChildBirthRegistrationCountry.values.head).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual child.ChildBirthRegistrationCountryPage(index).navigate(waypoints, expectedAnswers).url
+        redirectLocation(result).value mustEqual child.ChildBirthRegistrationCountryPage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }

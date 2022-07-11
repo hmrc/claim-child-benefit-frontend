@@ -64,7 +64,7 @@ class PartnerNameController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerNamePage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(PartnerNamePage.navigate(waypoints, updatedAnswers).route)
+          } yield Redirect(PartnerNamePage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
       )
   }
 }
