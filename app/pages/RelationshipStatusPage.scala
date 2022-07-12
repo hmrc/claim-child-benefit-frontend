@@ -18,9 +18,10 @@ package pages
 
 import controllers.routes
 import models.RelationshipStatus._
-import models.{RelationshipStatus, UserAnswers}
+import models.{Benefits, RelationshipStatus, UserAnswers}
 import pages.income._
 import pages.partner._
+import pages.payments.WantToBePaidWeeklyPage
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -78,50 +79,72 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
   override def cleanup(value: Option[RelationshipStatus], userAnswers: UserAnswers): Try[UserAnswers] =
     value.map {
       case Married =>
-        userAnswers.remove(CohabitationDatePage)
-          .flatMap(_.remove(SeparationDatePage))
-          .flatMap(_.remove(ApplicantIncomeOver50kPage))
-          .flatMap(_.remove(ApplicantIncomeOver60kPage))
-          .flatMap(_.remove(ApplicantBenefitsPage))
+        userAnswers.get(ApplicantOrPartnerBenefitsPage).map {
+          benefits =>
+            if (benefits.intersect(Benefits.qualifyingBenefits).isEmpty) {
+              userAnswers.remove(CohabitationDatePage)
+                .flatMap(_.remove(SeparationDatePage))
+                .flatMap(removeApplicantIncomeSection)
+                .flatMap(_.remove(WantToBePaidWeeklyPage))
+            } else {
+              userAnswers.remove(CohabitationDatePage)
+                .flatMap(_.remove(SeparationDatePage))
+                .flatMap(removeApplicantIncomeSection)
+            }
+        }.getOrElse {
+          userAnswers.remove(CohabitationDatePage)
+            .flatMap(_.remove(SeparationDatePage))
+            .flatMap(removeApplicantIncomeSection)
+        }
 
       case Cohabiting =>
-        userAnswers.remove(SeparationDatePage)
-          .flatMap(_.remove(ApplicantIncomeOver50kPage))
-          .flatMap(_.remove(ApplicantIncomeOver60kPage))
-          .flatMap(_.remove(ApplicantBenefitsPage))
+        userAnswers.get(ApplicantOrPartnerBenefitsPage).map {
+          benefits =>
+            if (benefits.intersect(Benefits.qualifyingBenefits).isEmpty) {
+              userAnswers.remove(SeparationDatePage)
+                .flatMap(removeApplicantIncomeSection)
+                .flatMap(_.remove(WantToBePaidWeeklyPage))
+            } else {
+              userAnswers.remove(SeparationDatePage)
+                .flatMap(removeApplicantIncomeSection)
+            }
+        }.getOrElse {
+          userAnswers.remove(SeparationDatePage)
+            .flatMap(removeApplicantIncomeSection)
+        }
 
       case Separated =>
         userAnswers.remove(CohabitationDatePage)
-          .flatMap(_.remove(ApplicantOrPartnerIncomeOver50kPage))
-          .flatMap(_.remove(ApplicantOrPartnerIncomeOver60kPage))
-          .flatMap(_.remove(ApplicantOrPartnerBenefitsPage))
-          .flatMap(_.remove(PartnerNamePage))
-          .flatMap(_.remove(PartnerNinoKnownPage))
-          .flatMap(_.remove(PartnerNinoPage))
-          .flatMap(_.remove(PartnerDateOfBirthPage))
-          .flatMap(_.remove(PartnerNationalityPage))
-          .flatMap(_.remove(PartnerEmploymentStatusPage))
-          .flatMap(_.remove(PartnerEntitledToChildBenefitPage))
-          .flatMap(_.remove(PartnerWaitingForEntitlementDecisionPage))
-          .flatMap(_.remove(PartnerEldestChildNamePage))
-          .flatMap(_.remove(PartnerEldestChildDateOfBirthPage))
+          .flatMap(removeApplicantOrPartnerIncomeSection)
+          .flatMap(removePartnerSection)
 
       case Single | Divorced | Widowed =>
         userAnswers.remove(CohabitationDatePage)
           .flatMap(_.remove(SeparationDatePage))
-          .flatMap(_.remove(ApplicantOrPartnerIncomeOver50kPage))
-          .flatMap(_.remove(ApplicantOrPartnerIncomeOver60kPage))
-          .flatMap(_.remove(ApplicantOrPartnerBenefitsPage))
-          .flatMap(_.remove(PartnerNamePage))
-          .flatMap(_.remove(PartnerNinoKnownPage))
-          .flatMap(_.remove(PartnerNinoPage))
-          .flatMap(_.remove(PartnerDateOfBirthPage))
-          .flatMap(_.remove(PartnerNationalityPage))
-          .flatMap(_.remove(PartnerEmploymentStatusPage))
-          .flatMap(_.remove(PartnerEntitledToChildBenefitPage))
-          .flatMap(_.remove(PartnerWaitingForEntitlementDecisionPage))
-          .flatMap(_.remove(PartnerEldestChildNamePage))
-          .flatMap(_.remove(PartnerEldestChildDateOfBirthPage))
+          .flatMap(removeApplicantOrPartnerIncomeSection)
+          .flatMap(removePartnerSection)
 
     }.getOrElse(super.cleanup(value, userAnswers))
+
+  private def removeApplicantIncomeSection(answers: UserAnswers): Try[UserAnswers] =
+    answers.remove(ApplicantIncomeOver50kPage)
+      .flatMap(_.remove(ApplicantIncomeOver60kPage))
+      .flatMap(_.remove(ApplicantBenefitsPage))
+
+  private def removeApplicantOrPartnerIncomeSection(answers: UserAnswers): Try[UserAnswers] =
+    answers.remove(ApplicantOrPartnerIncomeOver50kPage)
+      .flatMap(_.remove(ApplicantOrPartnerIncomeOver60kPage))
+      .flatMap(_.remove(ApplicantOrPartnerBenefitsPage))
+
+  private def removePartnerSection(answers: UserAnswers): Try[UserAnswers] =
+    answers.remove(PartnerNamePage)
+      .flatMap(_.remove(PartnerNinoKnownPage))
+      .flatMap(_.remove(PartnerNinoPage))
+      .flatMap(_.remove(PartnerDateOfBirthPage))
+      .flatMap(_.remove(PartnerNationalityPage))
+      .flatMap(_.remove(PartnerEmploymentStatusPage))
+      .flatMap(_.remove(PartnerEntitledToChildBenefitPage))
+      .flatMap(_.remove(PartnerWaitingForEntitlementDecisionPage))
+      .flatMap(_.remove(PartnerEldestChildNamePage))
+      .flatMap(_.remove(PartnerEldestChildDateOfBirthPage))
 }
