@@ -70,7 +70,7 @@ class ChangingInitialSectionJourneySpec
       goTo(CheckYourAnswersPage)
     )
 
-    "and did not answer whether they wanted to be paid weekly" - {
+    "and were not eligible to be paid weekly" - {
 
       "changing the answer to Cohabiting must collect the cohabitation date then return to Check Answers" in {
 
@@ -102,7 +102,7 @@ class ChangingInitialSectionJourneySpec
 
         "when the user originally said they wanted to be paid Child Benefit" - {
 
-          "must remove joint income and partner details, then collect the separation date, single income details, and whether they want to be paid weekly" in {
+          "must remove joint income and partner details, then collect the separation date, single income details and whether they want to be paid weekly" in {
 
             startingFrom(RelationshipStatusPage)
               .run(
@@ -239,7 +239,7 @@ class ChangingInitialSectionJourneySpec
       }
     }
 
-    "and answered whether they wanted to be paid weekly" - {
+    "and were eligible to be paid weekly" - {
 
       "changing the answer to Cohabiting must collect the cohabitation date then return to Check Answers" in {
 
@@ -269,69 +269,144 @@ class ChangingInitialSectionJourneySpec
           )
       }
 
-      "changing the answer to Separated " - {
+      "changing the answer to Separated" - {
 
-        "must remove joint income and partner details, then collect the separation date and single income details" in {
+        "when the user originally said they wanted to be paid Child Benefit" - {
 
-          startingFrom(RelationshipStatusPage)
-            .run(
-              initialise,
-              setUserAnswerTo(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
-              setUserAnswerTo(WantToBePaidWeeklyPage, false),
-              goToChangeAnswer(RelationshipStatusPage),
-              submitAnswer(RelationshipStatusPage, Separated),
-              submitAnswer(SeparationDatePage, LocalDate.now),
-              submitAnswer(ApplicantIncomeOver50kPage, false),
-              submitAnswer(ApplicantBenefitsPage, benefits),
-              pageMustBe(CheckYourAnswersPage),
-              answersMustNotContain(ApplicantOrPartnerIncomeOver50kPage),
-              answersMustNotContain(ApplicantOrPartnerIncomeOver60kPage),
-              answersMustNotContain(ApplicantOrPartnerBenefitsPage),
-              answersMustNotContain(PartnerNamePage),
-              answersMustNotContain(PartnerNinoKnownPage),
-              answersMustNotContain(PartnerNinoPage),
-              answersMustNotContain(PartnerDateOfBirthPage),
-              answersMustNotContain(PartnerNationalityPage),
-              answersMustNotContain(PartnerEmploymentStatusPage),
-              answersMustNotContain(PartnerEntitledToChildBenefitPage),
-              answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
-              answersMustNotContain(PartnerEldestChildNamePage),
-              answersMustNotContain(PartnerEldestChildDateOfBirthPage)
-            )
+          "must remove joint income and partner details, then go to collect single income details" in {
+
+            startingFrom(RelationshipStatusPage)
+              .run(
+                initialise,
+                setUserAnswerTo(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
+                setUserAnswerTo(WantToBePaidWeeklyPage, false),
+                goToChangeAnswer(RelationshipStatusPage),
+                submitAnswer(RelationshipStatusPage, Separated),
+                submitAnswer(SeparationDatePage, LocalDate.now),
+                submitAnswer(ApplicantIncomeOver50kPage, false),
+                submitAnswer(ApplicantBenefitsPage, benefits),
+                pageMustBe(CheckYourAnswersPage),
+                answersMustNotContain(ApplicantOrPartnerIncomeOver50kPage),
+                answersMustNotContain(ApplicantOrPartnerIncomeOver60kPage),
+                answersMustNotContain(ApplicantOrPartnerBenefitsPage),
+                answersMustNotContain(PartnerNamePage),
+                answersMustNotContain(PartnerNinoKnownPage),
+                answersMustNotContain(PartnerNinoPage),
+                answersMustNotContain(PartnerDateOfBirthPage),
+                answersMustNotContain(PartnerNationalityPage),
+                answersMustNotContain(PartnerEmploymentStatusPage),
+                answersMustNotContain(PartnerEntitledToChildBenefitPage),
+                answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
+                answersMustNotContain(PartnerEldestChildNamePage),
+                answersMustNotContain(PartnerEldestChildDateOfBirthPage),
+                answersMustContain(WantToBePaidWeeklyPage)
+              )
+          }
+        }
+
+        "when the user originally said they did not want to be paid Child Benefit" - {
+
+          "must remove joint income and partner details, then go to collect separation date and single income details" in {
+
+            startingFrom(RelationshipStatusPage)
+              .run(
+                initialise,
+                setUserAnswerTo(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
+                setUserAnswerTo(WantToBePaidPage, false),
+                goToChangeAnswer(RelationshipStatusPage),
+                submitAnswer(RelationshipStatusPage, Separated),
+                submitAnswer(SeparationDatePage, LocalDate.now),
+                submitAnswer(ApplicantIncomeOver50kPage, false),
+                submitAnswer(ApplicantBenefitsPage, benefits),
+                pageMustBe(CheckYourAnswersPage),
+                answersMustNotContain(ApplicantOrPartnerIncomeOver50kPage),
+                answersMustNotContain(ApplicantOrPartnerIncomeOver60kPage),
+                answersMustNotContain(ApplicantOrPartnerBenefitsPage),
+                answersMustNotContain(PartnerNamePage),
+                answersMustNotContain(PartnerNinoKnownPage),
+                answersMustNotContain(PartnerNinoPage),
+                answersMustNotContain(PartnerDateOfBirthPage),
+                answersMustNotContain(PartnerNationalityPage),
+                answersMustNotContain(PartnerEmploymentStatusPage),
+                answersMustNotContain(PartnerEntitledToChildBenefitPage),
+                answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
+                answersMustNotContain(PartnerEldestChildNamePage),
+                answersMustNotContain(PartnerEldestChildDateOfBirthPage)
+              )
+          }
         }
       }
 
       "changing the answer to Single, Divorced or Widowed" - {
 
-        "must remove joint income and partner details, then go to collect single income details" in {
+        "when the user originally said they wanted to be paid Child Benefit" - {
 
-          forAll(Gen.oneOf(Single, Divorced, Widowed)) {
-            status =>
+          "must remove joint income and partner details, then go to collect single income details" in {
 
-              startingFrom(RelationshipStatusPage)
-                .run(
-                  initialise,
-                  setUserAnswerTo(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
-                  setUserAnswerTo(WantToBePaidWeeklyPage, false),
-                  goToChangeAnswer(RelationshipStatusPage),
-                  submitAnswer(RelationshipStatusPage, status),
-                  submitAnswer(ApplicantIncomeOver50kPage, false),
-                  submitAnswer(ApplicantBenefitsPage, benefits),
-                  pageMustBe(CheckYourAnswersPage),
-                  answersMustNotContain(ApplicantOrPartnerIncomeOver50kPage),
-                  answersMustNotContain(ApplicantOrPartnerIncomeOver60kPage),
-                  answersMustNotContain(ApplicantOrPartnerBenefitsPage),
-                  answersMustNotContain(PartnerNamePage),
-                  answersMustNotContain(PartnerNinoKnownPage),
-                  answersMustNotContain(PartnerNinoPage),
-                  answersMustNotContain(PartnerDateOfBirthPage),
-                  answersMustNotContain(PartnerNationalityPage),
-                  answersMustNotContain(PartnerEmploymentStatusPage),
-                  answersMustNotContain(PartnerEntitledToChildBenefitPage),
-                  answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
-                  answersMustNotContain(PartnerEldestChildNamePage),
-                  answersMustNotContain(PartnerEldestChildDateOfBirthPage)
-                )
+            forAll(Gen.oneOf(Single, Divorced, Widowed)) {
+              status =>
+
+                startingFrom(RelationshipStatusPage)
+                  .run(
+                    initialise,
+                    setUserAnswerTo(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
+                    setUserAnswerTo(WantToBePaidWeeklyPage, false),
+                    goToChangeAnswer(RelationshipStatusPage),
+                    submitAnswer(RelationshipStatusPage, status),
+                    submitAnswer(ApplicantIncomeOver50kPage, false),
+                    submitAnswer(ApplicantBenefitsPage, benefits),
+                    pageMustBe(CheckYourAnswersPage),
+                    answersMustNotContain(ApplicantOrPartnerIncomeOver50kPage),
+                    answersMustNotContain(ApplicantOrPartnerIncomeOver60kPage),
+                    answersMustNotContain(ApplicantOrPartnerBenefitsPage),
+                    answersMustNotContain(PartnerNamePage),
+                    answersMustNotContain(PartnerNinoKnownPage),
+                    answersMustNotContain(PartnerNinoPage),
+                    answersMustNotContain(PartnerDateOfBirthPage),
+                    answersMustNotContain(PartnerNationalityPage),
+                    answersMustNotContain(PartnerEmploymentStatusPage),
+                    answersMustNotContain(PartnerEntitledToChildBenefitPage),
+                    answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
+                    answersMustNotContain(PartnerEldestChildNamePage),
+                    answersMustNotContain(PartnerEldestChildDateOfBirthPage),
+                    answersMustContain(WantToBePaidWeeklyPage)
+                  )
+            }
+          }
+        }
+
+        "when the user originally said they did not want to be paid Child Benefit" - {
+
+          "must remove joint income and partner details, then go to collect single income details" in {
+
+            forAll(Gen.oneOf(Single, Divorced, Widowed)) {
+              status =>
+
+                startingFrom(RelationshipStatusPage)
+                  .run(
+                    initialise,
+                    setUserAnswerTo(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
+                    setUserAnswerTo(WantToBePaidPage, false),
+                    goToChangeAnswer(RelationshipStatusPage),
+                    submitAnswer(RelationshipStatusPage, status),
+                    submitAnswer(ApplicantIncomeOver50kPage, false),
+                    submitAnswer(ApplicantBenefitsPage, benefits),
+                    pageMustBe(CheckYourAnswersPage),
+                    answersMustNotContain(ApplicantOrPartnerIncomeOver50kPage),
+                    answersMustNotContain(ApplicantOrPartnerIncomeOver60kPage),
+                    answersMustNotContain(ApplicantOrPartnerBenefitsPage),
+                    answersMustNotContain(PartnerNamePage),
+                    answersMustNotContain(PartnerNinoKnownPage),
+                    answersMustNotContain(PartnerNinoPage),
+                    answersMustNotContain(PartnerDateOfBirthPage),
+                    answersMustNotContain(PartnerNationalityPage),
+                    answersMustNotContain(PartnerEmploymentStatusPage),
+                    answersMustNotContain(PartnerEntitledToChildBenefitPage),
+                    answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
+                    answersMustNotContain(PartnerEldestChildNamePage),
+                    answersMustNotContain(PartnerEldestChildDateOfBirthPage)
+                  )
+            }
           }
         }
       }
@@ -362,7 +437,7 @@ class ChangingInitialSectionJourneySpec
       goTo(CheckYourAnswersPage)
     )
 
-    "and did not answer whether they wanted to be paid weekly" - {
+    "and were not eligible to be paid weekly" - {
 
       "changing the answer to Married" - {
 
@@ -371,6 +446,7 @@ class ChangingInitialSectionJourneySpec
           startingFrom(RelationshipStatusPage)
             .run(
               initialise,
+              setUserAnswerTo(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
               goToChangeAnswer(RelationshipStatusPage),
               submitAnswer(RelationshipStatusPage, Married),
               pageMustBe(CheckYourAnswersPage),
@@ -396,11 +472,12 @@ class ChangingInitialSectionJourneySpec
 
         "when the user originally said they wanted to be paid Child Benefit" - {
 
-          "must remove cohab date, joint income and partner details, collect separation date, single income details and whether they want to be paid weekly" in {
+          "must remove cohab date, joint income and partner details, collect separation date and single income details and whether they want to be paid weekly" in {
 
             startingFrom(RelationshipStatusPage)
               .run(
                 initialise,
+                setUserAnswerTo(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
                 goToChangeAnswer(RelationshipStatusPage),
                 submitAnswer(RelationshipStatusPage, Separated),
                 submitAnswer(SeparationDatePage, LocalDate.now),
@@ -433,6 +510,7 @@ class ChangingInitialSectionJourneySpec
             startingFrom(RelationshipStatusPage)
               .run(
                 initialise,
+                setUserAnswerTo(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
                 setUserAnswerTo(WantToBePaidPage, false),
                 goToChangeAnswer(RelationshipStatusPage),
                 submitAnswer(RelationshipStatusPage, Separated),
@@ -471,6 +549,7 @@ class ChangingInitialSectionJourneySpec
                 startingFrom(RelationshipStatusPage)
                   .run(
                     initialise,
+                    setUserAnswerTo(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
                     goToChangeAnswer(RelationshipStatusPage),
                     submitAnswer(RelationshipStatusPage, status),
                     submitAnswer(ApplicantIncomeOver50kPage, false),
@@ -506,6 +585,7 @@ class ChangingInitialSectionJourneySpec
                 startingFrom(RelationshipStatusPage)
                   .run(
                     initialise,
+                    setUserAnswerTo(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
                     setUserAnswerTo(WantToBePaidPage, false),
                     goToChangeAnswer(RelationshipStatusPage),
                     submitAnswer(RelationshipStatusPage, status),
@@ -533,7 +613,7 @@ class ChangingInitialSectionJourneySpec
       }
     }
 
-    "and answered whether they wanted to be paid weekly" - {
+    "and were eligible to be paid weekly" - {
 
       "changing the answer to Married" - {
 
@@ -568,35 +648,146 @@ class ChangingInitialSectionJourneySpec
 
       "changing the answer to Separated" - {
 
-        "must remove cohab date, joint income and partner details, collect separation date and single income details" in {
+        "when the user initially said they wanted to be paid Child Benefit" - {
 
-          startingFrom(RelationshipStatusPage)
-            .run(
-              initialise,
-              setUserAnswerTo(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
-              setUserAnswerTo(WantToBePaidWeeklyPage, false),
-              goToChangeAnswer(RelationshipStatusPage),
-              submitAnswer(RelationshipStatusPage, Separated),
-              submitAnswer(SeparationDatePage, LocalDate.now),
-              submitAnswer(ApplicantIncomeOver50kPage, false),
-              submitAnswer(ApplicantBenefitsPage, benefits),
-              pageMustBe(CheckYourAnswersPage),
-              answersMustNotContain(CohabitationDatePage),
-              answersMustNotContain(ApplicantOrPartnerIncomeOver50kPage),
-              answersMustNotContain(ApplicantOrPartnerIncomeOver60kPage),
-              answersMustNotContain(ApplicantOrPartnerBenefitsPage),
-              answersMustNotContain(PartnerNamePage),
-              answersMustNotContain(PartnerNinoKnownPage),
-              answersMustNotContain(PartnerNinoPage),
-              answersMustNotContain(PartnerDateOfBirthPage),
-              answersMustNotContain(PartnerNationalityPage),
-              answersMustNotContain(PartnerEmploymentStatusPage),
-              answersMustNotContain(PartnerEntitledToChildBenefitPage),
-              answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
-              answersMustNotContain(PartnerEldestChildNamePage),
-              answersMustNotContain(PartnerEldestChildDateOfBirthPage),
-              answersMustContain(WantToBePaidWeeklyPage)
-            )
+          "must remove cohab date, joint income and partner details, collect separation date and single income details" in {
+
+            startingFrom(RelationshipStatusPage)
+              .run(
+                initialise,
+                setUserAnswerTo(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
+                setUserAnswerTo(WantToBePaidWeeklyPage, false),
+                goToChangeAnswer(RelationshipStatusPage),
+                submitAnswer(RelationshipStatusPage, Separated),
+                submitAnswer(SeparationDatePage, LocalDate.now),
+                submitAnswer(ApplicantIncomeOver50kPage, false),
+                submitAnswer(ApplicantBenefitsPage, benefits),
+                pageMustBe(CheckYourAnswersPage),
+                answersMustNotContain(CohabitationDatePage),
+                answersMustNotContain(ApplicantOrPartnerIncomeOver50kPage),
+                answersMustNotContain(ApplicantOrPartnerIncomeOver60kPage),
+                answersMustNotContain(ApplicantOrPartnerBenefitsPage),
+                answersMustNotContain(PartnerNamePage),
+                answersMustNotContain(PartnerNinoKnownPage),
+                answersMustNotContain(PartnerNinoPage),
+                answersMustNotContain(PartnerDateOfBirthPage),
+                answersMustNotContain(PartnerNationalityPage),
+                answersMustNotContain(PartnerEmploymentStatusPage),
+                answersMustNotContain(PartnerEntitledToChildBenefitPage),
+                answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
+                answersMustNotContain(PartnerEldestChildNamePage),
+                answersMustNotContain(PartnerEldestChildDateOfBirthPage),
+                answersMustContain(WantToBePaidWeeklyPage)
+              )
+          }
+        }
+
+        "when the user initially said they did not want to be paid Child Benefit" - {
+
+          "must remove cohab date, joint income and partner details, collect separation date and single income details" in {
+
+            startingFrom(RelationshipStatusPage)
+              .run(
+                initialise,
+                setUserAnswerTo(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
+                setUserAnswerTo(WantToBePaidPage, false),
+                goToChangeAnswer(RelationshipStatusPage),
+                submitAnswer(RelationshipStatusPage, Separated),
+                submitAnswer(SeparationDatePage, LocalDate.now),
+                submitAnswer(ApplicantIncomeOver50kPage, false),
+                submitAnswer(ApplicantBenefitsPage, benefits),
+                pageMustBe(CheckYourAnswersPage),
+                answersMustNotContain(CohabitationDatePage),
+                answersMustNotContain(ApplicantOrPartnerIncomeOver50kPage),
+                answersMustNotContain(ApplicantOrPartnerIncomeOver60kPage),
+                answersMustNotContain(ApplicantOrPartnerBenefitsPage),
+                answersMustNotContain(PartnerNamePage),
+                answersMustNotContain(PartnerNinoKnownPage),
+                answersMustNotContain(PartnerNinoPage),
+                answersMustNotContain(PartnerDateOfBirthPage),
+                answersMustNotContain(PartnerNationalityPage),
+                answersMustNotContain(PartnerEmploymentStatusPage),
+                answersMustNotContain(PartnerEntitledToChildBenefitPage),
+                answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
+                answersMustNotContain(PartnerEldestChildNamePage),
+                answersMustNotContain(PartnerEldestChildDateOfBirthPage)
+              )
+          }
+        }
+      }
+
+      "changing the answer to Single, Divorced or Widowed" - {
+
+        "when the user initially said they wanted to be paid Child Benefit" - {
+
+          "must remove cohab date, joint income and partner details, collect separation date and single income details" in {
+
+            forAll(Gen.oneOf(Single, Divorced, Widowed)) {
+              status =>
+
+                startingFrom(RelationshipStatusPage)
+                  .run(
+                    initialise,
+                    setUserAnswerTo(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
+                    setUserAnswerTo(WantToBePaidWeeklyPage, false),
+                    goToChangeAnswer(RelationshipStatusPage),
+                    submitAnswer(RelationshipStatusPage, status),
+                    submitAnswer(ApplicantIncomeOver50kPage, false),
+                    submitAnswer(ApplicantBenefitsPage, benefits),
+                    pageMustBe(CheckYourAnswersPage),
+                    answersMustNotContain(CohabitationDatePage),
+                    answersMustNotContain(ApplicantOrPartnerIncomeOver50kPage),
+                    answersMustNotContain(ApplicantOrPartnerIncomeOver60kPage),
+                    answersMustNotContain(ApplicantOrPartnerBenefitsPage),
+                    answersMustNotContain(PartnerNamePage),
+                    answersMustNotContain(PartnerNinoKnownPage),
+                    answersMustNotContain(PartnerNinoPage),
+                    answersMustNotContain(PartnerDateOfBirthPage),
+                    answersMustNotContain(PartnerNationalityPage),
+                    answersMustNotContain(PartnerEmploymentStatusPage),
+                    answersMustNotContain(PartnerEntitledToChildBenefitPage),
+                    answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
+                    answersMustNotContain(PartnerEldestChildNamePage),
+                    answersMustNotContain(PartnerEldestChildDateOfBirthPage),
+                    answersMustContain(WantToBePaidWeeklyPage)
+                  )
+            }
+          }
+        }
+
+        "when the user initially said they did not want to be paid Child Benefit" - {
+
+          "must remove cohab date, joint income and partner details, collect separation date and single income details" in {
+
+            forAll(Gen.oneOf(Single, Divorced, Widowed)) {
+              status =>
+                startingFrom(RelationshipStatusPage)
+                  .run(
+                    initialise,
+                    setUserAnswerTo(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
+                    setUserAnswerTo(WantToBePaidPage, false),
+                    goToChangeAnswer(RelationshipStatusPage),
+                    submitAnswer(RelationshipStatusPage, status),
+                    submitAnswer(ApplicantIncomeOver50kPage, false),
+                    submitAnswer(ApplicantBenefitsPage, benefits),
+                    pageMustBe(CheckYourAnswersPage),
+                    answersMustNotContain(CohabitationDatePage),
+                    answersMustNotContain(ApplicantOrPartnerIncomeOver50kPage),
+                    answersMustNotContain(ApplicantOrPartnerIncomeOver60kPage),
+                    answersMustNotContain(ApplicantOrPartnerBenefitsPage),
+                    answersMustNotContain(PartnerNamePage),
+                    answersMustNotContain(PartnerNinoKnownPage),
+                    answersMustNotContain(PartnerNinoPage),
+                    answersMustNotContain(PartnerDateOfBirthPage),
+                    answersMustNotContain(PartnerNationalityPage),
+                    answersMustNotContain(PartnerEmploymentStatusPage),
+                    answersMustNotContain(PartnerEntitledToChildBenefitPage),
+                    answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
+                    answersMustNotContain(PartnerEldestChildNamePage),
+                    answersMustNotContain(PartnerEldestChildDateOfBirthPage)
+                  )
+            }
+          }
         }
       }
     }
@@ -861,7 +1052,7 @@ class ChangingInitialSectionJourneySpec
 
         "and the user or their partner have qualifying benefits" - {
 
-          "must remove the separation date, single income details and whether they wanted to be paid weekly, then go to collect cohab date and joint income details" in {
+          "must remove the separation date and single income details, then go to collect cohab date and joint income details" in {
 
             startingFrom(RelationshipStatusPage)
               .run(
@@ -1103,7 +1294,7 @@ class ChangingInitialSectionJourneySpec
 
         "and the user or their partner do not have qualifying benefits" - {
 
-          "must remove single income details and whether they want to be paid weekly, then go to collect joint income and partner details" in {
+          "must remove single income details and whether they want to be paid weekly, tell the user they cannot be paid weekly, then go to collect joint income and partner details" in {
 
             Seq(Single, Divorced, Widowed).foreach { status =>
 
@@ -1211,7 +1402,7 @@ class ChangingInitialSectionJourneySpec
 
         "and the user or their partner do not have qualifying benefits" - {
 
-          "must remove single income details, then collect the cohabitation date then joint income details" in {
+          "must remove single income details and whether they want to be paid weekly, tell the user they cannot be paid weekly, then collect the cohabitation date then joint income details" in {
 
             Seq(Single, Divorced, Widowed).foreach { status =>
 
@@ -1286,7 +1477,7 @@ class ChangingInitialSectionJourneySpec
 
         "and the user or their partner do not have qualifying benefits" - {
 
-          "must remove single income details, then collect the cohabitation date then joint income details" in {
+          "must remove single income details and whether they want to be paid weekly, then collect the cohabitation date then joint income details" in {
 
             Seq(Single, Divorced, Widowed).foreach { status =>
 
