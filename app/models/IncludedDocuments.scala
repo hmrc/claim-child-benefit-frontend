@@ -30,6 +30,7 @@ object IncludedDocuments extends Enumerable.Implicits {
   case object Passport extends WithName("passport") with IncludedDocuments
   case object TravelDocuments extends WithName("travelDocuments") with IncludedDocuments
   case object AdoptionCertificate extends WithName("adoptionCertificate") with IncludedDocuments
+  case class OtherDocument(name: String) extends IncludedDocuments
 
   private val allValues: Seq[IncludedDocuments] = Seq(
     BirthCertificate,
