@@ -19,9 +19,12 @@ package pages.income
 import controllers.income.routes
 import models.{Benefits, UserAnswers}
 import pages.partner.PartnerNamePage
-import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
+import pages.payments.WantToBePaidWeeklyPage
+import pages.{CannotBePaidWeeklyPage, NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+
+import scala.util.Try
 
 case object ApplicantOrPartnerBenefitsPage extends QuestionPage[Set[Benefits]] {
 
@@ -35,8 +38,34 @@ case object ApplicantOrPartnerBenefitsPage extends QuestionPage[Set[Benefits]] {
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     TaxChargeExplanationPage
 
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(PartnerNamePage)
-      .map(_ => waypoints.next.page)
-      .getOrElse(PartnerNamePage)
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, originalAnswers: UserAnswers, updatedAnswers: UserAnswers): Page = {
+
+    def getPartnerDetailsIfMissing: Page =
+      updatedAnswers.get(PartnerNamePage)
+        .map(_ => waypoints.next.page)
+        .getOrElse(PartnerNamePage)
+
+    originalAnswers.get(WantToBePaidWeeklyPage).map {
+      wantToBePaidWeekly =>
+        updatedAnswers.get(ApplicantOrPartnerBenefitsPage).map {
+          benefits =>
+            if (benefits.intersect(Benefits.qualifyingBenefits).isEmpty) {
+              if (wantToBePaidWeekly) CannotBePaidWeeklyPage else getPartnerDetailsIfMissing
+            } else {
+              getPartnerDetailsIfMissing
+            }
+        }.getOrElse(getPartnerDetailsIfMissing)
+    }.getOrElse(getPartnerDetailsIfMissing)
+
+  }
+
+  override def cleanup(value: Option[Set[Benefits]], userAnswers: UserAnswers): Try[UserAnswers] =
+    value.map {
+      benefits =>
+        if (benefits.intersect(Benefits.qualifyingBenefits).isEmpty) {
+          userAnswers.remove(WantToBePaidWeeklyPage)
+        } else {
+          super.cleanup(value, userAnswers)
+        }
+    }.getOrElse(super.cleanup(value, userAnswers))
 }

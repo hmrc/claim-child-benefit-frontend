@@ -17,6 +17,8 @@
 package pages
 
 import controllers.routes
+import models.UserAnswers
+import pages.partner.PartnerNamePage
 import play.api.mvc.Call
 
 case object CannotBePaidWeeklyPage extends Page {
@@ -24,5 +26,8 @@ case object CannotBePaidWeeklyPage extends Page {
   override def route(waypoints: Waypoints): Call =
     routes.CannotBePaidWeeklyController.onPageLoad(waypoints)
 
-
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    answers.get(PartnerNamePage)
+      .map(_ => waypoints.next.page)
+      .getOrElse(PartnerNamePage)
 }
