@@ -273,7 +273,7 @@ class ChangingInitialSectionJourneySpec
 
         "when the user originally said they wanted to be paid Child Benefit" - {
 
-          "must remove joint income and partner details, then go to collect single income details" in {
+          "must remove joint income and partner details, then go to collect separation date and single income details" in {
 
             startingFrom(RelationshipStatusPage)
               .run(
@@ -981,7 +981,7 @@ class ChangingInitialSectionJourneySpec
 
         "and the user or their partner have qualifying benefits" - {
 
-          "must remove the separation date and single income details , then go to collect cohab date and joint income details" in {
+          "must remove the separation date and single income details, then go to collect cohab date and joint income details" in {
 
             startingFrom(RelationshipStatusPage)
               .run(
