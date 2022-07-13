@@ -34,6 +34,9 @@ POST       /date-started-living-with-partner                  controllers.Cohabi
 GET        /date-separated-from-partner                  controllers.SeparationDateController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /date-separated-from-partner                  controllers.SeparationDateController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
+GET        /cannot-be-paid-weekly                       controllers.CannotBePaidWeeklyController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /cannot-be-paid-weekly                       controllers.CannotBePaidWeeklyController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 GET        /relationship-status                        controllers.RelationshipStatusController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /relationship-status                        controllers.RelationshipStatusController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 

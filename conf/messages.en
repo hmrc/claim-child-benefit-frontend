@@ -721,3 +721,5 @@ adoptingThroughLocalAuthority.change.hidden = if you are planning to adopt this 
 checkChildDetails.title = Check Child Details
 checkChildDetails.heading = Check Child Details
 
+cannotBePaidWeekly.title = You cannot be paid Child Benefit every week
+cannotBePaidWeekly.heading = You cannot be paid Child Benefit every week
