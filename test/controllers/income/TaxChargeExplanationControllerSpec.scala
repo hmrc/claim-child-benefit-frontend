@@ -17,11 +17,13 @@
 package controllers.income
 
 import base.SpecBase
-import pages.EmptyWaypoints
-import pages.income.TaxChargeExplanationPage
+import models.RelationshipStatus._
+import org.scalacheck.Gen
+import pages.{EmptyWaypoints, RelationshipStatusPage}
+import pages.income._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.income.TaxChargeExplanationView
+import views.html.income._
 
 class TaxChargeExplanationControllerSpec extends SpecBase {
 
@@ -29,19 +31,154 @@ class TaxChargeExplanationControllerSpec extends SpecBase {
 
   "TaxChargeExplanation Controller" - {
 
-    "must return OK and the correct view for a GET" in {
+    "must return OK and the correct view for a GET" - {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      "when the applicant is married or cohabiting" - {
 
-      running(application) {
-        val request = FakeRequest(GET, routes.TaxChargeExplanationController.onPageLoad().url)
+        "and their income is under 50k" in {
 
-        val result = route(application, request).value
+          val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
 
-        val view = application.injector.instanceOf[TaxChargeExplanationView]
+          val answers =
+            emptyUserAnswers
+              .set(RelationshipStatusPage, relationshipStatus).success.value
+              .set(ApplicantOrPartnerIncomeOver50kPage, false).success.value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(waypoints)(request, messages(application)).toString
+          val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+          running(application) {
+            val request = FakeRequest(GET, routes.TaxChargeExplanationController.onPageLoad(waypoints).url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[TaxChargeExplanationCoupleUnder50kView]
+
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual view(waypoints)(request, messages(application)).toString
+          }
+        }
+
+        "and their income is between 50k and 60k" in {
+
+          val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
+
+          val answers =
+            emptyUserAnswers
+              .set(RelationshipStatusPage, relationshipStatus).success.value
+              .set(ApplicantOrPartnerIncomeOver50kPage, true).success.value
+              .set(ApplicantOrPartnerIncomeOver60kPage, false).success.value
+
+          val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+          running(application) {
+            val request = FakeRequest(GET, routes.TaxChargeExplanationController.onPageLoad(waypoints).url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[TaxChargeExplanationCoupleUnder60kView]
+
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual view(waypoints)(request, messages(application)).toString
+          }
+        }
+
+        "and their income is over 60k" in {
+
+          val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
+
+          val answers =
+            emptyUserAnswers
+              .set(RelationshipStatusPage, relationshipStatus).success.value
+              .set(ApplicantOrPartnerIncomeOver50kPage, true).success.value
+              .set(ApplicantOrPartnerIncomeOver60kPage, true).success.value
+
+          val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+          running(application) {
+            val request = FakeRequest(GET, routes.TaxChargeExplanationController.onPageLoad(waypoints).url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[TaxChargeExplanationCoupleOver60kView]
+
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual view(waypoints)(request, messages(application)).toString
+          }
+        }
+      }
+
+      "when the applicant is single, separated, divorced or widowed" - {
+
+        "and their income is under 50k" in {
+
+          val relationshipStatus = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
+
+          val answers =
+            emptyUserAnswers
+              .set(RelationshipStatusPage, relationshipStatus).success.value
+              .set(ApplicantIncomeOver50kPage, false).success.value
+
+          val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+          running(application) {
+            val request = FakeRequest(GET, routes.TaxChargeExplanationController.onPageLoad(waypoints).url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[TaxChargeExplanationSingleUnder50kView]
+
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual view(waypoints)(request, messages(application)).toString
+          }
+        }
+
+        "and their income is between 50k and 60k" in {
+
+          val relationshipStatus = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
+
+          val answers =
+            emptyUserAnswers
+              .set(RelationshipStatusPage, relationshipStatus).success.value
+              .set(ApplicantIncomeOver50kPage, true).success.value
+              .set(ApplicantIncomeOver60kPage, false).success.value
+
+          val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+          running(application) {
+            val request = FakeRequest(GET, routes.TaxChargeExplanationController.onPageLoad(waypoints).url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[TaxChargeExplanationSingleUnder60kView]
+
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual view(waypoints)(request, messages(application)).toString
+          }
+        }
+
+        "and their income is over 60k" in {
+
+          val relationshipStatus = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
+
+          val answers =
+            emptyUserAnswers
+              .set(RelationshipStatusPage, relationshipStatus).success.value
+              .set(ApplicantIncomeOver50kPage, true).success.value
+              .set(ApplicantIncomeOver60kPage, true).success.value
+
+          val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+          running(application) {
+            val request = FakeRequest(GET, routes.TaxChargeExplanationController.onPageLoad(waypoints).url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[TaxChargeExplanationSingleOver60kView]
+
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual view(waypoints)(request, messages(application)).toString
+          }
+        }
       }
     }
 

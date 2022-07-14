@@ -16,13 +16,15 @@
 
 package controllers.income
 
+import controllers.AnswerExtractor
 import controllers.actions._
-import pages.Waypoints
-import pages.income.TaxChargeExplanationPage
+import models.RelationshipStatus._
+import pages.{RelationshipStatusPage, Waypoints}
+import pages.income._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.income.TaxChargeExplanationView
+import views.html.income._
 
 import javax.inject.Inject
 
@@ -32,12 +34,41 @@ class TaxChargeExplanationController @Inject()(
                                        getData: DataRetrievalAction,
                                        requireData: DataRequiredAction,
                                        val controllerComponents: MessagesControllerComponents,
-                                       view: TaxChargeExplanationView
-                                     ) extends FrontendBaseController with I18nSupport {
+                                       coupleUnder50kView: TaxChargeExplanationCoupleUnder50kView,
+                                       coupleUnder60kView: TaxChargeExplanationCoupleUnder60kView,
+                                       coupleOver60kView: TaxChargeExplanationCoupleOver60kView,
+                                       singleUnder50kView: TaxChargeExplanationSingleUnder50kView,
+                                       singleUnder60kView: TaxChargeExplanationSingleUnder60kView,
+                                       singleOver60kView: TaxChargeExplanationSingleOver60kView
+                                     ) extends FrontendBaseController with I18nSupport with AnswerExtractor {
 
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      Ok(view(waypoints))
+      getAnswer(RelationshipStatusPage) {
+        case Married | Cohabiting =>
+          getAnswer(ApplicantOrPartnerIncomeOver50kPage) {
+            case true =>
+              getAnswer(ApplicantOrPartnerIncomeOver60kPage) {
+                case true  => Ok(coupleOver60kView(waypoints))
+                case false => Ok(coupleUnder60kView(waypoints))
+              }
+
+            case false =>
+              Ok(coupleUnder50kView(waypoints))
+          }
+
+        case Single | Divorced | Separated | Widowed =>
+          getAnswer(ApplicantIncomeOver50kPage) {
+            case true =>
+              getAnswer(ApplicantIncomeOver60kPage) {
+                case true  => Ok(singleOver60kView(waypoints))
+                case false => Ok(singleUnder60kView(waypoints))
+              }
+
+            case false =>
+              Ok(singleUnder50kView(waypoints))
+          }
+      }
   }
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
