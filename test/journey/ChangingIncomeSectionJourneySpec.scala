@@ -21,6 +21,7 @@ import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import pages.CheckYourAnswersPage
 import pages.income._
+import pages.payments.ClaimedChildBenefitBeforePage
 
 class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
@@ -28,12 +29,14 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
   "when the user initially said their income was over 50k" - {
 
-    "changing the answer to false must remove the answer to `income over 60k` and return to Check Answers" in {
+    "changing the answer to false must remove the answer to `income over 60k`, show the tax charge explanation then return to Check Answers" in {
 
       val initialise = journeyOf(
         submitAnswer(ApplicantIncomeOver50kPage, true),
         submitAnswer(ApplicantIncomeOver60kPage, true),
         submitAnswer(ApplicantBenefitsPage, benefits),
+        next,
+        submitAnswer(ClaimedChildBenefitBeforePage, false),
         goTo(CheckYourAnswersPage)
       )
 
@@ -42,6 +45,8 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
           initialise,
           goToChangeAnswer(ApplicantIncomeOver50kPage),
           submitAnswer(ApplicantIncomeOver50kPage, false),
+          pageMustBe(TaxChargeExplanationPage),
+          next,
           pageMustBe(CheckYourAnswersPage),
           answersMustNotContain(ApplicantIncomeOver60kPage)
         )
@@ -50,12 +55,13 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
   "when the user initially said their income was not above 50k" - {
 
-
-    "changing the answer to true must collect `income over 60k` and return to Check Answers" in {
+    "changing the answer to true must collect `income over 60k`, show the tax charge explanation then return to Check Answers" in {
 
       val initialise = journeyOf(
         submitAnswer(ApplicantIncomeOver50kPage, false),
         submitAnswer(ApplicantBenefitsPage, benefits),
+        next,
+        submitAnswer(ClaimedChildBenefitBeforePage, false),
         goTo(CheckYourAnswersPage)
       )
 
@@ -65,6 +71,8 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
           goToChangeAnswer(ApplicantIncomeOver50kPage),
           submitAnswer(ApplicantIncomeOver50kPage, true),
           submitAnswer(ApplicantIncomeOver60kPage, true),
+          pageMustBe(TaxChargeExplanationPage),
+          next,
           pageMustBe(CheckYourAnswersPage)
         )
     }
@@ -72,12 +80,14 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
   
   "when the user initially said their or their partner's income was over 50k" - {
 
-    "changing the answer to false must remove the answer to `income over 60k` and return to Check Answers" in {
+    "changing the answer to false must remove the answer to `income over 60k`, show the tax charge explanation then return to Check Answers" in {
 
       val initialise = journeyOf(
         submitAnswer(ApplicantOrPartnerIncomeOver50kPage, true),
         submitAnswer(ApplicantOrPartnerIncomeOver60kPage, true),
         submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
+        next,
+        submitAnswer(ClaimedChildBenefitBeforePage, false),
         goTo(CheckYourAnswersPage)
       )
 
@@ -86,6 +96,8 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
           initialise,
           goToChangeAnswer(ApplicantOrPartnerIncomeOver50kPage),
           submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
+          pageMustBe(TaxChargeExplanationPage),
+          next,
           pageMustBe(CheckYourAnswersPage),
           answersMustNotContain(ApplicantOrPartnerIncomeOver60kPage)
         )
@@ -94,11 +106,13 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
   "when the user initially said their or their partner's income was not above 50k" - {
     
-    "changing the answer to true must collect `income over 60k` and return to Check Answers" in {
+    "changing the answer to true must collect `income over 60k`, show the tax charge explanation then return to Check Answers" in {
 
       val initialise = journeyOf(
         submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
         submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
+        next,
+        submitAnswer(ClaimedChildBenefitBeforePage, false),
         goTo(CheckYourAnswersPage)
       )
 
@@ -108,6 +122,8 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
           goToChangeAnswer(ApplicantOrPartnerIncomeOver50kPage),
           submitAnswer(ApplicantOrPartnerIncomeOver50kPage, true),
           submitAnswer(ApplicantOrPartnerIncomeOver60kPage, true),
+          pageMustBe(TaxChargeExplanationPage),
+          next,
           pageMustBe(CheckYourAnswersPage)
         )
     }

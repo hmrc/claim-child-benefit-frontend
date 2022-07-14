@@ -18,7 +18,7 @@ package pages.income
 
 import controllers.income.routes
 import models.UserAnswers
-import pages.{Page, QuestionPage, Waypoints}
+import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -37,6 +37,23 @@ case object ApplicantOrPartnerIncomeOver50kPage extends QuestionPage[Boolean] {
     answers.get(this).map {
       case true => ApplicantOrPartnerIncomeOver60kPage
       case false => ApplicantOrPartnerBenefitsPage
+    }.orRecover
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true =>
+        answers.get(ApplicantOrPartnerIncomeOver60kPage)
+          .map { _ =>
+            answers.get(ApplicantOrPartnerBenefitsPage)
+              .map(_ => TaxChargeExplanationPage)
+              .getOrElse(ApplicantOrPartnerBenefitsPage)
+          }
+          .getOrElse(ApplicantOrPartnerIncomeOver60kPage)
+
+      case false =>
+        answers.get(ApplicantOrPartnerBenefitsPage)
+          .map(_ => TaxChargeExplanationPage)
+          .getOrElse(ApplicantOrPartnerBenefitsPage)
     }.orRecover
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =

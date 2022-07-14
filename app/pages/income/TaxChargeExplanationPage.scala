@@ -17,9 +17,11 @@
 package pages.income
 
 import controllers.income.routes
+import models.RelationshipStatus._
 import models.UserAnswers
-import pages.payments.ClaimedChildBenefitBeforePage
-import pages.{Page, Waypoints}
+import pages.partner.PartnerNamePage
+import pages.payments.{ClaimedChildBenefitBeforePage, WantToBePaidPage, WantToBePaidWeeklyPage}
+import pages.{NonEmptyWaypoints, Page, RelationshipStatusPage, Waypoints}
 import play.api.mvc.Call
 
 case object TaxChargeExplanationPage extends Page {
@@ -29,4 +31,22 @@ case object TaxChargeExplanationPage extends Page {
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     ClaimedChildBenefitBeforePage
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    answers.get(RelationshipStatusPage).map {
+      case Married | Cohabiting =>
+        answers.get(PartnerNamePage)
+          .map(_ => waypoints.next.page)
+          .getOrElse(PartnerNamePage)
+
+      case Single | Divorced | Separated | Widowed =>
+        answers.get(WantToBePaidPage).map {
+          case true =>
+            answers.get(WantToBePaidWeeklyPage)
+              .map(_ => waypoints.next.page)
+              .getOrElse(WantToBePaidWeeklyPage)
+          case false =>
+            waypoints.next.page
+        }.orRecover
+    }.orRecover
 }

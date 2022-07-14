@@ -17,10 +17,9 @@
 package pages.income
 
 import controllers.income.routes
-import models.RelationshipStatus._
 import models.{Benefits, UserAnswers}
 import pages.payments.{WantToBePaidPage, WantToBePaidWeeklyPage}
-import pages.{NonEmptyWaypoints, Page, QuestionPage, RelationshipStatusPage, Waypoints}
+import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -38,12 +37,7 @@ case object ApplicantBenefitsPage extends QuestionPage[Set[Benefits]] {
 
   override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
     answers.get(WantToBePaidPage).map {
-      case true =>
-        answers.get(WantToBePaidWeeklyPage)
-          .map(_ => waypoints.next.page)
-          .getOrElse(WantToBePaidWeeklyPage)
-
-      case false =>
-        waypoints.next.page
+      case true  => TaxChargeExplanationPage
+      case false => waypoints.next.page
     }.getOrElse(waypoints.next.page)
 }

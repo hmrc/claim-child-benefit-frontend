@@ -26,7 +26,7 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.child.ChildNamePage
 import pages.income._
 import pages.partner._
-import pages.payments.{ApplicantHasSuitableAccountPage, WantToBePaidPage, WantToBePaidWeeklyPage}
+import pages.payments.{ApplicantHasSuitableAccountPage, ClaimedChildBenefitBeforePage, WantToBePaidPage, WantToBePaidWeeklyPage}
 import pages.{CannotBePaidWeeklyPage, CheckYourAnswersPage, CohabitationDatePage, RelationshipStatusPage, SeparationDatePage}
 import uk.gov.hmrc.domain.Nino
 
@@ -54,6 +54,8 @@ class ChangingInitialSectionJourneySpec
       submitAnswer(ApplicantOrPartnerIncomeOver50kPage, true),
       submitAnswer(ApplicantOrPartnerIncomeOver60kPage, true),
       submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
+      next,
+      submitAnswer(ClaimedChildBenefitBeforePage, false),
       setUserAnswerTo(WantToBePaidPage, true),
       setUserAnswerTo(ApplicantHasSuitableAccountPage, false),
       setUserAnswerTo(PartnerNamePage, partnerName),
@@ -102,7 +104,7 @@ class ChangingInitialSectionJourneySpec
 
         "when the user originally said they wanted to be paid Child Benefit" - {
 
-          "must remove joint income and partner details, then collect the separation date, single income details and whether they want to be paid weekly" in {
+          "must remove joint income and partner details, then collect the separation date and single income details, show the tax charge explanation, and ask whether they want to be paid weekly" in {
 
             startingFrom(RelationshipStatusPage)
               .run(
@@ -113,6 +115,8 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(SeparationDatePage, LocalDate.now),
                 submitAnswer(ApplicantIncomeOver50kPage, false),
                 submitAnswer(ApplicantBenefitsPage, benefits),
+                pageMustBe(TaxChargeExplanationPage),
+                next,
                 submitAnswer(WantToBePaidWeeklyPage, true),
                 pageMustBe(CheckYourAnswersPage),
                 answersMustNotContain(ApplicantOrPartnerIncomeOver50kPage),
@@ -134,7 +138,7 @@ class ChangingInitialSectionJourneySpec
 
         "when the user originally said they did not want to be paid Child Benefit" - {
 
-          "must remove joint income and partner details, then collect the separation date, single income details" in {
+          "must remove joint income and partner details, then collect the separation date and single income details" in {
 
             startingFrom(RelationshipStatusPage)
               .run(
@@ -169,7 +173,7 @@ class ChangingInitialSectionJourneySpec
 
         "when the user originally said they wanted to be paid Child Benefit" - {
 
-          "must remove joint income and partner details, then go to collect single income details and whether they want to be paid weekly" in {
+          "must remove joint income and partner details, then go to collect single income details, show the tax charge explanation, and ask whether they want to be paid weekly" in {
 
             forAll(Gen.oneOf(Single, Divorced, Widowed)) {
               status =>
@@ -182,6 +186,8 @@ class ChangingInitialSectionJourneySpec
                     submitAnswer(RelationshipStatusPage, status),
                     submitAnswer(ApplicantIncomeOver50kPage, false),
                     submitAnswer(ApplicantBenefitsPage, benefits),
+                    pageMustBe(TaxChargeExplanationPage),
+                    next,
                     submitAnswer(WantToBePaidWeeklyPage, true),
                     pageMustBe(CheckYourAnswersPage),
                     answersMustNotContain(ApplicantOrPartnerIncomeOver50kPage),
@@ -273,7 +279,7 @@ class ChangingInitialSectionJourneySpec
 
         "when the user originally said they wanted to be paid Child Benefit" - {
 
-          "must remove joint income and partner details, then go to collect separation date and single income details" in {
+          "must remove joint income and partner details, then go to collect separation date and single income details and show the tax charge explanation" in {
 
             startingFrom(RelationshipStatusPage)
               .run(
@@ -285,6 +291,8 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(SeparationDatePage, LocalDate.now),
                 submitAnswer(ApplicantIncomeOver50kPage, false),
                 submitAnswer(ApplicantBenefitsPage, benefits),
+                pageMustBe(TaxChargeExplanationPage),
+                next,
                 pageMustBe(CheckYourAnswersPage),
                 answersMustNotContain(ApplicantOrPartnerIncomeOver50kPage),
                 answersMustNotContain(ApplicantOrPartnerIncomeOver60kPage),
@@ -341,7 +349,7 @@ class ChangingInitialSectionJourneySpec
 
         "when the user originally said they wanted to be paid Child Benefit" - {
 
-          "must remove joint income and partner details, then go to collect single income details" in {
+          "must remove joint income and partner details, then go to collect single income details and show the tax charge explanation" in {
 
             forAll(Gen.oneOf(Single, Divorced, Widowed)) {
               status =>
@@ -355,6 +363,8 @@ class ChangingInitialSectionJourneySpec
                     submitAnswer(RelationshipStatusPage, status),
                     submitAnswer(ApplicantIncomeOver50kPage, false),
                     submitAnswer(ApplicantBenefitsPage, benefits),
+                    pageMustBe(TaxChargeExplanationPage),
+                    next,
                     pageMustBe(CheckYourAnswersPage),
                     answersMustNotContain(ApplicantOrPartnerIncomeOver50kPage),
                     answersMustNotContain(ApplicantOrPartnerIncomeOver60kPage),
@@ -472,7 +482,7 @@ class ChangingInitialSectionJourneySpec
 
         "when the user originally said they wanted to be paid Child Benefit" - {
 
-          "must remove cohab date, joint income and partner details, collect separation date and single income details and whether they want to be paid weekly" in {
+          "must remove cohab date, joint income and partner details, collect separation date and single income details, show the tax charge explanation, and ask whether they want to be paid weekly" in {
 
             startingFrom(RelationshipStatusPage)
               .run(
@@ -483,6 +493,8 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(SeparationDatePage, LocalDate.now),
                 submitAnswer(ApplicantIncomeOver50kPage, false),
                 submitAnswer(ApplicantBenefitsPage, benefits),
+                pageMustBe(TaxChargeExplanationPage),
+                next,
                 submitAnswer(WantToBePaidWeeklyPage, false),
                 pageMustBe(CheckYourAnswersPage),
                 answersMustNotContain(CohabitationDatePage),
@@ -541,7 +553,7 @@ class ChangingInitialSectionJourneySpec
 
         "when they originally said they wanted to be paid Child Benefit" - {
 
-          "must remove cohab date, joint income and partner details, then collect single income details and whether they want to be paid weekly" in {
+          "must remove cohab date, joint income and partner details, then collect single income details, show the tax charge explanation, and ask whether they want to be paid weekly" in {
 
             forAll(Gen.oneOf(Single, Divorced, Widowed)) {
               status =>
@@ -554,6 +566,8 @@ class ChangingInitialSectionJourneySpec
                     submitAnswer(RelationshipStatusPage, status),
                     submitAnswer(ApplicantIncomeOver50kPage, false),
                     submitAnswer(ApplicantBenefitsPage, benefits),
+                    pageMustBe(TaxChargeExplanationPage),
+                    next,
                     submitAnswer(WantToBePaidWeeklyPage, true),
                     pageMustBe(CheckYourAnswersPage),
                     answersMustNotContain(CohabitationDatePage),
@@ -650,7 +664,7 @@ class ChangingInitialSectionJourneySpec
 
         "when the user initially said they wanted to be paid Child Benefit" - {
 
-          "must remove cohab date, joint income and partner details, collect separation date and single income details" in {
+          "must remove cohab date, joint income and partner details, collect separation date and single income details and show the tax charge explanation" in {
 
             startingFrom(RelationshipStatusPage)
               .run(
@@ -662,6 +676,8 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(SeparationDatePage, LocalDate.now),
                 submitAnswer(ApplicantIncomeOver50kPage, false),
                 submitAnswer(ApplicantBenefitsPage, benefits),
+                pageMustBe(TaxChargeExplanationPage),
+                next,
                 pageMustBe(CheckYourAnswersPage),
                 answersMustNotContain(CohabitationDatePage),
                 answersMustNotContain(ApplicantOrPartnerIncomeOver50kPage),
@@ -720,7 +736,7 @@ class ChangingInitialSectionJourneySpec
 
         "when the user initially said they wanted to be paid Child Benefit" - {
 
-          "must remove cohab date, joint income and partner details, collect separation date and single income details" in {
+          "must remove cohab date, joint income and partner details, collect separation date and single income details and show the tax charge explanation" in {
 
             forAll(Gen.oneOf(Single, Divorced, Widowed)) {
               status =>
@@ -734,6 +750,8 @@ class ChangingInitialSectionJourneySpec
                     submitAnswer(RelationshipStatusPage, status),
                     submitAnswer(ApplicantIncomeOver50kPage, false),
                     submitAnswer(ApplicantBenefitsPage, benefits),
+                    pageMustBe(TaxChargeExplanationPage),
+                    next,
                     pageMustBe(CheckYourAnswersPage),
                     answersMustNotContain(CohabitationDatePage),
                     answersMustNotContain(ApplicantOrPartnerIncomeOver50kPage),
@@ -811,7 +829,7 @@ class ChangingInitialSectionJourneySpec
 
         "and the user or their partner have qualifying benefits" - {
 
-          "must remove the separation date and single income details, then go to collect joint income then partner details" in {
+          "must remove the separation date and single income details, go to collect joint income details, show the tax charge explanation, then collect partner details" in {
 
             startingFrom(RelationshipStatusPage)
               .run(
@@ -821,6 +839,8 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(RelationshipStatusPage, Married),
                 submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
                 submitAnswer(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
+                pageMustBe(TaxChargeExplanationPage),
+                next,
                 submitAnswer(PartnerNamePage, partnerName),
                 submitAnswer(PartnerNinoKnownPage, true),
                 submitAnswer(PartnerNinoPage, nino),
@@ -843,7 +863,7 @@ class ChangingInitialSectionJourneySpec
 
         "and the user or their partner do not have qualifying benefits" - {
 
-          "must remove the separation date, single income details and whether they want to be paid weekly, tell the user they cannot be paid weekly, then go to collect joint income then partner details" in {
+          "must remove the separation date, single income details and whether they want to be paid weekly, go to collect joint income details, tell the user they cannot be paid weekly, show the tax charge explanation, then collect partner details" in {
 
             startingFrom(RelationshipStatusPage)
               .run(
@@ -854,6 +874,8 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
                 submitAnswer(ApplicantOrPartnerBenefitsPage, nonQualifyingBenefits),
                 pageMustBe(CannotBePaidWeeklyPage),
+                next,
+                pageMustBe(TaxChargeExplanationPage),
                 next,
                 submitAnswer(PartnerNamePage, partnerName),
                 submitAnswer(PartnerNinoKnownPage, true),
@@ -880,7 +902,7 @@ class ChangingInitialSectionJourneySpec
 
         "and the user or their partner have qualifying benefits" - {
 
-          "must remove the separation date and single income details, then go to collect joint income then partner details" in {
+          "must remove the separation date and single income details, then go to collect joint income, show the tax charge explanation, then collect partner details" in {
 
             startingFrom(RelationshipStatusPage)
               .run(
@@ -890,6 +912,8 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(RelationshipStatusPage, Married),
                 submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
                 submitAnswer(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
+                pageMustBe(TaxChargeExplanationPage),
+                next,
                 submitAnswer(PartnerNamePage, partnerName),
                 submitAnswer(PartnerNinoKnownPage, true),
                 submitAnswer(PartnerNinoPage, nino),
@@ -912,7 +936,7 @@ class ChangingInitialSectionJourneySpec
 
         "and the user or their partner do not have qualifying benefits" - {
 
-          "must remove the separation date, single income details and whether they want to be paid weekly, then go to collect joint income then partner details" in {
+          "must remove the separation date, single income details and whether they want to be paid weekly, then go to collect joint income details, show the tax charge explanation, then collect partner details" in {
 
             startingFrom(RelationshipStatusPage)
               .run(
@@ -922,6 +946,8 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(RelationshipStatusPage, Married),
                 submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
                 submitAnswer(ApplicantOrPartnerBenefitsPage, nonQualifyingBenefits),
+                pageMustBe(TaxChargeExplanationPage),
+                next,
                 submitAnswer(PartnerNamePage, partnerName),
                 submitAnswer(PartnerNinoKnownPage, true),
                 submitAnswer(PartnerNinoPage, nino),
@@ -981,7 +1007,7 @@ class ChangingInitialSectionJourneySpec
 
         "and the user or their partner have qualifying benefits" - {
 
-          "must remove the separation date and single income details, then go to collect cohab date and joint income details" in {
+          "must remove the separation date and single income details, then go to collect cohab date and joint income details, then show the tax charge explanation" in {
 
             startingFrom(RelationshipStatusPage)
               .run(
@@ -992,6 +1018,8 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(CohabitationDatePage, LocalDate.now),
                 submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
                 submitAnswer(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
+                pageMustBe(TaxChargeExplanationPage),
+                next,
                 submitAnswer(PartnerNamePage, partnerName),
                 submitAnswer(PartnerNinoKnownPage, true),
                 submitAnswer(PartnerNinoPage, nino),
@@ -1014,7 +1042,7 @@ class ChangingInitialSectionJourneySpec
 
         "and the user or their partner do not have qualifying benefits" - {
 
-          "must remove the separation date, single income details and whether they wanted to be paid weekly, then go to collect cohab date and joint income details" in {
+          "must remove the separation date, single income details and whether they wanted to be paid weekly, then go to collect cohab date and joint income details, tell the user they cannot be paid weekly, show the tax charge explanation, and collect partner details" in {
 
             startingFrom(RelationshipStatusPage)
               .run(
@@ -1026,6 +1054,8 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
                 submitAnswer(ApplicantOrPartnerBenefitsPage, nonQualifyingBenefits),
                 pageMustBe(CannotBePaidWeeklyPage),
+                next,
+                pageMustBe(TaxChargeExplanationPage),
                 next,
                 submitAnswer(PartnerNamePage, partnerName),
                 submitAnswer(PartnerNinoKnownPage, true),
@@ -1063,6 +1093,8 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(CohabitationDatePage, LocalDate.now),
                 submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
                 submitAnswer(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
+                pageMustBe(TaxChargeExplanationPage),
+                next,
                 submitAnswer(PartnerNamePage, partnerName),
                 submitAnswer(PartnerNinoKnownPage, true),
                 submitAnswer(PartnerNinoPage, nino),
@@ -1085,7 +1117,7 @@ class ChangingInitialSectionJourneySpec
 
         "and the user or their partner do not have qualifying benefits" - {
 
-          "must remove the separation date, single income details and whether they wanted to be paid weekly, then go to collect cohab date and joint income details" in {
+          "must remove the separation date, single income details and whether they wanted to be paid weekly, then go to collect cohab date and joint income details, show the tax charge explanation, and collect partner details" in {
 
             startingFrom(RelationshipStatusPage)
               .run(
@@ -1096,6 +1128,8 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(CohabitationDatePage, LocalDate.now),
                 submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
                 submitAnswer(ApplicantOrPartnerBenefitsPage, nonQualifyingBenefits),
+                pageMustBe(TaxChargeExplanationPage),
+                next,
                 submitAnswer(PartnerNamePage, partnerName),
                 submitAnswer(PartnerNinoKnownPage, true),
                 submitAnswer(PartnerNinoPage, nino),
@@ -1187,7 +1221,7 @@ class ChangingInitialSectionJourneySpec
 
         "and the user or their partner have qualifying benefits" - {
 
-          "must remove single income details, then go to collect joint income and partner details" in {
+          "must remove single income details, then go to collect joint income details, show the tax charge explanation, and collect partner details" in {
 
             Seq(Single, Divorced, Widowed).foreach { status =>
 
@@ -1199,6 +1233,8 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(RelationshipStatusPage, Married),
                   submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
                   submitAnswer(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
+                  pageMustBe(TaxChargeExplanationPage),
+                  next,
                   submitAnswer(PartnerNamePage, partnerName),
                   submitAnswer(PartnerNinoKnownPage, true),
                   submitAnswer(PartnerNinoPage, nino),
@@ -1221,7 +1257,7 @@ class ChangingInitialSectionJourneySpec
 
         "and the user or their partner do not have qualifying benefits" - {
 
-          "must remove single income details and whether they want to be paid weekly, tell the user they cannot be paid weekly, then go to collect joint income then partner details" in {
+          "must remove single income details and whether they want to be paid weekly, go to collect joint income details, tell the user they cannot be paid weekly, show the tax charge explanation, then collect partner details" in {
 
             Seq(Single, Divorced, Widowed).foreach { status =>
 
@@ -1234,6 +1270,8 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
                   submitAnswer(ApplicantOrPartnerBenefitsPage, nonQualifyingBenefits),
                   pageMustBe(CannotBePaidWeeklyPage),
+                  next,
+                  pageMustBe(TaxChargeExplanationPage),
                   next,
                   submitAnswer(PartnerNamePage, partnerName),
                   submitAnswer(PartnerNinoKnownPage, true),
@@ -1260,7 +1298,7 @@ class ChangingInitialSectionJourneySpec
 
         "and the user or their partner have qualifying benefits" - {
 
-          "must remove single income details, then go to collect joint income and partner details" in {
+          "must remove single income details, then go to collect joint income details, show the tax charge explanation, and collect partner details" in {
 
             Seq(Single, Divorced, Widowed).foreach { status =>
 
@@ -1272,6 +1310,8 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(RelationshipStatusPage, Married),
                   submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
                   submitAnswer(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
+                  pageMustBe(TaxChargeExplanationPage),
+                  next,
                   submitAnswer(PartnerNamePage, partnerName),
                   submitAnswer(PartnerNinoKnownPage, true),
                   submitAnswer(PartnerNinoPage, nino),
@@ -1294,7 +1334,7 @@ class ChangingInitialSectionJourneySpec
 
         "and the user or their partner do not have qualifying benefits" - {
 
-          "must remove single income details and whether they want to be paid weekly, tell the user they cannot be paid weekly, then go to collect joint income and partner details" in {
+          "must remove single income details and whether they want to be paid weekly,  go to collect joint income details, show the tax charge explanation,  and collect partner details" in {
 
             Seq(Single, Divorced, Widowed).foreach { status =>
 
@@ -1306,6 +1346,8 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(RelationshipStatusPage, Married),
                   submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
                   submitAnswer(ApplicantOrPartnerBenefitsPage, nonQualifyingBenefits),
+                  pageMustBe(TaxChargeExplanationPage),
+                  next,
                   submitAnswer(PartnerNamePage, partnerName),
                   submitAnswer(PartnerNinoKnownPage, true),
                   submitAnswer(PartnerNinoPage, nino),
@@ -1367,7 +1409,7 @@ class ChangingInitialSectionJourneySpec
 
         "and the user or their partner have qualifying benefits" - {
 
-          "must remove single income details, then collect the cohabitation date then joint income details" in {
+          "must remove single income details, then collect the cohabitation date then joint income details, show the tax charge explanation, and collect partner details" in {
 
             Seq(Single, Divorced, Widowed).foreach { status =>
 
@@ -1380,6 +1422,8 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(CohabitationDatePage, LocalDate.now),
                   submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
                   submitAnswer(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
+                  pageMustBe(TaxChargeExplanationPage),
+                  next,
                   submitAnswer(PartnerNamePage, partnerName),
                   submitAnswer(PartnerNinoKnownPage, true),
                   submitAnswer(PartnerNinoPage, nino),
@@ -1402,7 +1446,7 @@ class ChangingInitialSectionJourneySpec
 
         "and the user or their partner do not have qualifying benefits" - {
 
-          "must remove single income details and whether they want to be paid weekly, tell the user they cannot be paid weekly, then collect the cohabitation date then joint income details" in {
+          "must remove single income details and whether they want to be paid weekly, collect the cohabitation date then joint income details, tell the user they cannot be paid weekly, show the tax charge explanation, then collect partner details" in {
 
             Seq(Single, Divorced, Widowed).foreach { status =>
 
@@ -1416,6 +1460,8 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
                   submitAnswer(ApplicantOrPartnerBenefitsPage, nonQualifyingBenefits),
                   pageMustBe(CannotBePaidWeeklyPage),
+                  next,
+                  pageMustBe(TaxChargeExplanationPage),
                   next,
                   submitAnswer(PartnerNamePage, partnerName),
                   submitAnswer(PartnerNinoKnownPage, true),
@@ -1442,7 +1488,7 @@ class ChangingInitialSectionJourneySpec
 
         "and the user or their partner have qualifying benefits" - {
 
-          "must remove single income details, then collect the cohabitation date then joint income details" in {
+          "must remove single income details, then collect the cohabitation date then joint income details, show the tax charge explanation, then collect partner details" in {
 
             Seq(Single, Divorced, Widowed).foreach { status =>
 
@@ -1455,6 +1501,8 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(CohabitationDatePage, LocalDate.now),
                   submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
                   submitAnswer(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
+                  pageMustBe(TaxChargeExplanationPage),
+                  next,
                   submitAnswer(PartnerNamePage, partnerName),
                   submitAnswer(PartnerNinoKnownPage, true),
                   submitAnswer(PartnerNinoPage, nino),
@@ -1477,7 +1525,7 @@ class ChangingInitialSectionJourneySpec
 
         "and the user or their partner do not have qualifying benefits" - {
 
-          "must remove single income details and whether they want to be paid weekly, then collect the cohabitation date then joint income details" in {
+          "must remove single income details and whether they want to be paid weekly, then collect the cohabitation date then joint income details, show the tax charge explanation, and collect partner details" in {
 
             Seq(Single, Divorced, Widowed).foreach { status =>
 
@@ -1490,6 +1538,8 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(CohabitationDatePage, LocalDate.now),
                   submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
                   submitAnswer(ApplicantOrPartnerBenefitsPage, nonQualifyingBenefits),
+                  pageMustBe(TaxChargeExplanationPage),
+                  next,
                   submitAnswer(PartnerNamePage, partnerName),
                   submitAnswer(PartnerNinoKnownPage, true),
                   submitAnswer(PartnerNinoPage, nino),
