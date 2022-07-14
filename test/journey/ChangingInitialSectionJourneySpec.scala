@@ -834,6 +834,7 @@ class ChangingInitialSectionJourneySpec
             startingFrom(RelationshipStatusPage)
               .run(
                 initialise,
+                setUserAnswerTo(WantToBePaidPage, true),
                 setUserAnswerTo(WantToBePaidWeeklyPage, true),
                 goToChangeAnswer(RelationshipStatusPage),
                 submitAnswer(RelationshipStatusPage, Married),
@@ -868,6 +869,7 @@ class ChangingInitialSectionJourneySpec
             startingFrom(RelationshipStatusPage)
               .run(
                 initialise,
+                setUserAnswerTo(WantToBePaidPage, true),
                 setUserAnswerTo(WantToBePaidWeeklyPage, true),
                 goToChangeAnswer(RelationshipStatusPage),
                 submitAnswer(RelationshipStatusPage, Married),
@@ -907,6 +909,7 @@ class ChangingInitialSectionJourneySpec
             startingFrom(RelationshipStatusPage)
               .run(
                 initialise,
+                setUserAnswerTo(WantToBePaidPage, true),
                 setUserAnswerTo(WantToBePaidWeeklyPage, false),
                 goToChangeAnswer(RelationshipStatusPage),
                 submitAnswer(RelationshipStatusPage, Married),
@@ -941,6 +944,7 @@ class ChangingInitialSectionJourneySpec
             startingFrom(RelationshipStatusPage)
               .run(
                 initialise,
+                setUserAnswerTo(WantToBePaidPage, true),
                 setUserAnswerTo(WantToBePaidWeeklyPage, false),
                 goToChangeAnswer(RelationshipStatusPage),
                 submitAnswer(RelationshipStatusPage, Married),
@@ -1012,6 +1016,7 @@ class ChangingInitialSectionJourneySpec
             startingFrom(RelationshipStatusPage)
               .run(
                 initialise,
+                setUserAnswerTo(WantToBePaidPage, true),
                 setUserAnswerTo(WantToBePaidWeeklyPage, true),
                 goToChangeAnswer(RelationshipStatusPage),
                 submitAnswer(RelationshipStatusPage, Cohabiting),
@@ -1047,6 +1052,7 @@ class ChangingInitialSectionJourneySpec
             startingFrom(RelationshipStatusPage)
               .run(
                 initialise,
+                setUserAnswerTo(WantToBePaidPage, true),
                 setUserAnswerTo(WantToBePaidWeeklyPage, true),
                 goToChangeAnswer(RelationshipStatusPage),
                 submitAnswer(RelationshipStatusPage, Cohabiting),
@@ -1087,6 +1093,7 @@ class ChangingInitialSectionJourneySpec
             startingFrom(RelationshipStatusPage)
               .run(
                 initialise,
+                setUserAnswerTo(WantToBePaidPage, true),
                 setUserAnswerTo(WantToBePaidWeeklyPage, false),
                 goToChangeAnswer(RelationshipStatusPage),
                 submitAnswer(RelationshipStatusPage, Cohabiting),
@@ -1122,6 +1129,7 @@ class ChangingInitialSectionJourneySpec
             startingFrom(RelationshipStatusPage)
               .run(
                 initialise,
+                setUserAnswerTo(WantToBePaidPage, true),
                 setUserAnswerTo(WantToBePaidWeeklyPage, false),
                 goToChangeAnswer(RelationshipStatusPage),
                 submitAnswer(RelationshipStatusPage, Cohabiting),
@@ -1228,6 +1236,7 @@ class ChangingInitialSectionJourneySpec
               startingFrom(RelationshipStatusPage)
                 .run(
                   initialise(status),
+                  setUserAnswerTo(WantToBePaidPage, true),
                   setUserAnswerTo(WantToBePaidWeeklyPage, true),
                   goToChangeAnswer(RelationshipStatusPage),
                   submitAnswer(RelationshipStatusPage, Married),
@@ -1264,6 +1273,7 @@ class ChangingInitialSectionJourneySpec
               startingFrom(RelationshipStatusPage)
                 .run(
                   initialise(status),
+                  setUserAnswerTo(WantToBePaidPage, true),
                   setUserAnswerTo(WantToBePaidWeeklyPage, true),
                   goToChangeAnswer(RelationshipStatusPage),
                   submitAnswer(RelationshipStatusPage, Married),
@@ -1305,6 +1315,7 @@ class ChangingInitialSectionJourneySpec
               startingFrom(RelationshipStatusPage)
                 .run(
                   initialise(status),
+                  setUserAnswerTo(WantToBePaidPage, true),
                   setUserAnswerTo(WantToBePaidWeeklyPage, false),
                   goToChangeAnswer(RelationshipStatusPage),
                   submitAnswer(RelationshipStatusPage, Married),
@@ -1341,6 +1352,7 @@ class ChangingInitialSectionJourneySpec
               startingFrom(RelationshipStatusPage)
                 .run(
                   initialise(status),
+                  setUserAnswerTo(WantToBePaidPage, true),
                   setUserAnswerTo(WantToBePaidWeeklyPage, false),
                   goToChangeAnswer(RelationshipStatusPage),
                   submitAnswer(RelationshipStatusPage, Married),
@@ -1416,6 +1428,7 @@ class ChangingInitialSectionJourneySpec
               startingFrom(RelationshipStatusPage)
                 .run(
                   initialise(status),
+                  setUserAnswerTo(WantToBePaidPage, true),
                   setUserAnswerTo(WantToBePaidWeeklyPage, true),
                   goToChangeAnswer(RelationshipStatusPage),
                   submitAnswer(RelationshipStatusPage, Cohabiting),
@@ -1453,6 +1466,7 @@ class ChangingInitialSectionJourneySpec
               startingFrom(RelationshipStatusPage)
                 .run(
                   initialise(status),
+                  setUserAnswerTo(WantToBePaidPage, true),
                   setUserAnswerTo(WantToBePaidWeeklyPage, true),
                   goToChangeAnswer(RelationshipStatusPage),
                   submitAnswer(RelationshipStatusPage, Cohabiting),
@@ -1495,6 +1509,7 @@ class ChangingInitialSectionJourneySpec
               startingFrom(RelationshipStatusPage)
                 .run(
                   initialise(status),
+                  setUserAnswerTo(WantToBePaidPage, true),
                   setUserAnswerTo(WantToBePaidWeeklyPage, false),
                   goToChangeAnswer(RelationshipStatusPage),
                   submitAnswer(RelationshipStatusPage, Cohabiting),
@@ -1532,6 +1547,7 @@ class ChangingInitialSectionJourneySpec
               startingFrom(RelationshipStatusPage)
                 .run(
                   initialise(status),
+                  setUserAnswerTo(WantToBePaidPage, true),
                   setUserAnswerTo(WantToBePaidWeeklyPage, false),
                   goToChangeAnswer(RelationshipStatusPage),
                   submitAnswer(RelationshipStatusPage, Cohabiting),
@@ -1569,6 +1585,7 @@ class ChangingInitialSectionJourneySpec
         startingFrom(RelationshipStatusPage)
           .run(
             initialise(status),
+            setUserAnswerTo(WantToBePaidPage, true),
             setUserAnswerTo(WantToBePaidWeeklyPage, true),
             goToChangeAnswer(RelationshipStatusPage),
             submitAnswer(RelationshipStatusPage, Separated),
@@ -1591,6 +1608,7 @@ class ChangingInitialSectionJourneySpec
         startingFrom(RelationshipStatusPage)
           .run(
             initialise(status),
+            setUserAnswerTo(WantToBePaidPage, true),
             setUserAnswerTo(WantToBePaidWeeklyPage, true),
             goToChangeAnswer(RelationshipStatusPage),
             submitAnswer(RelationshipStatusPage, newStatus),

@@ -16,14 +16,18 @@
 
 package journey
 
-import models.Benefits
+import generators.ModelGenerators
+import models.{Benefits, PartnerName}
+import models.RelationshipStatus._
+import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
-import pages.CheckYourAnswersPage
+import pages.{CheckYourAnswersPage, RelationshipStatusPage}
 import pages.income._
-import pages.payments.ClaimedChildBenefitBeforePage
+import pages.partner.PartnerNamePage
+import pages.payments.{ApplicantHasSuitableAccountPage, ClaimedChildBenefitBeforePage, WantToBePaidPage, WantToBePaidWeeklyPage}
 
-class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
+class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
   private def benefits = Set(Gen.oneOf(Benefits.values).sample.value)
 
@@ -31,12 +35,16 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
     "changing the answer to false must remove the answer to `income over 60k`, show the tax charge explanation then return to Check Answers" in {
 
+      val relationshipStatus = Gen.oneOf(Single, Separated, Widowed, Divorced).sample.value
+
       val initialise = journeyOf(
+        setUserAnswerTo(RelationshipStatusPage, relationshipStatus),
         submitAnswer(ApplicantIncomeOver50kPage, true),
         submitAnswer(ApplicantIncomeOver60kPage, true),
         submitAnswer(ApplicantBenefitsPage, benefits),
         next,
         submitAnswer(ClaimedChildBenefitBeforePage, false),
+        submitAnswer(WantToBePaidPage, false),
         goTo(CheckYourAnswersPage)
       )
 
@@ -57,11 +65,15 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
     "changing the answer to true must collect `income over 60k`, show the tax charge explanation then return to Check Answers" in {
 
+      val relationshipStatus = Gen.oneOf(Single, Separated, Widowed, Divorced).sample.value
+
       val initialise = journeyOf(
+        setUserAnswerTo(RelationshipStatusPage, relationshipStatus),
         submitAnswer(ApplicantIncomeOver50kPage, false),
         submitAnswer(ApplicantBenefitsPage, benefits),
         next,
         submitAnswer(ClaimedChildBenefitBeforePage, false),
+        submitAnswer(WantToBePaidPage, false),
         goTo(CheckYourAnswersPage)
       )
 
@@ -82,12 +94,18 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
     "changing the answer to false must remove the answer to `income over 60k`, show the tax charge explanation then return to Check Answers" in {
 
+      val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
+      val partnerName        = arbitrary[PartnerName].sample.value
+
       val initialise = journeyOf(
+        setUserAnswerTo(RelationshipStatusPage, relationshipStatus),
         submitAnswer(ApplicantOrPartnerIncomeOver50kPage, true),
         submitAnswer(ApplicantOrPartnerIncomeOver60kPage, true),
         submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
         next,
         submitAnswer(ClaimedChildBenefitBeforePage, false),
+        submitAnswer(WantToBePaidPage, false),
+        setUserAnswerTo(PartnerNamePage, partnerName),
         goTo(CheckYourAnswersPage)
       )
 
@@ -108,11 +126,17 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
     
     "changing the answer to true must collect `income over 60k`, show the tax charge explanation then return to Check Answers" in {
 
+      val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
+      val partnerName        = arbitrary[PartnerName].sample.value
+
       val initialise = journeyOf(
+        setUserAnswerTo(RelationshipStatusPage, relationshipStatus),
         submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
         submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
         next,
         submitAnswer(ClaimedChildBenefitBeforePage, false),
+        submitAnswer(WantToBePaidPage, false),
+        setUserAnswerTo(PartnerNamePage, partnerName),
         goTo(CheckYourAnswersPage)
       )
 
@@ -126,6 +150,71 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
           next,
           pageMustBe(CheckYourAnswersPage)
         )
+    }
+  }
+
+  "when the user initially said they or their partner did not receive any qualifying benefits" - {
+
+    def qualifyingBenefits = Set[Benefits](Gen.oneOf(Benefits.qualifyingBenefits).sample.value)
+
+    "and they wanted to be paid Child Benefit" - {
+
+      "changing to say they do receive benefits must ask if they want to be paid weekly then return to Check Answers" in {
+
+        val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
+        val partnerName        = arbitrary[PartnerName].sample.value
+
+        val initialise = journeyOf(
+          setUserAnswerTo(RelationshipStatusPage, relationshipStatus),
+          submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
+          submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
+          next,
+          submitAnswer(ClaimedChildBenefitBeforePage, false),
+          submitAnswer(WantToBePaidPage, true),
+          setUserAnswerTo(PartnerNamePage, partnerName),
+          setUserAnswerTo(ApplicantHasSuitableAccountPage, false),
+          goTo(CheckYourAnswersPage)
+        )
+
+        startingFrom(ApplicantOrPartnerIncomeOver50kPage)
+          .run(
+            initialise,
+            goToChangeAnswer(ApplicantOrPartnerBenefitsPage),
+            submitAnswer(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
+            pageMustBe(TaxChargeExplanationPage),
+            next,
+            submitAnswer(WantToBePaidWeeklyPage, true),
+            pageMustBe(CheckYourAnswersPage)
+          )
+      }
+    }
+
+    "and they did not want to be paid Child Benefit" - {
+
+      "changing to say they do receive benefits must return to Check Answers" in {
+
+        val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
+        val partnerName        = arbitrary[PartnerName].sample.value
+
+        val initialise = journeyOf(
+          setUserAnswerTo(RelationshipStatusPage, relationshipStatus),
+          submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
+          submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
+          next,
+          submitAnswer(ClaimedChildBenefitBeforePage, false),
+          submitAnswer(WantToBePaidPage, false),
+          setUserAnswerTo(PartnerNamePage, partnerName),
+          goTo(CheckYourAnswersPage)
+        )
+
+        startingFrom(ApplicantOrPartnerIncomeOver50kPage)
+          .run(
+            initialise,
+            goToChangeAnswer(ApplicantOrPartnerBenefitsPage),
+            submitAnswer(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
+            pageMustBe(CheckYourAnswersPage)
+          )
+      }
     }
   }
 }

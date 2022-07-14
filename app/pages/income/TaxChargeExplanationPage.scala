@@ -18,7 +18,7 @@ package pages.income
 
 import controllers.income.routes
 import models.RelationshipStatus._
-import models.UserAnswers
+import models.{Benefits, UserAnswers}
 import pages.partner.PartnerNamePage
 import pages.payments.{ClaimedChildBenefitBeforePage, WantToBePaidPage, WantToBePaidWeeklyPage}
 import pages.{NonEmptyWaypoints, Page, RelationshipStatusPage, Waypoints}
@@ -32,12 +32,34 @@ case object TaxChargeExplanationPage extends Page {
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     ClaimedChildBenefitBeforePage
 
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page = {
+
+    val getPartnerDetailsIfMissing =
+      answers.get(PartnerNamePage)
+        .map(_ => waypoints.next.page)
+        .getOrElse(PartnerNamePage)
+
     answers.get(RelationshipStatusPage).map {
       case Married | Cohabiting =>
-        answers.get(PartnerNamePage)
-          .map(_ => waypoints.next.page)
-          .getOrElse(PartnerNamePage)
+        answers.get(WantToBePaidPage).map {
+          case true =>
+            answers.get(WantToBePaidWeeklyPage)
+              .map(_ => getPartnerDetailsIfMissing)
+              .getOrElse {
+                answers.get(ApplicantOrPartnerBenefitsPage).map {
+                  benefits =>
+                    if (benefits.intersect(Benefits.qualifyingBenefits).isEmpty) {
+                      getPartnerDetailsIfMissing
+                    } else {
+                      WantToBePaidWeeklyPage
+                    }
+                }.orRecover
+              }
+
+          case false =>
+            getPartnerDetailsIfMissing
+        }.orRecover
+
 
       case Single | Divorced | Separated | Widowed =>
         answers.get(WantToBePaidPage).map {
@@ -49,4 +71,5 @@ case object TaxChargeExplanationPage extends Page {
             waypoints.next.page
         }.orRecover
     }.orRecover
+  }
 }
