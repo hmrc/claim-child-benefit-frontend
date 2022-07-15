@@ -21,10 +21,36 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukCheckboxes: GovukCheckboxes,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    govukInput: GovukInput
 )
 
 @(form: Form[_], waypoints: Waypoints, index: Index, childName: ChildName, relationshipToChild: ApplicantRelationshipToChild)(implicit request: Request[_], messages: Messages)
+
+@otherDocumentInput = @{
+    govukInput(InputViewModel(form("otherDocument"), LabelViewModel(messages("includedDocuments.otherDocument.label"))))
+}
+
+@otherDocumentItem = @{
+    CheckboxItemViewModel(
+        content = Text(messages("includedDocuments.otherDocument")),
+        fieldId = "value",
+        index   = IncludedDocuments.standardDocuments(relationshipToChild).size,
+        value   = "otherDocument"
+    ).withConditionalHtml(otherDocumentInput)
+}
+
+@checkboxItems = @{
+    IncludedDocuments.standardDocuments(relationshipToChild).zipWithIndex.map {
+        case (value, index) =>
+            CheckboxItemViewModel(
+                content = Text(messages(s"includedDocuments.${value.toString}")),
+                fieldId = "value",
+                index   = index,
+                value   = value.toString
+            )
+    } :+ otherDocumentItem
+}
 
 @layout(pageTitle = title(form, messages("includedDocuments.title"))) {
 
@@ -42,7 +68,7 @@
                     content = messages("includedDocuments.heading", childName.safeFirstName),
                     caption = HmrcSectionCaption(messages("section.child"))
                 ),
-                items  = IncludedDocuments.checkboxItems(relationshipToChild)
+                items  = checkboxItems
             )
         )
 

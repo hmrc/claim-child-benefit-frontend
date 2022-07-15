@@ -42,7 +42,7 @@ class IncludedDocumentsControllerSpec extends SpecBase with MockitoSugar {
 
   private val childName           = ChildName("first", None, "last")
   private val relationshipToChild = BirthChild
-  private val allowedValues       = IncludedDocuments.values(relationshipToChild)
+  private val allowedValues       = IncludedDocuments.standardDocuments(relationshipToChild)
 
   private val baseAnswers =
     emptyUserAnswers
@@ -50,7 +50,6 @@ class IncludedDocumentsControllerSpec extends SpecBase with MockitoSugar {
       .set(ApplicantRelationshipToChildPage(index), relationshipToChild).success.value
 
   private val formProvider = new IncludedDocumentsFormProvider()
-  private val form = formProvider(childName, allowedValues)
 
   "IncludedDocuments Controller" - {
 
@@ -64,10 +63,12 @@ class IncludedDocumentsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[IncludedDocumentsView]
+        implicit val msgs = messages(application)
+        val form = formProvider(childName, relationshipToChild)
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(form, waypoints, index, childName, relationshipToChild)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index, childName, relationshipToChild)(request, implicitly).toString
       }
     }
 
@@ -81,11 +82,13 @@ class IncludedDocumentsControllerSpec extends SpecBase with MockitoSugar {
         val request = FakeRequest(GET, includedDocumentsRoute)
 
         val view = application.injector.instanceOf[IncludedDocumentsView]
+        implicit val msgs = messages(application)
+        val form = formProvider(childName, relationshipToChild)
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(allowedValues.toSet), waypoints, index, childName, relationshipToChild)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(allowedValues.toSet), waypoints, index, childName, relationshipToChild)(request, implicitly).toString
       }
     }
 
@@ -125,6 +128,9 @@ class IncludedDocumentsControllerSpec extends SpecBase with MockitoSugar {
           FakeRequest(POST, includedDocumentsRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
+        implicit val msgs = messages(application)
+        val form = formProvider(childName, relationshipToChild)
+
         val boundForm = form.bind(Map("value" -> "invalid value"))
 
         val view = application.injector.instanceOf[IncludedDocumentsView]
@@ -132,7 +138,7 @@ class IncludedDocumentsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, index, childName, relationshipToChild)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index, childName, relationshipToChild)(request, implicitly).toString
       }
     }
 

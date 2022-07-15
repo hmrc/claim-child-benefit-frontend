@@ -36,7 +36,7 @@ trait ModelGenerators {
 
   implicit lazy val arbitraryIncludedDocuments: Arbitrary[IncludedDocuments] =
     Arbitrary {
-      Gen.oneOf(IncludedDocuments.values(AdoptingChild))
+      Gen.oneOf(IncludedDocuments.standardDocuments(AdoptingChild))
     }
 
   implicit lazy val arbitraryChildScottishBirthCertificateDetails: Arbitrary[ChildScottishBirthCertificateDetails] =
