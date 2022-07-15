@@ -19,7 +19,7 @@ package controllers.child
 import controllers.AnswerExtractor
 import controllers.actions._
 import forms.child.IncludedDocumentsFormProvider
-import models.{IncludedDocuments, Index}
+import models.Index
 import pages.Waypoints
 import pages.child.{ApplicantRelationshipToChildPage, ChildNamePage, IncludedDocumentsPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -50,8 +50,7 @@ class IncludedDocumentsController @Inject()(
       getAnswers(ChildNamePage(index), ApplicantRelationshipToChildPage(index)) {
         case (childName, relationshipToChild) =>
 
-          val allowedValues = IncludedDocuments.values(relationshipToChild)
-          val form          = formProvider(childName, allowedValues)
+          val form = formProvider(childName, relationshipToChild)
 
           val preparedForm = request.userAnswers.get(IncludedDocumentsPage(index)) match {
           case None => form
@@ -67,8 +66,7 @@ class IncludedDocumentsController @Inject()(
       getAnswersAsync(ChildNamePage(index), ApplicantRelationshipToChildPage(index)) {
         case (childName, relationshipToChild) =>
 
-          val allowedValues = IncludedDocuments.values(relationshipToChild)
-          val form = formProvider(childName, allowedValues)
+          val form = formProvider(childName, relationshipToChild)
 
           form.bindFromRequest().fold(
             formWithErrors =>

@@ -16,6 +16,7 @@
 
 package viewmodels.checkAnswers.child
 
+import models.IncludedDocuments.OtherDocument
 import models.{Index, UserAnswers}
 import pages.child.IncludedDocumentsPage
 import pages.{CheckAnswersPage, Waypoints}
@@ -36,9 +37,12 @@ object IncludedDocumentsSummary {
         val value = ValueViewModel(
           HtmlContent(
             answers.map {
-              answer => HtmlFormat.escape(messages(s"includedDocuments.$answer")).toString
-            }
-              .mkString(",<br>")
+              case OtherDocument(name) =>
+                HtmlFormat.escape(name).toString
+
+              case regularDocument =>
+                messages(s"includedDocuments.$regularDocument")
+            }.mkString(",<br>")
           )
         )
 

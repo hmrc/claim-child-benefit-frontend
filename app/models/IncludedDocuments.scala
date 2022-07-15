@@ -18,48 +18,52 @@ package models
 
 import models.ApplicantRelationshipToChild.AdoptedChild
 import play.api.i18n.Messages
+import play.api.libs.json.{JsError, JsString, JsSuccess, Reads, Writes}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import viewmodels.govuk.checkbox._
 
-sealed trait IncludedDocuments
+sealed trait IncludedDocuments {
+  val name: String
+}
 
-object IncludedDocuments extends Enumerable.Implicits {
+object IncludedDocuments {
 
   case object BirthCertificate extends WithName("birthCertificate") with IncludedDocuments
   case object Passport extends WithName("passport") with IncludedDocuments
   case object TravelDocuments extends WithName("travelDocuments") with IncludedDocuments
   case object AdoptionCertificate extends WithName("adoptionCertificate") with IncludedDocuments
-  case class OtherDocument(name: String) extends IncludedDocuments
 
-  private val allValues: Seq[IncludedDocuments] = Seq(
+  case class OtherDocument(name: String) extends IncludedDocuments {
+    override def toString: String = "otherDocument"
+  }
+
+  private val allStandardDocuments: Seq[IncludedDocuments] = Seq(
     BirthCertificate,
     Passport,
     TravelDocuments,
     AdoptionCertificate
   )
 
-  def values(relationshipToChild: ApplicantRelationshipToChild): Seq[IncludedDocuments] = {
+  def standardDocuments(relationshipToChild: ApplicantRelationshipToChild): Seq[IncludedDocuments] = {
     relationshipToChild match {
       case AdoptedChild =>
-        allValues
+        allStandardDocuments
 
       case _ =>
-        allValues.filterNot(_ == AdoptionCertificate)
+        allStandardDocuments.filterNot(_ == AdoptionCertificate)
     }
   }
 
-  def checkboxItems(relationshipToChild: ApplicantRelationshipToChild)(implicit messages: Messages): Seq[CheckboxItem] =
-    values(relationshipToChild).zipWithIndex.map {
-      case (value, index) =>
-        CheckboxItemViewModel(
-          content = Text(messages(s"includedDocuments.${value.toString}")),
-          fieldId = "value",
-          index   = index,
-          value   = value.toString
-        )
-    }
+  implicit val reads: Reads[IncludedDocuments] = Reads {
+    case JsString(BirthCertificate.toString)    => JsSuccess(BirthCertificate)
+    case JsString(Passport.toString)            => JsSuccess(Passport)
+    case JsString(TravelDocuments.toString)     => JsSuccess(TravelDocuments)
+    case JsString(AdoptionCertificate.toString) => JsSuccess(AdoptionCertificate)
+    case JsString(name)                         => JsSuccess(OtherDocument(name))
+    case _                                      => JsError("error.invalid")
+  }
 
-  implicit val enumerable: Enumerable[IncludedDocuments] =
-    Enumerable(allValues.map(v => v.toString -> v): _*)
+  implicit val writes: Writes[IncludedDocuments] =
+    Writes(value => JsString(value.name))
 }

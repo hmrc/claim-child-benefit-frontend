@@ -18,47 +18,41 @@ package models
 
 import generators.ModelGenerators
 import models.ApplicantRelationshipToChild.AdoptedChild
+import models.IncludedDocuments._
 import org.scalacheck.Arbitrary.arbitrary
+import org.scalacheck.Gen
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import play.api.libs.json.{JsError, JsString, Json}
+import play.api.libs.json.{JsError, JsString, JsSuccess, Json}
 
 class IncludedDocumentsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues with ModelGenerators {
 
   "IncludedDocuments" - {
 
-    "must deserialise valid values" in {
+    "must serialise and deserialise standard documents to/from JSON" in {
 
-      val gen = arbitrary[IncludedDocuments]
+      val standardDocuments: Gen[IncludedDocuments] = Gen.oneOf(BirthCertificate, Passport, TravelDocuments, AdoptionCertificate)
 
-      forAll(gen) {
-        includedDocuments =>
-
-          JsString(includedDocuments.toString).validate[IncludedDocuments].asOpt.value mustEqual includedDocuments
+      forAll(standardDocuments) {
+        document =>
+          val json = Json.toJson(document)
+          json.validate[IncludedDocuments] mustEqual JsSuccess(document)
       }
     }
 
-    "must fail to deserialise invalid values" in {
+    "must serialise and deserialise other documents to/from JSON" in {
 
-      val gen = arbitrary[String] suchThat (!IncludedDocuments.values(AdoptedChild).map(_.toString).contains(_))
+      val standardDocuments = Set(BirthCertificate, Passport, TravelDocuments, AdoptionCertificate)
 
-      forAll(gen) {
-        invalidValue =>
+      forAll(arbitrary[String]) {
+        value =>
 
-          JsString(invalidValue).validate[IncludedDocuments] mustEqual JsError("error.invalid")
-      }
-    }
-
-    "must serialise" in {
-
-      val gen = arbitrary[IncludedDocuments]
-
-      forAll(gen) {
-        includedDocuments =>
-
-          Json.toJson(includedDocuments) mustEqual JsString(includedDocuments.toString)
+          whenever (!standardDocuments.map(_.toString).contains(value)) {
+            val json = Json.toJson(OtherDocument(value): IncludedDocuments)
+            json.validate[IncludedDocuments] mustEqual JsSuccess(OtherDocument(value))
+          }
       }
     }
   }

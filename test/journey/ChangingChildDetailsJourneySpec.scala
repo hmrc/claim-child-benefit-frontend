@@ -596,7 +596,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
               ApplicantRelationshipToChild.Other
             ).sample.value
 
-            val newDocuments = Set(Gen.oneOf(IncludedDocuments.values(newRelationship)).sample.value)
+            val newDocuments = Set(Gen.oneOf(IncludedDocuments.standardDocuments(newRelationship)).sample.value)
 
             val initialise = journeyOf(
               basicChildJourney,
@@ -622,7 +622,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
 
             val newRelationship = Relationship.AdoptingChild
 
-            val newDocuments = Set(Gen.oneOf(IncludedDocuments.values(newRelationship)).sample.value)
+            val newDocuments = Set(Gen.oneOf(IncludedDocuments.standardDocuments(newRelationship)).sample.value)
 
             val initialise = journeyOf(
               basicChildJourney,
@@ -656,7 +656,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
               ApplicantRelationshipToChild.Other
             ).sample.value
 
-            val otherDocument    = Gen.oneOf(IncludedDocuments.values(newRelationship)).sample.value
+            val otherDocument    = Gen.oneOf(IncludedDocuments.standardDocuments(newRelationship)).sample.value
             val initialDocuments = Set(otherDocument, AdoptionCertificate)
 
             val initialise = journeyOf(
@@ -683,7 +683,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
 
             val newRelationship = Relationship.AdoptingChild
 
-            val otherDocument    = Gen.oneOf(IncludedDocuments.values(newRelationship)).sample.value
+            val otherDocument    = Gen.oneOf(IncludedDocuments.standardDocuments(newRelationship)).sample.value
             val initialDocuments = Set(otherDocument, AdoptionCertificate)
 
             val initialise = journeyOf(
@@ -718,7 +718,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
               ApplicantRelationshipToChild.Other
             ).sample.value
 
-            val document = Gen.oneOf(IncludedDocuments.values(newRelationship)).sample.value
+            val document = Gen.oneOf(IncludedDocuments.standardDocuments(newRelationship)).sample.value
 
             val initialise = journeyOf(
               basicChildJourney,
@@ -743,7 +743,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
 
             val newRelationship = Relationship.AdoptingChild
 
-            val document = Gen.oneOf(IncludedDocuments.values(newRelationship)).sample.value
+            val document = Gen.oneOf(IncludedDocuments.standardDocuments(newRelationship)).sample.value
 
             val initialise = journeyOf(
               basicChildJourney,
