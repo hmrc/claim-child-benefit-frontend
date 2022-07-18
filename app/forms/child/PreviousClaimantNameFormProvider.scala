@@ -17,7 +17,7 @@
 package forms.child
 
 import forms.mappings.Mappings
-import models.PreviousClaimantName
+import models.AdultName
 import play.api.data.Form
 import play.api.data.Forms._
 
@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 class PreviousClaimantNameFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[PreviousClaimantName] = Form(
+  def apply(): Form[AdultName] = Form(
     mapping(
       "title" -> optional(text("previousClaimantName.error.title.required")
         .verifying(maxLength(20, "previousClaimantName.error.title.length"))),
@@ -35,6 +35,6 @@ class PreviousClaimantNameFormProvider @Inject() extends Mappings {
         .verifying(maxLength(100, "previousClaimantName.error.middleNames.length"))),
       "lastName" -> text("previousClaimantName.error.lastName.required")
         .verifying(maxLength(100, "previousClaimantName.error.lastName.length"))
-    )(PreviousClaimantName.apply)(PreviousClaimantName.unapply)
+    )(AdultName.apply)(AdultName.unapply)
   )
 }

@@ -19,7 +19,7 @@ package controllers.partner
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.partner.PartnerNameFormProvider
-import models.PartnerName
+import models.AdultName
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -41,7 +41,7 @@ class PartnerNameControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val partnerNameRoute = routes.PartnerNameController.onPageLoad(waypoints).url
 
-  private val validAnswer = PartnerName(None, "value 1", None, "value 2")
+  private val validAnswer = AdultName(None, "value 1", None, "value 2")
   private val userAnswers = emptyUserAnswers.set(PartnerNamePage, validAnswer).success.value
 
   "PartnerName Controller" - {

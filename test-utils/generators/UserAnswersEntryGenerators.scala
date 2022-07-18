@@ -42,7 +42,7 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
     Arbitrary {
       for {
         page  <- arbitrary[PreviousClaimantNamePage]
-        value <- arbitrary[PreviousClaimantName].map(Json.toJson(_))
+        value <- arbitrary[AdultName].map(Json.toJson(_))
       } yield (page, value)
     }
 
@@ -202,7 +202,7 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
     Arbitrary {
       for {
         page  <- arbitrary[PartnerNamePage.type]
-        value <- arbitrary[PartnerName].map(Json.toJson(_))
+        value <- arbitrary[AdultName].map(Json.toJson(_))
       } yield (page, value)
     }
 
@@ -306,7 +306,7 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
     Arbitrary {
       for {
         page  <- arbitrary[ApplicantNamePage.type]
-        value <- arbitrary[ApplicantName].map(Json.toJson(_))
+        value <- arbitrary[AdultName].map(Json.toJson(_))
       } yield (page, value)
     }
 

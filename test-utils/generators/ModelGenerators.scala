@@ -26,16 +26,6 @@ import java.time.LocalDate
 
 trait ModelGenerators {
 
-  implicit lazy val arbitraryPreviousClaimantName: Arbitrary[PreviousClaimantName] =
-    Arbitrary {
-      for {
-        title <- Gen.option(arbitrary[String])
-        firstName <- arbitrary[String]
-        middleNames <- Gen.option(arbitrary[String])
-        lastName <- arbitrary[String]
-      } yield PreviousClaimantName(title, firstName, middleNames, lastName)
-    }
-
   implicit lazy val arbitraryIncludedDocuments: Arbitrary[IncludedDocuments] =
     Arbitrary {
       Gen.oneOf(IncludedDocuments.standardDocuments(AdoptingChild))
@@ -80,16 +70,6 @@ trait ModelGenerators {
     }
   }
 
-  implicit lazy val arbitraryPartnerName: Arbitrary[PartnerName] =
-    Arbitrary {
-      for {
-        title <- Gen.option(arbitrary[String])
-        firstName <- arbitrary[String]
-        middleNames <- Gen.option(arbitrary[String])
-        lastName <- arbitrary[String]
-      } yield PartnerName(title, firstName, middleNames, lastName)
-    }
-
   implicit lazy val arbitraryPartnerEmploymentStatus: Arbitrary[PartnerEmploymentStatus] =
     Arbitrary {
       Gen.oneOf(PartnerEmploymentStatus.values)
@@ -113,14 +93,14 @@ trait ModelGenerators {
     } yield Nino(firstChar ++ secondChar ++ digits :+ lastChar)
   }
 
-  implicit lazy val arbitraryApplicantName: Arbitrary[ApplicantName] =
+  implicit lazy val arbitraryApplicantName: Arbitrary[AdultName] =
     Arbitrary {
       for {
         title       <- Gen.option(arbitrary[String])
         firstName   <- arbitrary[String]
         middleNames <- Gen.option(arbitrary[String])
         lastName    <- arbitrary[String]
-      } yield ApplicantName(title, firstName, middleNames, lastName)
+      } yield AdultName(title, firstName, middleNames, lastName)
     }
 
   implicit lazy val arbitraryApplicantEmploymentStatus: Arbitrary[ApplicantEmploymentStatus] =

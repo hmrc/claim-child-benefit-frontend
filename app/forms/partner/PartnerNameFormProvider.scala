@@ -17,7 +17,7 @@
 package forms.partner
 
 import forms.mappings.Mappings
-import models.PartnerName
+import models.AdultName
 import play.api.data.Form
 import play.api.data.Forms._
 
@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 class PartnerNameFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[PartnerName] = Form(
+  def apply(): Form[AdultName] = Form(
     mapping(
       "title" -> optional(text("partnerName.error.titleField.required")
         .verifying(maxLength(20, "partnerName.error.titleField.length"))),
@@ -35,6 +35,6 @@ class PartnerNameFormProvider @Inject() extends Mappings {
         .verifying(maxLength(100, "partnerName.error.middleNames.length"))),
       "lastName" -> text("partnerName.error.lastName.required")
         .verifying(maxLength(100, "partnerName.error.lastName.length"))
-    )(PartnerName.apply)(PartnerName.unapply)
+    )(AdultName.apply)(AdultName.unapply)
   )
 }

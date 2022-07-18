@@ -211,7 +211,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
       "when their country of birth registration means we do not need documents" in {
 
         val country      = Gen.oneOf(England, Wales, Scotland).sample.value
-        val claimantName = PreviousClaimantName(None, "first", None, "last")
+        val claimantName = AdultName(None, "first", None, "last")
         val claimantAddress = Address("line 1", None, "town", None, "postcode")
 
         val initialise = journeyOf(
@@ -231,7 +231,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
       "when their country of birth registration means we  need documents" in {
 
         val country         = Gen.oneOf(Other, Unknown).sample.value
-        val claimantName    = PreviousClaimantName(None, "first", None, "last")
+        val claimantName    = AdultName(None, "first", None, "last")
         val claimantAddress = Address("line 1", None, "town", None, "postcode")
         val documents       = Set(arbitrary[IncludedDocuments].sample.value)
 
