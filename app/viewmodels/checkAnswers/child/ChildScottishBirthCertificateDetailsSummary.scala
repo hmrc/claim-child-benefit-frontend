@@ -34,9 +34,7 @@ object ChildScottishBirthCertificateDetailsSummary {
       answer =>
 
         val value =
-          Seq(answer.district, answer.year, answer.entryNumber)
-            .map(HtmlFormat.escape(_).toString)
-            .mkString(" ")
+          s"${answer.district} ${answer.year} ${answer.entryNumber}"
 
         SummaryListRowViewModel(
           key = "childScottishBirthCertificateDetails.checkYourAnswersLabel",

@@ -22,6 +22,8 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.{Arbitrary, Gen}
 import uk.gov.hmrc.domain.Nino
 
+import java.time.LocalDate
+
 trait ModelGenerators {
 
   implicit lazy val arbitraryPreviousClaimantName: Arbitrary[PreviousClaimantName] =
@@ -43,7 +45,7 @@ trait ModelGenerators {
     Arbitrary {
       for {
         district <- arbitrary[String]
-        year <- arbitrary[String]
+        year <- Gen.choose(LocalDate.now.getYear - 19, LocalDate.now.getYear)
         entryNumber <- arbitrary[String]
       } yield ChildScottishBirthCertificateDetails(district, year, entryNumber)
     }

@@ -654,11 +654,13 @@ childScottishBirthCertificateDetails.year = Year
 childScottishBirthCertificateDetails.entryNumber = Entry number
 childScottishBirthCertificateDetails.checkYourAnswersLabel = What is the district number, year and entry number on this child’s birth certificate?
 childScottishBirthCertificateDetails.error.district.required = Enter the district number
+childScottishBirthCertificateDetails.error.district.required = District number must be three digits
 childScottishBirthCertificateDetails.error.year.required = Enter the year
+childScottishBirthCertificateDetails.error.year.belowMinimum = Year cannot be before {0}
+childScottishBirthCertificateDetails.error.year.aboveMaximum = Year cannot be after {0}
+childScottishBirthCertificateDetails.error.year.invalid = Year must be four digits
 childScottishBirthCertificateDetails.error.entryNumber.required = Enter the entry number
-childScottishBirthCertificateDetails.error.district.length = District number must be 3 digits
-childScottishBirthCertificateDetails.error.year.length = Year must be 4 digits
-childScottishBirthCertificateDetails.error.entryNumber.length = Entry number must be 3 digits or less
+childScottishBirthCertificateDetails.error.entryNumber.invalid = Entry number must be up to three digits
 childScottishBirthCertificateDetails.change.hidden = the district number, year and entry number on this child’s birth certificate
 
 includedDocuments.title = What documents will you be sending for this child?
