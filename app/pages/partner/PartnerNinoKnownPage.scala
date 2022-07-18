@@ -18,7 +18,7 @@ package pages.partner
 
 import controllers.partner.routes
 import models.UserAnswers
-import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
+import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 

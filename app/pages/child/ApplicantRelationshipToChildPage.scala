@@ -17,7 +17,7 @@
 package pages.child
 
 import controllers.child.routes
-import models.ApplicantRelationshipToChild.{AdoptingChild, AdoptedChild}
+import models.ApplicantRelationshipToChild.{AdoptedChild, AdoptingChild}
 import models.ChildBirthRegistrationCountry._
 import models.IncludedDocuments.AdoptionCertificate
 import models.{ApplicantRelationshipToChild, Index, UserAnswers}

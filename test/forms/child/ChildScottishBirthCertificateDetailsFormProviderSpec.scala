@@ -22,7 +22,7 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import play.api.data.FormError
 
-import java.time.{Clock, Instant, LocalDate, ZoneId}
+import java.time.{Clock, LocalDate}
 
 class ChildScottishBirthCertificateDetailsFormProviderSpec extends StringFieldBehaviours {
 

@@ -16,13 +16,14 @@
 
 package viewmodels.checkAnswers
 
-import java.time.format.DateTimeFormatter
 import models.UserAnswers
-import pages.{CheckAnswersPage, CohabitationDatePage, RelationshipStatusPage, Waypoints}
+import pages.{CheckAnswersPage, CohabitationDatePage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+
+import java.time.format.DateTimeFormatter
 
 object CohabitationDateSummary  {
 

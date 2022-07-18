@@ -18,11 +18,10 @@ package controllers
 
 import base.SpecBase
 import forms.CohabitationDateFormProvider
-import models.RelationshipStatus
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{EmptyWaypoints, CohabitationDatePage, RelationshipStatusPage}
+import pages.{CohabitationDatePage, EmptyWaypoints}
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest

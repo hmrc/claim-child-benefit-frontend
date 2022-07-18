@@ -16,11 +16,11 @@
 
 package forms
 
-import javax.inject.Inject
-
 import forms.mappings.Mappings
-import play.api.data.Form
 import models.RelationshipStatus
+import play.api.data.Form
+
+import javax.inject.Inject
 
 class RelationshipStatusFormProvider @Inject() extends Mappings {
 

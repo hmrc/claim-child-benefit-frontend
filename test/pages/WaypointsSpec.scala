@@ -17,9 +17,9 @@
 package pages
 
 import models.NormalMode
-import org.scalatest.{EitherValues, OptionValues}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import org.scalatest.{EitherValues, OptionValues}
 import play.api.libs.json.JsPath
 import play.api.mvc.{Call, QueryStringBindable}
 

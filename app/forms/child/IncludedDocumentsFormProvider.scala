@@ -21,7 +21,7 @@ import models.ApplicantRelationshipToChild.AdoptedChild
 import models.IncludedDocuments._
 import models.{ApplicantRelationshipToChild, ChildName, IncludedDocuments}
 import play.api.data.Form
-import play.api.data.Forms.{mapping, optional, set}
+import play.api.data.Forms.{mapping, set}
 import play.api.i18n.Messages
 import uk.gov.voa.play.form.ConditionalMappings.mandatoryIf
 

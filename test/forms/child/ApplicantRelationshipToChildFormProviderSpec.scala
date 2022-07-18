@@ -18,7 +18,6 @@ package forms.child
 
 import forms.behaviours.OptionFieldBehaviours
 import models.{ApplicantRelationshipToChild, ChildName}
-import pages.child.ChildNamePage
 import play.api.data.FormError
 
 class ApplicantRelationshipToChildFormProviderSpec extends OptionFieldBehaviours {

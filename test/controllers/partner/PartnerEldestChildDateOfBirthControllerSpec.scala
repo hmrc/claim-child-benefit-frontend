@@ -32,7 +32,7 @@ import play.api.test.Helpers._
 import repositories.SessionRepository
 import views.html.partner.PartnerEldestChildDateOfBirthView
 
-import java.time.{LocalDate, ZoneOffset}
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class PartnerEldestChildDateOfBirthControllerSpec extends SpecBase with MockitoSugar {

@@ -21,10 +21,10 @@ import pages.payments.EldestChildDateOfBirthPage
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-
-import java.time.format.DateTimeFormatter
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+
+import java.time.format.DateTimeFormatter
 
 object EldestChildDateOfBirthSummary {
 

@@ -16,12 +16,12 @@
 
 package forms
 
-import javax.inject.Inject
-
 import forms.mappings.Mappings
+import models.AdultName
 import play.api.data.Form
 import play.api.data.Forms._
-import models.AdultName
+
+import javax.inject.Inject
 
 class ApplicantNameFormProvider @Inject() extends Mappings {
 
