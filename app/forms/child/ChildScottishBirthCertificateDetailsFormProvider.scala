@@ -16,23 +16,35 @@
 
 package forms.child
 
+import forms.Validation
 import forms.mappings.Mappings
 import models.ChildScottishBirthCertificateDetails
 import play.api.data.Form
 import play.api.data.Forms._
 
+import java.time.{Clock, LocalDate}
 import javax.inject.Inject
 
-class ChildScottishBirthCertificateDetailsFormProvider @Inject() extends Mappings {
+class ChildScottishBirthCertificateDetailsFormProvider @Inject()(clock: Clock) extends Mappings {
 
-  def apply(): Form[ChildScottishBirthCertificateDetails] = Form(
-    mapping(
-      "district" -> text("childScottishBirthCertificateDetails.error.district.required")
-        .verifying(maxLength(3, "childScottishBirthCertificateDetails.error.district.length")),
-      "year" -> text("childScottishBirthCertificateDetails.error.year.required")
-        .verifying(maxLength(4, "childScottishBirthCertificateDetails.error.year.length")),
-      "entryNumber" -> text("childScottishBirthCertificateDetails.error.entryNumber.required")
-        .verifying(maxLength(3, "childScottishBirthCertificateDetails.error.entryNumber.length"))
-    )(ChildScottishBirthCertificateDetails.apply)(ChildScottishBirthCertificateDetails.unapply)
-  )
+  def apply(): Form[ChildScottishBirthCertificateDetails] = {
+
+    val maxYear = LocalDate.now(clock).getYear
+    val minYear = maxYear - 20
+
+    Form(
+      mapping(
+        "district" -> text("childScottishBirthCertificateDetails.error.district.required")
+          .verifying(regexp(Validation.districtPattern, "childScottishBirthCertificateDetails.error.district.invalid")),
+        "year" -> int(
+          requiredKey    = "childScottishBirthCertificateDetails.error.year.required",
+          wholeNumberKey = "childScottishBirthCertificateDetails.error.year.invalid",
+          nonNumericKey  = "childScottishBirthCertificateDetails.error.year.invalid"
+        ).verifying(minimumValue(minYear, "childScottishBirthCertificateDetails.error.year.belowMinimum"))
+          .verifying(maximumValue(maxYear, "childScottishBirthCertificateDetails.error.year.aboveMaximum")),
+        "entryNumber" -> text("childScottishBirthCertificateDetails.error.entryNumber.required")
+          .verifying(regexp(Validation.entryNumberPattern, "childScottishBirthCertificateDetails.error.entryNumber.invalid"))
+      )(ChildScottishBirthCertificateDetails.apply)(ChildScottishBirthCertificateDetails.unapply)
+    )
+  }
 }

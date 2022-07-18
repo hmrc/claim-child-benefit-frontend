@@ -38,11 +38,11 @@ import scala.concurrent.Future
 class PartnerEldestChildDateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
   private val name = PartnerName(None, "first", None, "last")
-  val formProvider = new PartnerEldestChildDateOfBirthFormProvider()
+  val formProvider = new PartnerEldestChildDateOfBirthFormProvider(clockAtFixedInstant)
   private def form = formProvider(name.firstName)
   private val waypoints = EmptyWaypoints
 
-  val validAnswer = LocalDate.now(ZoneOffset.UTC)
+  val validAnswer = LocalDate.now(clockAtFixedInstant).minusYears(1)
 
   lazy val partnerEldestChildDateOfBirthRoute = routes.PartnerEldestChildDateOfBirthController.onPageLoad(waypoints).url
 

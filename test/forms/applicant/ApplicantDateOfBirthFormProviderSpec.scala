@@ -17,21 +17,42 @@
 package forms.applicant
 
 import forms.behaviours.DateBehaviours
+import play.api.data.FormError
 
-import java.time.{LocalDate, ZoneOffset}
+import java.time.format.DateTimeFormatter
+import java.time.{Clock, LocalDate, ZoneId, ZoneOffset}
 
 class ApplicantDateOfBirthFormProviderSpec extends DateBehaviours {
 
-  val form = new ApplicantDateOfBirthFormProvider()()
+  private val fixedInstant = LocalDate.now.atStartOfDay(ZoneId.systemDefault).toInstant
+  private val clock = Clock.fixed(fixedInstant, ZoneId.systemDefault)
+
+  private val form = new ApplicantDateOfBirthFormProvider(clock)()
+
+  private val minDate = LocalDate.now(clock).minusYears(130)
+  private val maxDate = LocalDate.now(clock)
+
+  private def dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
   ".value" - {
 
-    val validData = datesBetween(
-      min = LocalDate.of(2000, 1, 1),
-      max = LocalDate.now(ZoneOffset.UTC)
-    )
+    val validData = datesBetween(minDate, maxDate)
 
     behave like dateField(form, "value", validData)
+
+    behave like dateFieldWithMax(
+      form      = form,
+      key       = "value",
+      max       = maxDate,
+      formError = FormError("value", "applicantDateOfBirth.error.afterMaximum", Seq(maxDate.format(dateFormatter)))
+    )
+
+    behave like dateFieldWithMin(
+      form      = form,
+      key       = "value",
+      min       = minDate,
+      formError = FormError("value", "applicantDateOfBirth.error.beforeMinimum", Seq(minDate.format(dateFormatter)))
+    )
 
     behave like mandatoryDateField(form, "value", "applicantDateOfBirth.error.required.all")
   }

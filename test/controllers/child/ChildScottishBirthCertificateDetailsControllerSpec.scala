@@ -31,20 +31,23 @@ import play.api.test.Helpers._
 import repositories.SessionRepository
 import views.html.child.ChildScottishBirthCertificateDetailsView
 
+import java.time.{Clock, LocalDate}
 import scala.concurrent.Future
 
 class ChildScottishBirthCertificateDetailsControllerSpec extends SpecBase with MockitoSugar {
 
   private val childName = ChildName("first", None, "last")
   private val baseAnswers = emptyUserAnswers.set(ChildNamePage(index), childName).success.value
+  private val clock = Clock.systemUTC
+  private val validYear = LocalDate.now(clock).getYear
 
-  val formProvider = new ChildScottishBirthCertificateDetailsFormProvider()
+  val formProvider = new ChildScottishBirthCertificateDetailsFormProvider(clock)
   val form = formProvider()
   private val waypoints = EmptyWaypoints
 
   lazy val childScottishBirthCertificateDetailsRoute = routes.ChildScottishBirthCertificateDetailsController.onPageLoad(waypoints, index).url
 
-  private val validAnswer = ChildScottishBirthCertificateDetails("123", "2022", "456")
+  private val validAnswer = ChildScottishBirthCertificateDetails("123", validYear, "456")
   private val userAnswers = baseAnswers.set(ChildScottishBirthCertificateDetailsPage(index), validAnswer).success.value
 
   "ChildScottishBirthCertificateDetails Controller" - {
@@ -97,7 +100,7 @@ class ChildScottishBirthCertificateDetailsControllerSpec extends SpecBase with M
       running(application) {
         val request =
           FakeRequest(POST, childScottishBirthCertificateDetailsRoute)
-            .withFormUrlEncodedBody(("district", "123"), ("year", "2022"), ("entryNumber", "456"))
+            .withFormUrlEncodedBody(("district", "123"), ("year", validYear.toString), ("entryNumber", "456"))
 
         val result = route(application, request).value
         val expectedAnswers = baseAnswers.set(child.ChildScottishBirthCertificateDetailsPage(index), validAnswer).success.value
@@ -149,7 +152,7 @@ class ChildScottishBirthCertificateDetailsControllerSpec extends SpecBase with M
       running(application) {
         val request =
           FakeRequest(POST, childScottishBirthCertificateDetailsRoute)
-            .withFormUrlEncodedBody(("district", "123"), ("year", "2022"), ("entryNumber", "456"))
+            .withFormUrlEncodedBody(("district", "123"), ("year", validYear.toString), ("entryNumber", "456"))
 
         val result = route(application, request).value
 

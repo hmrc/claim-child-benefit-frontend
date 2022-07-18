@@ -61,6 +61,18 @@ class ChildBirthCertificateSystemNumberFormProviderSpec extends StringFieldBehav
       }
     }
 
+    "must bind 9 digit strings that include hyphens" in {
+
+      val gen = Gen.listOfN(9, Gen.numChar).map(_.mkString("-"))
+
+      forAll(gen) {
+        dataItem: String =>
+          val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
+          result.value.value mustBe dataItem
+          result.errors mustBe empty
+      }
+    }
+
     "must not bind values with fewer than 9 digits" in {
 
       val gen = for {

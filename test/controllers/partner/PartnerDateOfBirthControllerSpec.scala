@@ -32,17 +32,17 @@ import play.api.test.Helpers._
 import repositories.SessionRepository
 import views.html.partner.PartnerDateOfBirthView
 
-import java.time.{LocalDate, ZoneOffset}
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class PartnerDateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
   private val name = PartnerName(None, "first", None, "last")
-  val formProvider = new PartnerDateOfBirthFormProvider()
+  val formProvider = new PartnerDateOfBirthFormProvider(clockAtFixedInstant)
   private def form = formProvider(name.firstName)
   private val waypoints = EmptyWaypoints
 
-  val validAnswer = LocalDate.now(ZoneOffset.UTC)
+  val validAnswer = LocalDate.now(clockAtFixedInstant).minusYears(20)
 
   lazy val partnerDateOfBirthRoute = routes.PartnerDateOfBirthController.onPageLoad(waypoints).url
 
