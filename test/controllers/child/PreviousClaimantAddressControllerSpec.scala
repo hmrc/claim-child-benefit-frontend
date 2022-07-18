@@ -19,7 +19,7 @@ package controllers.child
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.child.PreviousClaimantAddressFormProvider
-import models.{Address, PreviousClaimantName}
+import models.{Address, AdultName}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -35,7 +35,7 @@ import scala.concurrent.Future
 
 class PreviousClaimantAddressControllerSpec extends SpecBase with MockitoSugar {
 
-  private val previousClaimantName = PreviousClaimantName(None, "first", None, "last")
+  private val previousClaimantName = AdultName(None, "first", None, "last")
   private val baseAnswers = emptyUserAnswers.set(PreviousClaimantNamePage(index), previousClaimantName).success.value
 
   val formProvider = new PreviousClaimantAddressFormProvider()

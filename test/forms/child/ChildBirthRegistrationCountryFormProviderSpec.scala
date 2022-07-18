@@ -18,7 +18,6 @@ package forms.child
 
 import forms.behaviours.OptionFieldBehaviours
 import models.{ChildBirthRegistrationCountry, ChildName}
-import pages.child.ChildNamePage
 import play.api.data.FormError
 
 class ChildBirthRegistrationCountryFormProviderSpec extends OptionFieldBehaviours {

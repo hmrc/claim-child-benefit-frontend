@@ -17,7 +17,6 @@
 package models
 
 import generators.ModelGenerators
-import models.ApplicantRelationshipToChild.AdoptedChild
 import models.IncludedDocuments._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
@@ -25,7 +24,7 @@ import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import play.api.libs.json.{JsError, JsString, JsSuccess, Json}
+import play.api.libs.json.{JsSuccess, Json}
 
 class IncludedDocumentsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues with ModelGenerators {
 

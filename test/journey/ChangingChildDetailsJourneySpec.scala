@@ -17,10 +17,9 @@
 package journey
 
 import generators.ModelGenerators
-import models.{ApplicantRelationshipToChild => Relationship}
 import models.ChildBirthRegistrationCountry._
 import models.IncludedDocuments.AdoptionCertificate
-import models._
+import models.{ApplicantRelationshipToChild => Relationship, _}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
@@ -35,7 +34,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
     private val childName               = arbitrary[ChildName].sample.value
     private val sex                     = arbitrary[ChildBiologicalSex].sample.value
     private val systemNumber            = Gen.listOfN(9, Gen.numChar).sample.value.mkString
-    private val claimantName            = arbitrary[PreviousClaimantName].sample.value
+    private val claimantName            = arbitrary[AdultName].sample.value
     private val claimantAddress         = arbitrary[Address].sample.value
     private val scottishBcDetails       = arbitrary[ChildScottishBirthCertificateDetails].sample.value
     private val includedDocuments       = Set(arbitrary[IncludedDocuments].sample.value)
@@ -539,9 +538,9 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           val country = Gen.oneOf(England, Wales, Scotland).sample.value
 
           val newRelationship = Gen.oneOf(
-            ApplicantRelationshipToChild.BirthChild,
-            ApplicantRelationshipToChild.StepChild,
-            ApplicantRelationshipToChild.Other
+            Relationship.BirthChild,
+            Relationship.StepChild,
+            Relationship.Other
           ).sample.value
 
           val initialise = journeyOf(
@@ -591,9 +590,9 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             val country = Gen.oneOf(Other, Unknown).sample.value
 
             val newRelationship = Gen.oneOf(
-              ApplicantRelationshipToChild.BirthChild,
-              ApplicantRelationshipToChild.StepChild,
-              ApplicantRelationshipToChild.Other
+              Relationship.BirthChild,
+              Relationship.StepChild,
+              Relationship.Other
             ).sample.value
 
             val newDocuments = Set(Gen.oneOf(IncludedDocuments.standardDocuments(newRelationship)).sample.value)
@@ -651,9 +650,9 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             val country = Gen.oneOf(Other, Unknown).sample.value
 
             val newRelationship = Gen.oneOf(
-              ApplicantRelationshipToChild.BirthChild,
-              ApplicantRelationshipToChild.StepChild,
-              ApplicantRelationshipToChild.Other
+              Relationship.BirthChild,
+              Relationship.StepChild,
+              Relationship.Other
             ).sample.value
 
             val otherDocument    = Gen.oneOf(IncludedDocuments.standardDocuments(newRelationship)).sample.value
@@ -713,9 +712,9 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             val country = Gen.oneOf(Other, Unknown).sample.value
 
             val newRelationship = Gen.oneOf(
-              ApplicantRelationshipToChild.BirthChild,
-              ApplicantRelationshipToChild.StepChild,
-              ApplicantRelationshipToChild.Other
+              Relationship.BirthChild,
+              Relationship.StepChild,
+              Relationship.Other
             ).sample.value
 
             val document = Gen.oneOf(IncludedDocuments.standardDocuments(newRelationship)).sample.value

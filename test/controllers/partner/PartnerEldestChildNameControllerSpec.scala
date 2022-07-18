@@ -19,7 +19,7 @@ package controllers.partner
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.partner.PartnerEldestChildNameFormProvider
-import models.{PartnerEldestChildName, PartnerName}
+import models.{AdultName, ChildName}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -41,9 +41,9 @@ class PartnerEldestChildNameControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val partnerEldestChildNameRoute = routes.PartnerEldestChildNameController.onPageLoad(waypoints).url
 
-  private val name = PartnerName(None, "first", None, "last")
+  private val name = AdultName(None, "first", None, "last")
   private val baseAnswers = emptyUserAnswers.set(PartnerNamePage, name).success.value
-  private val validAnswer = PartnerEldestChildName("value 1", None, "value 2")
+  private val validAnswer = ChildName("value 1", None, "value 2")
   private val userAnswers = baseAnswers.set(PartnerEldestChildNamePage, validAnswer).success.value
 
   "PartnerEldestChildName Controller" - {

@@ -19,7 +19,7 @@ package controllers.partner
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.partner.PartnerNationalityFormProvider
-import models.PartnerName
+import models.AdultName
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -36,7 +36,7 @@ import scala.concurrent.Future
 class PartnerNationalityControllerSpec extends SpecBase with MockitoSugar {
 
   private val waypoints = EmptyWaypoints
-  private val name = PartnerName(None, "first", None, "last")
+  private val name = AdultName(None, "first", None, "last")
   private val baseAnswers = emptyUserAnswers.set(PartnerNamePage, name).success.value
 
   val formProvider = new PartnerNationalityFormProvider()

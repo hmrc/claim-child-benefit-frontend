@@ -18,7 +18,6 @@ package forms.child
 
 import forms.behaviours.BooleanFieldBehaviours
 import models.ChildName
-import pages.child.ChildNamePage
 import play.api.data.FormError
 
 class ChildNameChangedByDeedPollFormProviderSpec extends BooleanFieldBehaviours {

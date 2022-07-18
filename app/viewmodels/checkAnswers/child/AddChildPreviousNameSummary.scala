@@ -29,8 +29,7 @@ import viewmodels.implicits._
 
 object AddChildPreviousNameSummary {
 
-  def rows(answers: UserAnswers, childIndex: Index, waypoints: Waypoints, sourcePage: AddItemPage)
-          (implicit messages: Messages): Seq[ListItem] =
+  def rows(answers: UserAnswers, childIndex: Index, waypoints: Waypoints, sourcePage: AddItemPage): Seq[ListItem] =
     answers.get(AllChildPreviousNames(childIndex)).getOrElse(Nil).zipWithIndex.map {
       case (previousName, index) =>
 

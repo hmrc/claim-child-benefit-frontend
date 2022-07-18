@@ -18,12 +18,12 @@ package journey
 
 import generators.ModelGenerators
 import models.RelationshipStatus._
-import models.{BankAccountDetails, Benefits, EldestChildName, UserAnswers}
+import models.{BankAccountDetails, Benefits, ChildName, UserAnswers}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.freespec.AnyFreeSpec
 import pages.RelationshipStatusPage
 import pages.applicant.ApplicantHasPreviousFamilyNamePage
-import pages.income.{ApplicantOrPartnerBenefitsPage, TaxChargeExplanationPage}
+import pages.income.ApplicantOrPartnerBenefitsPage
 import pages.payments._
 
 import java.time.LocalDate
@@ -75,7 +75,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
 
     "who are currently receiving Child Benefit" - {
 
-      val childName = EldestChildName("first", None, "last")
+      val childName = ChildName("first", None, "last")
       val childDob  = LocalDate.now
 
       "who want to be paid to their existing bank account" - {

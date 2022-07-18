@@ -19,7 +19,7 @@ package controllers.partner
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.partner.PartnerEldestChildDateOfBirthFormProvider
-import models.PartnerName
+import models.AdultName
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -32,12 +32,12 @@ import play.api.test.Helpers._
 import repositories.SessionRepository
 import views.html.partner.PartnerEldestChildDateOfBirthView
 
-import java.time.{LocalDate, ZoneOffset}
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class PartnerEldestChildDateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
-  private val name = PartnerName(None, "first", None, "last")
+  private val name = AdultName(None, "first", None, "last")
   val formProvider = new PartnerEldestChildDateOfBirthFormProvider(clockAtFixedInstant)
   private def form = formProvider(name.firstName)
   private val waypoints = EmptyWaypoints

@@ -19,7 +19,7 @@ package controllers.payments
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.payments.EldestChildDateOfBirthFormProvider
-import models.EldestChildName
+import models.ChildName
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -32,12 +32,12 @@ import play.api.test.Helpers._
 import repositories.SessionRepository
 import views.html.payments.EldestChildDateOfBirthView
 
-import java.time.{LocalDate, ZoneOffset}
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class EldestChildDateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
-  val eldestChildName = EldestChildName("first", None, "last")
+  val eldestChildName = ChildName("first", None, "last")
   val formProvider = new EldestChildDateOfBirthFormProvider(clockAtFixedInstant)
   private def form = formProvider("first")
   private val waypoints = EmptyWaypoints

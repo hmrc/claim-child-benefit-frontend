@@ -18,11 +18,10 @@ package forms.child
 
 import forms.behaviours.DateBehaviours
 import models.ChildName
-import pages.child.ChildNamePage
 import play.api.data.FormError
 
 import java.time.format.DateTimeFormatter
-import java.time.{Clock, LocalDate, ZoneId, ZoneOffset}
+import java.time.{Clock, LocalDate, ZoneId}
 
 class ChildDateOfBirthFormProviderSpec extends DateBehaviours {
 

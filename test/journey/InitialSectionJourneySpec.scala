@@ -16,7 +16,7 @@
 
 package journey
 
-import models.{ApplicantName, RelationshipStatus}
+import models.{AdultName, RelationshipStatus}
 import org.scalatest.freespec.AnyFreeSpec
 import pages.income.{ApplicantIncomeOver50kPage, ApplicantOrPartnerIncomeOver50kPage}
 import pages.{AnyChildLivedWithOthersPage, ApplicantNamePage, CohabitationDatePage, EverLivedOrWorkedAbroadPage, RelationshipStatusPage, SeparationDatePage, UsePrintAndPostFormPage}
@@ -25,7 +25,7 @@ import java.time.LocalDate
 
 class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
   
-  private val applicantName = ApplicantName(None, "first", None, "last")
+  private val applicantName = AdultName(None, "first", None, "last")
 
   "eligible Married users must continue to the income section" in {
 

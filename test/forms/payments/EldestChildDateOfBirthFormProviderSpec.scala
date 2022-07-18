@@ -20,7 +20,7 @@ import forms.behaviours.DateBehaviours
 import play.api.data.FormError
 
 import java.time.format.DateTimeFormatter
-import java.time.{Clock, LocalDate, ZoneId, ZoneOffset}
+import java.time.{Clock, LocalDate, ZoneId}
 
 class EldestChildDateOfBirthFormProviderSpec extends DateBehaviours {
 

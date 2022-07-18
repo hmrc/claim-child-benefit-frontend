@@ -18,12 +18,12 @@ package journey
 
 import generators.ModelGenerators
 import models.RelationshipStatus._
-import models.{BankAccountDetails, Benefits, EldestChildName, RelationshipStatus}
+import models.{BankAccountDetails, Benefits, ChildName, RelationshipStatus}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import pages.applicant.ApplicantHasPreviousFamilyNamePage
-import pages.income.{ApplicantOrPartnerBenefitsPage, TaxChargeExplanationPage}
+import pages.income.ApplicantOrPartnerBenefitsPage
 import pages.payments._
 import pages.{CheckYourAnswersPage, RelationshipStatusPage}
 
@@ -31,7 +31,7 @@ import java.time.LocalDate
 
 class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
-  private val childName               = arbitrary[EldestChildName].sample.value
+  private val childName               = arbitrary[ChildName].sample.value
   private val bankDetails             = arbitrary[BankAccountDetails].sample.value
   private val benefits: Set[Benefits] = Set(Gen.oneOf(Benefits.values).sample.value)
 

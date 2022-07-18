@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.partner.PartnerNinoFormProvider
 import generators.Generators
-import models.PartnerName
+import models.AdultName
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalacheck.Arbitrary.arbitrary
@@ -41,7 +41,7 @@ class PartnerNinoControllerSpec extends SpecBase with MockitoSugar with Generato
   val nino = arbitrary[Nino].sample.value
 
   private val waypoints = EmptyWaypoints
-  private val name = PartnerName(None, "first", None, "last")
+  private val name = AdultName(None, "first", None, "last")
   private val baseAnswers = emptyUserAnswers.set(PartnerNamePage, name).success.value
 
   val formProvider = new PartnerNinoFormProvider()

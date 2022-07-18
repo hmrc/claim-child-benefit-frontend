@@ -17,7 +17,7 @@
 package journey
 
 import generators.ModelGenerators
-import models.{ChildName, Index, PartnerEldestChildName}
+import models.{ChildName, Index}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.freespec.AnyFreeSpec
 import pages.CheckYourAnswersPage
@@ -30,7 +30,7 @@ import java.time.LocalDate
 class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
   private def nino            = arbitrary[Nino].sample.value
-  private def eldestChildName = arbitrary[PartnerEldestChildName].sample.value
+  private def eldestChildName = arbitrary[ChildName].sample.value
   private def childName       = arbitrary[ChildName].sample.value
 
   "when a user initially said they knew their partner's NINO" - {

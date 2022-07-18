@@ -17,8 +17,8 @@
 package journey
 
 import generators.ModelGenerators
-import models._
 import models.RelationshipStatus._
+import models._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
@@ -41,10 +41,10 @@ class ChangingInitialSectionJourneySpec
   private def benefits              = Set(Gen.oneOf(Benefits.values).sample.value)
   private def qualifyingBenefits    = Set(Gen.oneOf(Benefits.qualifyingBenefits).sample.value)
   private val nonQualifyingBenefits = Set[Benefits](Benefits.NoneOfTheAbove)
-  private def partnerName           = arbitrary[PartnerName].sample.value
+  private def partnerName           = arbitrary[AdultName].sample.value
   private def nino                  = arbitrary[Nino].sample.value
   private def employmentStatus      = Set(arbitrary[PartnerEmploymentStatus].sample.value)
-  private def eldestChildName       = arbitrary[PartnerEldestChildName].sample.value
+  private def eldestChildName       = arbitrary[ChildName].sample.value
   private def childName             = arbitrary[ChildName].sample.value
 
   "when a user initially said they were Married" - {

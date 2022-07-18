@@ -16,9 +16,9 @@
 
 package forms
 
-import java.time.{LocalDate, ZoneOffset}
 import forms.behaviours.DateBehaviours
-import models.RelationshipStatus
+
+import java.time.{LocalDate, ZoneOffset}
 
 class CohabitationDateFormProviderSpec extends DateBehaviours {
 

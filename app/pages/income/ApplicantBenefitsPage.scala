@@ -17,10 +17,9 @@
 package pages.income
 
 import controllers.income.routes
-import models.RelationshipStatus._
 import models.{Benefits, UserAnswers}
 import pages.payments.{WantToBePaidPage, WantToBePaidWeeklyPage}
-import pages.{NonEmptyWaypoints, Page, QuestionPage, RelationshipStatusPage, Waypoints}
+import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 

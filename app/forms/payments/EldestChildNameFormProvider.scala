@@ -17,7 +17,7 @@
 package forms.payments
 
 import forms.mappings.Mappings
-import models.EldestChildName
+import models.ChildName
 import play.api.data.Form
 import play.api.data.Forms._
 
@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 class EldestChildNameFormProvider @Inject() extends Mappings {
 
-   def apply(): Form[EldestChildName] = Form(
+   def apply(): Form[ChildName] = Form(
      mapping(
       "firstName" -> text("eldestChildName.error.firstName.required")
         .verifying(maxLength(100, "eldestChildName.error.firstName.length")),
@@ -33,6 +33,6 @@ class EldestChildNameFormProvider @Inject() extends Mappings {
         .verifying(maxLength(100, "eldestChildName.error.middleNames.length"))),
        "lastName" -> text("eldestChildName.error.lastName.required")
          .verifying(maxLength(100, "eldestChildName.error.lastName.length"))
-    )(EldestChildName.apply)(EldestChildName.unapply)
+    )(ChildName.apply)(ChildName.unapply)
    )
  }

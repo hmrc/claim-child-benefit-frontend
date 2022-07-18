@@ -17,14 +17,18 @@
 package models
 
 import play.api.libs.json._
+import play.twirl.api.HtmlFormat
 
-case class ApplicantName (
+case class AdultName(
                            title: Option[String],
                            firstName: String,
                            middleNames: Option[String],
                            lastName: String
-                         )
+                         ) {
 
-object ApplicantName {
-  implicit val format = Json.format[ApplicantName]
+  val safeFirstName: String = HtmlFormat.escape(firstName).toString()
+}
+
+object AdultName {
+  implicit val format = Json.format[AdultName]
 }

@@ -17,7 +17,7 @@
 package journey
 
 import generators.ModelGenerators
-import models.{Index, PartnerEldestChildName, PartnerEmploymentStatus, PartnerName}
+import models.{AdultName, ChildName, Index, PartnerEmploymentStatus}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.freespec.AnyFreeSpec
 import pages.child.ChildNamePage
@@ -30,7 +30,7 @@ class PartnerJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGener
 
   "users who don't know their partner's NINO, and the partner is not entitled to CB, must proceed to Child Name" in{
 
-    val partnerName      = PartnerName(None, "first", None, "last")
+    val partnerName      = AdultName(None, "first", None, "last")
     val employmentStatus = Set(arbitrary[PartnerEmploymentStatus].sample.value)
 
     startingFrom(PartnerNamePage)
@@ -60,7 +60,7 @@ class PartnerJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGener
 
   "users whose partner is entitled to Child Benefit must be asked for their partner's eldest child's details then go to Child Name" in {
 
-    val childName = PartnerEldestChildName("first", None, "last")
+    val childName = ChildName("first", None, "last")
 
     startingFrom(PartnerEntitledToChildBenefitPage)
       .run(
@@ -73,7 +73,7 @@ class PartnerJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGener
 
   "users whose partner is waiting to hear if they are entitled must be asked for their partner's eldest child's details then go to Child Name" in {
 
-    val childName = PartnerEldestChildName("first", None, "last")
+    val childName = ChildName("first", None, "last")
 
     startingFrom(PartnerEntitledToChildBenefitPage)
       .run(

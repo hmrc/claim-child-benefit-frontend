@@ -19,7 +19,7 @@ package controllers.child
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.child.ChildBiologicalSexFormProvider
-import models.{ChildBiologicalSex, ChildName, UserAnswers}
+import models.{ChildBiologicalSex, ChildName}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar

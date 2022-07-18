@@ -19,7 +19,7 @@ package controllers.child
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.child.PreviousClaimantNameFormProvider
-import models.{ChildName, PreviousClaimantName}
+import models.{AdultName, ChildName}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -44,7 +44,7 @@ class PreviousClaimantNameControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val previousClaimantNameRoute = routes.PreviousClaimantNameController.onPageLoad(waypoints, index).url
 
-  private val validAnswer = PreviousClaimantName(None, "value 1", None, "value 2")
+  private val validAnswer = AdultName(None, "value 1", None, "value 2")
   private val userAnswers = baseAnswers.set(PreviousClaimantNamePage(index), validAnswer).success.value
 
   "PreviousClaimantName Controller" - {

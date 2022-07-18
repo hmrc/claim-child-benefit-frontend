@@ -17,11 +17,7 @@
 package models
 
 import models.ApplicantRelationshipToChild.AdoptedChild
-import play.api.i18n.Messages
-import play.api.libs.json.{JsError, JsString, JsSuccess, Reads, Writes}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import viewmodels.govuk.checkbox._
+import play.api.libs.json._
 
 sealed trait IncludedDocuments {
   val name: String
