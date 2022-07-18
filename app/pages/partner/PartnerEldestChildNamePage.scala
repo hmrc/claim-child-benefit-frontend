@@ -17,12 +17,12 @@
 package pages.partner
 
 import controllers.partner.routes
-import models.{PartnerEldestChildName, UserAnswers}
+import models.{ChildName, UserAnswers}
 import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object PartnerEldestChildNamePage extends QuestionPage[PartnerEldestChildName] {
+case object PartnerEldestChildNamePage extends QuestionPage[ChildName] {
 
   override def path: JsPath = JsPath \ toString
 

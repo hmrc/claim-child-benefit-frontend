@@ -17,7 +17,7 @@
 package forms.partner
 
 import forms.mappings.Mappings
-import models.PartnerEldestChildName
+import models.ChildName
 import play.api.data.Form
 import play.api.data.Forms._
 
@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 class PartnerEldestChildNameFormProvider @Inject() extends Mappings {
 
-   def apply(): Form[PartnerEldestChildName] = Form(
+   def apply(): Form[ChildName] = Form(
      mapping(
        "firstName" -> text("partnerEldestChildName.error.firstName.required")
          .verifying(maxLength(100, "partnerEldestChildName.error.firstName.length")),
@@ -33,6 +33,6 @@ class PartnerEldestChildNameFormProvider @Inject() extends Mappings {
          .verifying(maxLength(100, "partnerEldestChildName.error.middleNames.length"))),
        "lastName" -> text("partnerEldestChildName.error.lastName.required")
          .verifying(maxLength(100, "partnerEldestChildName.error.lastName.length"))
-    )(PartnerEldestChildName.apply)(PartnerEldestChildName.unapply)
+    )(ChildName.apply)(ChildName.unapply)
    )
  }

@@ -51,17 +51,17 @@ trait ModelGenerators {
 
   implicit lazy val arbitraryChildBirthRegistrationCountry: Arbitrary[ChildBirthRegistrationCountry] =
     Arbitrary {
-      Gen.oneOf(ChildBirthRegistrationCountry.values.toSeq)
+      Gen.oneOf(ChildBirthRegistrationCountry.values)
     }
 
   implicit lazy val arbitraryChildBiologicalSex: Arbitrary[ChildBiologicalSex] =
     Arbitrary {
-      Gen.oneOf(ChildBiologicalSex.values.toSeq)
+      Gen.oneOf(ChildBiologicalSex.values)
     }
 
   implicit lazy val arbitraryApplicantRelationshipToChild: Arbitrary[ApplicantRelationshipToChild] =
     Arbitrary {
-      Gen.oneOf(ApplicantRelationshipToChild.values.toSeq)
+      Gen.oneOf(ApplicantRelationshipToChild.values)
     }
 
   implicit lazy val arbitraryBestTimeToContact: Arbitrary[BestTimeToContact] = {
@@ -73,15 +73,6 @@ trait ModelGenerators {
   implicit lazy val arbitraryPartnerEmploymentStatus: Arbitrary[PartnerEmploymentStatus] =
     Arbitrary {
       Gen.oneOf(PartnerEmploymentStatus.values)
-    }
-
-  implicit lazy val arbitraryPartnerEldestChildName: Arbitrary[PartnerEldestChildName] =
-    Arbitrary {
-      for {
-        firstName <- arbitrary[String]
-        middleNames <- Gen.option(arbitrary[String])
-        lastName <- arbitrary[String]
-      } yield PartnerEldestChildName(firstName, middleNames, lastName)
     }
 
   implicit lazy val arbitraryNino: Arbitrary[Nino] = Arbitrary {
@@ -117,15 +108,6 @@ trait ModelGenerators {
         county   <- Gen.option(arbitrary[String])
         postcode <- arbitrary[String]
       } yield Address(line1, line2, town, county, postcode)
-    }
-
-  implicit lazy val arbitraryEldestChildName: Arbitrary[EldestChildName] =
-    Arbitrary {
-      for {
-        firstName <- arbitrary[String]
-        middleNames <- Gen.option(arbitrary[String])
-        lastName <- arbitrary[String]
-      } yield EldestChildName(firstName, middleNames, lastName)
     }
 
   implicit lazy val arbitraryBankAccountDetails: Arbitrary[BankAccountDetails] =
