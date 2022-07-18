@@ -19,7 +19,7 @@ package controllers.child
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.child.ChildDateOfBirthFormProvider
-import models.{ChildName, UserAnswers}
+import models.ChildName
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -32,7 +32,7 @@ import play.api.test.Helpers._
 import repositories.SessionRepository
 import views.html.child.ChildDateOfBirthView
 
-import java.time.{LocalDate, ZoneOffset}
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class ChildDateOfBirthControllerSpec extends SpecBase with MockitoSugar {
@@ -40,11 +40,11 @@ class ChildDateOfBirthControllerSpec extends SpecBase with MockitoSugar {
   private val childName = ChildName("first", None, "last")
   private val baseAnswers = emptyUserAnswers.set(ChildNamePage(index), childName).success.value
 
-  val formProvider = new ChildDateOfBirthFormProvider()
+  val formProvider = new ChildDateOfBirthFormProvider(clockAtFixedInstant)
   private val form = formProvider(childName)
   private val waypoints = EmptyWaypoints
 
-  val validAnswer = LocalDate.now(ZoneOffset.UTC)
+  val validAnswer = LocalDate.now(clockAtFixedInstant).minusYears(1)
 
   lazy val childDateOfBirthRoute = routes.ChildDateOfBirthController.onPageLoad(waypoints, index).url
 

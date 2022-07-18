@@ -20,10 +20,15 @@ import forms.mappings.Mappings
 import models.ChildName
 import play.api.data.Form
 
-import java.time.LocalDate
+import java.time.{Clock, LocalDate}
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
-class ChildDateOfBirthFormProvider @Inject() extends Mappings {
+class ChildDateOfBirthFormProvider @Inject()(clock: Clock) extends Mappings {
+
+  val minDate: LocalDate    = LocalDate.now(clock).minusYears(20)
+  val maxDate: LocalDate    = LocalDate.now(clock)
+  private def dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
   def apply(childName: ChildName): Form[LocalDate] =
     Form(
@@ -33,6 +38,9 @@ class ChildDateOfBirthFormProvider @Inject() extends Mappings {
         twoRequiredKey = "childDateOfBirth.error.required.two",
         requiredKey    = "childDateOfBirth.error.required",
         args           = Seq(childName.safeFirstName)
+      ).verifying(
+        maxDate(maxDate, "childDateOfBirth.error.afterMaximum", maxDate.format(dateFormatter)),
+        minDate(minDate, "childDateOfBirth.error.beforeMinimum", minDate.format(dateFormatter))
       )
     )
 }

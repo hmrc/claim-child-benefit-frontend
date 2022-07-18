@@ -259,6 +259,8 @@ eldestChildDateOfBirth.error.required.all = Enter {0}’s date of birth
 eldestChildDateOfBirth.error.required.two = The date of birth must include {0} and {1}
 eldestChildDateOfBirth.error.required = The date of birth must include {0}
 eldestChildDateOfBirth.error.invalid = Enter a real date
+eldestChildDateOfBirth.error.belowMinimum = The date must be on or after {0}
+eldestChildDateOfBirth.error.aboveMaximum = The date must be on or before {0}
 eldestChildDateOfBirth.change.hidden = your eldest child’s date of birth
 
 eldestChildName.title = What is your eldest child’s name?
@@ -331,6 +333,8 @@ applicantDateOfBirth.error.required.all = Enter your date of birth
 applicantDateOfBirth.error.required.two = The date must include {0} and {1}
 applicantDateOfBirth.error.required = The date must include {0}
 applicantDateOfBirth.error.invalid = Enter a real date
+applicantDateOfBirth.error.belowMinimum = The date must be on or after {0}
+applicantDateOfBirth.error.aboveMaximum = The date must be on or before {0}
 applicantDateOfBirth.change.hidden = your date of birth
 
 applicantEmploymentStatus.title = What is your employment status?
@@ -449,6 +453,8 @@ partnerDateOfBirth.error.required.all = Enter {0}’s date of birth
 partnerDateOfBirth.error.required.two = The date must include {0} and {1}
 partnerDateOfBirth.error.required = The date must include {0}
 partnerDateOfBirth.error.invalid = Enter a real date
+partnerDateOfBirth.error.belowMinimum = The date must be on or after {0}
+partnerDateOfBirth.error.aboveMaximum = The date must be on or before {0}
 partnerDateOfBirth.change.hidden = {0}’s date of birth
 
 partnerEldestChildDateOfBirth.title = What is your partner’s eldest child’s date of birth?
@@ -459,6 +465,8 @@ partnerEldestChildDateOfBirth.error.required.all = Enter the date of birth
 partnerEldestChildDateOfBirth.error.required.two = The date must include {0} and {1}
 partnerEldestChildDateOfBirth.error.required = The date must include {0}
 partnerEldestChildDateOfBirth.error.invalid = Enter a real date
+partnerEldestChildDateOfBirth.error.belowMinimum = The date must be on or after {0}
+partnerEldestChildDateOfBirth.error.aboveMaximum = The date must be on or before {0}
 partnerEldestChildDateOfBirth.change.hidden = {0}’s eldest child’s date of birth
 
 partnerEldestChildName.title = What is your partner’s eldest child’s name?
@@ -607,6 +615,8 @@ childDateOfBirth.error.required.all = Enter {0}’s date of birth
 childDateOfBirth.error.required.two = The date must include {0} and {1}
 childDateOfBirth.error.required = The date must include {0}
 childDateOfBirth.error.invalid = Enter a real date
+childDateOfBirth.error.belowMinimum = The date must be on or after {0}
+childDateOfBirth.error.aboveMaximum = The date must be on or before {0}
 childDateOfBirth.change.hidden = this child’s date of birth
 
 childHasPreviousName.title = Has this child been known by any other names?

@@ -32,16 +32,16 @@ import play.api.test.Helpers._
 import repositories.SessionRepository
 import views.html.applicant.ApplicantDateOfBirthView
 
-import java.time.{LocalDate, ZoneOffset}
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class ApplicantDateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new ApplicantDateOfBirthFormProvider()
+  val formProvider = new ApplicantDateOfBirthFormProvider(clockAtFixedInstant)
   private def form = formProvider()
   private val waypoints = EmptyWaypoints
 
-  val validAnswer = LocalDate.now(ZoneOffset.UTC)
+  val validAnswer = LocalDate.now(clockAtFixedInstant).minusYears(20)
 
   lazy val applicantDateOfBirthRoute = routes.ApplicantDateOfBirthController.onPageLoad(waypoints).url
 

@@ -19,10 +19,16 @@ package forms.applicant
 import forms.mappings.Mappings
 import play.api.data.Form
 
-import java.time.LocalDate
+import java.time.{Clock, LocalDate}
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
-class ApplicantDateOfBirthFormProvider @Inject() extends Mappings {
+class ApplicantDateOfBirthFormProvider @Inject()(clock: Clock) extends Mappings {
+
+
+  val minDate: LocalDate = LocalDate.now(clock).minusYears(130)
+  val maxDate: LocalDate = LocalDate.now(clock)
+  private def dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
   def apply(): Form[LocalDate] =
     Form(
@@ -31,6 +37,9 @@ class ApplicantDateOfBirthFormProvider @Inject() extends Mappings {
         allRequiredKey = "applicantDateOfBirth.error.required.all",
         twoRequiredKey = "applicantDateOfBirth.error.required.two",
         requiredKey    = "applicantDateOfBirth.error.required"
+      ).verifying(
+        maxDate(maxDate, "applicantDateOfBirth.error.afterMaximum", maxDate.format(dateFormatter)),
+        minDate(minDate, "applicantDateOfBirth.error.beforeMinimum", minDate.format(dateFormatter))
       )
     )
 }
