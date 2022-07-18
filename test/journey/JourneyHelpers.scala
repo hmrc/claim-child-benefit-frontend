@@ -120,7 +120,7 @@ trait JourneyHelpers extends Matchers with TryValues with OptionValues {
     } yield ()
   }
 
-  def removeAddToListItem[A](settable: Settable[A])(implicit writes: Writes[A], position: Position): JourneyStep[Unit] = {
+  def removeAddToListItem[A](settable: Settable[A])(implicit position: Position): JourneyStep[Unit] = {
     for {
       originalAnswers <- getAnswers
       _               <- remove(settable)

@@ -53,7 +53,6 @@ class PartnerEldestChildNameFormProviderSpec extends StringFieldBehaviours {
   ".middleNames" - {
 
     val fieldName = "middleNames"
-    val requiredKey = "partnerEldestChildName.error.middleNames.required"
     val lengthKey = "partnerEldestChildName.error.middleNames.length"
     val maxLength = 100
 

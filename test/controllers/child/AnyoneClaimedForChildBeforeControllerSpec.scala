@@ -25,7 +25,6 @@ import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.child.{AnyoneClaimedForChildBeforePage, ChildNamePage}
 import pages.{EmptyWaypoints, child}
-import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -35,8 +34,6 @@ import views.html.child.AnyoneClaimedForChildBeforeView
 import scala.concurrent.Future
 
 class AnyoneClaimedForChildBeforeControllerSpec extends SpecBase with MockitoSugar {
-
-  private implicit val msgs: Messages = stubMessages(stubMessagesApi())
 
   private val waypoints          = EmptyWaypoints
   private val childName          = ChildName("first", None, "last")

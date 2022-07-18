@@ -29,8 +29,7 @@ import viewmodels.implicits._
 
 object AddChildSummary {
 
-  def rows(answers: UserAnswers, waypoints: Waypoints, sourcePage: AddItemPage)
-          (implicit messages: Messages): Seq[ListItem] =
+  def rows(answers: UserAnswers, waypoints: Waypoints, sourcePage: AddItemPage): Seq[ListItem] =
     answers.get(AllChildSummaries).getOrElse(Nil).zipWithIndex.map {
       case (summary, index) =>
 
