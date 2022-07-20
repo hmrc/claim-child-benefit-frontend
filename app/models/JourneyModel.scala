@@ -18,7 +18,6 @@ package models
 
 import cats.data.{Ior, IorNec}
 import cats.implicits._
-import cats.Monad
 import models.{ChildBirthRegistrationCountry => Country}
 import models.JourneyModel._
 import pages._
@@ -28,9 +27,9 @@ import pages.income._
 import pages.partner._
 import pages.payments._
 import queries.{AllChildPreviousNames, AllChildSummaries, AllPreviousFamilyNames, Query}
+import utils.MonadOps._
 
 import java.time.LocalDate
-import scala.language.higherKinds
 
 final case class JourneyModel(
                                applicant: Applicant,
@@ -341,14 +340,6 @@ object JourneyModel {
 
       case false =>
         getPaymentDetails
-    }
-  }
-
-  implicit class BooleanMonadSyntax[F[_]](fa: F[Boolean])(implicit m: Monad[F]) {
-
-    def &&(that: F[Boolean]): F[Boolean] = fa.flatMap {
-      case false => m.pure(false)
-      case true  => that
     }
   }
 }
