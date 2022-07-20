@@ -184,11 +184,11 @@ object JourneyModel {
       ).parMapN(Child.apply)
     }
 
-    answers.getIor(AllChildSummaries)
-      .flatMap(NonEmptyList.fromList(_).toRightIor(NonEmptyChain.one(AllChildSummaries)))
-      .flatMap { children =>
-        children.toList.indices.toList.parTraverse { i => getChild(Index(i)) }
-      }.map(NonEmptyList.fromListUnsafe)
+    answers.getIor(AllChildSummaries).getOrElse(Nil).indices.toList.parTraverse { i =>
+      getChild(Index(i))
+    }.flatMap { children =>
+      NonEmptyList.fromList(children).toRightIor(NonEmptyChain.one(AllChildSummaries))
+    }
   }
 
   private def getApplicant(answers: UserAnswers): IorNec[Query, Applicant] = {

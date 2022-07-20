@@ -16,8 +16,8 @@
 
 package models
 
+import cats.data.{IorNec, NonEmptyChain}
 import cats.implicits._
-import cats.data.{EitherNec, IorNec, NonEmptyChain}
 import play.api.libs.json._
 import queries.{Derivable, Gettable, Query, Settable}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
