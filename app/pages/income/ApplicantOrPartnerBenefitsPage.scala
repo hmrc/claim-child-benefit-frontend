@@ -19,7 +19,7 @@ package pages.income
 import controllers.income.routes
 import models.{Benefits, UserAnswers}
 import pages.partner.PartnerNamePage
-import pages.payments.WantToBePaidWeeklyPage
+import pages.payments.{WantToBePaidPage, WantToBePaidWeeklyPage}
 import pages.{CannotBePaidWeeklyPage, NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
@@ -39,24 +39,29 @@ case object ApplicantOrPartnerBenefitsPage extends QuestionPage[Set[Benefits]] {
     TaxChargeExplanationPage
 
   override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, originalAnswers: UserAnswers, updatedAnswers: UserAnswers): Page = {
-
-    def getPartnerDetailsIfMissing: Page =
-      updatedAnswers.get(PartnerNamePage)
-        .map(_ => waypoints.next.page)
-        .getOrElse(PartnerNamePage)
-
     originalAnswers.get(WantToBePaidWeeklyPage).map {
-      wantToBePaidWeekly =>
+      case true =>
         updatedAnswers.get(ApplicantOrPartnerBenefitsPage).map {
           benefits =>
             if (benefits.intersect(Benefits.qualifyingBenefits).isEmpty) {
-              if (wantToBePaidWeekly) CannotBePaidWeeklyPage else getPartnerDetailsIfMissing
+              CannotBePaidWeeklyPage
             } else {
-              getPartnerDetailsIfMissing
+              TaxChargeExplanationPage
             }
-        }.getOrElse(getPartnerDetailsIfMissing)
-    }.getOrElse(getPartnerDetailsIfMissing)
+        }.orRecover
 
+      case false =>
+        TaxChargeExplanationPage
+    }.getOrElse {
+      updatedAnswers.get(WantToBePaidPage).map {
+        case true =>
+          TaxChargeExplanationPage
+        case false =>
+          updatedAnswers.get(PartnerNamePage)
+            .map(_ => waypoints.next.page)
+            .getOrElse(PartnerNamePage)
+      }.orRecover
+    }
   }
 
   override def cleanup(value: Option[Set[Benefits]], userAnswers: UserAnswers): Try[UserAnswers] =

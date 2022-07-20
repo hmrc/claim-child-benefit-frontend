@@ -37,12 +37,7 @@ case object ApplicantBenefitsPage extends QuestionPage[Set[Benefits]] {
 
   override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
     answers.get(WantToBePaidPage).map {
-      case true =>
-        answers.get(WantToBePaidWeeklyPage)
-          .map(_ => waypoints.next.page)
-          .getOrElse(WantToBePaidWeeklyPage)
-
-      case false =>
-        waypoints.next.page
+      case true  => TaxChargeExplanationPage
+      case false => waypoints.next.page
     }.getOrElse(waypoints.next.page)
 }

@@ -17,9 +17,11 @@
 package pages.income
 
 import controllers.income.routes
-import models.UserAnswers
-import pages.payments.ClaimedChildBenefitBeforePage
-import pages.{Page, Waypoints}
+import models.RelationshipStatus._
+import models.{Benefits, UserAnswers}
+import pages.partner.PartnerNamePage
+import pages.payments.{ClaimedChildBenefitBeforePage, WantToBePaidPage, WantToBePaidWeeklyPage}
+import pages.{NonEmptyWaypoints, Page, RelationshipStatusPage, Waypoints}
 import play.api.mvc.Call
 
 case object TaxChargeExplanationPage extends Page {
@@ -29,4 +31,45 @@ case object TaxChargeExplanationPage extends Page {
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     ClaimedChildBenefitBeforePage
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page = {
+
+    val getPartnerDetailsIfMissing =
+      answers.get(PartnerNamePage)
+        .map(_ => waypoints.next.page)
+        .getOrElse(PartnerNamePage)
+
+    answers.get(RelationshipStatusPage).map {
+      case Married | Cohabiting =>
+        answers.get(WantToBePaidPage).map {
+          case true =>
+            answers.get(WantToBePaidWeeklyPage)
+              .map(_ => getPartnerDetailsIfMissing)
+              .getOrElse {
+                answers.get(ApplicantOrPartnerBenefitsPage).map {
+                  benefits =>
+                    if (benefits.intersect(Benefits.qualifyingBenefits).isEmpty) {
+                      getPartnerDetailsIfMissing
+                    } else {
+                      WantToBePaidWeeklyPage
+                    }
+                }.orRecover
+              }
+
+          case false =>
+            getPartnerDetailsIfMissing
+        }.orRecover
+
+
+      case Single | Divorced | Separated | Widowed =>
+        answers.get(WantToBePaidPage).map {
+          case true =>
+            answers.get(WantToBePaidWeeklyPage)
+              .map(_ => waypoints.next.page)
+              .getOrElse(WantToBePaidWeeklyPage)
+          case false =>
+            waypoints.next.page
+        }.orRecover
+    }.orRecover
+  }
 }
