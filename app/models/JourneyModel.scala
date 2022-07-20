@@ -18,6 +18,7 @@ package models
 
 import cats.data.{Ior, IorNec}
 import cats.implicits._
+import cats.Monad
 import models.{ChildBirthRegistrationCountry => Country}
 import models.JourneyModel._
 import pages._
@@ -29,12 +30,13 @@ import pages.payments._
 import queries.{AllChildPreviousNames, AllChildSummaries, AllPreviousFamilyNames, Query}
 
 import java.time.LocalDate
+import scala.language.higherKinds
 
 final case class JourneyModel(
                                applicant: Applicant,
                                relationship: Relationship,
                                children: List[Child],
-                               benefits:Set[Benefits],
+                               benefits: Set[Benefits],
                                paymentPreference: PaymentPreference
                              )
 
@@ -326,30 +328,28 @@ object JourneyModel {
           Ior.Right(DoNotPay)
       }
 
-    answers.getIor(ClaimedChildBenefitBeforePage).flatMap {
+    (
+      answers.getIor(ClaimedChildBenefitBeforePage) &&
+      answers.getIor(CurrentlyEntitledToChildBenefitPage) &&
+      answers.getIor(CurrentlyReceivingChildBenefitPage)
+    ).flatMap {
       case true =>
-        answers.getIor(CurrentlyEntitledToChildBenefitPage).flatMap {
-          case true =>
-            answers.getIor(CurrentlyReceivingChildBenefitPage).flatMap {
-              case true =>
-                answers.getIor(WantToBePaidToExistingAccountPage).flatMap {
-                  case true  =>
-                    getEldestChild.map(ExistingAccount)
-
-                  case false =>
-                    (getAccountDetails, getEldestChild).parMapN(ExistingFrequency.apply)
-                }
-
-              case false =>
-                getPaymentDetails
-            }
-
-          case false =>
-            getPaymentDetails
+        answers.getIor(WantToBePaidToExistingAccountPage).flatMap {
+          case true  => getEldestChild.map(ExistingAccount)
+          case false => (getAccountDetails, getEldestChild).parMapN(ExistingFrequency.apply)
         }
 
       case false =>
         getPaymentDetails
     }
   }
+
+  implicit class BooleanMonadSyntax[F[_]](fa: F[Boolean])(implicit m: Monad[F]) {
+
+    def &&(that: F[Boolean]): F[Boolean] = fa.flatMap {
+      case false => m.pure(false)
+      case true  => that
+    }
+  }
 }
+
