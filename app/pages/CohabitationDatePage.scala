@@ -28,7 +28,7 @@ case object CohabitationDatePage extends QuestionPage[LocalDate] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "relationshipStatusDate"
+  override def toString: String = "cohabitationDate"
 
   override def route(waypoints: Waypoints): Call =
     routes.CohabitationDateController.onPageLoad(waypoints)
