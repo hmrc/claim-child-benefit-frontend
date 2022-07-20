@@ -17,7 +17,7 @@
 package journey
 
 import generators.ModelGenerators
-import models.{Benefits, PartnerName}
+import models.{AdultName, Benefits}
 import models.RelationshipStatus._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
@@ -95,7 +95,7 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
     "changing the answer to false must remove the answer to `income over 60k`, show the tax charge explanation then return to Check Answers" in {
 
       val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
-      val partnerName        = arbitrary[PartnerName].sample.value
+      val partnerName        = arbitrary[AdultName].sample.value
 
       val initialise = journeyOf(
         setUserAnswerTo(RelationshipStatusPage, relationshipStatus),
@@ -127,7 +127,7 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
     "changing the answer to true must collect `income over 60k`, show the tax charge explanation then return to Check Answers" in {
 
       val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
-      val partnerName        = arbitrary[PartnerName].sample.value
+      val partnerName        = arbitrary[AdultName].sample.value
 
       val initialise = journeyOf(
         setUserAnswerTo(RelationshipStatusPage, relationshipStatus),
@@ -162,7 +162,7 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
       "changing to say they do receive benefits must ask if they want to be paid weekly then return to Check Answers" in {
 
         val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
-        val partnerName        = arbitrary[PartnerName].sample.value
+        val partnerName        = arbitrary[AdultName].sample.value
 
         val initialise = journeyOf(
           setUserAnswerTo(RelationshipStatusPage, relationshipStatus),
@@ -194,7 +194,7 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
       "changing to say they do receive benefits must return to Check Answers" in {
 
         val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
-        val partnerName        = arbitrary[PartnerName].sample.value
+        val partnerName        = arbitrary[AdultName].sample.value
 
         val initialise = journeyOf(
           setUserAnswerTo(RelationshipStatusPage, relationshipStatus),
