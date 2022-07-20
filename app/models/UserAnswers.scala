@@ -34,9 +34,6 @@ final case class UserAnswers(
   def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] =
     Reads.optionNoError(Reads.at(page.path)).reads(data).getOrElse(None)
 
-  def getNec[A](page: Gettable[A])(implicit rds: Reads[A]): EitherNec[Query, A] =
-    get(page).toRight(NonEmptyChain.one(page))
-
   def getIor[A](page: Gettable[A])(implicit rds: Reads[A]): IorNec[Query, A] =
     get(page).toRightIor(NonEmptyChain.one(page))
 

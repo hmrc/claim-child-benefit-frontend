@@ -16,7 +16,7 @@
 
 package models
 
-import cats.data.{Ior, IorNec}
+import cats.data.{Ior, IorNec, NonEmptyChain, NonEmptyList}
 import cats.implicits._
 import models.{ChildBirthRegistrationCountry => Country}
 import models.JourneyModel._
@@ -34,7 +34,7 @@ import java.time.LocalDate
 final case class JourneyModel(
                                applicant: Applicant,
                                relationship: Relationship,
-                               children: List[Child],
+                               children: NonEmptyList[Child],
                                benefits: Set[Benefits],
                                paymentPreference: PaymentPreference
                              )
@@ -117,7 +117,7 @@ object JourneyModel {
     }
   }
 
-  private def getChildren(answers: UserAnswers): IorNec[Query, List[Child]] = {
+  private def getChildren(answers: UserAnswers): IorNec[Query, NonEmptyList[Child]] = {
 
     def getChild(index: Index): IorNec[Query, Child] = {
 
@@ -184,9 +184,11 @@ object JourneyModel {
       ).parMapN(Child.apply)
     }
 
-    answers.get(AllChildSummaries).getOrElse(Nil).indices.toList.parTraverse { i =>
-      getChild(Index(i))
-    }
+    answers.getIor(AllChildSummaries)
+      .flatMap(NonEmptyList.fromList(_).toRightIor(NonEmptyChain.one(AllChildSummaries)))
+      .flatMap { children =>
+        children.toList.indices.toList.parTraverse { i => getChild(Index(i)) }
+      }.map(NonEmptyList.fromListUnsafe)
   }
 
   private def getApplicant(answers: UserAnswers): IorNec[Query, Applicant] = {

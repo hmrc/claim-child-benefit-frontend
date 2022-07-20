@@ -16,6 +16,7 @@
 
 package models
 
+import cats.data.NonEmptyList
 import generators.ModelGenerators
 import models.ApplicantRelationshipToChild.AdoptingChild
 import models.{ChildBirthRegistrationCountry => Country}
@@ -31,7 +32,7 @@ import pages.child._
 import pages.income._
 import pages.partner._
 import pages.payments._
-import queries.{AllChildPreviousNames, AllPreviousFamilyNames}
+import queries.{AllChildPreviousNames, AllChildSummaries, AllPreviousFamilyNames}
 import uk.gov.hmrc.domain.Nino
 
 import java.time.LocalDate
@@ -104,7 +105,7 @@ class JourneyModelSpec
             employmentStatus = applicantEmployment
           ),
           relationship = JourneyModel.Relationship(Single, None, None),
-          children = List(
+          children = NonEmptyList(
             JourneyModel.Child(
               name = childName,
               nameChangedByDeedPoll = None,
@@ -117,7 +118,7 @@ class JourneyModelSpec
               adoptingThroughLocalAuthority = None,
               previousClaimant = None,
               documents = Set.empty
-            )
+            ), Nil
           ),
           benefits = applicantBenefits,
           paymentPreference = JourneyModel.PaymentPreference.DoNotPay
@@ -173,7 +174,7 @@ class JourneyModelSpec
               eldestChild = None
             ))
           ),
-          children = List(
+          children = NonEmptyList(
             JourneyModel.Child(
               name = childName,
               nameChangedByDeedPoll = None,
@@ -186,6 +187,91 @@ class JourneyModelSpec
               adoptingThroughLocalAuthority = None,
               previousClaimant = None,
               documents = Set.empty
+            ), Nil
+          ),
+          benefits = applicantBenefits,
+          paymentPreference = JourneyModel.PaymentPreference.DoNotPay
+        )
+
+        val (errors, data) = JourneyModel.from(answers).pad
+
+        errors mustBe empty
+        data.value mustEqual expectedModel
+      }
+
+      "when the applicant has multiple children" in {
+
+        val childName2 = ChildName("first 2", None, "last 2")
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalCoupleIncomeDetails
+          .withMinimalPartnerDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Married).success.value
+          .set(ChildNamePage(Index(1)), childName2).success.value
+          .set(ChildHasPreviousNamePage(Index(1)), false).success.value
+          .set(ChildBiologicalSexPage(Index(1)), biologicalSex).success.value
+          .set(ChildDateOfBirthPage(Index(1)), now).success.value
+          .set(ChildBirthRegistrationCountryPage(Index(1)), ChildBirthRegistrationCountry.England).success.value
+          .set(ChildBirthCertificateSystemNumberPage(Index(1)), systemNumber).success.value
+          .set(ApplicantRelationshipToChildPage(Index(1)), relationshipToChild).success.value
+          .set(AnyoneClaimedForChildBeforePage(Index(1)), false).success.value
+
+        val expectedModel = JourneyModel(
+          applicant = JourneyModel.Applicant(
+            name = applicantName,
+            previousFamilyNames = Nil,
+            dateOfBirth = now,
+            nationalInsuranceNumber = None,
+            currentAddress = currentAddress,
+            previousAddress = None,
+            telephoneNumber = phoneNumber,
+            bestTimeToContact = bestTimes,
+            nationality = applicantNationality,
+            employmentStatus = applicantEmployment
+          ),
+          relationship = JourneyModel.Relationship(
+            status = Married,
+            since = None,
+            partner = Some(JourneyModel.Partner(
+              name = partnerName,
+              dateOfBirth = now,
+              nationality = partnerNationality,
+              nationalInsuranceNumber = None,
+              currentlyEntitledToChildBenefit = false,
+              waitingToHearAboutEntitlement = Some(false),
+              eldestChild = None
+            ))
+          ),
+          children = NonEmptyList(
+            JourneyModel.Child(
+              name = childName,
+              nameChangedByDeedPoll = None,
+              previousNames = Nil,
+              biologicalSex = biologicalSex,
+              countryOfRegistration = ChildBirthRegistrationCountry.England,
+              birtCertificateSystemNumber = Some(systemNumber),
+              scottishBirthCertificateDetails = None,
+              relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
+              adoptingThroughLocalAuthority = None,
+              previousClaimant = None,
+              documents = Set.empty
+            ), List(
+              JourneyModel.Child(
+                name = childName2,
+                nameChangedByDeedPoll = None,
+                previousNames = Nil,
+                biologicalSex = biologicalSex,
+                countryOfRegistration = ChildBirthRegistrationCountry.England,
+                birtCertificateSystemNumber = Some(systemNumber),
+                scottishBirthCertificateDetails = None,
+                relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
+                adoptingThroughLocalAuthority = None,
+                previousClaimant = None,
+                documents = Set.empty
+              )
             )
           ),
           benefits = applicantBenefits,
@@ -797,7 +883,7 @@ class JourneyModelSpec
         val (errors, data) = JourneyModel.from(answers).pad
 
         errors mustBe empty
-        data.value.children must contain only expectedChildDetails
+        data.value.children.toList must contain only expectedChildDetails
       }
 
       "when a child was born in Scotland" in {
@@ -828,7 +914,7 @@ class JourneyModelSpec
         val (errors, data) = JourneyModel.from(answers).pad
 
         errors mustBe empty
-        data.value.children must contain only expectedChildDetails
+        data.value.children.toList must contain only expectedChildDetails
       }
 
       "when a child was born outside of England, Wales and Scotland" in {
@@ -859,7 +945,7 @@ class JourneyModelSpec
         val (errors, data) = JourneyModel.from(answers).pad
 
         errors mustBe empty
-        data.value.children must contain only expectedChildDetails
+        data.value.children.toList must contain only expectedChildDetails
       }
 
       "when a child is being adopted" in {
@@ -890,7 +976,7 @@ class JourneyModelSpec
         val (errors, data) = JourneyModel.from(answers).pad
 
         errors mustBe empty
-        data.value.children must contain only expectedChildDetails
+        data.value.children.toList must contain only expectedChildDetails
       }
     }
 
@@ -1355,6 +1441,22 @@ class JourneyModelSpec
 
         data mustBe empty
       }
+
+      "when no children are present" in {
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withMinimalSingleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+
+        val (errors, data) = JourneyModel.from(answers).pad
+
+        errors.value.toChain.toList must contain only AllChildSummaries
+
+        data mustBe empty
+      }
+
     }
   }
 
