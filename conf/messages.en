@@ -78,6 +78,7 @@ index.p11 = You cannot save a partly completed form, you should gather all your 
 index.p12 = You need to send your completed form to HMRC, along with any documents you need to provide.
 index.p13 = If you need further assistance with your claim,
 index.p13.link.text = contact the Child Benefit helpline
+index.p13.link.href = https://www.gov.uk/government/organisations/hm-revenue-customs/contact/child-benefit
 index.link.href = https://www.gov.uk/government/organisations/hm-revenue-customs/contact/child-benefit
 index.p14 = Do not delay making your claim, because Child Benefit can only be backdated by 3 months.
 
@@ -452,7 +453,7 @@ applicantName.firstName = First name
 applicantName.middleNames = Middle name(s)
 applicantName.lastName = Last name
 applicantName.checkYourAnswersLabel = What is your name?
-applicantName.error.firstName.required = Enter your first nmae
+applicantName.error.firstName.required = Enter your first name
 applicantName.error.lastName.required = Enter your last name
 applicantName.error.title.length = Title must be 100 characters or less
 applicantName.error.firstName.length = First name must be 100 characters or less
