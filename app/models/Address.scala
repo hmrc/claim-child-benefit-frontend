@@ -21,13 +21,13 @@ import play.api.libs.json._
 case class Address(
                     line1: String,
                     line2: Option[String],
-                    town: String,
+                    townOrCity: String,
                     county: Option[String],
                     postcode: String
                   ) {
 
   val lines: Seq[String] =
-    Seq(Some(line1), line2, Some(town), county, Some(postcode)).flatten
+    Seq(Some(line1), line2, Some(townOrCity), county, Some(postcode)).flatten
 }
 
 object Address {
