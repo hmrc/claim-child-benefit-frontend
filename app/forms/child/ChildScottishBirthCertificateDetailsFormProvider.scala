@@ -18,33 +18,18 @@ package forms.child
 
 import forms.Validation
 import forms.mappings.Mappings
-import models.ChildScottishBirthCertificateDetails
+import models.ChildName
 import play.api.data.Form
-import play.api.data.Forms._
 
-import java.time.{Clock, LocalDate}
 import javax.inject.Inject
 
-class ChildScottishBirthCertificateDetailsFormProvider @Inject()(clock: Clock) extends Mappings {
+class ChildScottishBirthCertificateDetailsFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[ChildScottishBirthCertificateDetails] = {
-
-    val maxYear = LocalDate.now(clock).getYear
-    val minYear = maxYear - 20
-
+  def apply(childName: ChildName): Form[String] =
     Form(
-      mapping(
-        "district" -> text("childScottishBirthCertificateDetails.error.district.required")
-          .verifying(regexp(Validation.districtPattern, "childScottishBirthCertificateDetails.error.district.invalid")),
-        "year" -> int(
-          requiredKey    = "childScottishBirthCertificateDetails.error.year.required",
-          wholeNumberKey = "childScottishBirthCertificateDetails.error.year.invalid",
-          nonNumericKey  = "childScottishBirthCertificateDetails.error.year.invalid"
-        ).verifying(minimumValue(minYear, "childScottishBirthCertificateDetails.error.year.belowMinimum"))
-          .verifying(maximumValue(maxYear, "childScottishBirthCertificateDetails.error.year.aboveMaximum")),
-        "entryNumber" -> text("childScottishBirthCertificateDetails.error.entryNumber.required")
-          .verifying(regexp(Validation.entryNumberPattern, "childScottishBirthCertificateDetails.error.entryNumber.invalid"))
-      )(ChildScottishBirthCertificateDetails.apply)(ChildScottishBirthCertificateDetails.unapply)
+      "value" -> text("childScottishBirthCertificateDetails.error.required", args = Seq(childName.safeFirstName))
+        .verifying(regexp(Validation.scottishBirthCertificateNumberPattern.toString, "childScottishBirthCertificateDetails.error.invalid"))
+        .transform[String](x => x.replace(" ", "").replace("-", ""), x => x)
     )
-  }
+
 }

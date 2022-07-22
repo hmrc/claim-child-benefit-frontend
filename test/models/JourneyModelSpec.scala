@@ -71,7 +71,7 @@ class JourneyModelSpec
   private val biologicalSex = ChildBiologicalSex.Female
   private val relationshipToChild = ApplicantRelationshipToChild.BirthChild
   private val systemNumber = "000000000"
-  private val scottishBirthCertificateDetails = ChildScottishBirthCertificateDetails("123", now.getYear, "123")
+  private val scottishBirthCertificateDetails = "0000000000"
   private val childPreviousName1 = ChildName("first 1", None, "last 1")
   private val childPreviousName2 = ChildName("first 2", None, "last 2")
   private val documents = Set[IncludedDocuments](IncludedDocuments.BirthCertificate)
@@ -112,8 +112,7 @@ class JourneyModelSpec
               previousNames = Nil,
               biologicalSex = biologicalSex,
               countryOfRegistration = ChildBirthRegistrationCountry.England,
-              birtCertificateSystemNumber = Some(systemNumber),
-              scottishBirthCertificateDetails = None,
+              birtCertificateNumber = Some(systemNumber),
               relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
               adoptingThroughLocalAuthority = None,
               previousClaimant = None,
@@ -181,8 +180,7 @@ class JourneyModelSpec
               previousNames = Nil,
               biologicalSex = biologicalSex,
               countryOfRegistration = ChildBirthRegistrationCountry.England,
-              birtCertificateSystemNumber = Some(systemNumber),
-              scottishBirthCertificateDetails = None,
+              birtCertificateNumber = Some(systemNumber),
               relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
               adoptingThroughLocalAuthority = None,
               previousClaimant = None,
@@ -214,8 +212,8 @@ class JourneyModelSpec
           .set(ChildHasPreviousNamePage(Index(1)), false).success.value
           .set(ChildBiologicalSexPage(Index(1)), biologicalSex).success.value
           .set(ChildDateOfBirthPage(Index(1)), now).success.value
-          .set(ChildBirthRegistrationCountryPage(Index(1)), ChildBirthRegistrationCountry.England).success.value
-          .set(ChildBirthCertificateSystemNumberPage(Index(1)), systemNumber).success.value
+          .set(ChildBirthRegistrationCountryPage(Index(1)), ChildBirthRegistrationCountry.Scotland).success.value
+          .set(ChildScottishBirthCertificateDetailsPage(Index(1)), scottishBirthCertificateDetails).success.value
           .set(ApplicantRelationshipToChildPage(Index(1)), relationshipToChild).success.value
           .set(AnyoneClaimedForChildBeforePage(Index(1)), false).success.value
 
@@ -252,8 +250,7 @@ class JourneyModelSpec
               previousNames = Nil,
               biologicalSex = biologicalSex,
               countryOfRegistration = ChildBirthRegistrationCountry.England,
-              birtCertificateSystemNumber = Some(systemNumber),
-              scottishBirthCertificateDetails = None,
+              birtCertificateNumber = Some(systemNumber),
               relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
               adoptingThroughLocalAuthority = None,
               previousClaimant = None,
@@ -264,9 +261,8 @@ class JourneyModelSpec
                 nameChangedByDeedPoll = None,
                 previousNames = Nil,
                 biologicalSex = biologicalSex,
-                countryOfRegistration = ChildBirthRegistrationCountry.England,
-                birtCertificateSystemNumber = Some(systemNumber),
-                scottishBirthCertificateDetails = None,
+                countryOfRegistration = ChildBirthRegistrationCountry.Scotland,
+                birtCertificateNumber = Some(scottishBirthCertificateDetails),
                 relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
                 adoptingThroughLocalAuthority = None,
                 previousClaimant = None,
@@ -872,8 +868,7 @@ class JourneyModelSpec
           previousNames = List(childPreviousName1, childPreviousName2),
           biologicalSex = ChildBiologicalSex.Female,
           countryOfRegistration = ChildBirthRegistrationCountry.England,
-          birtCertificateSystemNumber = Some(systemNumber),
-          scottishBirthCertificateDetails = None,
+          birtCertificateNumber = Some(systemNumber),
           relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
           adoptingThroughLocalAuthority = None,
           previousClaimant = None,
@@ -903,8 +898,7 @@ class JourneyModelSpec
           previousNames = Nil,
           biologicalSex = ChildBiologicalSex.Female,
           countryOfRegistration = ChildBirthRegistrationCountry.Scotland,
-          birtCertificateSystemNumber = None,
-          scottishBirthCertificateDetails = Some(scottishBirthCertificateDetails),
+          birtCertificateNumber = Some(scottishBirthCertificateDetails),
           relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
           adoptingThroughLocalAuthority = None,
           previousClaimant = None,
@@ -934,8 +928,7 @@ class JourneyModelSpec
           previousNames = Nil,
           biologicalSex = ChildBiologicalSex.Female,
           countryOfRegistration = ChildBirthRegistrationCountry.Other,
-          birtCertificateSystemNumber = None,
-          scottishBirthCertificateDetails = None,
+          birtCertificateNumber = None,
           relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
           adoptingThroughLocalAuthority = None,
           previousClaimant = None,
@@ -965,8 +958,7 @@ class JourneyModelSpec
           previousNames = Nil,
           biologicalSex = ChildBiologicalSex.Female,
           countryOfRegistration = ChildBirthRegistrationCountry.England,
-          birtCertificateSystemNumber = Some(systemNumber),
-          scottishBirthCertificateDetails = None,
+          birtCertificateNumber = Some(systemNumber),
           relationshipToApplicant = ApplicantRelationshipToChild.AdoptingChild,
           adoptingThroughLocalAuthority = Some(true),
           previousClaimant = None,
