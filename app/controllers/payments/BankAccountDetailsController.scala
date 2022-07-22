@@ -18,11 +18,14 @@ package controllers.payments
 
 import controllers.actions._
 import forms.payments.BankAccountDetailsFormProvider
+import models.{ReputationResponseEnum, ValidateBankDetailsResponseModel}
 import pages.Waypoints
 import pages.payments.BankAccountDetailsPage
+import play.api.data.FormError
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
+import services.BarsService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.payments.BankAccountDetailsView
 
@@ -37,7 +40,8 @@ class BankAccountDetailsController @Inject()(
                                       requireData: DataRequiredAction,
                                       formProvider: BankAccountDetailsFormProvider,
                                       val controllerComponents: MessagesControllerComponents,
-                                      view: BankAccountDetailsView
+                                      view: BankAccountDetailsView,
+                                      barsService: BarsService
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form = formProvider()
@@ -61,10 +65,27 @@ class BankAccountDetailsController @Inject()(
           Future.successful(BadRequest(view(formWithErrors, waypoints))),
 
         value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(BankAccountDetailsPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(BankAccountDetailsPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+          barsService.validateBankDetails(value).flatMap {
+            getBarsError(_).map { error =>
+              Future.successful(BadRequest(view(form.fill(value).withError(error), waypoints)))
+            }.getOrElse {
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(BankAccountDetailsPage, value))
+                _              <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(BankAccountDetailsPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+            }
+          }
       )
   }
+
+  private def getBarsError(validationResult: Option[ValidateBankDetailsResponseModel]): Option[FormError] =
+    validationResult.flatMap { result =>
+      if (result.sortCodeIsPresentOnEISCD == ReputationResponseEnum.No) {
+        Some(FormError("sortCode", "bankAccountDetails.error.sortCode.doesNotExist"))
+      } else if (result.accountNumberIsWellFormatted == ReputationResponseEnum.No) {
+        Some(FormError("sortCode", "bankAccountDetails.error.sortCode.failedModulusCheck"))
+      } else {
+        None
+      }
+    }
 }

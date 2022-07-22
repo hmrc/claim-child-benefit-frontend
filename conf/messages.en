@@ -216,6 +216,8 @@ applicantHasSuitableAccount.change.hidden = if you have an account that Child Be
 
 bankAccountDetails.title = Bank or building society account details
 bankAccountDetails.heading = Bank or building society account details
+bankAccountDetails.error.sortCode.failedModulusCheck = Enter a recognised sort code and account number
+bankAccountDetails.error.sortCode.doesNotExist = Enter a sort code that is recognised
 bankAccountDetails.accountName = Name on the account
 bankAccountDetails.accountNumber = Account number
 bankAccountDetails.accountNumber.hint = Must be between 6 and 8 digits long
