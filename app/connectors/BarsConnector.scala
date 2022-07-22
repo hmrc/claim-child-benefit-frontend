@@ -16,17 +16,20 @@
 
 package connectors
 
+import audit.{AuditService, ValidateBankDetailsAuditEvent}
 import config.Service
 import connectors.BarsHttpParser.{BarsReads, ValidateBankDetailsResponse}
 import models.ValidateBankDetailsRequest
 import play.api.Configuration
-import play.api.libs.json.Json
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import play.api.libs.json.{JsValue, Json}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
-class BarsConnector @Inject()(config: Configuration, httpClient: HttpClient)(implicit ec: ExecutionContext) {
+class BarsConnector @Inject()(config: Configuration, httpClient: HttpClient, auditService: AuditService)
+                             (implicit ec: ExecutionContext) {
 
   private val baseUrl     = config.get[Service]("microservice.services.bank-account-reputation")
   private val validateUrl = s"$baseUrl/validate/bank-details"
@@ -38,7 +41,17 @@ class BarsConnector @Inject()(config: Configuration, httpClient: HttpClient)(imp
 
     httpClient.POST(validateUrl, json).map {
       case (connectorResponse, httpResponse) =>
+        auditService.auditValidateBankDetails(
+          ValidateBankDetailsAuditEvent(
+            request  = barsRequest,
+            response = getResponseJson(httpResponse)
+          )
+        )
+
         connectorResponse
     }
   }
+
+  private def getResponseJson(response: HttpResponse): JsValue =
+    Try(response.json).getOrElse(Json.obj())
 }

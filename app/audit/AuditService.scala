@@ -18,6 +18,7 @@ package audit
 
 import com.google.inject.{Inject, Singleton}
 import models.JourneyModel
+import play.api.libs.json.JsValue
 import play.api.{Configuration, Logging}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -27,10 +28,14 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class AuditService @Inject() (connector: AuditConnector, configuration: Configuration)(implicit ec: ExecutionContext) extends Logging {
 
-  private val downloadEventName = configuration.get[String]("auditing.downloadEventName")
+  private val downloadEventName            = configuration.get[String]("auditing.downloadEventName")
+  private val validateBankDetailsEventName = configuration.get[String]("auditing.validateBankDetailsEventName")
 
   def auditDownload(model: JourneyModel)(implicit hc: HeaderCarrier): Unit = {
     val data = DownloadAuditEvent.from(model)
     connector.sendExplicitAudit(downloadEventName, data)
   }
+
+  def auditValidateBankDetails(auditEvent: ValidateBankDetailsAuditEvent)(implicit hc: HeaderCarrier): Unit =
+    connector.sendExplicitAudit(validateBankDetailsEventName, auditEvent)
 }

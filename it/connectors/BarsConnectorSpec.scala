@@ -1,14 +1,19 @@
 package connectors
 
-import com.github.tomakehurst.wiremock.client.WireMock._
+import audit.{AuditService, ValidateBankDetailsAuditEvent}
+import com.github.tomakehurst.wiremock.client.WireMock.{ok, post, serverError, urlEqualTo}
 import models.{Account, InvalidJson, ReputationResponseEnum, UnexpectedResponseStatus, ValidateBankDetailsRequest, ValidateBankDetailsResponseModel}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito.{times, verify}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{EitherValues, OptionValues}
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Application
+import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json.Json
 import play.api.test.Helpers.running
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -27,6 +32,7 @@ class BarsConnectorSpec
   private def application: Application =
     new GuiceApplicationBuilder()
       .configure("microservice.services.bank-account-reputation.port" -> server.port)
+      .bindings(bind[AuditService].toInstance(mock[AuditService]))
       .build()
 
   private val happyResponseJson =
@@ -45,13 +51,14 @@ class BarsConnectorSpec
 
     "when valid json is returned" - {
 
-      "must return a Right" in {
+      "must return a Right and audit the response" in {
 
         val app = application
 
         running(app) {
 
-          val connector = app.injector.instanceOf[BarsConnector]
+          val connector    = app.injector.instanceOf[BarsConnector]
+          val auditService = app.injector.instanceOf[AuditService]
 
           server.stubFor(
             post(urlEqualTo("/validate/bank-details"))
@@ -67,6 +74,13 @@ class BarsConnectorSpec
             nonStandardAccountDetailsRequiredForBacs = ReputationResponseEnum.No,
             sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes
           )
+
+          verify(auditService, times(1)).auditValidateBankDetails(
+            eqTo(ValidateBankDetailsAuditEvent(
+              request  = request,
+              response = Json.parse(happyResponseJson)
+            ))
+          )(any())
         }
       }
     }
@@ -79,7 +93,8 @@ class BarsConnectorSpec
 
         running(app) {
 
-          val connector = app.injector.instanceOf[BarsConnector]
+          val connector    = app.injector.instanceOf[BarsConnector]
+          val auditService = app.injector.instanceOf[AuditService]
 
           val invalidJson = """{"foo": "bar"}"""
 
@@ -93,6 +108,13 @@ class BarsConnectorSpec
           val result = connector.validate(request).futureValue
 
           result.left.value mustEqual InvalidJson
+
+          verify(auditService, times(1)).auditValidateBankDetails(
+            eqTo(ValidateBankDetailsAuditEvent(
+              request  = request,
+              response = Json.parse(invalidJson)
+            ))
+          )(any())
         }
       }
     }
@@ -105,7 +127,8 @@ class BarsConnectorSpec
 
         running(app) {
 
-          val connector = app.injector.instanceOf[BarsConnector]
+          val connector    = app.injector.instanceOf[BarsConnector]
+          val auditService = app.injector.instanceOf[AuditService]
 
           server.stubFor(
             post(urlEqualTo("/validate/bank-details"))
@@ -117,6 +140,13 @@ class BarsConnectorSpec
           val result = connector.validate(request).futureValue
 
           result.left.value mustEqual UnexpectedResponseStatus(500)
+
+          verify(auditService, times(1)).auditValidateBankDetails(
+            eqTo(ValidateBankDetailsAuditEvent(
+              request  = request,
+              response = Json.obj()
+            ))
+          )(any())
         }
       }
     }
