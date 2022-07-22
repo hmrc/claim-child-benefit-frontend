@@ -26,7 +26,8 @@ object AppDependencies {
     "org.mockito"             %% "mockito-scala"           % "1.16.42",
     "org.scalacheck"          %% "scalacheck"              % "1.15.4",
     "uk.gov.hmrc.mongo"       %% "hmrc-mongo-test-play-28" % "0.65.0",
-    "com.vladsch.flexmark"    %  "flexmark-all"            % "0.62.2"
+    "com.vladsch.flexmark"    %  "flexmark-all"            % "0.62.2",
+    "com.github.tomakehurst"  %  "wiremock-standalone"     % "2.27.2"
   ).map(_ % "test, it")
 
   def apply(): Seq[ModuleID] = compile ++ test
