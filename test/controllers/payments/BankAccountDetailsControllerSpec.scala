@@ -42,7 +42,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val bankAccountDetailsRoute = routes.BankAccountDetailsController.onPageLoad(waypoints).url
 
-  private val validAnswer = BankAccountDetails("name", "00123456", "123456", None)
+  private val validAnswer = BankAccountDetails("name", "123456", "00123456", None)
   private val userAnswers = emptyUserAnswers.set(BankAccountDetailsPage, validAnswer).success.value
 
   "BankAccountDetails Controller" - {
