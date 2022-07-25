@@ -121,7 +121,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
     "must be asked for the birth certificate details, and not for any documents" in {
 
       val relationship       = ApplicantRelationshipToChild.BirthChild
-      val certificateDetails = arbitrary[ChildScottishBirthCertificateDetails].sample.value
+      val certificateDetails =Gen.listOfN(10, Gen.numChar).sample.value.mkString
 
       startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
         .run(

@@ -745,18 +745,10 @@ childPreviousName.checkYourAnswersLabel = Previous names
 
 childScottishBirthCertificateDetails.title = What is the district number, year and entry number on this child’s birth certificate?
 childScottishBirthCertificateDetails.heading = What is the district number, year and entry number on {0}’s birth certificate?
-childScottishBirthCertificateDetails.district = District number
-childScottishBirthCertificateDetails.year = Year
-childScottishBirthCertificateDetails.entryNumber = Entry number
+childScottishBirthCertificateDetails.hint = This is at the top of their birth certificate.  For example, 123 2000 456.
 childScottishBirthCertificateDetails.checkYourAnswersLabel = What is the district number, year and entry number on this child’s birth certificate?
-childScottishBirthCertificateDetails.error.district.required = Enter the district number
-childScottishBirthCertificateDetails.error.district.required = District number must be three digits
-childScottishBirthCertificateDetails.error.year.required = Enter the year
-childScottishBirthCertificateDetails.error.year.belowMinimum = Year cannot be before {0}
-childScottishBirthCertificateDetails.error.year.aboveMaximum = Year cannot be after {0}
-childScottishBirthCertificateDetails.error.year.invalid = Year must be four digits
-childScottishBirthCertificateDetails.error.entryNumber.required = Enter the entry number
-childScottishBirthCertificateDetails.error.entryNumber.invalid = Entry number must be up to three digits
+childScottishBirthCertificateDetails.error.required = Enter the district number, year and entry number on {0}’s birth certificate
+childScottishBirthCertificateDetails.error.invalid = The district number, year and entry number must be 10 digits.
 childScottishBirthCertificateDetails.change.hidden = the district number, year and entry number on this child’s birth certificate
 
 includedDocuments.title = What documents will you be sending for this child?

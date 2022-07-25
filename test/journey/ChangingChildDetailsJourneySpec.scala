@@ -36,7 +36,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
     private val systemNumber            = Gen.listOfN(9, Gen.numChar).sample.value.mkString
     private val claimantName            = arbitrary[AdultName].sample.value
     private val claimantAddress         = arbitrary[Address].sample.value
-    private val scottishBcDetails       = arbitrary[ChildScottishBirthCertificateDetails].sample.value
+    private val scottishBcDetails       = Gen.listOfN(10, Gen.numChar).sample.value.mkString
     private val includedDocuments       = Set(arbitrary[IncludedDocuments].sample.value)
     private val notAdoptingRelationship = Gen.oneOf(Relationship.BirthChild, Relationship.StepChild, Relationship.AdoptedChild, Relationship.Other).sample.value
 

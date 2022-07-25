@@ -31,15 +31,6 @@ trait ModelGenerators {
       Gen.oneOf(IncludedDocuments.standardDocuments(AdoptingChild))
     }
 
-  implicit lazy val arbitraryChildScottishBirthCertificateDetails: Arbitrary[ChildScottishBirthCertificateDetails] =
-    Arbitrary {
-      for {
-        district <- arbitrary[String]
-        year <- Gen.choose(LocalDate.now.getYear - 19, LocalDate.now.getYear)
-        entryNumber <- arbitrary[String]
-      } yield ChildScottishBirthCertificateDetails(district, year, entryNumber)
-    }
-
   implicit lazy val arbitraryChildName: Arbitrary[ChildName] =
     Arbitrary {
       for {

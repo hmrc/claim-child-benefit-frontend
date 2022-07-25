@@ -20,7 +20,7 @@ import models.{Index, UserAnswers}
 import pages.child.ChildScottishBirthCertificateDetailsPage
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -32,12 +32,9 @@ object ChildScottishBirthCertificateDetailsSummary {
     answers.get(ChildScottishBirthCertificateDetailsPage(index)).map {
       answer =>
 
-        val value =
-          s"${answer.district} ${answer.year} ${answer.entryNumber}"
-
         SummaryListRowViewModel(
           key = "childScottishBirthCertificateDetails.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlContent(value)),
+          value = ValueViewModel(HtmlFormat.escape(answer).toString),
           actions = Seq(
             ActionItemViewModel("site.change", ChildScottishBirthCertificateDetailsPage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("childScottishBirthCertificateDetails.change.hidden"))

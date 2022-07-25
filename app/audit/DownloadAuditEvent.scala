@@ -68,7 +68,7 @@ object DownloadAuditEvent {
           previousNames                 = child.previousNames.map(convertChildName),
           biologicalSex                 = child.biologicalSex.toString,
           birthRegistrationCountry      = child.countryOfRegistration.toString,
-          birthCertificateNumber        = child.birtCertificateSystemNumber orElse child.scottishBirthCertificateDetails.map(_.toString),
+          birthCertificateNumber        = child.birtCertificateNumber,
           relationshipToApplicant       = child.relationshipToApplicant.toString,
           adoptingThroughLocalAuthority = child.adoptingThroughLocalAuthority,
           previousClaimant              = child.previousClaimant.map { claimant =>

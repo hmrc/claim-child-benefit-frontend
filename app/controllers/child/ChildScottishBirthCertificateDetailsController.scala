@@ -45,12 +45,12 @@ class ChildScottishBirthCertificateDetailsController @Inject()(
     with I18nSupport
     with AnswerExtractor {
 
-  private val form = formProvider()
-
   def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       getAnswer(ChildNamePage(index)) {
         childName =>
+
+          val form = formProvider(childName)
 
           val preparedForm = request.userAnswers.get(ChildScottishBirthCertificateDetailsPage(index)) match {
             case None => form
@@ -65,6 +65,8 @@ class ChildScottishBirthCertificateDetailsController @Inject()(
     implicit request =>
       getAnswerAsync(ChildNamePage(index)) {
         childName =>
+
+          val form = formProvider(childName)
 
           form.bindFromRequest().fold(
             formWithErrors =>

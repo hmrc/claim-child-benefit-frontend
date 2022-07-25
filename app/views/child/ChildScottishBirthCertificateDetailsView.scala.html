@@ -36,33 +36,16 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h1WithCaption(
-            content = messages("childScottishBirthCertificateDetails.heading", childName.safeFirstName),
-            caption = messages("section.child")
-        )
-
         @govukInput(
             InputViewModel(
-                field = form("district"),
-                label = LabelViewModel(messages("childScottishBirthCertificateDetails.district"))
+                field = form("value"),
+                label = HmrcPageHeadingLabel(
+                    content = messages("childScottishBirthCertificateDetails.heading", childName.safeFirstName),
+                    caption = HmrcSectionCaption(messages("section.child"))
+                )
             )
-            .withWidth(Fixed5)
-        )
-
-        @govukInput(
-            InputViewModel(
-                field = form("year"),
-                label = LabelViewModel(messages("childScottishBirthCertificateDetails.year"))
-            )
-                    .withWidth(Fixed5)
-        )
-
-        @govukInput(
-            InputViewModel(
-                field = form("entryNumber"),
-                label = LabelViewModel(messages("childScottishBirthCertificateDetails.entryNumber"))
-            )
-            .withWidth(Fixed5)
+            .withWidth(Fixed10)
+            .withHint(HintViewModel(messages("childScottishBirthCertificateDetails.hint")))
         )
 
         @govukButton(
