@@ -23,7 +23,21 @@ case class BankAccountDetails (
                                 sortCode: String,
                                 accountNumber: String,
                                 rollNumber: Option[String]
-                              )
+                              ) {
+
+  lazy val sortCodeTrimmed: String =
+    sortCode
+      .replace(" ", "")
+      .replace("-", "")
+
+  private val accountNumberLength = 8
+
+  val accountNumberPadded: String =
+    accountNumber
+      .replace(" ", "")
+      .replace("-", "")
+      .reverse.padTo(accountNumberLength, '0').reverse
+}
 
 object BankAccountDetails {
   implicit val format = Json.format[BankAccountDetails]

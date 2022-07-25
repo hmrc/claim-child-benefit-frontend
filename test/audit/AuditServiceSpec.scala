@@ -39,7 +39,8 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
 
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
   val configuration: Configuration = Configuration(
-    "auditing.downloadEventName" -> "downloadAuditEvent"
+    "auditing.downloadEventName" -> "downloadAuditEvent",
+    "auditing.validateBankDetailsEventName" -> "validateBankDetailsEventName"
   )
   val service = new AuditService(mockAuditConnector, configuration)
 

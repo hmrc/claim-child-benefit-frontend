@@ -19,7 +19,7 @@ package controllers.payments
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.payments.BankAccountDetailsFormProvider
-import models.BankAccountDetails
+import models.{BankAccountDetails, ReputationResponseEnum, ValidateBankDetailsResponseModel}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -29,6 +29,7 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
+import services.BarsService
 import views.html.payments.BankAccountDetailsView
 
 import scala.concurrent.Future
@@ -41,7 +42,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val bankAccountDetailsRoute = routes.BankAccountDetailsController.onPageLoad(waypoints).url
 
-  private val validAnswer = BankAccountDetails("name", "00123456", "123456", None)
+  private val validAnswer = BankAccountDetails("name", "123456", "00123456", None)
   private val userAnswers = emptyUserAnswers.set(BankAccountDetailsPage, validAnswer).success.value
 
   "BankAccountDetails Controller" - {
@@ -78,16 +79,55 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
-    "must save the answer and redirect to the next page when valid data is submitted" in {
+    "must save the answer and redirect to the next page when valid data is submitted and the BARS response is successful" in {
 
+      val happyBarsResponse = ValidateBankDetailsResponseModel(
+        accountNumberIsWellFormatted = ReputationResponseEnum.Yes,
+        nonStandardAccountDetailsRequiredForBacs = ReputationResponseEnum.No,
+        sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes
+      )
+
+      val mockBarsService = mock[BarsService]
       val mockSessionRepository = mock[SessionRepository]
 
+      when(mockBarsService.validateBankDetails(any())(any(), any())) thenReturn Future.successful(Some(happyBarsResponse))
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[SessionRepository].toInstance(mockSessionRepository),
+            bind[BarsService].toInstance(mockBarsService)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, bankAccountDetailsRoute)
+            .withFormUrlEncodedBody(("accountName", "name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+
+        val result = route(application, request).value
+        val expectedAnswers = emptyUserAnswers.set(BankAccountDetailsPage, validAnswer).success.value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
+      }
+    }
+
+    "must save the answer and redirect to the next page when valid data is submitted and we cannot get a good response from BARS" in {
+
+      val mockBarsService = mock[BarsService]
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockBarsService.validateBankDetails(any())(any(), any())) thenReturn Future.successful(None)
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[SessionRepository].toInstance(mockSessionRepository),
+            bind[BarsService].toInstance(mockBarsService)
           )
           .build()
 
@@ -122,6 +162,66 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+      }
+    }
+
+    "must return a Bad Request when the BARS response indicates a bad sort code" in {
+
+      val invalidDetailsResponse = ValidateBankDetailsResponseModel(
+        accountNumberIsWellFormatted = ReputationResponseEnum.Indeterminate,
+        nonStandardAccountDetailsRequiredForBacs = ReputationResponseEnum.Indeterminate,
+        sortCodeIsPresentOnEISCD = ReputationResponseEnum.No
+      )
+
+      val mockBarsService = mock[BarsService]
+
+      when(mockBarsService.validateBankDetails(any())(any(), any())) thenReturn Future.successful(Some(invalidDetailsResponse))
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[BarsService].toInstance(mockBarsService)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, bankAccountDetailsRoute)
+            .withFormUrlEncodedBody(("accountName", "name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+      }
+    }
+
+    "must return a Bad Request when the BARS response indicates a failed modulus check" in {
+
+      val invalidDetailsResponse = ValidateBankDetailsResponseModel(
+        accountNumberIsWellFormatted = ReputationResponseEnum.No,
+        nonStandardAccountDetailsRequiredForBacs = ReputationResponseEnum.Indeterminate,
+        sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes
+      )
+
+      val mockBarsService = mock[BarsService]
+
+      when(mockBarsService.validateBankDetails(any())(any(), any())) thenReturn Future.successful(Some(invalidDetailsResponse))
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[BarsService].toInstance(mockBarsService)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, bankAccountDetailsRoute)
+            .withFormUrlEncodedBody(("accountName", "name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
       }
     }
 
