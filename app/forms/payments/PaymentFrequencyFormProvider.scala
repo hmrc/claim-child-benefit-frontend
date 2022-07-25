@@ -17,14 +17,15 @@
 package forms.payments
 
 import forms.mappings.Mappings
+import models.PaymentFrequency
 import play.api.data.Form
 
 import javax.inject.Inject
 
-class WantToBePaidWeeklyFormProvider @Inject() extends Mappings {
+class PaymentFrequencyFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(): Form[PaymentFrequency] =
     Form(
-      "value" -> boolean("wantToBePaidWeekly.error.required")
+      "value" -> enumerable[PaymentFrequency]("paymentFrequency.error.required")
     )
 }

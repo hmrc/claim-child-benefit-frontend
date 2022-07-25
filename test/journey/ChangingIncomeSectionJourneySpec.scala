@@ -17,7 +17,7 @@
 package journey
 
 import generators.ModelGenerators
-import models.{AdultName, Benefits}
+import models.{AdultName, Benefits, PaymentFrequency}
 import models.RelationshipStatus._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
@@ -25,7 +25,7 @@ import org.scalatest.freespec.AnyFreeSpec
 import pages.{CheckYourAnswersPage, RelationshipStatusPage}
 import pages.income._
 import pages.partner.PartnerNamePage
-import pages.payments.{ApplicantHasSuitableAccountPage, ClaimedChildBenefitBeforePage, WantToBePaidPage, WantToBePaidWeeklyPage}
+import pages.payments.{ApplicantHasSuitableAccountPage, ClaimedChildBenefitBeforePage, PaymentFrequencyPage, WantToBePaidPage}
 
 class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
@@ -183,7 +183,7 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
             submitAnswer(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
             pageMustBe(TaxChargeExplanationPage),
             next,
-            submitAnswer(WantToBePaidWeeklyPage, true),
+            submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
             pageMustBe(CheckYourAnswersPage)
           )
       }

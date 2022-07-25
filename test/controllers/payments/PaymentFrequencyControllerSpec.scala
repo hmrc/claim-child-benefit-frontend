@@ -18,33 +18,34 @@ package controllers.payments
 
 import base.SpecBase
 import controllers.{routes => baseRoutes}
-import forms.payments.WantToBePaidWeeklyFormProvider
-import models.UserAnswers
+import forms.payments.PaymentFrequencyFormProvider
+import models.{PaymentFrequency, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.EmptyWaypoints
-import pages.payments.WantToBePaidWeeklyPage
+import pages.payments.PaymentFrequencyPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
-import views.html.payments.WantToBePaidWeeklyView
+import views.html.payments.PaymentFrequencyView
 
 import scala.concurrent.Future
 
-class WantToBePaidWeeklyControllerSpec extends SpecBase with MockitoSugar {
+class PaymentFrequencyControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new WantToBePaidWeeklyFormProvider()
+  val formProvider = new PaymentFrequencyFormProvider()
   val form = formProvider()
   private val waypoints = EmptyWaypoints
+  private val validAnswer = PaymentFrequency.Weekly
 
-  lazy val wantToBePaidWeeklyRoute = routes.WantToBePaidWeeklyController.onPageLoad(waypoints).url
+  lazy val wantToBePaidWeeklyRoute = routes.PaymentFrequencyController.onPageLoad(waypoints).url
 
-  "WantToBePaidWeekly Controller" - {
+  "PaymentFrequency Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
@@ -55,7 +56,7 @@ class WantToBePaidWeeklyControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[WantToBePaidWeeklyView]
+        val view = application.injector.instanceOf[PaymentFrequencyView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
@@ -64,19 +65,19 @@ class WantToBePaidWeeklyControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(WantToBePaidWeeklyPage, true).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(PaymentFrequencyPage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, wantToBePaidWeeklyRoute)
 
-        val view = application.injector.instanceOf[WantToBePaidWeeklyView]
+        val view = application.injector.instanceOf[PaymentFrequencyView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints)(request, messages(application)).toString
       }
     }
 
@@ -96,13 +97,13 @@ class WantToBePaidWeeklyControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, wantToBePaidWeeklyRoute)
-            .withFormUrlEncodedBody(("value", "true"))
+            .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(WantToBePaidWeeklyPage, true).success.value
+        val expectedAnswers = emptyUserAnswers.set(PaymentFrequencyPage, validAnswer).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual WantToBePaidWeeklyPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual PaymentFrequencyPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -118,7 +119,7 @@ class WantToBePaidWeeklyControllerSpec extends SpecBase with MockitoSugar {
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[WantToBePaidWeeklyView]
+        val view = application.injector.instanceOf[PaymentFrequencyView]
 
         val result = route(application, request).value
 
@@ -148,7 +149,7 @@ class WantToBePaidWeeklyControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, wantToBePaidWeeklyRoute)
-            .withFormUrlEncodedBody(("value", "true"))
+            .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value
 

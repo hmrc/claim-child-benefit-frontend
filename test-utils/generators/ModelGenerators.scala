@@ -26,6 +26,11 @@ import java.time.LocalDate
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryPaymentFrequency: Arbitrary[PaymentFrequency] =
+    Arbitrary {
+      Gen.oneOf(PaymentFrequency.values)
+    }
+
   implicit lazy val arbitraryIncludedDocuments: Arbitrary[IncludedDocuments] =
     Arbitrary {
       Gen.oneOf(IncludedDocuments.standardDocuments(AdoptingChild))

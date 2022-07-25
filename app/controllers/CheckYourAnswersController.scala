@@ -75,7 +75,7 @@ class CheckYourAnswersController @Inject()(
           EldestChildDateOfBirthSummary.row(request.userAnswers, waypoints, thisPage),
           WantToBePaidToExistingAccountSummary.row(request.userAnswers, waypoints, thisPage),
           WantToBePaidSummary.row(request.userAnswers, waypoints, thisPage),
-          WantToBePaidWeeklySummary.row(request.userAnswers, waypoints, thisPage),
+          PaymentFrequencySummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantHasSuitableAccountSummary.row(request.userAnswers, waypoints, thisPage),
           BankAccountDetailsSummary.row(request.userAnswers, waypoints, thisPage)
         ).flatten

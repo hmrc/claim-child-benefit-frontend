@@ -16,24 +16,24 @@
 
 package forms.payments
 
-import forms.behaviours.BooleanFieldBehaviours
+import forms.behaviours.OptionFieldBehaviours
+import models.PaymentFrequency
 import play.api.data.FormError
 
-class WantToBePaidWeeklyFormProviderSpec extends BooleanFieldBehaviours {
+class PaymentFrequencyFormProviderSpec extends OptionFieldBehaviours {
 
-  val requiredKey = "wantToBePaidWeekly.error.required"
-  val invalidKey = "error.boolean"
-
-  val form = new WantToBePaidWeeklyFormProvider()()
+  val form = new PaymentFrequencyFormProvider()()
 
   ".value" - {
 
     val fieldName = "value"
+    val requiredKey = "paymentFrequency.error.required"
 
-    behave like booleanField(
+    behave like optionsField[PaymentFrequency](
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+      validValues  = PaymentFrequency.values,
+      invalidError = FormError(fieldName, "error.invalid")
     )
 
     behave like mandatoryField(

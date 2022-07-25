@@ -156,8 +156,8 @@ trait PageGenerators {
   implicit lazy val arbitraryAddApplicantPreviousFamilyNamePage: Arbitrary[AddApplicantPreviousFamilyNamePage.type] =
     Arbitrary(AddApplicantPreviousFamilyNamePage)
 
-  implicit lazy val arbitraryWantToBePaidWeeklyPage: Arbitrary[WantToBePaidWeeklyPage.type] =
-    Arbitrary(WantToBePaidWeeklyPage)
+  implicit lazy val arbitraryWantToBePaidWeeklyPage: Arbitrary[PaymentFrequencyPage.type] =
+    Arbitrary(PaymentFrequencyPage)
 
   implicit lazy val arbitraryWantToBePaidToExistingAccountPage: Arbitrary[WantToBePaidToExistingAccountPage.type] =
     Arbitrary(WantToBePaidToExistingAccountPage)
