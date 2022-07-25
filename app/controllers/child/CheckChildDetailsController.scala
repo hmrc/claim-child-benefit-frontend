@@ -17,10 +17,11 @@
 package controllers.child
 
 import com.google.inject.Inject
+import controllers.AnswerExtractor
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import models.Index
 import pages.Waypoints
-import pages.child.CheckChildDetailsPage
+import pages.child.{CheckChildDetailsPage, ChildNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -35,34 +36,36 @@ class CheckChildDetailsController @Inject()(
                                             requireData: DataRequiredAction,
                                             val controllerComponents: MessagesControllerComponents,
                                             view: CheckChildDetailsView
-                                          ) extends FrontendBaseController with I18nSupport {
+                                          ) extends FrontendBaseController with I18nSupport with AnswerExtractor {
 
   def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
+      getAnswer(ChildNamePage(index)) {
+        childName =>
 
-      val list = SummaryListViewModel(
-        rows = Seq(
-          ChildNameSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
-          ChildHasPreviousNameSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
-          ChildNameChangedByDeedPollSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
-          AddChildPreviousNameSummary.checkAnswersRow(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
-          ChildBiologicalSexSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
-          ChildDateOfBirthSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
-          ChildBirthRegistrationCountrySummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
-          ChildBirthCertificateSystemNumberSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
-          ChildScottishBirthCertificateDetailsSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
-          ApplicantRelationshipToChildSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
-          AnyoneClaimedForChildBeforeSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
-          PreviousClaimantNameSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
-          PreviousClaimantAddressSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
-          AdoptingThroughLocalAuthoritySummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
-          IncludedDocumentsSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index))
-        ).flatten
-      )
+          val list = SummaryListViewModel(
+            rows = Seq(
+              ChildNameSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              ChildHasPreviousNameSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              ChildNameChangedByDeedPollSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              AddChildPreviousNameSummary.checkAnswersRow(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              ChildBiologicalSexSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              ChildDateOfBirthSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              ChildBirthRegistrationCountrySummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              ChildBirthCertificateSystemNumberSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              ChildScottishBirthCertificateDetailsSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              ApplicantRelationshipToChildSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              AnyoneClaimedForChildBeforeSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              PreviousClaimantNameSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              PreviousClaimantAddressSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              AdoptingThroughLocalAuthoritySummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              IncludedDocumentsSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index))
+            ).flatten
+          )
 
-      Ok(view(list, waypoints, index))
+          Ok(view(list, waypoints, index, childName))
+      }
   }
-
   def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       Redirect(CheckChildDetailsPage(index).navigate(waypoints, request.userAnswers, request.userAnswers).route)

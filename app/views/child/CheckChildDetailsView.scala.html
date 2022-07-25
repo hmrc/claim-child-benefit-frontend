@@ -24,14 +24,14 @@
         h1WithCaption: components.h1WithCaption
 )
 
-@(list: SummaryList, waypoints: Waypoints, index: Index)(implicit request: Request[_], messages: Messages)
+@(list: SummaryList, waypoints: Waypoints, index: Index, childName: ChildName)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkChildDetails.title"))) {
 
     @formHelper(action = routes.CheckChildDetailsController.onSubmit(waypoints, index)) {
 
         @h1WithCaption(
-            content = messages("checkChildDetails.heading"),
+            content = messages("checkChildDetails.heading", childName.safeFirstName),
             caption = messages("section.child")
         )
 

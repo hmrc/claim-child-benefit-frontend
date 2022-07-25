@@ -34,13 +34,18 @@ object ApplicantRelationshipToChild extends Enumerable.Implicits {
     BirthChild, AdoptedChild, AdoptingChild, StepChild, Other
   )
 
-  def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
-    case (value, index) =>
-      RadioItem(
-        content = Text(messages(s"applicantRelationshipToChild.${value.toString}")),
-        value   = Some(value.toString),
-        id      = Some(s"value_$index")
-      )
+  def options(implicit messages: Messages): Seq[RadioItem] = {
+
+    val divider = RadioItem(divider = Some(messages("site.or")))
+
+    values.zipWithIndex.map {
+      case (value, index) =>
+        RadioItem(
+          content = Text(messages(s"applicantRelationshipToChild.${value.toString}")),
+          value = Some(value.toString),
+          id = Some(s"value_$index")
+        )
+    }.patch(values.size - 1, List(divider), 0)
   }
 
   implicit val enumerable: Enumerable[ApplicantRelationshipToChild] =

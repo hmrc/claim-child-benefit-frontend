@@ -18,7 +18,8 @@
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukButton: GovukButton,
-        h1WithCaption: components.h1WithCaption
+        h1WithCaption: components.h1WithCaption,
+        govukPanel: GovukPanel
 )
 
 @(waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
@@ -27,10 +28,29 @@
 
     @formHelper(action = routes.CannotBePaidWeeklyController.onSubmit(waypoints)) {
 
-        @h1WithCaption(
-            content = messages("cannotBePaidWeekly.heading"),
-            caption = messages("section.income")
-        )
+        @govukPanel(Panel(title = messages("cannotBePaidWeekly.heading")))
+
+        <p class="govuk-body">@messages("cannotBePaidWeekly.p1")</p>
+
+        <p class="govuk-body">@messages("cannotBePaidWeekly.p2")</p>
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li>@messages("cannotBePaidWeekly.bullet1")</li>
+            <li>@messages("cannotBePaidWeekly.bullet2")</li>
+            <li>@messages("cannotBePaidWeekly.bullet3")</li>
+            <li>@messages("cannotBePaidWeekly.bullet4")</li>
+            <li>@messages("cannotBePaidWeekly.bullet5")</li>
+        </ul>
+
+        <p class="govuk-body">
+            @messages("cannotBePaidWeekly.p3")
+            <a href="@messages("cannotBePaidWeekly.p3.link.href")" class="govuk-link">@messages("cannotBePaidWeekly.p3.link.text")</a>.
+        </p>
+
+        <p class="govuk-body">
+            @messages("cannotBePaidWeekly.p4")
+            <a href="@routes.EverLivedOrWorkedAbroadController.onPageLoad()" class="govuk-link">@messages("cannotBePaidWeekly.p4.link.text")</a>.
+        </p>
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))
