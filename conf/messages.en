@@ -16,10 +16,10 @@ date.day = Day
 date.month = Month
 date.year = Year
 
-timeout.title = You’re about to be signed out
-timeout.message = For security reasons, you will be signed out of this service in
-timeout.keepAlive = Stay signed in
-timeout.signOut = Sign out
+timeout.title = The application form is about to be reset
+timeout.message = For your security, the application form will be reset in
+timeout.keepAlive = Continue form
+timeout.signOut = Reset
 
 error.browser.title.prefix = Error:
 error.boolean = Please give an answer
