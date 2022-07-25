@@ -17,19 +17,19 @@
 package pages.payments
 
 import controllers.payments.routes
-import models.UserAnswers
+import models.{PaymentFrequency, UserAnswers}
 import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object WantToBePaidWeeklyPage extends QuestionPage[Boolean] {
+case object PaymentFrequencyPage extends QuestionPage[PaymentFrequency] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "wantToBePaidWeekly"
+  override def toString: String = "paymentFrequency"
 
   override def route(waypoints: Waypoints): Call =
-    routes.WantToBePaidWeeklyController.onPageLoad(waypoints)
+    routes.PaymentFrequencyController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     ApplicantHasSuitableAccountPage

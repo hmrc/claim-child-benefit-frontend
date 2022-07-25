@@ -18,7 +18,7 @@ package journey
 
 import generators.ModelGenerators
 import models.RelationshipStatus._
-import models.{BankAccountDetails, Benefits, ChildName, RelationshipStatus}
+import models.{BankAccountDetails, Benefits, ChildName, PaymentFrequency, RelationshipStatus}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
@@ -157,7 +157,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
           submitAnswer(CurrentlyEntitledToChildBenefitPage, true),
           submitAnswer(CurrentlyReceivingChildBenefitPage, false),
           submitAnswer(WantToBePaidPage, true),
-          submitAnswer(WantToBePaidWeeklyPage, true),
+          submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
           submitAnswer(ApplicantHasSuitableAccountPage, true),
           goTo(CheckYourAnswersPage)
         )
@@ -187,7 +187,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(WantToBePaidToExistingAccountPage, false),
               pageMustBe(CheckYourAnswersPage),
               answersMustNotContain(WantToBePaidPage),
-              answersMustNotContain(WantToBePaidWeeklyPage)
+              answersMustNotContain(PaymentFrequencyPage)
             )
         }
       }
@@ -200,7 +200,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
         submitAnswer(ClaimedChildBenefitBeforePage, true),
         submitAnswer(CurrentlyEntitledToChildBenefitPage, false),
         submitAnswer(WantToBePaidPage, true),
-        submitAnswer(WantToBePaidWeeklyPage, true),
+        submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
         goTo(CheckYourAnswersPage)
       )
 
@@ -230,7 +230,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
               pageMustBe(WantToBePaidToExistingAccountPage),
               answersMustNotContain(WantToBePaidPage),
-              answersMustNotContain(WantToBePaidWeeklyPage)
+              answersMustNotContain(PaymentFrequencyPage)
             )
         }
       }
@@ -251,7 +251,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               setUserAnswerTo(RelationshipStatusPage, Single),
               submitAnswer(ClaimedChildBenefitBeforePage, false),
               submitAnswer(WantToBePaidPage, true),
-              submitAnswer(WantToBePaidWeeklyPage, true),
+              submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
               goTo(CheckYourAnswersPage)
             )
 
@@ -266,7 +266,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
                 submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
                 pageMustBe(WantToBePaidToExistingAccountPage),
                 answersMustNotContain(WantToBePaidPage),
-                answersMustNotContain(WantToBePaidWeeklyPage)
+                answersMustNotContain(PaymentFrequencyPage)
               )
           }
         }
@@ -279,7 +279,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               setUserAnswerTo(RelationshipStatusPage, Single),
               submitAnswer(ClaimedChildBenefitBeforePage, false),
               submitAnswer(WantToBePaidPage, true),
-              submitAnswer(WantToBePaidWeeklyPage, true),
+              submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
               goTo(CheckYourAnswersPage)
             )
 
@@ -304,7 +304,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             setUserAnswerTo(RelationshipStatusPage, Single),
             submitAnswer(ClaimedChildBenefitBeforePage, false),
             submitAnswer(WantToBePaidPage, true),
-            submitAnswer(WantToBePaidWeeklyPage, true),
+            submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
             goTo(CheckYourAnswersPage)
           )
 
@@ -340,7 +340,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
                 initialise,
                 goToChangeAnswer(WantToBePaidPage),
                 submitAnswer(WantToBePaidPage, true),
-                submitAnswer(WantToBePaidWeeklyPage, arbitrary[Boolean].sample.value),
+                submitAnswer(PaymentFrequencyPage, arbitrary[PaymentFrequency].sample.value),
                 pageMustBe(ApplicantHasSuitableAccountPage)
               )
           }
@@ -370,7 +370,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
                   initialise,
                   goToChangeAnswer(WantToBePaidPage),
                   submitAnswer(WantToBePaidPage, true),
-                  submitAnswer(WantToBePaidWeeklyPage, arbitrary[Boolean].sample.value),
+                  submitAnswer(PaymentFrequencyPage, arbitrary[PaymentFrequency].sample.value),
                   pageMustBe(ApplicantHasSuitableAccountPage)
                 )
             }
@@ -415,7 +415,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
           setUserAnswerTo(ApplicantOrPartnerBenefitsPage, benefits),
           submitAnswer(ClaimedChildBenefitBeforePage, false),
           submitAnswer(WantToBePaidPage, true),
-          submitAnswer(WantToBePaidWeeklyPage, arbitrary[Boolean].sample.value),
+          submitAnswer(PaymentFrequencyPage, arbitrary[PaymentFrequency].sample.value),
           submitAnswer(ApplicantHasSuitableAccountPage, true),
           submitAnswer(BankAccountDetailsPage, bankDetails),
           setUserAnswerTo(ApplicantHasPreviousFamilyNamePage, false),
@@ -428,7 +428,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             goToChangeAnswer(WantToBePaidPage),
             submitAnswer(WantToBePaidPage, false),
             pageMustBe(CheckYourAnswersPage),
-            answersMustNotContain(WantToBePaidWeeklyPage),
+            answersMustNotContain(PaymentFrequencyPage),
             answersMustNotContain(ApplicantHasSuitableAccountPage),
             answersMustNotContain(BankAccountDetailsPage)
           )

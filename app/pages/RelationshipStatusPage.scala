@@ -21,7 +21,7 @@ import models.RelationshipStatus._
 import models.{Benefits, RelationshipStatus, UserAnswers}
 import pages.income._
 import pages.partner._
-import pages.payments.WantToBePaidWeeklyPage
+import pages.payments.PaymentFrequencyPage
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -85,7 +85,7 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
               userAnswers.remove(CohabitationDatePage)
                 .flatMap(_.remove(SeparationDatePage))
                 .flatMap(removeApplicantIncomeSection)
-                .flatMap(_.remove(WantToBePaidWeeklyPage))
+                .flatMap(_.remove(PaymentFrequencyPage))
             } else {
               userAnswers.remove(CohabitationDatePage)
                 .flatMap(_.remove(SeparationDatePage))
@@ -103,7 +103,7 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
             if (benefits.intersect(Benefits.qualifyingBenefits).isEmpty) {
               userAnswers.remove(SeparationDatePage)
                 .flatMap(removeApplicantIncomeSection)
-                .flatMap(_.remove(WantToBePaidWeeklyPage))
+                .flatMap(_.remove(PaymentFrequencyPage))
             } else {
               userAnswers.remove(SeparationDatePage)
                 .flatMap(removeApplicantIncomeSection)

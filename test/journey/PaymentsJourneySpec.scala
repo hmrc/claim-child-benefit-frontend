@@ -18,7 +18,7 @@ package journey
 
 import generators.ModelGenerators
 import models.RelationshipStatus._
-import models.{BankAccountDetails, Benefits, ChildName, UserAnswers}
+import models.{BankAccountDetails, Benefits, ChildName, PaymentFrequency, UserAnswers}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.freespec.AnyFreeSpec
 import pages.RelationshipStatusPage
@@ -146,7 +146,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
             submitAnswer(WantToBePaidPage, true),
-            submitAnswer(WantToBePaidWeeklyPage, true),
+            submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
             pageMustBe(ApplicantHasSuitableAccountPage)
           )
       }
@@ -179,7 +179,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
             submitAnswer(WantToBePaidPage, true),
-            submitAnswer(WantToBePaidWeeklyPage, true),
+            submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
             pageMustBe(ApplicantHasSuitableAccountPage)
           )
       }
@@ -197,7 +197,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
             submitAnswer(WantToBePaidPage, true),
-            submitAnswer(WantToBePaidWeeklyPage, true),
+            submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
             pageMustBe(ApplicantHasSuitableAccountPage)
           )
       }
@@ -215,7 +215,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
             submitAnswer(WantToBePaidPage, true),
-            submitAnswer(WantToBePaidWeeklyPage, true),
+            submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
             pageMustBe(ApplicantHasSuitableAccountPage)
           )
       }
@@ -233,7 +233,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
             submitAnswer(WantToBePaidPage, true),
-            submitAnswer(WantToBePaidWeeklyPage, true),
+            submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
             pageMustBe(ApplicantHasSuitableAccountPage)
           )
       }
@@ -251,7 +251,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
             submitAnswer(WantToBePaidPage, true),
-            submitAnswer(WantToBePaidWeeklyPage, true),
+            submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
             pageMustBe(ApplicantHasSuitableAccountPage)
           )
       }

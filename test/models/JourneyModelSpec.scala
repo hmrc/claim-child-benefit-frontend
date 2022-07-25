@@ -385,7 +385,7 @@ class JourneyModelSpec
 
               val answers = baseAnswers
                 .set(WantToBePaidPage, true).success.value
-                .set(WantToBePaidWeeklyPage, false).success.value
+                .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks).success.value
                 .set(ApplicantHasSuitableAccountPage, true).success.value
                 .set(BankAccountDetailsPage, bankAccountDetails).success.value
 
@@ -403,7 +403,7 @@ class JourneyModelSpec
 
               val answers = baseAnswers
                 .set(WantToBePaidPage, true).success.value
-                .set(WantToBePaidWeeklyPage, false).success.value
+                .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks).success.value
                 .set(ApplicantHasSuitableAccountPage, false).success.value
 
               val expectedPaymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(
@@ -423,7 +423,7 @@ class JourneyModelSpec
 
               val answers = baseAnswers
                 .set(WantToBePaidPage, true).success.value
-                .set(WantToBePaidWeeklyPage, true).success.value
+                .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
                 .set(ApplicantHasSuitableAccountPage, true).success.value
                 .set(BankAccountDetailsPage, bankAccountDetails).success.value
 
@@ -441,7 +441,7 @@ class JourneyModelSpec
 
               val answers = baseAnswers
                 .set(WantToBePaidPage, true).success.value
-                .set(WantToBePaidWeeklyPage, true).success.value
+                .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
                 .set(ApplicantHasSuitableAccountPage, false).success.value
 
               val expectedPaymentPreference = JourneyModel.PaymentPreference.Weekly(
@@ -486,7 +486,7 @@ class JourneyModelSpec
 
               val answers = baseAnswers
                 .set(WantToBePaidPage, true).success.value
-                .set(WantToBePaidWeeklyPage, false).success.value
+                .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks).success.value
                 .set(ApplicantHasSuitableAccountPage, true).success.value
                 .set(BankAccountDetailsPage, bankAccountDetails).success.value
 
@@ -504,7 +504,7 @@ class JourneyModelSpec
 
               val answers = baseAnswers
                 .set(WantToBePaidPage, true).success.value
-                .set(WantToBePaidWeeklyPage, false).success.value
+                .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks).success.value
                 .set(ApplicantHasSuitableAccountPage, false).success.value
 
               val expectedPaymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(
@@ -524,7 +524,7 @@ class JourneyModelSpec
 
               val answers = baseAnswers
                 .set(WantToBePaidPage, true).success.value
-                .set(WantToBePaidWeeklyPage, true).success.value
+                .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
                 .set(ApplicantHasSuitableAccountPage, true).success.value
                 .set(BankAccountDetailsPage, bankAccountDetails).success.value
 
@@ -542,7 +542,7 @@ class JourneyModelSpec
 
               val answers = baseAnswers
                 .set(WantToBePaidPage, true).success.value
-                .set(WantToBePaidWeeklyPage, true).success.value
+                .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
                 .set(ApplicantHasSuitableAccountPage, false).success.value
 
               val expectedPaymentPreference = JourneyModel.PaymentPreference.Weekly(
@@ -586,7 +586,7 @@ class JourneyModelSpec
 
               val answers = baseAnswers
                 .set(WantToBePaidPage, true).success.value
-                .set(WantToBePaidWeeklyPage, false).success.value
+                .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks).success.value
                 .set(ApplicantHasSuitableAccountPage, true).success.value
                 .set(BankAccountDetailsPage, bankAccountDetails).success.value
 
@@ -604,7 +604,7 @@ class JourneyModelSpec
 
               val answers = baseAnswers
                 .set(WantToBePaidPage, true).success.value
-                .set(WantToBePaidWeeklyPage, false).success.value
+                .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks).success.value
                 .set(ApplicantHasSuitableAccountPage, false).success.value
 
               val expectedPaymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(
@@ -624,7 +624,7 @@ class JourneyModelSpec
 
               val answers = baseAnswers
                 .set(WantToBePaidPage, true).success.value
-                .set(WantToBePaidWeeklyPage, true).success.value
+                .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
                 .set(ApplicantHasSuitableAccountPage, true).success.value
                 .set(BankAccountDetailsPage, bankAccountDetails).success.value
 
@@ -642,7 +642,7 @@ class JourneyModelSpec
 
               val answers = baseAnswers
                 .set(WantToBePaidPage, true).success.value
-                .set(WantToBePaidWeeklyPage, true).success.value
+                .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
                 .set(ApplicantHasSuitableAccountPage, false).success.value
 
               val expectedPaymentPreference = JourneyModel.PaymentPreference.Weekly(

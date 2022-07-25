@@ -45,11 +45,11 @@ case object WantToBePaidPage extends QuestionPage[Boolean] {
             if (answers.get(ApplicantOrPartnerBenefitsPage).forall(_.intersect(qualifyingBenefits).isEmpty)) {
               ApplicantHasSuitableAccountPage
             } else {
-              WantToBePaidWeeklyPage
+              PaymentFrequencyPage
             }
 
           case Single | Separated | Divorced | Widowed =>
-            WantToBePaidWeeklyPage
+            PaymentFrequencyPage
         }.orRecover
 
       case false =>
@@ -58,7 +58,7 @@ case object WantToBePaidPage extends QuestionPage[Boolean] {
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
     if (value.contains(false)) {
-      userAnswers.remove(WantToBePaidWeeklyPage)
+      userAnswers.remove(PaymentFrequencyPage)
         .flatMap(_.remove(ApplicantHasSuitableAccountPage))
         .flatMap(_.remove(BankAccountDetailsPage))
     } else {

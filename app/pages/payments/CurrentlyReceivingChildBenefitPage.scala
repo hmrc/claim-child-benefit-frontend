@@ -43,7 +43,7 @@ case object CurrentlyReceivingChildBenefitPage extends QuestionPage[Boolean] {
     value.map {
       case true =>
         userAnswers.remove(WantToBePaidPage)
-          .flatMap(_.remove(WantToBePaidWeeklyPage))
+          .flatMap(_.remove(PaymentFrequencyPage))
 
       case false =>
         userAnswers.remove(EldestChildNamePage)

@@ -313,9 +313,9 @@ object JourneyModel {
     def getPaymentDetails: IorNec[Query, PaymentPreference] =
       answers.getIor(WantToBePaidPage).flatMap {
         case true =>
-          answers.get(WantToBePaidWeeklyPage) match {
-            case Some(true) => getAccountDetails.map(Weekly)
-            case _          => getAccountDetails.map(EveryFourWeeks)
+          answers.get(PaymentFrequencyPage) match {
+            case Some(PaymentFrequency.Weekly) => getAccountDetails.map(Weekly)
+            case _                             => getAccountDetails.map(EveryFourWeeks)
           }
 
         case false =>

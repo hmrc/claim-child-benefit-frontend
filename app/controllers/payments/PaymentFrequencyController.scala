@@ -17,35 +17,35 @@
 package controllers.payments
 
 import controllers.actions._
-import forms.payments.WantToBePaidWeeklyFormProvider
+import forms.payments.PaymentFrequencyFormProvider
 import pages.Waypoints
-import pages.payments.WantToBePaidWeeklyPage
+import pages.payments.PaymentFrequencyPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.payments.WantToBePaidWeeklyView
+import views.html.payments.PaymentFrequencyView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class WantToBePaidWeeklyController @Inject()(
-                                         override val messagesApi: MessagesApi,
-                                         sessionRepository: SessionRepository,
-                                         identify: IdentifierAction,
-                                         getData: DataRetrievalAction,
-                                         requireData: DataRequiredAction,
-                                         formProvider: WantToBePaidWeeklyFormProvider,
-                                         val controllerComponents: MessagesControllerComponents,
-                                         view: WantToBePaidWeeklyView
-                                 )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class PaymentFrequencyController @Inject()(
+                                            override val messagesApi: MessagesApi,
+                                            sessionRepository: SessionRepository,
+                                            identify: IdentifierAction,
+                                            getData: DataRetrievalAction,
+                                            requireData: DataRequiredAction,
+                                            formProvider: PaymentFrequencyFormProvider,
+                                            val controllerComponents: MessagesControllerComponents,
+                                            view: PaymentFrequencyView
+                                          )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form = formProvider()
 
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(WantToBePaidWeeklyPage) match {
+      val preparedForm = request.userAnswers.get(PaymentFrequencyPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -62,9 +62,9 @@ class WantToBePaidWeeklyController @Inject()(
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(WantToBePaidWeeklyPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(PaymentFrequencyPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(WantToBePaidWeeklyPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+          } yield Redirect(PaymentFrequencyPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
       )
   }
 }

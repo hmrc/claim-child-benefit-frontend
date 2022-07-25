@@ -20,7 +20,7 @@ import controllers.income.routes
 import models.RelationshipStatus._
 import models.{Benefits, UserAnswers}
 import pages.partner.PartnerNamePage
-import pages.payments.{ClaimedChildBenefitBeforePage, WantToBePaidPage, WantToBePaidWeeklyPage}
+import pages.payments.{ClaimedChildBenefitBeforePage, WantToBePaidPage, PaymentFrequencyPage}
 import pages.{NonEmptyWaypoints, Page, RelationshipStatusPage, Waypoints}
 import play.api.mvc.Call
 
@@ -43,7 +43,7 @@ case object TaxChargeExplanationPage extends Page {
       case Married | Cohabiting =>
         answers.get(WantToBePaidPage).map {
           case true =>
-            answers.get(WantToBePaidWeeklyPage)
+            answers.get(PaymentFrequencyPage)
               .map(_ => getPartnerDetailsIfMissing)
               .getOrElse {
                 answers.get(ApplicantOrPartnerBenefitsPage).map {
@@ -51,7 +51,7 @@ case object TaxChargeExplanationPage extends Page {
                     if (benefits.intersect(Benefits.qualifyingBenefits).isEmpty) {
                       getPartnerDetailsIfMissing
                     } else {
-                      WantToBePaidWeeklyPage
+                      PaymentFrequencyPage
                     }
                 }.orRecover
               }
@@ -64,9 +64,9 @@ case object TaxChargeExplanationPage extends Page {
       case Single | Divorced | Separated | Widowed =>
         answers.get(WantToBePaidPage).map {
           case true =>
-            answers.get(WantToBePaidWeeklyPage)
+            answers.get(PaymentFrequencyPage)
               .map(_ => waypoints.next.page)
-              .getOrElse(WantToBePaidWeeklyPage)
+              .getOrElse(PaymentFrequencyPage)
           case false =>
             waypoints.next.page
         }.orRecover

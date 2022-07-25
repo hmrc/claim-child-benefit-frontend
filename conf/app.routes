@@ -34,8 +34,8 @@ POST       /date-started-living-with-partner                  controllers.Cohabi
 GET        /date-separated-from-partner                  controllers.SeparationDateController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /date-separated-from-partner                  controllers.SeparationDateController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /cannot-be-paid-weekly                       controllers.CannotBePaidWeeklyController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /cannot-be-paid-weekly                       controllers.CannotBePaidWeeklyController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /not-eligible-for-weekly-payments                       controllers.CannotBePaidWeeklyController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /not-eligible-for-weekly-payments                       controllers.CannotBePaidWeeklyController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /relationship-status                        controllers.RelationshipStatusController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /relationship-status                        controllers.RelationshipStatusController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
@@ -95,8 +95,8 @@ POST       /want-to-be-paid-child-benefit                        controllers.pay
 GET        /want-to-be-paid-to-existing-account                        controllers.payments.WantToBePaidToExistingAccountController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /want-to-be-paid-to-existing-account                        controllers.payments.WantToBePaidToExistingAccountController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /want-to-be-paid-weekly                        controllers.payments.WantToBePaidWeeklyController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /want-to-be-paid-weekly                        controllers.payments.WantToBePaidWeeklyController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /how-often-want-to-be-paid                        controllers.payments.PaymentFrequencyController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /how-often-want-to-be-paid                        controllers.payments.PaymentFrequencyController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 # Applicant section
 GET        /add-previous-family-name                        controllers.applicant.AddApplicantPreviousFamilyNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)

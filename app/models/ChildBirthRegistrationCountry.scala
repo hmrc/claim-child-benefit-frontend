@@ -18,6 +18,7 @@ package models
 
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
 sealed trait ChildBirthRegistrationCountry
@@ -34,13 +35,19 @@ object ChildBirthRegistrationCountry extends Enumerable.Implicits {
     England, Scotland, Wales, Other, Unknown
   )
 
-  def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
-    case (value, index) =>
-      RadioItem(
-        content = Text(messages(s"childBirthRegistrationCountry.${value.toString}")),
-        value   = Some(value.toString),
-        id      = Some(s"value_$index")
-      )
+  def options(implicit messages: Messages): Seq[RadioItem] = {
+
+    val divider = RadioItem(divider = Some(messages("site.or")))
+
+    values.zipWithIndex.map {
+
+      case (value, index) =>
+        RadioItem(
+          content = Text(messages(s"childBirthRegistrationCountry.${value.toString}")),
+          value = Some(value.toString),
+          id = Some(s"value_$index")
+        )
+    }.patch(values.size - 1, List(divider), 0)
   }
 
   implicit val enumerable: Enumerable[ChildBirthRegistrationCountry] =

@@ -17,9 +17,10 @@
 package pages.income
 
 import controllers.income.routes
+import models.PaymentFrequency.{EveryFourWeeks, Weekly}
 import models.{Benefits, UserAnswers}
 import pages.partner.PartnerNamePage
-import pages.payments.{WantToBePaidPage, WantToBePaidWeeklyPage}
+import pages.payments.{PaymentFrequencyPage, WantToBePaidPage}
 import pages.{CannotBePaidWeeklyPage, NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
@@ -39,8 +40,8 @@ case object ApplicantOrPartnerBenefitsPage extends QuestionPage[Set[Benefits]] {
     TaxChargeExplanationPage
 
   override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, originalAnswers: UserAnswers, updatedAnswers: UserAnswers): Page = {
-    originalAnswers.get(WantToBePaidWeeklyPage).map {
-      case true =>
+    originalAnswers.get(PaymentFrequencyPage).map {
+      case Weekly =>
         updatedAnswers.get(ApplicantOrPartnerBenefitsPage).map {
           benefits =>
             if (benefits.intersect(Benefits.qualifyingBenefits).isEmpty) {
@@ -50,7 +51,7 @@ case object ApplicantOrPartnerBenefitsPage extends QuestionPage[Set[Benefits]] {
             }
         }.orRecover
 
-      case false =>
+      case EveryFourWeeks =>
         TaxChargeExplanationPage
     }.getOrElse {
       updatedAnswers.get(WantToBePaidPage).map {
@@ -68,7 +69,7 @@ case object ApplicantOrPartnerBenefitsPage extends QuestionPage[Set[Benefits]] {
     value.map {
       benefits =>
         if (benefits.intersect(Benefits.qualifyingBenefits).isEmpty) {
-          userAnswers.remove(WantToBePaidWeeklyPage)
+          userAnswers.remove(PaymentFrequencyPage)
         } else {
           super.cleanup(value, userAnswers)
         }

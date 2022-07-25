@@ -26,7 +26,7 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.child.ChildNamePage
 import pages.income._
 import pages.partner._
-import pages.payments.{ApplicantHasSuitableAccountPage, ClaimedChildBenefitBeforePage, WantToBePaidPage, WantToBePaidWeeklyPage}
+import pages.payments.{ApplicantHasSuitableAccountPage, ClaimedChildBenefitBeforePage, WantToBePaidPage, PaymentFrequencyPage}
 import pages.{CannotBePaidWeeklyPage, CheckYourAnswersPage, CohabitationDatePage, RelationshipStatusPage, SeparationDatePage}
 import uk.gov.hmrc.domain.Nino
 
@@ -117,7 +117,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(ApplicantBenefitsPage, benefits),
                 pageMustBe(TaxChargeExplanationPage),
                 next,
-                submitAnswer(WantToBePaidWeeklyPage, true),
+                submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
                 pageMustBe(CheckYourAnswersPage),
                 answersMustNotContain(ApplicantOrPartnerIncomeOver50kPage),
                 answersMustNotContain(ApplicantOrPartnerIncomeOver60kPage),
@@ -188,7 +188,7 @@ class ChangingInitialSectionJourneySpec
                     submitAnswer(ApplicantBenefitsPage, benefits),
                     pageMustBe(TaxChargeExplanationPage),
                     next,
-                    submitAnswer(WantToBePaidWeeklyPage, true),
+                    submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
                     pageMustBe(CheckYourAnswersPage),
                     answersMustNotContain(ApplicantOrPartnerIncomeOver50kPage),
                     answersMustNotContain(ApplicantOrPartnerIncomeOver60kPage),
@@ -253,7 +253,7 @@ class ChangingInitialSectionJourneySpec
           .run(
             initialise,
             setUserAnswerTo(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
-            setUserAnswerTo(WantToBePaidWeeklyPage, false),
+            setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
             goToChangeAnswer(RelationshipStatusPage),
             submitAnswer(RelationshipStatusPage, Cohabiting),
             submitAnswer(CohabitationDatePage, LocalDate.now),
@@ -271,7 +271,7 @@ class ChangingInitialSectionJourneySpec
             answersMustContain(PartnerWaitingForEntitlementDecisionPage),
             answersMustContain(PartnerEldestChildNamePage),
             answersMustContain(PartnerEldestChildDateOfBirthPage),
-            answersMustContain(WantToBePaidWeeklyPage)
+            answersMustContain(PaymentFrequencyPage)
           )
       }
 
@@ -285,7 +285,7 @@ class ChangingInitialSectionJourneySpec
               .run(
                 initialise,
                 setUserAnswerTo(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
-                setUserAnswerTo(WantToBePaidWeeklyPage, false),
+                setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
                 goToChangeAnswer(RelationshipStatusPage),
                 submitAnswer(RelationshipStatusPage, Separated),
                 submitAnswer(SeparationDatePage, LocalDate.now),
@@ -307,7 +307,7 @@ class ChangingInitialSectionJourneySpec
                 answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
                 answersMustNotContain(PartnerEldestChildNamePage),
                 answersMustNotContain(PartnerEldestChildDateOfBirthPage),
-                answersMustContain(WantToBePaidWeeklyPage)
+                answersMustContain(PaymentFrequencyPage)
               )
           }
         }
@@ -358,7 +358,7 @@ class ChangingInitialSectionJourneySpec
                   .run(
                     initialise,
                     setUserAnswerTo(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
-                    setUserAnswerTo(WantToBePaidWeeklyPage, false),
+                    setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
                     goToChangeAnswer(RelationshipStatusPage),
                     submitAnswer(RelationshipStatusPage, status),
                     submitAnswer(ApplicantIncomeOver50kPage, false),
@@ -379,7 +379,7 @@ class ChangingInitialSectionJourneySpec
                     answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
                     answersMustNotContain(PartnerEldestChildNamePage),
                     answersMustNotContain(PartnerEldestChildDateOfBirthPage),
-                    answersMustContain(WantToBePaidWeeklyPage)
+                    answersMustContain(PaymentFrequencyPage)
                   )
             }
           }
@@ -495,7 +495,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(ApplicantBenefitsPage, benefits),
                 pageMustBe(TaxChargeExplanationPage),
                 next,
-                submitAnswer(WantToBePaidWeeklyPage, false),
+                submitAnswer(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
                 pageMustBe(CheckYourAnswersPage),
                 answersMustNotContain(CohabitationDatePage),
                 answersMustNotContain(ApplicantOrPartnerIncomeOver50kPage),
@@ -568,7 +568,7 @@ class ChangingInitialSectionJourneySpec
                     submitAnswer(ApplicantBenefitsPage, benefits),
                     pageMustBe(TaxChargeExplanationPage),
                     next,
-                    submitAnswer(WantToBePaidWeeklyPage, true),
+                    submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
                     pageMustBe(CheckYourAnswersPage),
                     answersMustNotContain(CohabitationDatePage),
                     answersMustNotContain(ApplicantOrPartnerIncomeOver50kPage),
@@ -637,7 +637,7 @@ class ChangingInitialSectionJourneySpec
             .run(
               initialise,
               setUserAnswerTo(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
-              setUserAnswerTo(WantToBePaidWeeklyPage, false),
+              setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
               goToChangeAnswer(RelationshipStatusPage),
               submitAnswer(RelationshipStatusPage, Married),
               pageMustBe(CheckYourAnswersPage),
@@ -655,7 +655,7 @@ class ChangingInitialSectionJourneySpec
               answersMustContain(PartnerWaitingForEntitlementDecisionPage),
               answersMustContain(PartnerEldestChildNamePage),
               answersMustContain(PartnerEldestChildDateOfBirthPage),
-              answersMustContain(WantToBePaidWeeklyPage)
+              answersMustContain(PaymentFrequencyPage)
             )
         }
       }
@@ -670,7 +670,7 @@ class ChangingInitialSectionJourneySpec
               .run(
                 initialise,
                 setUserAnswerTo(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
-                setUserAnswerTo(WantToBePaidWeeklyPage, false),
+                setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
                 goToChangeAnswer(RelationshipStatusPage),
                 submitAnswer(RelationshipStatusPage, Separated),
                 submitAnswer(SeparationDatePage, LocalDate.now),
@@ -693,7 +693,7 @@ class ChangingInitialSectionJourneySpec
                 answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
                 answersMustNotContain(PartnerEldestChildNamePage),
                 answersMustNotContain(PartnerEldestChildDateOfBirthPage),
-                answersMustContain(WantToBePaidWeeklyPage)
+                answersMustContain(PaymentFrequencyPage)
               )
           }
         }
@@ -745,7 +745,7 @@ class ChangingInitialSectionJourneySpec
                   .run(
                     initialise,
                     setUserAnswerTo(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
-                    setUserAnswerTo(WantToBePaidWeeklyPage, false),
+                    setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
                     goToChangeAnswer(RelationshipStatusPage),
                     submitAnswer(RelationshipStatusPage, status),
                     submitAnswer(ApplicantIncomeOver50kPage, false),
@@ -767,7 +767,7 @@ class ChangingInitialSectionJourneySpec
                     answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
                     answersMustNotContain(PartnerEldestChildNamePage),
                     answersMustNotContain(PartnerEldestChildDateOfBirthPage),
-                    answersMustContain(WantToBePaidWeeklyPage)
+                    answersMustContain(PaymentFrequencyPage)
                   )
             }
           }
@@ -835,7 +835,7 @@ class ChangingInitialSectionJourneySpec
               .run(
                 initialise,
                 setUserAnswerTo(WantToBePaidPage, true),
-                setUserAnswerTo(WantToBePaidWeeklyPage, true),
+                setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
                 goToChangeAnswer(RelationshipStatusPage),
                 submitAnswer(RelationshipStatusPage, Married),
                 submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
@@ -857,7 +857,7 @@ class ChangingInitialSectionJourneySpec
                 answersMustNotContain(ApplicantIncomeOver50kPage),
                 answersMustNotContain(ApplicantIncomeOver60kPage),
                 answersMustNotContain(ApplicantBenefitsPage),
-                answersMustContain(WantToBePaidWeeklyPage)
+                answersMustContain(PaymentFrequencyPage)
               )
           }
         }
@@ -870,7 +870,7 @@ class ChangingInitialSectionJourneySpec
               .run(
                 initialise,
                 setUserAnswerTo(WantToBePaidPage, true),
-                setUserAnswerTo(WantToBePaidWeeklyPage, true),
+                setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
                 goToChangeAnswer(RelationshipStatusPage),
                 submitAnswer(RelationshipStatusPage, Married),
                 submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
@@ -894,7 +894,7 @@ class ChangingInitialSectionJourneySpec
                 answersMustNotContain(ApplicantIncomeOver50kPage),
                 answersMustNotContain(ApplicantIncomeOver60kPage),
                 answersMustNotContain(ApplicantBenefitsPage),
-                answersMustNotContain(WantToBePaidWeeklyPage)
+                answersMustNotContain(PaymentFrequencyPage)
               )
           }
         }
@@ -910,7 +910,7 @@ class ChangingInitialSectionJourneySpec
               .run(
                 initialise,
                 setUserAnswerTo(WantToBePaidPage, true),
-                setUserAnswerTo(WantToBePaidWeeklyPage, false),
+                setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
                 goToChangeAnswer(RelationshipStatusPage),
                 submitAnswer(RelationshipStatusPage, Married),
                 submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
@@ -928,7 +928,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                 submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
                 pageMustBe(CheckYourAnswersPage),
-                answersMustContain(WantToBePaidWeeklyPage),
+                answersMustContain(PaymentFrequencyPage),
                 answersMustNotContain(SeparationDatePage),
                 answersMustNotContain(ApplicantIncomeOver50kPage),
                 answersMustNotContain(ApplicantIncomeOver60kPage),
@@ -945,7 +945,7 @@ class ChangingInitialSectionJourneySpec
               .run(
                 initialise,
                 setUserAnswerTo(WantToBePaidPage, true),
-                setUserAnswerTo(WantToBePaidWeeklyPage, false),
+                setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
                 goToChangeAnswer(RelationshipStatusPage),
                 submitAnswer(RelationshipStatusPage, Married),
                 submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
@@ -963,7 +963,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                 submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
                 pageMustBe(CheckYourAnswersPage),
-                answersMustNotContain(WantToBePaidWeeklyPage),
+                answersMustNotContain(PaymentFrequencyPage),
                 answersMustNotContain(SeparationDatePage),
                 answersMustNotContain(ApplicantIncomeOver50kPage),
                 answersMustNotContain(ApplicantIncomeOver60kPage),
@@ -1017,7 +1017,7 @@ class ChangingInitialSectionJourneySpec
               .run(
                 initialise,
                 setUserAnswerTo(WantToBePaidPage, true),
-                setUserAnswerTo(WantToBePaidWeeklyPage, true),
+                setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
                 goToChangeAnswer(RelationshipStatusPage),
                 submitAnswer(RelationshipStatusPage, Cohabiting),
                 submitAnswer(CohabitationDatePage, LocalDate.now),
@@ -1040,7 +1040,7 @@ class ChangingInitialSectionJourneySpec
                 answersMustNotContain(ApplicantIncomeOver50kPage),
                 answersMustNotContain(ApplicantIncomeOver60kPage),
                 answersMustNotContain(ApplicantBenefitsPage),
-                answersMustContain(WantToBePaidWeeklyPage)
+                answersMustContain(PaymentFrequencyPage)
               )
           }
         }
@@ -1053,7 +1053,7 @@ class ChangingInitialSectionJourneySpec
               .run(
                 initialise,
                 setUserAnswerTo(WantToBePaidPage, true),
-                setUserAnswerTo(WantToBePaidWeeklyPage, true),
+                setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
                 goToChangeAnswer(RelationshipStatusPage),
                 submitAnswer(RelationshipStatusPage, Cohabiting),
                 submitAnswer(CohabitationDatePage, LocalDate.now),
@@ -1078,7 +1078,7 @@ class ChangingInitialSectionJourneySpec
                 answersMustNotContain(ApplicantIncomeOver50kPage),
                 answersMustNotContain(ApplicantIncomeOver60kPage),
                 answersMustNotContain(ApplicantBenefitsPage),
-                answersMustNotContain(WantToBePaidWeeklyPage)
+                answersMustNotContain(PaymentFrequencyPage)
               )
           }
         }
@@ -1094,7 +1094,7 @@ class ChangingInitialSectionJourneySpec
               .run(
                 initialise,
                 setUserAnswerTo(WantToBePaidPage, true),
-                setUserAnswerTo(WantToBePaidWeeklyPage, false),
+                setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
                 goToChangeAnswer(RelationshipStatusPage),
                 submitAnswer(RelationshipStatusPage, Cohabiting),
                 submitAnswer(CohabitationDatePage, LocalDate.now),
@@ -1117,7 +1117,7 @@ class ChangingInitialSectionJourneySpec
                 answersMustNotContain(ApplicantIncomeOver50kPage),
                 answersMustNotContain(ApplicantIncomeOver60kPage),
                 answersMustNotContain(ApplicantBenefitsPage),
-                answersMustContain(WantToBePaidWeeklyPage)
+                answersMustContain(PaymentFrequencyPage)
               )
           }
         }
@@ -1130,7 +1130,7 @@ class ChangingInitialSectionJourneySpec
               .run(
                 initialise,
                 setUserAnswerTo(WantToBePaidPage, true),
-                setUserAnswerTo(WantToBePaidWeeklyPage, false),
+                setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
                 goToChangeAnswer(RelationshipStatusPage),
                 submitAnswer(RelationshipStatusPage, Cohabiting),
                 submitAnswer(CohabitationDatePage, LocalDate.now),
@@ -1153,7 +1153,7 @@ class ChangingInitialSectionJourneySpec
                 answersMustNotContain(ApplicantIncomeOver50kPage),
                 answersMustNotContain(ApplicantIncomeOver60kPage),
                 answersMustNotContain(ApplicantBenefitsPage),
-                answersMustNotContain(WantToBePaidWeeklyPage)
+                answersMustNotContain(PaymentFrequencyPage)
               )
           }
         }
@@ -1237,7 +1237,7 @@ class ChangingInitialSectionJourneySpec
                 .run(
                   initialise(status),
                   setUserAnswerTo(WantToBePaidPage, true),
-                  setUserAnswerTo(WantToBePaidWeeklyPage, true),
+                  setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
                   goToChangeAnswer(RelationshipStatusPage),
                   submitAnswer(RelationshipStatusPage, Married),
                   submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
@@ -1258,7 +1258,7 @@ class ChangingInitialSectionJourneySpec
                   answersMustNotContain(ApplicantIncomeOver50kPage),
                   answersMustNotContain(ApplicantIncomeOver60kPage),
                   answersMustNotContain(ApplicantBenefitsPage),
-                  answersMustContain(WantToBePaidWeeklyPage)
+                  answersMustContain(PaymentFrequencyPage)
                 )
             }
           }
@@ -1274,7 +1274,7 @@ class ChangingInitialSectionJourneySpec
                 .run(
                   initialise(status),
                   setUserAnswerTo(WantToBePaidPage, true),
-                  setUserAnswerTo(WantToBePaidWeeklyPage, true),
+                  setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
                   goToChangeAnswer(RelationshipStatusPage),
                   submitAnswer(RelationshipStatusPage, Married),
                   submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
@@ -1297,7 +1297,7 @@ class ChangingInitialSectionJourneySpec
                   answersMustNotContain(ApplicantIncomeOver50kPage),
                   answersMustNotContain(ApplicantIncomeOver60kPage),
                   answersMustNotContain(ApplicantBenefitsPage),
-                  answersMustNotContain(WantToBePaidWeeklyPage)
+                  answersMustNotContain(PaymentFrequencyPage)
                 )
             }
           }
@@ -1316,7 +1316,7 @@ class ChangingInitialSectionJourneySpec
                 .run(
                   initialise(status),
                   setUserAnswerTo(WantToBePaidPage, true),
-                  setUserAnswerTo(WantToBePaidWeeklyPage, false),
+                  setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
                   goToChangeAnswer(RelationshipStatusPage),
                   submitAnswer(RelationshipStatusPage, Married),
                   submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
@@ -1337,7 +1337,7 @@ class ChangingInitialSectionJourneySpec
                   answersMustNotContain(ApplicantIncomeOver50kPage),
                   answersMustNotContain(ApplicantIncomeOver60kPage),
                   answersMustNotContain(ApplicantBenefitsPage),
-                  answersMustContain(WantToBePaidWeeklyPage)
+                  answersMustContain(PaymentFrequencyPage)
                 )
             }
           }
@@ -1353,7 +1353,7 @@ class ChangingInitialSectionJourneySpec
                 .run(
                   initialise(status),
                   setUserAnswerTo(WantToBePaidPage, true),
-                  setUserAnswerTo(WantToBePaidWeeklyPage, false),
+                  setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
                   goToChangeAnswer(RelationshipStatusPage),
                   submitAnswer(RelationshipStatusPage, Married),
                   submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
@@ -1374,7 +1374,7 @@ class ChangingInitialSectionJourneySpec
                   answersMustNotContain(ApplicantIncomeOver50kPage),
                   answersMustNotContain(ApplicantIncomeOver60kPage),
                   answersMustNotContain(ApplicantBenefitsPage),
-                  answersMustNotContain(WantToBePaidWeeklyPage)
+                  answersMustNotContain(PaymentFrequencyPage)
                 )
             }
           }
@@ -1429,7 +1429,7 @@ class ChangingInitialSectionJourneySpec
                 .run(
                   initialise(status),
                   setUserAnswerTo(WantToBePaidPage, true),
-                  setUserAnswerTo(WantToBePaidWeeklyPage, true),
+                  setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
                   goToChangeAnswer(RelationshipStatusPage),
                   submitAnswer(RelationshipStatusPage, Cohabiting),
                   submitAnswer(CohabitationDatePage, LocalDate.now),
@@ -1451,7 +1451,7 @@ class ChangingInitialSectionJourneySpec
                   answersMustNotContain(ApplicantIncomeOver50kPage),
                   answersMustNotContain(ApplicantIncomeOver60kPage),
                   answersMustNotContain(ApplicantBenefitsPage),
-                  answersMustContain(WantToBePaidWeeklyPage)
+                  answersMustContain(PaymentFrequencyPage)
                 )
             }
           }
@@ -1467,7 +1467,7 @@ class ChangingInitialSectionJourneySpec
                 .run(
                   initialise(status),
                   setUserAnswerTo(WantToBePaidPage, true),
-                  setUserAnswerTo(WantToBePaidWeeklyPage, true),
+                  setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
                   goToChangeAnswer(RelationshipStatusPage),
                   submitAnswer(RelationshipStatusPage, Cohabiting),
                   submitAnswer(CohabitationDatePage, LocalDate.now),
@@ -1491,7 +1491,7 @@ class ChangingInitialSectionJourneySpec
                   answersMustNotContain(ApplicantIncomeOver50kPage),
                   answersMustNotContain(ApplicantIncomeOver60kPage),
                   answersMustNotContain(ApplicantBenefitsPage),
-                  answersMustNotContain(WantToBePaidWeeklyPage)
+                  answersMustNotContain(PaymentFrequencyPage)
                 )
             }
           }
@@ -1510,7 +1510,7 @@ class ChangingInitialSectionJourneySpec
                 .run(
                   initialise(status),
                   setUserAnswerTo(WantToBePaidPage, true),
-                  setUserAnswerTo(WantToBePaidWeeklyPage, false),
+                  setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
                   goToChangeAnswer(RelationshipStatusPage),
                   submitAnswer(RelationshipStatusPage, Cohabiting),
                   submitAnswer(CohabitationDatePage, LocalDate.now),
@@ -1532,7 +1532,7 @@ class ChangingInitialSectionJourneySpec
                   answersMustNotContain(ApplicantIncomeOver50kPage),
                   answersMustNotContain(ApplicantIncomeOver60kPage),
                   answersMustNotContain(ApplicantBenefitsPage),
-                  answersMustContain(WantToBePaidWeeklyPage)
+                  answersMustContain(PaymentFrequencyPage)
                 )
             }
           }
@@ -1548,7 +1548,7 @@ class ChangingInitialSectionJourneySpec
                 .run(
                   initialise(status),
                   setUserAnswerTo(WantToBePaidPage, true),
-                  setUserAnswerTo(WantToBePaidWeeklyPage, false),
+                  setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
                   goToChangeAnswer(RelationshipStatusPage),
                   submitAnswer(RelationshipStatusPage, Cohabiting),
                   submitAnswer(CohabitationDatePage, LocalDate.now),
@@ -1570,7 +1570,7 @@ class ChangingInitialSectionJourneySpec
                   answersMustNotContain(ApplicantIncomeOver50kPage),
                   answersMustNotContain(ApplicantIncomeOver60kPage),
                   answersMustNotContain(ApplicantBenefitsPage),
-                  answersMustNotContain(WantToBePaidWeeklyPage)
+                  answersMustNotContain(PaymentFrequencyPage)
                 )
             }
           }
@@ -1586,7 +1586,7 @@ class ChangingInitialSectionJourneySpec
           .run(
             initialise(status),
             setUserAnswerTo(WantToBePaidPage, true),
-            setUserAnswerTo(WantToBePaidWeeklyPage, true),
+            setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
             goToChangeAnswer(RelationshipStatusPage),
             submitAnswer(RelationshipStatusPage, Separated),
             submitAnswer(SeparationDatePage, LocalDate.now),
@@ -1594,7 +1594,7 @@ class ChangingInitialSectionJourneySpec
             answersMustContain(ApplicantIncomeOver50kPage),
             answersMustContain(ApplicantIncomeOver60kPage),
             answersMustContain(ApplicantBenefitsPage),
-            answersMustContain(WantToBePaidWeeklyPage)
+            answersMustContain(PaymentFrequencyPage)
           )
       }
     }
@@ -1609,14 +1609,14 @@ class ChangingInitialSectionJourneySpec
           .run(
             initialise(status),
             setUserAnswerTo(WantToBePaidPage, true),
-            setUserAnswerTo(WantToBePaidWeeklyPage, true),
+            setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
             goToChangeAnswer(RelationshipStatusPage),
             submitAnswer(RelationshipStatusPage, newStatus),
             pageMustBe(CheckYourAnswersPage),
             answersMustContain(ApplicantIncomeOver50kPage),
             answersMustContain(ApplicantIncomeOver60kPage),
             answersMustContain(ApplicantBenefitsPage),
-            answersMustContain(WantToBePaidWeeklyPage)
+            answersMustContain(PaymentFrequencyPage)
           )
       }
     }

@@ -26,21 +26,22 @@
 
 @(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("wantToBePaidWeekly.title"))) {
+@layout(pageTitle = title(form, messages("paymentFrequency.title"))) {
 
-    @formHelper(action = routes.WantToBePaidWeeklyController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.PaymentFrequencyController.onSubmit(waypoints), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
         @govukRadios(
-            RadiosViewModel.yesNo(
-                field = form("value"),
+            RadiosViewModel(
+                field  = form("value"),
                 legend = HmrcPageHeadingLegend(
-                    content = messages("wantToBePaidWeekly.heading"),
+                    content = messages("paymentFrequency.heading"),
                     caption = HmrcSectionCaption(messages("section.payments"))
-                )
+                ),
+                items  = PaymentFrequency.options
             )
         )
 
