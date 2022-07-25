@@ -838,3 +838,7 @@ cannotBePaidWeekly.p4.link.text = start your application again
 
 print.title = Your Child Benefit claim form is ready to be sent
 print.heading = Your Child Benefit claim form is ready to be sent
+print.button = Download form
+
+pdf.title = Claim Child Benefit for one or more children (CH2)
+pdf.personalDetails = Personal details

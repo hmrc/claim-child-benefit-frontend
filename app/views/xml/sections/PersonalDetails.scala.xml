@@ -1,0 +1,9 @@
+
+@import viewmodels.PrintModel
+@import views.xml.xml.sections._
+
+@this()
+
+@(model: PrintModel)(implicit messages: Messages)
+
+<fo:block font-size="18pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.personalDetails")</fo:block>

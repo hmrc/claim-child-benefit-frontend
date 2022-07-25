@@ -26,6 +26,7 @@ import org.apache.xmlgraphics.util.MimeConstants
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.PrintModel
 import views.html.PrintView
 import views.xml.xml.PrintTemplate
 
@@ -74,7 +75,8 @@ class PrintController @Inject()(
     implicit request =>
       withJourneyModel(request.userAnswers) {
         journeyModel =>
-          val pdf = fop.processTwirlXml(template.render(), MimeConstants.MIME_PDF, foUserAgentBlock = userAgentBlock)
+          val printModel = PrintModel.from(journeyModel)
+          val pdf = fop.processTwirlXml(template.render(printModel, implicitly), MimeConstants.MIME_PDF, foUserAgentBlock = userAgentBlock)
           auditService.auditDownload(journeyModel)
           Ok(pdf).as("application/octet-stream").withHeaders(CONTENT_DISPOSITION -> "attachment; filename=claim-child-benefit-by-post.pdf")
       }
