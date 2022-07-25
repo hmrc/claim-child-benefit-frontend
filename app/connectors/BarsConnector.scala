@@ -22,24 +22,25 @@ import connectors.BarsHttpParser.{BarsReads, ValidateBankDetailsResponse}
 import models.ValidateBankDetailsRequest
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
-class BarsConnector @Inject()(config: Configuration, httpClient: HttpClient, auditService: AuditService)
+class BarsConnector @Inject()(config: Configuration, httpClient: HttpClientV2, auditService: AuditService)
                              (implicit ec: ExecutionContext) {
 
   private val baseUrl     = config.get[Service]("microservice.services.bank-account-reputation")
-  private val validateUrl = s"$baseUrl/validate/bank-details"
+  private val validateUrl = url"$baseUrl/validate/bank-details"
 
   def validate(barsRequest: ValidateBankDetailsRequest)
               (implicit hc: HeaderCarrier): Future[ValidateBankDetailsResponse] = {
 
     val json = Json.toJson(barsRequest)
 
-    httpClient.POST(validateUrl, json).map {
+    httpClient.post(validateUrl).withBody(json).execute.map {
       case (connectorResponse, httpResponse) =>
         auditService.auditValidateBankDetails(
           ValidateBankDetailsAuditEvent(
