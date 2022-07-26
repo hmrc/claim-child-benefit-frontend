@@ -1,0 +1,34 @@
+@import views.xml.xml.sections._
+
+@this(
+    line: Line,
+    doNotPay: DoNotPay,
+    weekly: Weekly,
+    everyFourWeeks: EveryFourWeeks,
+    existingAccount: ExistingAccount,
+    existingFrequency: ExistingFrequency
+)
+
+@(model: JourneyModel)(implicit messages: Messages)
+
+<fo:block-container margin-bottom="1cm" keep-together="always">
+
+    <fo:block font-size="18pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.paymentDetails")</fo:block>
+
+    @{model.paymentPreference match {
+        case JourneyModel.PaymentPreference.DoNotPay =>
+            doNotPay()
+
+        case JourneyModel.PaymentPreference.Weekly(bankDetails) =>
+            weekly(bankDetails)
+
+        case JourneyModel.PaymentPreference.EveryFourWeeks(bankDetails) =>
+            everyFourWeeks(bankDetails)
+
+        case JourneyModel.PaymentPreference.ExistingAccount(eldestChild) =>
+            existingAccount(eldestChild)
+
+        case JourneyModel.PaymentPreference.ExistingFrequency(bankAccount, eldestChild) =>
+            existingFrequency(bankAccount, eldestChild)
+    }}
+</fo:block-container>

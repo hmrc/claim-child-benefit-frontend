@@ -25,8 +25,8 @@ import queries.DeriveNumberOfChildPreviousNames
 
 final case class AddChildPreviousNamePage(index: Index) extends QuestionPage[Boolean] with AddItemPage {
 
-  override val checkModeUrlFragment: String = s"change-child-name-${index.position}"
-  override val normalModeUrlFragment: String = s"add-child-name-${index.position}"
+  override val checkModeUrlFragment: String = s"change-child-name-${index.display}"
+  override val normalModeUrlFragment: String = s"add-child-name-${index.display}"
 
   override def path: JsPath = JsPath \ "children" \ index.position \ toString
 

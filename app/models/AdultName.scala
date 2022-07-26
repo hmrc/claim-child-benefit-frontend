@@ -27,6 +27,13 @@ case class AdultName(
                          ) {
 
   val safeFirstName: String = HtmlFormat.escape(firstName).toString()
+
+  val display: String = Seq(
+    title,
+    Some(firstName),
+    middleNames,
+    Some(lastName)
+  ).flatten.mkString(" ")
 }
 
 object AdultName {

@@ -56,6 +56,7 @@ object DownloadAuditEvent {
             nationality                     = partner.nationality,
             nationalInsuranceNumber         = partner.nationalInsuranceNumber,
             currentlyEntitledToChildBenefit = partner.currentlyEntitledToChildBenefit,
+            employmentStatus                = partner.employmentStatus.map(_.toString),
             waitingToHearAboutEntitlement   = partner.waitingToHearAboutEntitlement,
             eldestChild                     = partner.eldestChild.map(convertEldestChild)
           )
@@ -67,8 +68,9 @@ object DownloadAuditEvent {
           nameChangedByDeedPoll         = child.nameChangedByDeedPoll,
           previousNames                 = child.previousNames.map(convertChildName),
           biologicalSex                 = child.biologicalSex.toString,
+          dateOfBirth                   = child.dateOfBirth,
           birthRegistrationCountry      = child.countryOfRegistration.toString,
-          birthCertificateNumber        = child.birtCertificateNumber,
+          birthCertificateNumber        = child.birthCertificateNumber,
           relationshipToApplicant       = child.relationshipToApplicant.toString,
           adoptingThroughLocalAuthority = child.adoptingThroughLocalAuthority,
           previousClaimant              = child.previousClaimant.map { claimant =>
@@ -179,6 +181,7 @@ object DownloadAuditEvent {
                                            nationality: String,
                                            currentlyEntitledToChildBenefit: Boolean,
                                            nationalInsuranceNumber: Option[String],
+                                           employmentStatus: Set[String],
                                            waitingToHearAboutEntitlement: Option[Boolean],
                                            eldestChild: Option[EldestChild]
                                          )
@@ -201,6 +204,7 @@ object DownloadAuditEvent {
                                          nameChangedByDeedPoll: Option[Boolean],
                                          previousNames: List[ChildName],
                                          biologicalSex: String,
+                                         dateOfBirth: LocalDate,
                                          birthRegistrationCountry: String,
                                          birthCertificateNumber: Option[String],
                                          relationshipToApplicant: String,

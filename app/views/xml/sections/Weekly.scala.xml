@@ -1,0 +1,14 @@
+@this(
+    line: Line,
+    bankAccount: BankAccount
+)
+
+@(bankAccountDetails: Option[BankAccountDetails])(implicit messages: Messages)
+
+@line("pdf.currentlyReceiving", messages("site.no"))
+
+@line("pdf.wantToBePaid", messages("site.yes"))
+
+@line("pdf.paymentFrequency", messages("paymentFrequency.weekly"))
+
+@bankAccountDetails.map(x => bankAccount(x)).getOrElse(line("pdf.applicantHasSuitableAccount", messages("site.no")))

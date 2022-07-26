@@ -74,18 +74,24 @@ object JourneyModel {
                             dateOfBirth: LocalDate,
                             nationality: String,
                             nationalInsuranceNumber: Option[String],
+                            employmentStatus: Set[PartnerEmploymentStatus],
                             currentlyEntitledToChildBenefit: Boolean,
                             waitingToHearAboutEntitlement: Option[Boolean],
                             eldestChild: Option[EldestChild]
-                          )
+                          ) {
+
+    val entitledToChildBenefitOrWaiting: Boolean =
+      waitingToHearAboutEntitlement.getOrElse(currentlyEntitledToChildBenefit)
+  }
 
   final case class Child(
                           name: ChildName,
                           nameChangedByDeedPoll: Option[Boolean],
                           previousNames: List[ChildName],
                           biologicalSex: ChildBiologicalSex,
+                          dateOfBirth: LocalDate,
                           countryOfRegistration: ChildBirthRegistrationCountry,
-                          birtCertificateNumber: Option[String],
+                          birthCertificateNumber: Option[String],
                           relationshipToApplicant: ApplicantRelationshipToChild,
                           adoptingThroughLocalAuthority: Option[Boolean],
                           previousClaimant: Option[PreviousClaimant],
@@ -135,8 +141,8 @@ object JourneyModel {
       def getBirthCertificateNumber: IorNec[Query, Option[String]] =
         answers.getIor(ChildBirthRegistrationCountryPage(index)).flatMap {
           case Country.England | Country.Wales => answers.getIor(ChildBirthCertificateSystemNumberPage(index)).map(Some(_))
-          case Country.Scotland  => answers.getIor(ChildScottishBirthCertificateDetailsPage(index)).map(Some(_))
-          case _                 => Ior.Right(None)
+          case Country.Scotland                => answers.getIor(ChildScottishBirthCertificateDetailsPage(index)).map(Some(_))
+          case _                               => Ior.Right(None)
         }
 
       def getPreviousClaimant: IorNec[Query, Option[PreviousClaimant]] =
@@ -168,6 +174,7 @@ object JourneyModel {
         getNameChangedByDeedPoll,
         getPreviousNames,
         answers.getIor(ChildBiologicalSexPage(index)),
+        answers.getIor(ChildDateOfBirthPage(index)),
         answers.getIor(ChildBirthRegistrationCountryPage(index)),
         getBirthCertificateNumber,
         answers.getIor(ApplicantRelationshipToChildPage(index)),
@@ -256,6 +263,7 @@ object JourneyModel {
       answers.getIor(PartnerDateOfBirthPage),
       answers.getIor(PartnerNationalityPage),
       getPartnerNino,
+      answers.getIor(PartnerEmploymentStatusPage),
       answers.getIor(PartnerEntitledToChildBenefitPage),
       getPartnerWaitingToHear,
       getPartnerEldestChild

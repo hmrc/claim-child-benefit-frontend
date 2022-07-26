@@ -73,6 +73,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             dateOfBirth = now,
             nationality = "partner nationality",
             nationalInsuranceNumber = Some(partnerNino),
+            employmentStatus = Set(models.PartnerEmploymentStatus.Employed, models.PartnerEmploymentStatus.SelfEmployed),
             currentlyEntitledToChildBenefit = false,
             waitingToHearAboutEntitlement = Some(true),
             eldestChild = Some(JourneyModel.EldestChild(
@@ -87,8 +88,9 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             nameChangedByDeedPoll = Some(true),
             previousNames = List(models.ChildName("child 1 previous first", Some("child 1 previous middle"), "child 1 previous last")),
             biologicalSex = models.ChildBiologicalSex.Female,
+            dateOfBirth = now,
             countryOfRegistration = models.ChildBirthRegistrationCountry.England,
-            birtCertificateNumber = Some("000000000"),
+            birthCertificateNumber = Some("000000000"),
             relationshipToApplicant = models.ApplicantRelationshipToChild.AdoptingChild,
             adoptingThroughLocalAuthority = Some(true),
             previousClaimant = Some(JourneyModel.PreviousClaimant(
@@ -129,6 +131,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             dateOfBirth = now,
             nationality = "partner nationality",
             nationalInsuranceNumber = Some(partnerNino),
+            employmentStatus = Set("employed", "selfEmployed"),
             currentlyEntitledToChildBenefit = false,
             waitingToHearAboutEntitlement = Some(true),
             eldestChild = Some(EldestChild(
@@ -143,6 +146,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             nameChangedByDeedPoll = Some(true),
             previousNames = List(ChildName("child 1 previous first", Some("child 1 previous middle"), "child 1 previous last")),
             biologicalSex = "female",
+            dateOfBirth = now,
             birthRegistrationCountry = "england",
             birthCertificateNumber = Some("000000000"),
             relationshipToApplicant = "adoptingChild",
