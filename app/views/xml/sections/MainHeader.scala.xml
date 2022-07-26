@@ -1,8 +1,6 @@
-@import viewmodels.PrintModel
-
 @this()
 
-@(model: PrintModel)(implicit messages: Messages)
+@(model: JourneyModel)(implicit messages: Messages)
 
 <fo:static-content flow-name="xsl-region-before">
     <fo:block>
