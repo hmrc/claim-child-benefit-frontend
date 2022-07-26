@@ -2,7 +2,10 @@
 
 @this(
     mainHeader: MainHeader,
-    personalDetails: PersonalDetails
+    personalDetails: PersonalDetails,
+    paymentDetails: PaymentDetails,
+    partnerDetails: PartnerDetails,
+    childDetails: ChildDetails
 )
 
 @(model: JourneyModel)(implicit messages: Messages)
@@ -17,6 +20,16 @@
             <fo:block>
 
                 @personalDetails(model)
+
+                @paymentDetails(model)
+
+                @model.relationship.partner.map { partner =>
+                    @partnerDetails(partner)
+                }
+
+                @for((child, index) <- model.children.toList.zipWithIndex) {
+                    @childDetails(child, index)
+                }
 
             </fo:block>
 

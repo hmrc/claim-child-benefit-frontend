@@ -19,6 +19,9 @@ package views
 import play.api.data.Form
 import play.api.i18n.Messages
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 object ViewUtils {
 
   def title(form: Form[_], title: String, section: Option[String] = None)(implicit messages: Messages): String =
@@ -33,4 +36,13 @@ object ViewUtils {
   def errorPrefix(form: Form[_])(implicit messages: Messages): String = {
     if (form.hasErrors || form.hasGlobalErrors) messages("error.browser.title.prefix") else ""
   }
+
+  def date(d: LocalDate): String =
+    d.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))
+
+  def indexToOrdinal(index: Int)(implicit messages: Messages): String =
+    messages(s"ordinal.$index")
+
+  def booleanToYesNo(value: Boolean)(implicit messages: Messages): String =
+    if (value) messages("site.yes") else messages("site.no")
 }

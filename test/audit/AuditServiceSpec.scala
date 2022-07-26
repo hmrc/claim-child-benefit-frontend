@@ -90,7 +90,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             biologicalSex = models.ChildBiologicalSex.Female,
             dateOfBirth = now,
             countryOfRegistration = models.ChildBirthRegistrationCountry.England,
-            birtCertificateNumber = Some("000000000"),
+            birthCertificateNumber = Some("000000000"),
             relationshipToApplicant = models.ApplicantRelationshipToChild.AdoptingChild,
             adoptingThroughLocalAuthority = Some(true),
             previousClaimant = Some(JourneyModel.PreviousClaimant(

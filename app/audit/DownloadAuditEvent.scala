@@ -70,7 +70,7 @@ object DownloadAuditEvent {
           biologicalSex                 = child.biologicalSex.toString,
           dateOfBirth                   = child.dateOfBirth,
           birthRegistrationCountry      = child.countryOfRegistration.toString,
-          birthCertificateNumber        = child.birtCertificateNumber,
+          birthCertificateNumber        = child.birthCertificateNumber,
           relationshipToApplicant       = child.relationshipToApplicant.toString,
           adoptingThroughLocalAuthority = child.adoptingThroughLocalAuthority,
           previousClaimant              = child.previousClaimant.map { claimant =>

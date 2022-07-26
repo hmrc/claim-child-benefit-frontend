@@ -28,6 +28,7 @@ case class ChildName (firstName: String, middleNames: Option[String], lastName: 
   val safeFirstName: String = HtmlFormat.escape(firstName).toString
 
   val safeFullName: String = HtmlFormat.escape(fullName).toString
+
 }
 
 object ChildName {

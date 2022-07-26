@@ -91,7 +91,7 @@ object JourneyModel {
                           biologicalSex: ChildBiologicalSex,
                           dateOfBirth: LocalDate,
                           countryOfRegistration: ChildBirthRegistrationCountry,
-                          birtCertificateNumber: Option[String],
+                          birthCertificateNumber: Option[String],
                           relationshipToApplicant: ApplicantRelationshipToChild,
                           adoptingThroughLocalAuthority: Option[Boolean],
                           previousClaimant: Option[PreviousClaimant],
@@ -141,8 +141,8 @@ object JourneyModel {
       def getBirthCertificateNumber: IorNec[Query, Option[String]] =
         answers.getIor(ChildBirthRegistrationCountryPage(index)).flatMap {
           case Country.England | Country.Wales => answers.getIor(ChildBirthCertificateSystemNumberPage(index)).map(Some(_))
-          case Country.Scotland  => answers.getIor(ChildScottishBirthCertificateDetailsPage(index)).map(Some(_))
-          case _                 => Ior.Right(None)
+          case Country.Scotland                => answers.getIor(ChildScottishBirthCertificateDetailsPage(index)).map(Some(_))
+          case _                               => Ior.Right(None)
         }
 
       def getPreviousClaimant: IorNec[Query, Option[PreviousClaimant]] =

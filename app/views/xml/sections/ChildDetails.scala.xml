@@ -1,0 +1,49 @@
+@this(line: Line)
+
+@(child: JourneyModel.Child, index: Int)(implicit messages: Messages)
+
+<fo:block-container margin-bottom="1cm" keep-together="always">
+
+    <fo:block font-size="18pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.childDetails", child.name.fullName, indexToOrdinal(index))</fo:block>
+
+    @line("pdf.name", child.name.fullName)
+
+    @line("pdf.hasPreviousNames", booleanToYesNo(child.previousNames.nonEmpty))
+
+    @child.nameChangedByDeedPoll.map(value => line("pdf.nameChangedByDeedPoll", booleanToYesNo(value)))
+
+    @if(child.previousNames.nonEmpty) {
+        <fo:block margin-bottom="2mm">
+            <fo:inline font-weight="bold">@messages("pdf.previousNames"): </fo:inline>
+            <fo:inline>@child.previousNames.map(name => name.fullName).mkString(", ")</fo:inline>
+        </fo:block>
+    }
+
+    @line("pdf.biologicalSex", messages(s"childBiologicalSex.${child.biologicalSex.toString}"))
+
+    @line("pdf.dateOfBirth", date(child.dateOfBirth))
+
+    @line("pdf.birthRegistrationCountry", messages(s"childBirthRegistrationCountry.${child.countryOfRegistration.toString}"))
+
+    @child.birthCertificateNumber.map { number =>
+        line("pdf.birthCertificateNumber", number)
+    }
+
+    @line("pdf.relationshipToApplicant", messages(s"applicantRelationshipToChild.${child.relationshipToApplicant.toString}"))
+
+    @child.adoptingThroughLocalAuthority.map { value =>
+        @line("pdf.adoptingThroughLocalAuthority", booleanToYesNo(value))
+    }
+
+    @line("pdf.claimedBefore", booleanToYesNo(child.previousClaimant.nonEmpty))
+
+    @child.previousClaimant.map { previousClaimant =>
+        @line("pdf.previousClaimantName", previousClaimant.name.display)
+        @line("pdf.previousClaimantAddress", previousClaimant.address.lines.mkString(", "))
+    }
+
+    @if(child.documents.nonEmpty) {
+        line("pdf.documents", previousClaimant.documents.map(x => messages(s"includedDocuments.${x.toString}")).mkString(", "))
+    }
+
+</fo:block-container>

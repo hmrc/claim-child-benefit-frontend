@@ -22,6 +22,7 @@ import pages.child.{AddChildPreviousNamePage, ChildPreviousNamePage}
 import pages.{AddItemPage, CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import queries.AllChildPreviousNames
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import uk.gov.hmrc.hmrcfrontend.views.viewmodels.addtoalist.ListItem
 import viewmodels.govuk.summarylist._
@@ -45,7 +46,7 @@ object AddChildPreviousNameSummary {
     answers.get(AllChildPreviousNames(childIndex)).map {
       names =>
 
-        val value = names.map(_.fullName).mkString("<br/>")
+        val value = HtmlContent(names.map(_.fullName).mkString("<br/>"))
 
         SummaryListRowViewModel(
           key = "addChildPreviousName.checkYourAnswersLabel",
