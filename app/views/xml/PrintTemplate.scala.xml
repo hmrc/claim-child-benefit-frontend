@@ -1,0 +1,14 @@
+@import views.xml.xml.sections._
+
+@this(
+    layout: Layout,
+    main: Main
+)
+
+@(model: JourneyModel)(implicit messages: Messages)
+
+<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:fox="http://xmlgraphics.apache.org/fop/extensions" font-family="sans-serif">
+    @layout()
+
+    @main(model)
+</fo:root>

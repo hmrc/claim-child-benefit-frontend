@@ -232,3 +232,6 @@ POST       /adopting-through-local-authority/:index                        contr
 
 GET        /check-child-details/:index                 controllers.child.CheckChildDetailsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /check-child-details/:index                 controllers.child.CheckChildDetailsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+
+GET        /print-form                         controllers.PrintController.onDownload
+GET        /next-steps                         controllers.PrintController.onPageLoad
