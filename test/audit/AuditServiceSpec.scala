@@ -73,6 +73,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             dateOfBirth = now,
             nationality = "partner nationality",
             nationalInsuranceNumber = Some(partnerNino),
+            employmentStatus = Set(models.PartnerEmploymentStatus.Employed, models.PartnerEmploymentStatus.SelfEmployed),
             currentlyEntitledToChildBenefit = false,
             waitingToHearAboutEntitlement = Some(true),
             eldestChild = Some(JourneyModel.EldestChild(
@@ -129,6 +130,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             dateOfBirth = now,
             nationality = "partner nationality",
             nationalInsuranceNumber = Some(partnerNino),
+            employmentStatus = Set("employed", "selfEmployed"),
             currentlyEntitledToChildBenefit = false,
             waitingToHearAboutEntitlement = Some(true),
             eldestChild = Some(EldestChild(

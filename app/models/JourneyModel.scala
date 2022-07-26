@@ -74,10 +74,15 @@ object JourneyModel {
                             dateOfBirth: LocalDate,
                             nationality: String,
                             nationalInsuranceNumber: Option[String],
+                            employmentStatus: Set[PartnerEmploymentStatus],
                             currentlyEntitledToChildBenefit: Boolean,
                             waitingToHearAboutEntitlement: Option[Boolean],
                             eldestChild: Option[EldestChild]
-                          )
+                          ) {
+
+    val entitledToChildBenefitOrWaiting: Boolean =
+      waitingToHearAboutEntitlement.getOrElse(currentlyEntitledToChildBenefit)
+  }
 
   final case class Child(
                           name: ChildName,
@@ -256,6 +261,7 @@ object JourneyModel {
       answers.getIor(PartnerDateOfBirthPage),
       answers.getIor(PartnerNationalityPage),
       getPartnerNino,
+      answers.getIor(PartnerEmploymentStatusPage),
       answers.getIor(PartnerEntitledToChildBenefitPage),
       getPartnerWaitingToHear,
       getPartnerEldestChild

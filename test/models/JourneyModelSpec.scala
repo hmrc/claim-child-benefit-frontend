@@ -168,6 +168,7 @@ class JourneyModelSpec
               dateOfBirth = now,
               nationality = partnerNationality,
               nationalInsuranceNumber = None,
+              employmentStatus = partnerEmployment,
               currentlyEntitledToChildBenefit = false,
               waitingToHearAboutEntitlement = Some(false),
               eldestChild = None
@@ -238,6 +239,7 @@ class JourneyModelSpec
               dateOfBirth = now,
               nationality = partnerNationality,
               nationalInsuranceNumber = None,
+              employmentStatus = partnerEmployment,
               currentlyEntitledToChildBenefit = false,
               waitingToHearAboutEntitlement = Some(false),
               eldestChild = None
@@ -779,6 +781,7 @@ class JourneyModelSpec
           dateOfBirth = now,
           nationality = partnerNationality,
           nationalInsuranceNumber = Some(partnerNino.value),
+          employmentStatus = partnerEmployment,
           currentlyEntitledToChildBenefit = false,
           waitingToHearAboutEntitlement = Some(false),
           eldestChild = None
@@ -808,6 +811,7 @@ class JourneyModelSpec
           dateOfBirth = now,
           nationality = partnerNationality,
           nationalInsuranceNumber = None,
+          employmentStatus = partnerEmployment,
           currentlyEntitledToChildBenefit = true,
           waitingToHearAboutEntitlement = None,
           eldestChild = Some(JourneyModel.EldestChild(partnerEldestChildName, now))
@@ -838,6 +842,7 @@ class JourneyModelSpec
           dateOfBirth = now,
           nationality = partnerNationality,
           nationalInsuranceNumber = None,
+          employmentStatus = partnerEmployment,
           currentlyEntitledToChildBenefit = false,
           waitingToHearAboutEntitlement = Some(true),
           eldestChild = Some(JourneyModel.EldestChild(partnerEldestChildName, now))
@@ -1006,6 +1011,7 @@ class JourneyModelSpec
           PartnerDateOfBirthPage,
           PartnerNationalityPage,
           PartnerNinoKnownPage,
+          PartnerEmploymentStatusPage,
           PartnerEntitledToChildBenefitPage
         )
         data mustBe empty
@@ -1044,6 +1050,7 @@ class JourneyModelSpec
           PartnerDateOfBirthPage,
           PartnerNationalityPage,
           PartnerNinoKnownPage,
+          PartnerEmploymentStatusPage,
           PartnerEntitledToChildBenefitPage
         )
         data mustBe empty

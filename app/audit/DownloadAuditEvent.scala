@@ -56,6 +56,7 @@ object DownloadAuditEvent {
             nationality                     = partner.nationality,
             nationalInsuranceNumber         = partner.nationalInsuranceNumber,
             currentlyEntitledToChildBenefit = partner.currentlyEntitledToChildBenefit,
+            employmentStatus                = partner.employmentStatus.map(_.toString),
             waitingToHearAboutEntitlement   = partner.waitingToHearAboutEntitlement,
             eldestChild                     = partner.eldestChild.map(convertEldestChild)
           )
@@ -179,6 +180,7 @@ object DownloadAuditEvent {
                                            nationality: String,
                                            currentlyEntitledToChildBenefit: Boolean,
                                            nationalInsuranceNumber: Option[String],
+                                           employmentStatus: Set[String],
                                            waitingToHearAboutEntitlement: Option[Boolean],
                                            eldestChild: Option[EldestChild]
                                          )
