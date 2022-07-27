@@ -26,6 +26,10 @@
 
     @line("pdf.relationshipStatus", messages(s"relationshipStatus.${model.relationship.status.toString}"))
 
+    @model.relationship.since.map { since =>
+        @line(s"pdf.relationshipStatusDate.${model.relationship.status.toString}", date(since))
+    }
+
     @line("pdf.currentAddress", model.applicant.currentAddress.lines.mkString(", "))
 
     @model.applicant.previousAddress.map { address =>

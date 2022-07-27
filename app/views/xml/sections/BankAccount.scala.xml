@@ -20,3 +20,10 @@
     <fo:inline font-weight="bold">@messages("pdf.accountNumber"): </fo:inline>
     <fo:inline>@bankAccountDetails.accountNumber</fo:inline>
 </fo:block>
+
+@bankAccountDetails.rollNumber.map { rollNumber =>
+<fo:block margin-bottom="2mm" margin-left="1cm">
+    <fo:inline font-weight="bold">@messages("pdf.rollNumber"): </fo:inline>
+    <fo:inline>@rollNumber</fo:inline>
+</fo:block>
+}

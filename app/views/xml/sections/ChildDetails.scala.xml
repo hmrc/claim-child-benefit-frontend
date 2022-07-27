@@ -26,7 +26,7 @@
     @line("pdf.birthRegistrationCountry", messages(s"childBirthRegistrationCountry.${child.countryOfRegistration.toString}"))
 
     @child.birthCertificateNumber.map { number =>
-        line("pdf.birthCertificateNumber", number)
+        @line("pdf.birthCertificateNumber", number)
     }
 
     @line("pdf.relationshipToApplicant", messages(s"applicantRelationshipToChild.${child.relationshipToApplicant.toString}"))
