@@ -2,7 +2,10 @@
 
 @this(
     layout: Layout,
-    main: Main
+    main: Main,
+    declaration: Declaration,
+    instructions: Instructions,
+    addressLabel: AddressLabel
 )
 
 @(model: JourneyModel)(implicit messages: Messages)
@@ -11,4 +14,10 @@
     @layout()
 
     @main(model)
+
+    @declaration(model)
+
+    @instructions(model)
+
+    @addressLabel(model)
 </fo:root>
