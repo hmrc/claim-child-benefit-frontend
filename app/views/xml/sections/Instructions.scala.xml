@@ -1,0 +1,42 @@
+@import views.xml.xml.sections._
+
+@this()
+
+@(model: JourneyModel)(implicit messages: Messages)
+
+<fo:page-sequence master-reference="instructions">
+    <fo:static-content flow-name="xsl-region-before-instructions">
+        <fo:block>
+            <fo:external-graphic src="url(conf/resources/logo.jpg)" padding-right="1cm" fox:alt-text="HM Revenue and Customs logo" />
+            <fo:block margin-left="6cm" margin-top="-1.5cm" text-align="right" font-size="18pt" font-weight="bold">@messages("pdf.title")</fo:block>
+        </fo:block>
+    </fo:static-content>
+
+    <fo:flow flow-name="xsl-region-body" font-size="12pt" text-align="left">
+        <fo:block>
+            <fo:block margin-bottom="0.5cm" font-weight="bold" font-size="18pt">@messages("pdf.whatToDoNow")</fo:block>
+
+            <fo:block margin-bottom="4mm">@messages("pdf.whatToDoNow.p1")</fo:block>
+
+            <fo:block margin-bottom="6mm">
+                <fo:block>@messages("pdf.childBenefitAddress.1")</fo:block>
+                <fo:block>@messages("pdf.childBenefitAddress.2")</fo:block>
+                <fo:block>@messages("pdf.childBenefitAddress.3")</fo:block>
+                <fo:block>@messages("pdf.childBenefitAddress.4")</fo:block>
+            </fo:block>
+
+            <fo:block margin-bottom="4mm">@messages("pdf.whatToDoNow.p2")</fo:block>
+
+            <fo:block margin-bottom="4mm">@messages("pdf.whatToDoNow.p3")</fo:block>
+
+            <fo:block margin-bottom="0.5cm" font-weight="bold" font-size="18pt">@messages("pdf.whatHappensNext")</fo:block>
+
+            <fo:block margin-bottom="4mm">@messages("pdf.whatHappensNext.p1")</fo:block>
+            <fo:block margin-bottom="4mm">@messages("pdf.whatHappensNext.p2")</fo:block>
+            <fo:block margin-bottom="4mm">@messages("pdf.whatHappensNext.p3")</fo:block>
+            <fo:block margin-bottom="4mm">@messages("pdf.whatHappensNext.p4")</fo:block>
+            <fo:block margin-bottom="4mm">@messages("pdf.whatHappensNext.p5")</fo:block>
+
+        </fo:block>
+    </fo:flow>
+</fo:page-sequence>

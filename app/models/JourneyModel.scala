@@ -37,7 +37,10 @@ final case class JourneyModel(
                                children: NonEmptyList[Child],
                                benefits: Set[Benefits],
                                paymentPreference: PaymentPreference
-                             )
+                             ) {
+
+  val anyDocuments: Boolean = children.toList.exists(_.documents.nonEmpty)
+}
 
 object JourneyModel {
 

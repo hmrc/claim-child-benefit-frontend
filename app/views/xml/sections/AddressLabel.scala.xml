@@ -1,0 +1,62 @@
+@import views.xml.xml.sections._
+
+@this()
+
+@(model: JourneyModel)(implicit messages: Messages)
+
+<fo:page-sequence master-reference="address-label">
+    <fo:static-content flow-name="xsl-region-before-address-label">
+        <fo:block>
+            <fo:external-graphic src="url(conf/resources/logo.jpg)" padding-right="1cm" fox:alt-text="HM Revenue and Customs logo" />
+            <fo:block margin-left="6cm" margin-top="-1.5cm" text-align="right" font-size="18pt" font-weight="bold">@messages("pdf.addressLabel")</fo:block>
+        </fo:block>
+    </fo:static-content>
+
+
+    <fo:flow flow-name="xsl-region-body" font-size="12pt" text-align="left">
+        <fo:block margin-right="6cm" padding-left="2mm" padding-top="5mm" padding-bottom="5mm" margin-bottom="8mm" border="0.5mm solid black">
+            <fo:block margin-bottom="3mm">@model.applicant.name.display</fo:block>
+            @for(line <- model.applicant.currentAddress.lines) {
+                <fo:block margin-bottom="3mm" font-size="14pt">@line</fo:block>
+            }
+        </fo:block>
+
+        <fo:block margin-bottom="4mm">@messages("pdf.addressLabel.p1")</fo:block>
+
+        <fo:block margin-bottom="4mm">@messages("pdf.addressLabel.p2")</fo:block>
+
+        <fo:block margin-bottom="4mm" font-weight="bold">@messages("pdf.addressLabel.p3")</fo:block>
+
+        <fo:block margin-bottom="4mm" margin-top="2.5cm" color="gray">@messages("pdf.addressLabel.hmrcUseOnly")</fo:block>
+
+        <fo:block margin-right="1cm" padding-left="2mm" padding-top="2mm" padding-bottom="2mm" margin-bottom="8mm" border="0.5mm solid gray">
+            <fo:block font-size="14pt">@messages("pdf.addressLabel.yourDocuments")</fo:block>
+
+            <fo:block>@messages("pdf.addressLabel.yourDocuments.p1")</fo:block>
+
+            <fo:block margin-top="8mm" margin-bottom="8mm">
+                <fo:block>
+                    <fo:inline border="0.4mm solid gray" padding-top="0.3cm" padding-left="0.3cm" color="#ffffff">X</fo:inline>
+                    <fo:block margin-left="1.2cm" margin-top="-0.6cm">@messages("pdf.addressLabel.birthCertificates")</fo:block>
+                </fo:block>
+                <fo:block margin-left="7cm" margin-top="-4mm">
+                    <fo:inline border="0.4mm solid gray" padding-top="0.3cm" padding-left="0.3cm" color="#ffffff">X</fo:inline>
+                    <fo:block margin-left="1.2cm" margin-top="-0.6cm">@messages("pdf.addressLabel.passports")</fo:block>
+                </fo:block>
+                <fo:block margin-top="9mm">
+                    <fo:inline border="0.4mm solid gray" padding-top="0.3cm" padding-left="0.3cm" color="#ffffff">X</fo:inline>
+                    <fo:block margin-left="1.2cm" margin-top="-0.6cm">@messages("pdf.addressLabel.travelDocuments")</fo:block>
+                </fo:block>
+                <fo:block margin-left="7cm" margin-top="-4mm">
+                    <fo:inline border="0.4mm solid gray" padding-top="0.3cm" padding-left="0.3cm" color="#ffffff">X</fo:inline>
+                    <fo:block margin-left="1.2cm" margin-top="-0.6cm">@messages("pdf.addressLabel.adoptionCertificates")</fo:block>
+                </fo:block>
+                <fo:block margin-top="9mm">
+                    <fo:inline border="0.4mm solid gray" padding-top="0.3cm" padding-left="0.3cm" color="#ffffff">X</fo:inline>
+                    <fo:block margin-left="1.2cm" margin-top="-0.6cm">@messages("pdf.addressLabel.otherDocuments")</fo:block>
+                </fo:block>
+            </fo:block>
+            <fo:block>@messages("pdf.addressLabel.yourDocuments.p2")</fo:block>
+        </fo:block>
+    </fo:flow>
+</fo:page-sequence>
