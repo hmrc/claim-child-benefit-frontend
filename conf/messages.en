@@ -239,18 +239,6 @@ bankAccountDetails.error.rollNumber.length = Building society roll number must b
 bankAccountDetails.error.rollNumber.invalid = Building society roll number must only include letters a to z, numbers, hyphens, spaces, forward slashes and full stops
 bankAccountDetails.change.hidden = the bank or building society account details
 
-claimedChildBenefitBefore.title = Have you claimed Child Benefit before?
-claimedChildBenefitBefore.heading = Have you claimed Child Benefit before?
-claimedChildBenefitBefore.checkYourAnswersLabel = Have you claimed Child Benefit before?
-claimedChildBenefitBefore.error.required = Select yes if you have claimed Child Benefit before
-claimedChildBenefitBefore.change.hidden = if you have claimed Child Benefit before
-
-currentlyEntitledToChildBenefit.title = Are you currently entitled to receive Child Benefit?
-currentlyEntitledToChildBenefit.heading = Are you currently entitled to receive Child Benefit?
-currentlyEntitledToChildBenefit.checkYourAnswersLabel = Are you currently entitled to receive Child Benefit?
-currentlyEntitledToChildBenefit.error.required = Select yes if you are currently entitled to receive Child Benefit
-currentlyEntitledToChildBenefit.change.hidden = if you are currently entitled to receive Child Benefit
-
 currentlyReceivingChildBenefit.title = Are you currently receiving Child Benefit?
 currentlyReceivingChildBenefit.heading = Are you currently receiving Child Benefit?
 currentlyReceivingChildBenefit.checkYourAnswersLabel = Are you currently receiving Child Benefit?

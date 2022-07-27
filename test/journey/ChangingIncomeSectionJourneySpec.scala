@@ -17,15 +17,15 @@
 package journey
 
 import generators.ModelGenerators
-import models.{AdultName, Benefits, PaymentFrequency}
 import models.RelationshipStatus._
+import models.{AdultName, Benefits, PaymentFrequency}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
-import pages.{CheckYourAnswersPage, RelationshipStatusPage}
 import pages.income._
 import pages.partner.PartnerNamePage
-import pages.payments.{ApplicantHasSuitableAccountPage, ClaimedChildBenefitBeforePage, PaymentFrequencyPage, WantToBePaidPage}
+import pages.payments.{ApplicantHasSuitableAccountPage, CurrentlyReceivingChildBenefitPage, PaymentFrequencyPage, WantToBePaidPage}
+import pages.{CheckYourAnswersPage, RelationshipStatusPage}
 
 class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
@@ -43,7 +43,7 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
         submitAnswer(ApplicantIncomeOver60kPage, true),
         submitAnswer(ApplicantBenefitsPage, benefits),
         next,
-        submitAnswer(ClaimedChildBenefitBeforePage, false),
+        submitAnswer(CurrentlyReceivingChildBenefitPage, false),
         submitAnswer(WantToBePaidPage, false),
         goTo(CheckYourAnswersPage)
       )
@@ -72,7 +72,7 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
         submitAnswer(ApplicantIncomeOver50kPage, false),
         submitAnswer(ApplicantBenefitsPage, benefits),
         next,
-        submitAnswer(ClaimedChildBenefitBeforePage, false),
+        submitAnswer(CurrentlyReceivingChildBenefitPage, false),
         submitAnswer(WantToBePaidPage, false),
         goTo(CheckYourAnswersPage)
       )
@@ -103,7 +103,7 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
         submitAnswer(ApplicantOrPartnerIncomeOver60kPage, true),
         submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
         next,
-        submitAnswer(ClaimedChildBenefitBeforePage, false),
+        submitAnswer(CurrentlyReceivingChildBenefitPage, false),
         submitAnswer(WantToBePaidPage, false),
         setUserAnswerTo(PartnerNamePage, partnerName),
         goTo(CheckYourAnswersPage)
@@ -134,7 +134,7 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
         submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
         submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
         next,
-        submitAnswer(ClaimedChildBenefitBeforePage, false),
+        submitAnswer(CurrentlyReceivingChildBenefitPage, false),
         submitAnswer(WantToBePaidPage, false),
         setUserAnswerTo(PartnerNamePage, partnerName),
         goTo(CheckYourAnswersPage)
@@ -169,7 +169,7 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
           submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
           submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
           next,
-          submitAnswer(ClaimedChildBenefitBeforePage, false),
+          submitAnswer(CurrentlyReceivingChildBenefitPage, false),
           submitAnswer(WantToBePaidPage, true),
           setUserAnswerTo(PartnerNamePage, partnerName),
           setUserAnswerTo(ApplicantHasSuitableAccountPage, false),
@@ -201,7 +201,7 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
           submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
           submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
           next,
-          submitAnswer(ClaimedChildBenefitBeforePage, false),
+          submitAnswer(CurrentlyReceivingChildBenefitPage, false),
           submitAnswer(WantToBePaidPage, false),
           setUserAnswerTo(PartnerNamePage, partnerName),
           goTo(CheckYourAnswersPage)

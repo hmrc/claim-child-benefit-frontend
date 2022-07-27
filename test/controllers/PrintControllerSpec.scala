@@ -23,18 +23,16 @@ import generators.ModelGenerators
 import models._
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{never, times, verify, when}
-import org.scalacheck.Arbitrary.arbitrary
 import org.scalatestplus.mockito.MockitoSugar
 import pages._
 import pages.applicant._
 import pages.child._
 import pages.income._
 import pages.payments._
+import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.domain.Nino
 import views.html.PrintView
-import play.api.inject.bind
 
 import java.nio.charset.Charset
 import java.time.LocalDate
@@ -49,7 +47,6 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
   private val applicantBenefits = Set[Benefits](Benefits.NoneOfTheAbove)
   private val applicantNationality = "applicant nationality"
   private val applicantEmployment = Set[ApplicantEmploymentStatus](ApplicantEmploymentStatus.Employed)
-
 
   private val childName = ChildName("first", None, "last")
   private val biologicalSex = ChildBiologicalSex.Female
@@ -78,7 +75,7 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
       .set(AnyoneClaimedForChildBeforePage(Index(0)), false).success.value
       .set(ApplicantIncomeOver50kPage, false).success.value
       .set(ApplicantBenefitsPage, applicantBenefits).success.value
-      .set(ClaimedChildBenefitBeforePage, false).success.value
+      .set(CurrentlyReceivingChildBenefitPage, false).success.value
       .set(WantToBePaidPage, false).success.value
       .set(RelationshipStatusPage, RelationshipStatus.Single).success.value
 
@@ -121,7 +118,7 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
 
       val mockAuditService = mock[AuditService]
       val mockFop = mock[PlayFop]
-      when(mockFop.processTwirlXml(any(), any(), any(), any())) thenReturn("hello".getBytes)
+      when(mockFop.processTwirlXml(any(), any(), any(), any())) thenReturn "hello".getBytes
 
       val application =
         applicationBuilder(userAnswers = Some(completeAnswers))
@@ -149,7 +146,7 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
 
       val mockAuditService = mock[AuditService]
       val mockFop = mock[PlayFop]
-      when(mockFop.processTwirlXml(any(), any(), any(), any())) thenReturn("hello".getBytes)
+      when(mockFop.processTwirlXml(any(), any(), any(), any())) thenReturn "hello".getBytes
 
       val application =
         applicationBuilder(userAnswers = Some(incompleteAnswers))

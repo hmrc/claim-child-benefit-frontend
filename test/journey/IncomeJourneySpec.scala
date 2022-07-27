@@ -20,7 +20,7 @@ import models.Benefits
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import pages.income._
-import pages.payments.ClaimedChildBenefitBeforePage
+import pages.payments.CurrentlyReceivingChildBenefitPage
 
 class IncomeJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
@@ -36,7 +36,7 @@ class IncomeJourneySpec extends AnyFreeSpec with JourneyHelpers {
           submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
           pageMustBe(TaxChargeExplanationPage),
           next,
-          pageMustBe(ClaimedChildBenefitBeforePage)
+          pageMustBe(CurrentlyReceivingChildBenefitPage)
         )
     }
 
@@ -49,7 +49,7 @@ class IncomeJourneySpec extends AnyFreeSpec with JourneyHelpers {
           submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
           pageMustBe(TaxChargeExplanationPage),
           next,
-          pageMustBe(ClaimedChildBenefitBeforePage)
+          pageMustBe(CurrentlyReceivingChildBenefitPage)
         )
     }
 
@@ -62,7 +62,7 @@ class IncomeJourneySpec extends AnyFreeSpec with JourneyHelpers {
           submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
           pageMustBe(TaxChargeExplanationPage),
           next,
-          pageMustBe(ClaimedChildBenefitBeforePage)
+          pageMustBe(CurrentlyReceivingChildBenefitPage)
         )
     }
   }
@@ -79,7 +79,7 @@ class IncomeJourneySpec extends AnyFreeSpec with JourneyHelpers {
           submitAnswer(ApplicantBenefitsPage, benefits),
           pageMustBe(TaxChargeExplanationPage),
           next,
-          pageMustBe(ClaimedChildBenefitBeforePage)
+          pageMustBe(CurrentlyReceivingChildBenefitPage)
         )
     }
 
@@ -92,7 +92,7 @@ class IncomeJourneySpec extends AnyFreeSpec with JourneyHelpers {
           submitAnswer(ApplicantBenefitsPage, benefits),
           pageMustBe(TaxChargeExplanationPage),
           next,
-          pageMustBe(ClaimedChildBenefitBeforePage)
+          pageMustBe(CurrentlyReceivingChildBenefitPage)
         )
     }
 
@@ -104,7 +104,7 @@ class IncomeJourneySpec extends AnyFreeSpec with JourneyHelpers {
           submitAnswer(ApplicantIncomeOver60kPage, true),
           submitAnswer(ApplicantBenefitsPage, benefits),pageMustBe(TaxChargeExplanationPage),
           next,
-          pageMustBe(ClaimedChildBenefitBeforePage)
+          pageMustBe(CurrentlyReceivingChildBenefitPage)
         )
     }
   }

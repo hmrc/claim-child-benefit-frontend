@@ -74,12 +74,6 @@ POST       /have-suitable-bank-account                        controllers.paymen
 GET        /bank-account-details                        controllers.payments.BankAccountDetailsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /bank-account-details                        controllers.payments.BankAccountDetailsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /claimed-child-benefit-before                        controllers.payments.ClaimedChildBenefitBeforeController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /claimed-child-benefit-before                        controllers.payments.ClaimedChildBenefitBeforeController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /currently-entitled-to-child-benefit                        controllers.payments.CurrentlyEntitledToChildBenefitController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /currently-entitled-to-child-benefit                        controllers.payments.CurrentlyEntitledToChildBenefitController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
 GET        /currently-receiving-child-benefit                        controllers.payments.CurrentlyReceivingChildBenefitController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /currently-receiving-child-benefit                        controllers.payments.CurrentlyReceivingChildBenefitController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
