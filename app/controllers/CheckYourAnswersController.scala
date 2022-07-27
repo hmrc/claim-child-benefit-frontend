@@ -68,8 +68,6 @@ class CheckYourAnswersController @Inject()(
 
       val paymentDetails = SummaryListViewModel(
         rows = Seq(
-          ClaimedChildBenefitBeforeSummary.row(request.userAnswers, waypoints, thisPage),
-          CurrentlyEntitledToChildBenefitSummary.row(request.userAnswers, waypoints, thisPage),
           CurrentlyReceivingChildBenefitSummary.row(request.userAnswers, waypoints, thisPage),
           EldestChildNameSummary.row(request.userAnswers, waypoints, thisPage),
           EldestChildDateOfBirthSummary.row(request.userAnswers, waypoints, thisPage),

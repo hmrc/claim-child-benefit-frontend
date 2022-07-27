@@ -32,86 +32,40 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
 
   private def bankDetails = arbitrary[BankAccountDetails].sample.value
 
-  "users who have not claimed Child Benefit before" - {
+  "users who are currently receiving Child Benefit" - {
 
-    "must be asked if they want to be paid Child Benefit" in {
+    val childName = ChildName("first", None, "last")
+    val childDob  = LocalDate.now
 
-      startingFrom(ClaimedChildBenefitBeforePage)
-        .run(
-          submitAnswer(ClaimedChildBenefitBeforePage, false),
-          pageMustBe(WantToBePaidPage)
-        )
-    }
-  }
+    "who want to be paid to their existing bank account" - {
 
-  "users who have claimed Child Benefit before" - {
+      "must proceed to the Applicant section" in {
 
-    "who are not currently entitled" - {
-
-      "must be asked if they want to be paid Child Benefit" in {
-
-        startingFrom(ClaimedChildBenefitBeforePage)
+        startingFrom(CurrentlyReceivingChildBenefitPage)
           .run(
-            submitAnswer(ClaimedChildBenefitBeforePage, true),
-            submitAnswer(CurrentlyEntitledToChildBenefitPage, false),
-            pageMustBe(WantToBePaidPage)
+            submitAnswer(CurrentlyReceivingChildBenefitPage, true),
+            submitAnswer(EldestChildNamePage, childName),
+            submitAnswer(EldestChildDateOfBirthPage, childDob),
+            submitAnswer(WantToBePaidToExistingAccountPage, true),
+            pageMustBe(ApplicantHasPreviousFamilyNamePage)
           )
       }
     }
 
-    "who are currently entitled but not currently receiving Child Benefit" - {
+    "who do not want to be paid to their existing bank account" -{
 
-      "must be asked if they want to be paid Child Benefit" in {
+      "must proceed to the bank details section" in {
 
-        startingFrom(ClaimedChildBenefitBeforePage)
+        startingFrom(CurrentlyReceivingChildBenefitPage)
           .run(
-            submitAnswer(ClaimedChildBenefitBeforePage, true),
-            submitAnswer(CurrentlyEntitledToChildBenefitPage, true),
-            submitAnswer(CurrentlyReceivingChildBenefitPage, false),
-            pageMustBe(WantToBePaidPage)
+            submitAnswer(CurrentlyReceivingChildBenefitPage, true),
+            submitAnswer(EldestChildNamePage, childName),
+            submitAnswer(EldestChildDateOfBirthPage, childDob),
+            submitAnswer(WantToBePaidToExistingAccountPage, false),
+            submitAnswer(ApplicantHasSuitableAccountPage, true),
+            submitAnswer(BankAccountDetailsPage, bankDetails),
+            pageMustBe(ApplicantHasPreviousFamilyNamePage)
           )
-      }
-    }
-
-    "who are currently receiving Child Benefit" - {
-
-      val childName = ChildName("first", None, "last")
-      val childDob  = LocalDate.now
-
-      "who want to be paid to their existing bank account" - {
-
-        "must proceed to the Applicant section" in {
-
-          startingFrom(ClaimedChildBenefitBeforePage)
-            .run(
-              submitAnswer(ClaimedChildBenefitBeforePage, true),
-              submitAnswer(CurrentlyEntitledToChildBenefitPage, true),
-              submitAnswer(CurrentlyReceivingChildBenefitPage, true),
-              submitAnswer(EldestChildNamePage, childName),
-              submitAnswer(EldestChildDateOfBirthPage, childDob),
-              submitAnswer(WantToBePaidToExistingAccountPage, true),
-              pageMustBe(ApplicantHasPreviousFamilyNamePage)
-            )
-        }
-      }
-
-      "who do not want to be paid to their existing bank account" -{
-
-        "must proceed to the bank details section" in {
-
-          startingFrom(ClaimedChildBenefitBeforePage)
-            .run(
-              submitAnswer(ClaimedChildBenefitBeforePage, true),
-              submitAnswer(CurrentlyEntitledToChildBenefitPage, true),
-              submitAnswer(CurrentlyReceivingChildBenefitPage, true),
-              submitAnswer(EldestChildNamePage, childName),
-              submitAnswer(EldestChildDateOfBirthPage, childDob),
-              submitAnswer(WantToBePaidToExistingAccountPage, false),
-              submitAnswer(ApplicantHasSuitableAccountPage, true),
-              submitAnswer(BankAccountDetailsPage, bankDetails),
-              pageMustBe(ApplicantHasPreviousFamilyNamePage)
-            )
-        }
       }
     }
   }

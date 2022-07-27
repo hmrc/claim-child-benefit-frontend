@@ -406,22 +406,6 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryCurrentlyEntitledToChildBenefitUserAnswersEntry: Arbitrary[(CurrentlyEntitledToChildBenefitPage.type, JsValue)] =
-    Arbitrary {
-      for {
-        page  <- arbitrary[CurrentlyEntitledToChildBenefitPage.type]
-        value <- arbitrary[Boolean].map(Json.toJson(_))
-      } yield (page, value)
-    }
-
-  implicit lazy val arbitraryClaimedChildBenefitBeforeUserAnswersEntry: Arbitrary[(ClaimedChildBenefitBeforePage.type, JsValue)] =
-    Arbitrary {
-      for {
-        page  <- arbitrary[ClaimedChildBenefitBeforePage.type]
-        value <- arbitrary[Boolean].map(Json.toJson(_))
-      } yield (page, value)
-    }
-
   implicit lazy val arbitraryBankAccountDetailsUserAnswersEntry: Arbitrary[(BankAccountDetailsPage.type, JsValue)] =
     Arbitrary {
       for {

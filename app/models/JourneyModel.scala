@@ -27,7 +27,6 @@ import pages.income._
 import pages.partner._
 import pages.payments._
 import queries.{AllChildPreviousNames, AllChildSummaries, AllPreviousFamilyNames, Query}
-import utils.MonadOps._
 
 import java.time.LocalDate
 
@@ -333,11 +332,7 @@ object JourneyModel {
           Ior.Right(DoNotPay)
       }
 
-    (
-      answers.getIor(ClaimedChildBenefitBeforePage) &&
-      answers.getIor(CurrentlyEntitledToChildBenefitPage) &&
-      answers.getIor(CurrentlyReceivingChildBenefitPage)
-    ).flatMap {
+    answers.getIor(CurrentlyReceivingChildBenefitPage).flatMap {
       case true =>
         answers.getIor(WantToBePaidToExistingAccountPage).flatMap {
           case true  => getEldestChild.map(ExistingAccount)

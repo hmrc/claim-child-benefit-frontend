@@ -174,12 +174,6 @@ trait PageGenerators {
   implicit lazy val arbitraryCurrentlyReceivingChildBenefitPage: Arbitrary[CurrentlyReceivingChildBenefitPage.type] =
     Arbitrary(CurrentlyReceivingChildBenefitPage)
 
-  implicit lazy val arbitraryCurrentlyEntitledToChildBenefitPage: Arbitrary[CurrentlyEntitledToChildBenefitPage.type] =
-    Arbitrary(CurrentlyEntitledToChildBenefitPage)
-
-  implicit lazy val arbitraryClaimedChildBenefitBeforePage: Arbitrary[ClaimedChildBenefitBeforePage.type] =
-    Arbitrary(ClaimedChildBenefitBeforePage)
-
   implicit lazy val arbitraryBankAccountDetailsPage: Arbitrary[BankAccountDetailsPage.type] =
     Arbitrary(BankAccountDetailsPage)
 

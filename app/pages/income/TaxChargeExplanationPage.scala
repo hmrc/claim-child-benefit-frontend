@@ -20,7 +20,7 @@ import controllers.income.routes
 import models.RelationshipStatus._
 import models.{Benefits, UserAnswers}
 import pages.partner.PartnerNamePage
-import pages.payments.{ClaimedChildBenefitBeforePage, WantToBePaidPage, PaymentFrequencyPage}
+import pages.payments.{CurrentlyReceivingChildBenefitPage, PaymentFrequencyPage, WantToBePaidPage}
 import pages.{NonEmptyWaypoints, Page, RelationshipStatusPage, Waypoints}
 import play.api.mvc.Call
 
@@ -30,7 +30,7 @@ case object TaxChargeExplanationPage extends Page {
     routes.TaxChargeExplanationController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ClaimedChildBenefitBeforePage
+    CurrentlyReceivingChildBenefitPage
 
   override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page = {
 

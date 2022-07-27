@@ -26,7 +26,7 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.child.ChildNamePage
 import pages.income._
 import pages.partner._
-import pages.payments.{ApplicantHasSuitableAccountPage, ClaimedChildBenefitBeforePage, WantToBePaidPage, PaymentFrequencyPage}
+import pages.payments.{ApplicantHasSuitableAccountPage, CurrentlyReceivingChildBenefitPage, PaymentFrequencyPage, WantToBePaidPage}
 import pages.{CannotBePaidWeeklyPage, CheckYourAnswersPage, CohabitationDatePage, RelationshipStatusPage, SeparationDatePage}
 import uk.gov.hmrc.domain.Nino
 
@@ -55,7 +55,7 @@ class ChangingInitialSectionJourneySpec
       submitAnswer(ApplicantOrPartnerIncomeOver60kPage, true),
       submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
       next,
-      submitAnswer(ClaimedChildBenefitBeforePage, false),
+      submitAnswer(CurrentlyReceivingChildBenefitPage, false),
       setUserAnswerTo(WantToBePaidPage, true),
       setUserAnswerTo(ApplicantHasSuitableAccountPage, false),
       setUserAnswerTo(PartnerNamePage, partnerName),
