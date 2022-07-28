@@ -720,7 +720,7 @@ childName.error.lastName.length = Last name must be 100 characters or less
 childName.change.hidden = this child’s name
 
 childNameChangedByDeedPoll.title = Has this child’s name been changed by deed poll?
-childNameChangedByDeedPoll.heading = Has {0}’s name been changed by deed poll
+childNameChangedByDeedPoll.heading = Has {0}’s name been changed by deed poll?
 childNameChangedByDeedPoll.checkYourAnswersLabel = Has this child’s name been changed by deed poll?
 childNameChangedByDeedPoll.error.required = Select yes if {0}’s name has been changed by deed poll
 childNameChangedByDeedPoll.change.hidden = if this child’s name has been changed by deed poll
@@ -748,6 +748,7 @@ childScottishBirthCertificateDetails.change.hidden = the district number, year a
 
 includedDocuments.title = What documents will you be sending for this child?
 includedDocuments.heading = What documents will you be sending for {0}?
+includedDocuments.hint = Select all that apply
 includedDocuments.birthCertificate = Birth certificate
 includedDocuments.passport = Passport
 includedDocuments.travelDocuments = Travel documents
