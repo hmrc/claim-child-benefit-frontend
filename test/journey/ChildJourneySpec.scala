@@ -17,7 +17,7 @@
 package journey
 
 import generators.ModelGenerators
-import models.ChildBirthRegistrationCountry.{England, Other, Scotland, Unknown, Wales}
+import models.ChildBirthRegistrationCountry.{England, NorthernIreland, Other, Scotland, Unknown, Wales}
 import models._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
@@ -134,7 +134,25 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
     }
   }
 
-  "users whose child was registered outside of Great Britain" - {
+  "users whose child was registered in Northern Ireland" - {
+
+    "must be asked for documents" in {
+
+      val relationship = ApplicantRelationshipToChild.BirthChild
+      val documents    = Set(arbitrary[IncludedDocuments].sample.value)
+
+      startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
+        .run(
+          submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland),
+          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
+          submitAnswer(IncludedDocumentsPage(Index(0)), documents),
+          pageMustBe(CheckChildDetailsPage(Index(0)))
+        )
+    }
+  }
+
+  "users whose child was registered outside of the UK" - {
 
     "must be asked for documents" in {
 

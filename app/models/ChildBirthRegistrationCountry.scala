@@ -18,7 +18,6 @@ package models
 
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
 sealed trait ChildBirthRegistrationCountry
@@ -28,11 +27,12 @@ object ChildBirthRegistrationCountry extends Enumerable.Implicits {
   case object England extends WithName("england") with ChildBirthRegistrationCountry
   case object Scotland extends WithName("scotland") with ChildBirthRegistrationCountry
   case object Wales extends WithName("wales") with ChildBirthRegistrationCountry
+  case object NorthernIreland extends WithName("northernIreland") with ChildBirthRegistrationCountry
   case object Other extends WithName("other") with ChildBirthRegistrationCountry
   case object Unknown extends WithName("unknown") with ChildBirthRegistrationCountry
 
   val values: Seq[ChildBirthRegistrationCountry] = Seq(
-    England, Scotland, Wales, Other, Unknown
+    England, Scotland, Wales, NorthernIreland, Other, Unknown
   )
 
   def options(implicit messages: Messages): Seq[RadioItem] = {

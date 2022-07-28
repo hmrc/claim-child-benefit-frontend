@@ -682,6 +682,7 @@ childBirthRegistrationCountry.heading = Where was {0}’s birth registered?
 childBirthRegistrationCountry.england = England
 childBirthRegistrationCountry.scotland = Scotland
 childBirthRegistrationCountry.wales = Wales
+childBirthRegistrationCountry.northernIreland = Northern Ireland
 childBirthRegistrationCountry.other = Other country
 childBirthRegistrationCountry.unknown = Don’t know
 childBirthRegistrationCountry.checkYourAnswersLabel = Where was this child’s birth registered?

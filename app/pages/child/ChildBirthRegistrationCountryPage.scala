@@ -17,7 +17,7 @@
 package pages.child
 
 import controllers.child.routes
-import models.ChildBirthRegistrationCountry.{England, Other, Scotland, Unknown, Wales}
+import models.ChildBirthRegistrationCountry._
 import models.{ChildBirthRegistrationCountry, Index, UserAnswers}
 import pages.{NonEmptyWaypoints, Page, Waypoints}
 import play.api.libs.json.JsPath
@@ -42,7 +42,7 @@ final case class ChildBirthRegistrationCountryPage(index: Index) extends ChildQu
       case Scotland =>
         ChildScottishBirthCertificateDetailsPage(index)
 
-      case Other | Unknown =>
+      case NorthernIreland | Other | Unknown =>
         ApplicantRelationshipToChildPage(index)
     }.orRecover
 
@@ -58,7 +58,7 @@ final case class ChildBirthRegistrationCountryPage(index: Index) extends ChildQu
           .map(_ => waypoints.next.page)
           .getOrElse(ChildScottishBirthCertificateDetailsPage(index))
 
-      case Other | Unknown =>
+      case NorthernIreland | Other | Unknown =>
         answers.get(IncludedDocumentsPage(index))
           .map(_ => waypoints.next.page)
           .getOrElse(IncludedDocumentsPage(index))
@@ -76,7 +76,7 @@ final case class ChildBirthRegistrationCountryPage(index: Index) extends ChildQu
           .remove(ChildBirthCertificateSystemNumberPage(index))
           .flatMap(_.remove(IncludedDocumentsPage(index)))
 
-      case Other | Unknown =>
+      case NorthernIreland | Other | Unknown =>
         userAnswers
           .remove(ChildBirthCertificateSystemNumberPage(index))
           .flatMap(_.remove(ChildScottishBirthCertificateDetailsPage(index)))
