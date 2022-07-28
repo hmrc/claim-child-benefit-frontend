@@ -120,6 +120,19 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           )
       }
 
+      "changing the country to Northern Ireland must remove Birth Certificate System Number, collect Included Documents, then return to Check Child Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            basicChildJourney,
+            goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland),
+            submitAnswer(IncludedDocumentsPage(Index(0)), includedDocuments),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(ChildBirthCertificateSystemNumberPage(Index(0)))
+          )
+      }
+
       "changing the country to Other must remove Birth Certificate System Number, collect Included Documents, then return to Check Child Details" in {
 
         startingFrom(ChildNamePage(Index(0)))
@@ -133,7 +146,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           )
       }
 
-      "changing the country to unknown must remove Birth Certificate System Number, collect Included Documents, then return to Check Child Details" in {
+      "changing the country to Unknown must remove Birth Certificate System Number, collect Included Documents, then return to Check Child Details" in {
 
         startingFrom(ChildNamePage(Index(0)))
           .run(
@@ -179,6 +192,19 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           )
       }
 
+      "changing the country to Northern Ireland must remove Birth Certificate System Number, collect Included Documents, then return to Check Child Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland),
+            submitAnswer(IncludedDocumentsPage(Index(0)), includedDocuments),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(ChildBirthCertificateSystemNumberPage(Index(0)))
+          )
+      }
+
       "changing the country to Other must remove Birth Certificate System Number, collect Included Documents, then return to Check Child Details" in {
 
         startingFrom(ChildNamePage(Index(0)))
@@ -192,7 +218,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           )
       }
 
-      "changing the country to unknown must remove Birth Certificate System Number, collect Included Documents, then return to Check Child Details" in {
+      "changing the country to Unknown must remove Birth Certificate System Number, collect Included Documents, then return to Check Child Details" in {
 
         startingFrom(ChildNamePage(Index(0)))
           .run(
@@ -242,6 +268,19 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           )
       }
 
+      "changing the country to Northern Ireland must collect Included Documents, remove Scottish  Details, then return to Check Child Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland),
+            submitAnswer(IncludedDocumentsPage(Index(0)), includedDocuments),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(ChildScottishBirthCertificateDetailsPage(Index(0)))
+          )
+      }
+
       "changing the country to Other must collect Included Documents, remove Scottish  Details, then return to Check Child Details" in {
 
         startingFrom(ChildNamePage(Index(0)))
@@ -255,7 +294,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           )
       }
 
-      "changing the country to unknown must collect Included Documents, remove Scottish Details, then return to Check Child Details" in {
+      "changing the country to Unknown must collect Included Documents, remove Scottish Details, then return to Check Child Details" in {
 
         startingFrom(ChildNamePage(Index(0)))
           .run(
@@ -318,6 +357,17 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           )
       }
 
+      "changing the country to Northern Ireland must return to Check Child Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
+          )
+      }
+
       "changing the country to Unknown must return to Check Child Details" in {
 
         startingFrom(ChildNamePage(Index(0)))
@@ -330,7 +380,79 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
       }
     }
 
-    "that the user said was registered in an unknown country" - {
+    "that the user said was registered in Northern Ireland" - {
+
+      val initialState =
+        journeyOf(
+          basicChildJourney,
+          setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland),
+          setUserAnswerTo(IncludedDocumentsPage(Index(0)), includedDocuments),
+          remove(ChildBirthCertificateSystemNumberPage(Index(0)))
+        )
+
+      "changing the country to England must collect the Birth Certificate System number, remove Included Documents, then return to Check Child Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
+            submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(IncludedDocumentsPage(Index(0)))
+          )
+      }
+
+      "changing the country to Wales must collect the Birth Certificate System number, remove Included Documents, then return to Check Child Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Wales),
+            submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(IncludedDocumentsPage(Index(0)))
+          )
+      }
+
+      "changing the country to Scotland must collect Scottish Details, remove Included Documents, then return to Check Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
+            submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBcDetails),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(IncludedDocumentsPage(Index(0)))
+          )
+      }
+
+      "changing the country to Other must return to Check Child Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Other),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
+          )
+      }
+
+      "changing the country to Unknown must return to Check Child Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Unknown),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
+          )
+      }
+    }
+
+    "that the user said was registered in an Unknown country" - {
 
       val initialState =
         journeyOf(
@@ -376,6 +498,17 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBcDetails),
             pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(IncludedDocumentsPage(Index(0)))
+          )
+      }
+
+      "changing the country to Northern Ireland must return to Check Child Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }
 
@@ -581,13 +714,13 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
         }
       }
 
-      "and whose birth was registered in another country, or the country was unknown" - {
+      "and whose birth was registered in Northern Ireland, another country, or the country was unknown" - {
 
         "and they were going to include the adoption certificate alone" - {
 
           "changing the relationship to Birth Child, Step Child or Other must remove `adoption certificate`, collect a new document type, then return to Check Answers" in {
 
-            val country = Gen.oneOf(Other, Unknown).sample.value
+            val country = Gen.oneOf(NorthernIreland, Other, Unknown).sample.value
 
             val newRelationship = Gen.oneOf(
               Relationship.BirthChild,

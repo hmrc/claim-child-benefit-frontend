@@ -37,7 +37,7 @@ final case class PreviousClaimantAddressPage(index: Index) extends ChildQuestion
       case England | Wales | Scotland =>
         CheckChildDetailsPage(index)
 
-      case Other | Unknown =>
+      case NorthernIreland | Other | Unknown =>
         IncludedDocumentsPage(index)
     }.orRecover
 }

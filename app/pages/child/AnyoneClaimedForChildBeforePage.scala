@@ -44,7 +44,7 @@ final case class AnyoneClaimedForChildBeforePage(index: Index) extends ChildQues
           case England | Wales | Scotland =>
             CheckChildDetailsPage(index)
 
-          case Other | Unknown =>
+          case NorthernIreland | Other | Unknown =>
             IncludedDocumentsPage(index)
         }.orRecover
     }.orRecover

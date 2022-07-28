@@ -60,7 +60,7 @@ final case class ApplicantRelationshipToChildPage(index: Index) extends ChildQue
           case England | Wales | Scotland =>
             waypoints.next.page
 
-          case Other | Unknown =>
+          case NorthernIreland | Other | Unknown =>
             answers.get(IncludedDocumentsPage(index)).map {
               case docs if docs.nonEmpty =>
                 waypoints.next.page

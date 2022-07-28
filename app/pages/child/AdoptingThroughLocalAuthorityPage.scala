@@ -42,7 +42,7 @@ final case class AdoptingThroughLocalAuthorityPage(index: Index) extends ChildQu
           .map(_ => waypoints.next.page)
           .getOrElse(AnyoneClaimedForChildBeforePage(index))
 
-      case Other | Unknown =>
+      case NorthernIreland | Other | Unknown =>
         answers.get(AnyoneClaimedForChildBeforePage(index))
           .map { _ =>
             answers.get(IncludedDocumentsPage(index)).map {
