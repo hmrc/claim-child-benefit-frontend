@@ -25,8 +25,8 @@ import javax.inject.Inject
 
 class PartnerDateOfBirthFormProvider @Inject()(clock: Clock) extends Mappings {
 
-  val minDate: LocalDate = LocalDate.now(clock).minusYears(130)
-  val maxDate: LocalDate = LocalDate.now(clock)
+  def minDate: LocalDate = LocalDate.now(clock).minusYears(130)
+  def maxDate: LocalDate = LocalDate.now(clock)
   private def dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
   def apply(partnerFirstName: String): Form[LocalDate] =
