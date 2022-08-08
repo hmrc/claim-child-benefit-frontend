@@ -34,7 +34,7 @@ import scala.concurrent.Future
 
 class SeparationDateControllerSpec extends SpecBase with MockitoSugar {
 
-  private val formProvider = new SeparationDateFormProvider()
+  private val formProvider = new SeparationDateFormProvider(clockAtFixedInstant)
   private def form = formProvider()
   private val waypoints = EmptyWaypoints
 

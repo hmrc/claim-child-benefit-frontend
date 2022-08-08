@@ -19,10 +19,14 @@ package forms
 import forms.mappings.Mappings
 import play.api.data.Form
 
-import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.{Clock, LocalDate}
 import javax.inject.Inject
 
-class CohabitationDateFormProvider @Inject() extends Mappings {
+class CohabitationDateFormProvider @Inject()(clock: Clock) extends Mappings {
+
+  private def maxDate       = LocalDate.now(clock)
+  private def dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
   def apply(): Form[LocalDate] =
     Form(
@@ -31,6 +35,6 @@ class CohabitationDateFormProvider @Inject() extends Mappings {
         allRequiredKey = s"cohabitationDate.error.required.all",
         twoRequiredKey = s"cohabitationDate.error.required.two",
         requiredKey    = s"cohabitationDate.error.required"
-      )
+      ).verifying(maxDate(maxDate, "cohabitationDate.error.afterMaximum", maxDate.format(dateFormatter)))
     )
 }

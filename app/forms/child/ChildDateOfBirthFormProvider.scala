@@ -26,8 +26,8 @@ import javax.inject.Inject
 
 class ChildDateOfBirthFormProvider @Inject()(clock: Clock) extends Mappings {
 
-  val minDate: LocalDate    = LocalDate.now(clock).minusYears(20)
-  val maxDate: LocalDate    = LocalDate.now(clock)
+  def minDate: LocalDate    = LocalDate.now(clock).minusYears(20)
+  def maxDate: LocalDate    = LocalDate.now(clock)
   private def dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
   def apply(childName: ChildName): Form[LocalDate] =

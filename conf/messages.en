@@ -125,6 +125,7 @@ cohabitationDate.error.required.all = Enter the date you started living with you
 cohabitationDate.error.required.two = The date must include {0} and {1}
 cohabitationDate.error.required = The date must include {0}
 cohabitationDate.error.invalid = Enter a real date
+cohabitationDate.error.afterMaximum = The date must be on or before {0}
 cohabitationDate.change.hidden = when you started living with your partner
 
 separationDate.title = When did you separate from your partner?
@@ -135,6 +136,7 @@ separationDate.error.required.all = Enter the date you separated from your partn
 separationDate.error.required.two = The date must include {0} and {1}
 separationDate.error.required = The date must include {0}
 separationDate.error.invalid = Enter a real date
+separationDate.error.afterMaximum = The date must be on or before {0}
 separationDate.change.hidden = when you separated from your partner
 
 relationshipStatus.title = What is your marital or civil partnership status?

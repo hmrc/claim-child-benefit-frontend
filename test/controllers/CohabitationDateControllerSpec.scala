@@ -34,7 +34,7 @@ import scala.concurrent.Future
 
 class CohabitationDateControllerSpec extends SpecBase with MockitoSugar {
 
-  private val formProvider = new CohabitationDateFormProvider()
+  private val formProvider = new CohabitationDateFormProvider(clockAtFixedInstant)
   private def form = formProvider()
   private val waypoints = EmptyWaypoints
 
