@@ -17,13 +17,21 @@
 package forms
 
 import forms.behaviours.DateBehaviours
+import play.api.data.FormError
 
-import java.time.{LocalDate, ZoneOffset}
+import java.time.format.DateTimeFormatter
+import java.time.{Clock, LocalDate, ZoneId, ZoneOffset}
 
 class SeparationDateFormProviderSpec extends DateBehaviours {
 
-  private val formProvider = new SeparationDateFormProvider()
+  private val fixedInstant = LocalDate.now.atStartOfDay(ZoneId.systemDefault).toInstant
+  private val clock = Clock.fixed(fixedInstant, ZoneId.systemDefault)
+
+  private val formProvider = new SeparationDateFormProvider(clock)
   private val form         = formProvider()
+
+  private val maxDate = LocalDate.now(clock)
+  private def dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
   ".value" - {
 
@@ -35,5 +43,12 @@ class SeparationDateFormProviderSpec extends DateBehaviours {
     behave like dateField(form, "value", validData)
 
     behave like mandatoryDateField(form, "value", "separationDate.error.required.all")
+
+    behave like dateFieldWithMax(
+      form      = form,
+      key       = "value",
+      max       = maxDate,
+      formError = FormError("value", "separationDate.error.afterMaximum", Seq(maxDate.format(dateFormatter)))
+    )
   }
 }

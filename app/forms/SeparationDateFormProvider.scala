@@ -19,10 +19,14 @@ package forms
 import forms.mappings.Mappings
 import play.api.data.Form
 
-import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.{Clock, LocalDate}
 import javax.inject.Inject
 
-class SeparationDateFormProvider @Inject() extends Mappings {
+class SeparationDateFormProvider @Inject()(clock: Clock) extends Mappings {
+
+  private def maxDate       = LocalDate.now(clock)
+  private def dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
   def apply(): Form[LocalDate] =
     Form(
@@ -31,6 +35,6 @@ class SeparationDateFormProvider @Inject() extends Mappings {
         allRequiredKey = s"separationDate.error.required.all",
         twoRequiredKey = s"separationDate.error.required.two",
         requiredKey    = s"separationDate.error.required"
-      )
+      ).verifying(maxDate(maxDate, "separationDate.error.afterMaximum", maxDate.format(dateFormatter)))
     )
 }
