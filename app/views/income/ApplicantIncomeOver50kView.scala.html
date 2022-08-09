@@ -21,7 +21,9 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    h1WithCaption: components.h1WithCaption,
+    newTabLink: HmrcNewTabLink
 )
 
 @(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
@@ -34,13 +36,26 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        @h1WithCaption(
+            content = messages("applicantIncomeOver50k.heading"),
+            caption = HmrcSectionCaption(messages("section.income"))
+        )
+
+        <p class="govuk-body">@messages("applicantIncomeOver50k.p1")</p>
+
+        <p class="govuk-body">
+            @messages("applicantIncomeOver50k.p2.1")
+            @newTabLink(NewTabLink(
+                text = messages("applicantIncomeOver50k.p2.link.text"),
+                href = Some(messages("applicantIncomeOver50k.p2.link.href"))
+            ))
+            @messages("applicantIncomeOver50k.p2.2")
+        </p>
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = HmrcPageHeadingLegend(
-                    content = messages("applicantIncomeOver50k.heading"),
-                    caption = HmrcSectionCaption(messages("section.income"))
-                )
+                legend = LegendViewModel(messages("applicantIncomeOver50k.heading")).withCssClass("govuk-visually-hidden")
             )
         )
 
