@@ -59,22 +59,16 @@ final case class ChildBirthRegistrationCountryPage(index: Index) extends ChildQu
           .getOrElse(ChildScottishBirthCertificateDetailsPage(index))
 
       case NorthernIreland | Other | Unknown =>
-        answers.get(IncludedDocumentsPage(index))
-          .map(_ => waypoints.next.page)
-          .getOrElse(IncludedDocumentsPage(index))
+        waypoints.next.page
     }.orRecover
 
   override def cleanup(value: Option[ChildBirthRegistrationCountry], userAnswers: UserAnswers): Try[UserAnswers] = {
     value.map {
       case England | Wales =>
-        userAnswers
-          .remove(ChildScottishBirthCertificateDetailsPage(index))
-          .flatMap(_.remove(IncludedDocumentsPage(index)))
+        userAnswers.remove(ChildScottishBirthCertificateDetailsPage(index))
 
       case Scotland =>
-        userAnswers
-          .remove(ChildBirthCertificateSystemNumberPage(index))
-          .flatMap(_.remove(IncludedDocumentsPage(index)))
+        userAnswers.remove(ChildBirthCertificateSystemNumberPage(index))
 
       case NorthernIreland | Other | Unknown =>
         userAnswers

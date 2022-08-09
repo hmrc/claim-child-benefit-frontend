@@ -84,7 +84,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
   "users whose child was registered in England" - {
 
-    "must be asked for the birth certificate system number, and not for any documents" in {
+    "must be asked for the birth certificate system number" in {
 
       val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
 
@@ -102,7 +102,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
   "users whose child was registered in Wales" - {
 
-    "must be asked for the birth certificate system number, and not for any documents" in {
+    "must be asked for the birth certificate system number" in {
 
       val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
 
@@ -120,7 +120,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
   "users whose child was registered in Scotland" - {
 
-    "must be asked for the birth certificate details, and not for any documents" in {
+    "must be asked for the birth certificate details" in {
 
       val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
       val certificateDetails =Gen.listOfN(10, Gen.numChar).sample.value.mkString
@@ -139,10 +139,9 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
   "users whose child was registered in Northern Ireland" - {
 
-    "must be asked for documents" in {
+    "must not be asked for birth certificate details" in {
 
       val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
-      val documents    = Set(arbitrary[IncludedDocuments].sample.value)
 
       startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
         .run(
@@ -150,7 +149,6 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
           submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
           submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
           submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
-          submitAnswer(IncludedDocumentsPage(Index(0)), documents),
           pageMustBe(CheckChildDetailsPage(Index(0)))
         )
     }
@@ -158,10 +156,9 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
   "users whose child was registered outside of the UK" - {
 
-    "must be asked for documents" in {
+    "must not be asked for birth certificate details" in {
 
       val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
-      val documents    = Set(arbitrary[IncludedDocuments].sample.value)
 
       startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
         .run(
@@ -169,7 +166,6 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
           submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
           submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
           submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
-          submitAnswer(IncludedDocumentsPage(Index(0)), documents),
           pageMustBe(CheckChildDetailsPage(Index(0)))
         )
     }
@@ -177,10 +173,9 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
   "users whose child's country of registration is unknown" - {
 
-    "must be asked for documents" in {
+    "must not be asked for birth certificate details" in {
 
       val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
-      val documents    = Set(arbitrary[IncludedDocuments].sample.value)
 
       startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
         .run(
@@ -188,7 +183,6 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
           submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
           submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
           submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
-          submitAnswer(IncludedDocumentsPage(Index(0)), documents),
           pageMustBe(CheckChildDetailsPage(Index(0)))
         )
     }
@@ -196,49 +190,24 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
   "users whose child has been claimed for before" - {
 
-    "must be asked for details of the previous claimant" - {
+    "must be asked for details of the previous claimant" in {
 
-      "when their country of birth registration means we do not need documents" in {
+      val country      = arbitrary[ChildBirthRegistrationCountry].sample.value
+      val claimantName = AdultName(None, "first", None, "last")
+      val claimantAddress = Address("line 1", None, "town", None, "postcode")
 
-        val country      = Gen.oneOf(England, Wales, Scotland).sample.value
-        val claimantName = AdultName(None, "first", None, "last")
-        val claimantAddress = Address("line 1", None, "town", None, "postcode")
+      val initialise = journeyOf(
+        setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), country)
+      )
 
-        val initialise = journeyOf(
-          setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), country)
+      startingFrom(AnyoneClaimedForChildBeforePage(Index(0)))
+        .run(
+          initialise,
+          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
+          submitAnswer(PreviousClaimantNamePage(Index(0)), claimantName),
+          submitAnswer(PreviousClaimantAddressPage(Index(0)), claimantAddress),
+          pageMustBe(CheckChildDetailsPage(Index(0)))
         )
-
-        startingFrom(AnyoneClaimedForChildBeforePage(Index(0)))
-          .run(
-            initialise,
-            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
-            submitAnswer(PreviousClaimantNamePage(Index(0)), claimantName),
-            submitAnswer(PreviousClaimantAddressPage(Index(0)), claimantAddress),
-            pageMustBe(CheckChildDetailsPage(Index(0)))
-          )
-      }
-
-      "when their country of birth registration means we  need documents" in {
-
-        val country         = Gen.oneOf(Other, Unknown).sample.value
-        val claimantName    = AdultName(None, "first", None, "last")
-        val claimantAddress = Address("line 1", None, "town", None, "postcode")
-        val documents       = Set(arbitrary[IncludedDocuments].sample.value)
-
-        val initialise = journeyOf(
-          setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), country)
-        )
-
-        startingFrom(AnyoneClaimedForChildBeforePage(Index(0)))
-          .run(
-            initialise,
-            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
-            submitAnswer(PreviousClaimantNamePage(Index(0)), claimantName),
-            submitAnswer(PreviousClaimantAddressPage(Index(0)), claimantAddress),
-            submitAnswer(IncludedDocumentsPage(Index(0)), documents),
-            pageMustBe(CheckChildDetailsPage(Index(0)))
-          )
-      }
     }
   }
 }

@@ -35,7 +35,6 @@ trait UserAnswersGenerator extends TryValues {
     arbitrary[(AdoptingThroughLocalAuthorityPage, JsValue)] ::
     arbitrary[(PreviousClaimantNamePage, JsValue)] ::
     arbitrary[(PreviousClaimantAddressPage, JsValue)] ::
-    arbitrary[(IncludedDocumentsPage, JsValue)] ::
     arbitrary[(ChildScottishBirthCertificateDetailsPage, JsValue)] ::
     arbitrary[(ChildPreviousNamePage, JsValue)] ::
     arbitrary[(ChildNameChangedByDeedPollPage, JsValue)] ::

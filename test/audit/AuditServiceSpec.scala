@@ -92,12 +92,11 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             countryOfRegistration = models.ChildBirthRegistrationCountry.England,
             birthCertificateNumber = Some("000000000"),
             relationshipToApplicant = models.ApplicantRelationshipToChild.AdoptingChild,
-            adoptingThroughLocalAuthority = Some(true),
+            adoptingThroughLocalAuthority = true,
             previousClaimant = Some(JourneyModel.PreviousClaimant(
               name    = models.AdultName(Some("previous claimant title"), "previous claimant first", Some("previous claimant middle"), "previous claimant last"),
               address = models.Address("previous claimant line 1", Some("previous claimant line 2"), "previous claimant town", Some("previous claimant county"), "previous claimant postcode")
-            )),
-            documents = Set(models.IncludedDocuments.BirthCertificate)
+            ))
           ), Nil
         ),
         benefits = Set(models.Benefits.IncomeSupport, models.Benefits.JobseekersAllowance),
@@ -150,12 +149,11 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             birthRegistrationCountry = "england",
             birthCertificateNumber = Some("000000000"),
             relationshipToApplicant = "adoptingChild",
-            adoptingThroughLocalAuthority = Some(true),
+            adoptingThroughLocalAuthority = true,
             previousClaimant = Some(PreviousClaimant(
               name    = AdultName(Some("previous claimant title"), "previous claimant first", Some("previous claimant middle"), "previous claimant last"),
               address = Address("previous claimant line 1", Some("previous claimant line 2"), "previous claimant town", Some("previous claimant county"), "previous claimant postcode")
-            )),
-            documents = Set("birthCertificate")
+            ))
           )
         ),
         benefits = Set("incomeSupport", "jobseekersAllowance"),

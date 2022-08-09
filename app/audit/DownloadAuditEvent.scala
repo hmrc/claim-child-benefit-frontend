@@ -78,8 +78,7 @@ object DownloadAuditEvent {
               name    = convertAdultName(claimant.name),
               address = convertAddress(claimant.address)
             )
-          },
-          documents = child.documents.map(_.name)
+          }
         )
       },
       benefits          = model.benefits.map(_.toString),
@@ -208,9 +207,8 @@ object DownloadAuditEvent {
                                          birthRegistrationCountry: String,
                                          birthCertificateNumber: Option[String],
                                          relationshipToApplicant: String,
-                                         adoptingThroughLocalAuthority: Option[Boolean],
-                                         previousClaimant: Option[PreviousClaimant],
-                                         documents: Set[String]
+                                         adoptingThroughLocalAuthority: Boolean,
+                                         previousClaimant: Option[PreviousClaimant]
                                        )
   object Child {
     implicit lazy val formats: Format[Child] = Json.format

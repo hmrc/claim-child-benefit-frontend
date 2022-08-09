@@ -749,20 +749,6 @@ childScottishBirthCertificateDetails.error.required = Enter the district number,
 childScottishBirthCertificateDetails.error.invalid = The district number, year and entry number must be 10 digits.
 childScottishBirthCertificateDetails.change.hidden = the district number, year and entry number on this child’s birth certificate
 
-includedDocuments.title = What documents will you be sending for this child?
-includedDocuments.heading = What documents will you be sending for {0}?
-includedDocuments.hint = Select all that apply
-includedDocuments.birthCertificate = Birth certificate
-includedDocuments.passport = Passport
-includedDocuments.travelDocuments = Travel documents
-includedDocuments.adoptionCertificate = Adoption certificate
-includedDocuments.otherDocument = Other document
-includedDocuments.otherDocument.label = Please specify
-includedDocuments.checkYourAnswersLabel = What documents will you be sending for this child?
-includedDocuments.error.required = Select what documents you will be sending for {0}
-includedDocuments.error.otherDocument.required = Specify what document you will be sending for {0}
-includedDocuments.change.hidden = what documents you will be sending for this child
-
 previousClaimantAddress.title = What is the person who claimed Child Benefit for this child’s address?
 previousClaimantAddress.heading = What is {0}’s address?
 previousClaimantAddress.line1 = Address line 1
