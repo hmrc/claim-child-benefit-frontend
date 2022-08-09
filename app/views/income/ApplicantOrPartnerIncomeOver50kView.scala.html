@@ -15,13 +15,16 @@
  *@
 
 @import controllers.income.routes
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.newtablinkhelper.NewTabLinkHelper
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    h1WithCaption: components.h1WithCaption,
+    newTabLink: HmrcNewTabLinkHelper
 )
 
 @(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
@@ -34,13 +37,26 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        @h1WithCaption(
+            content = messages("applicantOrPartnerIncomeOver50k.heading"),
+            caption = HmrcSectionCaption(messages("section.income"))
+        )
+
+        <p class="govuk-body">@messages("applicantOrPartnerIncomeOver50k.p1")</p>
+
+        <p class="govuk-body">
+            @messages("applicantOrPartnerIncomeOver50k.p2.1")
+            @newTabLink(NewTabLinkHelper(
+                text = messages("applicantOrPartnerIncomeOver50k.p2.link.text"),
+                href = Some(messages("applicantOrPartnerIncomeOver50k.p2.link.href"))
+            ))
+            @messages("applicantOrPartnerIncomeOver50k.p2.2")
+        </p>
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = HmrcPageHeadingLegend(
-                    content = messages("applicantOrPartnerIncomeOver50k.heading"),
-                    caption = HmrcSectionCaption(messages("section.income"))
-                )
+                legend = LegendViewModel(messages("applicantOrPartnerIncomeOver50k.heading")).withCssClass("govuk-visually-hidden")
             )
         )
 
