@@ -37,41 +37,7 @@ final case class ApplicantRelationshipToChildPage(index: Index) extends ChildQue
     routes.ApplicantRelationshipToChildController.onPageLoad(waypoints, index)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case AdoptingChild =>
-        AdoptingThroughLocalAuthorityPage(index)
-
-      case _ =>
-        AnyoneClaimedForChildBeforePage(index)
-    }.orRecover
-
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case AdoptingChild =>
-        answers.get(AdoptingThroughLocalAuthorityPage(index))
-          .map(_ => waypoints.next.page)
-          .getOrElse(AdoptingThroughLocalAuthorityPage(index))
-
-      case AdoptedChild =>
-        waypoints.next.page
-
-      case _ =>
-        answers.get(ChildBirthRegistrationCountryPage(index)).map {
-          case England | Wales | Scotland =>
-            waypoints.next.page
-
-          case NorthernIreland | Other | Unknown =>
-            answers.get(IncludedDocumentsPage(index)).map {
-              case docs if docs.nonEmpty =>
-                waypoints.next.page
-
-              case _ =>
-                IncludedDocumentsPage(index)
-
-            }.orRecover
-        }.orRecover
-
-    }.orRecover
+    AdoptingThroughLocalAuthorityPage(index)
 
   override def cleanup(value: Option[ApplicantRelationshipToChild], userAnswers: UserAnswers): Try[UserAnswers] =
     value.map {

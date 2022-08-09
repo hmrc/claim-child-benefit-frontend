@@ -18,7 +18,6 @@ package journey
 
 import generators.ModelGenerators
 import models.ChildBirthRegistrationCountry._
-import models.IncludedDocuments.AdoptionCertificate
 import models.{ApplicantRelationshipToChild => Relationship, _}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
@@ -31,14 +30,14 @@ import java.time.LocalDate
 
 class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
-    private val childName               = arbitrary[ChildName].sample.value
-    private val sex                     = arbitrary[ChildBiologicalSex].sample.value
-    private val systemNumber            = Gen.listOfN(9, Gen.numChar).sample.value.mkString
-    private val claimantName            = arbitrary[AdultName].sample.value
-    private val claimantAddress         = arbitrary[Address].sample.value
-    private val scottishBcDetails       = Gen.listOfN(10, Gen.numChar).sample.value.mkString
-    private val includedDocuments       = Set(arbitrary[IncludedDocuments].sample.value)
-    private val notAdoptingRelationship = Gen.oneOf(Relationship.BirthChild, Relationship.StepChild, Relationship.AdoptedChild, Relationship.Other).sample.value
+    private val childName         = arbitrary[ChildName].sample.value
+    private val sex               = arbitrary[ChildBiologicalSex].sample.value
+    private val systemNumber      = Gen.listOfN(9, Gen.numChar).sample.value.mkString
+    private val claimantName      = arbitrary[AdultName].sample.value
+    private val claimantAddress   = arbitrary[Address].sample.value
+    private val scottishBcDetails = Gen.listOfN(10, Gen.numChar).sample.value.mkString
+    private val includedDocuments = Set(arbitrary[IncludedDocuments].sample.value)
+    private val relationship      = arbitrary[Relationship].sample.value
 
   "when a user has added a child" - {
 
@@ -50,7 +49,8 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
         submitAnswer(ChildDateOfBirthPage(Index(0)), LocalDate.now),
         submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
         submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
-        submitAnswer(ApplicantRelationshipToChildPage(Index(0)), notAdoptingRelationship),
+        submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+        submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
         submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false)
       )
 
@@ -624,279 +624,6 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           )
       }
     }
-
-    "that they were not adopting or planning to adopt" - {
-
-      "changing the relationship to `adopting or planning to adopt` must ask if they are adopting through a LA, then return to check child details" in {
-
-        startingFrom(ChildNamePage(Index(0)))
-          .run(
-            basicChildJourney,
-            goToChangeAnswer(ApplicantRelationshipToChildPage(Index(0))),
-            submitAnswer(ApplicantRelationshipToChildPage(Index(0)), Relationship.AdoptingChild),
-            submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), true),
-            pageMustBe(CheckChildDetailsPage(Index(0)))
-          )
-      }
-    }
-
-    "that they were adopting or planning to adopt" - {
-
-      "changing the relationship to anything else must remove if they are adopting through a LA, then return to check child details" in {
-
-        val initialise = journeyOf(
-          basicChildJourney,
-          setUserAnswerTo(ApplicantRelationshipToChildPage(Index(0)), Relationship.AdoptingChild),
-          setUserAnswerTo(AdoptingThroughLocalAuthorityPage(Index(0)), false),
-          goTo(CheckChildDetailsPage(Index(0)))
-        )
-
-        startingFrom(ChildNamePage(Index(0)))
-          .run(
-            initialise,
-            goToChangeAnswer(ApplicantRelationshipToChildPage(Index(0))),
-            submitAnswer(ApplicantRelationshipToChildPage(Index(0)), notAdoptingRelationship),
-            pageMustBe(CheckChildDetailsPage(Index(0))),
-            answersMustNotContain(AdoptingThroughLocalAuthorityPage(Index(0)))
-          )
-      }
-    }
-
-    "that they have adopted" - {
-
-      "and whose birth was registered in England, Wales or Scotland" - {
-
-        "changing the relationship to Birth Child, Step Child or Other must return to Check Answers" in {
-
-          val country = Gen.oneOf(England, Wales, Scotland).sample.value
-
-          val newRelationship = Gen.oneOf(
-            Relationship.BirthChild,
-            Relationship.StepChild,
-            Relationship.Other
-          ).sample.value
-
-          val initialise = journeyOf(
-            basicChildJourney,
-            setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), country),
-            setUserAnswerTo(ApplicantRelationshipToChildPage(Index(0)), Relationship.AdoptedChild),
-            goTo(CheckChildDetailsPage(Index(0)))
-          )
-
-          startingFrom(ChildNamePage(Index(0)))
-            .run(
-              initialise,
-              goToChangeAnswer(ApplicantRelationshipToChildPage(Index(0))),
-              submitAnswer(ApplicantRelationshipToChildPage(Index(0)), newRelationship),
-              pageMustBe(CheckChildDetailsPage(Index(0)))
-            )
-        }
-
-        "changing the relationship to Adopting must ask if they are adopting through a LA then return to Check Answers" in {
-
-          val country = Gen.oneOf(England, Wales, Scotland).sample.value
-
-          val initialise = journeyOf(
-            basicChildJourney,
-            setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), country),
-            setUserAnswerTo(ApplicantRelationshipToChildPage(Index(0)), Relationship.AdoptedChild),
-            goTo(CheckChildDetailsPage(Index(0)))
-          )
-
-          startingFrom(ChildNamePage(Index(0)))
-            .run(
-              initialise,
-              goToChangeAnswer(ApplicantRelationshipToChildPage(Index(0))),
-              submitAnswer(ApplicantRelationshipToChildPage(Index(0)), Relationship.AdoptingChild),
-              submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
-              pageMustBe(CheckChildDetailsPage(Index(0)))
-            )
-        }
-      }
-
-      "and whose birth was registered in Northern Ireland, another country, or the country was unknown" - {
-
-        "and they were going to include the adoption certificate alone" - {
-
-          "changing the relationship to Birth Child, Step Child or Other must remove `adoption certificate`, collect a new document type, then return to Check Answers" in {
-
-            val country = Gen.oneOf(NorthernIreland, Other, Unknown).sample.value
-
-            val newRelationship = Gen.oneOf(
-              Relationship.BirthChild,
-              Relationship.StepChild,
-              Relationship.Other
-            ).sample.value
-
-            val newDocuments = Set(Gen.oneOf(IncludedDocuments.standardDocuments(newRelationship)).sample.value)
-
-            val initialise = journeyOf(
-              basicChildJourney,
-              setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), country),
-              setUserAnswerTo(ApplicantRelationshipToChildPage(Index(0)), Relationship.AdoptedChild),
-              setUserAnswerTo(IncludedDocumentsPage(Index(0)), Set[IncludedDocuments](AdoptionCertificate)),
-              goTo(CheckChildDetailsPage(Index(0)))
-            )
-
-            startingFrom(ChildNamePage(Index(0)))
-              .run(
-                initialise,
-                goToChangeAnswer(ApplicantRelationshipToChildPage(Index(0))),
-                submitAnswer(ApplicantRelationshipToChildPage(Index(0)), newRelationship),
-                submitAnswer(IncludedDocumentsPage(Index(0)), newDocuments),
-                pageMustBe(CheckChildDetailsPage(Index(0)))
-              )
-          }
-
-          "changing the relationship to Adopting must remove `adoption certificate`, collect whether they are adopting through an LA and a new document type, then return to Check Answers" in {
-
-            val country = Gen.oneOf(Other, Unknown).sample.value
-
-            val newRelationship = Relationship.AdoptingChild
-
-            val newDocuments = Set(Gen.oneOf(IncludedDocuments.standardDocuments(newRelationship)).sample.value)
-
-            val initialise = journeyOf(
-              basicChildJourney,
-              setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), country),
-              setUserAnswerTo(ApplicantRelationshipToChildPage(Index(0)), Relationship.AdoptedChild),
-              setUserAnswerTo(IncludedDocumentsPage(Index(0)), Set[IncludedDocuments](AdoptionCertificate)),
-              goTo(CheckChildDetailsPage(Index(0)))
-            )
-
-            startingFrom(ChildNamePage(Index(0)))
-              .run(
-                initialise,
-                goToChangeAnswer(ApplicantRelationshipToChildPage(Index(0))),
-                submitAnswer(ApplicantRelationshipToChildPage(Index(0)), newRelationship),
-                submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), true),
-                submitAnswer(IncludedDocumentsPage(Index(0)), newDocuments),
-                pageMustBe(CheckChildDetailsPage(Index(0)))
-              )
-          }
-        }
-
-        "and they were going to include the adoption certificate and other documents" - {
-
-          "changing the relationship to Birth Child, Step Child or Other must remove `adoption certificate`, leaving the other document types, then return to Check Answers" in {
-
-            val country = Gen.oneOf(Other, Unknown).sample.value
-
-            val newRelationship = Gen.oneOf(
-              Relationship.BirthChild,
-              Relationship.StepChild,
-              Relationship.Other
-            ).sample.value
-
-            val otherDocument    = Gen.oneOf(IncludedDocuments.standardDocuments(newRelationship)).sample.value
-            val initialDocuments = Set(otherDocument, AdoptionCertificate)
-
-            val initialise = journeyOf(
-              basicChildJourney,
-              setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), country),
-              setUserAnswerTo(ApplicantRelationshipToChildPage(Index(0)), Relationship.AdoptedChild),
-              setUserAnswerTo(IncludedDocumentsPage(Index(0)), initialDocuments),
-              goTo(CheckChildDetailsPage(Index(0)))
-            )
-
-            startingFrom(ChildNamePage(Index(0)))
-              .run(
-                initialise,
-                goToChangeAnswer(ApplicantRelationshipToChildPage(Index(0))),
-                submitAnswer(ApplicantRelationshipToChildPage(Index(0)), newRelationship),
-                pageMustBe(CheckChildDetailsPage(Index(0))),
-                answerMustEqual(IncludedDocumentsPage(Index(0)), Set(otherDocument))
-              )
-          }
-
-          "changing the relationship to Adopting must remove `adoption certificate`, leaving the other document types, then return to Check Answers" in {
-
-            val country = Gen.oneOf(Other, Unknown).sample.value
-
-            val newRelationship = Relationship.AdoptingChild
-
-            val otherDocument    = Gen.oneOf(IncludedDocuments.standardDocuments(newRelationship)).sample.value
-            val initialDocuments = Set(otherDocument, AdoptionCertificate)
-
-            val initialise = journeyOf(
-              basicChildJourney,
-              setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), country),
-              setUserAnswerTo(ApplicantRelationshipToChildPage(Index(0)), Relationship.AdoptedChild),
-              setUserAnswerTo(IncludedDocumentsPage(Index(0)), initialDocuments),
-              goTo(CheckChildDetailsPage(Index(0)))
-            )
-
-            startingFrom(ChildNamePage(Index(0)))
-              .run(
-                initialise,
-                goToChangeAnswer(ApplicantRelationshipToChildPage(Index(0))),
-                submitAnswer(ApplicantRelationshipToChildPage(Index(0)), newRelationship),
-                submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
-                pageMustBe(CheckChildDetailsPage(Index(0))),
-                answerMustEqual(IncludedDocumentsPage(Index(0)), Set(otherDocument))
-              )
-          }
-        }
-
-        "and they were going to include other documents" - {
-
-          "changing the relationship to Birth Child, Step Child or Other must return to Check Answers" in {
-
-            val country = Gen.oneOf(Other, Unknown).sample.value
-
-            val newRelationship = Gen.oneOf(
-              Relationship.BirthChild,
-              Relationship.StepChild,
-              Relationship.Other
-            ).sample.value
-
-            val document = Gen.oneOf(IncludedDocuments.standardDocuments(newRelationship)).sample.value
-
-            val initialise = journeyOf(
-              basicChildJourney,
-              setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), country),
-              setUserAnswerTo(ApplicantRelationshipToChildPage(Index(0)), Relationship.AdoptedChild),
-              setUserAnswerTo(IncludedDocumentsPage(Index(0)), Set(document)),
-              goTo(CheckChildDetailsPage(Index(0)))
-            )
-
-            startingFrom(ChildNamePage(Index(0)))
-              .run(
-                initialise,
-                goToChangeAnswer(ApplicantRelationshipToChildPage(Index(0))),
-                submitAnswer(ApplicantRelationshipToChildPage(Index(0)), newRelationship),
-                pageMustBe(CheckChildDetailsPage(Index(0)))
-              )
-          }
-
-          "changing the relationship to Adopting must ask if they are adopting through an LA thenreturn to Check Answers" in {
-
-            val country = Gen.oneOf(Other, Unknown).sample.value
-
-            val newRelationship = Relationship.AdoptingChild
-
-            val document = Gen.oneOf(IncludedDocuments.standardDocuments(newRelationship)).sample.value
-
-            val initialise = journeyOf(
-              basicChildJourney,
-              setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), country),
-              setUserAnswerTo(ApplicantRelationshipToChildPage(Index(0)), Relationship.AdoptedChild),
-              setUserAnswerTo(IncludedDocumentsPage(Index(0)), Set(document)),
-              goTo(CheckChildDetailsPage(Index(0)))
-            )
-
-            startingFrom(ChildNamePage(Index(0)))
-              .run(
-                initialise,
-                goToChangeAnswer(ApplicantRelationshipToChildPage(Index(0))),
-                submitAnswer(ApplicantRelationshipToChildPage(Index(0)), newRelationship),
-                submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), true),
-                pageMustBe(CheckChildDetailsPage(Index(0)))
-              )
-          }
-        }
-      }
-    }
   }
   
   "when a user has added multiple children" - {
@@ -909,7 +636,8 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
         submitAnswer(ChildDateOfBirthPage(Index(0)), LocalDate.now),
         submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
         submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
-        submitAnswer(ApplicantRelationshipToChildPage(Index(0)), notAdoptingRelationship),
+        submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+        submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
         submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
         next,
         submitAnswer(AddChildPage, true),
@@ -919,7 +647,8 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
         submitAnswer(ChildDateOfBirthPage(Index(1)), LocalDate.now),
         submitAnswer(ChildBirthRegistrationCountryPage(Index(1)), England),
         submitAnswer(ChildBirthCertificateSystemNumberPage(Index(1)), systemNumber),
-        submitAnswer(ApplicantRelationshipToChildPage(Index(1)), notAdoptingRelationship),
+        submitAnswer(ApplicantRelationshipToChildPage(Index(1)), relationship),
+        submitAnswer(AdoptingThroughLocalAuthorityPage(Index(1)), false),
         submitAnswer(AnyoneClaimedForChildBeforePage(Index(1)), false),
         next,
         submitAnswer(AddChildPage, false),
@@ -956,7 +685,8 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           submitAnswer(ChildDateOfBirthPage(Index(0)), LocalDate.now),
           submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
           submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
-          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), notAdoptingRelationship),
+          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+          submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
           submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
           next,
           submitAnswer(AddChildPage, false),

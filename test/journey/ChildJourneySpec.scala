@@ -86,13 +86,14 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
     "must be asked for the birth certificate system number, and not for any documents" in {
 
-      val relationship = ApplicantRelationshipToChild.BirthChild
+      val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
 
       startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
         .run(
           submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
           submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), "123456789"),
           submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+          submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
           submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
           pageMustBe(CheckChildDetailsPage(Index(0)))
         )
@@ -103,13 +104,14 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
     "must be asked for the birth certificate system number, and not for any documents" in {
 
-      val relationship = ApplicantRelationshipToChild.BirthChild
+      val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
 
       startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
         .run(
           submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Wales),
           submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), "123456789"),
           submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+          submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
           submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
           pageMustBe(CheckChildDetailsPage(Index(0)))
         )
@@ -120,7 +122,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
     "must be asked for the birth certificate details, and not for any documents" in {
 
-      val relationship       = ApplicantRelationshipToChild.BirthChild
+      val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
       val certificateDetails =Gen.listOfN(10, Gen.numChar).sample.value.mkString
 
       startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
@@ -128,6 +130,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
           submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
           submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), certificateDetails),
           submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+          submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
           submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
           pageMustBe(CheckChildDetailsPage(Index(0)))
         )
@@ -138,13 +141,14 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
     "must be asked for documents" in {
 
-      val relationship = ApplicantRelationshipToChild.BirthChild
+      val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
       val documents    = Set(arbitrary[IncludedDocuments].sample.value)
 
       startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
         .run(
           submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland),
           submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+          submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
           submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
           submitAnswer(IncludedDocumentsPage(Index(0)), documents),
           pageMustBe(CheckChildDetailsPage(Index(0)))
@@ -156,13 +160,14 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
     "must be asked for documents" in {
 
-      val relationship = ApplicantRelationshipToChild.BirthChild
+      val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
       val documents    = Set(arbitrary[IncludedDocuments].sample.value)
 
       startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
         .run(
           submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Other),
           submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+          submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
           submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
           submitAnswer(IncludedDocumentsPage(Index(0)), documents),
           pageMustBe(CheckChildDetailsPage(Index(0)))
@@ -174,50 +179,17 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
     "must be asked for documents" in {
 
-      val relationship = ApplicantRelationshipToChild.BirthChild
+      val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
       val documents    = Set(arbitrary[IncludedDocuments].sample.value)
 
       startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
         .run(
           submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Unknown),
           submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+          submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
           submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
           submitAnswer(IncludedDocumentsPage(Index(0)), documents),
           pageMustBe(CheckChildDetailsPage(Index(0)))
-        )
-    }
-  }
-
-  "users whose relationship to the child is Adopting" - {
-
-    "must be asked if they are adopting through a local authority" in {
-
-      val relationship = ApplicantRelationshipToChild.AdoptingChild
-
-      startingFrom(ApplicantRelationshipToChildPage(Index(0)))
-        .run(
-          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-          submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), true),
-          pageMustBe(AnyoneClaimedForChildBeforePage(Index(0)))
-        )
-    }
-  }
-
-  "users whose relationship to the child is Birth Child, Adopted Child, Step Child or Other" - {
-
-    "must not be asked if they are adopting through a local authority" in {
-
-      val relationship = Gen.oneOf(
-        ApplicantRelationshipToChild.BirthChild,
-        ApplicantRelationshipToChild.AdoptedChild,
-        ApplicantRelationshipToChild.StepChild,
-        ApplicantRelationshipToChild.Other
-      ).sample.value
-
-      startingFrom(ApplicantRelationshipToChildPage(Index(0)))
-        .run(
-          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-          pageMustBe(AnyoneClaimedForChildBeforePage(Index(0)))
         )
     }
   }
