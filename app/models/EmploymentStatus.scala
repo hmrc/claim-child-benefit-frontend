@@ -21,23 +21,23 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import viewmodels.govuk.checkbox._
 
-sealed trait ApplicantEmploymentStatus
+sealed trait EmploymentStatus
 
-object ApplicantEmploymentStatus extends Enumerable.Implicits {
+object EmploymentStatus extends Enumerable.Implicits {
 
-  case object LookingForWork extends WithName("lookingForWork") with ApplicantEmploymentStatus
-  case object Employed extends WithName("employed") with ApplicantEmploymentStatus
-  case object SelfEmployed extends WithName("selfEmployed") with ApplicantEmploymentStatus
-  case object NoneOfThese extends WithName("noneOfThese") with ApplicantEmploymentStatus
+  case object LookingForWork extends WithName("lookingForWork") with EmploymentStatus
+  case object Employed extends WithName("employed") with EmploymentStatus
+  case object SelfEmployed extends WithName("selfEmployed") with EmploymentStatus
+  case object NoneOfThese extends WithName("noneOfThese") with EmploymentStatus
 
-  val values: Seq[ApplicantEmploymentStatus] = Seq(
+  val values: Seq[EmploymentStatus] = Seq(
     LookingForWork,
     Employed,
     SelfEmployed,
     NoneOfThese
   )
 
-  val activeStatuses: Set[ApplicantEmploymentStatus] = values.toSet - NoneOfThese
+  val activeStatuses: Set[EmploymentStatus] = values.toSet - NoneOfThese
 
   def checkboxItems(implicit messages: Messages): Seq[CheckboxItem] = {
 
@@ -46,7 +46,7 @@ object ApplicantEmploymentStatus extends Enumerable.Implicits {
     values.zipWithIndex.map {
       case (value, index) =>
         CheckboxItemViewModel(
-          content = Text(messages(s"applicantEmploymentStatus.${value.toString}")),
+          content = Text(messages(s"employmentStatus.${value.toString}")),
           fieldId = "value",
           index = index,
           value = value.toString
@@ -54,6 +54,6 @@ object ApplicantEmploymentStatus extends Enumerable.Implicits {
     }.patch(activeStatuses.size, List(divider), 0)
   }
 
-  implicit val enumerable: Enumerable[ApplicantEmploymentStatus] =
+  implicit val enumerable: Enumerable[EmploymentStatus] =
     Enumerable(values.map(v => v.toString -> v): _*)
 }

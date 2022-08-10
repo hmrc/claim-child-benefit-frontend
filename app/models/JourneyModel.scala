@@ -68,7 +68,7 @@ object JourneyModel {
                               telephoneNumber: String,
                               bestTimeToContact: Set[BestTimeToContact],
                               nationality: String,
-                              employmentStatus: Set[ApplicantEmploymentStatus]
+                              employmentStatus: Set[EmploymentStatus]
                             )
 
   final case class Partner(
@@ -76,7 +76,7 @@ object JourneyModel {
                             dateOfBirth: LocalDate,
                             nationality: String,
                             nationalInsuranceNumber: Option[String],
-                            employmentStatus: Set[PartnerEmploymentStatus],
+                            employmentStatus: Set[EmploymentStatus],
                             currentlyEntitledToChildBenefit: Boolean,
                             waitingToHearAboutEntitlement: Option[Boolean],
                             eldestChild: Option[EldestChild]

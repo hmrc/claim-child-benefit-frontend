@@ -35,25 +35,23 @@ object PartnerEmploymentStatusSummary {
       employmentStatus <- answers.get(PartnerEmploymentStatusPage)
     } yield {
 
-      val safeFirstName = HtmlFormat.escape(partnerName.firstName).toString
-
       val value = ValueViewModel(
         HtmlContent(
           employmentStatus.map {
-            answer => HtmlFormat.escape(messages(s"partnerEmploymentStatus.$answer")).toString
+            answer => HtmlFormat.escape(messages(s"employmentStatus.$answer")).toString
           }
             .mkString(",<br>")
         )
       )
 
       SummaryListRowViewModel(
-        key = messages("partnerEmploymentStatus.checkYourAnswersLabel", safeFirstName),
+        key = messages("partnerEmploymentStatus.checkYourAnswersLabel", partnerName.safeFirstName),
         value = value,
         actions = Seq(
           ActionItemViewModel(
             messages("site.change"),
             PartnerEmploymentStatusPage.changeLink(waypoints, sourcePage).url
-          ).withVisuallyHiddenText(messages("partnerEmploymentStatus.change.hidden", safeFirstName))
+          ).withVisuallyHiddenText(messages("partnerEmploymentStatus.change.hidden", partnerName.safeFirstName))
         )
       )
     }

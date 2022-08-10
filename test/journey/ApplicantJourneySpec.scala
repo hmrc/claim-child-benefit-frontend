@@ -18,7 +18,7 @@ package journey
 
 import generators.ModelGenerators
 import models.RelationshipStatus._
-import models.{Address, ApplicantEmploymentStatus, BestTimeToContact, Index, UserAnswers}
+import models.{Address, EmploymentStatus, BestTimeToContact, Index, UserAnswers}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.freespec.AnyFreeSpec
 import pages.RelationshipStatusPage
@@ -111,7 +111,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
     "must go to Partner Name if they are Married" in {
 
       val answers = UserAnswers("id").set(RelationshipStatusPage, Married).success.value
-      val employmentStatus = Set(arbitrary[ApplicantEmploymentStatus].sample.value)
+      val employmentStatus = Set(arbitrary[EmploymentStatus].sample.value)
 
       startingFrom(ApplicantEmploymentStatusPage, answers = answers)
         .run(
@@ -123,7 +123,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
     "must go to Partner Name if they are Cohabiting" in {
 
       val answers = UserAnswers("id").set(RelationshipStatusPage, Cohabiting).success.value
-      val employmentStatus = Set(arbitrary[ApplicantEmploymentStatus].sample.value)
+      val employmentStatus = Set(arbitrary[EmploymentStatus].sample.value)
 
       startingFrom(ApplicantEmploymentStatusPage, answers = answers)
         .run(
@@ -135,7 +135,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
     "must go to Child Name (for index 0) if they are Single" in {
 
       val answers = UserAnswers("id").set(RelationshipStatusPage, Single).success.value
-      val employmentStatus = Set(arbitrary[ApplicantEmploymentStatus].sample.value)
+      val employmentStatus = Set(arbitrary[EmploymentStatus].sample.value)
 
       startingFrom(ApplicantEmploymentStatusPage, answers = answers)
         .run(
@@ -147,7 +147,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
     "must go to Child Name (for index 0) if they are Separated" in {
 
       val answers = UserAnswers("id").set(RelationshipStatusPage, Separated).success.value
-      val employmentStatus = Set(arbitrary[ApplicantEmploymentStatus].sample.value)
+      val employmentStatus = Set(arbitrary[EmploymentStatus].sample.value)
 
       startingFrom(ApplicantEmploymentStatusPage, answers = answers)
         .run(
@@ -159,7 +159,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
     "must go to Child Name (for index 0) if they are Divorced" in {
 
       val answers = UserAnswers("id").set(RelationshipStatusPage, Divorced).success.value
-      val employmentStatus = Set(arbitrary[ApplicantEmploymentStatus].sample.value)
+      val employmentStatus = Set(arbitrary[EmploymentStatus].sample.value)
 
       startingFrom(ApplicantEmploymentStatusPage, answers = answers)
         .run(
@@ -171,7 +171,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
     "must go to Child Name (for index 0) if they are Widowed" in {
 
       val answers = UserAnswers("id").set(RelationshipStatusPage, Widowed).success.value
-      val employmentStatus = Set(arbitrary[ApplicantEmploymentStatus].sample.value)
+      val employmentStatus = Set(arbitrary[EmploymentStatus].sample.value)
 
       startingFrom(ApplicantEmploymentStatusPage, answers = answers)
         .run(

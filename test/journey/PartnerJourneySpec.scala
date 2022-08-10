@@ -17,7 +17,7 @@
 package journey
 
 import generators.ModelGenerators
-import models.{AdultName, ChildName, Index, PartnerEmploymentStatus}
+import models.{AdultName, ChildName, EmploymentStatus, Index}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.freespec.AnyFreeSpec
 import pages.child.ChildNamePage
@@ -31,7 +31,7 @@ class PartnerJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGener
   "users who don't know their partner's NINO, and the partner is not entitled to CB, must proceed to Child Name" in{
 
     val partnerName      = AdultName(None, "first", None, "last")
-    val employmentStatus = Set(arbitrary[PartnerEmploymentStatus].sample.value)
+    val employmentStatus = Set(arbitrary[EmploymentStatus].sample.value)
 
     startingFrom(PartnerNamePage)
       .run(

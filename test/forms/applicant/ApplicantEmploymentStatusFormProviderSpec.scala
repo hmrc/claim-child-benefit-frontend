@@ -17,7 +17,7 @@
 package forms.applicant
 
 import forms.behaviours.CheckboxFieldBehaviours
-import models.ApplicantEmploymentStatus
+import models.EmploymentStatus
 import play.api.data.FormError
 
 class ApplicantEmploymentStatusFormProviderSpec extends CheckboxFieldBehaviours {
@@ -27,12 +27,12 @@ class ApplicantEmploymentStatusFormProviderSpec extends CheckboxFieldBehaviours 
   ".value" - {
 
     val fieldName = "value"
-    val requiredKey = "applicantEmploymentStatus.error.required"
+    val requiredKey = "employmentStatus.error.required"
 
-    behave like checkboxField[ApplicantEmploymentStatus](
+    behave like checkboxField[EmploymentStatus](
       form,
       fieldName,
-      validValues  = ApplicantEmploymentStatus.values,
+      validValues  = EmploymentStatus.values,
       invalidError = FormError(s"$fieldName[0]", "error.invalid")
     )
 

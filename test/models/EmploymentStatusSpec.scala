@@ -24,40 +24,40 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.libs.json.{JsError, JsString, Json}
 
-class ApplicantEmploymentStatusSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues with ModelGenerators {
+class EmploymentStatusSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues with ModelGenerators {
 
   "ApplicantEmploymentStatus" - {
 
     "must deserialise valid values" in {
 
-      val gen = arbitrary[ApplicantEmploymentStatus]
+      val gen = arbitrary[EmploymentStatus]
 
       forAll(gen) {
-        applicantEmploymentStatus =>
+        employmentStatus =>
 
-          JsString(applicantEmploymentStatus.toString).validate[ApplicantEmploymentStatus].asOpt.value mustEqual applicantEmploymentStatus
+          JsString(employmentStatus.toString).validate[EmploymentStatus].asOpt.value mustEqual employmentStatus
       }
     }
 
     "must fail to deserialise invalid values" in {
 
-      val gen = arbitrary[String] suchThat (!ApplicantEmploymentStatus.values.map(_.toString).contains(_))
+      val gen = arbitrary[String] suchThat (!EmploymentStatus.values.map(_.toString).contains(_))
 
       forAll(gen) {
         invalidValue =>
 
-          JsString(invalidValue).validate[ApplicantEmploymentStatus] mustEqual JsError("error.invalid")
+          JsString(invalidValue).validate[EmploymentStatus] mustEqual JsError("error.invalid")
       }
     }
 
     "must serialise" in {
 
-      val gen = arbitrary[ApplicantEmploymentStatus]
+      val gen = arbitrary[EmploymentStatus]
 
       forAll(gen) {
-        applicantEmploymentStatus =>
+        employmentStatus =>
 
-          Json.toJson(applicantEmploymentStatus) mustEqual JsString(applicantEmploymentStatus.toString)
+          Json.toJson(employmentStatus) mustEqual JsString(employmentStatus.toString)
       }
     }
   }

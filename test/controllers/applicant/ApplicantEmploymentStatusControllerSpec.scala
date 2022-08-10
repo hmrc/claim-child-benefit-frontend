@@ -19,7 +19,7 @@ package controllers.applicant
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.applicant.ApplicantEmploymentStatusFormProvider
-import models.{ApplicantEmploymentStatus, UserAnswers}
+import models.{EmploymentStatus, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -63,7 +63,7 @@ class ApplicantEmploymentStatusControllerSpec extends SpecBase with MockitoSugar
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ApplicantEmploymentStatusPage, ApplicantEmploymentStatus.values.toSet).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(ApplicantEmploymentStatusPage, EmploymentStatus.values.toSet).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -75,7 +75,7 @@ class ApplicantEmploymentStatusControllerSpec extends SpecBase with MockitoSugar
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(ApplicantEmploymentStatus.values.toSet), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(EmploymentStatus.values.toSet), waypoints)(request, messages(application)).toString
       }
     }
 
@@ -95,10 +95,10 @@ class ApplicantEmploymentStatusControllerSpec extends SpecBase with MockitoSugar
       running(application) {
         val request =
           FakeRequest(POST, applicantEmploymentStatusRoute)
-            .withFormUrlEncodedBody(("value[0]", ApplicantEmploymentStatus.values.head.toString))
+            .withFormUrlEncodedBody(("value[0]", EmploymentStatus.values.head.toString))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(ApplicantEmploymentStatusPage, Set(ApplicantEmploymentStatus.values.head)).success.value
+        val expectedAnswers = emptyUserAnswers.set(ApplicantEmploymentStatusPage, Set(EmploymentStatus.values.head)).success.value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual ApplicantEmploymentStatusPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
@@ -147,7 +147,7 @@ class ApplicantEmploymentStatusControllerSpec extends SpecBase with MockitoSugar
       running(application) {
         val request =
           FakeRequest(POST, applicantEmploymentStatusRoute)
-            .withFormUrlEncodedBody(("value[0]", ApplicantEmploymentStatus.values.head.toString))
+            .withFormUrlEncodedBody(("value[0]", EmploymentStatus.values.head.toString))
 
         val result = route(application, request).value
 

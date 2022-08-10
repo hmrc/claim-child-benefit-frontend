@@ -17,7 +17,7 @@
 package forms.applicant
 
 import forms.mappings.Mappings
-import models.ApplicantEmploymentStatus
+import models.EmploymentStatus
 import play.api.data.Form
 import play.api.data.Forms.set
 
@@ -25,8 +25,10 @@ import javax.inject.Inject
 
 class ApplicantEmploymentStatusFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Set[ApplicantEmploymentStatus]] =
+  def apply(): Form[Set[EmploymentStatus]] =
     Form(
-      "value" -> set(enumerable[ApplicantEmploymentStatus]("applicantEmploymentStatus.error.required")).verifying(nonEmptySet("applicantEmploymentStatus.error.required"))
+      "value" ->
+        set(enumerable[EmploymentStatus]("employmentStatus.error.required"))
+          .verifying(nonEmptySet("employmentStatus.error.required"))
     )
 }
