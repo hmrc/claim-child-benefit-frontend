@@ -26,7 +26,7 @@ import org.apache.xmlgraphics.util.MimeConstants
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.PrintView
+import views.html.{PrintDocumentsRequiredView, PrintNoDocumentsRequiredView}
 import views.xml.xml.PrintTemplate
 
 import javax.inject.Inject
@@ -39,7 +39,8 @@ class PrintController @Inject()(
                                  auditService: AuditService,
                                  fop: PlayFop,
                                  template: PrintTemplate,
-                                 view: PrintView
+                                 noDocumentsView: PrintNoDocumentsRequiredView,
+                                 documentsView: PrintDocumentsRequiredView
                                ) extends FrontendBaseController with I18nSupport with Logging {
 
 
@@ -84,7 +85,11 @@ class PrintController @Inject()(
     implicit request =>
       withJourneyModel(request.userAnswers) {
         journeyModel =>
-          Ok(view())
+          if (journeyModel.children.exists(_.requiredDocuments.nonEmpty)) {
+            Ok(documentsView(journeyModel))
+          } else {
+            Ok(noDocumentsView())
+          }
       }
   }
 }

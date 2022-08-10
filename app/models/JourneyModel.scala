@@ -18,6 +18,9 @@ package models
 
 import cats.data.{Ior, IorNec, NonEmptyChain, NonEmptyList}
 import cats.implicits._
+import models.ApplicantRelationshipToChild.AdoptedChild
+import models.ChildBirthRegistrationCountry._
+import models.DocumentType.{AdoptionCertificate, BirthCertificate, TravelDocument}
 import models.JourneyModel._
 import models.{ChildBirthRegistrationCountry => Country}
 import pages._
@@ -94,7 +97,21 @@ object JourneyModel {
                           relationshipToApplicant: ApplicantRelationshipToChild,
                           adoptingThroughLocalAuthority: Boolean,
                           previousClaimant: Option[PreviousClaimant]
-                        )
+                        ) {
+
+    private val adoptionCertificate =
+      if (relationshipToApplicant == AdoptedChild) Some(AdoptionCertificate) else None
+
+    private val (birthCertificate, travelDocument) = countryOfRegistration match {
+      case England | Scotland | Wales      => (None, None)
+      case _ if previousClaimant.isDefined => (None, None)
+      case NorthernIreland                 => (Some(BirthCertificate), None)
+      case _                               => (Some(BirthCertificate), Some(TravelDocument))
+    }
+
+    val requiredDocuments: Seq[DocumentType] =
+      Seq(birthCertificate, travelDocument, adoptionCertificate).flatten
+  }
 
   final case class PreviousClaimant(name: AdultName, address: Address)
 

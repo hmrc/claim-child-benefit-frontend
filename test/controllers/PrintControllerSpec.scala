@@ -32,7 +32,7 @@ import pages.payments._
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.PrintView
+import views.html.{PrintDocumentsRequiredView, PrintNoDocumentsRequiredView}
 
 import java.nio.charset.Charset
 import java.time.LocalDate
@@ -82,7 +82,7 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
 
   "Print Controller" - {
 
-    "must return OK and the correct view for onPageLoad when user answers are complete" in {
+    "must return OK and the correct view for onPageLoad when user answers are complete and no documents are required" in {
 
       val application = applicationBuilder(userAnswers = Some(completeAnswers)).build()
 
@@ -91,13 +91,33 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[PrintView]
+        val view = application.injector.instanceOf[PrintNoDocumentsRequiredView]
 
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual view()(request, messages(application)).toString
       }
     }
+
+    "must return OK and the correct view for onPageLoad when user answers are complete and some documents are required" in {
+
+      val answers = completeAnswers.set(ApplicantRelationshipToChildPage(Index(0)), ApplicantRelationshipToChild.AdoptedChild).success.value
+      val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.PrintController.onPageLoad.url)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[PrintDocumentsRequiredView]
+        val journeyModel = JourneyModel.from(answers).right.value
+
+        status(result) mustEqual OK
+
+        contentAsString(result) mustEqual view(journeyModel)(request, messages(application)).toString
+      }
+    }
+
     "must redirect to journey recovery for onPageLoad when user answers are not complete" in {
 
       val incompleteAnswers = completeAnswers.remove(ApplicantNamePage).success.value
