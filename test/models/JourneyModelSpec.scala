@@ -18,7 +18,6 @@ package models
 
 import cats.data.NonEmptyList
 import generators.ModelGenerators
-import models.ApplicantRelationshipToChild.AdoptingChild
 import models.RelationshipStatus._
 import models.{ChildBirthRegistrationCountry => Country}
 import org.scalacheck.Arbitrary.arbitrary
@@ -74,7 +73,6 @@ class JourneyModelSpec
   private val scottishBirthCertificateDetails = "0000000000"
   private val childPreviousName1 = ChildName("first 1", None, "last 1")
   private val childPreviousName2 = ChildName("first 2", None, "last 2")
-  private val documents = Set[IncludedDocuments](IncludedDocuments.BirthCertificate)
 
   ".from" - {
 
@@ -115,9 +113,8 @@ class JourneyModelSpec
               countryOfRegistration = ChildBirthRegistrationCountry.England,
               birthCertificateNumber = Some(systemNumber),
               relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
-              adoptingThroughLocalAuthority = None,
-              previousClaimant = None,
-              documents = Set.empty
+              adoptingThroughLocalAuthority = false,
+              previousClaimant = None
             ), Nil
           ),
           benefits = applicantBenefits,
@@ -185,9 +182,8 @@ class JourneyModelSpec
               countryOfRegistration = ChildBirthRegistrationCountry.England,
               birthCertificateNumber = Some(systemNumber),
               relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
-              adoptingThroughLocalAuthority = None,
-              previousClaimant = None,
-              documents = Set.empty
+              adoptingThroughLocalAuthority = false,
+              previousClaimant = None
             ), Nil
           ),
           benefits = applicantBenefits,
@@ -218,6 +214,7 @@ class JourneyModelSpec
           .set(ChildBirthRegistrationCountryPage(Index(1)), ChildBirthRegistrationCountry.Scotland).success.value
           .set(ChildScottishBirthCertificateDetailsPage(Index(1)), scottishBirthCertificateDetails).success.value
           .set(ApplicantRelationshipToChildPage(Index(1)), relationshipToChild).success.value
+          .set(AdoptingThroughLocalAuthorityPage(Index(1)), false).success.value
           .set(AnyoneClaimedForChildBeforePage(Index(1)), false).success.value
 
         val expectedModel = JourneyModel(
@@ -257,9 +254,8 @@ class JourneyModelSpec
               countryOfRegistration = ChildBirthRegistrationCountry.England,
               birthCertificateNumber = Some(systemNumber),
               relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
-              adoptingThroughLocalAuthority = None,
-              previousClaimant = None,
-              documents = Set.empty
+              adoptingThroughLocalAuthority = false,
+              previousClaimant = None
             ), List(
               JourneyModel.Child(
                 name = childName2,
@@ -270,9 +266,8 @@ class JourneyModelSpec
                 countryOfRegistration = ChildBirthRegistrationCountry.Scotland,
                 birthCertificateNumber = Some(scottishBirthCertificateDetails),
                 relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
-                adoptingThroughLocalAuthority = None,
-                previousClaimant = None,
-                documents = Set.empty
+                adoptingThroughLocalAuthority = false,
+                previousClaimant = None
               )
             )
           ),
@@ -668,9 +663,8 @@ class JourneyModelSpec
           countryOfRegistration = ChildBirthRegistrationCountry.England,
           birthCertificateNumber = Some(systemNumber),
           relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
-          adoptingThroughLocalAuthority = None,
-          previousClaimant = None,
-          documents = Set.empty
+          adoptingThroughLocalAuthority = false,
+          previousClaimant = None
         )
 
         val (errors, data) = JourneyModel.from(answers).pad
@@ -699,71 +693,8 @@ class JourneyModelSpec
           countryOfRegistration = ChildBirthRegistrationCountry.Scotland,
           birthCertificateNumber = Some(scottishBirthCertificateDetails),
           relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
-          adoptingThroughLocalAuthority = None,
-          previousClaimant = None,
-          documents = Set.empty
-        )
-
-        val (errors, data) = JourneyModel.from(answers).pad
-
-        errors mustBe empty
-        data.value.children.toList must contain only expectedChildDetails
-      }
-
-      "when a child was born outside of England, Wales and Scotland" in {
-
-        val answers = UserAnswers("id")
-          .withMinimalApplicantDetails
-          .withOneChild
-          .withMinimalSingleIncomeDetails
-          .withMinimalPaymentDetails
-          .set(RelationshipStatusPage, Single).success.value
-          .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.Other).success.value
-          .set(IncludedDocumentsPage(Index(0)), documents).success.value
-
-        val expectedChildDetails = JourneyModel.Child(
-          name = childName,
-          nameChangedByDeedPoll = None,
-          previousNames = Nil,
-          biologicalSex = ChildBiologicalSex.Female,
-          dateOfBirth = now,
-          countryOfRegistration = ChildBirthRegistrationCountry.Other,
-          birthCertificateNumber = None,
-          relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
-          adoptingThroughLocalAuthority = None,
-          previousClaimant = None,
-          documents = documents
-        )
-
-        val (errors, data) = JourneyModel.from(answers).pad
-
-        errors mustBe empty
-        data.value.children.toList must contain only expectedChildDetails
-      }
-
-      "when a child is being adopted" in {
-
-        val answers = UserAnswers("id")
-          .withMinimalApplicantDetails
-          .withOneChild
-          .withMinimalSingleIncomeDetails
-          .withMinimalPaymentDetails
-          .set(RelationshipStatusPage, Single).success.value
-          .set(ApplicantRelationshipToChildPage(Index(0)), ApplicantRelationshipToChild.AdoptingChild).success.value
-          .set(AdoptingThroughLocalAuthorityPage(Index(0)), true).success.value
-
-        val expectedChildDetails = JourneyModel.Child(
-          name = childName,
-          nameChangedByDeedPoll = None,
-          previousNames = Nil,
-          biologicalSex = ChildBiologicalSex.Female,
-          dateOfBirth = now,
-          countryOfRegistration = ChildBirthRegistrationCountry.England,
-          birthCertificateNumber = Some(systemNumber),
-          relationshipToApplicant = ApplicantRelationshipToChild.AdoptingChild,
-          adoptingThroughLocalAuthority = Some(true),
-          previousClaimant = None,
-          documents = Set.empty
+          adoptingThroughLocalAuthority = false,
+          previousClaimant = None
         )
 
         val (errors, data) = JourneyModel.from(answers).pad
@@ -1142,42 +1073,6 @@ class JourneyModelSpec
         data mustBe empty
       }
 
-      "when a child's birth was registered outside the UK or in an unknown country, but no documents are included" in {
-
-        val country = Gen.oneOf(Country.Other, Country.Unknown).sample.value
-
-        val answers = UserAnswers("id")
-          .withMinimalApplicantDetails
-          .withOneChild
-          .withMinimalSingleIncomeDetails
-          .withMinimalPaymentDetails
-          .set(RelationshipStatusPage, Single).success.value
-          .set(ChildBirthRegistrationCountryPage(Index(0)), country).success.value
-
-        val (errors, data) = JourneyModel.from(answers).pad
-
-        errors.value.toChain.toList must contain only IncludedDocumentsPage(Index(0))
-
-        data mustBe empty
-      }
-
-      "when a child is being adopted, but whether it is through a local authority is not present" in {
-
-        val answers = UserAnswers("id")
-          .withMinimalApplicantDetails
-          .withOneChild
-          .withMinimalSingleIncomeDetails
-          .withMinimalPaymentDetails
-          .set(RelationshipStatusPage, Single).success.value
-          .set(ApplicantRelationshipToChildPage(Index(0)), AdoptingChild).success.value
-
-        val (errors, data) = JourneyModel.from(answers).pad
-
-        errors.value.toChain.toList must contain only AdoptingThroughLocalAuthorityPage(Index(0))
-
-        data mustBe empty
-      }
-
       "when someone has claimed for this child before, but their details are not present" in {
 
         val answers = UserAnswers("id")
@@ -1212,7 +1107,6 @@ class JourneyModelSpec
 
         data mustBe empty
       }
-
     }
   }
 
@@ -1250,6 +1144,7 @@ class JourneyModelSpec
         .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.England).success.value
         .set(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber).success.value
         .set(ApplicantRelationshipToChildPage(Index(0)), relationshipToChild).success.value
+        .set(AdoptingThroughLocalAuthorityPage(Index(0)), false).success.value
         .set(AnyoneClaimedForChildBeforePage(Index(0)), false).success.value
 
     def withMinimalSingleIncomeDetails: UserAnswers =

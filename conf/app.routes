@@ -206,9 +206,6 @@ POST       /child-previous-name/:childIndex/:nameIndex                        co
 GET        /child-scottish-birth-certificate-details/:index                        controllers.child.ChildScottishBirthCertificateDetailsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /child-scottish-birth-certificate-details/:index                        controllers.child.ChildScottishBirthCertificateDetailsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
-GET        /documents/:index                        controllers.child.IncludedDocumentsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
-POST       /documents/:index                        controllers.child.IncludedDocumentsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
-
 GET        /previous-claimant-address/:index                        controllers.child.PreviousClaimantAddressController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /previous-claimant-address/:index                        controllers.child.PreviousClaimantAddressController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 

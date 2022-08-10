@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,20 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this(
-        layout: templates.Layout,
-        govukButton: GovukButton,
-        govukInset: GovukInsetText,
-        govukPanel : GovukPanel
-)
+package models
 
-@()(implicit request: Request[_], messages: Messages)
+sealed trait DocumentType
 
-@layout(pageTitle = titleNoForm(messages("print.title")), showBackLink = false) {
+object DocumentType {
 
-    @govukPanel(Panel(title = messages("print.heading")))
-
-    <a id="download" href="@routes.PrintController.onDownload" class="govuk-button" download>@messages("print.button")</a>
+  case object BirthCertificate extends WithName("birthCertificate") with DocumentType
+  case object TravelDocument extends WithName("travelDocument") with DocumentType
+  case object AdoptionCertificate extends WithName("adoptionCertificate") with DocumentType
 }

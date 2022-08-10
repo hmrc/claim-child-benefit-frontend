@@ -18,8 +18,11 @@ package models
 
 import cats.data.{Ior, IorNec, NonEmptyChain, NonEmptyList}
 import cats.implicits._
-import models.{ChildBirthRegistrationCountry => Country}
+import models.ApplicantRelationshipToChild.AdoptedChild
+import models.ChildBirthRegistrationCountry._
+import models.DocumentType.{AdoptionCertificate, BirthCertificate, TravelDocument}
 import models.JourneyModel._
+import models.{ChildBirthRegistrationCountry => Country}
 import pages._
 import pages.applicant._
 import pages.child._
@@ -36,10 +39,7 @@ final case class JourneyModel(
                                children: NonEmptyList[Child],
                                benefits: Set[Benefits],
                                paymentPreference: PaymentPreference
-                             ) {
-
-  val anyDocuments: Boolean = children.toList.exists(_.documents.nonEmpty)
-}
+                             )
 
 object JourneyModel {
 
@@ -95,10 +95,23 @@ object JourneyModel {
                           countryOfRegistration: ChildBirthRegistrationCountry,
                           birthCertificateNumber: Option[String],
                           relationshipToApplicant: ApplicantRelationshipToChild,
-                          adoptingThroughLocalAuthority: Option[Boolean],
-                          previousClaimant: Option[PreviousClaimant],
-                          documents: Set[IncludedDocuments]
-                        )
+                          adoptingThroughLocalAuthority: Boolean,
+                          previousClaimant: Option[PreviousClaimant]
+                        ) {
+
+    private val adoptionCertificate =
+      if (relationshipToApplicant == AdoptedChild) Some(AdoptionCertificate) else None
+
+    private val (birthCertificate, travelDocument) = countryOfRegistration match {
+      case England | Scotland | Wales      => (None, None)
+      case _ if previousClaimant.isDefined => (None, None)
+      case NorthernIreland                 => (Some(BirthCertificate), None)
+      case _                               => (Some(BirthCertificate), Some(TravelDocument))
+    }
+
+    val requiredDocuments: Seq[DocumentType] =
+      Seq(birthCertificate, travelDocument, adoptionCertificate).flatten
+  }
 
   final case class PreviousClaimant(name: AdultName, address: Address)
 
@@ -159,18 +172,6 @@ object JourneyModel {
             Ior.Right(None)
         }
 
-      def getDocuments: IorNec[Query, Set[IncludedDocuments]] =
-        answers.getIor(ChildBirthRegistrationCountryPage(index)).flatMap {
-          case Country.Other | Country.Unknown => answers.getIor(IncludedDocumentsPage(index))
-          case _                               => Ior.Right(Set.empty)
-        }
-
-      def getAdoptingThroughLocalAuthority: IorNec[Query, Option[Boolean]] =
-        answers.getIor(ApplicantRelationshipToChildPage(index)).flatMap {
-          case ApplicantRelationshipToChild.AdoptingChild => answers.getIor(AdoptingThroughLocalAuthorityPage(index)).map(Some(_))
-          case _                                          => Ior.Right(None)
-        }
-
       (
         answers.getIor(ChildNamePage(index)),
         getNameChangedByDeedPoll,
@@ -180,9 +181,8 @@ object JourneyModel {
         answers.getIor(ChildBirthRegistrationCountryPage(index)),
         getBirthCertificateNumber,
         answers.getIor(ApplicantRelationshipToChildPage(index)),
-        getAdoptingThroughLocalAuthority,
-        getPreviousClaimant,
-        getDocuments
+        answers.getIor(AdoptingThroughLocalAuthorityPage(index)),
+        getPreviousClaimant
       ).parMapN(Child.apply)
     }
 

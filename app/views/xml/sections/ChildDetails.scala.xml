@@ -31,19 +31,13 @@
 
     @line("pdf.relationshipToApplicant", messages(s"applicantRelationshipToChild.${child.relationshipToApplicant.toString}"))
 
-    @child.adoptingThroughLocalAuthority.map { value =>
-        @line("pdf.adoptingThroughLocalAuthority", booleanToYesNo(value))
-    }
+    @line("pdf.adoptingThroughLocalAuthority", booleanToYesNo(child.adoptingThroughLocalAuthority))
 
     @line("pdf.claimedBefore", booleanToYesNo(child.previousClaimant.nonEmpty))
 
     @child.previousClaimant.map { previousClaimant =>
         @line("pdf.previousClaimantName", previousClaimant.name.display)
         @line("pdf.previousClaimantAddress", previousClaimant.address.lines.mkString(", "))
-    }
-
-    @if(child.documents.nonEmpty) {
-        line("pdf.documents", previousClaimant.documents.map(x => messages(s"includedDocuments.${x.toString}")).mkString(", "))
     }
 
 </fo:block-container>

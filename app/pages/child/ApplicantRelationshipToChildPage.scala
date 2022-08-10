@@ -17,15 +17,10 @@
 package pages.child
 
 import controllers.child.routes
-import models.ApplicantRelationshipToChild.{AdoptedChild, AdoptingChild}
-import models.ChildBirthRegistrationCountry._
-import models.IncludedDocuments.AdoptionCertificate
 import models.{ApplicantRelationshipToChild, Index, UserAnswers}
-import pages.{NonEmptyWaypoints, Page, Waypoints}
+import pages.{Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
-
-import scala.util.Try
 
 final case class ApplicantRelationshipToChildPage(index: Index) extends ChildQuestionPage[ApplicantRelationshipToChild] {
 
@@ -37,60 +32,5 @@ final case class ApplicantRelationshipToChildPage(index: Index) extends ChildQue
     routes.ApplicantRelationshipToChildController.onPageLoad(waypoints, index)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case AdoptingChild =>
-        AdoptingThroughLocalAuthorityPage(index)
-
-      case _ =>
-        AnyoneClaimedForChildBeforePage(index)
-    }.orRecover
-
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case AdoptingChild =>
-        answers.get(AdoptingThroughLocalAuthorityPage(index))
-          .map(_ => waypoints.next.page)
-          .getOrElse(AdoptingThroughLocalAuthorityPage(index))
-
-      case AdoptedChild =>
-        waypoints.next.page
-
-      case _ =>
-        answers.get(ChildBirthRegistrationCountryPage(index)).map {
-          case England | Wales | Scotland =>
-            waypoints.next.page
-
-          case NorthernIreland | Other | Unknown =>
-            answers.get(IncludedDocumentsPage(index)).map {
-              case docs if docs.nonEmpty =>
-                waypoints.next.page
-
-              case _ =>
-                IncludedDocumentsPage(index)
-
-            }.orRecover
-        }.orRecover
-
-    }.orRecover
-
-  override def cleanup(value: Option[ApplicantRelationshipToChild], userAnswers: UserAnswers): Try[UserAnswers] =
-    value.map {
-      case AdoptedChild =>
-        userAnswers.remove(AdoptingThroughLocalAuthorityPage(index))
-
-      case AdoptingChild =>
-        userAnswers.get(IncludedDocumentsPage(index)).map {
-          documents =>
-            userAnswers.set(IncludedDocumentsPage(index), documents - AdoptionCertificate)
-        }.getOrElse(super.cleanup(value, userAnswers))
-
-      case _ =>
-        userAnswers.get(IncludedDocumentsPage(index)).map {
-          documents =>
-            userAnswers
-              .set(IncludedDocumentsPage(index), documents - AdoptionCertificate)
-              .flatMap(_.remove(AdoptingThroughLocalAuthorityPage(index)))
-        }.getOrElse(userAnswers.remove(AdoptingThroughLocalAuthorityPage(index)))
-
-    }.getOrElse(super.cleanup(value, userAnswers))
+    AdoptingThroughLocalAuthorityPage(index)
 }

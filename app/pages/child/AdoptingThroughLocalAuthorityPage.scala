@@ -17,9 +17,8 @@
 package pages.child
 
 import controllers.child.routes
-import models.ChildBirthRegistrationCountry._
 import models.{Index, UserAnswers}
-import pages.{NonEmptyWaypoints, Page, Waypoints}
+import pages.{Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -34,25 +33,4 @@ final case class AdoptingThroughLocalAuthorityPage(index: Index) extends ChildQu
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     AnyoneClaimedForChildBeforePage(index)
-
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(ChildBirthRegistrationCountryPage(index)).map {
-      case England | Scotland | Wales =>
-        answers.get(AnyoneClaimedForChildBeforePage(index))
-          .map(_ => waypoints.next.page)
-          .getOrElse(AnyoneClaimedForChildBeforePage(index))
-
-      case NorthernIreland | Other | Unknown =>
-        answers.get(AnyoneClaimedForChildBeforePage(index))
-          .map { _ =>
-            answers.get(IncludedDocumentsPage(index)).map {
-              case docs if docs.nonEmpty =>
-                waypoints.next.page
-
-              case _ =>
-                IncludedDocumentsPage(index)
-            }.orRecover
-          }
-          .getOrElse(AnyoneClaimedForChildBeforePage(index))
-    }.orRecover
 }

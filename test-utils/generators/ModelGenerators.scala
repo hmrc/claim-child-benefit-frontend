@@ -31,11 +31,6 @@ trait ModelGenerators {
       Gen.oneOf(PaymentFrequency.values)
     }
 
-  implicit lazy val arbitraryIncludedDocuments: Arbitrary[IncludedDocuments] =
-    Arbitrary {
-      Gen.oneOf(IncludedDocuments.standardDocuments(AdoptingChild))
-    }
-
   implicit lazy val arbitraryChildName: Arbitrary[ChildName] =
     Arbitrary {
       for {
