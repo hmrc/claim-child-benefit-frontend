@@ -275,8 +275,8 @@ eldestChildDateOfBirth.error.required.all = Enter {0}’s date of birth
 eldestChildDateOfBirth.error.required.two = The date of birth must include {0} and {1}
 eldestChildDateOfBirth.error.required = The date of birth must include {0}
 eldestChildDateOfBirth.error.invalid = Enter a real date
-eldestChildDateOfBirth.error.belowMinimum = The date must be on or after {0}
-eldestChildDateOfBirth.error.aboveMaximum = The date must be on or before {0}
+eldestChildDateOfBirth.error.beforeMinimum = The date must be on or after {0}
+eldestChildDateOfBirth.error.afterMaximum = The date must be on or before {0}
 eldestChildDateOfBirth.change.hidden = your eldest child’s date of birth
 
 eldestChildName.title = What is the name of your eldest child?
