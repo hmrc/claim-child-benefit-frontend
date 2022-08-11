@@ -173,14 +173,15 @@ benefits.jobseekersAllowance = Income-based Jobseeker’s Allowance
 benefits.pensionCredit = Pension Credit
 benefits.employmentSupport = Income-related Employment and Support Allowance
 benefits.universalCredit = Universal Credit
-benefits.none = None of the above
+benefits.none = None of these benefits
 
-applicantBenefits.title = Do you receive any of the following?
-applicantBenefits.heading = Do you receive any of the following?
+applicantBenefits.title = Do you get any of these benefits?
+applicantBenefits.heading = Do you get any of these benefits?
 applicantBenefits.hint = Select all that apply
-applicantBenefits.checkYourAnswersLabel = Do you receive any of the following?
-applicantBenefits.error.required = Select the benefits you receive
-applicantBenefits.change.hidden = the benefits you receive
+applicantBenefits.checkYourAnswersLabel = Do you get any of these benefits?
+applicantBenefits.error.required = Select the benefits you get
+applicantBenefits.error.mutuallyExclusive = Select the benefits you get or none of these benefits
+applicantBenefits.change.hidden = the benefits you get
 
 applicantIncomeOver50k.title = Is your adjusted net income over £50,000 per year?
 applicantIncomeOver50k.heading = Is your adjusted net income over £50,000 per year?
@@ -204,12 +205,13 @@ applicantIncomeOver60k.p2.2 = to get an estimate of your adjusted net income.
 applicantIncomeOver60k.error.required = Select yes if your adjusted net income is over £60,000 per year
 applicantIncomeOver60k.change.hidden = if your adjusted net income is over £60,000 per year
 
-applicantOrPartnerBenefits.title = Do you or your partner receive any of the following?
-applicantOrPartnerBenefits.heading = Do you or your partner receive any of the following?
+applicantOrPartnerBenefits.title = Do you or your partner get any of these benefits?
+applicantOrPartnerBenefits.heading = Do you or your partner get any of these benefits?
 applicantOrPartnerBenefits.hint = Select all that apply
-applicantOrPartnerBenefits.checkYourAnswersLabel = Do you or your partner receive any of the following?
-applicantOrPartnerBenefits.error.required = Select the benefits you or your partner receive
-applicantOrPartnerBenefits.change.hidden = the benefits you or your partner receive
+applicantOrPartnerBenefits.checkYourAnswersLabel = Do you or your partner get any of these benefits?
+applicantOrPartnerBenefits.error.required = Select the benefits you or your partner get
+applicantOrPartnerBenefits.error.mutuallyExclusive = Select the benefits you or your partner get or none of these benefits
+applicantOrPartnerBenefits.change.hidden = the benefits you or your partner get
 
 applicantOrPartnerIncomeOver50k.title = Is your or your partner’s adjusted net income over £50,000 per year?
 applicantOrPartnerIncomeOver50k.heading = Is your or your partner’s adjusted net  income over £50,000 per year?
@@ -445,12 +447,13 @@ applicantEmploymentStatus.heading = What is your employment status?
 applicantEmploymentStatus.hint = Select all that apply
 applicantEmploymentStatus.checkYourAnswersLabel = What is your employment status?
 applicantEmploymentStatus.error.required = Select your employment status
+applicantEmploymentStatus.error.mutuallyExclusive = Select your employment status or none of these apply
 applicantEmploymentStatus.change.hidden = your employment status
 
 employmentStatus.lookingForWork = Looking for work
 employmentStatus.employed = Employed
 employmentStatus.selfEmployed = Self-employed
-employmentStatus.noneOfThese = None of the above
+employmentStatus.noneOfThese = None of these apply
 
 applicantHasPreviousFamilyName.title = Have you been known by any other last names or family names?
 applicantHasPreviousFamilyName.heading = Have you been known by any other last names or family names?
@@ -591,6 +594,7 @@ partnerEmploymentStatus.heading = What is {0}’s employment status?
 partnerEmploymentStatus.hint = Select all that apply
 partnerEmploymentStatus.checkYourAnswersLabel = What is {0}’s employment status?
 partnerEmploymentStatus.error.required = Select {0}’s employment status
+partnerEmploymentStatus.error.mutuallyExclusive = Select {0}’s employment status or none of these apply
 partnerEmploymentStatus.change.hidden = {0}’s employment status
 
 partnerEntitledToChildBenefit.title = Is your partner entitled to receive Child Benefit now?

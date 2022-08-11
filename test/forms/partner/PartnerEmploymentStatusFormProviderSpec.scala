@@ -41,7 +41,15 @@ class PartnerEmploymentStatusFormProviderSpec extends CheckboxFieldBehaviours {
       form,
       fieldName,
       requiredKey,
-      Seq(name)
+      name
+    )
+
+    behave like checkboxFieldWithMutuallyExclusiveAnswers[EmploymentStatus](
+      form,
+      fieldName,
+      EmploymentStatus.activeStatuses,
+      Set(EmploymentStatus.NoneOfThese),
+      FormError(fieldName, "partnerEmploymentStatus.error.mutuallyExclusive", Seq(name))
     )
   }
 }

@@ -41,5 +41,13 @@ class ApplicantOrPartnerBenefitsFormProviderSpec extends CheckboxFieldBehaviours
       fieldName,
       requiredKey
     )
+
+    behave like checkboxFieldWithMutuallyExclusiveAnswers[Benefits](
+      form,
+      fieldName,
+      Benefits.qualifyingBenefits,
+      Set(Benefits.NoneOfTheAbove),
+      FormError(fieldName, "applicantOrPartnerBenefits.error.mutuallyExclusive")
+    )
   }
 }

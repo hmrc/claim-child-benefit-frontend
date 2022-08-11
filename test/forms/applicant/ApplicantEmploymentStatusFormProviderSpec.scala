@@ -27,7 +27,7 @@ class ApplicantEmploymentStatusFormProviderSpec extends CheckboxFieldBehaviours 
   ".value" - {
 
     val fieldName = "value"
-    val requiredKey = "employmentStatus.error.required"
+    val requiredKey = "applicantEmploymentStatus.error.required"
 
     behave like checkboxField[EmploymentStatus](
       form,
@@ -40,6 +40,14 @@ class ApplicantEmploymentStatusFormProviderSpec extends CheckboxFieldBehaviours 
       form,
       fieldName,
       requiredKey
+    )
+
+    behave like checkboxFieldWithMutuallyExclusiveAnswers[EmploymentStatus](
+      form,
+      fieldName,
+      EmploymentStatus.activeStatuses,
+      Set(EmploymentStatus.NoneOfThese),
+      FormError(fieldName, "applicantEmploymentStatus.error.mutuallyExclusive")
     )
   }
 }

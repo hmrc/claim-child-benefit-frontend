@@ -28,6 +28,14 @@ class PartnerEmploymentStatusFormProvider @Inject() extends Mappings {
   def apply(partnerFirstName: String): Form[Set[EmploymentStatus]] =
     Form(
       "value" -> set(enumerable[EmploymentStatus]("partnerEmploymentStatus.error.required", args = Seq(partnerFirstName)))
-        .verifying(nonEmptySet("partnerEmploymentStatus.error.required", args = Seq(partnerFirstName)))
+        .verifying(
+          nonEmptySet("partnerEmploymentStatus.error.required", args = partnerFirstName),
+          noMutuallyExclusiveAnswers[EmploymentStatus](
+            EmploymentStatus.activeStatuses,
+            Set(EmploymentStatus.NoneOfThese),
+            "partnerEmploymentStatus.error.mutuallyExclusive",
+            partnerFirstName
+          )
+        )
     )
 }

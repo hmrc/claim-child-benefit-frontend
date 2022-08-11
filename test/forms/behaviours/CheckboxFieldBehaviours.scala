@@ -17,6 +17,7 @@
 package forms.behaviours
 
 import forms.FormSpec
+import models.WithName
 import play.api.data.{Form, FormError}
 
 trait CheckboxFieldBehaviours extends FormSpec {
@@ -47,12 +48,11 @@ trait CheckboxFieldBehaviours extends FormSpec {
   def mandatoryCheckboxField(form: Form[_],
                              fieldName: String,
                              requiredKey: String,
-                             args: Seq[String] = Nil): Unit = {
+                             args: Any*): Unit = {
 
     "fail to bind when no answers are selected" in {
       val data = Map.empty[String, String]
-      val errorArgs = if (args.isEmpty) Nil else Seq(args)
-      form.bind(data).errors must contain(FormError(s"$fieldName", requiredKey, errorArgs))
+      form.bind(data).errors must contain(FormError(s"$fieldName", requiredKey, args))
     }
 
     "fail to bind when blank answer provided" in {
@@ -60,6 +60,43 @@ trait CheckboxFieldBehaviours extends FormSpec {
         s"$fieldName[0]" -> ""
       )
       form.bind(data).errors must contain(FormError(s"$fieldName[0]", requiredKey, args))
+    }
+  }
+
+  def checkboxFieldWithMutuallyExclusiveAnswers[A](
+                                                    form: Form[_],
+                                                    fieldName: String,
+                                                    set1: Set[A],
+                                                    set2: Set[A],
+                                                    expectedError: FormError
+                                                  ): Unit = {
+
+    "must bind when all values are from the first set" in {
+      val data = set1.toList.zipWithIndex.map { case (item, index) =>
+        s"$fieldName[$index]" -> item.toString
+      }.toMap
+
+      val result = form.bind(data)
+      result.get mustEqual set1
+      result.errors mustBe empty
+    }
+
+    "must bind when all values are from the second set" in {
+      val data = set2.toList.zipWithIndex.map { case (item, index) =>
+        s"$fieldName[$index]" -> item.toString
+      }.toMap
+
+      val result = form.bind(data)
+      result.get mustEqual set2
+      result.errors mustBe empty
+    }
+
+    "must not bind when there are values from both sets" in {
+      val data = set1.union(set2).toList.zipWithIndex.map { case (item, index) =>
+        s"$fieldName[$index]" -> item.toString
+      }.toMap
+
+      form.bind(data).errors must contain only expectedError
     }
   }
 }
