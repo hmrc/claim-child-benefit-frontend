@@ -63,7 +63,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           telephoneNumber = "07777 777777",
           bestTimeToContact = Set(models.BestTimeToContact.Morning, models.BestTimeToContact.Afternoon, models.BestTimeToContact.Evening),
           nationality = "applicant nationality",
-          employmentStatus = Set(models.ApplicantEmploymentStatus.Employed, models.ApplicantEmploymentStatus.SelfEmployed)
+          employmentStatus = Set(models.EmploymentStatus.Employed, models.EmploymentStatus.SelfEmployed)
         ),
         relationship = JourneyModel.Relationship(
           status = models.RelationshipStatus.Cohabiting,
@@ -73,7 +73,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             dateOfBirth = now,
             nationality = "partner nationality",
             nationalInsuranceNumber = Some(partnerNino),
-            employmentStatus = Set(models.PartnerEmploymentStatus.Employed, models.PartnerEmploymentStatus.SelfEmployed),
+            employmentStatus = Set(models.EmploymentStatus.Employed, models.EmploymentStatus.SelfEmployed),
             currentlyEntitledToChildBenefit = false,
             waitingToHearAboutEntitlement = Some(true),
             eldestChild = Some(JourneyModel.EldestChild(

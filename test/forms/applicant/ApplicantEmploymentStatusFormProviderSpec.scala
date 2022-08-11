@@ -17,7 +17,7 @@
 package forms.applicant
 
 import forms.behaviours.CheckboxFieldBehaviours
-import models.ApplicantEmploymentStatus
+import models.EmploymentStatus
 import play.api.data.FormError
 
 class ApplicantEmploymentStatusFormProviderSpec extends CheckboxFieldBehaviours {
@@ -29,10 +29,10 @@ class ApplicantEmploymentStatusFormProviderSpec extends CheckboxFieldBehaviours 
     val fieldName = "value"
     val requiredKey = "applicantEmploymentStatus.error.required"
 
-    behave like checkboxField[ApplicantEmploymentStatus](
+    behave like checkboxField[EmploymentStatus](
       form,
       fieldName,
-      validValues  = ApplicantEmploymentStatus.values,
+      validValues  = EmploymentStatus.values,
       invalidError = FormError(s"$fieldName[0]", "error.invalid")
     )
 
@@ -40,6 +40,14 @@ class ApplicantEmploymentStatusFormProviderSpec extends CheckboxFieldBehaviours 
       form,
       fieldName,
       requiredKey
+    )
+
+    behave like checkboxFieldWithMutuallyExclusiveAnswers[EmploymentStatus](
+      form,
+      fieldName,
+      EmploymentStatus.activeStatuses,
+      Set(EmploymentStatus.NoneOfThese),
+      FormError(fieldName, "applicantEmploymentStatus.error.mutuallyExclusive")
     )
   }
 }

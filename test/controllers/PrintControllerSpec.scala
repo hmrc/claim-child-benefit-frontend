@@ -46,7 +46,7 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
   private val bestTimes = Set[BestTimeToContact](BestTimeToContact.Morning)
   private val applicantBenefits = Set[Benefits](Benefits.NoneOfTheAbove)
   private val applicantNationality = "applicant nationality"
-  private val applicantEmployment = Set[ApplicantEmploymentStatus](ApplicantEmploymentStatus.Employed)
+  private val applicantEmployment = Set[EmploymentStatus](EmploymentStatus.Employed)
 
   private val childName = ChildName("first", None, "last")
   private val biologicalSex = ChildBiologicalSex.Female

@@ -43,7 +43,7 @@
 
     @line("pdf.nationality", model.applicant.nationality)
 
-    @line("pdf.employmentStatus", model.applicant.employmentStatus.map(x => messages(s"applicantEmploymentStatus.${x.toString}")).mkString(", "))
+    @line("pdf.employmentStatus", model.applicant.employmentStatus.map(x => messages(s"employmentStatus.${x.toString}")).mkString(", "))
 
     @line("pdf.benefits", model.benefits.map(x => messages(s"benefits.${x.toString}")).mkString(", "))
 

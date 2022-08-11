@@ -27,6 +27,15 @@ class ApplicantBenefitsFormProvider @Inject() extends Mappings {
 
   def apply(): Form[Set[Benefits]] =
     Form(
-      "value" -> set(enumerable[Benefits]("applicantBenefits.error.required")).verifying(nonEmptySet("applicantBenefits.error.required"))
+      "value" ->
+        set(enumerable[Benefits]("applicantBenefits.error.required"))
+          .verifying(
+            nonEmptySet("applicantBenefits.error.required"),
+            noMutuallyExclusiveAnswers[Benefits](
+              Benefits.qualifyingBenefits,
+              Set(Benefits.NoneOfTheAbove),
+              "applicantBenefits.error.mutuallyExclusive"
+            )
+          )
     )
 }

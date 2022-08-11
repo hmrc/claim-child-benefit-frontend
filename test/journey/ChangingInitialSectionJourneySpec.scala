@@ -43,7 +43,7 @@ class ChangingInitialSectionJourneySpec
   private val nonQualifyingBenefits = Set[Benefits](Benefits.NoneOfTheAbove)
   private def partnerName           = arbitrary[AdultName].sample.value
   private def nino                  = arbitrary[Nino].sample.value
-  private def employmentStatus      = Set(arbitrary[PartnerEmploymentStatus].sample.value)
+  private def employmentStatus      = Set(arbitrary[EmploymentStatus].sample.value)
   private def eldestChildName       = arbitrary[ChildName].sample.value
   private def childName             = arbitrary[ChildName].sample.value
 

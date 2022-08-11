@@ -53,7 +53,7 @@ class JourneyModelSpec
   private val bestTimes = Set[BestTimeToContact](BestTimeToContact.Morning)
   private val applicantBenefits = Set[Benefits](Benefits.NoneOfTheAbove)
   private val applicantNationality = "applicant nationality"
-  private val applicantEmployment = Set[ApplicantEmploymentStatus](ApplicantEmploymentStatus.Employed)
+  private val applicantEmployment = Set[EmploymentStatus](EmploymentStatus.Employed)
   private val previousName1 = "previous name 1"
   private val previousName2 = "previous name 2"
 
@@ -62,7 +62,7 @@ class JourneyModelSpec
 
   private val partnerName = AdultName(None, "partner first", None, "partner last")
   private val partnerNationality = "partner nationality"
-  private val partnerEmployment = Set[PartnerEmploymentStatus](PartnerEmploymentStatus.Employed)
+  private val partnerEmployment = Set[EmploymentStatus](EmploymentStatus.Employed)
   private val partnerNino = arbitrary[Nino].sample.value
   private val partnerEldestChildName = ChildName("partner child first", None, "partner child last")
 

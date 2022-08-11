@@ -18,14 +18,14 @@ package pages.applicant
 
 import controllers.applicant.routes
 import models.RelationshipStatus.{Cohabiting, Divorced, Married, Separated, Single, Widowed}
-import models.{ApplicantEmploymentStatus, Index, UserAnswers}
+import models.{EmploymentStatus, Index, UserAnswers}
 import pages.child.ChildNamePage
 import pages.partner.PartnerNamePage
 import pages.{Page, QuestionPage, RelationshipStatusPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object ApplicantEmploymentStatusPage extends QuestionPage[Set[ApplicantEmploymentStatus]] {
+case object ApplicantEmploymentStatusPage extends QuestionPage[Set[EmploymentStatus]] {
 
   override def path: JsPath = JsPath \ toString
 

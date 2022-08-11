@@ -113,4 +113,12 @@ trait Constraints {
       case _ =>
         Invalid(errorKey, args: _*)
     }
+
+  protected def noMutuallyExclusiveAnswers[A](set1: Set[A], set2: Set[A], errorKey: String, args: Any*): Constraint[Set[A]] =
+    Constraint {
+      case set if set.intersect(set1).nonEmpty && set.intersect(set2).nonEmpty =>
+        Invalid(errorKey, args: _*)
+      case _ =>
+        Valid
+    }
 }
