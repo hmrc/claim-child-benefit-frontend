@@ -22,6 +22,7 @@ import pages.child.{AddChildPage, CheckChildDetailsPage}
 import pages.{AddItemPage, CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import queries.AllChildSummaries
+import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import uk.gov.hmrc.hmrcfrontend.views.viewmodels.addtoalist.ListItem
 import viewmodels.govuk.summarylist._
@@ -49,7 +50,7 @@ object AddChildSummary {
 
         SummaryListRowViewModel(
           key = "addChild.checkYourAnswersLabel",
-          value = ValueViewModel(value),
+          value = ValueViewModel(HtmlContent(value)),
           actions = Seq(
             ActionItemViewModel("site.change", AddChildPage.changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("addChild.change.hidden"))
