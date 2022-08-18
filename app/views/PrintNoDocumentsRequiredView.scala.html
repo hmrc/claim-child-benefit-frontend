@@ -43,6 +43,18 @@
         @messages("print.address.4")
     </p>
 
+    <h2 class="govuk-heading-m">@messages("print.circumstances")</h2>
+
+    <p class="govuk-body">
+        @messages("print.circumstances.p1")
+        <a href="@messages("print.circumstances.p1.link.href")" class="govuk-link">@messages("print.circumstances.p1.link.text")</a>.
+    </p>
+
+    <p class="govuk-body">
+        @messages("print.circumstances.p2")
+        <a href="@messages("print.circumstances.p2.link.href")" class="govuk-link">@messages("print.circumstances.p2.link.text")</a>.
+    </p>
+
     <h2 class="govuk-heading-m">@messages("print.whatHappensNext")</h2>
 
     <p class="govuk-body">@messages("print.whatHappensNext.p1")</p>
@@ -50,8 +62,24 @@
     <ul class="govuk-list govuk-list--bullet">
         <li>@messages("print.whatHappensNext.bullet1")</li>
         <li>@messages("print.whatHappensNext.bullet2")</li>
-        <li>@messages("print.whatHappensNext.bullet3")</li>
     </ul>
 
+    <p class="govuk-body">
+        @messages("print.whatHappensNext.p2")
+        <a href="@messages("print.whatHappensNext.p2.link.href")" class="govuk-link">@messages("print.whatHappensNext.p2.link.text")</a>.
+    </p>
+
+    <p class="govuk-body">
+        @messages("print.whatHappensNext.p3")
+        <a href="@messages("print.whatHappensNext.p3.link.href")" class="govuk-link">@messages("print.whatHappensNext.p3.link.text")</a>.
+    </p>
+
+    <p class="govuk-body">
+        @messages("print.whatHappensNext.p4.1")
+        <a href="@routes.CheckYourAnswersController.onPageLoad" class="govuk-link">@messages("print.whatHappensNext.p4.link1.text")</a>
+        @messages("print.whatHappensNext.p4.2")
+        <a href="@routes.IndexController.onPageLoad" class="govuk-link">@messages("print.whatHappensNext.p4.link2.text")</a>.
+    </p>
+    
     <a id="download" href="@routes.PrintController.onDownload" class="govuk-button" download>@messages("print.button")</a>
 }
