@@ -44,7 +44,7 @@
         @govukInput(
             InputViewModel(
                 field = form("title"),
-                label = LabelViewModel(messages("partnerName.title"))
+                label = LabelViewModel(messages("partnerName.field.title"))
             )
             .withWidth(Fixed10)
         )
@@ -52,7 +52,7 @@
         @govukInput(
             InputViewModel(
                 field = form("firstName"),
-                label = LabelViewModel(messages("partnerName.firstName"))
+                label = LabelViewModel(messages("partnerName.field.firstName"))
             )
             .withWidth(Full)
         )
@@ -60,7 +60,7 @@
         @govukInput(
             InputViewModel(
                 field = form("middleNames"),
-                label = LabelViewModel(messages("partnerName.middleNames"))
+                label = LabelViewModel(messages("partnerName.field.middleNames"))
             )
             .withWidth(Full)
         )
@@ -68,7 +68,7 @@
         @govukInput(
             InputViewModel(
                 field = form("lastName"),
-                label = LabelViewModel(messages("partnerName.lastName"))
+                label = LabelViewModel(messages("partnerName.field.lastName"))
             )
             .withWidth(Full)
         )

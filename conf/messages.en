@@ -470,10 +470,10 @@ applicantLivedAtCurrentAddressOneYear.change.hidden = if you have lived at this 
 
 applicantName.title = What is your name?
 applicantName.heading = What is your name?
-applicantName.title = Title
-applicantName.firstName = First name
-applicantName.middleNames = Middle names
-applicantName.lastName = Last name
+applicantName.field.title = Title
+applicantName.field.firstName = First name
+applicantName.field.middleNames = Middle names
+applicantName.field.lastName = Last name
 applicantName.checkYourAnswersLabel = What is your name?
 applicantName.error.firstName.required = Enter your first name
 applicantName.error.lastName.required = Enter your last name
@@ -606,10 +606,10 @@ partnerEntitledToChildBenefit.change.hidden = if {0} is entitled to receive Chil
 
 partnerName.title = What is your partner’s name?
 partnerName.heading = What is your partner’s name?
-partnerName.title = Title
-partnerName.firstName = First name
-partnerName.middleNames = Middle names
-partnerName.lastName = Last name
+partnerName.field.title = Title
+partnerName.field.firstName = First name
+partnerName.field.middleNames = Middle names
+partnerName.field.lastName = Last name
 partnerName.checkYourAnswersLabel = What is your partner’s name?
 partnerName.error.firstName.required = Enter your partner’s first name
 partnerName.error.lastName.required = Enter your partner’s last name
@@ -791,7 +791,6 @@ previousClaimantAddress.change.hidden = the claimant’s address
 
 previousClaimantName.title = What is the name of the person who claimed Child Benefit for this child?
 previousClaimantName.heading = What is the name of the person who claimed Child Benefit for {0}?
-previousClaimantName.title = Title (optional)
 previousClaimantName.firstName = First name
 previousClaimantName.middleNames = Middle names
 previousClaimantName.lastName = Last name
