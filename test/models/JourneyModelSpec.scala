@@ -100,7 +100,8 @@ class JourneyModelSpec
             telephoneNumber = phoneNumber,
             bestTimeToContact = bestTimes,
             nationality = applicantNationality,
-            employmentStatus = applicantEmployment
+            employmentStatus = applicantEmployment,
+            memberOfHMForcesOrCivilServantAbroad = false
           ),
           relationship = JourneyModel.Relationship(Single, None, None),
           children = NonEmptyList(
@@ -142,6 +143,7 @@ class JourneyModelSpec
           .set(PartnerDateOfBirthPage, now).success.value
           .set(PartnerNationalityPage, partnerNationality).success.value
           .set(PartnerEmploymentStatusPage, partnerEmployment).success.value
+          .set(PartnerIsHmfOrCivilServantPage, false).success.value
           .set(PartnerEntitledToChildBenefitPage, false).success.value
           .set(PartnerWaitingForEntitlementDecisionPage, false).success.value
 
@@ -156,7 +158,8 @@ class JourneyModelSpec
             telephoneNumber = phoneNumber,
             bestTimeToContact = bestTimes,
             nationality = applicantNationality,
-            employmentStatus = applicantEmployment
+            employmentStatus = applicantEmployment,
+            memberOfHMForcesOrCivilServantAbroad = false
           ),
           relationship = JourneyModel.Relationship(
             status = Married,
@@ -167,6 +170,7 @@ class JourneyModelSpec
               nationality = partnerNationality,
               nationalInsuranceNumber = None,
               employmentStatus = partnerEmployment,
+              memberOfHMForcesOrCivilServantAbroad = false,
               currentlyEntitledToChildBenefit = false,
               waitingToHearAboutEntitlement = Some(false),
               eldestChild = None
@@ -228,7 +232,8 @@ class JourneyModelSpec
             telephoneNumber = phoneNumber,
             bestTimeToContact = bestTimes,
             nationality = applicantNationality,
-            employmentStatus = applicantEmployment
+            employmentStatus = applicantEmployment,
+            memberOfHMForcesOrCivilServantAbroad = false
           ),
           relationship = JourneyModel.Relationship(
             status = Married,
@@ -239,6 +244,7 @@ class JourneyModelSpec
               nationality = partnerNationality,
               nationalInsuranceNumber = None,
               employmentStatus = partnerEmployment,
+              memberOfHMForcesOrCivilServantAbroad = false,
               currentlyEntitledToChildBenefit = false,
               waitingToHearAboutEntitlement = Some(false),
               eldestChild = None
@@ -481,7 +487,8 @@ class JourneyModelSpec
           telephoneNumber = phoneNumber,
           bestTimeToContact = bestTimes,
           nationality = applicantNationality,
-          employmentStatus = applicantEmployment
+          employmentStatus = applicantEmployment,
+          memberOfHMForcesOrCivilServantAbroad = false
         )
 
         val (errors, data) = JourneyModel.from(answers).pad
@@ -512,7 +519,8 @@ class JourneyModelSpec
           telephoneNumber = phoneNumber,
           bestTimeToContact = bestTimes,
           nationality = applicantNationality,
-          employmentStatus = applicantEmployment
+          employmentStatus = applicantEmployment,
+          memberOfHMForcesOrCivilServantAbroad = false
         )
 
         val (errors, data) = JourneyModel.from(answers).pad
@@ -542,7 +550,8 @@ class JourneyModelSpec
           telephoneNumber = phoneNumber,
           bestTimeToContact = bestTimes,
           nationality = applicantNationality,
-          employmentStatus = applicantEmployment
+          employmentStatus = applicantEmployment,
+          memberOfHMForcesOrCivilServantAbroad = false
         )
 
         val (errors, data) = JourneyModel.from(answers).pad
@@ -569,6 +578,7 @@ class JourneyModelSpec
           nationality = partnerNationality,
           nationalInsuranceNumber = Some(partnerNino.value),
           employmentStatus = partnerEmployment,
+          memberOfHMForcesOrCivilServantAbroad = false,
           currentlyEntitledToChildBenefit = false,
           waitingToHearAboutEntitlement = Some(false),
           eldestChild = None
@@ -599,6 +609,7 @@ class JourneyModelSpec
           nationality = partnerNationality,
           nationalInsuranceNumber = None,
           employmentStatus = partnerEmployment,
+          memberOfHMForcesOrCivilServantAbroad = false,
           currentlyEntitledToChildBenefit = true,
           waitingToHearAboutEntitlement = None,
           eldestChild = Some(JourneyModel.EldestChild(partnerEldestChildName, now))
@@ -630,6 +641,7 @@ class JourneyModelSpec
           nationality = partnerNationality,
           nationalInsuranceNumber = None,
           employmentStatus = partnerEmployment,
+          memberOfHMForcesOrCivilServantAbroad = false,
           currentlyEntitledToChildBenefit = false,
           waitingToHearAboutEntitlement = Some(true),
           eldestChild = Some(JourneyModel.EldestChild(partnerEldestChildName, now))
@@ -739,6 +751,7 @@ class JourneyModelSpec
           PartnerNationalityPage,
           PartnerNinoKnownPage,
           PartnerEmploymentStatusPage,
+          PartnerIsHmfOrCivilServantPage,
           PartnerEntitledToChildBenefitPage
         )
         data mustBe empty
@@ -778,6 +791,7 @@ class JourneyModelSpec
           PartnerNationalityPage,
           PartnerNinoKnownPage,
           PartnerEmploymentStatusPage,
+          PartnerIsHmfOrCivilServantPage,
           PartnerEntitledToChildBenefitPage
         )
         data mustBe empty
@@ -1124,6 +1138,7 @@ class JourneyModelSpec
         .set(BestTimeToContactPage, bestTimes).success.value
         .set(ApplicantNationalityPage, applicantNationality).success.value
         .set(ApplicantEmploymentStatusPage, applicantEmployment).success.value
+        .set(ApplicantIsHmfOrCivilServantPage, false).success.value
 
     def withMinimalPartnerDetails: UserAnswers =
       answers
@@ -1132,6 +1147,7 @@ class JourneyModelSpec
         .set(PartnerDateOfBirthPage, now).success.value
         .set(PartnerNationalityPage, partnerNationality).success.value
         .set(PartnerEmploymentStatusPage, partnerEmployment).success.value
+        .set(PartnerIsHmfOrCivilServantPage, false).success.value
         .set(PartnerEntitledToChildBenefitPage, false).success.value
         .set(PartnerWaitingForEntitlementDecisionPage, false).success.value
 

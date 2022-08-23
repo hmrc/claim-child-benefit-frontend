@@ -68,7 +68,8 @@ object JourneyModel {
                               telephoneNumber: String,
                               bestTimeToContact: Set[BestTimeToContact],
                               nationality: String,
-                              employmentStatus: Set[EmploymentStatus]
+                              employmentStatus: Set[EmploymentStatus],
+                              memberOfHMForcesOrCivilServantAbroad: Boolean
                             )
 
   final case class Partner(
@@ -77,6 +78,7 @@ object JourneyModel {
                             nationality: String,
                             nationalInsuranceNumber: Option[String],
                             employmentStatus: Set[EmploymentStatus],
+                            memberOfHMForcesOrCivilServantAbroad: Boolean,
                             currentlyEntitledToChildBenefit: Boolean,
                             waitingToHearAboutEntitlement: Option[Boolean],
                             eldestChild: Option[EldestChild]
@@ -223,7 +225,8 @@ object JourneyModel {
       answers.getIor(ApplicantPhoneNumberPage),
       answers.getIor(BestTimeToContactPage),
       answers.getIor(ApplicantNationalityPage),
-      answers.getIor(ApplicantEmploymentStatusPage)
+      answers.getIor(ApplicantEmploymentStatusPage),
+      answers.getIor(ApplicantIsHmfOrCivilServantPage)
     ).parMapN(Applicant.apply)
   }
 
@@ -266,6 +269,7 @@ object JourneyModel {
       answers.getIor(PartnerNationalityPage),
       getPartnerNino,
       answers.getIor(PartnerEmploymentStatusPage),
+      answers.getIor(PartnerIsHmfOrCivilServantPage),
       answers.getIor(PartnerEntitledToChildBenefitPage),
       getPartnerWaitingToHear,
       getPartnerEldestChild
