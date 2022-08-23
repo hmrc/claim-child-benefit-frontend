@@ -16,10 +16,11 @@
 
 package controllers.partner
 
+import controllers.AnswerExtractor
 import controllers.actions._
 import forms.partner.PartnerIsHmfOrCivilServantFormProvider
 import pages.Waypoints
-import pages.partner.PartnerIsHmfOrCivilServantPage
+import pages.partner.{PartnerIsHmfOrCivilServantPage, PartnerNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -38,33 +39,43 @@ class PartnerIsHmfOrCivilServantController @Inject()(
                                          formProvider: PartnerIsHmfOrCivilServantFormProvider,
                                          val controllerComponents: MessagesControllerComponents,
                                          view: PartnerIsHmfOrCivilServantView
-                                 )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
-
-  val form = formProvider()
+                                 )(implicit ec: ExecutionContext)
+  extends FrontendBaseController
+    with I18nSupport
+    with AnswerExtractor {
 
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
+      getAnswer(PartnerNamePage) {
+        partnerName =>
+          val form = formProvider(partnerName.safeFirstName)
 
-      val preparedForm = request.userAnswers.get(PartnerIsHmfOrCivilServantPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
+          val preparedForm = request.userAnswers.get(PartnerIsHmfOrCivilServantPage) match {
+            case None => form
+            case Some(value) => form.fill(value)
+          }
+
+          Ok(view(preparedForm, waypoints, partnerName.safeFirstName))
       }
-
-      Ok(view(preparedForm, waypoints))
   }
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      getAnswerAsync(PartnerNamePage) {
+        partnerName =>
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints))),
+          val form = formProvider(partnerName.safeFirstName)
 
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerIsHmfOrCivilServantPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(PartnerIsHmfOrCivilServantPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
-      )
+          form.bindFromRequest().fold(
+            formWithErrors =>
+              Future.successful(BadRequest(view(formWithErrors, waypoints, partnerName.safeFirstName))),
+
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerIsHmfOrCivilServantPage, value))
+                _ <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(PartnerIsHmfOrCivilServantPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+          )
+        }
   }
 }

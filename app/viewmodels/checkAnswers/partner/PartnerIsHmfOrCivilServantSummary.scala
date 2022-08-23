@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers.partner
 
 import models.UserAnswers
-import pages.partner.PartnerIsHmfOrCivilServantPage
+import pages.partner.{PartnerIsHmfOrCivilServantPage, PartnerNamePage}
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -27,19 +27,21 @@ import viewmodels.implicits._
 object PartnerIsHmfOrCivilServantSummary {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
-         (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(PartnerIsHmfOrCivilServantPage).map {
-      answer =>
-
+         (implicit messages: Messages): Option[SummaryListRow] = {
+    for {
+      partnerName <- answers.get(PartnerNamePage)
+      answer      <- answers.get(PartnerIsHmfOrCivilServantPage)
+    } yield {
         val value = if (answer) "site.yes" else "site.no"
 
         SummaryListRowViewModel(
-          key = "partnerIsHmfOrCivilServant.checkYourAnswersLabel",
+          key = messages("partnerIsHmfOrCivilServant.checkYourAnswersLabel", partnerName.safeFirstName),
           value = ValueViewModel(value),
           actions = Seq(
             ActionItemViewModel("site.change", PartnerIsHmfOrCivilServantPage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("partnerIsHmfOrCivilServant.change.hidden"))
+              .withVisuallyHiddenText(messages("partnerIsHmfOrCivilServant.change.hidden", partnerName.safeFirstName))
           )
         )
     }
+  }
 }

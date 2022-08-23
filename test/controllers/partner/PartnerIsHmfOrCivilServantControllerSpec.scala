@@ -19,12 +19,12 @@ package controllers.partner
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.partner.PartnerIsHmfOrCivilServantFormProvider
-import models.UserAnswers
+import models.{AdultName, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.EmptyWaypoints
-import pages.partner.PartnerIsHmfOrCivilServantPage
+import pages.partner.{PartnerIsHmfOrCivilServantPage, PartnerNamePage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -38,9 +38,12 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new PartnerIsHmfOrCivilServantFormProvider()
-  val form = formProvider()
+  private val partnerName = AdultName(None, "first", None, "Last")
+
+  private val formProvider = new PartnerIsHmfOrCivilServantFormProvider()
+  private val form = formProvider("first")
   private val waypoints = EmptyWaypoints
+  private val baseAnswers = emptyUserAnswers.set(PartnerNamePage, partnerName).success.value
 
   lazy val partnerIsHmfOrCivilServantRoute = routes.PartnerIsHmfOrCivilServantController.onPageLoad(waypoints).url
 
@@ -48,7 +51,7 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, partnerIsHmfOrCivilServantRoute)
@@ -58,13 +61,13 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
         val view = application.injector.instanceOf[PartnerIsHmfOrCivilServantView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, "first")(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(PartnerIsHmfOrCivilServantPage, true).success.value
+      val userAnswers = baseAnswers.set(PartnerIsHmfOrCivilServantPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -76,7 +79,7 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), waypoints, "first")(request, messages(application)).toString
       }
     }
 
@@ -87,7 +90,7 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
             bind[SessionRepository].toInstance(mockSessionRepository)
           )
@@ -99,7 +102,7 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(PartnerIsHmfOrCivilServantPage, true).success.value
+        val expectedAnswers = baseAnswers.set(PartnerIsHmfOrCivilServantPage, true).success.value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual PartnerIsHmfOrCivilServantPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
@@ -109,7 +112,7 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request =
@@ -123,7 +126,7 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, "first")(request, messages(application)).toString
       }
     }
 
