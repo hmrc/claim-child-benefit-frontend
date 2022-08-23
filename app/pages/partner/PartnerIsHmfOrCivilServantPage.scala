@@ -17,7 +17,8 @@
 package pages.partner
 
 import controllers.partner.routes
-import pages.{QuestionPage, Waypoints}
+import models.UserAnswers
+import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -29,4 +30,7 @@ case object PartnerIsHmfOrCivilServantPage extends QuestionPage[Boolean] {
 
   override def route(waypoints: Waypoints): Call =
     routes.PartnerIsHmfOrCivilServantController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    PartnerEntitledToChildBenefitPage
 }

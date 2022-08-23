@@ -143,6 +143,7 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
       .flatMap(_.remove(PartnerDateOfBirthPage))
       .flatMap(_.remove(PartnerNationalityPage))
       .flatMap(_.remove(PartnerEmploymentStatusPage))
+      .flatMap(_.remove(PartnerIsHmfOrCivilServantPage))
       .flatMap(_.remove(PartnerEntitledToChildBenefitPage))
       .flatMap(_.remove(PartnerWaitingForEntitlementDecisionPage))
       .flatMap(_.remove(PartnerEldestChildNamePage))

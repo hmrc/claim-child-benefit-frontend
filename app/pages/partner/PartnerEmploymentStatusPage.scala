@@ -32,5 +32,5 @@ case object PartnerEmploymentStatusPage extends QuestionPage[Set[EmploymentStatu
     routes.PartnerEmploymentStatusController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    PartnerEntitledToChildBenefitPage
+    PartnerIsHmfOrCivilServantPage
 }
