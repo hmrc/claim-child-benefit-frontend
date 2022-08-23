@@ -565,8 +565,8 @@ partnerDateOfBirth.error.required.all = Enter {0}’s date of birth
 partnerDateOfBirth.error.required.two = The date must include {0} and {1}
 partnerDateOfBirth.error.required = The date must include {0}
 partnerDateOfBirth.error.invalid = Enter a real date
-partnerDateOfBirth.error.belowMinimum = The date must be on or after {0}
-partnerDateOfBirth.error.aboveMaximum = The date must be on or before {0}
+partnerDateOfBirth.error.beforeMinimum = The date must be on or after {0}
+partnerDateOfBirth.error.afterMaximum = The date must be on or before {0}
 partnerDateOfBirth.change.hidden = {0}’s date of birth
 
 partnerEldestChildDateOfBirth.title = What is your partner’s eldest child’s date of birth?
@@ -577,8 +577,8 @@ partnerEldestChildDateOfBirth.error.required.all = Enter the date of birth
 partnerEldestChildDateOfBirth.error.required.two = The date must include {0} and {1}
 partnerEldestChildDateOfBirth.error.required = The date must include {0}
 partnerEldestChildDateOfBirth.error.invalid = Enter a real date
-partnerEldestChildDateOfBirth.error.belowMinimum = The date must be on or after {0}
-partnerEldestChildDateOfBirth.error.aboveMaximum = The date must be on or before {0}
+partnerEldestChildDateOfBirth.error.beforeMinimum = The date must be on or after {0}
+partnerEldestChildDateOfBirth.error.afterMaximum = The date must be on or before {0}
 partnerEldestChildDateOfBirth.change.hidden = {0}’s eldest child’s date of birth
 
 partnerEldestChildName.title = What is the name of your partner’s eldest child?
@@ -725,8 +725,8 @@ childDateOfBirth.error.required.all = Enter {0}’s date of birth
 childDateOfBirth.error.required.two = The date must include {0} and {1}
 childDateOfBirth.error.required = The date must include {0}
 childDateOfBirth.error.invalid = Enter a real date
-childDateOfBirth.error.belowMinimum = The date must be on or after {0}
-childDateOfBirth.error.aboveMaximum = The date must be on or before {0}
+childDateOfBirth.error.beforeMinimum = The date must be on or after {0}
+childDateOfBirth.error.afterMaximum = The date must be on or before {0}
 childDateOfBirth.change.hidden = this child’s date of birth
 
 childHasPreviousName.title = Has this child been known by any other names?
