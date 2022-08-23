@@ -27,6 +27,12 @@ import pages.payments._
 
 trait PageGenerators {
 
+  implicit lazy val arbitraryPartnerIsHmfOrCivilServantPage: Arbitrary[PartnerIsHmfOrCivilServantPage.type] =
+    Arbitrary(PartnerIsHmfOrCivilServantPage)
+
+  implicit lazy val arbitraryApplicantIsHmfOrCivilServantPage: Arbitrary[ApplicantIsHmfOrCivilServantPage.type] =
+    Arbitrary(ApplicantIsHmfOrCivilServantPage)
+
   implicit lazy val arbitraryAdoptingChildPage: Arbitrary[AdoptingThroughLocalAuthorityPage] =
     Arbitrary(child.AdoptingThroughLocalAuthorityPage(Index(0)))
 

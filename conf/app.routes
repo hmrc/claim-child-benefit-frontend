@@ -226,3 +226,8 @@ POST       /check-child-details/:index                 controllers.child.CheckCh
 
 GET        /print-form                         controllers.PrintController.onDownload
 GET        /next-steps                         controllers.PrintController.onPageLoad
+GET        /applicantIsHmfOrCivilServant                        controllers.ApplicantIsHmfOrCivilServantController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /applicantIsHmfOrCivilServant                        controllers.ApplicantIsHmfOrCivilServantController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /partnerIsHmfOrCivilServant                        controllers.PartnerIsHmfOrCivilServantController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /partnerIsHmfOrCivilServant                        controllers.PartnerIsHmfOrCivilServantController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

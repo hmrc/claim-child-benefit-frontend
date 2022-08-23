@@ -981,3 +981,15 @@ ordinal.6 = seventh
 ordinal.7 = eighth
 ordinal.8 = ninth
 ordinal.9 = tenth
+
+applicantIsHmfOrCivilServant.title = applicantIsHmfOrCivilServant
+applicantIsHmfOrCivilServant.heading = applicantIsHmfOrCivilServant
+applicantIsHmfOrCivilServant.checkYourAnswersLabel = applicantIsHmfOrCivilServant
+applicantIsHmfOrCivilServant.error.required = Select yes if applicantIsHmfOrCivilServant
+applicantIsHmfOrCivilServant.change.hidden = ApplicantIsHmfOrCivilServant
+
+partnerIsHmfOrCivilServant.title = partnerIsHmfOrCivilServant
+partnerIsHmfOrCivilServant.heading = partnerIsHmfOrCivilServant
+partnerIsHmfOrCivilServant.checkYourAnswersLabel = partnerIsHmfOrCivilServant
+partnerIsHmfOrCivilServant.error.required = Select yes if partnerIsHmfOrCivilServant
+partnerIsHmfOrCivilServant.change.hidden = PartnerIsHmfOrCivilServant
