@@ -14,30 +14,31 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers
+package viewmodels.checkAnswers.partner
 
 import models.UserAnswers
-import pages.{ApplicantIsHmfOrCivilServantPage, CheckAnswersPage, Waypoints}
+import pages.partner.PartnerIsHmfOrCivilServantPage
+import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ApplicantIsHmfOrCivilServantSummary  {
+object PartnerIsHmfOrCivilServantSummary {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ApplicantIsHmfOrCivilServantPage).map {
+    answers.get(PartnerIsHmfOrCivilServantPage).map {
       answer =>
 
         val value = if (answer) "site.yes" else "site.no"
 
         SummaryListRowViewModel(
-          key     = "applicantIsHmfOrCivilServant.checkYourAnswersLabel",
-          value   = ValueViewModel(value),
+          key = "partnerIsHmfOrCivilServant.checkYourAnswersLabel",
+          value = ValueViewModel(value),
           actions = Seq(
-            ActionItemViewModel("site.change", ApplicantIsHmfOrCivilServantPage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("applicantIsHmfOrCivilServant.change.hidden"))
+            ActionItemViewModel("site.change", PartnerIsHmfOrCivilServantPage.changeLink(waypoints, sourcePage).url)
+              .withVisuallyHiddenText(messages("partnerIsHmfOrCivilServant.change.hidden"))
           )
         )
     }

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package forms
-
-import javax.inject.Inject
+package forms.partner
 
 import forms.mappings.Mappings
 import play.api.data.Form
+
+import javax.inject.Inject
 
 class PartnerIsHmfOrCivilServantFormProvider @Inject() extends Mappings {
 

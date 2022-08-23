@@ -14,46 +14,48 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.applicant
 
 import base.SpecBase
-import forms.PartnerIsHmfOrCivilServantFormProvider
+import controllers.{routes => baseRoutes}
+import forms.applicant.ApplicantIsHmfOrCivilServantFormProvider
 import models.UserAnswers
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{PartnerIsHmfOrCivilServantPage, EmptyWaypoints}
+import pages.EmptyWaypoints
+import pages.applicant.ApplicantIsHmfOrCivilServantPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
-import views.html.PartnerIsHmfOrCivilServantView
+import views.html.applicant.ApplicantIsHmfOrCivilServantView
 
 import scala.concurrent.Future
 
-class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSugar {
+class ApplicantIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new PartnerIsHmfOrCivilServantFormProvider()
+  val formProvider = new ApplicantIsHmfOrCivilServantFormProvider()
   val form = formProvider()
   private val waypoints = EmptyWaypoints
 
-  lazy val partnerIsHmfOrCivilServantRoute = routes.PartnerIsHmfOrCivilServantController.onPageLoad(waypoints).url
+  lazy val applicantIsHmfOrCivilServantRoute = routes.ApplicantIsHmfOrCivilServantController.onPageLoad(waypoints).url
 
-  "PartnerIsHmfOrCivilServant Controller" - {
+  "ApplicantIsHmfOrCivilServant Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, partnerIsHmfOrCivilServantRoute)
+        val request = FakeRequest(GET, applicantIsHmfOrCivilServantRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[PartnerIsHmfOrCivilServantView]
+        val view = application.injector.instanceOf[ApplicantIsHmfOrCivilServantView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
@@ -62,14 +64,14 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(PartnerIsHmfOrCivilServantPage, true).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(ApplicantIsHmfOrCivilServantPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, partnerIsHmfOrCivilServantRoute)
+        val request = FakeRequest(GET, applicantIsHmfOrCivilServantRoute)
 
-        val view = application.injector.instanceOf[PartnerIsHmfOrCivilServantView]
+        val view = application.injector.instanceOf[ApplicantIsHmfOrCivilServantView]
 
         val result = route(application, request).value
 
@@ -93,14 +95,14 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
 
       running(application) {
         val request =
-          FakeRequest(POST, partnerIsHmfOrCivilServantRoute)
+          FakeRequest(POST, applicantIsHmfOrCivilServantRoute)
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(PartnerIsHmfOrCivilServantPage, true).success.value
+        val expectedAnswers = emptyUserAnswers.set(ApplicantIsHmfOrCivilServantPage, true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual PartnerIsHmfOrCivilServantPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual ApplicantIsHmfOrCivilServantPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -111,12 +113,12 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
 
       running(application) {
         val request =
-          FakeRequest(POST, partnerIsHmfOrCivilServantRoute)
+          FakeRequest(POST, applicantIsHmfOrCivilServantRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[PartnerIsHmfOrCivilServantView]
+        val view = application.injector.instanceOf[ApplicantIsHmfOrCivilServantView]
 
         val result = route(application, request).value
 
@@ -130,12 +132,12 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, partnerIsHmfOrCivilServantRoute)
+        val request = FakeRequest(GET, applicantIsHmfOrCivilServantRoute)
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -145,13 +147,13 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
 
       running(application) {
         val request =
-          FakeRequest(POST, partnerIsHmfOrCivilServantRoute)
+          FakeRequest(POST, applicantIsHmfOrCivilServantRoute)
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

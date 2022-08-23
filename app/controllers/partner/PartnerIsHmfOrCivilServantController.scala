@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.partner
 
 import controllers.actions._
-import forms.PartnerIsHmfOrCivilServantFormProvider
-import javax.inject.Inject
-import pages.{PartnerIsHmfOrCivilServantPage, Waypoints}
+import forms.partner.PartnerIsHmfOrCivilServantFormProvider
+import pages.Waypoints
+import pages.partner.PartnerIsHmfOrCivilServantPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.PartnerIsHmfOrCivilServantView
+import views.html.partner.PartnerIsHmfOrCivilServantView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class PartnerIsHmfOrCivilServantController @Inject()(

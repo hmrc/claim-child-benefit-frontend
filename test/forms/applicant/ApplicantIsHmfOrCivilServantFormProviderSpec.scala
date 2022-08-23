@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package forms
+package forms.applicant
 
 import forms.behaviours.BooleanFieldBehaviours
 import play.api.data.FormError
 
-class PartnerIsHmfOrCivilServantFormProviderSpec extends BooleanFieldBehaviours {
+class ApplicantIsHmfOrCivilServantFormProviderSpec extends BooleanFieldBehaviours {
 
-  val requiredKey = "partnerIsHmfOrCivilServant.error.required"
+  val requiredKey = "applicantIsHmfOrCivilServant.error.required"
   val invalidKey = "error.boolean"
 
-  val form = new PartnerIsHmfOrCivilServantFormProvider()()
+  val form = new ApplicantIsHmfOrCivilServantFormProvider()()
 
   ".value" - {
 

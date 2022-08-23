@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package pages
+package forms.applicant
 
-import controllers.routes
-import play.api.libs.json.JsPath
-import play.api.mvc.Call
+import forms.mappings.Mappings
+import play.api.data.Form
 
-case object PartnerIsHmfOrCivilServantPage extends QuestionPage[Boolean] {
+import javax.inject.Inject
 
-  override def path: JsPath = JsPath \ toString
+class ApplicantIsHmfOrCivilServantFormProvider @Inject() extends Mappings {
 
-  override def toString: String = "partnerIsHmfOrCivilServant"
-
-  override def route(waypoints: Waypoints): Call =
-    routes.PartnerIsHmfOrCivilServantController.onPageLoad(waypoints)
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean("applicantIsHmfOrCivilServant.error.required")
+    )
 }
