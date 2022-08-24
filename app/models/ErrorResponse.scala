@@ -31,3 +31,7 @@ case object NotFound extends ErrorResponse {
 case class UnexpectedResponseStatus(status: Int) extends ErrorResponse {
   override val body: String = s"Unexpected response, status $status received"
 }
+
+case object UnexpectedException extends ErrorResponse {
+  override val body: String = "Received an unexpected exception"
+}
