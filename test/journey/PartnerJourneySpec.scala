@@ -40,6 +40,7 @@ class PartnerJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGener
         submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
         submitAnswer(PartnerNationalityPage, "nationality"),
         submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
+        submitAnswer(PartnerIsHmfOrCivilServantPage, false),
         submitAnswer(PartnerEntitledToChildBenefitPage, false),
         submitAnswer(PartnerWaitingForEntitlementDecisionPage, false),
         pageMustBe(ChildNamePage(Index(0)))

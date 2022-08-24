@@ -35,30 +35,32 @@ object DownloadAuditEvent {
   def from(model: JourneyModel): DownloadAuditEvent =
     DownloadAuditEvent(
       applicant = Applicant(
-        name                    = convertAdultName(model.applicant.name),
-        previousFamilyNames     = model.applicant.previousFamilyNames,
-        dateOfBirth             = model.applicant.dateOfBirth,
-        nationalInsuranceNumber = model.applicant.nationalInsuranceNumber,
-        currentAddress          = convertAddress(model.applicant.currentAddress),
-        previousAddress         = model.applicant.previousAddress.map(convertAddress),
-        telephoneNumber         = model.applicant.telephoneNumber,
-        bestTimeToContact       = model.applicant.bestTimeToContact.map(_.toString),
-        nationality             = model.applicant.nationality,
-        employmentStatus        = model.applicant.employmentStatus.map(_.toString)
+        name                                 = convertAdultName(model.applicant.name),
+        previousFamilyNames                  = model.applicant.previousFamilyNames,
+        dateOfBirth                          = model.applicant.dateOfBirth,
+        nationalInsuranceNumber              = model.applicant.nationalInsuranceNumber,
+        currentAddress                       = convertAddress(model.applicant.currentAddress),
+        previousAddress                      = model.applicant.previousAddress.map(convertAddress),
+        telephoneNumber                      = model.applicant.telephoneNumber,
+        bestTimeToContact                    = model.applicant.bestTimeToContact.map(_.toString),
+        nationality                          = model.applicant.nationality,
+        employmentStatus                     = model.applicant.employmentStatus.map(_.toString),
+        memberOfHMForcesOrCivilServantAbroad = model.applicant.memberOfHMForcesOrCivilServantAbroad
       ),
       relationship = Relationship(
         status  = model.relationship.status.toString,
         since   = model.relationship.since,
         partner = model.relationship.partner.map {
           partner => Partner(
-            name                            = convertAdultName(partner.name),
-            dateOfBirth                     = partner.dateOfBirth,
-            nationality                     = partner.nationality,
-            nationalInsuranceNumber         = partner.nationalInsuranceNumber,
-            currentlyEntitledToChildBenefit = partner.currentlyEntitledToChildBenefit,
-            employmentStatus                = partner.employmentStatus.map(_.toString),
-            waitingToHearAboutEntitlement   = partner.waitingToHearAboutEntitlement,
-            eldestChild                     = partner.eldestChild.map(convertEldestChild)
+            name                                 = convertAdultName(partner.name),
+            dateOfBirth                          = partner.dateOfBirth,
+            nationality                          = partner.nationality,
+            nationalInsuranceNumber              = partner.nationalInsuranceNumber,
+            currentlyEntitledToChildBenefit      = partner.currentlyEntitledToChildBenefit,
+            employmentStatus                     = partner.employmentStatus.map(_.toString),
+            memberOfHMForcesOrCivilServantAbroad = partner.memberOfHMForcesOrCivilServantAbroad,
+            waitingToHearAboutEntitlement        = partner.waitingToHearAboutEntitlement,
+            eldestChild                          = partner.eldestChild.map(convertEldestChild)
           )
         }
       ),
@@ -168,7 +170,8 @@ object DownloadAuditEvent {
                                              telephoneNumber: String,
                                              bestTimeToContact: Set[String],
                                              nationality: String,
-                                             employmentStatus: Set[String]
+                                             employmentStatus: Set[String],
+                                             memberOfHMForcesOrCivilServantAbroad: Boolean
                                            )
   object Applicant {
     implicit lazy val formats: Format[Applicant] = Json.format
@@ -181,6 +184,7 @@ object DownloadAuditEvent {
                                            currentlyEntitledToChildBenefit: Boolean,
                                            nationalInsuranceNumber: Option[String],
                                            employmentStatus: Set[String],
+                                           memberOfHMForcesOrCivilServantAbroad: Boolean,
                                            waitingToHearAboutEntitlement: Option[Boolean],
                                            eldestChild: Option[EldestChild]
                                          )

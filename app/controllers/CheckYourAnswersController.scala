@@ -92,7 +92,8 @@ class CheckYourAnswersController @Inject()(
           ApplicantPhoneNumberSummary.row(request.userAnswers, waypoints, thisPage),
           BestTimeToContactSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantNationalitySummary.row(request.userAnswers, waypoints, thisPage),
-          ApplicantEmploymentStatusSummary.row(request.userAnswers, waypoints, thisPage)
+          ApplicantEmploymentStatusSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantIsHmfOrCivilServantSummary.row(request.userAnswers, waypoints, thisPage)
         ).flatten
       )
 
@@ -105,6 +106,7 @@ class CheckYourAnswersController @Inject()(
           PartnerNationalitySummary.row(request.userAnswers, waypoints, thisPage),
           PartnerEmploymentStatusSummary.row(request.userAnswers, waypoints, thisPage),
           PartnerEntitledToChildBenefitSummary.row(request.userAnswers, waypoints, thisPage),
+          PartnerIsHmfOrCivilServantSummary.row(request.userAnswers, waypoints, thisPage),
           PartnerWaitingForEntitlementDecisionSummary.row(request.userAnswers, waypoints, thisPage),
           PartnerEldestChildNameSummary.row(request.userAnswers, waypoints, thisPage),
           PartnerEldestChildDateOfBirthSummary.row(request.userAnswers, waypoints, thisPage)

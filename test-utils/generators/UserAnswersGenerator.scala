@@ -32,6 +32,8 @@ trait UserAnswersGenerator extends TryValues {
   self: Generators =>
 
   val generators: Seq[Gen[(QuestionPage[_], JsValue)]] =
+    arbitrary[(PartnerIsHmfOrCivilServantPage.type, JsValue)] ::
+    arbitrary[(ApplicantIsHmfOrCivilServantPage.type, JsValue)] ::
     arbitrary[(AdoptingThroughLocalAuthorityPage, JsValue)] ::
     arbitrary[(PreviousClaimantNamePage, JsValue)] ::
     arbitrary[(PreviousClaimantAddressPage, JsValue)] ::

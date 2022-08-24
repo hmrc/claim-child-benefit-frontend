@@ -17,20 +17,29 @@
 package pages.applicant
 
 import controllers.applicant.routes
-import models.{EmploymentStatus, UserAnswers}
-import pages.{Page, QuestionPage, Waypoints}
+import models.{Index, UserAnswers}
+import models.RelationshipStatus._
+import pages.child.ChildNamePage
+import pages.partner.PartnerNamePage
+import pages.{Page, QuestionPage, RelationshipStatusPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object ApplicantEmploymentStatusPage extends QuestionPage[Set[EmploymentStatus]] {
+case object ApplicantIsHmfOrCivilServantPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "applicantEmploymentStatus"
+  override def toString: String = "applicantIsHmfOrCivilServant"
 
   override def route(waypoints: Waypoints): Call =
-    routes.ApplicantEmploymentStatusController.onPageLoad(waypoints)
+    routes.ApplicantIsHmfOrCivilServantController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantIsHmfOrCivilServantPage
+    answers.get(RelationshipStatusPage).map {
+      case Married | Cohabiting =>
+        PartnerNamePage
+
+      case Single | Divorced | Separated | Widowed =>
+        ChildNamePage(Index(0))
+    }.orRecover
 }

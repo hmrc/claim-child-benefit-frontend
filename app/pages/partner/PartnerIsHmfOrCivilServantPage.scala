@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package pages.applicant
+package pages.partner
 
-import controllers.applicant.routes
-import models.{EmploymentStatus, UserAnswers}
+import controllers.partner.routes
+import models.UserAnswers
 import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object ApplicantEmploymentStatusPage extends QuestionPage[Set[EmploymentStatus]] {
+case object PartnerIsHmfOrCivilServantPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "applicantEmploymentStatus"
+  override def toString: String = "partnerIsHmfOrCivilServant"
 
   override def route(waypoints: Waypoints): Call =
-    routes.ApplicantEmploymentStatusController.onPageLoad(waypoints)
+    routes.PartnerIsHmfOrCivilServantController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantIsHmfOrCivilServantPage
+    PartnerEntitledToChildBenefitPage
 }

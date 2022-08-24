@@ -63,7 +63,8 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           telephoneNumber = "07777 777777",
           bestTimeToContact = Set(models.BestTimeToContact.Morning, models.BestTimeToContact.Afternoon, models.BestTimeToContact.Evening),
           nationality = "applicant nationality",
-          employmentStatus = Set(models.EmploymentStatus.Employed, models.EmploymentStatus.SelfEmployed)
+          employmentStatus = Set(models.EmploymentStatus.Employed, models.EmploymentStatus.SelfEmployed),
+          memberOfHMForcesOrCivilServantAbroad = false
         ),
         relationship = JourneyModel.Relationship(
           status = models.RelationshipStatus.Cohabiting,
@@ -74,6 +75,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             nationality = "partner nationality",
             nationalInsuranceNumber = Some(partnerNino),
             employmentStatus = Set(models.EmploymentStatus.Employed, models.EmploymentStatus.SelfEmployed),
+            memberOfHMForcesOrCivilServantAbroad = false,
             currentlyEntitledToChildBenefit = false,
             waitingToHearAboutEntitlement = Some(true),
             eldestChild = Some(JourneyModel.EldestChild(
@@ -120,7 +122,8 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           telephoneNumber = "07777 777777",
           bestTimeToContact = Set("morning", "afternoon", "evening"),
           nationality = "applicant nationality",
-          employmentStatus = Set("employed", "selfEmployed")
+          employmentStatus = Set("employed", "selfEmployed"),
+          memberOfHMForcesOrCivilServantAbroad = false
         ),
         relationship = Relationship(
           status = "cohabiting",
@@ -131,6 +134,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             nationality = "partner nationality",
             nationalInsuranceNumber = Some(partnerNino),
             employmentStatus = Set("employed", "selfEmployed"),
+            memberOfHMForcesOrCivilServantAbroad = false,
             currentlyEntitledToChildBenefit = false,
             waitingToHearAboutEntitlement = Some(true),
             eldestChild = Some(EldestChild(

@@ -30,6 +30,22 @@ import uk.gov.hmrc.domain.Nino
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
 
+  implicit lazy val arbitraryPartnerIsHmfOrCivilServantUserAnswersEntry: Arbitrary[(PartnerIsHmfOrCivilServantPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[PartnerIsHmfOrCivilServantPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryApplicantIsHmfOrCivilServantUserAnswersEntry: Arbitrary[(ApplicantIsHmfOrCivilServantPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[ApplicantIsHmfOrCivilServantPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
   implicit lazy val arbitraryAdoptingChildUserAnswersEntry: Arbitrary[(AdoptingThroughLocalAuthorityPage, JsValue)] =
     Arbitrary {
       for {
