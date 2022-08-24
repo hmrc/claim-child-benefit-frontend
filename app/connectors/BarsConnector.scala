@@ -19,7 +19,8 @@ package connectors
 import audit.{AuditService, ValidateBankDetailsAuditEvent}
 import config.Service
 import connectors.BarsHttpParser.{BarsReads, ValidateBankDetailsResponse}
-import models.ValidateBankDetailsRequest
+import logging.Logging
+import models.{InvalidJson, UnexpectedException, ValidateBankDetailsRequest}
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.client.HttpClientV2
@@ -30,7 +31,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
 class BarsConnector @Inject()(config: Configuration, httpClient: HttpClientV2, auditService: AuditService)
-                             (implicit ec: ExecutionContext) {
+                             (implicit ec: ExecutionContext) extends Logging {
 
   private val baseUrl     = config.get[Service]("microservice.services.bank-account-reputation")
   private val validateUrl = url"$baseUrl/validate/bank-details"
@@ -50,6 +51,10 @@ class BarsConnector @Inject()(config: Configuration, httpClient: HttpClientV2, a
         )
 
         connectorResponse
+    }.recover {
+      case e =>
+        logger.error(s"Error calling validate-bank-details: ${e.getMessage}")
+        Left(UnexpectedException)
     }
   }
 

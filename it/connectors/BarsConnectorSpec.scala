@@ -1,8 +1,9 @@
 package connectors
 
 import audit.{AuditService, ValidateBankDetailsAuditEvent}
-import com.github.tomakehurst.wiremock.client.WireMock.{ok, post, serverError, urlEqualTo}
-import models.{Account, InvalidJson, ReputationResponseEnum, UnexpectedResponseStatus, ValidateBankDetailsRequest, ValidateBankDetailsResponseModel}
+import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, ok, post, serverError, urlEqualTo}
+import com.github.tomakehurst.wiremock.http.Fault
+import models.{Account, InvalidJson, ReputationResponseEnum, UnexpectedException, UnexpectedResponseStatus, ValidateBankDetailsRequest, ValidateBankDetailsResponseModel}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -148,6 +149,27 @@ class BarsConnectorSpec
             ))
           )(any())
         }
+      }
+    }
+
+    "when the server responds with a fault" in {
+
+      val app = application
+
+      running(app) {
+
+        val connector = app.injector.instanceOf[BarsConnector]
+
+        server.stubFor(
+          post(urlEqualTo("/validate/bank-details"))
+            .willReturn(aResponse().withFault(Fault.MALFORMED_RESPONSE_CHUNK))
+        )
+
+        val request = ValidateBankDetailsRequest(Account("123456", "12345678"))
+
+        val result = connector.validate(request).futureValue
+
+        result.left.value mustEqual UnexpectedException
       }
     }
   }
