@@ -16,13 +16,10 @@
 
 package generators
 
-import models.ApplicantRelationshipToChild.AdoptingChild
 import models._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.{Arbitrary, Gen}
 import uk.gov.hmrc.domain.Nino
-
-import java.time.LocalDate
 
 trait ModelGenerators {
 

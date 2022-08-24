@@ -682,7 +682,6 @@ applicantRelationshipToChild.title = How would you describe your relationship wi
 applicantRelationshipToChild.heading = How would you describe your relationship with {0}?
 applicantRelationshipToChild.birthChild = Birth child
 applicantRelationshipToChild.adoptedChild = Adopted child
-applicantRelationshipToChild.adoptingChild = Adopting or planning to adopt child
 applicantRelationshipToChild.stepChild = Stepchild
 applicantRelationshipToChild.other = None of these
 applicantRelationshipToChild.checkYourAnswersLabel = How would you describe your relationship to this child?
