@@ -1,29 +1,15 @@
-@this()
+@this(
+    line: Line
+)
 
 @(bankAccountDetails: BankAccountDetails)(implicit messages: Messages)
 
-<fo:block margin-bottom="2mm">
-    <fo:inline font-weight="bold">@messages("pdf.bankAccountDetails"): </fo:inline>
-</fo:block>
+@line("pdf.sortCode", bankAccountDetails.sortCode)
 
-<fo:block margin-bottom="2mm" margin-left="1cm">
-    <fo:inline font-weight="bold">@messages("pdf.accountName"): </fo:inline>
-    <fo:inline>@bankAccountDetails.accountName</fo:inline>
-</fo:block>
+@line("pdf.accountNumber", bankAccountDetails.accountNumber)
 
-<fo:block margin-bottom="2mm" margin-left="1cm">
-    <fo:inline font-weight="bold">@messages("pdf.sortCode"): </fo:inline>
-    <fo:inline>@bankAccountDetails.sortCode</fo:inline>
-</fo:block>
-
-<fo:block margin-bottom="2mm" margin-left="1cm">
-    <fo:inline font-weight="bold">@messages("pdf.accountNumber"): </fo:inline>
-    <fo:inline>@bankAccountDetails.accountNumber</fo:inline>
-</fo:block>
+@line("pdf.accountName", bankAccountDetails.accountName)
 
 @bankAccountDetails.rollNumber.map { rollNumber =>
-<fo:block margin-bottom="2mm" margin-left="1cm">
-    <fo:inline font-weight="bold">@messages("pdf.rollNumber"): </fo:inline>
-    <fo:inline>@rollNumber</fo:inline>
-</fo:block>
+    line("pdf.rollNumber", rollNumber)
 }

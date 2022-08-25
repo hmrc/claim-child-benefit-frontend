@@ -1,0 +1,64 @@
+
+@import views.xml.xml.sections._
+
+@this(line: Line)
+
+@(model: JourneyModel)(implicit messages: Messages)
+
+<fo:block-container margin-bottom="1cm" keep-together.within-column="always" wrap-option="wrap">
+
+    <fo:block font-size="16pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.personalDetails")</fo:block>
+
+    @line("pdf.nino", model.applicant.nationalInsuranceNumber.getOrElse(messages("pdf.notKnown")))
+
+    @line("pdf.nationality", model.applicant.nationality)
+
+    @line("pdf.alwaysLivedInUk", messages("site.yes"))
+
+    @line("pdf.hmfOrCivilServant", booleanToYesNo(model.applicant.memberOfHMForcesOrCivilServantAbroad))
+
+    @model.applicant.name.title.map { title =>
+        @line("pdf.name.title", title)
+    }
+
+    @line("pdf.name.first", model.applicant.name.firstName)
+
+    @model.applicant.name.middleNames.map { middleNames =>
+        @line("pdf.name.middle", middleNames)
+    }
+
+    @line("pdf.name.last", model.applicant.name.lastName)
+
+    @if(model.applicant.previousFamilyNames.nonEmpty) {
+        @line("pdf.previousNames", model.applicant.previousFamilyNames.mkString(", "))
+    }
+
+    @line("pdf.dateOfBirth", date(model.applicant.dateOfBirth))
+
+    @line("pdf.relationshipStatus", messages(s"pdf.relationshipStatus.${model.relationship.status.toString}"))
+
+    @model.relationship.since.map { since =>
+        @line(s"pdf.relationshipStatusDate.${model.relationship.status.toString}", date(since))
+    }
+
+    @line("pdf.employmentStatus", model.applicant.employmentStatus.map(x => messages(s"employmentStatus.${x.toString}")).mkString(", "))
+
+    @line("pdf.benefits", model.benefits.map(x => messages(s"benefits.${x.toString}")).mkString(", "))
+
+    <!--TODO: claimed before (needs adding to journey model) -->
+
+    @line("pdf.currentAddress", model.applicant.currentAddress.lines.mkString(", "))
+
+    @model.applicant.previousAddress.map { address =>
+        @line("pdf.livedAtAddressOneYear", messages("site.no"))
+        @line("pdf.previousAddress", address.lines.mkString(", "))
+    }.getOrElse(line("pdf.livedAtAddressOneYear", messages("site.yes")))
+
+    @line("pdf.phoneNumber", model.applicant.telephoneNumber)
+
+    @line("pdf.bestTimeToContact", model.applicant.bestTimeToContact.map(x => messages(s"bestTimeToContact.${x.toString}")).mkString(", "))
+
+
+
+
+</fo:block-container>

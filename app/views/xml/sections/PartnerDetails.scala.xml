@@ -6,27 +6,29 @@
 @(model: JourneyModel.Partner)(implicit messages: Messages)
 
 
-<fo:block-container margin-bottom="1cm" keep-together="always">
+<fo:block-container margin-bottom="1cm" keep-together.within-column="always" wrap-option="wrap">
 
-    <fo:block font-size="18pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.partnerDetails")</fo:block>
+    <fo:block font-size="16pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.partnerDetails")</fo:block>
 
-    @line("pdf.name", model.name.display)
+    @line("pdf.partnerNino", model.nationalInsuranceNumber.getOrElse(messages("pdf.notKnown")))
 
-    @line("pdf.nino", model.nationalInsuranceNumber.getOrElse(messages("pdf.notKnown")))
+    @line("pdf.name.last", model.name.lastName)
+
+    @line("pdf.name.full", model.name.display)
 
     @line("pdf.dateOfBirth", date(model.dateOfBirth))
 
     @line("pdf.nationality", model.nationality)
 
-    @line("pdf.employmentStatus", model.employmentStatus.map(x => messages(s"partnerEmploymentStatus.${x.toString}")).mkString(", "))
+    @line("pdf.employmentStatus", model.employmentStatus.map(x => messages(s"employmentStatus.${x.toString}")).mkString(", "))
 
-    @line(
-        "pdf.entitledOrWaitingToHear",
-        model.waitingToHearAboutEntitlement.getOrElse(model.currentlyEntitledToChildBenefit) match {
-            case true => messages("site.yes")
-            case false => messages("site.no")
-        }
-    )
+    @line("pdf.hmfOrCivilServant", booleanToYesNo(model.memberOfHMForcesOrCivilServantAbroad))
+
+    @line("pdf.entitledToChildBenefit", booleanToYesNo(model.currentlyEntitledToChildBenefit))
+
+    @model.waitingToHearAboutEntitlement.map { answer =>
+        line("pdf.waitingToHearAboutEntitlement", booleanToYesNo(answer))
+    }
 
     @model.eldestChild.map { child =>
         @line("pdf.eldestChildName", child.name.fullName),
