@@ -31,8 +31,8 @@ object EmploymentStatus extends Enumerable.Implicits {
   case object NoneOfThese extends WithName("noneOfThese") with EmploymentStatus
 
   val values: Seq[EmploymentStatus] = Seq(
-    LookingForWork,
     Employed,
+    LookingForWork,
     SelfEmployed,
     NoneOfThese
   )
