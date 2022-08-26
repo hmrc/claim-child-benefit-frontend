@@ -38,10 +38,7 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = HmrcPageHeadingLabel(
-                    content = messages("applicantPreviousFamilyName.heading"),
-                    caption = HmrcSectionCaption(messages("section.applicant"))
-                )
+                label = LabelViewModel(messages("applicantPreviousFamilyName.heading")).asPageHeading()
             )
             .withWidth(Full)
         )

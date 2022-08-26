@@ -36,10 +36,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h1WithCaption(
-            content = messages("applicantPreviousAddress.heading"),
-            caption = messages("section.applicant")
-        )
+        <h1 class="govuk-heading-xl">@messages("applicantPreviousAddress.heading")</h1>
 
         @govukInput(
             InputViewModel(

@@ -36,10 +36,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = HmrcPageHeadingLegend(
-                    content = messages("removeApplicantPreviousFamilyName.heading", otherName),
-                    caption = HmrcSectionCaption(messages("section.applicant"))
-                )
+                legend = LegendViewModel(messages("removeApplicantPreviousFamilyName.heading", otherName)).asPageHeading()
             )
         )
 
