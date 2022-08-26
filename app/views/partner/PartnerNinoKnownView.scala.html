@@ -37,10 +37,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = HmrcPageHeadingLegend(
-                    content = messages("partnerNinoKnown.heading", partnerFirstName),
-                    caption = HmrcSectionCaption(messages("section.partner"))
-                )
+                legend = LegendViewModel(messages("partnerNinoKnown.heading", partnerFirstName)).asPageHeading()
             )
             .withHint(HintViewModel(messages("partnerNinoKnown.hint")))
         )
