@@ -33,10 +33,10 @@ object Benefits extends Enumerable.Implicits {
   case object NoneOfTheAbove extends WithName("none") with Benefits
 
   val values: Seq[Benefits] = Seq(
-    IncomeSupport,
     JobseekersAllowance,
-    PensionCredit,
     EmploymentSupport,
+    IncomeSupport,
+    PensionCredit,
     UniversalCredit,
     NoneOfTheAbove
   )
