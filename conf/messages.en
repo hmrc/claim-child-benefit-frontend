@@ -141,7 +141,7 @@ separationDate.change.hidden = when you separated from your partner
 
 relationshipStatus.title = What is your marital or civil partnership status?
 relationshipStatus.heading = What is your marital or civil partnership status?
-relationshipStatus.hint = Select one that applies.  We consider you single for Child Benefit purposes unless you live with a partner.
+relationshipStatus.hint = Choose the most suitable status.  We consider you single for Child Benefit purposes unless you live with a partner.
 relationshipStatus.married = Married or in a civil partnership
 relationshipStatus.cohabiting = Living with a partner as if you’re married or a civil partner
 relationshipStatus.widowed = Widowed
