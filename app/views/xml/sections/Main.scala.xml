@@ -3,7 +3,7 @@
 @this(
     mainHeader: MainHeader,
     mainFooter: MainFooter,
-    personalDetails: PersonalDetails,
+    applicantDetails: ApplicantDetails,
     paymentDetails: PaymentDetails,
     partnerDetails: PartnerDetails,
     childDetails: ChildDetails,
@@ -18,22 +18,22 @@
 
     @mainFooter()
 
-    <fo:flow flow-name="xsl-region-body" font-size="12pt" text-align="left">
+    <fo:flow flow-name="xsl-region-body" font-size="10pt" text-align="left">
 
         <fo:block-container width="90%">
             <fo:block>
 
-                @personalDetails(model)
-
-                @paymentDetails(model)
+                @applicantDetails(model)
 
                 @model.relationship.partner.map { partner =>
                     @partnerDetails(partner)
                 }
 
                 @for((child, index) <- model.children.toList.zipWithIndex) {
-                    @childDetails(child, index)
+                    @childDetails(child, (index + 1))
                 }
+
+                @paymentDetails(model)
             </fo:block>
 
         </fo:block-container>

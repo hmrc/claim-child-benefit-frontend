@@ -20,12 +20,13 @@
     <fo:flow flow-name="xsl-region-body" font-size="12pt" text-align="left">
         <fo:block id="FinalElement">
             <fo:block margin-bottom="0.5cm" font-weight="bold" font-size="18pt">@messages("pdf.declaration")</fo:block>
-            <fo:block margin-bottom="1.5cm" font-weight="bold" font-size="13pt">@messages("pdf.declaration.subHeading")</fo:block>
 
-            <fo:block margin-bottom="1.5cm">
-                <fo:inline border="0.4mm solid black" padding-top="0.5cm" padding-left="0.5cm" color="#ffffff">X</fo:inline>
-                <fo:block margin-left="1.4cm" margin-top="-1cm">@messages("pdf.sendingDocuments")</fo:block>
-            </fo:block>
+            @if(model.anyDocumentsRequired) {
+                <fo:block margin-bottom="1.5cm">
+                    <fo:inline border="0.4mm solid black" padding-top="0.5cm" padding-left="0.5cm" color="#ffffff">X</fo:inline>
+                    <fo:block margin-left="1.4cm" margin-top="-1cm">@messages("pdf.sendingDocuments")</fo:block>
+                </fo:block>
+            }
 
             <fo:block margin-bottom="1.5cm">
                 <fo:inline border="0.4mm solid black" padding-top="0.5cm" padding-left="0.5cm" color="#ffffff">X</fo:inline>

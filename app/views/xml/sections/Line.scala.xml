@@ -2,7 +2,7 @@
 
 @(key: String, value: String)(implicit messages: Messages)
 
-<fo:block margin-bottom="2mm">
-    <fo:inline font-weight="bold">@messages(key): </fo:inline>
-    <fo:inline>@(value)</fo:inline>
+<fo:block margin-bottom="3mm">
+    <fo:block font-weight="bold">@messages(key)</fo:block>
+    <fo:block width="8cm" wrap-option="wrap">@(value)</fo:block>
 </fo:block>

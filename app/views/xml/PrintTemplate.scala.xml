@@ -19,5 +19,8 @@
 
     @instructions(model)
 
-    @addressLabel(model)
+    @if(model.anyDocumentsRequired) {
+        addressLabel(model)
+    }
+
 </fo:root>

@@ -4,10 +4,12 @@
 
 @(eldestChild: JourneyModel.EldestChild)(implicit messages: Messages)
 
-@line("pdf.currentlyReceiving", messages("site.yes"))
+@line("pdf.wantToBePaid", messages("site.yes"))
+
+@line("pdf.paymentFrequency", messages("pdf.paymentFrequency.existing"))
+
+@line("pdf.wantToBePaidToExistingAccount", messages("site.yes"))
 
 @line("pdf.eldestChildName", eldestChild.name.fullName)
 
 @line("pdf.eldestChildDateOfBirth", date(eldestChild.dateOfBirth))
-
-@line("pdf.wantToBePaidToExistingAccount", messages("site.yes"))

@@ -2,22 +2,17 @@
 
 @(child: JourneyModel.Child, index: Int)(implicit messages: Messages)
 
-<fo:block-container margin-bottom="1cm" keep-together="always">
+<fo:block-container margin-bottom="1cm" keep-together.within-column="always" wrap-option="wrap">
 
-    <fo:block font-size="18pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.childDetails", child.name.fullName, indexToOrdinal(index))</fo:block>
+    <fo:block font-size="16pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.childDetails", index)</fo:block>
 
-    @line("pdf.name", child.name.fullName)
+    @line("pdf.name.first", child.name.firstName)
 
-    @line("pdf.hasPreviousNames", booleanToYesNo(child.previousNames.nonEmpty))
-
-    @child.nameChangedByDeedPoll.map(value => line("pdf.nameChangedByDeedPoll", booleanToYesNo(value)))
-
-    @if(child.previousNames.nonEmpty) {
-        <fo:block margin-bottom="2mm">
-            <fo:inline font-weight="bold">@messages("pdf.previousNames"): </fo:inline>
-            <fo:inline>@child.previousNames.map(name => name.fullName).mkString(", ")</fo:inline>
-        </fo:block>
+    @child.name.middleNames.map { middleNames =>
+        line("pdf.name.middle", middleNames)
     }
+
+    @line("pdf.name.last", child.name.lastName)
 
     @line("pdf.biologicalSex", messages(s"childBiologicalSex.${child.biologicalSex.toString}"))
 
@@ -29,6 +24,10 @@
         @line("pdf.birthCertificateNumber", number)
     }
 
+    @line("pdf.childLivingWithApplicant", messages("site.yes"))
+
+    <!-- TODO: Applicant is parent of the child-->
+
     @line("pdf.relationshipToApplicant", messages(s"applicantRelationshipToChild.${child.relationshipToApplicant.toString}"))
 
     @line("pdf.adoptingThroughLocalAuthority", booleanToYesNo(child.adoptingThroughLocalAuthority))
@@ -38,6 +37,18 @@
     @child.previousClaimant.map { previousClaimant =>
         @line("pdf.previousClaimantName", previousClaimant.name.display)
         @line("pdf.previousClaimantAddress", previousClaimant.address.lines.mkString(", "))
+    }
+
+    @line("pdf.hasPreviousNames", booleanToYesNo(child.previousNames.nonEmpty))
+
+    @child.nameChangedByDeedPoll.map(value => line("pdf.nameChangedByDeedPoll", booleanToYesNo(value)))
+
+    @if(child.previousNames.nonEmpty) {
+        @line("pdf.previousNames", child.previousNames.map(name => name.fullName).mkString(", "))
+    }
+
+    @if(child.requiredDocuments.nonEmpty) {
+        @line("pdf.documents", child.requiredDocuments.map(x => messages(s"pdf.documents.${x.toString}")).mkString(", "))
     }
 
 </fo:block-container>
