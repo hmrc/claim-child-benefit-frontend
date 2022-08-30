@@ -20,8 +20,7 @@
         layout: templates.Layout,
         govukSummaryList: GovukSummaryList,
         formHelper: FormWithCSRF,
-        govukButton: GovukButton,
-        h1WithCaption: components.h1WithCaption
+        govukButton: GovukButton
 )
 
 @(list: SummaryList, waypoints: Waypoints, index: Index, childName: ChildName)(implicit request: Request[_], messages: Messages)
@@ -30,10 +29,7 @@
 
     @formHelper(action = routes.CheckChildDetailsController.onSubmit(waypoints, index)) {
 
-        @h1WithCaption(
-            content = messages("checkChildDetails.heading", childName.safeFirstName),
-            caption = messages("section.child")
-        )
+        <h1 class="govuk-heading-xl">@messages("checkChildDetails.heading", childName.safeFirstName)</h1>
 
         @govukSummaryList(list)
 

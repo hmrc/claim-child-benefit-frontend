@@ -718,18 +718,18 @@ childHasPreviousName.checkYourAnswersLabel = Has this child been known by any ot
 childHasPreviousName.error.required = Select yes if {0} has been known by any other names
 childHasPreviousName.change.hidden = if this child has been known by any other names
 
-childName.title = What is the child’s name?
-childName.heading = What is the child’s name?
+childName.title = What is the name of the child you want to claim for?
+childName.heading = What is the name of the child you want to claim for?
 childName.firstName = First name
 childName.middleNames = Middle names
 childName.lastName = Last name
-childName.checkYourAnswersLabel = What is the child’s name?
+childName.checkYourAnswersLabel = What is the name of the child you want to claim for?
 childName.error.firstName.required = Enter the child’s first name
 childName.error.lastName.required = Enter the child’s last name
 childName.error.firstName.length = First name must be 100 characters or less
 childName.error.middleNames.length = Middle names must be 100 characters or less
 childName.error.lastName.length = Last name must be 100 characters or less
-childName.change.hidden = this child’s name
+childName.change.hidden = the name of this child
 
 childNameChangedByDeedPoll.title = Has this child’s name been changed by deed poll?
 childNameChangedByDeedPoll.heading = Has {0}’s name been changed by deed poll?

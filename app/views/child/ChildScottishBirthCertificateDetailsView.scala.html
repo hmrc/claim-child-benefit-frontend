@@ -39,10 +39,7 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = HmrcPageHeadingLabel(
-                    content = messages("childScottishBirthCertificateDetails.heading", childName.safeFirstName),
-                    caption = HmrcSectionCaption(messages("section.child"))
-                )
+                label = LabelViewModel(messages("childScottishBirthCertificateDetails.heading", childName.safeFirstName)).asPageHeading()
             )
             .withWidth(Fixed10)
             .withHint(HintViewModel(messages("childScottishBirthCertificateDetails.hint")))

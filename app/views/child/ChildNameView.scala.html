@@ -22,8 +22,7 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukButton: GovukButton,
-    h1WithCaption: components.h1WithCaption
+    govukButton: GovukButton
 )
 
 @(form: Form[_], waypoints: Waypoints, index: Index)(implicit request: Request[_], messages: Messages)
@@ -36,10 +35,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h1WithCaption(
-            content = messages("childName.heading"),
-            caption = messages("section.child")
-        )
+        <h1 class="govuk-heading-xl">@messages("childName.heading")</h1>
 
         @govukInput(
             InputViewModel(
