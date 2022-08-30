@@ -93,7 +93,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             dateOfBirth = now,
             countryOfRegistration = models.ChildBirthRegistrationCountry.England,
             birthCertificateNumber = Some("000000000"),
-            relationshipToApplicant = models.ApplicantRelationshipToChild.AdoptingChild,
+            relationshipToApplicant = models.ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = true,
             previousClaimant = Some(JourneyModel.PreviousClaimant(
               name    = models.AdultName(Some("previous claimant title"), "previous claimant first", Some("previous claimant middle"), "previous claimant last"),
@@ -152,7 +152,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             dateOfBirth = now,
             birthRegistrationCountry = "england",
             birthCertificateNumber = Some("000000000"),
-            relationshipToApplicant = "adoptingChild",
+            relationshipToApplicant = "birthChild",
             adoptingThroughLocalAuthority = true,
             previousClaimant = Some(PreviousClaimant(
               name    = AdultName(Some("previous claimant title"), "previous claimant first", Some("previous claimant middle"), "previous claimant last"),
