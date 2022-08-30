@@ -31,7 +31,7 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
 
   "signOut" - {
 
-    "must clear user answers and redirect to sign out from survey route" in {
+    "must clear user answers and redirect to signed out" in {
 
       val mockSessionRepository = mock[SessionRepository]
       when(mockSessionRepository.clear(any())) thenReturn Future.successful(true)
@@ -44,33 +44,6 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
 
         val request = FakeRequest(GET, routes.AuthController.signOut.url)
-
-        val result = route(application, request).value
-
-        val expectedRedirectUrl = routes.SignedOutController.onPageLoad.url
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual expectedRedirectUrl
-        verify(mockSessionRepository, times(1)).clear(eqTo(userAnswersId))
-      }
-    }
-  }
-
-  "signOutNoSurvey" - {
-
-    "must clear users answers and redirect to sign out from no survey route" in {
-
-      val mockSessionRepository = mock[SessionRepository]
-      when(mockSessionRepository.clear(any())) thenReturn Future.successful(true)
-
-      val application =
-        applicationBuilder(None)
-          .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
-          .build()
-
-      running(application) {
-
-        val request = FakeRequest(GET, routes.AuthController.signOutNoSurvey.url)
 
         val result = route(application, request).value
 
