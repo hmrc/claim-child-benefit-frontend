@@ -38,10 +38,7 @@
             CheckboxesViewModel(
                 form   = form,
                 name   = "value",
-                legend = HmrcPageHeadingLegend(
-                    content = messages("partnerEmploymentStatus.heading", partnerFirstName),
-                    caption = HmrcSectionCaption(messages("section.partner"))
-                ),
+                legend = LegendViewModel(messages("partnerEmploymentStatus.heading", partnerFirstName)).asPageHeading(),
                 items  = EmploymentStatus.checkboxItems
             ).withHint(HintViewModel(messages("partnerEmploymentStatus.hint")))
         )

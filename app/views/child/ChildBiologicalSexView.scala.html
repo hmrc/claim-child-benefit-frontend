@@ -37,10 +37,7 @@
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = HmrcPageHeadingLegend(
-                    content = messages("childBiologicalSex.heading", childName.safeFirstName),
-                    caption = HmrcSectionCaption(messages("section.child"))
-                ),
+                legend = LegendViewModel(messages("childBiologicalSex.heading", childName.safeFirstName)).asPageHeading(),
                 items  = ChildBiologicalSex.options
             )
         )

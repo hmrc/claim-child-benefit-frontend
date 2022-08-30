@@ -34,15 +34,11 @@
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
 
-
         @govukCheckboxes(
             CheckboxesViewModel(
                 form   = form,
                 name   = "value",
-                legend = HmrcPageHeadingLegend(
-                    content = messages("bestTimeToContact.heading"),
-                    caption = HmrcSectionCaption(messages("section.applicant"))
-                ),
+                legend = LegendViewModel(messages("bestTimeToContact.heading")).asPageHeading(),
                 items  = BestTimeToContact.checkboxItems
             ).withHint(HintViewModel(messages("bestTimeToContact.hint")))
         )

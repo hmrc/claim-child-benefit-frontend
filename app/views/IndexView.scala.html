@@ -29,84 +29,42 @@
 
     <h1 class="govuk-heading-xl">@messages("index.heading")</h1>
 
-    <p class="govuk-body">@messages("index.p1")</p>
-    <ul class="govuk-list govuk-list--bullet">
-        <li>
-            @messages("index.p1.bullet1")
-            <a href="@messages("index.p1.bullet1.link.href")" class="govuk-link">@messages("index.p1.bullet1.link.text")</a>
-        </li>
-        <li>@messages("index.p1.bullet2")</li>
-        <li>@messages("index.p1.bullet3")</li>
-    </ul>
-
     <p class="govuk-body">
-        @messages("index.p2.1")
-        <a href="@messages("index.p2.link.href")" class="govuk-link">@messages("index.p2.link.text")</a>
-        @messages("index.p2.2")
-    </p>
-    <ul class="govuk-list govuk-list--bullet">
-        <li>@messages("index.p2.bullet1")</li>
-        <li>@messages("index.p2.bullet2")</li>
-        <li>@messages("index.p2.bullet3")</li>
-    </ul>
-
-    <div class="govuk-inset-text">
-        @messages("index.p3")
-    </div>
-
-    <p class="govuk-body">
-        @messages("index.p4")
-    </p>
-    <ul class="govuk-list govuk-list--bullet">
-        <li>@messages("index.p4.bullet1")</li>
-        <li>@messages("index.p4.bullet2")</li>
-    </ul>
-
-    <h2 class="govuk-heading-m">@messages("index.over50k")</h2>
-
-    <p class="govuk-body">
-        @messages("index.p5")
-    </p>
-    <p class="govuk-body">
-        @messages("index.p6")
+        @messages("index.p1")
+        <a href="@messages("index.p1.link.href")" class="govuk-link">@messages("index.p1.link.text")</a>.
     </p>
 
-    <div class="govuk-inset-text">
-        @messages("index.p7")
-    </div>
+    <h2 class="govuk-heading-m">@messages("index.whoCanApply")</h2>
 
-    <p class="govuk-body">
-        @messages("index.p8") <a href="@messages("index.p8.link.href")" class="govuk-link">@messages("index.p8.link.text")</a>.
-    </p>
+    <p class="govuk-body">@messages("index.whoCanApply.p1")</p>
+
+    <h2 class="govuk-heading-m">@messages("index.whenToApply")</h2>
+
+    <p class="govuk-body">@messages("index.whenToApply.p1")</p>
 
     <h2 class="govuk-heading-m">@messages("index.beforeYouStart")</h2>
 
-    <p class="govuk-body">
-    @messages("index.p9")
-    </p>
+    <p class="govuk-body">@messages("index.beforeYouStart.p1")</p>
+
     <ul class="govuk-list govuk-list--bullet">
-        <li>@messages("index.p9.bullet1")</li>
-        <li>@messages("index.p9.bullet2")</li>
+        <li>@messages("index.beforeYouStart.p1.bullet1")</li>
+        <li>@messages("index.beforeYouStart.p1.bullet2")</li>
+        <li>@messages("index.beforeYouStart.p1.bullet3")</li>
     </ul>
 
-    <p class="govuk-body">
-        @messages("index.p10")
-    </p>
+    <p class="govuk-body">@messages("index.beforeYouStart.p2")</p>
 
-    <p class="govuk-body">
-        @messages("index.p11")
-    </p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("index.beforeYouStart.p2.bullet1")</li>
+        <li>@messages("index.beforeYouStart.p2.bullet2")</li>
+        <li>@messages("index.beforeYouStart.p2.bullet3")</li>
+        <li>@messages("index.beforeYouStart.p2.bullet4")</li>
+    </ul>
 
-    <p class="govuk-body">
-        @messages("index.p12")
-    </p>
-
-    <p class="govuk-body">
-        @messages("index.p13") <a href="@messages("index.p13.link.href")" class="govuk-link">@messages("index.p13.link.text")</a>.
-    </p>
+    <p class="govuk-body">@messages("index.beforeYouStart.p2")</p>
 
     <div class="govuk-inset-text">
-        @messages("index.p14")
+        @messages("index.beforeYouStart.p4")
     </div>
 
     @formHelper(action = routes.IndexController.onSubmit) {
