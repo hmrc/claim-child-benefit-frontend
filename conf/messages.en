@@ -64,6 +64,9 @@ index.beforeYouStart.p2.bullet3 = your partner’s National Insurance number, if
 index.beforeYouStart.p2.bullet4 = a printer - to print off your completed form
 index.beforeYouStart.p3 = You need to print and send your completed form to HMRC, along with any documents you need to provide.
 index.beforeYouStart.p4 = Do not delay making your claim, because Child Benefit can only be backdated by 3 months.
+index.beforeYouStart.p5 = If you have any questions about Child Benefit,
+index.beforeYouStart.p5.link.text = contact the Child Benefit helpline
+index.beforeYouStart.p5.link.href = https://www.gov.uk/government/organisations/hm-revenue-customs/contact/child-benefit
 
 checkYourAnswers.title = Check Your Answers
 checkYourAnswers.heading = Check Your Answers
