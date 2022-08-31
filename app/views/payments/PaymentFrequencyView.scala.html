@@ -26,7 +26,7 @@
 
 @(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("paymentFrequency.title"))) {
+@layout(pageTitle = title(form, messages("paymentFrequency.title"), section = Some(messages("section.payments")))) {
 
     @formHelper(action = routes.PaymentFrequencyController.onSubmit(waypoints), 'autoComplete -> "off") {
 
