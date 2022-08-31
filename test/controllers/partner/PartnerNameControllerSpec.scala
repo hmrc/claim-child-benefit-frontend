@@ -41,7 +41,7 @@ class PartnerNameControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val partnerNameRoute = routes.PartnerNameController.onPageLoad(waypoints).url
 
-  private val validAnswer = AdultName(None, "value 1", None, "value 2")
+  private val validAnswer = AdultName("value 1", None, "value 2")
   private val userAnswers = emptyUserAnswers.set(PartnerNamePage, validAnswer).success.value
 
   "PartnerName Controller" - {

@@ -45,7 +45,7 @@ class JourneyModelSpec
     with ModelGenerators {
 
   private val now = LocalDate.now
-  private val applicantName = AdultName(None, "first", None, "last")
+  private val applicantName = AdultName("first", None, "last")
   private val applicantNino = arbitrary[Nino].sample.value
   private val currentAddress = Address("line 1", None, "town", None, "AA11 1AA")
   private val previousAddress = Address("line 1", None, "town", None, "BB22 2BB")
@@ -60,7 +60,7 @@ class JourneyModelSpec
   private val bankAccountDetails = BankAccountDetails("name", "00000000", "000000", None)
   private val eldestChildName = ChildName("first", None, "last")
 
-  private val partnerName = AdultName(None, "partner first", None, "partner last")
+  private val partnerName = AdultName("partner first", None, "partner last")
   private val partnerNationality = "partner nationality"
   private val partnerEmployment = Set[EmploymentStatus](EmploymentStatus.Employed)
   private val partnerNino = arbitrary[Nino].sample.value

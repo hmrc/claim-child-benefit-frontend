@@ -37,7 +37,7 @@ import scala.concurrent.Future
 class PartnerWaitingForEntitlementDecisionControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
-  private val name = AdultName(None, "first", None, "last")
+  private val name = AdultName("first", None, "last")
   private val baseAnswers = emptyUserAnswers.set(PartnerNamePage, name).success.value
 
   val formProvider = new PartnerWaitingForEntitlementDecisionFormProvider()

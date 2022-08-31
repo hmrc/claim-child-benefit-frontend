@@ -54,7 +54,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
 
       val model = JourneyModel(
         applicant = JourneyModel.Applicant(
-          name = models.AdultName(title = Some("applicant title"), firstName = "applicant first", middleNames = Some("applicant middle"), lastName = "applicant last"),
+          name = models.AdultName(firstName = "applicant first", middleNames = Some("applicant middle"), lastName = "applicant last"),
           previousFamilyNames = List("previous family name"),
           dateOfBirth = now,
           nationalInsuranceNumber = Some(applicantNino),
@@ -70,7 +70,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           status = models.RelationshipStatus.Cohabiting,
           since = Some(now),
           partner = Some(models.JourneyModel.Partner(
-            name = models.AdultName(title = Some("partner title"), firstName = "partner first", middleNames = Some("partner middle"), lastName = "partner last"),
+            name = models.AdultName(firstName = "partner first", middleNames = Some("partner middle"), lastName = "partner last"),
             dateOfBirth = now,
             nationality = "partner nationality",
             nationalInsuranceNumber = Some(partnerNino),
@@ -96,7 +96,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             relationshipToApplicant = models.ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = true,
             previousClaimant = Some(JourneyModel.PreviousClaimant(
-              name    = models.AdultName(Some("previous claimant title"), "previous claimant first", Some("previous claimant middle"), "previous claimant last"),
+              name    = models.AdultName("previous claimant first", Some("previous claimant middle"), "previous claimant last"),
               address = models.Address("previous claimant line 1", Some("previous claimant line 2"), "previous claimant town", Some("previous claimant county"), "previous claimant postcode")
             ))
           ), Nil
@@ -113,7 +113,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
 
       val expectedAuditEvent: DownloadAuditEvent = DownloadAuditEvent(
         applicant = Applicant(
-          name = AdultName(title = Some("applicant title"), firstName = "applicant first", middleNames = Some("applicant middle"), lastName = "applicant last"),
+          name = AdultName(firstName = "applicant first", middleNames = Some("applicant middle"), lastName = "applicant last"),
           previousFamilyNames = List("previous family name"),
           dateOfBirth = now,
           nationalInsuranceNumber = Some(applicantNino),
@@ -129,7 +129,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           status = "cohabiting",
           since = Some(now),
           partner = Some(Partner(
-            name = AdultName(title = Some("partner title"), firstName = "partner first", middleNames = Some("partner middle"), lastName = "partner last"),
+            name = AdultName(firstName = "partner first", middleNames = Some("partner middle"), lastName = "partner last"),
             dateOfBirth = now,
             nationality = "partner nationality",
             nationalInsuranceNumber = Some(partnerNino),
@@ -155,7 +155,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             relationshipToApplicant = "birthChild",
             adoptingThroughLocalAuthority = true,
             previousClaimant = Some(PreviousClaimant(
-              name    = AdultName(Some("previous claimant title"), "previous claimant first", Some("previous claimant middle"), "previous claimant last"),
+              name    = AdultName( "previous claimant first", Some("previous claimant middle"), "previous claimant last"),
               address = Address("previous claimant line 1", Some("previous claimant line 2"), "previous claimant town", Some("previous claimant county"), "previous claimant postcode")
             ))
           )

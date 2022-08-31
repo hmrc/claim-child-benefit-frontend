@@ -193,7 +193,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
     "must be asked for details of the previous claimant" in {
 
       val country      = arbitrary[ChildBirthRegistrationCountry].sample.value
-      val claimantName = AdultName(None, "first", None, "last")
+      val claimantName = AdultName("first", None, "last")
       val claimantAddress = Address("line 1", None, "town", None, "postcode")
 
       val initialise = journeyOf(
