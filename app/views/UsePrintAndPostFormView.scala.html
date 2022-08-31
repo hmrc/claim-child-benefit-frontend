@@ -16,15 +16,14 @@
 
 @this(
         layout: templates.Layout,
-        govukButton: GovukButton,
-        govukPanel : GovukPanel,
+        govukButton: GovukButton
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("usePrintAndPostForm.title")), showBackLink = false) {
 
-    @govukPanel(Panel(title = messages("usePrintAndPostForm.heading")))
+    <h1 class="govuk-heading-xl">@messages("usePrintAndPostForm.heading")</h1>
 
     <p class="govuk-body">
         @messages("usePrintAndPostForm.p1")
