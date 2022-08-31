@@ -30,7 +30,7 @@ class PartnerJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGener
 
   "users who don't know their partner's NINO, and the partner is not entitled to CB, must proceed to Child Name" in{
 
-    val partnerName      = AdultName(None, "first", None, "last")
+    val partnerName      = AdultName("first", None, "last")
     val employmentStatus = Set(arbitrary[EmploymentStatus].sample.value)
 
     startingFrom(PartnerNamePage)

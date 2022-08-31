@@ -20,8 +20,6 @@ import models.UserAnswers
 import pages.partner.PartnerNamePage
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -33,14 +31,9 @@ object PartnerNameSummary {
     answers.get(PartnerNamePage).map {
       answer =>
 
-        val value =
-          List(answer.title, Some(answer.firstName), answer.middleNames, Some(answer.lastName))
-            .flatten.map(HtmlFormat.escape(_).toString)
-            .mkString(" ")
-
         SummaryListRowViewModel(
           key = "partnerName.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlContent(value)),
+          value = ValueViewModel(answer.display),
           actions = Seq(
             ActionItemViewModel("site.change", PartnerNamePage.changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("partnerName.change.hidden"))

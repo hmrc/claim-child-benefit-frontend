@@ -19,8 +19,6 @@ package viewmodels.checkAnswers
 import models.UserAnswers
 import pages.{ApplicantNamePage, CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -32,13 +30,9 @@ object ApplicantNameSummary  {
     answers.get(ApplicantNamePage).map {
       answer =>
 
-        val value = List(answer.title, Some(answer.firstName), answer.middleNames, Some(answer.lastName))
-          .flatten.map(HtmlFormat.escape(_).toString)
-          .mkString(" ")
-
         SummaryListRowViewModel(
           key     = "applicantName.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlContent(value)),
+          value   = ValueViewModel(answer.display),
           actions = Seq(
             ActionItemViewModel("site.change", ApplicantNamePage.changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("applicantName.change.hidden"))

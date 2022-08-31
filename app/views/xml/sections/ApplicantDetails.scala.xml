@@ -17,10 +17,6 @@
 
     @line("pdf.hmfOrCivilServant", booleanToYesNo(model.applicant.memberOfHMForcesOrCivilServantAbroad))
 
-    @model.applicant.name.title.map { title =>
-        @line("pdf.name.title", title)
-    }
-
     @line("pdf.name.first", model.applicant.name.firstName)
 
     @model.applicant.name.middleNames.map { middleNames =>

@@ -20,8 +20,6 @@ import models.{Index, UserAnswers}
 import pages.child.PreviousClaimantNamePage
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -33,15 +31,9 @@ object PreviousClaimantNameSummary {
     answers.get(PreviousClaimantNamePage(index)).map {
       answer =>
 
-        val value =
-          Seq(answer.title, Some(answer.firstName), answer.middleNames, Some(answer.lastName))
-            .flatten
-            .map(HtmlFormat.escape(_).toString)
-            .mkString(" ")
-
         SummaryListRowViewModel(
           key = "previousClaimantName.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlContent(value)),
+          value = ValueViewModel(answer.display),
           actions = Seq(
             ActionItemViewModel("site.change", PreviousClaimantNamePage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("previousClaimantName.change.hidden"))

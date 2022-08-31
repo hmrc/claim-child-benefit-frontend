@@ -23,27 +23,6 @@ class PreviousClaimantNameFormProviderSpec extends StringFieldBehaviours {
 
   val form = new PreviousClaimantNameFormProvider()()
 
-  ".title" - {
-
-    val fieldName = "title"
-    val lengthKey = "previousClaimantName.error.title.length"
-    val maxLength = 20
-
-    behave like fieldThatBindsValidData(
-      form,
-      fieldName,
-      stringsWithMaxLength(maxLength)
-    )
-
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
-    )
-
-  }
-
   ".firstName" - {
 
     val fieldName = "firstName"

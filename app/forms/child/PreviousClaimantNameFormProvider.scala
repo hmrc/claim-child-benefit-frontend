@@ -27,8 +27,6 @@ class PreviousClaimantNameFormProvider @Inject() extends Mappings {
 
   def apply(): Form[AdultName] = Form(
     mapping(
-      "title" -> optional(text("previousClaimantName.error.title.required")
-        .verifying(maxLength(20, "previousClaimantName.error.title.length"))),
       "firstName" -> text("previousClaimantName.error.firstName.required")
         .verifying(maxLength(100, "previousClaimantName.error.firstName.length")),
       "middleNames" -> optional(text("previousClaimantName.error.middleNames.required")

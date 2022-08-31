@@ -38,7 +38,7 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
 
   def onwardRoute = Call("GET", "/foo")
 
-  private val partnerName = AdultName(None, "first", None, "Last")
+  private val partnerName = AdultName("first", None, "last")
 
   private val formProvider = new PartnerIsHmfOrCivilServantFormProvider()
   private val form = formProvider("first")
