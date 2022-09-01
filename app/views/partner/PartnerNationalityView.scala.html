@@ -35,10 +35,14 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        <h1 class="govuk-heading-xl">@messages("partnerNationality.heading", partnerFirstName)</h1>
+
+        <p class="govuk-body">@messages("partnerNationality.guidance")</p>
+
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("partnerNationality.heading", partnerFirstName)).asPageHeading()
+                label = LabelViewModel(messages("partnerNationality.heading")).withCssClass("govuk-visually-hidden")
             )
             .withWidth(Full)
             .withHint(HintViewModel(messages("partnerNationality.hint")))

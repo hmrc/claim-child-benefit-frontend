@@ -473,7 +473,8 @@ applicantName.change.hidden = your name
 
 applicantNationality.title = What is your nationality?
 applicantNationality.heading = What is your nationality?
-applicantNationality.hint = This is shown on your passport if you have one, for example British, Irish, French or Polish.
+applicantNationality.guidance = This is shown on your passport if you have one.
+applicantNationality.hint = For example British, Irish, French or Polish.
 applicantNationality.checkYourAnswersLabel = Your nationality
 applicantNationality.error.required = Enter your nationality
 applicantNationality.error.length = Nationality must be 100 characters or less
@@ -608,7 +609,8 @@ partnerName.change.hidden = your partner’s name
 
 partnerNationality.title = What is your partner’s nationality?
 partnerNationality.heading = What is {0}’s nationality?
-partnerNationality.hint = This is shown on their passport if they have one, for example British, Irish, French or Polish.
+partnerNationality.guidance = This is shown on their passport if they have one.
+partnerNationality.hint = For example British, Irish, French or Polish.
 partnerNationality.checkYourAnswersLabel ={0}’s nationality
 partnerNationality.error.required = Enter {0}’s nationality
 partnerNationality.error.length = Nationality must be 100 characters or less
