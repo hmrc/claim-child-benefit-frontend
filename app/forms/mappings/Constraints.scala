@@ -82,12 +82,12 @@ trait Constraints {
   protected def regexp(regex: Regex, errorKey: String): Constraint[String] =
     regexp(regex.toString, errorKey)
 
-  protected def maxLength(maximum: Int, errorKey: String): Constraint[String] =
+  protected def maxLength(maximum: Int, errorKey: String, args: Any*): Constraint[String] =
     Constraint {
       case str if str.length <= maximum =>
         Valid
       case _ =>
-        Invalid(errorKey, maximum)
+        if (args.nonEmpty) Invalid(errorKey, maximum +: args: _*) else Invalid(errorKey, maximum)
     }
 
   protected def maxDate(maximum: LocalDate, errorKey: String, args: Any*): Constraint[LocalDate] =

@@ -45,14 +45,14 @@ class PartnerEldestChildDateOfBirthFormProviderSpec extends DateBehaviours {
       form      = form,
       key       = "value",
       max       = maxDate,
-      formError = FormError("value", "partnerEldestChildDateOfBirth.error.afterMaximum", Seq(maxDate.format(dateFormatter)))
+      formError = FormError("value", "partnerEldestChildDateOfBirth.error.afterMaximum", Seq(maxDate.format(dateFormatter), name))
     )
 
     behave like dateFieldWithMin(
       form      = form,
       key       = "value",
       min       = minDate,
-      formError = FormError("value", "partnerEldestChildDateOfBirth.error.beforeMinimum", Seq(minDate.format(dateFormatter)))
+      formError = FormError("value", "partnerEldestChildDateOfBirth.error.beforeMinimum", Seq(minDate.format(dateFormatter), name))
     )
 
     behave like mandatoryDateField(form, "value", "partnerEldestChildDateOfBirth.error.required.all", Seq(name))

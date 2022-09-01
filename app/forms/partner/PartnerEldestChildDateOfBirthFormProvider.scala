@@ -38,8 +38,8 @@ class PartnerEldestChildDateOfBirthFormProvider @Inject()(clock: Clock) extends 
         requiredKey    = "partnerEldestChildDateOfBirth.error.required",
         args           = Seq(partnerFirstName)
       ).verifying(
-        maxDate(maxDate, "partnerEldestChildDateOfBirth.error.afterMaximum", maxDate.format(dateFormatter)),
-        minDate(minDate, "partnerEldestChildDateOfBirth.error.beforeMinimum", minDate.format(dateFormatter))
+        maxDate(maxDate, "partnerEldestChildDateOfBirth.error.afterMaximum", maxDate.format(dateFormatter), partnerFirstName),
+        minDate(minDate, "partnerEldestChildDateOfBirth.error.beforeMinimum", minDate.format(dateFormatter), partnerFirstName)
       )
     )
 }
