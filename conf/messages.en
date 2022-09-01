@@ -91,11 +91,11 @@ signedOut.guidance = We did not save your answers.
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
-anyChildLivedWithOthers.title = Have any of the children you will claim for lived with anyone else in the last 12 months?
-anyChildLivedWithOthers.heading = Have any of the children you will claim for lived with anyone else in the last 12 months?
-anyChildLivedWithOthers.checkYourAnswersLabel = Have any of the children you will claim for lived with anyone else in the last 12 months?
-anyChildLivedWithOthers.error.required = Select yes if any of the children you will claim for has lived with anyone else in the last 12 months
-anyChildLivedWithOthers.change.hidden = if any of the children you will claim for has lived with anyone else in the last 12 months
+anyChildLivedWithOthers.title = Have any of the children you will claim for lived with anyone else in the last year?
+anyChildLivedWithOthers.heading = Have any of the children you will claim for lived with anyone else in the last year?
+anyChildLivedWithOthers.checkYourAnswersLabel = Have any of the children you will claim for lived with anyone else in the last year?
+anyChildLivedWithOthers.error.required = Select yes if any of the children you will claim for has lived with anyone else in the last year
+anyChildLivedWithOthers.change.hidden = if any of the children you will claim for has lived with anyone else in the last year
 
 everLivedOrWorkedAbroad.title = Have you or your partner ever lived or worked outside the UK?
 everLivedOrWorkedAbroad.heading = Have you or your partner ever lived or worked outside the UK?
@@ -452,11 +452,11 @@ applicantHasPreviousFamilyName.checkYourAnswersLabel = Have you been known by an
 applicantHasPreviousFamilyName.error.required = Select yes if you have been known by any other last names or family names
 applicantHasPreviousFamilyName.change.hidden = if you have been known by any other last names or family names
 
-applicantLivedAtCurrentAddressOneYear.title = Have you lived at this address for more than 12 months?
-applicantLivedAtCurrentAddressOneYear.heading = Have you lived at this address for more than 12 months?
-applicantLivedAtCurrentAddressOneYear.checkYourAnswersLabel = Have you lived at this address for more than 12 months?
-applicantLivedAtCurrentAddressOneYear.error.required = Select yes if you have lived at this address for more than 12 months
-applicantLivedAtCurrentAddressOneYear.change.hidden = if you have lived at this address for more than 12 months
+applicantLivedAtCurrentAddressOneYear.title = Have you lived at this address for more than a year?
+applicantLivedAtCurrentAddressOneYear.heading = Have you lived at this address for more than a year?
+applicantLivedAtCurrentAddressOneYear.checkYourAnswersLabel = Have you lived at this address for more than a year?
+applicantLivedAtCurrentAddressOneYear.error.required = Select yes if you have lived at this address for more than a year
+applicantLivedAtCurrentAddressOneYear.change.hidden = if you have lived at this address for more than a year
 
 applicantName.title = What is your name?
 applicantName.heading = What is your name?
@@ -496,7 +496,8 @@ applicantNinoKnown.change.hidden = if you know your National Insurance number
 
 applicantPhoneNumber.title = What is your telephone number?
 applicantPhoneNumber.heading = What is your telephone number?
-applicantPhoneNumber.hint = We may use this to contact you about your claim. Our number may not show up if we call you.
+applicantPhoneNumber.guidance = We may use this to contact you about your claim. Our number may not show up if we call you.
+applicantPhoneNumber.hint = For example, 01632 960 001, 07700 900 982 or +44 808 157 0192
 applicantPhoneNumber.checkYourAnswersLabel = Your telephone number
 applicantPhoneNumber.error.required = Enter your telephone number
 applicantPhoneNumber.error.invalid = Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192
@@ -527,9 +528,9 @@ applicantPreviousFamilyName.error.required = Enter your other last name or famil
 applicantPreviousFamilyName.error.length = Your other last name or family name must be 100 characters or less
 applicantPreviousFamilyName.change.hidden = your other last name or family name
 
-removeApplicantPreviousFamilyName.title = Do you want to remove this other last name or family name?
-removeApplicantPreviousFamilyName.heading = Do you want to remove {0}?
-removeApplicantPreviousFamilyName.error.required = Select yes if you want to remove {0}
+removeApplicantPreviousFamilyName.title = Are you sure you want to remove this other last name or family name?
+removeApplicantPreviousFamilyName.heading = Are you sure you want to remove {0}?
+removeApplicantPreviousFamilyName.error.required = Select yes if you are sure you want to remove {0}
 
 bestTimeToContact.title = What time of day is the best time to call you?
 bestTimeToContact.heading = What time of day is the best time to call you?
@@ -892,7 +893,7 @@ pdf.relationshipStatus.single = Single
 pdf.relationshipStatusDate.cohabiting = Living with partner since
 pdf.relationshipStatusDate.separated = Separated since
 pdf.currentAddress = Current address
-pdf.livedAtAddressOneYear = Lived at address for more than 12 months
+pdf.livedAtAddressOneYear = Lived at address for more than a year
 pdf.previousAddress = Previous address
 pdf.phoneNumber = Telephone number
 pdf.bestTimeToContact = Best time to call
