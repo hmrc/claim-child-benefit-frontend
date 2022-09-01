@@ -683,7 +683,8 @@ childBiologicalSex.change.hidden = this child’s sex as recorded on the birth c
 
 childBirthCertificateSystemNumber.title = What is the system number on this child’s birth certificate?
 childBirthCertificateSystemNumber.heading = What is the system number on {0}’s birth certificate?
-childBirthCertificateSystemNumber.hint = This is the 9 digit number from the bottom left hand corner of their birth certificate.
+childBirthCertificateSystemNumber.guidance = This is the 9 digit number from the bottom left hand corner of their birth certificate.
+childBirthCertificateSystemNumber.hint = For example, 123456789.
 childBirthCertificateSystemNumber.checkYourAnswersLabel = The system number on this child’s birth certificate
 childBirthCertificateSystemNumber.error.required = Enter the system number on {0}’s birth certificate
 childBirthCertificateSystemNumber.error.invalid = The system number must be 9 digits
@@ -753,7 +754,8 @@ childPreviousName.checkYourAnswersLabel = Previous names
 
 childScottishBirthCertificateDetails.title = What is the district number, year and entry number on this child’s birth certificate?
 childScottishBirthCertificateDetails.heading = What is the district number, year and entry number on {0}’s birth certificate?
-childScottishBirthCertificateDetails.hint = This is at the top of their birth certificate.  For example, 123 2000 456.
+childScottishBirthCertificateDetails.guidance = This is at the top of their birth certificate.
+childScottishBirthCertificateDetails.hint = For example, 123 2000 456.
 childScottishBirthCertificateDetails.checkYourAnswersLabel = The district number, year and entry number on this child’s birth certificate?
 childScottishBirthCertificateDetails.error.required = Enter the district number, year and entry number on {0}’s birth certificate
 childScottishBirthCertificateDetails.error.invalid = The district number, year and entry number must be 10 digits.
