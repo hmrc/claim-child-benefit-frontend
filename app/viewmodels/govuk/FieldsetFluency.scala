@@ -67,5 +67,8 @@ trait FieldsetFluency {
 
     def withSize(size: LegendSize): Legend =
       legend.withCssClass(size.toString)
+
+    def visuallyHidden(): Legend =
+      legend.withCssClass("govuk-visually-hidden")
   }
 }

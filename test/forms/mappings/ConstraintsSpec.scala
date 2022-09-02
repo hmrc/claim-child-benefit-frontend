@@ -118,8 +118,8 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
     }
 
     "must return Invalid for a string longer than the allowed length" in {
-      val result = maxLength(10, "error.length")("a" * 11)
-      result mustEqual Invalid("error.length", 10)
+      val result = maxLength(10, "error.length", "errorArg")("a" * 11)
+      result mustEqual Invalid("error.length", 10, "errorArg")
     }
   }
 

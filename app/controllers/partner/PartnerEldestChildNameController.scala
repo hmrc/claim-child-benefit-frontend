@@ -45,14 +45,13 @@ class PartnerEldestChildNameController @Inject()(
     with I18nSupport
     with AnswerExtractor {
 
-  private val form = formProvider()
-
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       getAnswer(PartnerNamePage) {
         partnerName =>
 
           val safeName = HtmlFormat.escape(partnerName.firstName).toString
+          val form     = formProvider(safeName)
 
           val preparedForm = request.userAnswers.get(PartnerEldestChildNamePage) match {
             case None => form
@@ -67,6 +66,9 @@ class PartnerEldestChildNameController @Inject()(
     implicit request =>
       getAnswerAsync(PartnerNamePage) {
         partnerName =>
+
+          val safeName = HtmlFormat.escape(partnerName.firstName).toString
+          val form     = formProvider(safeName)
 
           form.bindFromRequest().fold(
             formWithErrors => {

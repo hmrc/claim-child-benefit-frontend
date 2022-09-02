@@ -21,7 +21,8 @@ import play.api.data.FormError
 
 class PartnerEldestChildNameFormProviderSpec extends StringFieldBehaviours {
 
-  val form = new PartnerEldestChildNameFormProvider()()
+  val name = "name"
+  val form = new PartnerEldestChildNameFormProvider()(name)
 
   ".firstName" - {
 
@@ -40,13 +41,13 @@ class PartnerEldestChildNameFormProviderSpec extends StringFieldBehaviours {
       form,
       fieldName,
       maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength, name))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq(name))
     )
   }
 
@@ -66,7 +67,7 @@ class PartnerEldestChildNameFormProviderSpec extends StringFieldBehaviours {
       form,
       fieldName,
       maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength, name))
     )
   }
 
@@ -87,13 +88,13 @@ class PartnerEldestChildNameFormProviderSpec extends StringFieldBehaviours {
       form,
       fieldName,
       maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength, name))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq(name))
     )
   }
 }
