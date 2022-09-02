@@ -87,7 +87,7 @@ trait Constraints {
       case str if str.length <= maximum =>
         Valid
       case _ =>
-        if (args.nonEmpty) Invalid(errorKey, maximum +: args: _*) else Invalid(errorKey, maximum)
+        Invalid(errorKey, maximum +: args: _*)
     }
 
   protected def maxDate(maximum: LocalDate, errorKey: String, args: Any*): Constraint[LocalDate] =
