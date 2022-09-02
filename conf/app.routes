@@ -184,6 +184,9 @@ POST       /child-biological-sex/:index                        controllers.child
 GET        /child-birth-certificate-system-number/:index                        controllers.child.ChildBirthCertificateSystemNumberController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /child-birth-certificate-system-number/:index                        controllers.child.ChildBirthCertificateSystemNumberController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
+GET        /child-birth-certificate-has-system-number/:index                        controllers.child.BirthCertificateHasSystemNumberController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /child-birth-certificate-has-system-number/:index                        controllers.child.BirthCertificateHasSystemNumberController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+
 GET        /child-birth-registration-country/:index                        controllers.child.ChildBirthRegistrationCountryController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /child-birth-registration-country/:index                        controllers.child.ChildBirthRegistrationCountryController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
@@ -201,6 +204,9 @@ POST       /child-name-changed-by-deed-poll/:index                        contro
 
 GET        /child-previous-name/:childIndex/:nameIndex                        controllers.child.ChildPreviousNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, childIndex: Index, nameIndex: Index)
 POST       /child-previous-name/:childIndex/:nameIndex                        controllers.child.ChildPreviousNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, childIndex: Index, nameIndex: Index)
+
+GET        /child-scottish-birth-certificate-has-details/:index                        controllers.child.ScottishBirthCertificateHasNumbersController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /child-scottish-birth-certificate-has-details/:index                        controllers.child.ScottishBirthCertificateHasNumbersController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
 GET        /child-scottish-birth-certificate-details/:index                        controllers.child.ChildScottishBirthCertificateDetailsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /child-scottish-birth-certificate-details/:index                        controllers.child.ChildScottishBirthCertificateDetailsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
