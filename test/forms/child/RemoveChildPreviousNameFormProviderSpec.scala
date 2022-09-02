@@ -35,13 +35,13 @@ class RemoveChildPreviousNameFormProviderSpec extends BooleanFieldBehaviours {
     behave like booleanField(
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey, Seq(previousName.safeFirstName))
+      invalidError = FormError(fieldName, invalidKey, Seq(previousName.firstName))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey, Seq(previousName.safeFirstName))
+      requiredError = FormError(fieldName, requiredKey, Seq(previousName.firstName))
     )
   }
 }

@@ -20,8 +20,6 @@ import models.{Index, UserAnswers}
 import pages.child.ChildBirthRegistrationCountryPage
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -33,15 +31,9 @@ object ChildBirthRegistrationCountrySummary {
     answers.get(ChildBirthRegistrationCountryPage(index)).map {
       answer =>
 
-        val value = ValueViewModel(
-          HtmlContent(
-            HtmlFormat.escape(messages(s"childBirthRegistrationCountry.$answer"))
-          )
-        )
-
         SummaryListRowViewModel(
           key = "childBirthRegistrationCountry.checkYourAnswersLabel",
-          value = value,
+          value = ValueViewModel(messages(s"childBirthRegistrationCountry.$answer")),
           actions = Seq(
             ActionItemViewModel("site.change", ChildBirthRegistrationCountryPage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("childBirthRegistrationCountry.change.hidden"))

@@ -20,8 +20,6 @@ import models.{Index, UserAnswers}
 import pages.child.ChildNamePage
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -33,15 +31,9 @@ object ChildNameSummary {
     answers.get(ChildNamePage(index)).map {
       answer =>
 
-        val value =
-          Seq(Some(answer.firstName), answer.middleNames, Some(answer.lastName))
-            .flatten
-            .map(HtmlFormat.escape(_).toString)
-            .mkString(" ")
-
         SummaryListRowViewModel(
           key = "childName.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlContent(value)),
+          value = ValueViewModel(answer.fullName),
           actions = Seq(
             ActionItemViewModel("site.change", ChildNamePage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("childName.change.hidden"))

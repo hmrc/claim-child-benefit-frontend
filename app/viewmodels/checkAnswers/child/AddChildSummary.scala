@@ -21,6 +21,7 @@ import models.{Index, UserAnswers}
 import pages.child.{AddChildPage, CheckChildDetailsPage}
 import pages.{AddItemPage, CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import queries.AllChildSummaries
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -46,7 +47,7 @@ object AddChildSummary {
     answers.get(AllChildSummaries).map {
       summaries =>
 
-        val value = summaries.map(_.childName.fullName).mkString("<br/>")
+        val value = summaries.map(summary => HtmlFormat.escape(summary.childName.fullName).toString).mkString("<br/>")
 
         SummaryListRowViewModel(
           key = "addChild.checkYourAnswersLabel",

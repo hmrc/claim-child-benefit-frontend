@@ -45,12 +45,12 @@ class PreviousClaimantNameController @Inject()(
     with I18nSupport
     with AnswerExtractor {
 
-  val form = formProvider()
-
   def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       getAnswer(ChildNamePage(index)) {
         childName =>
+
+          val form = formProvider(childName)
 
           val preparedForm = request.userAnswers.get(PreviousClaimantNamePage(index)) match {
             case None => form
@@ -66,6 +66,7 @@ class PreviousClaimantNameController @Inject()(
       getAnswerAsync(ChildNamePage(index)) {
         childName =>
 
+          val form = formProvider(childName)
 
           form.bindFromRequest().fold(
             formWithErrors =>

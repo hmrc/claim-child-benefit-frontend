@@ -29,7 +29,7 @@
 
     @formHelper(action = routes.CheckChildDetailsController.onSubmit(waypoints, index)) {
 
-        <h1 class="govuk-heading-xl">@messages("checkChildDetails.heading", childName.safeFirstName)</h1>
+        <h1 class="govuk-heading-xl">@messages("checkChildDetails.heading", childName.firstName)</h1>
 
         @govukSummaryList(list)
 

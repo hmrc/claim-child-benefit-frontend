@@ -25,14 +25,14 @@ import javax.inject.Inject
 
 class ChildPreviousNameFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[ChildName] = Form(
+  def apply(childName: ChildName): Form[ChildName] = Form(
     mapping(
-      "firstName" -> text("childPreviousName.error.firstName.required")
-        .verifying(maxLength(100, "childPreviousName.error.firstName.length")),
-      "middleNames" -> optional(text("childPreviousName.error.middleNames.required")
-        .verifying(maxLength(100, "childPreviousName.error.middleNames.length"))),
-      "lastName" -> text("childPreviousName.error.lastName.required")
-        .verifying(maxLength(100, "childPreviousName.error.lastName.length"))
+      "firstName" -> text("childPreviousName.error.firstName.required", args = Seq(childName.firstName))
+        .verifying(maxLength(100, "childPreviousName.error.firstName.length", childName.firstName)),
+      "middleNames" -> optional(text("childPreviousName.error.middleNames.required", args = Seq(childName.firstName))
+        .verifying(maxLength(100, "childPreviousName.error.middleNames.length", childName.firstName))),
+      "lastName" -> text("childPreviousName.error.lastName.required", args = Seq(childName.firstName))
+        .verifying(maxLength(100, "childPreviousName.error.lastName.length", childName.firstName))
     )(ChildName.apply)(ChildName.unapply)
   )
 }

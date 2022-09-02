@@ -26,6 +26,6 @@ class ChildHasPreviousNameFormProvider @Inject() extends Mappings {
 
   def apply(childName: ChildName): Form[Boolean] =
     Form(
-      "value" -> boolean("childHasPreviousName.error.required", args = Seq(childName.safeFirstName))
+      "value" -> boolean("childHasPreviousName.error.required", args = Seq(childName.firstName))
     )
 }

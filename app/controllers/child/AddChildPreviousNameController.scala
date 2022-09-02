@@ -24,7 +24,6 @@ import pages.Waypoints
 import pages.child.{AddChildPreviousNamePage, ChildNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import play.twirl.api.HtmlFormat
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.child.AddChildPreviousNameSummary
@@ -54,11 +53,9 @@ class AddChildPreviousNameController @Inject()(
       getAnswer(ChildNamePage(index)) {
         childName =>
 
-          val safeName = HtmlFormat.escape(childName.firstName).toString
-
           val previousNames = AddChildPreviousNameSummary.rows(request.userAnswers, index, waypoints, AddChildPreviousNamePage(index))
 
-          Ok(view(form, waypoints, index, safeName, previousNames))
+          Ok(view(form, waypoints, index, childName.firstName, previousNames))
       }
   }
 
@@ -67,13 +64,11 @@ class AddChildPreviousNameController @Inject()(
       getAnswerAsync(ChildNamePage(index)) {
         childName =>
 
-          val safeName = HtmlFormat.escape(childName.firstName).toString
-
           form.bindFromRequest().fold(
             formWithErrors => {
               val previousNames = AddChildPreviousNameSummary.rows(request.userAnswers, index, waypoints, AddChildPreviousNamePage(index))
 
-              Future.successful(BadRequest(view(formWithErrors, waypoints, index, safeName, previousNames)))
+              Future.successful(BadRequest(view(formWithErrors, waypoints, index, childName.firstName, previousNames)))
             },
 
             value =>

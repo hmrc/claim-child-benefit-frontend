@@ -17,7 +17,7 @@
 package forms.child
 
 import forms.mappings.Mappings
-import models.AdultName
+import models.{AdultName, ChildName}
 import play.api.data.Form
 import play.api.data.Forms._
 
@@ -25,14 +25,14 @@ import javax.inject.Inject
 
 class PreviousClaimantNameFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[AdultName] = Form(
+  def apply(childName: ChildName): Form[AdultName] = Form(
     mapping(
-      "firstName" -> text("previousClaimantName.error.firstName.required")
-        .verifying(maxLength(100, "previousClaimantName.error.firstName.length")),
-      "middleNames" -> optional(text("previousClaimantName.error.middleNames.required")
-        .verifying(maxLength(100, "previousClaimantName.error.middleNames.length"))),
-      "lastName" -> text("previousClaimantName.error.lastName.required")
-        .verifying(maxLength(100, "previousClaimantName.error.lastName.length"))
+      "firstName" -> text("previousClaimantName.error.firstName.required", args = Seq(childName.firstName))
+        .verifying(maxLength(100, "previousClaimantName.error.firstName.length", childName.firstName)),
+      "middleNames" -> optional(text("previousClaimantName.error.middleNames.required", args = Seq(childName.firstName))
+        .verifying(maxLength(100, "previousClaimantName.error.middleNames.length", childName.firstName))),
+      "lastName" -> text("previousClaimantName.error.lastName.required", args = Seq(childName.firstName))
+        .verifying(maxLength(100, "previousClaimantName.error.lastName.length", childName.firstName))
     )(AdultName.apply)(AdultName.unapply)
   )
 }
