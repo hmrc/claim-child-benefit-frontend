@@ -32,15 +32,9 @@ object RelationshipStatusSummary  {
     answers.get(RelationshipStatusPage).map {
       answer =>
 
-        val value = ValueViewModel(
-          HtmlContent(
-            HtmlFormat.escape(messages(s"relationshipStatus.$answer"))
-          )
-        )
-
         SummaryListRowViewModel(
           key     = "relationshipStatus.checkYourAnswersLabel",
-          value   = value,
+          value   = ValueViewModel(messages(s"relationshipStatus.$answer")),
           actions = Seq(
             ActionItemViewModel("site.change", RelationshipStatusPage.changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("relationshipStatus.change.hidden"))
