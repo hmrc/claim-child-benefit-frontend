@@ -17,11 +17,13 @@
 package forms.child
 
 import forms.behaviours.StringFieldBehaviours
+import models.ChildName
 import play.api.data.FormError
 
 class ChildPreviousNameFormProviderSpec extends StringFieldBehaviours {
 
-  val form = new ChildPreviousNameFormProvider()()
+  private val childName = ChildName("first", None, "last")
+  private val form = new ChildPreviousNameFormProvider()(childName)
 
   ".firstName" - {
 
@@ -40,13 +42,13 @@ class ChildPreviousNameFormProviderSpec extends StringFieldBehaviours {
       form,
       fieldName,
       maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength, "first"))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq("first"))
     )
   }
 
@@ -66,7 +68,7 @@ class ChildPreviousNameFormProviderSpec extends StringFieldBehaviours {
       form,
       fieldName,
       maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength, "first"))
     )
   }
 
@@ -87,13 +89,13 @@ class ChildPreviousNameFormProviderSpec extends StringFieldBehaviours {
       form,
       fieldName,
       maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength, "first"))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq("first"))
     )
   }
 }

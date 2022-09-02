@@ -26,6 +26,6 @@ class ChildBiologicalSexFormProvider @Inject() extends Mappings {
 
   def apply(childName: ChildName): Form[ChildBiologicalSex] =
     Form(
-      "value" -> enumerable[ChildBiologicalSex]("childBiologicalSex.error.required", args = Seq(childName.safeFirstName))
+      "value" -> enumerable[ChildBiologicalSex]("childBiologicalSex.error.required", args = Seq(childName.firstName))
     )
 }

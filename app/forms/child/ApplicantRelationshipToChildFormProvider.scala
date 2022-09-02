@@ -26,6 +26,6 @@ class ApplicantRelationshipToChildFormProvider @Inject() extends Mappings {
 
   def apply(childName: ChildName): Form[ApplicantRelationshipToChild] =
     Form(
-      "value" -> enumerable[ApplicantRelationshipToChild]("applicantRelationshipToChild.error.required", args = Seq(childName.safeFirstName))
+      "value" -> enumerable[ApplicantRelationshipToChild]("applicantRelationshipToChild.error.required", args = Seq(childName.firstName))
     )
 }

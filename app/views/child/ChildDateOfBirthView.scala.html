@@ -37,7 +37,7 @@
         @govukDateInput(
             DateViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(messages("childDateOfBirth.heading", childName.safeFirstName)).asPageHeading()
+                legend = LegendViewModel(messages("childDateOfBirth.heading", childName.firstName)).asPageHeading()
             )
             .withHint(HintViewModel(messages("childDateOfBirth.hint")))
         )

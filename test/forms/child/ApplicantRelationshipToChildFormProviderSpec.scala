@@ -35,13 +35,13 @@ class ApplicantRelationshipToChildFormProviderSpec extends OptionFieldBehaviours
       form,
       fieldName,
       validValues  = ApplicantRelationshipToChild.values,
-      invalidError = FormError(fieldName, "error.invalid", Seq(childName.safeFirstName))
+      invalidError = FormError(fieldName, "error.invalid", Seq(childName.firstName))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey, Seq(childName.safeFirstName))
+      requiredError = FormError(fieldName, requiredKey, Seq(childName.firstName))
     )
   }
 }

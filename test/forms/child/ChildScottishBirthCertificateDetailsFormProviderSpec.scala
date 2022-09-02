@@ -116,7 +116,7 @@ class ChildScottishBirthCertificateDetailsFormProviderSpec extends StringFieldBe
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey, Seq(childName.safeFirstName))
+      requiredError = FormError(fieldName, requiredKey, Seq(childName.firstName))
     )
   }
 }

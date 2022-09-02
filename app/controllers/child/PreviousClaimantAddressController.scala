@@ -45,12 +45,12 @@ class PreviousClaimantAddressController @Inject()(
     with I18nSupport
     with AnswerExtractor {
 
-  private val form = formProvider()
-
   def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       getAnswer(PreviousClaimantNamePage(index)) {
         previousClaimantName =>
+
+          val form = formProvider(previousClaimantName)
 
           val preparedForm = request.userAnswers.get(PreviousClaimantAddressPage(index)) match {
             case None => form
@@ -65,6 +65,8 @@ class PreviousClaimantAddressController @Inject()(
     implicit request =>
       getAnswerAsync(PreviousClaimantNamePage(index)) {
         previousClaimantName =>
+
+          val form = formProvider(previousClaimantName)
 
           form.bindFromRequest().fold(
           formWithErrors =>

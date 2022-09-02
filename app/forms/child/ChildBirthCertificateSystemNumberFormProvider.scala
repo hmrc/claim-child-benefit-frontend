@@ -27,7 +27,7 @@ class ChildBirthCertificateSystemNumberFormProvider @Inject() extends Mappings {
 
   def apply(childName: ChildName): Form[String] =
     Form(
-      "value" -> text("childBirthCertificateSystemNumber.error.required", args = Seq(childName.safeFirstName))
+      "value" -> text("childBirthCertificateSystemNumber.error.required", args = Seq(childName.firstName))
         .verifying(regexp(Validation.systemNumberPattern.toString, "childBirthCertificateSystemNumber.error.invalid"))
         .transform[String](x => x.replace(" ", "").replace("-", ""), x => x)
     )

@@ -35,14 +35,14 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <h1 class="govuk-heading-xl">@messages("childBirthCertificateSystemNumber.heading", childName.safeFirstName)</h1>
+        <h1 class="govuk-heading-xl">@messages("childBirthCertificateSystemNumber.heading", childName.firstName)</h1>
 
         <p class="govuk-body">@messages("childBirthCertificateSystemNumber.guidance")</p>
 
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("childBirthCertificateSystemNumber.heading", childName.safeFirstName)).visuallyHidden()
+                label = LabelViewModel(messages("childBirthCertificateSystemNumber.heading", childName.firstName)).visuallyHidden()
             )
             .withWidth(Fixed10)
             .withHint(HintViewModel(messages("childBirthCertificateSystemNumber.hint")))

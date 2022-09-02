@@ -37,10 +37,10 @@ class ChildDateOfBirthFormProvider @Inject()(clock: Clock) extends Mappings {
         allRequiredKey = "childDateOfBirth.error.required.all",
         twoRequiredKey = "childDateOfBirth.error.required.two",
         requiredKey    = "childDateOfBirth.error.required",
-        args           = Seq(childName.safeFirstName)
+        args           = Seq(childName.firstName)
       ).verifying(
-        maxDate(maxDate, "childDateOfBirth.error.afterMaximum", maxDate.format(dateFormatter)),
-        minDate(minDate, "childDateOfBirth.error.beforeMinimum", minDate.format(dateFormatter))
+        maxDate(maxDate, "childDateOfBirth.error.afterMaximum", maxDate.format(dateFormatter), childName.firstName),
+        minDate(minDate, "childDateOfBirth.error.beforeMinimum", minDate.format(dateFormatter), childName.firstName)
       )
     )
 }

@@ -26,6 +26,6 @@ class AnyoneClaimedForChildBeforeFormProvider @Inject() extends Mappings {
 
   def apply(childName: ChildName): Form[Boolean] =
     Form(
-      "value" -> boolean("anyoneClaimedForChildBefore.error.required", args = Seq(childName.safeFirstName))
+      "value" -> boolean("anyoneClaimedForChildBefore.error.required", args = Seq(childName.firstName))
     )
 }

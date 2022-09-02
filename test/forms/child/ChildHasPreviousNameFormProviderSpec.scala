@@ -35,13 +35,13 @@ class ChildHasPreviousNameFormProviderSpec extends BooleanFieldBehaviours {
     behave like booleanField(
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey, Seq(childName.safeFirstName))
+      invalidError = FormError(fieldName, invalidKey, Seq(childName.firstName))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey, Seq(childName.safeFirstName))
+      requiredError = FormError(fieldName, requiredKey, Seq(childName.firstName))
     )
   }
 }

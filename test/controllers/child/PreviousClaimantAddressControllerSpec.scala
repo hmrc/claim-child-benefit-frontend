@@ -39,7 +39,7 @@ class PreviousClaimantAddressControllerSpec extends SpecBase with MockitoSugar {
   private val baseAnswers = emptyUserAnswers.set(PreviousClaimantNamePage(index), previousClaimantName).success.value
 
   val formProvider = new PreviousClaimantAddressFormProvider()
-  val form = formProvider()
+  val form = formProvider(previousClaimantName)
   private val waypoints = EmptyWaypoints
 
   lazy val previousClaimantAddressRoute = routes.PreviousClaimantAddressController.onPageLoad(waypoints, index).url

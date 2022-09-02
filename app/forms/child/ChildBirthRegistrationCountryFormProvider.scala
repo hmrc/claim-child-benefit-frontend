@@ -26,6 +26,6 @@ class ChildBirthRegistrationCountryFormProvider @Inject() extends Mappings {
 
   def apply(childName: ChildName): Form[ChildBirthRegistrationCountry] =
     Form(
-      "value" -> enumerable[ChildBirthRegistrationCountry]("childBirthRegistrationCountry.error.required", args = Seq(childName.safeFirstName))
+      "value" -> enumerable[ChildBirthRegistrationCountry]("childBirthRegistrationCountry.error.required", args = Seq(childName.firstName))
     )
 }

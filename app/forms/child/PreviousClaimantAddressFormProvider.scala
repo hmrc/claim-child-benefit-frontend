@@ -17,7 +17,7 @@
 package forms.child
 
 import forms.mappings.Mappings
-import models.Address
+import models.{Address, AdultName}
 import play.api.data.Form
 import play.api.data.Forms._
 
@@ -25,18 +25,18 @@ import javax.inject.Inject
 
 class PreviousClaimantAddressFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Address] = Form(
+  def apply(previousClaimant: AdultName): Form[Address] = Form(
     mapping(
-      "line1" -> text("previousClaimantAddress.error.line1.required")
-        .verifying(maxLength(100, "previousClaimantAddress.error.line1.length")),
-      "line2" -> optional(text("previousClaimantAddress.error.line2.required")
-        .verifying(maxLength(100, "previousClaimantAddress.error.line2.length"))),
-      "town" -> text("previousClaimantAddress.error.town.required")
-        .verifying(maxLength(100, "previousClaimantAddress.error.town.length")),
-      "county" -> optional(text("previousClaimantAddress.error.county.required")
-        .verifying(maxLength(100, "previousClaimantAddress.error.county.length"))),
-      "postcode" -> text("previousClaimantAddress.error.postcode.required")
-        .verifying(maxLength(100, "previousClaimantAddress.error.postcode.length"))
+      "line1" -> text("previousClaimantAddress.error.line1.required", args = Seq(previousClaimant.firstName))
+        .verifying(maxLength(100, "previousClaimantAddress.error.line1.length", previousClaimant.firstName)),
+      "line2" -> optional(text("previousClaimantAddress.error.line2.required", args = Seq(previousClaimant.firstName))
+        .verifying(maxLength(100, "previousClaimantAddress.error.line2.length", previousClaimant.firstName))),
+      "town" -> text("previousClaimantAddress.error.town.required", args = Seq(previousClaimant.firstName))
+        .verifying(maxLength(100, "previousClaimantAddress.error.town.length", previousClaimant.firstName)),
+      "county" -> optional(text("previousClaimantAddress.error.county.required", args = Seq(previousClaimant.firstName))
+        .verifying(maxLength(100, "previousClaimantAddress.error.county.length", previousClaimant.firstName))),
+      "postcode" -> text("previousClaimantAddress.error.postcode.required", args = Seq(previousClaimant.firstName))
+        .verifying(maxLength(100, "previousClaimantAddress.error.postcode.length", previousClaimant.firstName))
     )(Address.apply)(Address.unapply)
   )
 }
