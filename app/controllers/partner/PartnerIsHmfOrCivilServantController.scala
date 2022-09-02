@@ -55,7 +55,7 @@ class PartnerIsHmfOrCivilServantController @Inject()(
             case Some(value) => form.fill(value)
           }
 
-          Ok(view(preparedForm, waypoints, partnerName.safeFirstName))
+          Ok(view(preparedForm, waypoints, partnerName.firstName))
       }
   }
 
