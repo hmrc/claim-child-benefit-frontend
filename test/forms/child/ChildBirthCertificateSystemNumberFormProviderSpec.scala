@@ -83,7 +83,7 @@ class ChildBirthCertificateSystemNumberFormProviderSpec extends StringFieldBehav
       forAll(gen) {
         dataItem =>
           val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
-          result.errors must contain only FormError(fieldName, invalidKey, Seq(Validation.systemNumberPattern.toString))
+          result.errors must contain only FormError(fieldName, invalidKey, Seq(Validation.systemNumberPattern.toString, childName.firstName))
       }
     }
 
@@ -97,7 +97,7 @@ class ChildBirthCertificateSystemNumberFormProviderSpec extends StringFieldBehav
       forAll(gen) {
         dataItem =>
           val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
-          result.errors must contain only FormError(fieldName, invalidKey, Seq(Validation.systemNumberPattern.toString))
+          result.errors must contain only FormError(fieldName, invalidKey, Seq(Validation.systemNumberPattern.toString, childName.firstName))
       }
     }
 
@@ -108,7 +108,7 @@ class ChildBirthCertificateSystemNumberFormProviderSpec extends StringFieldBehav
 
           whenever (!value.forall(_.isDigit) && !value.forall(_ == ' ')) {
             val result = form.bind(Map(fieldName -> value)).apply(fieldName)
-            result.errors must contain only FormError(fieldName, invalidKey, Seq(Validation.systemNumberPattern.toString))
+            result.errors must contain only FormError(fieldName, invalidKey, Seq(Validation.systemNumberPattern.toString, childName.firstName))
           }
       }
     }

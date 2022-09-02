@@ -28,7 +28,7 @@ class ChildScottishBirthCertificateDetailsFormProvider @Inject() extends Mapping
   def apply(childName: ChildName): Form[String] =
     Form(
       "value" -> text("childScottishBirthCertificateDetails.error.required", args = Seq(childName.firstName))
-        .verifying(regexp(Validation.scottishBirthCertificateNumberPattern.toString, "childScottishBirthCertificateDetails.error.invalid"))
+        .verifying(regexp(Validation.scottishBirthCertificateNumberPattern.toString, "childScottishBirthCertificateDetails.error.invalid", childName.firstName))
         .transform[String](x => x.replace(" ", "").replace("-", ""), x => x)
     )
 

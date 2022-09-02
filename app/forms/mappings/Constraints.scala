@@ -71,12 +71,12 @@ trait Constraints {
         }
     }
 
-  protected def regexp(regex: String, errorKey: String): Constraint[String] =
+  protected def regexp(regex: String, errorKey: String, args: Any*): Constraint[String] =
     Constraint {
       case str if str.matches(regex) =>
         Valid
       case _ =>
-        Invalid(errorKey, regex)
+        Invalid(errorKey, regex +: args: _*)
     }
 
   protected def regexp(regex: Regex, errorKey: String): Constraint[String] =
