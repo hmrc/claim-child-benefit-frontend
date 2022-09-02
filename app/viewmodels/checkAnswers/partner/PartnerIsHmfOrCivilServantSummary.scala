@@ -35,11 +35,11 @@ object PartnerIsHmfOrCivilServantSummary {
         val value = if (answer) "site.yes" else "site.no"
 
         SummaryListRowViewModel(
-          key = messages("partnerIsHmfOrCivilServant.checkYourAnswersLabel", partnerName.safeFirstName),
+          key = messages("partnerIsHmfOrCivilServant.checkYourAnswersLabel", partnerName.firstName),
           value = ValueViewModel(value),
           actions = Seq(
             ActionItemViewModel("site.change", PartnerIsHmfOrCivilServantPage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("partnerIsHmfOrCivilServant.change.hidden", partnerName.safeFirstName))
+              .withVisuallyHiddenText(messages("partnerIsHmfOrCivilServant.change.hidden", partnerName.firstName))
           )
         )
     }

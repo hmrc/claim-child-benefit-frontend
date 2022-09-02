@@ -50,15 +50,14 @@ class PartnerEldestChildNameController @Inject()(
       getAnswer(PartnerNamePage) {
         partnerName =>
 
-          val safeName = HtmlFormat.escape(partnerName.firstName).toString
-          val form     = formProvider(safeName)
+          val form = formProvider(partnerName.firstName)
 
           val preparedForm = request.userAnswers.get(PartnerEldestChildNamePage) match {
             case None => form
             case Some(value) => form.fill(value)
           }
 
-          Ok(view(preparedForm, waypoints, safeName))
+          Ok(view(preparedForm, waypoints, partnerName.firstName))
       }
   }
 
@@ -67,14 +66,13 @@ class PartnerEldestChildNameController @Inject()(
       getAnswerAsync(PartnerNamePage) {
         partnerName =>
 
-          val safeName = HtmlFormat.escape(partnerName.firstName).toString
-          val form     = formProvider(safeName)
+          val form = formProvider(partnerName.firstName)
 
           form.bindFromRequest().fold(
             formWithErrors => {
               val safeName = HtmlFormat.escape(partnerName.firstName).toString
 
-              Future.successful(BadRequest(view(formWithErrors, waypoints, safeName)))
+              Future.successful(BadRequest(view(formWithErrors, waypoints, partnerName.firstName)))
             },
 
             value =>

@@ -48,7 +48,7 @@ class PartnerIsHmfOrCivilServantController @Inject()(
     implicit request =>
       getAnswer(PartnerNamePage) {
         partnerName =>
-          val form = formProvider(partnerName.safeFirstName)
+          val form = formProvider(partnerName.firstName)
 
           val preparedForm = request.userAnswers.get(PartnerIsHmfOrCivilServantPage) match {
             case None => form
@@ -64,11 +64,11 @@ class PartnerIsHmfOrCivilServantController @Inject()(
       getAnswerAsync(PartnerNamePage) {
         partnerName =>
 
-          val form = formProvider(partnerName.safeFirstName)
+          val form = formProvider(partnerName.firstName)
 
           form.bindFromRequest().fold(
             formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, waypoints, partnerName.safeFirstName))),
+              Future.successful(BadRequest(view(formWithErrors, waypoints, partnerName.firstName))),
 
             value =>
               for {

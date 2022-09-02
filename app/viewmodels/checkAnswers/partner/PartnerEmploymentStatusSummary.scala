@@ -38,20 +38,20 @@ object PartnerEmploymentStatusSummary {
       val value = ValueViewModel(
         HtmlContent(
           employmentStatus.map {
-            answer => HtmlFormat.escape(messages(s"employmentStatus.$answer")).toString
+            answer => messages(s"employmentStatus.$answer")
           }
-            .mkString(",<br>")
+          .mkString(",<br>")
         )
       )
 
       SummaryListRowViewModel(
-        key = messages("partnerEmploymentStatus.checkYourAnswersLabel", partnerName.safeFirstName),
+        key = messages("partnerEmploymentStatus.checkYourAnswersLabel", partnerName.firstName),
         value = value,
         actions = Seq(
           ActionItemViewModel(
             messages("site.change"),
             PartnerEmploymentStatusPage.changeLink(waypoints, sourcePage).url
-          ).withVisuallyHiddenText(messages("partnerEmploymentStatus.change.hidden", partnerName.safeFirstName))
+          ).withVisuallyHiddenText(messages("partnerEmploymentStatus.change.hidden", partnerName.firstName))
         )
       )
     }

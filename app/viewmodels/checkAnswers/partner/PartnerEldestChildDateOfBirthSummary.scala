@@ -20,7 +20,6 @@ import models.UserAnswers
 import pages.partner.{PartnerEldestChildDateOfBirthPage, PartnerNamePage}
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -36,17 +35,16 @@ object PartnerEldestChildDateOfBirthSummary {
       dateOfBirth <- answers.get(PartnerEldestChildDateOfBirthPage)
     } yield {
 
-      val safeFirstName = HtmlFormat.escape(partnerName.firstName).toString
       val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
       SummaryListRowViewModel(
-        key = messages("partnerEldestChildDateOfBirth.checkYourAnswersLabel", safeFirstName),
+        key = messages("partnerEldestChildDateOfBirth.checkYourAnswersLabel", partnerName.firstName),
         value = ValueViewModel(dateOfBirth.format(dateFormatter)),
         actions = Seq(
           ActionItemViewModel(
             messages("site.change"),
             PartnerEldestChildDateOfBirthPage.changeLink(waypoints, sourcePage).url
-          ).withVisuallyHiddenText(messages("partnerEldestChildDateOfBirth.change.hidden", safeFirstName))
+          ).withVisuallyHiddenText(messages("partnerEldestChildDateOfBirth.change.hidden", partnerName.firstName))
         )
       )
     }

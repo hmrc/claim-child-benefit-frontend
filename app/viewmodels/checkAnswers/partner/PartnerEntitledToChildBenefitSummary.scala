@@ -20,7 +20,6 @@ import models.UserAnswers
 import pages.partner.{PartnerEntitledToChildBenefitPage, PartnerNamePage}
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -34,17 +33,16 @@ object PartnerEntitledToChildBenefitSummary {
       entitled <- answers.get(PartnerEntitledToChildBenefitPage)
     } yield {
 
-      val safeFirstName = HtmlFormat.escape(partnerName.firstName).toString
       val value = if (entitled) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
-        key = messages("partnerEntitledToChildBenefit.checkYourAnswersLabel", safeFirstName),
+        key = messages("partnerEntitledToChildBenefit.checkYourAnswersLabel", partnerName.firstName),
         value = ValueViewModel(value),
         actions = Seq(
           ActionItemViewModel(
             messages("site.change"),
             PartnerEntitledToChildBenefitPage.changeLink(waypoints, sourcePage).url
-          ).withVisuallyHiddenText(messages("partnerEntitledToChildBenefit.change.hidden", safeFirstName))
+          ).withVisuallyHiddenText(messages("partnerEntitledToChildBenefit.change.hidden", partnerName.firstName))
         )
       )
     }

@@ -23,7 +23,6 @@ import pages.Waypoints
 import pages.partner.{PartnerNamePage, PartnerNinoKnownPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import play.twirl.api.HtmlFormat
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.partner.PartnerNinoKnownView
@@ -50,15 +49,14 @@ class PartnerNinoKnownController @Inject()(
       getAnswer(PartnerNamePage) {
         partnerName =>
 
-          val safeFirstName = HtmlFormat.escape(partnerName.firstName).toString
-          val form          = formProvider(safeFirstName)
+          val form = formProvider(partnerName.firstName)
 
           val preparedForm = request.userAnswers.get(PartnerNinoKnownPage) match {
             case None => form
             case Some(value) => form.fill(value)
           }
 
-          Ok(view(preparedForm, waypoints, safeFirstName))
+          Ok(view(preparedForm, waypoints, partnerName.firstName))
       }
   }
 
@@ -67,12 +65,11 @@ class PartnerNinoKnownController @Inject()(
       getAnswerAsync(PartnerNamePage) {
         partnerName =>
 
-          val safeFirstName = HtmlFormat.escape(partnerName.firstName).toString
-          val form          = formProvider(safeFirstName)
+          val form = formProvider(partnerName.firstName)
 
           form.bindFromRequest().fold(
             formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, waypoints, safeFirstName))),
+              Future.successful(BadRequest(view(formWithErrors, waypoints, partnerName.firstName))),
 
             value =>
               for {

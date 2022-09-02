@@ -20,7 +20,6 @@ import models.UserAnswers
 import pages.partner.{PartnerNamePage, PartnerNinoKnownPage}
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -34,17 +33,16 @@ object PartnerNinoKnownSummary {
       ninoKnown <- answers.get(PartnerNinoKnownPage)
     } yield {
 
-      val safeFirstName = HtmlFormat.escape(partnerName.firstName).toString
       val value = if (ninoKnown) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
-        key = messages("partnerNinoKnown.checkYourAnswersLabel", safeFirstName),
+        key = messages("partnerNinoKnown.checkYourAnswersLabel", partnerName.firstName),
         value = ValueViewModel(value),
         actions = Seq(
           ActionItemViewModel(
             messages("site.change"),
             PartnerNinoKnownPage.changeLink(waypoints, sourcePage).url
-          ).withVisuallyHiddenText(messages("partnerNinoKnown.change.hidden", safeFirstName))
+          ).withVisuallyHiddenText(messages("partnerNinoKnown.change.hidden", partnerName.firstName))
         )
       )
     }

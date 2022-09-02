@@ -34,16 +34,14 @@ object PartnerNationalitySummary {
       nationality <- answers.get(PartnerNationalityPage)
     } yield {
 
-      val safeFirstName = HtmlFormat.escape(partnerName.firstName).toString
-
       SummaryListRowViewModel(
-        key = messages("partnerNationality.checkYourAnswersLabel", safeFirstName),
-        value = ValueViewModel(HtmlFormat.escape(nationality).toString),
+        key = messages("partnerNationality.checkYourAnswersLabel", partnerName.firstName),
+        value = ValueViewModel(nationality),
         actions = Seq(
           ActionItemViewModel(
             messages("site.change"),
             PartnerNationalityPage.changeLink(waypoints, sourcePage).url
-          ).withVisuallyHiddenText(messages("partnerNationality.change.hidden", safeFirstName))
+          ).withVisuallyHiddenText(messages("partnerNationality.change.hidden", partnerName.firstName))
         )
       )
     }
