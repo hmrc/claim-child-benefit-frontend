@@ -34,10 +34,9 @@ object AddApplicantPreviousFamilyNameSummary {
   def rows(answers: UserAnswers, waypoints: Waypoints, sourcePage: AddItemPage): Seq[ListItem] =
     answers.get(AllPreviousFamilyNames).getOrElse(List.empty).zipWithIndex.map {
       case (name, index) =>
-        val escaped = HtmlFormat.escape(name).toString
 
         ListItem(
-          name = escaped,
+          name = name,
           changeUrl = ApplicantPreviousFamilyNamePage(Index(index)).changeLink(waypoints, sourcePage).url,
           removeUrl = routes.RemoveApplicantPreviousFamilyNameController.onPageLoad(waypoints, Index(index)).url
         )

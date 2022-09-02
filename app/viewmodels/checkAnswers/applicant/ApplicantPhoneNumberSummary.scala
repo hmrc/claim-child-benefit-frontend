@@ -34,7 +34,7 @@ object ApplicantPhoneNumberSummary {
 
         SummaryListRowViewModel(
           key = "applicantPhoneNumber.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlFormat.escape(answer).toString),
+          value = ValueViewModel(answer),
           actions = Seq(
             ActionItemViewModel("site.change", ApplicantPhoneNumberPage.changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("applicantPhoneNumber.change.hidden"))
