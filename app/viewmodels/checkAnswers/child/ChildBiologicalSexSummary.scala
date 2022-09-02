@@ -20,7 +20,6 @@ import models.{Index, UserAnswers}
 import pages.child.ChildBiologicalSexPage
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -33,15 +32,9 @@ object ChildBiologicalSexSummary {
     answers.get(ChildBiologicalSexPage(index)).map {
       answer =>
 
-        val value = ValueViewModel(
-          HtmlContent(
-            HtmlFormat.escape(messages(s"childBiologicalSex.$answer"))
-          )
-        )
-
         SummaryListRowViewModel(
           key = "childBiologicalSex.checkYourAnswersLabel",
-          value = value,
+          value = ValueViewModel(messages(s"childBiologicalSex.$answer")),
           actions = Seq(
             ActionItemViewModel("site.change", ChildBiologicalSexPage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("childBiologicalSex.change.hidden"))
