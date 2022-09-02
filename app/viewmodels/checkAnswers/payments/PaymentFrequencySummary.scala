@@ -20,8 +20,6 @@ import models.UserAnswers
 import pages.payments.PaymentFrequencyPage
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -33,15 +31,9 @@ object PaymentFrequencySummary {
     answers.get(PaymentFrequencyPage).map {
       answer =>
 
-        val value = ValueViewModel(
-          HtmlContent(
-            HtmlFormat.escape(messages(s"paymentFrequency.$answer"))
-          )
-        )
-
         SummaryListRowViewModel(
           key = "paymentFrequency.checkYourAnswersLabel",
-          value = value,
+          value = ValueViewModel(messages(s"paymentFrequency.$answer")),
           actions = Seq(
             ActionItemViewModel("site.change", PaymentFrequencyPage.changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("paymentFrequency.change.hidden"))

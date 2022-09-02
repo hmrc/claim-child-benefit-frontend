@@ -20,7 +20,6 @@ import models.UserAnswers
 import pages.partner.{PartnerNamePage, PartnerWaitingForEntitlementDecisionPage}
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -34,17 +33,16 @@ object PartnerWaitingForEntitlementDecisionSummary {
       waiting <- answers.get(PartnerWaitingForEntitlementDecisionPage)
     } yield {
 
-      val safeFirstName = HtmlFormat.escape(partnerName.firstName).toString
       val value = if (waiting) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
-        key = messages("partnerWaitingForEntitlementDecision.checkYourAnswersLabel", safeFirstName),
+        key = messages("partnerWaitingForEntitlementDecision.checkYourAnswersLabel", partnerName.firstName),
         value = ValueViewModel(value),
         actions = Seq(
           ActionItemViewModel(
             messages("site.change"),
             PartnerWaitingForEntitlementDecisionPage.changeLink(waypoints, sourcePage).url
-          ).withVisuallyHiddenText(messages("partnerWaitingForEntitlementDecision.change.hidden", safeFirstName))
+          ).withVisuallyHiddenText(messages("partnerWaitingForEntitlementDecision.change.hidden", partnerName.firstName))
         )
       )
     }

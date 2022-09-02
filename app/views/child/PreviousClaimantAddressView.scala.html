@@ -35,7 +35,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <h1 class="govuk-heading-xl">@messages("previousClaimantAddress.heading", previousClaimantName.safeFirstName)</h1>
+        <h1 class="govuk-heading-xl">@messages("previousClaimantAddress.heading", previousClaimantName.firstName)</h1>
 
         @govukInput(
             InputViewModel(

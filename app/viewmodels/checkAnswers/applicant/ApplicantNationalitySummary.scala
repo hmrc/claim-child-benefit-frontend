@@ -20,7 +20,6 @@ import models.UserAnswers
 import pages.applicant.ApplicantNationalityPage
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -34,7 +33,7 @@ object ApplicantNationalitySummary {
 
         SummaryListRowViewModel(
           key = "applicantNationality.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlFormat.escape(answer).toString),
+          value = ValueViewModel(answer),
           actions = Seq(
             ActionItemViewModel("site.change", ApplicantNationalityPage.changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("applicantNationality.change.hidden"))

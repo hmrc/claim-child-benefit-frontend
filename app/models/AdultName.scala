@@ -25,8 +25,6 @@ case class AdultName(
                            lastName: String
                          ) {
 
-  val safeFirstName: String = HtmlFormat.escape(firstName).toString()
-
   val display: String = Seq(
     Some(firstName),
     middleNames,

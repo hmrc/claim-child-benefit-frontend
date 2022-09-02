@@ -20,7 +20,6 @@ import models.UserAnswers
 import pages.applicant.BestTimeToContactPage
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -36,9 +35,9 @@ object BestTimeToContactSummary  {
         val value = ValueViewModel(
           HtmlContent(
             answers.map {
-              answer => HtmlFormat.escape(messages(s"bestTimeToContact.$answer")).toString
+              answer => messages(s"bestTimeToContact.$answer")
             }
-              .mkString(",<br>")
+            .mkString(",<br>")
           )
         )
 

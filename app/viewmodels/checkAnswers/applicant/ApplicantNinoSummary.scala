@@ -20,7 +20,6 @@ import models.UserAnswers
 import pages.applicant.ApplicantNinoPage
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -34,7 +33,7 @@ object ApplicantNinoSummary {
 
         SummaryListRowViewModel(
           key = "applicantNino.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlFormat.escape(answer.value).toString),
+          value = ValueViewModel(answer.value),
           actions = Seq(
             ActionItemViewModel("site.change", ApplicantNinoPage.changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("applicantNino.change.hidden"))

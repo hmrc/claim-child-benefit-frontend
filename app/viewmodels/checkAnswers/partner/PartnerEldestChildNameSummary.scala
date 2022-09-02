@@ -35,21 +35,19 @@ object PartnerEldestChildNameSummary {
       childName <- answers.get(PartnerEldestChildNamePage)
     } yield {
 
-      val safeFirstName = HtmlFormat.escape(partnerName.firstName).toString
-
       val value =
         List(Some(childName.firstName), childName.middleNames, Some(childName.lastName))
           .flatten.map(HtmlFormat.escape(_).toString())
           .mkString("<br/>")
 
       SummaryListRowViewModel(
-        key = messages("partnerEldestChildName.checkYourAnswersLabel", safeFirstName),
+        key = messages("partnerEldestChildName.checkYourAnswersLabel", partnerName.firstName),
         value = ValueViewModel(HtmlContent(value)),
         actions = Seq(
           ActionItemViewModel(
             messages("site.change"),
             PartnerEldestChildNamePage.changeLink(waypoints, sourcePage).url
-          ).withVisuallyHiddenText(messages("partnerEldestChildName.change.hidden", safeFirstName))
+          ).withVisuallyHiddenText(messages("partnerEldestChildName.change.hidden", partnerName.firstName))
         )
       )
     }

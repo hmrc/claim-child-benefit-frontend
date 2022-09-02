@@ -20,7 +20,6 @@ import models.UserAnswers
 import pages.income.ApplicantBenefitsPage
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -36,9 +35,9 @@ object ApplicantBenefitsSummary {
         val value = ValueViewModel(
           HtmlContent(
             answers.map {
-              answer => HtmlFormat.escape(messages(s"benefits.$answer")).toString
+              answer => messages(s"benefits.$answer")
             }
-              .mkString(",<br>")
+            .mkString(",<br>")
           )
         )
 
