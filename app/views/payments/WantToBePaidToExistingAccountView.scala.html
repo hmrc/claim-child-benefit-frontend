@@ -45,7 +45,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("wantToBePaidToExistingAccount.heading")).withCssClass("govuk-visually-hidden")
+                legend = LegendViewModel(messages("wantToBePaidToExistingAccount.heading")).visuallyHidden()
             )
         )
 

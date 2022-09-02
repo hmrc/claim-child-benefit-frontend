@@ -42,7 +42,7 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("partnerNationality.heading")).withCssClass("govuk-visually-hidden")
+                label = LabelViewModel(messages("partnerNationality.heading")).visuallyHidden()
             )
             .withWidth(Full)
             .withHint(HintViewModel(messages("partnerNationality.hint")))

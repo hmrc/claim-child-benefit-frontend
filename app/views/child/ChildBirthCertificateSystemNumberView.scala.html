@@ -42,7 +42,7 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("childBirthCertificateSystemNumber.heading", childName.safeFirstName)).withCssClass("govuk-visually-hidden")
+                label = LabelViewModel(messages("childBirthCertificateSystemNumber.heading", childName.safeFirstName)).visuallyHidden()
             )
             .withWidth(Fixed10)
             .withHint(HintViewModel(messages("childBirthCertificateSystemNumber.hint")))
