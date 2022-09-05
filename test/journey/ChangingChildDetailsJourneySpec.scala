@@ -47,6 +47,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
         submitAnswer(ChildBiologicalSexPage(Index(0)), sex),
         submitAnswer(ChildDateOfBirthPage(Index(0)), LocalDate.now),
         submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
+        submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), true),
         submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
         submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
         submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
@@ -113,8 +114,10 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             basicChildJourney,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
+            submitAnswer(ScottishBirthCertificateHasNumbersPage(Index(0)), true),
             submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBcDetails),
             pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(BirthCertificateHasSystemNumberPage(Index(0))),
             answersMustNotContain(ChildBirthCertificateSystemNumberPage(Index(0)))
           )
       }
@@ -127,6 +130,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland),
             pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(BirthCertificateHasSystemNumberPage(Index(0))),
             answersMustNotContain(ChildBirthCertificateSystemNumberPage(Index(0)))
           )
       }
@@ -139,6 +143,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Other),
             pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(BirthCertificateHasSystemNumberPage(Index(0))),
             answersMustNotContain(ChildBirthCertificateSystemNumberPage(Index(0)))
           )
       }
@@ -151,6 +156,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Unknown),
             pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(BirthCertificateHasSystemNumberPage(Index(0))),
             answersMustNotContain(ChildBirthCertificateSystemNumberPage(Index(0)))
           )
       }
@@ -182,8 +188,10 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
+            submitAnswer(ScottishBirthCertificateHasNumbersPage(Index(0)), true),
             submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBcDetails),
             pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(BirthCertificateHasSystemNumberPage(Index(0))),
             answersMustNotContain(ChildBirthCertificateSystemNumberPage(Index(0)))
           )
       }
@@ -196,6 +204,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland),
             pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(BirthCertificateHasSystemNumberPage(Index(0))),
             answersMustNotContain(ChildBirthCertificateSystemNumberPage(Index(0)))
           )
       }
@@ -208,6 +217,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Other),
             pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(BirthCertificateHasSystemNumberPage(Index(0))),
             answersMustNotContain(ChildBirthCertificateSystemNumberPage(Index(0)))
           )
       }
@@ -220,6 +230,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Unknown),
             pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(BirthCertificateHasSystemNumberPage(Index(0))),
             answersMustNotContain(ChildBirthCertificateSystemNumberPage(Index(0)))
           )
       }
@@ -231,6 +242,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
         journeyOf(
           basicChildJourney,
           setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
+          setUserAnswerTo(ScottishBirthCertificateHasNumbersPage(Index(0)), true),
           setUserAnswerTo(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBcDetails),
           remove(ChildBirthCertificateSystemNumberPage(Index(0)))
         )
@@ -242,8 +254,10 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
+            submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), true),
             submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
             pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(ScottishBirthCertificateHasNumbersPage(Index(0))),
             answersMustNotContain(ChildScottishBirthCertificateDetailsPage(Index(0)))
           )
       }
@@ -255,8 +269,10 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Wales),
+            submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), true),
             submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
             pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(ScottishBirthCertificateHasNumbersPage(Index(0))),
             answersMustNotContain(ChildScottishBirthCertificateDetailsPage(Index(0)))
           )
       }
@@ -269,6 +285,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland),
             pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(BirthCertificateHasSystemNumberPage(Index(0))),
             answersMustNotContain(ChildScottishBirthCertificateDetailsPage(Index(0)))
           )
       }
@@ -281,6 +298,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Other),
             pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(BirthCertificateHasSystemNumberPage(Index(0))),
             answersMustNotContain(ChildScottishBirthCertificateDetailsPage(Index(0)))
           )
       }
@@ -293,6 +311,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Unknown),
             pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(BirthCertificateHasSystemNumberPage(Index(0))),
             answersMustNotContain(ChildScottishBirthCertificateDetailsPage(Index(0)))
           )
       }
@@ -304,6 +323,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
         journeyOf(
           basicChildJourney,
           setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), Other),
+          remove(BirthCertificateHasSystemNumberPage(Index(0))),
           remove(ChildBirthCertificateSystemNumberPage(Index(0)))
         )
 
@@ -314,6 +334,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
+            submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), true),
             submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
@@ -326,6 +347,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Wales),
+            submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), true),
             submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
@@ -338,6 +360,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
+            submitAnswer(ScottishBirthCertificateHasNumbersPage(Index(0)), true),
             submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBcDetails),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
@@ -382,6 +405,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
+            submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), true),
             submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
@@ -394,6 +418,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Wales),
+            submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), true),
             submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
@@ -406,6 +431,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
+            submitAnswer(ScottishBirthCertificateHasNumbersPage(Index(0)), true),
             submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBcDetails),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
@@ -450,6 +476,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
+            submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), true),
             submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
@@ -462,6 +489,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Wales),
+            submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), true),
             submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
@@ -474,6 +502,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
+            submitAnswer(ScottishBirthCertificateHasNumbersPage(Index(0)), true),
             submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBcDetails),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
@@ -497,6 +526,92 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Other),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
+          )
+      }
+    }
+
+    "whose birth certificate had a system number" - {
+
+      "changing to say it does not have a system number must remove the system number and return to Check Child Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            basicChildJourney,
+            goToChangeAnswer(BirthCertificateHasSystemNumberPage(Index(0))),
+            submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), false),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(ChildBirthCertificateSystemNumberPage(Index(0)))
+          )
+      }
+    }
+
+    "whose birth certificate did not have a system number" - {
+
+      "changing to say it does have a system number must collect the system number and return to Check Child Details" in {
+
+        val initialState =
+          journeyOf(
+            basicChildJourney,
+            setUserAnswerTo(BirthCertificateHasSystemNumberPage(Index(0)), false),
+            remove(ChildBirthCertificateSystemNumberPage(Index(0)))
+          )
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(BirthCertificateHasSystemNumberPage(Index(0))),
+            submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), true),
+            submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), "123456789"),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
+          )
+      }
+    }
+
+    "whose Scottish birth certificate had numbers" - {
+
+      "changing to say it does not have number must remove the system number and return to Check Child Details" in {
+
+        val initialState =
+          journeyOf(
+            basicChildJourney,
+            setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
+            setUserAnswerTo(ScottishBirthCertificateHasNumbersPage(Index(0)), true),
+            setUserAnswerTo(ChildScottishBirthCertificateDetailsPage(Index(0)), "1234567890"),
+            remove(BirthCertificateHasSystemNumberPage(Index(0))),
+            remove(ChildBirthCertificateSystemNumberPage(Index(0)))
+          )
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(ScottishBirthCertificateHasNumbersPage(Index(0))),
+            submitAnswer(ScottishBirthCertificateHasNumbersPage(Index(0)), false),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(ChildScottishBirthCertificateDetailsPage(Index(0)))
+          )
+      }
+    }
+
+    "whose Scottish birth certificate did not have numbers" - {
+
+      "changing to say it does have numbers must collect the number and return to Check Child Details" in {
+
+        val initialState =
+          journeyOf(
+            basicChildJourney,
+            setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
+            setUserAnswerTo(ScottishBirthCertificateHasNumbersPage(Index(0)), false),
+            remove(BirthCertificateHasSystemNumberPage(Index(0))),
+            remove(ChildBirthCertificateSystemNumberPage(Index(0)))
+          )
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(ScottishBirthCertificateHasNumbersPage(Index(0))),
+            submitAnswer(ScottishBirthCertificateHasNumbersPage(Index(0)), true),
+            submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), "1234567890"),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }
@@ -613,6 +728,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
         submitAnswer(ChildBiologicalSexPage(Index(0)), sex),
         submitAnswer(ChildDateOfBirthPage(Index(0)), LocalDate.now),
         submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
+        submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), true),
         submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
         submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
         submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
@@ -624,6 +740,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
         submitAnswer(ChildBiologicalSexPage(Index(1)), sex),
         submitAnswer(ChildDateOfBirthPage(Index(1)), LocalDate.now),
         submitAnswer(ChildBirthRegistrationCountryPage(Index(1)), England),
+        submitAnswer(BirthCertificateHasSystemNumberPage(Index(1)), true),
         submitAnswer(ChildBirthCertificateSystemNumberPage(Index(1)), systemNumber),
         submitAnswer(ApplicantRelationshipToChildPage(Index(1)), relationship),
         submitAnswer(AdoptingThroughLocalAuthorityPage(Index(1)), false),
@@ -662,6 +779,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           submitAnswer(ChildBiologicalSexPage(Index(0)), sex),
           submitAnswer(ChildDateOfBirthPage(Index(0)), LocalDate.now),
           submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
+          submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), true),
           submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
           submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
           submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),

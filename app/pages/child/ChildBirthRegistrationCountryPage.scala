@@ -37,10 +37,10 @@ final case class ChildBirthRegistrationCountryPage(index: Index) extends ChildQu
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case England | Wales =>
-        ChildBirthCertificateSystemNumberPage(index)
+        BirthCertificateHasSystemNumberPage(index)
 
       case Scotland =>
-        ChildScottishBirthCertificateDetailsPage(index)
+        ScottishBirthCertificateHasNumbersPage(index)
 
       case NorthernIreland | Other | Unknown =>
         ApplicantRelationshipToChildPage(index)
@@ -49,14 +49,14 @@ final case class ChildBirthRegistrationCountryPage(index: Index) extends ChildQu
   override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case England | Wales =>
-        answers.get(ChildBirthCertificateSystemNumberPage(index))
+        answers.get(BirthCertificateHasSystemNumberPage(index))
           .map(_ => waypoints.next.page)
-          .getOrElse(ChildBirthCertificateSystemNumberPage(index))
+          .getOrElse(BirthCertificateHasSystemNumberPage(index))
 
       case Scotland =>
-        answers.get(ChildScottishBirthCertificateDetailsPage(index))
+        answers.get(ScottishBirthCertificateHasNumbersPage(index))
           .map(_ => waypoints.next.page)
-          .getOrElse(ChildScottishBirthCertificateDetailsPage(index))
+          .getOrElse(ScottishBirthCertificateHasNumbersPage(index))
 
       case NorthernIreland | Other | Unknown =>
         waypoints.next.page
@@ -65,14 +65,20 @@ final case class ChildBirthRegistrationCountryPage(index: Index) extends ChildQu
   override def cleanup(value: Option[ChildBirthRegistrationCountry], userAnswers: UserAnswers): Try[UserAnswers] = {
     value.map {
       case England | Wales =>
-        userAnswers.remove(ChildScottishBirthCertificateDetailsPage(index))
+        userAnswers
+          .remove(ScottishBirthCertificateHasNumbersPage(index))
+          .flatMap(_.remove(ChildScottishBirthCertificateDetailsPage(index)))
 
       case Scotland =>
-        userAnswers.remove(ChildBirthCertificateSystemNumberPage(index))
+        userAnswers
+          .remove(BirthCertificateHasSystemNumberPage(index))
+          .flatMap(_.remove(ChildBirthCertificateSystemNumberPage(index)))
 
       case NorthernIreland | Other | Unknown =>
         userAnswers
-          .remove(ChildBirthCertificateSystemNumberPage(index))
+          .remove(BirthCertificateHasSystemNumberPage(index))
+          .flatMap(_.remove(ChildBirthCertificateSystemNumberPage(index)))
+          .flatMap(_.remove(ScottishBirthCertificateHasNumbersPage(index)))
           .flatMap(_.remove(ChildScottishBirthCertificateDetailsPage(index)))
 
     }.getOrElse(super.cleanup(value, userAnswers))
