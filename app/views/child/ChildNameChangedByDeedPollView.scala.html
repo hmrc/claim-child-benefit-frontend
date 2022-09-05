@@ -34,10 +34,14 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        <h1 class="govuk-heading-xl">@messages("childNameChangedByDeedPoll.heading", childName.firstName)</h1>
+
+        <p class="govuk-body">@messages("childNameChangedByDeedPoll.guidance")</p>
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("childNameChangedByDeedPoll.heading", childName.firstName)).asPageHeading()
+                legend = LegendViewModel(messages("childNameChangedByDeedPoll.heading", childName.firstName)).visuallyHidden()
             )
         )
 

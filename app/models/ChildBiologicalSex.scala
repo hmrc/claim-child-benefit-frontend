@@ -26,9 +26,10 @@ object ChildBiologicalSex extends Enumerable.Implicits {
 
   case object Female extends WithName("female") with ChildBiologicalSex
   case object Male extends WithName("male") with ChildBiologicalSex
+  case object Unspecified extends WithName("unspecified") with ChildBiologicalSex
 
   val values: Seq[ChildBiologicalSex] = Seq(
-    Female, Male
+    Female, Male, Unspecified
   )
 
   def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
