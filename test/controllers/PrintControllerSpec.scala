@@ -71,6 +71,7 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
       .set(ChildBiologicalSexPage(Index(0)), biologicalSex).success.value
       .set(ChildDateOfBirthPage(Index(0)), now).success.value
       .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.England).success.value
+      .set(BirthCertificateHasSystemNumberPage(Index(0)), true).success.value
       .set(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber).success.value
       .set(ApplicantRelationshipToChildPage(Index(0)), relationshipToChild).success.value
       .set(AdoptingThroughLocalAuthorityPage(Index(0)), false).success.value

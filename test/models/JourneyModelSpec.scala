@@ -216,6 +216,7 @@ class JourneyModelSpec
           .set(ChildBiologicalSexPage(Index(1)), biologicalSex).success.value
           .set(ChildDateOfBirthPage(Index(1)), now).success.value
           .set(ChildBirthRegistrationCountryPage(Index(1)), ChildBirthRegistrationCountry.Scotland).success.value
+          .set(ScottishBirthCertificateHasNumbersPage(Index(1)), true).success.value
           .set(ChildScottishBirthCertificateDetailsPage(Index(1)), scottishBirthCertificateDetails).success.value
           .set(ApplicantRelationshipToChildPage(Index(1)), relationshipToChild).success.value
           .set(AdoptingThroughLocalAuthorityPage(Index(1)), false).success.value
@@ -685,7 +686,7 @@ class JourneyModelSpec
         data.value.children.toList must contain only expectedChildDetails
       }
 
-      "when a child was born in Scotland" in {
+      "when a child was born in England and their birth certificate does not have a system number" in {
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -693,8 +694,9 @@ class JourneyModelSpec
           .withMinimalSingleIncomeDetails
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
-          .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.Scotland).success.value
-          .set(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBirthCertificateDetails).success.value
+          .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.England).success.value
+          .set(BirthCertificateHasSystemNumberPage(Index(0)), false).success.value
+
 
         val expectedChildDetails = JourneyModel.Child(
           name = childName,
@@ -702,8 +704,8 @@ class JourneyModelSpec
           previousNames = Nil,
           biologicalSex = ChildBiologicalSex.Female,
           dateOfBirth = now,
-          countryOfRegistration = ChildBirthRegistrationCountry.Scotland,
-          birthCertificateNumber = Some(scottishBirthCertificateDetails),
+          countryOfRegistration = ChildBirthRegistrationCountry.England,
+          birthCertificateNumber = None,
           relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
           adoptingThroughLocalAuthority = false,
           previousClaimant = None
@@ -713,6 +715,101 @@ class JourneyModelSpec
 
         errors mustBe empty
         data.value.children.toList must contain only expectedChildDetails
+      }
+
+      "when a child was born in Wales and their birth certificate does not have a system number" in {
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.Wales).success.value
+          .set(BirthCertificateHasSystemNumberPage(Index(0)), false).success.value
+
+
+        val expectedChildDetails = JourneyModel.Child(
+          name = childName,
+          nameChangedByDeedPoll = None,
+          previousNames = Nil,
+          biologicalSex = ChildBiologicalSex.Female,
+          dateOfBirth = now,
+          countryOfRegistration = ChildBirthRegistrationCountry.Wales,
+          birthCertificateNumber = None,
+          relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
+          adoptingThroughLocalAuthority = false,
+          previousClaimant = None
+        )
+
+        val (errors, data) = JourneyModel.from(answers).pad
+
+        errors mustBe empty
+        data.value.children.toList must contain only expectedChildDetails
+      }
+
+      "when a child was born in Scotland" - {
+
+        "and their birth certificate has details" in {
+
+          val answers = UserAnswers("id")
+            .withMinimalApplicantDetails
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .withMinimalPaymentDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.Scotland).success.value
+            .set(ScottishBirthCertificateHasNumbersPage(Index(0)), true).success.value
+            .set(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBirthCertificateDetails).success.value
+
+          val expectedChildDetails = JourneyModel.Child(
+            name = childName,
+            nameChangedByDeedPoll = None,
+            previousNames = Nil,
+            biologicalSex = ChildBiologicalSex.Female,
+            dateOfBirth = now,
+            countryOfRegistration = ChildBirthRegistrationCountry.Scotland,
+            birthCertificateNumber = Some(scottishBirthCertificateDetails),
+            relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
+            adoptingThroughLocalAuthority = false,
+            previousClaimant = None
+          )
+
+          val (errors, data) = JourneyModel.from(answers).pad
+
+          errors mustBe empty
+          data.value.children.toList must contain only expectedChildDetails
+        }
+
+        "and their birth certificate does not have details" in {
+
+          val answers = UserAnswers("id")
+            .withMinimalApplicantDetails
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .withMinimalPaymentDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.Scotland).success.value
+            .set(ScottishBirthCertificateHasNumbersPage(Index(0)), false).success.value
+
+          val expectedChildDetails = JourneyModel.Child(
+            name = childName,
+            nameChangedByDeedPoll = None,
+            previousNames = Nil,
+            biologicalSex = ChildBiologicalSex.Female,
+            dateOfBirth = now,
+            countryOfRegistration = ChildBirthRegistrationCountry.Scotland,
+            birthCertificateNumber = None,
+            relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
+            adoptingThroughLocalAuthority = false,
+            previousClaimant = None
+          )
+
+          val (errors, data) = JourneyModel.from(answers).pad
+
+          errors mustBe empty
+          data.value.children.toList must contain only expectedChildDetails
+        }
       }
     }
 
@@ -1050,7 +1147,7 @@ class JourneyModelSpec
         data mustBe empty
       }
 
-      "when a child's birth was registered in England or Wales, but no birth certificate system number is provided" in {
+      "when a child's birth was registered in England or Wales, the user said their birth certificate has a system number, but none is provided" in {
 
         val country = Gen.oneOf(Country.England, Country.Wales).sample.value
 
@@ -1061,6 +1158,7 @@ class JourneyModelSpec
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
           .set(ChildBirthRegistrationCountryPage(Index(0)), country).success.value
+          .set(BirthCertificateHasSystemNumberPage(Index(0)), true).success.value
           .remove(ChildBirthCertificateSystemNumberPage(Index(0))).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
@@ -1070,7 +1168,7 @@ class JourneyModelSpec
         data mustBe empty
       }
 
-      "when a child's birth was registered in Scotland, but no Scottish birth certificate details are provided" in {
+      "when a child's birth was registered in Scotland, the user said their birth certificate had details, but none are provided" in {
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -1078,6 +1176,7 @@ class JourneyModelSpec
           .withMinimalSingleIncomeDetails
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
+          .set(ScottishBirthCertificateHasNumbersPage(Index(0)), true).success.value
           .set(ChildBirthRegistrationCountryPage(Index(0)), Country.Scotland).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
@@ -1158,6 +1257,7 @@ class JourneyModelSpec
         .set(ChildBiologicalSexPage(Index(0)), biologicalSex).success.value
         .set(ChildDateOfBirthPage(Index(0)), now).success.value
         .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.England).success.value
+        .set(BirthCertificateHasSystemNumberPage(Index(0)), true).success.value
         .set(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber).success.value
         .set(ApplicantRelationshipToChildPage(Index(0)), relationshipToChild).success.value
         .set(AdoptingThroughLocalAuthorityPage(Index(0)), false).success.value
