@@ -84,56 +84,121 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
   "users whose child was registered in England" - {
 
-    "must be asked for the birth certificate system number" in {
+    "where their birth certificate has a system number" - {
 
-      val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
+      "must be asked for the birth certificate system number" in {
 
-      startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
-        .run(
-          submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
-          submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), "123456789"),
-          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-          submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
-          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
-          pageMustBe(CheckChildDetailsPage(Index(0)))
-        )
+        val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
+
+        startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
+          .run(
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
+            submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), true),
+            submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), "123456789"),
+            submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+            submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
+            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
+          )
+      }
+    }
+
+    "where their birth certificate does not have a system number" - {
+
+      "must not be asked for the birth certificate system number" in {
+
+        val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
+
+        startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
+          .run(
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
+            submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), false),
+            submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+            submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
+            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
+          )
+      }
     }
   }
 
   "users whose child was registered in Wales" - {
 
-    "must be asked for the birth certificate system number" in {
+    "where their birth certificate has a system number" - {
 
-      val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
+      "must be asked for the birth certificate system number" in {
 
-      startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
-        .run(
-          submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Wales),
-          submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), "123456789"),
-          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-          submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
-          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
-          pageMustBe(CheckChildDetailsPage(Index(0)))
-        )
+        val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
+
+        startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
+          .run(
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Wales),
+            submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), true),
+            submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), "123456789"),
+            submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+            submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
+            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
+          )
+      }
+    }
+
+    "where their birth certificate does not have a system number" - {
+
+      "must not be asked for the birth certificate system number" in {
+
+        val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
+
+        startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
+          .run(
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Wales),
+            submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), false),
+            submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+            submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
+            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
+          )
+      }
     }
   }
 
   "users whose child was registered in Scotland" - {
 
-    "must be asked for the birth certificate details" in {
+    "where their birth certificate has a system number" - {
 
-      val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
-      val certificateDetails =Gen.listOfN(10, Gen.numChar).sample.value.mkString
+      "must be asked for the birth certificate system number" in {
 
-      startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
-        .run(
-          submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
-          submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), certificateDetails),
-          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-          submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
-          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
-          pageMustBe(CheckChildDetailsPage(Index(0)))
-        )
+        val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
+
+        startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
+          .run(
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
+            submitAnswer(ScottishBirthCertificateHasNumbersPage(Index(0)), true),
+            submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), "1234567890"),
+            submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+            submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
+            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
+          )
+      }
+    }
+
+    "where their birth certificate does not have a system number" - {
+
+      "must not be asked for the birth certificate system number" in {
+
+        val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
+
+        startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
+          .run(
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
+            submitAnswer(ScottishBirthCertificateHasNumbersPage(Index(0)), false),
+            submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+            submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
+            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
+          )
+      }
     }
   }
 

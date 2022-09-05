@@ -22,6 +22,8 @@ import pages.{Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
+import scala.util.Try
+
 final case class BirthCertificateHasSystemNumberPage(index: Index) extends ChildQuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ "children" \ index.position \ toString
@@ -30,4 +32,18 @@ final case class BirthCertificateHasSystemNumberPage(index: Index) extends Child
 
   override def route(waypoints: Waypoints): Call =
     routes.BirthCertificateHasSystemNumberController.onPageLoad(waypoints, index)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true  => ChildBirthCertificateSystemNumberPage(index)
+      case false => ApplicantRelationshipToChildPage(index)
+    }.orRecover
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] = {
+    if (value.contains(false)) {
+      userAnswers.remove(ChildBirthCertificateSystemNumberPage(index))
+    } else {
+      super.cleanup(value, userAnswers)
+    }
+  }
 }
