@@ -17,27 +17,27 @@
 package viewmodels.checkAnswers
 
 import models.UserAnswers
-import pages.{CheckAnswersPage, EverLivedOrWorkedAbroadPage, Waypoints}
+import pages.{CheckAnswersPage, LivedOrWorkedAbroadPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object EverLivedOrWorkedAbroadSummary  {
+object LivedOrWorkedAbroadSummary  {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(EverLivedOrWorkedAbroadPage).map {
+    answers.get(LivedOrWorkedAbroadPage).map {
       answer =>
 
         val value = if (answer) "site.yes" else "site.no"
 
         SummaryListRowViewModel(
-          key     = "everLivedOrWorkedAbroad.checkYourAnswersLabel",
+          key     = "livedOrWorkedAbroad.checkYourAnswersLabel",
           value   = ValueViewModel(value),
           actions = Seq(
-            ActionItemViewModel("site.change", EverLivedOrWorkedAbroadPage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("everLivedOrWorkedAbroad.change.hidden"))
+            ActionItemViewModel("site.change", LivedOrWorkedAbroadPage.changeLink(waypoints, sourcePage).url)
+              .withVisuallyHiddenText(messages("livedOrWorkedAbroad.change.hidden"))
           )
         )
     }

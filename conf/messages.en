@@ -97,11 +97,11 @@ anyChildLivedWithOthers.checkYourAnswersLabel = Have any of the children you wil
 anyChildLivedWithOthers.error.required = Select yes if any of the children you will claim for has lived with anyone else in the last year
 anyChildLivedWithOthers.change.hidden = if any of the children you will claim for has lived with anyone else in the last year
 
-everLivedOrWorkedAbroad.title = Have you or your partner ever lived or worked outside the UK?
-everLivedOrWorkedAbroad.heading = Have you or your partner ever lived or worked outside the UK?
-everLivedOrWorkedAbroad.checkYourAnswersLabel = Have you or your partner ever lived or worked outside the UK?
-everLivedOrWorkedAbroad.error.required = Select yes if you or your partner have ever lived or worked outside the UK
-everLivedOrWorkedAbroad.change.hidden = if you or your partner have ever lived or worked outside the UK
+livedOrWorkedAbroad.title = Have you or your partner lived or worked outside the UK in the last 3 months?
+livedOrWorkedAbroad.heading = Have you or your partner lived or worked outside the UK in the last 3 months?
+livedOrWorkedAbroad.checkYourAnswersLabel = Have you or your partner lived or worked outside the UK in the last 3 months?
+livedOrWorkedAbroad.error.required = Select yes if you or your partner have lived or worked outside the UK in the last 3 months
+livedOrWorkedAbroad.change.hidden = if you or your partner have lived or worked outside the UK in the last 3 months
 
 cohabitationDate.title = When did you start living with your partner?
 cohabitationDate.heading = When did you start living with your partner?

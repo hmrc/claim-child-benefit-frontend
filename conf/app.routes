@@ -24,8 +24,8 @@ GET         /unauthorised                                controllers.Unauthorise
 GET        /any-child-in-claim-lived-with-others                        controllers.AnyChildLivedWithOthersController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /any-child-in-claim-lived-with-others                        controllers.AnyChildLivedWithOthersController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /ever-lived-or-worked-abroad                        controllers.EverLivedOrWorkedAbroadController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /ever-lived-or-worked-abroad                        controllers.EverLivedOrWorkedAbroadController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /lived-or-worked-abroad                        controllers.LivedOrWorkedAbroadController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /lived-or-worked-abroad                        controllers.LivedOrWorkedAbroadController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /date-started-living-with-partner                  controllers.CohabitationDateController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /date-started-living-with-partner                  controllers.CohabitationDateController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

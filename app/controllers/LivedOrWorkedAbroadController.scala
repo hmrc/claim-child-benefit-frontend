@@ -17,27 +17,27 @@
 package controllers
 
 import controllers.actions._
-import forms.EverLivedOrWorkedAbroadFormProvider
+import forms.LivedOrWorkedAbroadFormProvider
 import models.UserAnswers
 
 import javax.inject.Inject
-import pages.{EverLivedOrWorkedAbroadPage, Waypoints}
+import pages.{LivedOrWorkedAbroadPage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.EverLivedOrWorkedAbroadView
+import views.html.LivedOrWorkedAbroadView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class EverLivedOrWorkedAbroadController @Inject()(
-                                         override val messagesApi: MessagesApi,
-                                         sessionRepository: SessionRepository,
-                                         identify: IdentifierAction,
-                                         getData: DataRetrievalAction,
-                                         formProvider: EverLivedOrWorkedAbroadFormProvider,
-                                         val controllerComponents: MessagesControllerComponents,
-                                         view: EverLivedOrWorkedAbroadView
+class LivedOrWorkedAbroadController @Inject()(
+                                               override val messagesApi: MessagesApi,
+                                               sessionRepository: SessionRepository,
+                                               identify: IdentifierAction,
+                                               getData: DataRetrievalAction,
+                                               formProvider: LivedOrWorkedAbroadFormProvider,
+                                               val controllerComponents: MessagesControllerComponents,
+                                               view: LivedOrWorkedAbroadView
                                  )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form = formProvider()
@@ -45,7 +45,7 @@ class EverLivedOrWorkedAbroadController @Inject()(
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(EverLivedOrWorkedAbroadPage) match {
+      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(LivedOrWorkedAbroadPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -64,9 +64,9 @@ class EverLivedOrWorkedAbroadController @Inject()(
           val originalAnswers = request.userAnswers.getOrElse(UserAnswers(request.userId))
 
           for {
-            updatedAnswers <- Future.fromTry(originalAnswers.set(EverLivedOrWorkedAbroadPage, value))
+            updatedAnswers <- Future.fromTry(originalAnswers.set(LivedOrWorkedAbroadPage, value))
             _ <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(EverLivedOrWorkedAbroadPage.navigate(waypoints, originalAnswers, updatedAnswers).route)
+          } yield Redirect(LivedOrWorkedAbroadPage.navigate(waypoints, originalAnswers, updatedAnswers).route)
         }
       )
   }

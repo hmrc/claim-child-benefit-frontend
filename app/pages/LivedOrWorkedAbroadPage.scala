@@ -21,14 +21,14 @@ import models.UserAnswers
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object EverLivedOrWorkedAbroadPage extends QuestionPage[Boolean] {
+case object LivedOrWorkedAbroadPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "everLivedOrWorkedAbroad"
+  override def toString: String = "livedOrWorkedAbroad"
 
   override def route(waypoints: Waypoints): Call =
-    routes.EverLivedOrWorkedAbroadController.onPageLoad(waypoints)
+    routes.LivedOrWorkedAbroadController.onPageLoad(waypoints)
 
   override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
