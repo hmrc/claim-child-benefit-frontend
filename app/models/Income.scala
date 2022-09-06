@@ -26,7 +26,7 @@ object Income extends Enumerable.Implicits {
 
   case object BelowLowerThreshold extends WithName("belowLowerThreshold") with Income
   case object BetweenThresholds extends WithName("betweenThresholds") with Income
-  case object AboveUpperThreshold extends WithName("pensionCredit") with Income
+  case object AboveUpperThreshold extends WithName("aboveUpperThreshold") with Income
 
   val values: Seq[Income] = Seq(
     BelowLowerThreshold,
