@@ -18,7 +18,7 @@ package journey
 
 import models.{AdultName, RelationshipStatus}
 import org.scalatest.freespec.AnyFreeSpec
-import pages.income.{ApplicantIncomeOver50kPage, ApplicantIncomePage, ApplicantOrPartnerIncomeOver50kPage, ApplicantOrPartnerIncomePage}
+import pages.income.{ApplicantIncomePage, ApplicantOrPartnerIncomePage}
 import pages.{AnyChildLivedWithOthersPage, ApplicantNamePage, CohabitationDatePage, LivedOrWorkedAbroadPage, RelationshipStatusPage, SeparationDatePage, UsePrintAndPostFormPage}
 
 import java.time.LocalDate

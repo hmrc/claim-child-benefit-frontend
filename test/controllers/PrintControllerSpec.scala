@@ -76,7 +76,7 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
       .set(ApplicantRelationshipToChildPage(Index(0)), relationshipToChild).success.value
       .set(AdoptingThroughLocalAuthorityPage(Index(0)), false).success.value
       .set(AnyoneClaimedForChildBeforePage(Index(0)), false).success.value
-      .set(ApplicantIncomeOver50kPage, false).success.value
+      .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
       .set(ApplicantBenefitsPage, applicantBenefits).success.value
       .set(CurrentlyReceivingChildBenefitPage, false).success.value
       .set(WantToBePaidPage, false).success.value
