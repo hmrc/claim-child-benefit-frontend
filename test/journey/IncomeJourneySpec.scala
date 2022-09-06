@@ -16,49 +16,26 @@
 
 package journey
 
-import models.Benefits
+import generators.ModelGenerators
+import models.{Benefits, Income}
+import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import pages.income._
 import pages.payments.CurrentlyReceivingChildBenefitPage
 
-class IncomeJourneySpec extends AnyFreeSpec with JourneyHelpers {
+class IncomeJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
   "users with a partner" - {
 
     val benefits = Gen.nonEmptyListOf(Gen.oneOf(Benefits.values)).map(_.toSet).sample.value
+    val income   = arbitrary[Income].sample.value
 
-    "and an income below 50k must proceed to the payments section" in {
+    "must proceed to the payments section" in {
 
-      startingFrom(ApplicantOrPartnerIncomeOver50kPage)
+      startingFrom(ApplicantOrPartnerIncomePage)
         .run(
-          submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
-          submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
-          pageMustBe(TaxChargeExplanationPage),
-          next,
-          pageMustBe(CurrentlyReceivingChildBenefitPage)
-        )
-    }
-
-    "and an income between 50k and 60k must proceed to the payments section" in {
-
-      startingFrom(ApplicantOrPartnerIncomeOver50kPage)
-        .run(
-          submitAnswer(ApplicantOrPartnerIncomeOver50kPage, true),
-          submitAnswer(ApplicantOrPartnerIncomeOver60kPage, false),
-          submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
-          pageMustBe(TaxChargeExplanationPage),
-          next,
-          pageMustBe(CurrentlyReceivingChildBenefitPage)
-        )
-    }
-
-    "and an income above 60k must proceed to the payments section" in {
-
-      startingFrom(ApplicantOrPartnerIncomeOver50kPage)
-        .run(
-          submitAnswer(ApplicantOrPartnerIncomeOver50kPage, true),
-          submitAnswer(ApplicantOrPartnerIncomeOver60kPage, true),
+          submitAnswer(ApplicantOrPartnerIncomePage, income),
           submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
           pageMustBe(TaxChargeExplanationPage),
           next,
@@ -70,39 +47,15 @@ class IncomeJourneySpec extends AnyFreeSpec with JourneyHelpers {
   "users without a partner" - {
 
     val benefits = Gen.nonEmptyListOf(Gen.oneOf(Benefits.values)).map(_.toSet).sample.value
+    val income   = arbitrary[Income].sample.value
 
-    "and an income below 50k must proceed to the payments section" in {
+    "must proceed to the payments section" in {
 
-      startingFrom(ApplicantIncomeOver50kPage)
+      startingFrom(ApplicantIncomePage)
         .run(
-          submitAnswer(ApplicantIncomeOver50kPage, false),
+          submitAnswer(ApplicantIncomePage, income),
           submitAnswer(ApplicantBenefitsPage, benefits),
           pageMustBe(TaxChargeExplanationPage),
-          next,
-          pageMustBe(CurrentlyReceivingChildBenefitPage)
-        )
-    }
-
-    "and an income between 50k and 60k must proceed to the payments section" in {
-
-      startingFrom(ApplicantIncomeOver50kPage)
-        .run(
-          submitAnswer(ApplicantIncomeOver50kPage, true),
-          submitAnswer(ApplicantIncomeOver60kPage, false),
-          submitAnswer(ApplicantBenefitsPage, benefits),
-          pageMustBe(TaxChargeExplanationPage),
-          next,
-          pageMustBe(CurrentlyReceivingChildBenefitPage)
-        )
-    }
-
-    "and an income above 60k must proceed to the payments section" in {
-
-      startingFrom(ApplicantIncomeOver50kPage)
-        .run(
-          submitAnswer(ApplicantIncomeOver50kPage, true),
-          submitAnswer(ApplicantIncomeOver60kPage, true),
-          submitAnswer(ApplicantBenefitsPage, benefits),pageMustBe(TaxChargeExplanationPage),
           next,
           pageMustBe(CurrentlyReceivingChildBenefitPage)
         )

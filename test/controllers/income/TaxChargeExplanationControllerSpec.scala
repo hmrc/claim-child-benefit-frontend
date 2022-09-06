@@ -17,6 +17,7 @@
 package controllers.income
 
 import base.SpecBase
+import models.Income._
 import models.RelationshipStatus._
 import org.scalacheck.Gen
 import pages.{EmptyWaypoints, RelationshipStatusPage}
@@ -42,7 +43,7 @@ class TaxChargeExplanationControllerSpec extends SpecBase {
           val answers =
             emptyUserAnswers
               .set(RelationshipStatusPage, relationshipStatus).success.value
-              .set(ApplicantOrPartnerIncomeOver50kPage, false).success.value
+              .set(ApplicantOrPartnerIncomePage, BelowLowerThreshold).success.value
 
           val application = applicationBuilder(userAnswers = Some(answers)).build()
 
@@ -65,8 +66,7 @@ class TaxChargeExplanationControllerSpec extends SpecBase {
           val answers =
             emptyUserAnswers
               .set(RelationshipStatusPage, relationshipStatus).success.value
-              .set(ApplicantOrPartnerIncomeOver50kPage, true).success.value
-              .set(ApplicantOrPartnerIncomeOver60kPage, false).success.value
+              .set(ApplicantOrPartnerIncomePage, BetweenThresholds).success.value
 
           val application = applicationBuilder(userAnswers = Some(answers)).build()
 
@@ -89,8 +89,7 @@ class TaxChargeExplanationControllerSpec extends SpecBase {
           val answers =
             emptyUserAnswers
               .set(RelationshipStatusPage, relationshipStatus).success.value
-              .set(ApplicantOrPartnerIncomeOver50kPage, true).success.value
-              .set(ApplicantOrPartnerIncomeOver60kPage, true).success.value
+              .set(ApplicantOrPartnerIncomePage, AboveUpperThreshold).success.value
 
           val application = applicationBuilder(userAnswers = Some(answers)).build()
 
@@ -116,7 +115,7 @@ class TaxChargeExplanationControllerSpec extends SpecBase {
           val answers =
             emptyUserAnswers
               .set(RelationshipStatusPage, relationshipStatus).success.value
-              .set(ApplicantIncomeOver50kPage, false).success.value
+              .set(ApplicantIncomePage, BelowLowerThreshold).success.value
 
           val application = applicationBuilder(userAnswers = Some(answers)).build()
 
@@ -139,8 +138,7 @@ class TaxChargeExplanationControllerSpec extends SpecBase {
           val answers =
             emptyUserAnswers
               .set(RelationshipStatusPage, relationshipStatus).success.value
-              .set(ApplicantIncomeOver50kPage, true).success.value
-              .set(ApplicantIncomeOver60kPage, false).success.value
+              .set(ApplicantIncomePage, BetweenThresholds).success.value
 
           val application = applicationBuilder(userAnswers = Some(answers)).build()
 
@@ -163,8 +161,7 @@ class TaxChargeExplanationControllerSpec extends SpecBase {
           val answers =
             emptyUserAnswers
               .set(RelationshipStatusPage, relationshipStatus).success.value
-              .set(ApplicantIncomeOver50kPage, true).success.value
-              .set(ApplicantIncomeOver60kPage, true).success.value
+              .set(ApplicantIncomePage, AboveUpperThreshold).success.value
 
           val application = applicationBuilder(userAnswers = Some(answers)).build()
 

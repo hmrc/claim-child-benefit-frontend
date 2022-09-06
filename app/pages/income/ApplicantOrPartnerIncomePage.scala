@@ -17,8 +17,8 @@
 package pages.income
 
 import controllers.income.routes
-import models.Income
-import pages.{QuestionPage, Waypoints}
+import models.{Income, UserAnswers}
+import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -30,4 +30,12 @@ case object ApplicantOrPartnerIncomePage extends QuestionPage[Income] {
 
   override def route(waypoints: Waypoints): Call =
     routes.ApplicantOrPartnerIncomeController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    ApplicantOrPartnerBenefitsPage
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    answers.get(ApplicantOrPartnerBenefitsPage)
+      .map(_ => TaxChargeExplanationPage)
+      .getOrElse(ApplicantOrPartnerBenefitsPage)
 }

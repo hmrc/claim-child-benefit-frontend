@@ -18,6 +18,7 @@ package controllers.income
 
 import controllers.AnswerExtractor
 import controllers.actions._
+import models.Income._
 import models.RelationshipStatus._
 import pages.{RelationshipStatusPage, Waypoints}
 import pages.income._
@@ -46,27 +47,17 @@ class TaxChargeExplanationController @Inject()(
     implicit request =>
       getAnswer(RelationshipStatusPage) {
         case Married | Cohabiting =>
-          getAnswer(ApplicantOrPartnerIncomeOver50kPage) {
-            case true =>
-              getAnswer(ApplicantOrPartnerIncomeOver60kPage) {
-                case true  => Ok(coupleOver60kView(waypoints))
-                case false => Ok(coupleUnder60kView(waypoints))
-              }
-
-            case false =>
-              Ok(coupleUnder50kView(waypoints))
+          getAnswer(ApplicantOrPartnerIncomePage) {
+            case BelowLowerThreshold => Ok(coupleUnder50kView(waypoints))
+            case BetweenThresholds   => Ok(coupleUnder60kView(waypoints))
+            case AboveUpperThreshold => Ok(coupleOver60kView(waypoints))
           }
 
         case Single | Divorced | Separated | Widowed =>
-          getAnswer(ApplicantIncomeOver50kPage) {
-            case true =>
-              getAnswer(ApplicantIncomeOver60kPage) {
-                case true  => Ok(singleOver60kView(waypoints))
-                case false => Ok(singleUnder60kView(waypoints))
-              }
-
-            case false =>
-              Ok(singleUnder50kView(waypoints))
+          getAnswer(ApplicantIncomePage) {
+            case BelowLowerThreshold => Ok(singleUnder50kView(waypoints))
+            case BetweenThresholds   => Ok(singleUnder60kView(waypoints))
+            case AboveUpperThreshold => Ok(singleOver60kView(waypoints))
           }
       }
   }

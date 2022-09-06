@@ -18,7 +18,7 @@ package journey
 
 import models.{AdultName, RelationshipStatus}
 import org.scalatest.freespec.AnyFreeSpec
-import pages.income.{ApplicantIncomeOver50kPage, ApplicantOrPartnerIncomeOver50kPage}
+import pages.income.{ApplicantIncomeOver50kPage, ApplicantIncomePage, ApplicantOrPartnerIncomeOver50kPage, ApplicantOrPartnerIncomePage}
 import pages.{AnyChildLivedWithOthersPage, ApplicantNamePage, CohabitationDatePage, LivedOrWorkedAbroadPage, RelationshipStatusPage, SeparationDatePage, UsePrintAndPostFormPage}
 
 import java.time.LocalDate
@@ -35,7 +35,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Married),
-        pageMustBe(ApplicantOrPartnerIncomeOver50kPage)
+        pageMustBe(ApplicantOrPartnerIncomePage)
       )
   }
 
@@ -48,7 +48,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Cohabiting),
         submitAnswer(CohabitationDatePage, LocalDate.now.minusDays(1)),
-        pageMustBe(ApplicantOrPartnerIncomeOver50kPage)
+        pageMustBe(ApplicantOrPartnerIncomePage)
       )
   }
 
@@ -60,7 +60,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Single),
-        pageMustBe(ApplicantIncomeOver50kPage)
+        pageMustBe(ApplicantIncomePage)
       )
   }
 
@@ -73,7 +73,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Separated),
         submitAnswer(SeparationDatePage, LocalDate.now.minusDays(1)),
-        pageMustBe(ApplicantIncomeOver50kPage)
+        pageMustBe(ApplicantIncomePage)
       )
   }
 
@@ -85,7 +85,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Divorced),
-        pageMustBe(ApplicantIncomeOver50kPage)
+        pageMustBe(ApplicantIncomePage)
       )
   }
 
@@ -97,7 +97,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Widowed),
-        pageMustBe(ApplicantIncomeOver50kPage)
+        pageMustBe(ApplicantIncomePage)
       )
   }
 
