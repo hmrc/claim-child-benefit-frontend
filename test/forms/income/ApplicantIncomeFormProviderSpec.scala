@@ -16,11 +16,11 @@
 
 package forms.income
 
-import forms.behaviours.CheckboxFieldBehaviours
+import forms.behaviours.OptionFieldBehaviours
 import models.Income
 import play.api.data.FormError
 
-class ApplicantIncomeFormProviderSpec extends CheckboxFieldBehaviours {
+class ApplicantIncomeFormProviderSpec extends OptionFieldBehaviours {
 
   val form = new ApplicantIncomeFormProvider()()
 
@@ -29,17 +29,17 @@ class ApplicantIncomeFormProviderSpec extends CheckboxFieldBehaviours {
     val fieldName = "value"
     val requiredKey = "applicantIncome.error.required"
 
-    behave like checkboxField[Income](
+    behave like optionsField[Income](
       form,
       fieldName,
       validValues  = Income.values,
-      invalidError = FormError(s"$fieldName[0]", "error.invalid")
+      invalidError = FormError(fieldName, "error.invalid")
     )
 
-    behave like mandatoryCheckboxField(
+    behave like mandatoryField(
       form,
       fieldName,
-      requiredKey
+      requiredError = FormError(fieldName, requiredKey)
     )
   }
 }

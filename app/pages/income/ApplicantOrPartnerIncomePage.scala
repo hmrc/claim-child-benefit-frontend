@@ -22,7 +22,7 @@ import pages.{QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object ApplicantOrPartnerIncomePage extends QuestionPage[Set[Income]] {
+case object ApplicantOrPartnerIncomePage extends QuestionPage[Income] {
 
   override def path: JsPath = JsPath \ toString
 
