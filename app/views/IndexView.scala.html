@@ -17,7 +17,8 @@
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    govukWarningText: GovukWarningText
 )
 
 @()(implicit request: Request[_], messages: Messages)
@@ -63,9 +64,7 @@
 
     <p class="govuk-body">@messages("index.beforeYouStart.p3")</p>
 
-    <div class="govuk-inset-text">
-        @messages("index.beforeYouStart.p4")
-    </div>
+    @govukWarningText(WarningText(content = messages("index.beforeYouStart.p4")))
 
     @formHelper(action = routes.IndexController.onSubmit) {
         @govukButton(ButtonViewModel(HtmlContent(

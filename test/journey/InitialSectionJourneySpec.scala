@@ -19,7 +19,7 @@ package journey
 import models.{AdultName, RelationshipStatus}
 import org.scalatest.freespec.AnyFreeSpec
 import pages.income.{ApplicantIncomeOver50kPage, ApplicantOrPartnerIncomeOver50kPage}
-import pages.{AnyChildLivedWithOthersPage, ApplicantNamePage, CohabitationDatePage, EverLivedOrWorkedAbroadPage, RelationshipStatusPage, SeparationDatePage, UsePrintAndPostFormPage}
+import pages.{AnyChildLivedWithOthersPage, ApplicantNamePage, CohabitationDatePage, LivedOrWorkedAbroadPage, RelationshipStatusPage, SeparationDatePage, UsePrintAndPostFormPage}
 
 import java.time.LocalDate
 
@@ -29,9 +29,9 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
   "eligible Married users must continue to the income section" in {
 
-    startingFrom(EverLivedOrWorkedAbroadPage)
+    startingFrom(LivedOrWorkedAbroadPage)
       .run(
-        submitAnswer(EverLivedOrWorkedAbroadPage, false),
+        submitAnswer(LivedOrWorkedAbroadPage, false),
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Married),
@@ -41,9 +41,9 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
   "eligible Cohabiting users must continue to the income section" in {
 
-    startingFrom(EverLivedOrWorkedAbroadPage)
+    startingFrom(LivedOrWorkedAbroadPage)
       .run(
-        submitAnswer(EverLivedOrWorkedAbroadPage, false),
+        submitAnswer(LivedOrWorkedAbroadPage, false),
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Cohabiting),
@@ -54,9 +54,9 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
   "eligible Single users must continue to the income section" in {
 
-    startingFrom(EverLivedOrWorkedAbroadPage)
+    startingFrom(LivedOrWorkedAbroadPage)
       .run(
-        submitAnswer(EverLivedOrWorkedAbroadPage, false),
+        submitAnswer(LivedOrWorkedAbroadPage, false),
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Single),
@@ -66,9 +66,9 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
   "eligible Separated users must continue to the income section" in {
 
-    startingFrom(EverLivedOrWorkedAbroadPage)
+    startingFrom(LivedOrWorkedAbroadPage)
       .run(
-        submitAnswer(EverLivedOrWorkedAbroadPage, false),
+        submitAnswer(LivedOrWorkedAbroadPage, false),
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Separated),
@@ -79,9 +79,9 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
   "eligible Divorced users must continue to the income section" in {
 
-    startingFrom(EverLivedOrWorkedAbroadPage)
+    startingFrom(LivedOrWorkedAbroadPage)
       .run(
-        submitAnswer(EverLivedOrWorkedAbroadPage, false),
+        submitAnswer(LivedOrWorkedAbroadPage, false),
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Divorced),
@@ -91,9 +91,9 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
   "eligible Widowed users must continue to the income section" in {
 
-    startingFrom(EverLivedOrWorkedAbroadPage)
+    startingFrom(LivedOrWorkedAbroadPage)
       .run(
-        submitAnswer(EverLivedOrWorkedAbroadPage, false),
+        submitAnswer(LivedOrWorkedAbroadPage, false),
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Widowed),
@@ -103,18 +103,18 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
   "users who have lived or worked abroad must go to the Use Print and Post Form page" in {
 
-    startingFrom(EverLivedOrWorkedAbroadPage)
+    startingFrom(LivedOrWorkedAbroadPage)
       .run(
-        submitAnswer(EverLivedOrWorkedAbroadPage, true),
+        submitAnswer(LivedOrWorkedAbroadPage, true),
         pageMustBe(UsePrintAndPostFormPage)
       )
   }
 
   "users claiming for a child who has recently lived with someone else must go to the Use Print and Post Form page" in {
 
-    startingFrom(EverLivedOrWorkedAbroadPage)
+    startingFrom(LivedOrWorkedAbroadPage)
       .run(
-        submitAnswer(EverLivedOrWorkedAbroadPage, false),
+        submitAnswer(LivedOrWorkedAbroadPage, false),
         submitAnswer(AnyChildLivedWithOthersPage, true),
         pageMustBe(UsePrintAndPostFormPage)
       )

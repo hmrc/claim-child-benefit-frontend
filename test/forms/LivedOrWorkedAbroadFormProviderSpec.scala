@@ -19,12 +19,12 @@ package forms
 import forms.behaviours.BooleanFieldBehaviours
 import play.api.data.FormError
 
-class EverLivedOrWorkedAbroadFormProviderSpec extends BooleanFieldBehaviours {
+class LivedOrWorkedAbroadFormProviderSpec extends BooleanFieldBehaviours {
 
-  val requiredKey = "everLivedOrWorkedAbroad.error.required"
+  val requiredKey = "livedOrWorkedAbroad.error.required"
   val invalidKey = "error.boolean"
 
-  val form = new EverLivedOrWorkedAbroadFormProvider()()
+  val form = new LivedOrWorkedAbroadFormProvider()()
 
   ".value" - {
 

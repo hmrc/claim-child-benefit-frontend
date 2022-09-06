@@ -21,10 +21,10 @@ import play.api.data.Form
 
 import javax.inject.Inject
 
-class EverLivedOrWorkedAbroadFormProvider @Inject() extends Mappings {
+class LivedOrWorkedAbroadFormProvider @Inject() extends Mappings {
 
   def apply(): Form[Boolean] =
     Form(
-      "value" -> boolean("everLivedOrWorkedAbroad.error.required")
+      "value" -> boolean("livedOrWorkedAbroad.error.required")
     )
 }

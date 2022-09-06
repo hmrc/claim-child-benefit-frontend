@@ -24,9 +24,9 @@
 
 @(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("everLivedOrWorkedAbroad.title"))) {
+@layout(pageTitle = title(form, messages("livedOrWorkedAbroad.title"))) {
 
-    @formHelper(action = routes.EverLivedOrWorkedAbroadController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.LivedOrWorkedAbroadController.onSubmit(waypoints), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -35,7 +35,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("everLivedOrWorkedAbroad.heading")).asPageHeading()
+                legend = LegendViewModel(messages("livedOrWorkedAbroad.heading")).asPageHeading()
             )
         )
 
