@@ -18,6 +18,8 @@ package controllers
 
 import controllers.actions._
 import forms.RecentlyClaimedFormProvider
+import models.UserAnswers
+
 import javax.inject.Inject
 import pages.{RecentlyClaimedPage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -33,7 +35,6 @@ class RecentlyClaimedController @Inject()(
                                                    sessionRepository: SessionRepository,
                                                    identify: IdentifierAction,
                                                    getData: DataRetrievalAction,
-                                                   requireData: DataRequiredAction,
                                                    formProvider: RecentlyClaimedFormProvider,
                                                    val controllerComponents: MessagesControllerComponents,
                                                    view: RecentlyClaimedView
@@ -41,10 +42,10 @@ class RecentlyClaimedController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(RecentlyClaimedPage) match {
+      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(RecentlyClaimedPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -52,18 +53,22 @@ class RecentlyClaimedController @Inject()(
       Ok(view(preparedForm, waypoints))
   }
 
-  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
 
       form.bindFromRequest().fold(
         formWithErrors =>
           Future.successful(BadRequest(view(formWithErrors, waypoints))),
 
-        value =>
+        value => {
+
+          val originalAnswers = request.userAnswers.getOrElse(UserAnswers(request.userId))
+
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(RecentlyClaimedPage, value))
+            updatedAnswers <- Future.fromTry(originalAnswers.set(RecentlyClaimedPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(RecentlyClaimedPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+          } yield Redirect(RecentlyClaimedPage.navigate(waypoints, originalAnswers, updatedAnswers).route)
+        }
       )
   }
 }

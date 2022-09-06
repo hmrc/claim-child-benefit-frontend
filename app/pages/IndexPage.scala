@@ -25,5 +25,5 @@ object IndexPage extends Page {
     routes.IndexController.onPageLoad
 
   override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    LivedOrWorkedAbroadPage
+    RecentlyClaimedPage
 }

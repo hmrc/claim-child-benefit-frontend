@@ -125,7 +125,7 @@ class LivedOrWorkedAbroadControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
-    "must return OK for a GET if no existing data is found" in {
+    "must redirect to Journey Recovery if no existing data is found" in {
 
       val application = applicationBuilder(userAnswers = None).build()
 
@@ -134,22 +134,15 @@ class LivedOrWorkedAbroadControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
-    "must redirect to the next page for a POST if no existing data is found" in {
+    "must redirect to the Journey Recovery for a POST if no existing data is found" in {
 
-      val mockSessionRepository = mock[SessionRepository]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-
-      val application =
-        applicationBuilder(userAnswers = None)
-          .overrides(
-            bind[SessionRepository].toInstance(mockSessionRepository)
-          )
-          .build()
+      val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
         val request =
@@ -157,10 +150,9 @@ class LivedOrWorkedAbroadControllerSpec extends SpecBase with MockitoSugar {
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(LivedOrWorkedAbroadPage, true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual LivedOrWorkedAbroadPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

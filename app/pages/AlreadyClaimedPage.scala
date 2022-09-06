@@ -17,22 +17,10 @@
 package pages
 
 import controllers.routes
-import models.UserAnswers
-import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object RecentlyClaimedPage extends QuestionPage[Boolean] {
-
-  override def path: JsPath = JsPath \ toString
-
-  override def toString: String = "anyChildLivedWithOthers"
+case object AlreadyClaimedPage extends Page {
 
   override def route(waypoints: Waypoints): Call =
-    routes.RecentlyClaimedController.onPageLoad(waypoints)
-
-  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case true  => AlreadyClaimedPage
-      case false => LivedOrWorkedAbroadPage
-    }.orRecover
+    routes.AlreadyClaimedController.onPageLoad(waypoints)
 }
