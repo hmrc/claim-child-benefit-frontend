@@ -192,11 +192,12 @@ applicantOrPartnerBenefits.change.hidden = the benefits you or your partner get
 
 applicantOrPartnerIncome.title = What is your or your partner’s adjusted net income each year?
 applicantOrPartnerIncome.heading = What is your or your partner’s adjusted net income each year?
-applicantOrPartnerIncome.p1 = Your adjusted net income is your total taxable income before any personal allowances and less things like Gift Aid.
-applicantOrPartnerIncome.p2.1 = You can use the
-applicantOrPartnerIncome.p2.link.text = Child Benefit tax calculator
-applicantOrPartnerIncome.p2.link.href = https://www.gov.uk/child-benefit-tax-calculator
-applicantOrPartnerIncome.p2.2 = to get an estimate of your or your partner’s adjusted net income
+applicantOrPartnerIncome.p1 = Do not combine your household income. Use your partner’s income if it’s higher than yours.
+applicantOrPartnerIncome.p2 = Your adjusted net income is your total taxable income before any personal allowances and less things like Gift Aid.
+applicantOrPartnerIncome.p3.1 = You can use the
+applicantOrPartnerIncome.p3.link.text = Child Benefit tax calculator
+applicantOrPartnerIncome.p3.link.href = https://www.gov.uk/child-benefit-tax-calculator
+applicantOrPartnerIncome.p3.2 = to get an estimate of your or your partner’s adjusted net income
 applicantOrPartnerIncome.error.required = Select your or your partner’s adjusted net income each year
 applicantOrPartnerIncome.error.hidden = your or your partner’s adjusted net income each year
 
