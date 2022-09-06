@@ -27,6 +27,9 @@ POST       /any-child-in-claim-lived-with-others                        controll
 GET        /lived-or-worked-abroad                        controllers.LivedOrWorkedAbroadController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /lived-or-worked-abroad                        controllers.LivedOrWorkedAbroadController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
+GET        /recently-claimed-child-benefit                  controllers.RecentlyClaimedController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /recently-claimed-child-benefit                  controllers.RecentlyClaimedController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 GET        /date-started-living-with-partner                  controllers.CohabitationDateController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /date-started-living-with-partner                  controllers.CohabitationDateController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 

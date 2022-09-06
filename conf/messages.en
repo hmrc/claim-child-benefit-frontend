@@ -103,6 +103,12 @@ livedOrWorkedAbroad.checkYourAnswersLabel = Have you or your partner lived or wo
 livedOrWorkedAbroad.error.required = Select yes if you or your partner have lived or worked outside the UK in the last 3 months
 livedOrWorkedAbroad.change.hidden = if you or your partner have lived or worked outside the UK in the last 3 months
 
+recentlyClaimed.title = Have you recently made a Child Benefit claim and are waiting to hear if you are eligible?
+recentlyClaimed.heading = Have you recently made a Child Benefit claim and are waiting to hear if you are eligible?
+recentlyClaimed.checkYourAnswersLabel = Have you recently made a Child Benefit claim and are waiting to hear if you are eligible?
+recentlyClaimed.error.required = if you have recently made a Child Benefit claim and are waiting to hear if you are eligible
+recentlyClaimed.change.hidden = if you have recently made a Child Benefit claim and are waiting to hear if you are eligible
+
 cohabitationDate.title = When did you start living with your partner?
 cohabitationDate.heading = When did you start living with your partner?
 cohabitationDate.hint = For example, 20 3 2007.
