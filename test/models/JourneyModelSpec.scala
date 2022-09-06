@@ -84,7 +84,7 @@ class JourneyModelSpec
           .withMinimalApplicantDetails
           .withOneChild
           .set(RelationshipStatusPage, Single).success.value
-          .set(ApplicantIncomeOver50kPage, false).success.value
+          .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
           .set(ApplicantBenefitsPage, applicantBenefits).success.value
           .set(CurrentlyReceivingChildBenefitPage, false).success.value
           .set(WantToBePaidPage, false).success.value
@@ -134,7 +134,7 @@ class JourneyModelSpec
           .withMinimalApplicantDetails
           .withOneChild
           .set(RelationshipStatusPage, Married).success.value
-          .set(ApplicantOrPartnerIncomeOver50kPage, false).success.value
+          .set(ApplicantOrPartnerIncomePage, Income.BelowLowerThreshold).success.value
           .set(ApplicantOrPartnerBenefitsPage, applicantBenefits).success.value
           .set(CurrentlyReceivingChildBenefitPage, false).success.value
           .set(WantToBePaidPage, false).success.value
@@ -296,7 +296,7 @@ class JourneyModelSpec
             .withMinimalApplicantDetails
             .withOneChild
             .set(RelationshipStatusPage, Single).success.value
-            .set(ApplicantIncomeOver50kPage, false).success.value
+            .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
             .set(ApplicantBenefitsPage, applicantBenefits).success.value
             .set(CurrentlyReceivingChildBenefitPage, true).success.value
             .set(EldestChildNamePage, eldestChildName).success.value
@@ -320,7 +320,7 @@ class JourneyModelSpec
               .withMinimalApplicantDetails
               .withOneChild
               .set(RelationshipStatusPage, Single).success.value
-              .set(ApplicantIncomeOver50kPage, false).success.value
+              .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
               .set(ApplicantBenefitsPage, applicantBenefits).success.value
               .set(CurrentlyReceivingChildBenefitPage, true).success.value
               .set(EldestChildNamePage, eldestChildName).success.value
@@ -346,7 +346,7 @@ class JourneyModelSpec
               .withMinimalApplicantDetails
               .withOneChild
               .set(RelationshipStatusPage, Single).success.value
-              .set(ApplicantIncomeOver50kPage, false).success.value
+              .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
               .set(ApplicantBenefitsPage, applicantBenefits).success.value
               .set(CurrentlyReceivingChildBenefitPage, true).success.value
               .set(EldestChildNamePage, eldestChildName).success.value
@@ -373,7 +373,7 @@ class JourneyModelSpec
           .withMinimalApplicantDetails
           .withOneChild
           .set(RelationshipStatusPage, Single).success.value
-          .set(ApplicantIncomeOver50kPage, false).success.value
+          .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
           .set(ApplicantBenefitsPage, applicantBenefits).success.value
           .set(CurrentlyReceivingChildBenefitPage, false).success.value
 
@@ -1265,12 +1265,12 @@ class JourneyModelSpec
 
     def withMinimalSingleIncomeDetails: UserAnswers =
       answers
-        .set(ApplicantIncomeOver50kPage, false).success.value
+        .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
         .set(ApplicantBenefitsPage, applicantBenefits).success.value
 
     def withMinimalCoupleIncomeDetails: UserAnswers =
       answers
-        .set(ApplicantOrPartnerIncomeOver50kPage, false).success.value
+        .set(ApplicantOrPartnerIncomePage, Income.BelowLowerThreshold).success.value
         .set(ApplicantOrPartnerBenefitsPage, applicantBenefits).success.value
 
     def withMinimalPaymentDetails: UserAnswers =

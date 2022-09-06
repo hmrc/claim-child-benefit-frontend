@@ -182,28 +182,6 @@ applicantIncome.p2.2 = to get an estimate of your adjusted net income
 applicantIncome.error.required = Select your adjusted net income each year
 applicantIncome.error.hidden = your adjusted net income each year
 
-applicantIncomeOver50k.title = Is your adjusted net income over £50,000 per year?
-applicantIncomeOver50k.heading = Is your adjusted net income over £50,000 per year?
-applicantIncomeOver50k.checkYourAnswersLabel = Is your adjusted net income over £50,000 per year?
-applicantIncomeOver50k.p1 = Your adjusted net income is your total taxable income before any personal allowances and less things like Gift Aid.
-applicantIncomeOver50k.p2.1 = You can use the
-applicantIncomeOver50k.p2.link.text = Child Benefit tax calculator
-applicantIncomeOver50k.p2.link.href = https://www.gov.uk/child-benefit-tax-calculator
-applicantIncomeOver50k.p2.2 = to get an estimate of your adjusted net income.
-applicantIncomeOver50k.error.required = Select yes if your adjusted net income is over £50,000 per year
-applicantIncomeOver50k.change.hidden = if your adjusted net income is over £50,000 per year
-
-applicantIncomeOver60k.title = Is your adjusted net income over £60,000 per year?
-applicantIncomeOver60k.heading = Is your adjusted net income over £60,000 per year?
-applicantIncomeOver60k.checkYourAnswersLabel = Is your adjusted net income over £60,000 per year?
-applicantIncomeOver60k.p1 = Your adjusted net income is your total taxable income before any personal allowances and less things like Gift Aid.
-applicantIncomeOver60k.p2.1 = You can use the
-applicantIncomeOver60k.p2.link.text = Child Benefit tax calculator
-applicantIncomeOver60k.p2.link.href = https://www.gov.uk/child-benefit-tax-calculator
-applicantIncomeOver60k.p2.2 = to get an estimate of your adjusted net income.
-applicantIncomeOver60k.error.required = Select yes if your adjusted net income is over £60,000 per year
-applicantIncomeOver60k.change.hidden = if your adjusted net income is over £60,000 per year
-
 applicantOrPartnerBenefits.title = Do you or your partner get any of these benefits?
 applicantOrPartnerBenefits.heading = Do you or your partner get any of these benefits?
 applicantOrPartnerBenefits.hint = Select all that apply.
@@ -221,28 +199,6 @@ applicantOrPartnerIncome.p2.link.href = https://www.gov.uk/child-benefit-tax-cal
 applicantOrPartnerIncome.p2.2 = to get an estimate of your or your partner’s adjusted net income
 applicantOrPartnerIncome.error.required = Select your or your partner’s adjusted net income each year
 applicantOrPartnerIncome.error.hidden = your or your partner’s adjusted net income each year
-
-applicantOrPartnerIncomeOver50k.title = Is your or your partner’s adjusted net income over £50,000 per year?
-applicantOrPartnerIncomeOver50k.heading = Is your or your partner’s adjusted net  income over £50,000 per year?
-applicantOrPartnerIncomeOver50k.checkYourAnswersLabel = Is your or your partner’s adjusted net income over £50,000 per year?
-applicantOrPartnerIncomeOver50k.p1 = Your adjusted net income is your total taxable income before any personal allowances and less things like Gift Aid.
-applicantOrPartnerIncomeOver50k.p2.1 = You can use the
-applicantOrPartnerIncomeOver50k.p2.link.text = Child Benefit tax calculator
-applicantOrPartnerIncomeOver50k.p2.link.href = https://www.gov.uk/child-benefit-tax-calculator
-applicantOrPartnerIncomeOver50k.p2.2 = to get an estimate of your adjusted net income.
-applicantOrPartnerIncomeOver50k.error.required = Select yes if your or your partner’s adjusted net income is over £50,000 per year
-applicantOrPartnerIncomeOver50k.change.hidden = if your or your partner’s adjusted net income is over £50,000 per year
-
-applicantOrPartnerIncomeOver60k.title = Is your or your partner’s adjusted net income over £60,000 per year?
-applicantOrPartnerIncomeOver60k.heading = Is your or your partner’s adjusted net income over £60,000 per year?
-applicantOrPartnerIncomeOver60k.checkYourAnswersLabel = Is your or your partner’s adjusted net income over £60,000 per year?
-applicantOrPartnerIncomeOver60k.p1 = Your adjusted net income is your total taxable income before any personal allowances and less things like Gift Aid.
-applicantOrPartnerIncomeOver60k.p2.1 = You can use the
-applicantOrPartnerIncomeOver60k.p2.link.text = Child Benefit tax calculator
-applicantOrPartnerIncomeOver60k.p2.link.href = https://www.gov.uk/child-benefit-tax-calculator
-applicantOrPartnerIncomeOver60k.p2.2 = to get an estimate of your adjusted net income.
-applicantOrPartnerIncomeOver60k.error.required = Select yes if your or your partner’s adjusted net income is over £60,000 per year
-applicantOrPartnerIncomeOver60k.change.hidden = if your or your partner’s adjusted net income is over £60,000 per year
 
 applicantHasSuitableAccount.title = Do you have an account that Child Benefit can be paid to?
 applicantHasSuitableAccount.heading = Do you have an account that Child Benefit can be paid to?

@@ -48,26 +48,14 @@ POST       /your-name                        controllers.ApplicantNameController
 GET        /your-benefits                        controllers.income.ApplicantBenefitsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-benefits                        controllers.income.ApplicantBenefitsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /your-income-over-50k                        controllers.income.ApplicantIncomeOver50kController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /your-income-over-50k                        controllers.income.ApplicantIncomeOver50kController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
 GET        /your-income                                 controllers.income.ApplicantIncomeController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-income                                 controllers.income.ApplicantIncomeController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /your-or-your-partners-income                                 controllers.income.ApplicantOrPartnerIncomeController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-or-your-partners-income                                 controllers.income.ApplicantOrPartnerIncomeController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /your-income-over-60k                        controllers.income.ApplicantIncomeOver60kController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /your-income-over-60k                        controllers.income.ApplicantIncomeOver60kController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
 GET        /your-or-your-partners-benefits                        controllers.income.ApplicantOrPartnerBenefitsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-or-your-partners-benefits                        controllers.income.ApplicantOrPartnerBenefitsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /your-or-your-partners-income-over-50k                        controllers.income.ApplicantOrPartnerIncomeOver50kController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /your-or-your-partners-income-over-50k                        controllers.income.ApplicantOrPartnerIncomeOver50kController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /your-or-your-partners-income-over-60k                        controllers.income.ApplicantOrPartnerIncomeOver60kController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /your-or-your-partners-income-over-60k                        controllers.income.ApplicantOrPartnerIncomeOver60kController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /tax-charge-explanation                       controllers.income.TaxChargeExplanationController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /tax-charge-explanation                       controllers.income.TaxChargeExplanationController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

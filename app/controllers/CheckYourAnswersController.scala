@@ -57,11 +57,9 @@ class CheckYourAnswersController @Inject()(
 
       val incomeDetails = SummaryListViewModel(
         rows = Seq(
-          ApplicantIncomeOver50kSummary.row(request.userAnswers, waypoints, thisPage),
-          ApplicantIncomeOver60kSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantIncomeSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantBenefitsSummary.row(request.userAnswers, waypoints, thisPage),
-          ApplicantOrPartnerIncomeOver50kSummary.row(request.userAnswers, waypoints, thisPage),
-          ApplicantOrPartnerIncomeOver60kSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantOrPartnerIncomeSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantOrPartnerBenefitsSummary.row(request.userAnswers, waypoints, thisPage)
         ).flatten
       )
