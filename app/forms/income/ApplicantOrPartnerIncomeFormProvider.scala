@@ -25,10 +25,8 @@ import javax.inject.Inject
 
 class ApplicantOrPartnerIncomeFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Set[Income]] =
+  def apply(): Form[Income] =
     Form(
-      "value" ->
-        set(enumerable[Income]("applicantOrPartnerIncome.error.required"))
-          .verifying(nonEmptySet("applicantOrPartnerIncome.error.required"))
+      "value" -> enumerable[Income]("applicantOrPartnerIncome.error.required")
     )
 }

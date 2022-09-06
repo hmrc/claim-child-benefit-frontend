@@ -17,9 +17,8 @@
 package models
 
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import viewmodels.govuk.checkbox._
+import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
 sealed trait Income
 
@@ -35,14 +34,13 @@ object Income extends Enumerable.Implicits {
     AboveUpperThreshold
   )
 
-  def checkboxItems(implicit messages: Messages): Seq[CheckboxItem] = {
+  def options(implicit messages: Messages): Seq[RadioItem] = {
     values.zipWithIndex.map {
       case (value, index) =>
-        CheckboxItemViewModel(
+        RadioItem(
           content = Text(messages(s"income.${value.toString}")),
-          fieldId = "value",
-          index = index,
-          value = value.toString
+          value = Some(value.toString),
+          id = Some(s"value_$index")
         )
     }
   }

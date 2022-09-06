@@ -18,7 +18,7 @@ package journey
 
 import generators.ModelGenerators
 import models.RelationshipStatus._
-import models.{AdultName, Benefits, PaymentFrequency}
+import models.{AdultName, Benefits, Income, PaymentFrequency}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
@@ -31,16 +31,17 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
 
   private def benefits = Set(Gen.oneOf(Benefits.values).sample.value)
 
-  "when the user initially said their income was over 50k" - {
+  "when the user changes their income answer" - {
 
-    "changing the answer to false must remove the answer to `income over 60k`, show the tax charge explanation then return to Check Answers" in {
+    "they must be shown the tax charge explanation then return to Check Answers" in {
 
       val relationshipStatus = Gen.oneOf(Single, Separated, Widowed, Divorced).sample.value
+      val income1 = Gen.oneOf(Income.values).sample.value
+      val income2 = Gen.oneOf(Income.values.filterNot(_ == income1)).sample.value
 
       val initialise = journeyOf(
         setUserAnswerTo(RelationshipStatusPage, relationshipStatus),
-        submitAnswer(ApplicantIncomeOver50kPage, true),
-        submitAnswer(ApplicantIncomeOver60kPage, true),
+        submitAnswer(ApplicantIncomePage, income1),
         submitAnswer(ApplicantBenefitsPage, benefits),
         next,
         submitAnswer(CurrentlyReceivingChildBenefitPage, false),
@@ -48,59 +49,30 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
         goTo(CheckYourAnswersPage)
       )
 
-      startingFrom(ApplicantIncomeOver50kPage)
+      startingFrom(ApplicantIncomePage)
         .run(
           initialise,
-          goToChangeAnswer(ApplicantIncomeOver50kPage),
-          submitAnswer(ApplicantIncomeOver50kPage, false),
-          pageMustBe(TaxChargeExplanationPage),
-          next,
-          pageMustBe(CheckYourAnswersPage),
-          answersMustNotContain(ApplicantIncomeOver60kPage)
-        )
-    }
-  }
-
-  "when the user initially said their income was not above 50k" - {
-
-    "changing the answer to true must collect `income over 60k`, show the tax charge explanation then return to Check Answers" in {
-
-      val relationshipStatus = Gen.oneOf(Single, Separated, Widowed, Divorced).sample.value
-
-      val initialise = journeyOf(
-        setUserAnswerTo(RelationshipStatusPage, relationshipStatus),
-        submitAnswer(ApplicantIncomeOver50kPage, false),
-        submitAnswer(ApplicantBenefitsPage, benefits),
-        next,
-        submitAnswer(CurrentlyReceivingChildBenefitPage, false),
-        submitAnswer(WantToBePaidPage, false),
-        goTo(CheckYourAnswersPage)
-      )
-
-      startingFrom(ApplicantIncomeOver50kPage)
-        .run(
-          initialise,
-          goToChangeAnswer(ApplicantIncomeOver50kPage),
-          submitAnswer(ApplicantIncomeOver50kPage, true),
-          submitAnswer(ApplicantIncomeOver60kPage, true),
+          goToChangeAnswer(ApplicantIncomePage),
+          submitAnswer(ApplicantIncomePage, income2),
           pageMustBe(TaxChargeExplanationPage),
           next,
           pageMustBe(CheckYourAnswersPage)
         )
     }
   }
-  
-  "when the user initially said their or their partner's income was over 50k" - {
 
-    "changing the answer to false must remove the answer to `income over 60k`, show the tax charge explanation then return to Check Answers" in {
+  "when the user changes their or their partner's income answer" - {
+
+    "they must be shown the tax charge explanation then return to Check Answers" in {
 
       val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
-      val partnerName        = arbitrary[AdultName].sample.value
+      val income1 = Gen.oneOf(Income.values).sample.value
+      val income2 = Gen.oneOf(Income.values.filterNot(_ == income1)).sample.value
+      val partnerName = arbitrary[AdultName].sample.value
 
       val initialise = journeyOf(
         setUserAnswerTo(RelationshipStatusPage, relationshipStatus),
-        submitAnswer(ApplicantOrPartnerIncomeOver50kPage, true),
-        submitAnswer(ApplicantOrPartnerIncomeOver60kPage, true),
+        submitAnswer(ApplicantOrPartnerIncomePage, income1),
         submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
         next,
         submitAnswer(CurrentlyReceivingChildBenefitPage, false),
@@ -109,53 +81,23 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
         goTo(CheckYourAnswersPage)
       )
 
-      startingFrom(ApplicantOrPartnerIncomeOver50kPage)
+      startingFrom(ApplicantOrPartnerIncomePage)
         .run(
           initialise,
-          goToChangeAnswer(ApplicantOrPartnerIncomeOver50kPage),
-          submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
-          pageMustBe(TaxChargeExplanationPage),
-          next,
-          pageMustBe(CheckYourAnswersPage),
-          answersMustNotContain(ApplicantOrPartnerIncomeOver60kPage)
-        )
-    }
-  }
-
-  "when the user initially said their or their partner's income was not above 50k" - {
-    
-    "changing the answer to true must collect `income over 60k`, show the tax charge explanation then return to Check Answers" in {
-
-      val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
-      val partnerName        = arbitrary[AdultName].sample.value
-
-      val initialise = journeyOf(
-        setUserAnswerTo(RelationshipStatusPage, relationshipStatus),
-        submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
-        submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
-        next,
-        submitAnswer(CurrentlyReceivingChildBenefitPage, false),
-        submitAnswer(WantToBePaidPage, false),
-        setUserAnswerTo(PartnerNamePage, partnerName),
-        goTo(CheckYourAnswersPage)
-      )
-
-      startingFrom(ApplicantOrPartnerIncomeOver50kPage)
-        .run(
-          initialise,
-          goToChangeAnswer(ApplicantOrPartnerIncomeOver50kPage),
-          submitAnswer(ApplicantOrPartnerIncomeOver50kPage, true),
-          submitAnswer(ApplicantOrPartnerIncomeOver60kPage, true),
+          goToChangeAnswer(ApplicantOrPartnerIncomePage),
+          submitAnswer(ApplicantOrPartnerIncomePage, income2),
           pageMustBe(TaxChargeExplanationPage),
           next,
           pageMustBe(CheckYourAnswersPage)
         )
     }
   }
+
 
   "when the user initially said they or their partner did not receive any qualifying benefits" - {
 
     def qualifyingBenefits = Set[Benefits](Gen.oneOf(Benefits.qualifyingBenefits).sample.value)
+    def income = arbitrary[Income].sample.value
 
     "and they wanted to be paid Child Benefit" - {
 
@@ -166,7 +108,7 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
 
         val initialise = journeyOf(
           setUserAnswerTo(RelationshipStatusPage, relationshipStatus),
-          submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
+          submitAnswer(ApplicantOrPartnerIncomePage, income),
           submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
           next,
           submitAnswer(CurrentlyReceivingChildBenefitPage, false),
@@ -176,7 +118,7 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
           goTo(CheckYourAnswersPage)
         )
 
-        startingFrom(ApplicantOrPartnerIncomeOver50kPage)
+        startingFrom(ApplicantOrPartnerIncomePage)
           .run(
             initialise,
             goToChangeAnswer(ApplicantOrPartnerBenefitsPage),
@@ -198,7 +140,7 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
 
         val initialise = journeyOf(
           setUserAnswerTo(RelationshipStatusPage, relationshipStatus),
-          submitAnswer(ApplicantOrPartnerIncomeOver50kPage, false),
+          submitAnswer(ApplicantOrPartnerIncomePage, income),
           submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
           next,
           submitAnswer(CurrentlyReceivingChildBenefitPage, false),
@@ -207,7 +149,7 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
           goTo(CheckYourAnswersPage)
         )
 
-        startingFrom(ApplicantOrPartnerIncomeOver50kPage)
+        startingFrom(ApplicantOrPartnerIncomePage)
           .run(
             initialise,
             goToChangeAnswer(ApplicantOrPartnerBenefitsPage),

@@ -18,7 +18,7 @@ package pages
 
 import controllers.routes
 import models.UserAnswers
-import pages.income.ApplicantIncomeOver50kPage
+import pages.income.ApplicantIncomePage
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -34,10 +34,5 @@ case object SeparationDatePage extends QuestionPage[LocalDate] {
     routes.SeparationDateController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantIncomeOver50kPage
-
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(ApplicantIncomeOver50kPage)
-      .map(_ => waypoints.next.page)
-      .getOrElse(ApplicantIncomeOver50kPage)
+    ApplicantIncomePage
 }

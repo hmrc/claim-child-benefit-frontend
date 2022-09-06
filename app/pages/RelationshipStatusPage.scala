@@ -40,8 +40,8 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
     answers.get(this).map {
       case Cohabiting                  => CohabitationDatePage
       case Separated                   => SeparationDatePage
-      case Married                     => ApplicantOrPartnerIncomeOver50kPage
-      case Single | Divorced | Widowed => ApplicantIncomeOver50kPage
+      case Married                     => ApplicantOrPartnerIncomePage
+      case Single | Divorced | Widowed => ApplicantIncomePage
     }.orRecover
 
   override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
@@ -49,30 +49,30 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
       case Cohabiting =>
         answers.get(CohabitationDatePage)
           .map { _ =>
-            answers.get(ApplicantOrPartnerIncomeOver50kPage)
+            answers.get(ApplicantOrPartnerIncomePage)
               .map(_ => waypoints.next.page)
-              .getOrElse(ApplicantOrPartnerIncomeOver50kPage)
+              .getOrElse(ApplicantOrPartnerIncomePage)
           }
           .getOrElse(CohabitationDatePage)
 
       case Separated =>
         answers.get(SeparationDatePage)
           .map { _ =>
-            answers.get(ApplicantIncomeOver50kPage)
+            answers.get(ApplicantIncomePage)
               .map(_ => waypoints.next.page)
-              .getOrElse(ApplicantIncomeOver50kPage)
+              .getOrElse(ApplicantIncomePage)
           }
           .getOrElse(SeparationDatePage)
 
       case Married =>
-        answers.get(ApplicantOrPartnerIncomeOver50kPage)
+        answers.get(ApplicantOrPartnerIncomePage)
           .map(_ => waypoints.next.page)
-          .getOrElse(ApplicantOrPartnerIncomeOver50kPage)
+          .getOrElse(ApplicantOrPartnerIncomePage)
 
       case  Single | Divorced | Widowed =>
-        answers.get(ApplicantIncomeOver50kPage)
+        answers.get(ApplicantIncomePage)
         .map(_ => waypoints.next.page)
-        .getOrElse(ApplicantIncomeOver50kPage)
+        .getOrElse(ApplicantIncomePage)
 
     }.orRecover
 
@@ -127,13 +127,11 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
     }.getOrElse(super.cleanup(value, userAnswers))
 
   private def removeApplicantIncomeSection(answers: UserAnswers): Try[UserAnswers] =
-    answers.remove(ApplicantIncomeOver50kPage)
-      .flatMap(_.remove(ApplicantIncomeOver60kPage))
+    answers.remove(ApplicantIncomePage)
       .flatMap(_.remove(ApplicantBenefitsPage))
 
   private def removeApplicantOrPartnerIncomeSection(answers: UserAnswers): Try[UserAnswers] =
-    answers.remove(ApplicantOrPartnerIncomeOver50kPage)
-      .flatMap(_.remove(ApplicantOrPartnerIncomeOver60kPage))
+    answers.remove(ApplicantOrPartnerIncomePage)
       .flatMap(_.remove(ApplicantOrPartnerBenefitsPage))
 
   private def removePartnerSection(answers: UserAnswers): Try[UserAnswers] =

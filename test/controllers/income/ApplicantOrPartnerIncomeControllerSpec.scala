@@ -63,7 +63,7 @@ class ApplicantOrPartnerIncomeControllerSpec extends SpecBase with MockitoSugar 
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ApplicantOrPartnerIncomePage, Income.values.toSet).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(ApplicantOrPartnerIncomePage, Income.values.head).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -75,7 +75,7 @@ class ApplicantOrPartnerIncomeControllerSpec extends SpecBase with MockitoSugar 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(Income.values.toSet), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(Income.values.head), waypoints)(request, messages(application)).toString
       }
     }
 
@@ -95,10 +95,10 @@ class ApplicantOrPartnerIncomeControllerSpec extends SpecBase with MockitoSugar 
       running(application) {
         val request =
           FakeRequest(POST, applicantOrPartnerIncomeRoute)
-            .withFormUrlEncodedBody(("value[0]", Income.values.head.toString))
+            .withFormUrlEncodedBody(("value", Income.values.head.toString))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(ApplicantOrPartnerIncomePage, Set(Income.values.head)).success.value
+        val expectedAnswers = emptyUserAnswers.set(ApplicantOrPartnerIncomePage, Income.values.head).success.value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual ApplicantOrPartnerIncomePage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url

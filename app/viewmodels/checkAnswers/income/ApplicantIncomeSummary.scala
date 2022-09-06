@@ -30,20 +30,11 @@ object ApplicantIncomeSummary {
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
     answers.get(ApplicantIncomePage).map {
-      answers =>
-
-        val value = ValueViewModel(
-          HtmlContent(
-            answers.map {
-              answer => messages(s"income.$answer")
-            }
-              .mkString(",<br>")
-          )
-        )
+      answer =>
 
         SummaryListRowViewModel(
           key = "applicantIncome.checkYourAnswersLabel",
-          value = value,
+          value = ValueViewModel(messages(s"income.$answer")),
           actions = Seq(
             ActionItemViewModel("site.change", ApplicantIncomePage.changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("applicantIncome.change.hidden"))
