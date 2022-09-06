@@ -21,7 +21,7 @@ import models.{Index, UserAnswers}
 import models.RelationshipStatus._
 import pages.child.ChildNamePage
 import pages.partner.PartnerNamePage
-import pages.{Page, QuestionPage, RelationshipStatusPage, Waypoints}
+import pages.{AnyChildLivedWithOthersPage, Page, QuestionPage, RelationshipStatusPage, UsePrintAndPostFormPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -35,11 +35,8 @@ case object ApplicantIsHmfOrCivilServantPage extends QuestionPage[Boolean] {
     routes.ApplicantIsHmfOrCivilServantController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    answers.get(RelationshipStatusPage).map {
-      case Married | Cohabiting =>
-        PartnerNamePage
-
-      case Single | Divorced | Separated | Widowed =>
-        ChildNamePage(Index(0))
+    answers.get(this).map {
+      case true  => AnyChildLivedWithOthersPage
+      case false => UsePrintAndPostFormPage
     }.orRecover
 }

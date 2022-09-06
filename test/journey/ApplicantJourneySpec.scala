@@ -47,8 +47,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
           submitAnswer(ApplicantPhoneNumberPage, "07777 7777777"),
           submitAnswer(BestTimeToContactPage, Set[BestTimeToContact](BestTimeToContact.Morning)),
           submitAnswer(ApplicantNationalityPage, "nationality"),
-          submitAnswer(ApplicantEmploymentStatusPage, Set[EmploymentStatus](EmploymentStatus.Employed)),
-          pageMustBe(ApplicantIsHmfOrCivilServantPage)
+          pageMustBe(ApplicantEmploymentStatusPage)
         )
     }
   }
@@ -107,15 +106,17 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
       )
   }
 
-  "users proceeding from Applicant Is HM Forces or Civil Servant" - {
+  "users proceeding from Employment Status" - {
+
+    val employmentStatus = Set(arbitrary[EmploymentStatus].sample.value)
 
     "must go to Partner Name if they are Married" in {
 
       val answers = UserAnswers("id").set(RelationshipStatusPage, Married).success.value
 
-      startingFrom(ApplicantIsHmfOrCivilServantPage, answers = answers)
+      startingFrom(ApplicantEmploymentStatusPage, answers = answers)
         .run(
-          submitAnswer(ApplicantIsHmfOrCivilServantPage, true),
+          submitAnswer(ApplicantEmploymentStatusPage, employmentStatus),
           pageMustBe(PartnerNamePage)
         )
     }
@@ -124,9 +125,9 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
       val answers = UserAnswers("id").set(RelationshipStatusPage, Cohabiting).success.value
 
-      startingFrom(ApplicantIsHmfOrCivilServantPage, answers = answers)
+      startingFrom(ApplicantEmploymentStatusPage, answers = answers)
         .run(
-          submitAnswer(ApplicantIsHmfOrCivilServantPage, true),
+          submitAnswer(ApplicantEmploymentStatusPage, employmentStatus),
           pageMustBe(PartnerNamePage)
         )
     }
@@ -135,9 +136,9 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
       val answers = UserAnswers("id").set(RelationshipStatusPage, Single).success.value
 
-      startingFrom(ApplicantIsHmfOrCivilServantPage, answers = answers)
+      startingFrom(ApplicantEmploymentStatusPage, answers = answers)
         .run(
-          submitAnswer(ApplicantIsHmfOrCivilServantPage, true),
+          submitAnswer(ApplicantEmploymentStatusPage, employmentStatus),
           pageMustBe(ChildNamePage(Index(0)))
         )
     }
@@ -146,9 +147,9 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
       val answers = UserAnswers("id").set(RelationshipStatusPage, Separated).success.value
 
-      startingFrom(ApplicantIsHmfOrCivilServantPage, answers = answers)
+      startingFrom(ApplicantEmploymentStatusPage, answers = answers)
         .run(
-          submitAnswer(ApplicantIsHmfOrCivilServantPage, true),
+          submitAnswer(ApplicantEmploymentStatusPage, employmentStatus),
           pageMustBe(ChildNamePage(Index(0)))
       )
     }
@@ -157,9 +158,9 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
       val answers = UserAnswers("id").set(RelationshipStatusPage, Divorced).success.value
 
-      startingFrom(ApplicantIsHmfOrCivilServantPage, answers = answers)
+      startingFrom(ApplicantEmploymentStatusPage, answers = answers)
         .run(
-          submitAnswer(ApplicantIsHmfOrCivilServantPage, true),
+          submitAnswer(ApplicantEmploymentStatusPage, employmentStatus),
           pageMustBe(ChildNamePage(Index(0)))
         )
     }
@@ -168,9 +169,9 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
       val answers = UserAnswers("id").set(RelationshipStatusPage, Widowed).success.value
 
-      startingFrom(ApplicantIsHmfOrCivilServantPage, answers = answers)
+      startingFrom(ApplicantEmploymentStatusPage, answers = answers)
         .run(
-          submitAnswer(ApplicantIsHmfOrCivilServantPage, true),
+          submitAnswer(ApplicantEmploymentStatusPage, employmentStatus),
           pageMustBe(ChildNamePage(Index(0)))
         )
     }

@@ -20,6 +20,7 @@ import models.{AdultName, RelationshipStatus}
 import org.scalatest.freespec.AnyFreeSpec
 import pages.income.{ApplicantIncomePage, ApplicantOrPartnerIncomePage}
 import pages._
+import pages.applicant.ApplicantIsHmfOrCivilServantPage
 
 import java.time.LocalDate
 
@@ -116,14 +117,36 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
       )
   }
 
-  "users who have lived or worked abroad must go to the Use Print and Post Form page" in {
+  "users who have lived or worked abroad" - {
 
-    startingFrom(RecentlyClaimedPage)
-      .run(
-        submitAnswer(RecentlyClaimedPage, false),
-        submitAnswer(LivedOrWorkedAbroadPage, true),
-        pageMustBe(UsePrintAndPostFormPage)
-      )
+    "who are HM Forces or a civil servant abroad" - {
+
+      "must proceed with the journey" in {
+
+        startingFrom(RecentlyClaimedPage)
+          .run(
+            submitAnswer(RecentlyClaimedPage, false),
+            submitAnswer(LivedOrWorkedAbroadPage, true),
+            submitAnswer(ApplicantIsHmfOrCivilServantPage, true),
+            submitAnswer(AnyChildLivedWithOthersPage, false),
+            pageMustBe(ApplicantNamePage)
+          )
+      }
+    }
+
+    "who are not HM Forces or a civil servant abroad" - {
+
+      "must go to the Use Print and Post Form page" in {
+
+        startingFrom(RecentlyClaimedPage)
+          .run(
+            submitAnswer(RecentlyClaimedPage, false),
+            submitAnswer(LivedOrWorkedAbroadPage, true),
+            submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
+            pageMustBe(UsePrintAndPostFormPage)
+          )
+      }
+    }
   }
 
   "users claiming for a child who has recently lived with someone else must go to the Use Print and Post Form page" in {

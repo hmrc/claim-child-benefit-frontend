@@ -17,8 +17,11 @@
 package pages.applicant
 
 import controllers.applicant.routes
-import models.{EmploymentStatus, UserAnswers}
-import pages.{Page, QuestionPage, Waypoints}
+import models.RelationshipStatus._
+import models.{EmploymentStatus, Index, UserAnswers}
+import pages.child.ChildNamePage
+import pages.partner.PartnerNamePage
+import pages.{Page, QuestionPage, RelationshipStatusPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -32,5 +35,11 @@ case object ApplicantEmploymentStatusPage extends QuestionPage[Set[EmploymentSta
     routes.ApplicantEmploymentStatusController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantIsHmfOrCivilServantPage
+    answers.get(RelationshipStatusPage).map {
+      case Married | Cohabiting =>
+        PartnerNamePage
+
+      case Single | Divorced | Separated | Widowed =>
+        ChildNamePage(Index(0))
+    }.orRecover
 }
