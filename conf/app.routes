@@ -51,6 +51,12 @@ POST       /your-benefits                        controllers.income.ApplicantBen
 GET        /your-income-over-50k                        controllers.income.ApplicantIncomeOver50kController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-income-over-50k                        controllers.income.ApplicantIncomeOver50kController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
+GET        /your-income                                 controllers.income.ApplicantIncomeController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /your-income                                 controllers.income.ApplicantIncomeController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /your-or-your-partners-income                                 controllers.income.ApplicantOrPartnerIncomeController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /your-or-your-partners-income                                 controllers.income.ApplicantOrPartnerIncomeController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 GET        /your-income-over-60k                        controllers.income.ApplicantIncomeOver60kController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-income-over-60k                        controllers.income.ApplicantIncomeOver60kController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
