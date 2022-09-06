@@ -160,6 +160,10 @@ benefits.employmentSupport = Income-related Employment and Support Allowance (ES
 benefits.universalCredit = Universal Credit
 benefits.none = None of these benefits
 
+income.belowLowerThreshold = Below £50,100
+income.betweenThresholds = £50,100 - £60,000
+income.aboveUpperThreshold = Above £60,000
+
 applicantBenefits.title = Do you get any of these benefits?
 applicantBenefits.heading = Do you get any of these benefits?
 applicantBenefits.hint = Select all that apply.
@@ -167,6 +171,16 @@ applicantBenefits.checkYourAnswersLabel = Benefits you get
 applicantBenefits.error.required = Select the benefits you get
 applicantBenefits.error.mutuallyExclusive = Select the benefits you get or none of these benefits
 applicantBenefits.change.hidden = the benefits you get
+
+applicantIncome.title = What is your adjusted net income each year?
+applicantIncome.heading = What is your adjusted net income each year?
+applicantIncome.p1 = Your adjusted net income is your total taxable income before any personal allowances and less things like Gift Aid.
+applicantIncome.p2.1 = You can use the
+applicantIncome.p2.link.text = Child Benefit tax calculator
+applicantIncome.p2.link.href = https://www.gov.uk/child-benefit-tax-calculator
+applicantIncome.p2.2 = to get an estimate of your adjusted net income
+applicantIncome.error.required = Select your adjusted net income each year
+applicantIncome.error.hidden = your adjusted net income each year
 
 applicantIncomeOver50k.title = Is your adjusted net income over £50,000 per year?
 applicantIncomeOver50k.heading = Is your adjusted net income over £50,000 per year?
@@ -197,6 +211,16 @@ applicantOrPartnerBenefits.checkYourAnswersLabel = Do you or your partner get an
 applicantOrPartnerBenefits.error.required = Select the benefits you or your partner get
 applicantOrPartnerBenefits.error.mutuallyExclusive = Select the benefits you or your partner get or none of these benefits
 applicantOrPartnerBenefits.change.hidden = the benefits you or your partner get
+
+applicantOrPartnerIncome.title = What is your or your partner’s adjusted net income each year?
+applicantOrPartnerIncome.heading = What is your or your partner’s adjusted net income each year?
+applicantOrPartnerIncome.p1 = Your adjusted net income is your total taxable income before any personal allowances and less things like Gift Aid.
+applicantOrPartnerIncome.p2.1 = You can use the
+applicantOrPartnerIncome.p2.link.text = Child Benefit tax calculator
+applicantOrPartnerIncome.p2.link.href = https://www.gov.uk/child-benefit-tax-calculator
+applicantOrPartnerIncome.p2.2 = to get an estimate of your or your partner’s adjusted net income
+applicantOrPartnerIncome.error.required = Select your or your partner’s adjusted net income each year
+applicantOrPartnerIncome.error.hidden = your or your partner’s adjusted net income each year
 
 applicantOrPartnerIncomeOver50k.title = Is your or your partner’s adjusted net income over £50,000 per year?
 applicantOrPartnerIncomeOver50k.heading = Is your or your partner’s adjusted net  income over £50,000 per year?
