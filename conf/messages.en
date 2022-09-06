@@ -109,6 +109,19 @@ recentlyClaimed.checkYourAnswersLabel = Have you recently made a Child Benefit c
 recentlyClaimed.error.required = if you have recently made a Child Benefit claim and are waiting to hear if you are eligible
 recentlyClaimed.change.hidden = if you have recently made a Child Benefit claim and are waiting to hear if you are eligible
 
+alreadyClaimed.title = You have already made a Child Benefit claim
+alreadyClaimed.heading = You have already made a Child Benefit claim
+alreadyClaimed.p1 = You have already applied for Child Benefit by making a claim.
+alreadyClaimed.p2.1 = You can
+alreadyClaimed.p2.link.text = check when you can expect a reply from HMRC
+alreadyClaimed.p2.link.href = https://www.gov.uk/guidance/check-when-you-can-expect-a-reply-from-hmrc
+alreadyClaimed.p2.2 = where you can report a change of circumstances and request a proof of entitlement letter as well.
+alreadyClaimed.p3 = Find out more about
+alreadyClaimed.p3.link.text = claiming Child Benefit
+alreadyClaimed.p3.link.href = https://www.gov.uk/child-benefit
+alreadyClaimed.p4 = If you think that you’ve made a mistake you can
+alreadyClaimed.p4.link.text = start your application again
+
 cohabitationDate.title = When did you start living with your partner?
 cohabitationDate.heading = When did you start living with your partner?
 cohabitationDate.hint = For example, 20 3 2007.
