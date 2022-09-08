@@ -46,36 +46,29 @@ class PartnerIsHmfOrCivilServantController @Inject()(
 
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      getAnswer(PartnerNamePage) {
-        partnerName =>
-          val form = formProvider(partnerName.firstName)
+      val form = formProvider()
 
-          val preparedForm = request.userAnswers.get(PartnerIsHmfOrCivilServantPage) match {
-            case None => form
-            case Some(value) => form.fill(value)
-          }
-
-          Ok(view(preparedForm, waypoints, partnerName.firstName))
+      val preparedForm = request.userAnswers.get(PartnerIsHmfOrCivilServantPage) match {
+        case None => form
+        case Some(value) => form.fill(value)
       }
+
+      Ok(view(preparedForm, waypoints))
   }
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      getAnswerAsync(PartnerNamePage) {
-        partnerName =>
+      val form = formProvider()
 
-          val form = formProvider(partnerName.firstName)
+      form.bindFromRequest().fold(
+        formWithErrors =>
+          Future.successful(BadRequest(view(formWithErrors, waypoints))),
 
-          form.bindFromRequest().fold(
-            formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, waypoints, partnerName.firstName))),
-
-            value =>
-              for {
-                updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerIsHmfOrCivilServantPage, value))
-                _ <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(PartnerIsHmfOrCivilServantPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
-          )
-        }
-  }
+        value =>
+          for {
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerIsHmfOrCivilServantPage, value))
+            _ <- sessionRepository.set(updatedAnswers)
+          } yield Redirect(PartnerIsHmfOrCivilServantPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+      )
+    }
 }
