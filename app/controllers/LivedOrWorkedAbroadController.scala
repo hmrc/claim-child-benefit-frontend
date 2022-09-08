@@ -35,6 +35,7 @@ class LivedOrWorkedAbroadController @Inject()(
                                                sessionRepository: SessionRepository,
                                                identify: IdentifierAction,
                                                getData: DataRetrievalAction,
+                                               requireData: DataRequiredAction,
                                                formProvider: LivedOrWorkedAbroadFormProvider,
                                                val controllerComponents: MessagesControllerComponents,
                                                view: LivedOrWorkedAbroadView
@@ -42,10 +43,10 @@ class LivedOrWorkedAbroadController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(LivedOrWorkedAbroadPage) match {
+      val preparedForm = request.userAnswers.get(LivedOrWorkedAbroadPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -53,21 +54,19 @@ class LivedOrWorkedAbroadController @Inject()(
       Ok(view(preparedForm, waypoints))
   }
 
-  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
       form.bindFromRequest().fold(
         formWithErrors =>
           Future.successful(BadRequest(view(formWithErrors, waypoints))),
 
-        value => {
-          val originalAnswers = request.userAnswers.getOrElse(UserAnswers(request.userId))
-
+        value =>
           for {
-            updatedAnswers <- Future.fromTry(originalAnswers.set(LivedOrWorkedAbroadPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(LivedOrWorkedAbroadPage, value))
             _ <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(LivedOrWorkedAbroadPage.navigate(waypoints, originalAnswers, updatedAnswers).route)
-        }
+          } yield Redirect(LivedOrWorkedAbroadPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+
       )
   }
 }

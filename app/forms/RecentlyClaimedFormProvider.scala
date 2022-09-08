@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package pages
-import controllers.routes
-import models.UserAnswers
-import play.api.mvc.Call
+package forms
 
-object IndexPage extends Page {
+import forms.mappings.Mappings
+import play.api.data.Form
 
-  override def route(waypoints: Waypoints): Call =
-    routes.IndexController.onPageLoad
+import javax.inject.Inject
 
-  override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    RecentlyClaimedPage
+class RecentlyClaimedFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean("recentlyClaimed.error.required")
+    )
 }

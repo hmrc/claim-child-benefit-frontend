@@ -15,15 +15,12 @@
  */
 
 package pages
+
 import controllers.routes
-import models.UserAnswers
 import play.api.mvc.Call
 
-object IndexPage extends Page {
+case object AlreadyClaimedPage extends Page {
 
   override def route(waypoints: Waypoints): Call =
-    routes.IndexController.onPageLoad
-
-  override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    RecentlyClaimedPage
+    routes.AlreadyClaimedController.onPageLoad(waypoints)
 }

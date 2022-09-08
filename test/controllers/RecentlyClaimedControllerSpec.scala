@@ -17,43 +17,43 @@
 package controllers
 
 import base.SpecBase
-import forms.LivedOrWorkedAbroadFormProvider
+import forms.RecentlyClaimedFormProvider
 import models.UserAnswers
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{EmptyWaypoints, LivedOrWorkedAbroadPage}
+import pages.{RecentlyClaimedPage, EmptyWaypoints}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
-import views.html.LivedOrWorkedAbroadView
+import views.html.RecentlyClaimedView
 
 import scala.concurrent.Future
 
-class LivedOrWorkedAbroadControllerSpec extends SpecBase with MockitoSugar {
+class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new LivedOrWorkedAbroadFormProvider()
+  val formProvider = new RecentlyClaimedFormProvider()
   val form = formProvider()
   private val waypoints = EmptyWaypoints
 
-  lazy val livedOrWorkedAbroadRoute = routes.LivedOrWorkedAbroadController.onPageLoad(waypoints).url
+  lazy val anyChildLivedWithOthersRoute = routes.RecentlyClaimedController.onPageLoad(waypoints).url
 
-  "LivedOrWorkedAbroad Controller" - {
+  "RecentlyClaimed Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, livedOrWorkedAbroadRoute)
+        val request = FakeRequest(GET, anyChildLivedWithOthersRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[LivedOrWorkedAbroadView]
+        val view = application.injector.instanceOf[RecentlyClaimedView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
@@ -62,14 +62,14 @@ class LivedOrWorkedAbroadControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(LivedOrWorkedAbroadPage, true).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(RecentlyClaimedPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, livedOrWorkedAbroadRoute)
+        val request = FakeRequest(GET, anyChildLivedWithOthersRoute)
 
-        val view = application.injector.instanceOf[LivedOrWorkedAbroadView]
+        val view = application.injector.instanceOf[RecentlyClaimedView]
 
         val result = route(application, request).value
 
@@ -93,14 +93,14 @@ class LivedOrWorkedAbroadControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, livedOrWorkedAbroadRoute)
+          FakeRequest(POST, anyChildLivedWithOthersRoute)
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(LivedOrWorkedAbroadPage, true).success.value
+        val expectedAnswers = emptyUserAnswers.set(RecentlyClaimedPage, true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual LivedOrWorkedAbroadPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual RecentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -111,12 +111,12 @@ class LivedOrWorkedAbroadControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, livedOrWorkedAbroadRoute)
+          FakeRequest(POST, anyChildLivedWithOthersRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[LivedOrWorkedAbroadView]
+        val view = application.injector.instanceOf[RecentlyClaimedView]
 
         val result = route(application, request).value
 
@@ -125,34 +125,42 @@ class LivedOrWorkedAbroadControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
-    "must redirect to Journey Recovery if no existing data is found" in {
+    "must return OK for a GET if no existing data is found" in {
 
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, livedOrWorkedAbroadRoute)
+        val request = FakeRequest(GET, anyChildLivedWithOthersRoute)
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        status(result) mustEqual OK
       }
     }
 
-    "must redirect to the Journey Recovery for a POST if no existing data is found" in {
+    "must redirect to the next page for a POST if no existing data is found" in {
 
+      val mockSessionRepository = mock[SessionRepository]
 
-      val application = applicationBuilder(userAnswers = None).build()
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = None)
+          .overrides(
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
 
       running(application) {
         val request =
-          FakeRequest(POST, livedOrWorkedAbroadRoute)
+          FakeRequest(POST, anyChildLivedWithOthersRoute)
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
+        val expectedAnswers = emptyUserAnswers.set(RecentlyClaimedPage, true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual RecentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
       }
     }
   }

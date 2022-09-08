@@ -14,16 +14,32 @@
  * limitations under the License.
  */
 
-package pages
-import controllers.routes
-import models.UserAnswers
-import play.api.mvc.Call
+package forms
 
-object IndexPage extends Page {
+import forms.behaviours.BooleanFieldBehaviours
+import play.api.data.FormError
 
-  override def route(waypoints: Waypoints): Call =
-    routes.IndexController.onPageLoad
+class RecentlyClaimedFormProviderSpec extends BooleanFieldBehaviours {
 
-  override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    RecentlyClaimedPage
+  val requiredKey = "recentlyClaimed.error.required"
+  val invalidKey = "error.boolean"
+
+  val form = new RecentlyClaimedFormProvider()()
+
+  ".value" - {
+
+    val fieldName = "value"
+
+    behave like booleanField(
+      form,
+      fieldName,
+      invalidError = FormError(fieldName, invalidKey)
+    )
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
+  }
 }
