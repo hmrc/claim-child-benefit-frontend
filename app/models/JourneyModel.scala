@@ -234,6 +234,11 @@ object JourneyModel {
         case false => Ior.Right(Nil)
       }
 
+    def getHmForces: IorNec[Query, Boolean] =
+      answers.get(ApplicantIsHmfOrCivilServantPage)
+        .map(Ior.Right(_))
+        .getOrElse(Ior.Right(false))
+
     (
       answers.getIor(ApplicantNamePage),
       getPreviousFamilyNames,
@@ -245,7 +250,7 @@ object JourneyModel {
       answers.getIor(BestTimeToContactPage),
       answers.getIor(ApplicantNationalityPage),
       answers.getIor(ApplicantEmploymentStatusPage),
-      answers.getIor(ApplicantIsHmfOrCivilServantPage)
+      getHmForces
     ).parMapN(Applicant.apply)
   }
 
@@ -282,13 +287,18 @@ object JourneyModel {
       }
     }
 
+    def getHmForces: IorNec[Query, Boolean] =
+      answers.get(PartnerIsHmfOrCivilServantPage)
+        .map(Ior.Right(_))
+        .getOrElse(Ior.Right(false))
+
     (
       answers.getIor(PartnerNamePage),
       answers.getIor(PartnerDateOfBirthPage),
       answers.getIor(PartnerNationalityPage),
       getPartnerNino,
       answers.getIor(PartnerEmploymentStatusPage),
-      answers.getIor(PartnerIsHmfOrCivilServantPage),
+      getHmForces,
       answers.getIor(PartnerEntitledToChildBenefitPage),
       getPartnerWaitingToHear,
       getPartnerEldestChild

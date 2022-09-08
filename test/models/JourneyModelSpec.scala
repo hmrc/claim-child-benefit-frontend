@@ -811,6 +811,45 @@ class JourneyModelSpec
           data.value.children.toList must contain only expectedChildDetails
         }
       }
+
+      "when the applicant is HM Forces or a civil servant abroad" in {
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(LivedOrWorkedAbroadPage, true).success.value
+          .set(ApplicantIsHmfOrCivilServantPage, true).success.value
+
+        val (errors, data) = JourneyModel.from(answers).pad
+
+        errors mustBe empty
+        data.value.applicant.memberOfHMForcesOrCivilServantAbroad mustEqual true
+      }
+
+      "when the applicant's partner is HM Forces or a civil servant abroad" in {
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalCoupleIncomeDetails
+          .withMinimalPaymentDetails
+          .withMinimalPartnerDetails
+          .set(RelationshipStatusPage, Married).success.value
+          .set(ApplicantOrPartnerIncomePage, Income.BelowLowerThreshold).success.value
+          .set(ApplicantOrPartnerBenefitsPage, applicantBenefits).success.value
+          .set(LivedOrWorkedAbroadPage, true).success.value
+          .set(ApplicantIsHmfOrCivilServantPage, false).success.value
+          .set(PartnerIsHmfOrCivilServantPage, true).success.value
+
+        val (errors, data) = JourneyModel.from(answers).pad
+
+        errors mustBe empty
+        data.value.applicant.memberOfHMForcesOrCivilServantAbroad mustEqual false
+        data.value.relationship.partner.value.memberOfHMForcesOrCivilServantAbroad mustEqual true
+      }
     }
 
     "must fail and report the missing pages" - {
@@ -848,7 +887,6 @@ class JourneyModelSpec
           PartnerNationalityPage,
           PartnerNinoKnownPage,
           PartnerEmploymentStatusPage,
-          PartnerIsHmfOrCivilServantPage,
           PartnerEntitledToChildBenefitPage
         )
         data mustBe empty
@@ -888,7 +926,6 @@ class JourneyModelSpec
           PartnerNationalityPage,
           PartnerNinoKnownPage,
           PartnerEmploymentStatusPage,
-          PartnerIsHmfOrCivilServantPage,
           PartnerEntitledToChildBenefitPage
         )
         data mustBe empty
@@ -1237,7 +1274,6 @@ class JourneyModelSpec
         .set(BestTimeToContactPage, bestTimes).success.value
         .set(ApplicantNationalityPage, applicantNationality).success.value
         .set(ApplicantEmploymentStatusPage, applicantEmployment).success.value
-        .set(ApplicantIsHmfOrCivilServantPage, false).success.value
 
     def withMinimalPartnerDetails: UserAnswers =
       answers
@@ -1246,7 +1282,6 @@ class JourneyModelSpec
         .set(PartnerDateOfBirthPage, now).success.value
         .set(PartnerNationalityPage, partnerNationality).success.value
         .set(PartnerEmploymentStatusPage, partnerEmployment).success.value
-        .set(PartnerIsHmfOrCivilServantPage, false).success.value
         .set(PartnerEntitledToChildBenefitPage, false).success.value
         .set(PartnerWaitingForEntitlementDecisionPage, false).success.value
 
