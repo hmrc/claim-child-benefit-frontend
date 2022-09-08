@@ -33,6 +33,6 @@ case object RecentlyClaimedPage extends QuestionPage[Boolean] {
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case true  => AlreadyClaimedPage
-      case false => LivedOrWorkedAbroadPage
+      case false => AnyChildLivedWithOthersPage
     }.orRecover
 }

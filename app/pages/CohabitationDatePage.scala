@@ -34,5 +34,10 @@ case object CohabitationDatePage extends QuestionPage[LocalDate] {
     routes.CohabitationDateController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantOrPartnerIncomePage
+    LivedOrWorkedAbroadPage
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    answers.get(ApplicantOrPartnerIncomePage)
+      .map(_ => waypoints.next.page)
+      .getOrElse(ApplicantOrPartnerIncomePage)
 }

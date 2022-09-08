@@ -1010,7 +1010,7 @@ applicantIsHmfOrCivilServant.error.required = Select yes if you are a member of 
 applicantIsHmfOrCivilServant.change.hidden = if you are a member of HM Forces or a civil servant working abroad
 
 partnerIsHmfOrCivilServant.title = Is your partner a member of HM Forces or a civil servant working abroad?
-partnerIsHmfOrCivilServant.heading = Is {0} a member of HM&nbsp;Forces or a civil servant working abroad?
-partnerIsHmfOrCivilServant.checkYourAnswersLabel = Is {0} a member of HM Forces or a civil servant working abroad?
-partnerIsHmfOrCivilServant.error.required = Select yes if {0} is a member of HM Forces or a civil servant working abroad
-partnerIsHmfOrCivilServant.change.hidden = if {0} is a member of HM Forces or a civil servant working abroad
+partnerIsHmfOrCivilServant.heading = Is your partner a member of HM&nbsp;Forces or a civil servant working abroad?
+partnerIsHmfOrCivilServant.checkYourAnswersLabel = Is your partner a member of HM Forces or a civil servant working abroad?
+partnerIsHmfOrCivilServant.error.required = Select yes if your partner is a member of HM Forces or a civil servant working abroad
+partnerIsHmfOrCivilServant.change.hidden = if your partner is a member of HM Forces or a civil servant working abroad

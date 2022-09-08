@@ -27,7 +27,7 @@ import pages.child.ChildNamePage
 import pages.income._
 import pages.partner._
 import pages.payments.{ApplicantHasSuitableAccountPage, CurrentlyReceivingChildBenefitPage, PaymentFrequencyPage, WantToBePaidPage}
-import pages.{CannotBePaidWeeklyPage, CheckYourAnswersPage, CohabitationDatePage, RelationshipStatusPage, SeparationDatePage}
+import pages.{CannotBePaidWeeklyPage, CheckYourAnswersPage, CohabitationDatePage, LivedOrWorkedAbroadPage, RelationshipStatusPage, SeparationDatePage}
 import uk.gov.hmrc.domain.Nino
 
 import java.time.LocalDate
@@ -52,6 +52,7 @@ class ChangingInitialSectionJourneySpec
 
     val initialise = journeyOf(
       submitAnswer(RelationshipStatusPage, Married),
+      submitAnswer(LivedOrWorkedAbroadPage, false),
       submitAnswer(ApplicantOrPartnerIncomePage, income),
       submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
       next,
@@ -429,6 +430,7 @@ class ChangingInitialSectionJourneySpec
     val initialise = journeyOf(
       submitAnswer(RelationshipStatusPage, Cohabiting),
       submitAnswer(CohabitationDatePage, LocalDate.now),
+      submitAnswer(LivedOrWorkedAbroadPage, false),
       submitAnswer(ApplicantOrPartnerIncomePage, income),
       submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
       setUserAnswerTo(WantToBePaidPage, true),
@@ -817,6 +819,7 @@ class ChangingInitialSectionJourneySpec
     val initialise = journeyOf(
       submitAnswer(RelationshipStatusPage, Separated),
       submitAnswer(SeparationDatePage, LocalDate.now),
+      submitAnswer(LivedOrWorkedAbroadPage, false),
       submitAnswer(ApplicantIncomePage, income),
       submitAnswer(ApplicantBenefitsPage, benefits),
       setUserAnswerTo(ChildNamePage(Index(0)), childName),
@@ -848,7 +851,6 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                 submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                submitAnswer(PartnerIsHmfOrCivilServantPage, false),
                 submitAnswer(PartnerEntitledToChildBenefitPage, false),
                 submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
@@ -885,7 +887,6 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                 submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                submitAnswer(PartnerIsHmfOrCivilServantPage, false),
                 submitAnswer(PartnerEntitledToChildBenefitPage, false),
                 submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
@@ -923,7 +924,6 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                 submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                submitAnswer(PartnerIsHmfOrCivilServantPage, false),
                 submitAnswer(PartnerEntitledToChildBenefitPage, false),
                 submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
@@ -958,7 +958,6 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                 submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                submitAnswer(PartnerIsHmfOrCivilServantPage, false),
                 submitAnswer(PartnerEntitledToChildBenefitPage, false),
                 submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
@@ -991,7 +990,6 @@ class ChangingInitialSectionJourneySpec
               submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
               submitAnswer(PartnerNationalityPage, "nationality"),
               submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-              submitAnswer(PartnerIsHmfOrCivilServantPage, false),
               submitAnswer(PartnerEntitledToChildBenefitPage, false),
               submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
               submitAnswer(PartnerEldestChildNamePage, eldestChildName),
@@ -1031,7 +1029,6 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                 submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                submitAnswer(PartnerIsHmfOrCivilServantPage, false),
                 submitAnswer(PartnerEntitledToChildBenefitPage, false),
                 submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
@@ -1069,7 +1066,6 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                 submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                submitAnswer(PartnerIsHmfOrCivilServantPage, false),
                 submitAnswer(PartnerEntitledToChildBenefitPage, false),
                 submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
@@ -1108,7 +1104,6 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                 submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                submitAnswer(PartnerIsHmfOrCivilServantPage, false),
                 submitAnswer(PartnerEntitledToChildBenefitPage, false),
                 submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
@@ -1144,7 +1139,6 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                 submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                submitAnswer(PartnerIsHmfOrCivilServantPage, false),
                 submitAnswer(PartnerEntitledToChildBenefitPage, false),
                 submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
@@ -1178,7 +1172,6 @@ class ChangingInitialSectionJourneySpec
               submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
               submitAnswer(PartnerNationalityPage, "nationality"),
               submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-              submitAnswer(PartnerIsHmfOrCivilServantPage, false),
               submitAnswer(PartnerEntitledToChildBenefitPage, false),
               submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
               submitAnswer(PartnerEldestChildNamePage, eldestChildName),
@@ -1215,6 +1208,7 @@ class ChangingInitialSectionJourneySpec
 
     def initialise(status: RelationshipStatus) = journeyOf(
       submitAnswer(RelationshipStatusPage, status),
+      submitAnswer(LivedOrWorkedAbroadPage, false),
       submitAnswer(ApplicantIncomePage, income),
       submitAnswer(ApplicantBenefitsPage, benefits),
       setUserAnswerTo(ChildNamePage(Index(0)), childName),
@@ -1248,7 +1242,6 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                   submitAnswer(PartnerNationalityPage, "nationality"),
                   submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                  submitAnswer(PartnerIsHmfOrCivilServantPage, false),
                   submitAnswer(PartnerEntitledToChildBenefitPage, false),
                   submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
                   submitAnswer(PartnerEldestChildNamePage, eldestChildName),
@@ -1287,7 +1280,6 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                   submitAnswer(PartnerNationalityPage, "nationality"),
                   submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                  submitAnswer(PartnerIsHmfOrCivilServantPage, false),
                   submitAnswer(PartnerEntitledToChildBenefitPage, false),
                   submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
                   submitAnswer(PartnerEldestChildNamePage, eldestChildName),
@@ -1327,7 +1319,6 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                   submitAnswer(PartnerNationalityPage, "nationality"),
                   submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                  submitAnswer(PartnerIsHmfOrCivilServantPage, false),
                   submitAnswer(PartnerEntitledToChildBenefitPage, false),
                   submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
                   submitAnswer(PartnerEldestChildNamePage, eldestChildName),
@@ -1364,7 +1355,6 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                   submitAnswer(PartnerNationalityPage, "nationality"),
                   submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                  submitAnswer(PartnerIsHmfOrCivilServantPage, false),
                   submitAnswer(PartnerEntitledToChildBenefitPage, false),
                   submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
                   submitAnswer(PartnerEldestChildNamePage, eldestChildName),
@@ -1399,7 +1389,6 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                 submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                submitAnswer(PartnerIsHmfOrCivilServantPage, false),
                 submitAnswer(PartnerEntitledToChildBenefitPage, false),
                 submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
@@ -1441,7 +1430,6 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                   submitAnswer(PartnerNationalityPage, "nationality"),
                   submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                  submitAnswer(PartnerIsHmfOrCivilServantPage, false),
                   submitAnswer(PartnerEntitledToChildBenefitPage, false),
                   submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
                   submitAnswer(PartnerEldestChildNamePage, eldestChildName),
@@ -1481,7 +1469,6 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                   submitAnswer(PartnerNationalityPage, "nationality"),
                   submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                  submitAnswer(PartnerIsHmfOrCivilServantPage, false),
                   submitAnswer(PartnerEntitledToChildBenefitPage, false),
                   submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
                   submitAnswer(PartnerEldestChildNamePage, eldestChildName),
@@ -1522,7 +1509,6 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                   submitAnswer(PartnerNationalityPage, "nationality"),
                   submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                  submitAnswer(PartnerIsHmfOrCivilServantPage, false),
                   submitAnswer(PartnerEntitledToChildBenefitPage, false),
                   submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
                   submitAnswer(PartnerEldestChildNamePage, eldestChildName),
@@ -1560,7 +1546,6 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                   submitAnswer(PartnerNationalityPage, "nationality"),
                   submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                  submitAnswer(PartnerIsHmfOrCivilServantPage, false),
                   submitAnswer(PartnerEntitledToChildBenefitPage, false),
                   submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
                   submitAnswer(PartnerEldestChildNamePage, eldestChildName),

@@ -21,11 +21,10 @@ import play.api.data.FormError
 
 class PartnerIsHmfOrCivilServantFormProviderSpec extends BooleanFieldBehaviours {
 
-  val partnerFirstName = "first"
   val requiredKey = "partnerIsHmfOrCivilServant.error.required"
   val invalidKey = "error.boolean"
 
-  val form = new PartnerIsHmfOrCivilServantFormProvider()(partnerFirstName)
+  val form = new PartnerIsHmfOrCivilServantFormProvider()()
 
   ".value" - {
 
@@ -34,13 +33,13 @@ class PartnerIsHmfOrCivilServantFormProviderSpec extends BooleanFieldBehaviours 
     behave like booleanField(
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey, Seq(partnerFirstName))
+      invalidError = FormError(fieldName, invalidKey)
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey, Seq(partnerFirstName))
+      requiredError = FormError(fieldName, requiredKey)
     )
   }
 }
