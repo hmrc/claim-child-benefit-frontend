@@ -17,9 +17,12 @@
 package journey
 
 import models.{AdultName, RelationshipStatus}
+import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import pages.income.{ApplicantIncomePage, ApplicantOrPartnerIncomePage}
 import pages._
+import pages.applicant.ApplicantIsHmfOrCivilServantPage
+import pages.partner.PartnerIsHmfOrCivilServantPage
 
 import java.time.LocalDate
 
@@ -32,10 +35,10 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
     startingFrom(RecentlyClaimedPage)
       .run(
         submitAnswer(RecentlyClaimedPage, false),
-        submitAnswer(LivedOrWorkedAbroadPage, false),
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Married),
+        submitAnswer(LivedOrWorkedAbroadPage, false),
         pageMustBe(ApplicantOrPartnerIncomePage)
       )
   }
@@ -45,11 +48,11 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
     startingFrom(RecentlyClaimedPage)
       .run(
         submitAnswer(RecentlyClaimedPage, false),
-        submitAnswer(LivedOrWorkedAbroadPage, false),
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Cohabiting),
         submitAnswer(CohabitationDatePage, LocalDate.now.minusDays(1)),
+        submitAnswer(LivedOrWorkedAbroadPage, false),
         pageMustBe(ApplicantOrPartnerIncomePage)
       )
   }
@@ -59,10 +62,10 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
     startingFrom(RecentlyClaimedPage)
       .run(
         submitAnswer(RecentlyClaimedPage, false),
-        submitAnswer(LivedOrWorkedAbroadPage, false),
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Single),
+        submitAnswer(LivedOrWorkedAbroadPage, false),
         pageMustBe(ApplicantIncomePage)
       )
   }
@@ -72,11 +75,11 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
     startingFrom(RecentlyClaimedPage)
       .run(
         submitAnswer(RecentlyClaimedPage, false),
-        submitAnswer(LivedOrWorkedAbroadPage, false),
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Separated),
         submitAnswer(SeparationDatePage, LocalDate.now.minusDays(1)),
+        submitAnswer(LivedOrWorkedAbroadPage, false),
         pageMustBe(ApplicantIncomePage)
       )
   }
@@ -86,10 +89,10 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
     startingFrom(RecentlyClaimedPage)
       .run(
         submitAnswer(RecentlyClaimedPage, false),
-        submitAnswer(LivedOrWorkedAbroadPage, false),
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Divorced),
+        submitAnswer(LivedOrWorkedAbroadPage, false),
         pageMustBe(ApplicantIncomePage)
       )
   }
@@ -99,10 +102,10 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
     startingFrom(RecentlyClaimedPage)
       .run(
         submitAnswer(RecentlyClaimedPage, false),
-        submitAnswer(LivedOrWorkedAbroadPage, false),
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Widowed),
+        submitAnswer(LivedOrWorkedAbroadPage, false),
         pageMustBe(ApplicantIncomePage)
       )
   }
@@ -116,24 +119,154 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
       )
   }
 
-  "users who have lived or worked abroad must go to the Use Print and Post Form page" in {
-
-    startingFrom(RecentlyClaimedPage)
-      .run(
-        submitAnswer(RecentlyClaimedPage, false),
-        submitAnswer(LivedOrWorkedAbroadPage, true),
-        pageMustBe(UsePrintAndPostFormPage)
-      )
-  }
-
   "users claiming for a child who has recently lived with someone else must go to the Use Print and Post Form page" in {
 
     startingFrom(RecentlyClaimedPage)
       .run(
         submitAnswer(RecentlyClaimedPage, false),
-        submitAnswer(LivedOrWorkedAbroadPage, false),
         submitAnswer(AnyChildLivedWithOthersPage, true),
         pageMustBe(UsePrintAndPostFormPage)
       )
+  }
+
+  "users who have lived or worked abroad in the past 3 months" - {
+
+    "who are HM Forces or a civil servant abroad" - {
+
+      "must continue to the income section" in {
+
+        startingFrom(RecentlyClaimedPage)
+          .run(
+            submitAnswer(RecentlyClaimedPage, false),
+            submitAnswer(AnyChildLivedWithOthersPage, false),
+            submitAnswer(ApplicantNamePage, applicantName),
+            submitAnswer(RelationshipStatusPage, RelationshipStatus.Married),
+            submitAnswer(LivedOrWorkedAbroadPage, true),
+            submitAnswer(ApplicantIsHmfOrCivilServantPage, true),
+            pageMustBe(ApplicantOrPartnerIncomePage)
+          )
+      }
+    }
+
+    "who are not HM Forces or a civil servant abroad" - {
+
+      "and are Single, Divorced or Widowed" - {
+
+        "must go to the Use Print and Post Form page" in {
+
+          val relationshipStatus =
+            Gen.oneOf(RelationshipStatus.Single, RelationshipStatus.Divorced, RelationshipStatus.Widowed).sample.value
+
+          startingFrom(RecentlyClaimedPage)
+            .run(
+              submitAnswer(RecentlyClaimedPage, false),
+              submitAnswer(AnyChildLivedWithOthersPage, false),
+              submitAnswer(ApplicantNamePage, applicantName),
+              submitAnswer(RelationshipStatusPage, relationshipStatus),
+              submitAnswer(LivedOrWorkedAbroadPage, true),
+              submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
+              pageMustBe(UsePrintAndPostFormPage)
+            )
+        }
+      }
+
+      "and is Separated" - {
+
+        "must go to the Use Print and Post Form page" in {
+
+          startingFrom(RecentlyClaimedPage)
+            .run(
+              submitAnswer(RecentlyClaimedPage, false),
+              submitAnswer(AnyChildLivedWithOthersPage, false),
+              submitAnswer(ApplicantNamePage, applicantName),
+              submitAnswer(RelationshipStatusPage, RelationshipStatus.Separated),
+              submitAnswer(SeparationDatePage, LocalDate.now),
+              submitAnswer(LivedOrWorkedAbroadPage, true),
+              submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
+              pageMustBe(UsePrintAndPostFormPage)
+            )
+        }
+      }
+
+      "and is Married" - {
+
+        "and their partner is HM Forces or a civil servant abroad" - {
+
+          "must continue to the income section" in {
+
+            startingFrom(RecentlyClaimedPage)
+              .run(
+                submitAnswer(RecentlyClaimedPage, false),
+                submitAnswer(AnyChildLivedWithOthersPage, false),
+                submitAnswer(ApplicantNamePage, applicantName),
+                submitAnswer(RelationshipStatusPage, RelationshipStatus.Married),
+                submitAnswer(LivedOrWorkedAbroadPage, true),
+                submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
+                submitAnswer(PartnerIsHmfOrCivilServantPage, true),
+                pageMustBe(ApplicantOrPartnerIncomePage)
+              )
+          }
+        }
+
+        "and their partner is not HM Forces or a civil servant abroad" - {
+
+          "must go to the Use Print and Post Form page" in {
+
+            startingFrom(RecentlyClaimedPage)
+              .run(
+                submitAnswer(RecentlyClaimedPage, false),
+                submitAnswer(AnyChildLivedWithOthersPage, false),
+                submitAnswer(ApplicantNamePage, applicantName),
+                submitAnswer(RelationshipStatusPage, RelationshipStatus.Married),
+                submitAnswer(LivedOrWorkedAbroadPage, true),
+                submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
+                submitAnswer(PartnerIsHmfOrCivilServantPage, false),
+                pageMustBe(UsePrintAndPostFormPage)
+              )
+          }
+        }
+      }
+
+      "and is Cohabiting" - {
+
+        "and their partner is HM Forces or a civil servant abroad" - {
+
+          "must continue to the income section" in {
+
+            startingFrom(RecentlyClaimedPage)
+              .run(
+                submitAnswer(RecentlyClaimedPage, false),
+                submitAnswer(AnyChildLivedWithOthersPage, false),
+                submitAnswer(ApplicantNamePage, applicantName),
+                submitAnswer(RelationshipStatusPage, RelationshipStatus.Cohabiting),
+                submitAnswer(CohabitationDatePage, LocalDate.now),
+                submitAnswer(LivedOrWorkedAbroadPage, true),
+                submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
+                submitAnswer(PartnerIsHmfOrCivilServantPage, true),
+                pageMustBe(ApplicantOrPartnerIncomePage)
+              )
+          }
+        }
+
+        "and their partner is not HM Forces or a civil servant abroad" - {
+
+          "must go to the Use Print and Post Form page" in {
+
+            startingFrom(RecentlyClaimedPage)
+              .run(
+                submitAnswer(RecentlyClaimedPage, false),
+                submitAnswer(AnyChildLivedWithOthersPage, false),
+                submitAnswer(ApplicantNamePage, applicantName),
+                submitAnswer(RelationshipStatusPage, RelationshipStatus.Cohabiting),
+                submitAnswer(CohabitationDatePage, LocalDate.now),
+                submitAnswer(LivedOrWorkedAbroadPage, true),
+                submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
+                submitAnswer(PartnerIsHmfOrCivilServantPage, false),
+                pageMustBe(UsePrintAndPostFormPage)
+              )
+          }
+        }
+      }
+    }
   }
 }

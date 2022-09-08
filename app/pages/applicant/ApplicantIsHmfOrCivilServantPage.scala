@@ -17,11 +17,11 @@
 package pages.applicant
 
 import controllers.applicant.routes
-import models.{Index, UserAnswers}
 import models.RelationshipStatus._
-import pages.child.ChildNamePage
-import pages.partner.PartnerNamePage
-import pages.{Page, QuestionPage, RelationshipStatusPage, Waypoints}
+import models.UserAnswers
+import pages.income.{ApplicantIncomePage, ApplicantOrPartnerIncomePage}
+import pages.partner.PartnerIsHmfOrCivilServantPage
+import pages.{CohabitationDatePage, Page, QuestionPage, RelationshipStatusPage, SeparationDatePage, UsePrintAndPostFormPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -34,12 +34,24 @@ case object ApplicantIsHmfOrCivilServantPage extends QuestionPage[Boolean] {
   override def route(waypoints: Waypoints): Call =
     routes.ApplicantIsHmfOrCivilServantController.onPageLoad(waypoints)
 
-  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    answers.get(RelationshipStatusPage).map {
-      case Married | Cohabiting =>
-        PartnerNamePage
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page = {
+    answers.get(this).map {
+      case true =>
+        answers.get(RelationshipStatusPage).map {
+          case Married                                 => ApplicantOrPartnerIncomePage
+          case Cohabiting                              => CohabitationDatePage
+          case Separated                               => SeparationDatePage
+          case Single | Divorced | Separated | Widowed => ApplicantIncomePage
+        }.orRecover
 
-      case Single | Divorced | Separated | Widowed =>
-        ChildNamePage(Index(0))
+      case false =>
+        answers.get(RelationshipStatusPage).map {
+          case Married | Cohabiting =>
+            PartnerIsHmfOrCivilServantPage
+
+          case Single | Divorced | Separated | Widowed =>
+            UsePrintAndPostFormPage
+        }.orRecover
     }.orRecover
+  }
 }

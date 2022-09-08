@@ -34,5 +34,10 @@ case object SeparationDatePage extends QuestionPage[LocalDate] {
     routes.SeparationDateController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantIncomePage
+    LivedOrWorkedAbroadPage
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    answers.get(ApplicantIncomePage)
+      .map(_ => waypoints.next.page)
+      .getOrElse(ApplicantIncomePage)
 }
