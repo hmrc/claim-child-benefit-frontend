@@ -62,11 +62,11 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryPreviousClaimantAddressUserAnswersEntry: Arbitrary[(PreviousClaimantAddressPage, JsValue)] =
+  implicit lazy val arbitraryPreviousClaimantAddressUserAnswersEntry: Arbitrary[(PreviousClaimantUkAddressPage, JsValue)] =
     Arbitrary {
       for {
-        page  <- arbitrary[PreviousClaimantAddressPage]
-        value <- arbitrary[Address].map(Json.toJson(_))
+        page  <- arbitrary[PreviousClaimantUkAddressPage]
+        value <- arbitrary[UkAddress].map(Json.toJson(_))
       } yield (page, value)
     }
 
@@ -270,11 +270,11 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryApplicantPreviousAddressUserAnswersEntry: Arbitrary[(ApplicantPreviousAddressPage.type, JsValue)] =
+  implicit lazy val arbitraryApplicantPreviousAddressUserAnswersEntry: Arbitrary[(ApplicantPreviousUkAddressPage.type, JsValue)] =
     Arbitrary {
       for {
-        page  <- arbitrary[ApplicantPreviousAddressPage.type]
-        value <- arbitrary[Address].map(Json.toJson(_))
+        page  <- arbitrary[ApplicantPreviousUkAddressPage.type]
+        value <- arbitrary[UkAddress].map(Json.toJson(_))
       } yield (page, value)
     }
 
@@ -350,11 +350,11 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryApplicantCurrentAddressUserAnswersEntry: Arbitrary[(ApplicantCurrentAddressPage.type, JsValue)] =
+  implicit lazy val arbitraryApplicantCurrentAddressUserAnswersEntry: Arbitrary[(ApplicantCurrentUkAddressPage.type, JsValue)] =
     Arbitrary {
       for {
-        page  <- arbitrary[ApplicantCurrentAddressPage.type]
-        value <- arbitrary[Address].map(Json.toJson(_))
+        page  <- arbitrary[ApplicantCurrentUkAddressPage.type]
+        value <- arbitrary[UkAddress].map(Json.toJson(_))
       } yield (page, value)
     }
 

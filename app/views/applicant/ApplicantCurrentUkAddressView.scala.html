@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import controllers.child.routes
+@import controllers.applicant.routes
 @import viewmodels.InputWidth._
 
 @this(
@@ -25,46 +25,49 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], waypoints: Waypoints, index: Index, previousClaimantName: AdultName)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("previousClaimantAddress.title"))) {
+@layout(pageTitle = title(form, messages("applicantCurrentUkAddress.title"))) {
 
-    @formHelper(action = routes.PreviousClaimantAddressController.onSubmit(waypoints, index), 'autoComplete -> "off") {
+    @formHelper(action = routes.ApplicantCurrentUkAddressController.onSubmit(waypoints), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <h1 class="govuk-heading-xl">@messages("previousClaimantAddress.heading", previousClaimantName.firstName)</h1>
+        <h1 class="govuk-heading-xl">@messages("applicantCurrentUkAddress.heading")</h1>
 
         @govukInput(
             InputViewModel(
                 field = form("line1"),
-                label = LabelViewModel(messages("previousClaimantAddress.line1"))
+                label = LabelViewModel(messages("applicantCurrentUkAddress.line1"))
             )
             .withWidth(Full)
+            .withAutocomplete("address-line1")
         )
 
         @govukInput(
             InputViewModel(
                 field = form("line2"),
-                label = LabelViewModel(messages("previousClaimantAddress.line2"))
+                label = LabelViewModel(messages("applicantCurrentUkAddress.line2"))
             )
             .withWidth(Full)
+            .withAutocomplete("address-line2")
         )
 
         @govukInput(
             InputViewModel(
                 field = form("town"),
-                label = LabelViewModel(messages("previousClaimantAddress.town"))
+                label = LabelViewModel(messages("applicantCurrentUkAddress.town"))
             )
             .withWidth(TwoThirds)
+            .withAutocomplete("address-level2")
         )
 
         @govukInput(
             InputViewModel(
                 field = form("county"),
-                label = LabelViewModel(messages("previousClaimantAddress.county"))
+                label = LabelViewModel(messages("applicantCurrentUkAddress.county"))
             )
             .withWidth(TwoThirds)
         )
@@ -72,9 +75,10 @@
         @govukInput(
             InputViewModel(
                 field = form("postcode"),
-                label = LabelViewModel(messages("previousClaimantAddress.postcode"))
+                label = LabelViewModel(messages("applicantCurrentUkAddress.postcode"))
             )
             .withWidth(Fixed10)
+            .withAutocomplete("postal-code")
         )
 
         @govukButton(

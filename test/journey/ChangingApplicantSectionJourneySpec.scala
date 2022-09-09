@@ -17,7 +17,7 @@
 package journey
 
 import generators.ModelGenerators
-import models.{Address, Index}
+import models.{Index, UkAddress}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.freespec.AnyFreeSpec
 import pages.CheckYourAnswersPage
@@ -30,7 +30,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
 
   private def previousName = arbitrary[String].sample.value
   private def nino         = arbitrary[Nino].sample.value
-  private def address      = arbitrary[Address].sample.value
+  private def address      = arbitrary[UkAddress].sample.value
   private def phoneNumber  = arbitrary[String].sample.value
 
   "when the user initially said they had previous names" - {
@@ -195,7 +195,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
           initialise,
           goToChangeAnswer(ApplicantLivedAtCurrentAddressOneYearPage),
           submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
-          submitAnswer(ApplicantPreviousAddressPage, address),
+          submitAnswer(ApplicantPreviousUkAddressPage, address),
           pageMustBe(CheckYourAnswersPage)
         )
     }
@@ -207,7 +207,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
 
       val initialise = journeyOf(
         submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
-        submitAnswer(ApplicantPreviousAddressPage, address),
+        submitAnswer(ApplicantPreviousUkAddressPage, address),
         submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
         goTo(CheckYourAnswersPage)
       )
@@ -218,7 +218,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
           goToChangeAnswer(ApplicantLivedAtCurrentAddressOneYearPage),
           submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
           pageMustBe(CheckYourAnswersPage),
-          answersMustNotContain(ApplicantPreviousAddressPage)
+          answersMustNotContain(ApplicantPreviousUkAddressPage)
         )
     }
   }

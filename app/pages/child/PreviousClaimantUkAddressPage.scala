@@ -17,19 +17,19 @@
 package pages.child
 
 import controllers.child.routes
-import models.{Address, Index, UserAnswers}
+import models.{Index, UkAddress, UserAnswers}
 import pages.{Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-final case class PreviousClaimantAddressPage(index: Index) extends ChildQuestionPage[Address] {
+final case class PreviousClaimantUkAddressPage(index: Index) extends ChildQuestionPage[UkAddress] {
 
   override def path: JsPath = JsPath \ "children" \ index.position \ toString
 
-  override def toString: String = "previousClaimantAddress"
+  override def toString: String = "previousClaimantUkAddress"
 
   override def route(waypoints: Waypoints): Call =
-    routes.PreviousClaimantAddressController.onPageLoad(waypoints, index)
+    routes.PreviousClaimantUkAddressController.onPageLoad(waypoints, index)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     CheckChildDetailsPage(index)

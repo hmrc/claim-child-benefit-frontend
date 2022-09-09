@@ -34,7 +34,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
     private val sex               = arbitrary[ChildBiologicalSex].sample.value
     private val systemNumber      = Gen.listOfN(9, Gen.numChar).sample.value.mkString
     private val claimantName      = arbitrary[AdultName].sample.value
-    private val claimantAddress   = arbitrary[Address].sample.value
+    private val claimantAddress   = arbitrary[UkAddress].sample.value
     private val scottishBcDetails = Gen.listOfN(10, Gen.numChar).sample.value.mkString
     private val relationship      = arbitrary[Relationship].sample.value
 
@@ -64,7 +64,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
             submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
             submitAnswer(PreviousClaimantNamePage(Index(0)), claimantName),
-            submitAnswer(PreviousClaimantAddressPage(Index(0)), claimantAddress),
+            submitAnswer(PreviousClaimantUkAddressPage(Index(0)), claimantAddress),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }
@@ -77,7 +77,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
               basicChildJourney,
               setUserAnswerTo(AnyoneClaimedForChildBeforePage(Index(0)), true),
               setUserAnswerTo(PreviousClaimantNamePage(Index(0)), claimantName),
-              setUserAnswerTo(PreviousClaimantAddressPage(Index(0)), claimantAddress)
+              setUserAnswerTo(PreviousClaimantUkAddressPage(Index(0)), claimantAddress)
             )
 
       "changing `Anyone claimed before` to `false` must remove the previous claimant details and return the user to the Check page" in {
@@ -89,7 +89,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
             pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(PreviousClaimantNamePage(Index(0))),
-            answersMustNotContain(PreviousClaimantAddressPage(Index(0)))
+            answersMustNotContain(PreviousClaimantUkAddressPage(Index(0)))
           )
       }
     }

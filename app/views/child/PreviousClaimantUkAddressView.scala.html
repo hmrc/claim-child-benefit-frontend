@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import controllers.applicant.routes
+@import controllers.child.routes
 @import viewmodels.InputWidth._
 
 @this(
@@ -22,26 +22,25 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukButton: GovukButton,
-    h1WithCaption: components.h1WithCaption
+    govukButton: GovukButton
 )
 
-@(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints, index: Index, previousClaimantName: AdultName)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("applicantPreviousAddress.title"))) {
+@layout(pageTitle = title(form, messages("previousClaimantUkAddress.title"))) {
 
-    @formHelper(action = routes.ApplicantPreviousAddressController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.PreviousClaimantUkAddressController.onSubmit(waypoints, index), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <h1 class="govuk-heading-xl">@messages("applicantPreviousAddress.heading")</h1>
+        <h1 class="govuk-heading-xl">@messages("previousClaimantUkAddress.heading", previousClaimantName.firstName)</h1>
 
         @govukInput(
             InputViewModel(
                 field = form("line1"),
-                label = LabelViewModel(messages("applicantPreviousAddress.line1"))
+                label = LabelViewModel(messages("previousClaimantUkAddress.line1"))
             )
             .withWidth(Full)
         )
@@ -49,7 +48,7 @@
         @govukInput(
             InputViewModel(
                 field = form("line2"),
-                label = LabelViewModel(messages("applicantPreviousAddress.line2"))
+                label = LabelViewModel(messages("previousClaimantUkAddress.line2"))
             )
             .withWidth(Full)
         )
@@ -57,7 +56,7 @@
         @govukInput(
             InputViewModel(
                 field = form("town"),
-                label = LabelViewModel(messages("applicantPreviousAddress.town"))
+                label = LabelViewModel(messages("previousClaimantUkAddress.town"))
             )
             .withWidth(TwoThirds)
         )
@@ -65,7 +64,7 @@
         @govukInput(
             InputViewModel(
                 field = form("county"),
-                label = LabelViewModel(messages("applicantPreviousAddress.county"))
+                label = LabelViewModel(messages("previousClaimantUkAddress.county"))
             )
             .withWidth(TwoThirds)
         )
@@ -73,7 +72,7 @@
         @govukInput(
             InputViewModel(
                 field = form("postcode"),
-                label = LabelViewModel(messages("applicantPreviousAddress.postcode"))
+                label = LabelViewModel(messages("previousClaimantUkAddress.postcode"))
             )
             .withWidth(Fixed10)
         )

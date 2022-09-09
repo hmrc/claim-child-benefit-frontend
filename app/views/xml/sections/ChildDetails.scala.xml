@@ -36,7 +36,7 @@
 
     @child.previousClaimant.map { previousClaimant =>
         @line("pdf.previousClaimantName", previousClaimant.name.display)
-        @line("pdf.previousClaimantAddress", previousClaimant.address.lines.mkString(", "))
+        @line("pdf.previousClaimantUkAddress", previousClaimant.address.lines.mkString(", "))
     }
 
     @line("pdf.hasPreviousNames", booleanToYesNo(child.previousNames.nonEmpty))

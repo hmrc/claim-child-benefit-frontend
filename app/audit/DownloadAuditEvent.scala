@@ -17,8 +17,8 @@
 package audit
 
 import audit.DownloadAuditEvent._
-import models.JourneyModel
-import play.api.libs.json.{Format, JsString, Json, Writes}
+import models.{Country, JourneyModel}
+import play.api.libs.json.{JsString, Json, Writes}
 
 import java.time.LocalDate
 
@@ -102,14 +102,31 @@ object DownloadAuditEvent {
       }
     )
 
-  private def convertAddress(address: models.Address): Address =
-    Address(
+  private def convertUkAddress(address: models.UkAddress): UkAddress =
+    UkAddress(
       line1      = address.line1,
       line2      = address.line2,
       townOrCity = address.townOrCity,
       county     = address.county,
       postcode   = address.postcode
     )
+
+  private def convertInternationlAddress(address: models.InternationalAddress): InternationalAddress =
+    InternationalAddress(
+      line1         = address.line1,
+      line2         = address.line2,
+      townOrCity    = address.townOrCity,
+      stateOrRegion = address.stateOrRegion,
+      postcode      = address.postcode,
+      country       = address.country
+    )
+
+  private def convertAddress(address: models.Address): Address = {
+    address match {
+      case u: models.UkAddress            => convertUkAddress(u)
+      case i: models.InternationalAddress => convertInternationlAddress(i)
+    }
+  }
 
   private def convertBankAccountDetails(details: models.BankAccountDetails): BankAccountDetails =
     BankAccountDetails(
@@ -141,22 +158,35 @@ object DownloadAuditEvent {
 
   private[audit] final case class AdultName(firstName: String, middleNames: Option[String], lastName: String)
   object AdultName {
-    implicit lazy val formats: Format[AdultName] = Json.format
+    implicit lazy val writes: Writes[AdultName] = Json.writes
   }
 
   private[audit] final case class ChildName(firstName: String, middleNames: Option[String], lastName: String)
   object ChildName {
-    implicit lazy val formats: Format[ChildName] = Json.format
+    implicit lazy val writes: Writes[ChildName] = Json.writes
   }
 
   private[audit] final case class EldestChild(name: ChildName, dateOfBirth: LocalDate)
   object EldestChild {
-    implicit lazy val formats: Format[EldestChild] = Json.format
+    implicit lazy val writes: Writes[EldestChild] = Json.writes
   }
 
-  private[audit] final case class Address(line1: String, line2: Option[String], townOrCity: String, county: Option[String], postcode: String)
+  private[audit] sealed trait Address
   object Address {
-    implicit lazy val formats: Format[Address] = Json.format
+    implicit val writes: Writes[Address] = Writes {
+      case u: UkAddress            => Json.toJson(u)(UkAddress.writes)
+      case i: InternationalAddress => Json.toJson(i)(InternationalAddress.writes)
+    }
+  }
+
+  private[audit] final case class UkAddress(line1: String, line2: Option[String], townOrCity: String, county: Option[String], postcode: String) extends Address
+  object UkAddress {
+    implicit lazy val writes: Writes[UkAddress] = Json.writes
+  }
+
+  private[audit] final case class InternationalAddress(line1: String, line2: Option[String], townOrCity: String, stateOrRegion: Option[String], postcode: Option[String], country: Country) extends Address
+  object InternationalAddress {
+    implicit lazy val writes: Writes[InternationalAddress] = Json.writes
   }
 
   private[audit] final case class Applicant(
@@ -173,7 +203,7 @@ object DownloadAuditEvent {
                                              memberOfHMForcesOrCivilServantAbroad: Boolean
                                            )
   object Applicant {
-    implicit lazy val formats: Format[Applicant] = Json.format
+    implicit lazy val writes: Writes[Applicant] = Json.writes
   }
 
   private[audit] final case class Partner(
@@ -188,17 +218,17 @@ object DownloadAuditEvent {
                                            eldestChild: Option[EldestChild]
                                          )
   object Partner {
-    implicit lazy val formats: Format[Partner] = Json.format
+    implicit lazy val writes: Writes[Partner] = Json.writes
   }
 
   private[audit] final case class Relationship(status: String, since: Option[LocalDate], partner: Option[Partner])
   object Relationship {
-    implicit lazy val formats: Format[Relationship] = Json.format
+    implicit lazy val writes: Writes[Relationship] = Json.writes
   }
 
   private[audit] final case class PreviousClaimant(name: AdultName, address: Address)
   object PreviousClaimant {
-    implicit lazy val formats: Format[PreviousClaimant] = Json.format
+    implicit lazy val writes: Writes[PreviousClaimant] = Json.writes
   }
 
   private[audit] final case class Child(
@@ -214,12 +244,12 @@ object DownloadAuditEvent {
                                          previousClaimant: Option[PreviousClaimant]
                                        )
   object Child {
-    implicit lazy val formats: Format[Child] = Json.format
+    implicit lazy val writes: Writes[Child] = Json.writes
   }
 
   private[audit] final case class BankAccountDetails(accountName: String, sortCode: String, accountNumber: String, rollNumber: Option[String])
   object BankAccountDetails {
-    implicit lazy val formats: Format[BankAccountDetails] = Json.format
+    implicit lazy val writes: Writes[BankAccountDetails] = Json.writes
   }
 
   private[audit] sealed trait PaymentPreference

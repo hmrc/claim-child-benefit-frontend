@@ -14,51 +14,54 @@
  * limitations under the License.
  */
 
-package controllers.applicant
+package controllers.child
 
 import base.SpecBase
 import controllers.{routes => baseRoutes}
-import forms.applicant.ApplicantPreviousAddressFormProvider
-import models.Address
+import forms.child.PreviousClaimantUkAddressFormProvider
+import models.{AdultName, UkAddress}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.EmptyWaypoints
-import pages.applicant.ApplicantPreviousAddressPage
+import pages.child.{PreviousClaimantNamePage, PreviousClaimantUkAddressPage}
+import pages.{EmptyWaypoints, child}
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
-import views.html.applicant.ApplicantPreviousAddressView
+import views.html.child.PreviousClaimantUkAddressView
 
 import scala.concurrent.Future
 
-class ApplicantPreviousAddressControllerSpec extends SpecBase with MockitoSugar {
+class PreviousClaimantUkAddressControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new ApplicantPreviousAddressFormProvider()
-  val form = formProvider()
+  private val previousClaimantName = AdultName("first", None, "last")
+  private val baseAnswers = emptyUserAnswers.set(PreviousClaimantNamePage(index), previousClaimantName).success.value
+
+  val formProvider = new PreviousClaimantUkAddressFormProvider()
+  val form = formProvider(previousClaimantName)
   private val waypoints = EmptyWaypoints
 
-  lazy val applicantPreviousAddressRoute = routes.ApplicantPreviousAddressController.onPageLoad(waypoints).url
+  lazy val previousClaimantUkAddressRoute = routes.PreviousClaimantUkAddressController.onPageLoad(waypoints, index).url
 
-  private val validAnswer = Address("line 1", None, "town", None, "postcode")
-  private val userAnswers = emptyUserAnswers.set(ApplicantPreviousAddressPage, validAnswer).success.value
+  private val validAnswer = UkAddress("line 1", None, "town", None, "postcode")
+  private val userAnswers = baseAnswers.set(PreviousClaimantUkAddressPage(index), validAnswer).success.value
 
-  "ApplicantPreviousAddress Controller" - {
+  "PreviousClaimantUkAddress Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, applicantPreviousAddressRoute)
+        val request = FakeRequest(GET, previousClaimantUkAddressRoute)
 
-        val view = application.injector.instanceOf[ApplicantPreviousAddressView]
+        val view = application.injector.instanceOf[PreviousClaimantUkAddressView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index, previousClaimantName)(request, messages(application)).toString
       }
     }
 
@@ -67,14 +70,14 @@ class ApplicantPreviousAddressControllerSpec extends SpecBase with MockitoSugar 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, applicantPreviousAddressRoute)
+        val request = FakeRequest(GET, previousClaimantUkAddressRoute)
 
-        val view = application.injector.instanceOf[ApplicantPreviousAddressView]
+        val view = application.injector.instanceOf[PreviousClaimantUkAddressView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints, index, previousClaimantName)(request, messages(application)).toString
       }
     }
 
@@ -85,7 +88,7 @@ class ApplicantPreviousAddressControllerSpec extends SpecBase with MockitoSugar 
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
             bind[SessionRepository].toInstance(mockSessionRepository)
           )
@@ -93,35 +96,35 @@ class ApplicantPreviousAddressControllerSpec extends SpecBase with MockitoSugar 
 
       running(application) {
         val request =
-          FakeRequest(POST, applicantPreviousAddressRoute)
-            .withFormUrlEncodedBody(("line1", "line 1"), ("town", "town"), ("postcode", "postcode"))
+          FakeRequest(POST, previousClaimantUkAddressRoute)
+            .withFormUrlEncodedBody(("line1", "line 1"), ("town" -> "town"), ("postcode", "postcode"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(ApplicantPreviousAddressPage, validAnswer).success.value
+        val expectedAnswers = baseAnswers.set(child.PreviousClaimantUkAddressPage(index), validAnswer).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ApplicantPreviousAddressPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual child.PreviousClaimantUkAddressPage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request =
-          FakeRequest(POST, applicantPreviousAddressRoute)
+          FakeRequest(POST, previousClaimantUkAddressRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
 
-        val view = application.injector.instanceOf[ApplicantPreviousAddressView]
+        val view = application.injector.instanceOf[PreviousClaimantUkAddressView]
 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index, previousClaimantName)(request, messages(application)).toString
       }
     }
 
@@ -130,7 +133,7 @@ class ApplicantPreviousAddressControllerSpec extends SpecBase with MockitoSugar 
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, applicantPreviousAddressRoute)
+        val request = FakeRequest(GET, previousClaimantUkAddressRoute)
 
         val result = route(application, request).value
 
@@ -145,8 +148,8 @@ class ApplicantPreviousAddressControllerSpec extends SpecBase with MockitoSugar 
 
       running(application) {
         val request =
-          FakeRequest(POST, applicantPreviousAddressRoute)
-            .withFormUrlEncodedBody(("line1", "line 1"), ("town", "town"), ("postcode", "postcode"))
+          FakeRequest(POST, previousClaimantUkAddressRoute)
+            .withFormUrlEncodedBody(("line1", "line 1"), ("town" -> "town"), ("postcode", "postcode"))
 
         val result = route(application, request).value
 

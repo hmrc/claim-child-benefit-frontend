@@ -34,5 +34,5 @@ case object ApplicantDateOfBirthPage extends QuestionPage[LocalDate] {
     routes.ApplicantDateOfBirthController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantCurrentAddressPage
+    ApplicantCurrentUkAddressPage
 }

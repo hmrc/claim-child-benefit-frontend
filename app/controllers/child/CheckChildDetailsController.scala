@@ -57,7 +57,7 @@ class CheckChildDetailsController @Inject()(
               ApplicantRelationshipToChildSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               AnyoneClaimedForChildBeforeSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               PreviousClaimantNameSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
-              PreviousClaimantAddressSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              PreviousClaimantUkAddressSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               AdoptingThroughLocalAuthoritySummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index))
             ).flatten
           )

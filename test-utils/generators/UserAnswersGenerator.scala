@@ -36,7 +36,7 @@ trait UserAnswersGenerator extends TryValues {
     arbitrary[(ApplicantIsHmfOrCivilServantPage.type, JsValue)] ::
     arbitrary[(AdoptingThroughLocalAuthorityPage, JsValue)] ::
     arbitrary[(PreviousClaimantNamePage, JsValue)] ::
-    arbitrary[(PreviousClaimantAddressPage, JsValue)] ::
+    arbitrary[(PreviousClaimantUkAddressPage, JsValue)] ::
     arbitrary[(ChildScottishBirthCertificateDetailsPage, JsValue)] ::
     arbitrary[(ChildPreviousNamePage, JsValue)] ::
     arbitrary[(ChildNameChangedByDeedPollPage, JsValue)] ::
@@ -62,7 +62,7 @@ trait UserAnswersGenerator extends TryValues {
     arbitrary[(PartnerDateOfBirthPage.type, JsValue)] ::
     arbitrary[(BestTimeToContactPage.type, JsValue)] ::
     arbitrary[(ApplicantPreviousFamilyNamePage, JsValue)] ::
-    arbitrary[(ApplicantPreviousAddressPage.type, JsValue)] ::
+    arbitrary[(ApplicantPreviousUkAddressPage.type, JsValue)] ::
     arbitrary[(ApplicantPhoneNumberPage.type, JsValue)] ::
     arbitrary[(ApplicantNinoKnownPage.type, JsValue)] ::
     arbitrary[(ApplicantNinoPage.type, JsValue)] ::
@@ -72,7 +72,7 @@ trait UserAnswersGenerator extends TryValues {
     arbitrary[(ApplicantHasPreviousFamilyNamePage.type, JsValue)] ::
     arbitrary[(ApplicantEmploymentStatusPage.type, JsValue)] ::
     arbitrary[(ApplicantDateOfBirthPage.type, JsValue)] ::
-    arbitrary[(ApplicantCurrentAddressPage.type, JsValue)] ::
+    arbitrary[(ApplicantCurrentUkAddressPage.type, JsValue)] ::
     arbitrary[(AddApplicantPreviousFamilyNamePage.type, JsValue)] ::
     arbitrary[(PaymentFrequencyPage.type, JsValue)] ::
     arbitrary[(WantToBePaidToExistingAccountPage.type, JsValue)] ::

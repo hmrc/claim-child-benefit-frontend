@@ -58,8 +58,8 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           previousFamilyNames = List("previous family name"),
           dateOfBirth = now,
           nationalInsuranceNumber = Some(applicantNino),
-          currentAddress = models.Address("current line 1", Some("current line 2"), "current town", Some("current county"), "current postcode"),
-          previousAddress = Some(models.Address("previous line 1", Some("previous line 2"), "previous town", Some("previous county"), "previous postcode")),
+          currentAddress = models.UkAddress("current line 1", Some("current line 2"), "current town", Some("current county"), "current postcode"),
+          previousAddress = Some(models.UkAddress("previous line 1", Some("previous line 2"), "previous town", Some("previous county"), "previous postcode")),
           telephoneNumber = "07777 777777",
           bestTimeToContact = Set(models.BestTimeToContact.Morning, models.BestTimeToContact.Afternoon, models.BestTimeToContact.Evening),
           nationality = "applicant nationality",
@@ -97,7 +97,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             adoptingThroughLocalAuthority = true,
             previousClaimant = Some(JourneyModel.PreviousClaimant(
               name    = models.AdultName("previous claimant first", Some("previous claimant middle"), "previous claimant last"),
-              address = models.Address("previous claimant line 1", Some("previous claimant line 2"), "previous claimant town", Some("previous claimant county"), "previous claimant postcode")
+              address = models.UkAddress("previous claimant line 1", Some("previous claimant line 2"), "previous claimant town", Some("previous claimant county"), "previous claimant postcode")
             ))
           ), Nil
         ),
@@ -117,8 +117,8 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           previousFamilyNames = List("previous family name"),
           dateOfBirth = now,
           nationalInsuranceNumber = Some(applicantNino),
-          currentAddress = Address("current line 1", Some("current line 2"), "current town", Some("current county"), "current postcode"),
-          previousAddress = Some(Address("previous line 1", Some("previous line 2"), "previous town", Some("previous county"), "previous postcode")),
+          currentAddress = UkAddress("current line 1", Some("current line 2"), "current town", Some("current county"), "current postcode"),
+          previousAddress = Some(UkAddress("previous line 1", Some("previous line 2"), "previous town", Some("previous county"), "previous postcode")),
           telephoneNumber = "07777 777777",
           bestTimeToContact = Set("morning", "afternoon", "evening"),
           nationality = "applicant nationality",
@@ -156,7 +156,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             adoptingThroughLocalAuthority = true,
             previousClaimant = Some(PreviousClaimant(
               name    = AdultName( "previous claimant first", Some("previous claimant middle"), "previous claimant last"),
-              address = Address("previous claimant line 1", Some("previous claimant line 2"), "previous claimant town", Some("previous claimant county"), "previous claimant postcode")
+              address = UkAddress("previous claimant line 1", Some("previous claimant line 2"), "previous claimant town", Some("previous claimant county"), "previous claimant postcode")
             ))
           )
         ),

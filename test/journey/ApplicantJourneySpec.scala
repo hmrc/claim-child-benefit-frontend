@@ -18,7 +18,7 @@ package journey
 
 import generators.ModelGenerators
 import models.RelationshipStatus._
-import models.{Address, EmploymentStatus, BestTimeToContact, Index, UserAnswers}
+import models.{BestTimeToContact, EmploymentStatus, Index, UkAddress, UserAnswers}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.freespec.AnyFreeSpec
 import pages.RelationshipStatusPage
@@ -35,14 +35,14 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
     "must be asked all of the applicant questions" in {
 
-      val address = Address("line 1", None, "town", None, "postcode")
+      val address = UkAddress("line 1", None, "town", None, "postcode")
 
       startingFrom(ApplicantHasPreviousFamilyNamePage)
         .run(
           submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
           submitAnswer(ApplicantNinoKnownPage, false),
           submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
-          submitAnswer(ApplicantCurrentAddressPage, address),
+          submitAnswer(ApplicantCurrentUkAddressPage, address),
           submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
           submitAnswer(ApplicantPhoneNumberPage, "07777 7777777"),
           submitAnswer(BestTimeToContactPage, Set[BestTimeToContact](BestTimeToContact.Morning)),
@@ -96,12 +96,12 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
   "users who need to give a previous address must be asked for it" in {
 
-    val address = Address("line 1", None, "town", None, "postcode")
+    val address = UkAddress("line 1", None, "town", None, "postcode")
 
     startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
       .run(
         submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
-        submitAnswer(ApplicantPreviousAddressPage, address),
+        submitAnswer(ApplicantPreviousUkAddressPage, address),
         pageMustBe(ApplicantPhoneNumberPage)
       )
   }

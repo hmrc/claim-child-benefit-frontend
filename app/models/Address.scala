@@ -16,21 +16,68 @@
 
 package models
 
-import play.api.libs.json._
+import play.api.libs.json.{Format, Json, OFormat, Reads, Writes}
 
-case class Address(
-                    line1: String,
-                    line2: Option[String],
-                    townOrCity: String,
-                    county: Option[String],
-                    postcode: String
-                  ) {
-
-  val lines: Seq[String] =
-    Seq(Some(line1), line2, Some(townOrCity), county, Some(postcode)).flatten
+sealed trait Address {
+  def lines: Seq[String]
 }
 
 object Address {
-  implicit val format: OFormat[Address] =
-    Json.format[Address]
+  def reads: Reads[Address] =
+    UkAddress.format.widen[Address] orElse InternationalAddress.format.widen[Address]
+
+  def writes: Writes[Address] = Writes {
+    case u: UkAddress            => Json.toJson(u)(UkAddress.format)
+    case i: InternationalAddress => Json.toJson(i)(InternationalAddress.format)
+  }
+
+  implicit def format: Format[Address] = Format(reads, writes)
+}
+
+case class UkAddress(
+                      line1: String,
+                      line2: Option[String],
+                      townOrCity: String,
+                      county: Option[String],
+                      postcode: String
+                    ) extends Address {
+
+  val lines: Seq[String] =
+    Seq(
+      Some(line1),
+      line2,
+      Some(townOrCity),
+      county,
+      Some(postcode)
+    ).flatten
+}
+
+object UkAddress {
+
+  implicit val format: OFormat[UkAddress] = Json.format
+}
+
+case class InternationalAddress (
+                                  line1: String,
+                                  line2: Option[String],
+                                  townOrCity: String,
+                                  stateOrRegion: Option[String],
+                                  postcode: Option[String],
+                                  country: Country
+                                ) extends Address {
+
+  val lines: Seq[String] =
+    Seq(
+      Some(line1),
+      line2,
+      Some(townOrCity),
+      stateOrRegion,
+      postcode,
+      Some(country.name)
+    ).flatten
+}
+
+object InternationalAddress {
+
+  implicit val format: OFormat[InternationalAddress] = Json.format
 }

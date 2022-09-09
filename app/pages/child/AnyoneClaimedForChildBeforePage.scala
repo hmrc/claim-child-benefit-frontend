@@ -48,7 +48,7 @@ final case class AnyoneClaimedForChildBeforePage(index: Index) extends ChildQues
       case false =>
         userAnswers
           .remove(PreviousClaimantNamePage(index))
-          .flatMap(_.remove(PreviousClaimantAddressPage(index)))
+          .flatMap(_.remove(PreviousClaimantUkAddressPage(index)))
     }.getOrElse {
       super.cleanup(value, userAnswers)
     }

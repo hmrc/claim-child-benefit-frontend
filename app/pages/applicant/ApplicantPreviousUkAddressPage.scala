@@ -17,20 +17,20 @@
 package pages.applicant
 
 import controllers.applicant.routes
-import models.{Address, UserAnswers}
+import models.{UkAddress, UserAnswers}
 import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object ApplicantCurrentAddressPage extends QuestionPage[Address] {
+case object ApplicantPreviousUkAddressPage extends QuestionPage[UkAddress] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "applicantCurrentAddress"
+  override def toString: String = "applicantPreviousUkAddress"
 
   override def route(waypoints: Waypoints): Call =
-    routes.ApplicantCurrentAddressController.onPageLoad(waypoints)
+    routes.ApplicantPreviousUkAddressController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantLivedAtCurrentAddressOneYearPage
+    ApplicantPhoneNumberPage
 }

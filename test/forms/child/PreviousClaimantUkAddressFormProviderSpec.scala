@@ -14,20 +14,22 @@
  * limitations under the License.
  */
 
-package forms.applicant
+package forms.child
 
 import forms.behaviours.StringFieldBehaviours
+import models.AdultName
 import play.api.data.FormError
 
-class ApplicantCurrentAddressFormProviderSpec extends StringFieldBehaviours {
+class PreviousClaimantUkAddressFormProviderSpec extends StringFieldBehaviours {
 
-  val form = new ApplicantCurrentAddressFormProvider()()
+  private val name = AdultName("first", None, "last")
+  private val form = new PreviousClaimantUkAddressFormProvider()(name)
 
   ".line1" - {
 
     val fieldName = "line1"
-    val requiredKey = "applicantCurrentAddress.error.line1.required"
-    val lengthKey = "applicantCurrentAddress.error.line1.length"
+    val requiredKey = "previousClaimantUkAddress.error.line1.required"
+    val lengthKey = "previousClaimantUkAddress.error.line1.length"
     val maxLength = 100
 
     behave like fieldThatBindsValidData(
@@ -40,20 +42,20 @@ class ApplicantCurrentAddressFormProviderSpec extends StringFieldBehaviours {
       form,
       fieldName,
       maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength, "first"))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq("first"))
     )
   }
 
   ".line2" - {
 
     val fieldName = "line2"
-    val lengthKey = "applicantCurrentAddress.error.line2.length"
+    val lengthKey = "previousClaimantUkAddress.error.line2.length"
     val maxLength = 100
 
     behave like fieldThatBindsValidData(
@@ -66,15 +68,15 @@ class ApplicantCurrentAddressFormProviderSpec extends StringFieldBehaviours {
       form,
       fieldName,
       maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength, "first"))
     )
   }
 
   ".town" - {
 
     val fieldName = "town"
-    val requiredKey = "applicantCurrentAddress.error.town.required"
-    val lengthKey = "applicantCurrentAddress.error.town.length"
+    val requiredKey = "previousClaimantUkAddress.error.town.required"
+    val lengthKey = "previousClaimantUkAddress.error.town.length"
     val maxLength = 100
 
     behave like fieldThatBindsValidData(
@@ -87,20 +89,20 @@ class ApplicantCurrentAddressFormProviderSpec extends StringFieldBehaviours {
       form,
       fieldName,
       maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength, "first"))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq("first"))
     )
   }
 
   ".county" - {
 
     val fieldName = "county"
-    val lengthKey = "applicantCurrentAddress.error.county.length"
+    val lengthKey = "previousClaimantUkAddress.error.county.length"
     val maxLength = 100
 
     behave like fieldThatBindsValidData(
@@ -113,15 +115,15 @@ class ApplicantCurrentAddressFormProviderSpec extends StringFieldBehaviours {
       form,
       fieldName,
       maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength, "first"))
     )
   }
 
   ".postcode" - {
 
     val fieldName = "postcode"
-    val requiredKey = "applicantCurrentAddress.error.postcode.required"
-    val lengthKey = "applicantCurrentAddress.error.postcode.length"
+    val requiredKey = "previousClaimantUkAddress.error.postcode.required"
+    val lengthKey = "previousClaimantUkAddress.error.postcode.length"
     val maxLength = 100
 
     behave like fieldThatBindsValidData(
@@ -134,13 +136,13 @@ class ApplicantCurrentAddressFormProviderSpec extends StringFieldBehaviours {
       form,
       fieldName,
       maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength, "first"))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq("first"))
     )
   }
 

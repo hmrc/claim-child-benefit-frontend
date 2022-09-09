@@ -19,15 +19,15 @@ package forms.applicant
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
 
-class ApplicantPreviousAddressFormProviderSpec extends StringFieldBehaviours {
+class ApplicantPreviousUkAddressFormProviderSpec extends StringFieldBehaviours {
 
-  val form = new ApplicantPreviousAddressFormProvider()()
+  val form = new ApplicantPreviousUkAddressFormProvider()()
 
   ".line1" - {
 
     val fieldName = "line1"
-    val requiredKey = "applicantPreviousAddress.error.line1.required"
-    val lengthKey = "applicantPreviousAddress.error.line1.length"
+    val requiredKey = "applicantPreviousUkAddress.error.line1.required"
+    val lengthKey = "applicantPreviousUkAddress.error.line1.length"
     val maxLength = 100
 
     behave like fieldThatBindsValidData(
@@ -53,7 +53,7 @@ class ApplicantPreviousAddressFormProviderSpec extends StringFieldBehaviours {
   ".line2" - {
 
     val fieldName = "line2"
-    val lengthKey = "applicantPreviousAddress.error.line2.length"
+    val lengthKey = "applicantPreviousUkAddress.error.line2.length"
     val maxLength = 100
 
     behave like fieldThatBindsValidData(
@@ -73,8 +73,8 @@ class ApplicantPreviousAddressFormProviderSpec extends StringFieldBehaviours {
   ".town" - {
 
     val fieldName = "town"
-    val requiredKey = "applicantPreviousAddress.error.town.required"
-    val lengthKey = "applicantPreviousAddress.error.town.length"
+    val requiredKey = "applicantPreviousUkAddress.error.town.required"
+    val lengthKey = "applicantPreviousUkAddress.error.town.length"
     val maxLength = 100
 
     behave like fieldThatBindsValidData(
@@ -100,7 +100,7 @@ class ApplicantPreviousAddressFormProviderSpec extends StringFieldBehaviours {
   ".county" - {
 
     val fieldName = "county"
-    val lengthKey = "applicantPreviousAddress.error.county.length"
+    val lengthKey = "applicantPreviousUkAddress.error.county.length"
     val maxLength = 100
 
     behave like fieldThatBindsValidData(
@@ -120,8 +120,8 @@ class ApplicantPreviousAddressFormProviderSpec extends StringFieldBehaviours {
   ".postcode" - {
 
     val fieldName = "postcode"
-    val requiredKey = "applicantPreviousAddress.error.postcode.required"
-    val lengthKey = "applicantPreviousAddress.error.postcode.length"
+    val requiredKey = "applicantPreviousUkAddress.error.postcode.required"
+    val lengthKey = "applicantPreviousUkAddress.error.postcode.length"
     val maxLength = 100
 
     behave like fieldThatBindsValidData(
