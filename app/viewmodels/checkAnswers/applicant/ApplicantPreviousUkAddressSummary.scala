@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers.child
+package viewmodels.checkAnswers.applicant
 
-import models.{Index, UserAnswers}
-import pages.child.PreviousClaimantAddressPage
+import models.UserAnswers
+import pages.applicant.ApplicantPreviousUkAddressPage
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
@@ -26,11 +26,11 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object PreviousClaimantAddressSummary {
+object ApplicantPreviousUkAddressSummary {
 
-  def row(answers: UserAnswers, index: Index, waypoints: Waypoints, sourcePage: CheckAnswersPage)
+  def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(PreviousClaimantAddressPage(index)).map {
+    answers.get(ApplicantPreviousUkAddressPage).map {
       answer =>
 
         val value =
@@ -39,11 +39,11 @@ object PreviousClaimantAddressSummary {
             .mkString("<br/>")
 
         SummaryListRowViewModel(
-          key = "previousClaimantAddress.checkYourAnswersLabel",
+          key = "applicantPreviousUkAddress.checkYourAnswersLabel",
           value = ValueViewModel(HtmlContent(value)),
           actions = Seq(
-            ActionItemViewModel("site.change", PreviousClaimantAddressPage(index).changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("previousClaimantAddress.change.hidden"))
+            ActionItemViewModel("site.change", ApplicantPreviousUkAddressPage.changeLink(waypoints, sourcePage).url)
+              .withVisuallyHiddenText(messages("applicantPreviousUkAddress.change.hidden"))
           )
         )
     }

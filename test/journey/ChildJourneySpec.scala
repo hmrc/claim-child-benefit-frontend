@@ -259,7 +259,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
       val country      = arbitrary[ChildBirthRegistrationCountry].sample.value
       val claimantName = AdultName("first", None, "last")
-      val claimantAddress = Address("line 1", None, "town", None, "postcode")
+      val claimantAddress = UkAddress("line 1", None, "town", None, "postcode")
 
       val initialise = journeyOf(
         setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), country)
@@ -270,7 +270,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
           initialise,
           submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
           submitAnswer(PreviousClaimantNamePage(Index(0)), claimantName),
-          submitAnswer(PreviousClaimantAddressPage(Index(0)), claimantAddress),
+          submitAnswer(PreviousClaimantUkAddressPage(Index(0)), claimantAddress),
           pageMustBe(CheckChildDetailsPage(Index(0)))
         )
     }

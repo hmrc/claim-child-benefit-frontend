@@ -22,7 +22,7 @@ import models.ApplicantRelationshipToChild.AdoptedChild
 import models.ChildBirthRegistrationCountry._
 import models.DocumentType.{AdoptionCertificate, BirthCertificate, TravelDocument}
 import models.JourneyModel._
-import models.{ChildBirthRegistrationCountry => Country}
+import models.{ChildBirthRegistrationCountry => RegistrationCountry}
 import pages._
 import pages.applicant._
 import pages.child._
@@ -161,7 +161,7 @@ object JourneyModel {
 
       def getBirthCertificateNumber: IorNec[Query, Option[String]] =
         answers.getIor(ChildBirthRegistrationCountryPage(index)).flatMap {
-          case Country.England | Country.Wales =>
+          case RegistrationCountry.England | RegistrationCountry.Wales =>
             answers.getIor(BirthCertificateHasSystemNumberPage(index)).flatMap {
               case true =>
                 answers.getIor(ChildBirthCertificateSystemNumberPage(index)).map(Some(_))
@@ -169,7 +169,7 @@ object JourneyModel {
                 Ior.Right(None)
             }
 
-          case Country.Scotland =>
+          case RegistrationCountry.Scotland =>
             answers.getIor(ScottishBirthCertificateHasNumbersPage(index)).flatMap {
               case true =>
                 answers.getIor(ChildScottishBirthCertificateDetailsPage(index)).map(Some(_))
@@ -186,7 +186,7 @@ object JourneyModel {
           case true =>
             (
               answers.getIor(PreviousClaimantNamePage(index)),
-              answers.getIor(PreviousClaimantAddressPage(index))
+              answers.getIor(PreviousClaimantUkAddressPage(index))
             ).parMapN(PreviousClaimant.apply).map(Some(_))
 
           case false =>
@@ -225,7 +225,7 @@ object JourneyModel {
     def getPreviousAddress: IorNec[Query, Option[Address]] =
       answers.getIor(ApplicantLivedAtCurrentAddressOneYearPage).flatMap {
         case true  => Ior.Right(None)
-        case false => answers.getIor(ApplicantPreviousAddressPage).map(Some(_))
+        case false => answers.getIor(ApplicantPreviousUkAddressPage).map(Some(_))
       }
 
     def getPreviousFamilyNames: IorNec[Query, List[String]] =
@@ -244,7 +244,7 @@ object JourneyModel {
       getPreviousFamilyNames,
       answers.getIor(ApplicantDateOfBirthPage),
       getNino,
-      answers.getIor(ApplicantCurrentAddressPage),
+      answers.getIor(ApplicantCurrentUkAddressPage),
       getPreviousAddress,
       answers.getIor(ApplicantPhoneNumberPage),
       answers.getIor(BestTimeToContactPage),

@@ -45,8 +45,8 @@ trait PageGenerators {
   implicit lazy val arbitraryPreviousClaimantNamePage: Arbitrary[PreviousClaimantNamePage] =
     Arbitrary(child.PreviousClaimantNamePage(Index(0)))
 
-  implicit lazy val arbitraryPreviousClaimantAddressPage: Arbitrary[PreviousClaimantAddressPage] =
-    Arbitrary(child.PreviousClaimantAddressPage(Index(0)))
+  implicit lazy val arbitraryPreviousClaimantAddressPage: Arbitrary[PreviousClaimantUkAddressPage] =
+    Arbitrary(child.PreviousClaimantUkAddressPage(Index(0)))
 
   implicit lazy val arbitraryChildScottishBirthCertificateDetailsPage: Arbitrary[ChildScottishBirthCertificateDetailsPage] =
     Arbitrary(child.ChildScottishBirthCertificateDetailsPage(Index(0)))
@@ -123,8 +123,8 @@ trait PageGenerators {
   implicit lazy val arbitraryApplicantPreviousFamilyNamePage: Arbitrary[ApplicantPreviousFamilyNamePage] =
     Arbitrary(applicant.ApplicantPreviousFamilyNamePage(Index(0)))
 
-  implicit lazy val arbitraryApplicantPreviousAddressPage: Arbitrary[ApplicantPreviousAddressPage.type] =
-    Arbitrary(ApplicantPreviousAddressPage)
+  implicit lazy val arbitraryApplicantPreviousAddressPage: Arbitrary[ApplicantPreviousUkAddressPage.type] =
+    Arbitrary(ApplicantPreviousUkAddressPage)
 
   implicit lazy val arbitraryApplicantPhoneNumberPage: Arbitrary[ApplicantPhoneNumberPage.type] =
     Arbitrary(ApplicantPhoneNumberPage)
@@ -153,8 +153,8 @@ trait PageGenerators {
   implicit lazy val arbitraryApplicantDateOfBirthPage: Arbitrary[ApplicantDateOfBirthPage.type] =
     Arbitrary(ApplicantDateOfBirthPage)
 
-  implicit lazy val arbitraryApplicantCurrentAddressPage: Arbitrary[ApplicantCurrentAddressPage.type] =
-    Arbitrary(ApplicantCurrentAddressPage)
+  implicit lazy val arbitraryApplicantCurrentAddressPage: Arbitrary[ApplicantCurrentUkAddressPage.type] =
+    Arbitrary(ApplicantCurrentUkAddressPage)
 
   implicit lazy val arbitraryAddApplicantPreviousFamilyNamePage: Arbitrary[AddApplicantPreviousFamilyNamePage.type] =
     Arbitrary(AddApplicantPreviousFamilyNamePage)

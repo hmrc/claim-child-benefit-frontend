@@ -19,7 +19,7 @@ package models
 import cats.data.NonEmptyList
 import generators.ModelGenerators
 import models.RelationshipStatus._
-import models.{ChildBirthRegistrationCountry => Country}
+import models.{ChildBirthRegistrationCountry => BirthCountry}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
@@ -47,8 +47,8 @@ class JourneyModelSpec
   private val now = LocalDate.now
   private val applicantName = AdultName("first", None, "last")
   private val applicantNino = arbitrary[Nino].sample.value
-  private val currentAddress = Address("line 1", None, "town", None, "AA11 1AA")
-  private val previousAddress = Address("line 1", None, "town", None, "BB22 2BB")
+  private val currentAddress = UkAddress("line 1", None, "town", None, "AA11 1AA")
+  private val previousAddress = UkAddress("line 1", None, "town", None, "BB22 2BB")
   private val phoneNumber = "07777 777777"
   private val bestTimes = Set[BestTimeToContact](BestTimeToContact.Morning)
   private val applicantBenefits = Set[Benefits](Benefits.NoneOfTheAbove)
@@ -539,7 +539,7 @@ class JourneyModelSpec
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
-          .set(ApplicantPreviousAddressPage, previousAddress).success.value
+          .set(ApplicantPreviousUkAddressPage, previousAddress).success.value
 
         val expectedApplicant = JourneyModel.Applicant(
           name = applicantName,
@@ -1100,7 +1100,7 @@ class JourneyModelSpec
 
         val (errors, data) = JourneyModel.from(answers).pad
 
-        errors.value.toChain.toList must contain only ApplicantPreviousAddressPage
+        errors.value.toChain.toList must contain only ApplicantPreviousUkAddressPage
         data mustBe empty
       }
 
@@ -1186,7 +1186,7 @@ class JourneyModelSpec
 
       "when a child's birth was registered in England or Wales, the user said their birth certificate has a system number, but none is provided" in {
 
-        val country = Gen.oneOf(Country.England, Country.Wales).sample.value
+        val country = Gen.oneOf(BirthCountry.England, BirthCountry.Wales).sample.value
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -1214,7 +1214,7 @@ class JourneyModelSpec
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
           .set(ScottishBirthCertificateHasNumbersPage(Index(0)), true).success.value
-          .set(ChildBirthRegistrationCountryPage(Index(0)), Country.Scotland).success.value
+          .set(ChildBirthRegistrationCountryPage(Index(0)), BirthCountry.Scotland).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1237,7 +1237,7 @@ class JourneyModelSpec
 
         errors.value.toChain.toList must contain only (
           PreviousClaimantNamePage(Index(0)),
-          PreviousClaimantAddressPage(Index(0))
+          PreviousClaimantUkAddressPage(Index(0))
         )
 
         data mustBe empty
@@ -1268,7 +1268,7 @@ class JourneyModelSpec
         .set(ApplicantHasPreviousFamilyNamePage, false).success.value
         .set(ApplicantNinoKnownPage, false).success.value
         .set(ApplicantDateOfBirthPage, now).success.value
-        .set(ApplicantCurrentAddressPage, currentAddress).success.value
+        .set(ApplicantCurrentUkAddressPage, currentAddress).success.value
         .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
         .set(ApplicantPhoneNumberPage, phoneNumber).success.value
         .set(BestTimeToContactPage, bestTimes).success.value

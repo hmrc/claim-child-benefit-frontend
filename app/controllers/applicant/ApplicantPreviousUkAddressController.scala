@@ -17,35 +17,35 @@
 package controllers.applicant
 
 import controllers.actions._
-import forms.applicant.ApplicantCurrentAddressFormProvider
+import forms.applicant.ApplicantPreviousUkAddressFormProvider
 import pages.Waypoints
-import pages.applicant.ApplicantCurrentAddressPage
+import pages.applicant.ApplicantPreviousUkAddressPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.applicant.ApplicantCurrentAddressView
+import views.html.applicant.ApplicantPreviousUkAddressView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class ApplicantCurrentAddressController @Inject()(
-                                      override val messagesApi: MessagesApi,
-                                      sessionRepository: SessionRepository,
-                                      identify: IdentifierAction,
-                                      getData: DataRetrievalAction,
-                                      requireData: DataRequiredAction,
-                                      formProvider: ApplicantCurrentAddressFormProvider,
-                                      val controllerComponents: MessagesControllerComponents,
-                                      view: ApplicantCurrentAddressView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class ApplicantPreviousUkAddressController @Inject()(
+                                                    override val messagesApi: MessagesApi,
+                                                    sessionRepository: SessionRepository,
+                                                    identify: IdentifierAction,
+                                                    getData: DataRetrievalAction,
+                                                    requireData: DataRequiredAction,
+                                                    formProvider: ApplicantPreviousUkAddressFormProvider,
+                                                    val controllerComponents: MessagesControllerComponents,
+                                                    view: ApplicantPreviousUkAddressView
+                                                  )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form = formProvider()
 
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(ApplicantCurrentAddressPage) match {
+      val preparedForm = request.userAnswers.get(ApplicantPreviousUkAddressPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -62,9 +62,9 @@ class ApplicantCurrentAddressController @Inject()(
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(ApplicantCurrentAddressPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(ApplicantPreviousUkAddressPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(ApplicantCurrentAddressPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+          } yield Redirect(ApplicantPreviousUkAddressPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
       )
   }
 }

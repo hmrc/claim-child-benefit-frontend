@@ -41,7 +41,7 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
 
   private val now = LocalDate.now
   private val applicantName = AdultName("first", None, "last")
-  private val currentAddress = Address("line 1", None, "town", None, "AA11 1AA")
+  private val currentAddress = UkAddress("line 1", None, "town", None, "AA11 1AA")
   private val phoneNumber = "07777 777777"
   private val bestTimes = Set[BestTimeToContact](BestTimeToContact.Morning)
   private val applicantBenefits = Set[Benefits](Benefits.NoneOfTheAbove)
@@ -59,7 +59,7 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
       .set(ApplicantHasPreviousFamilyNamePage, false).success.value
       .set(ApplicantNinoKnownPage, false).success.value
       .set(ApplicantDateOfBirthPage, now).success.value
-      .set(ApplicantCurrentAddressPage, currentAddress).success.value
+      .set(ApplicantCurrentUkAddressPage, currentAddress).success.value
       .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
       .set(ApplicantPhoneNumberPage, phoneNumber).success.value
       .set(BestTimeToContactPage, bestTimes).success.value

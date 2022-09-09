@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers.applicant
 
 import models.UserAnswers
-import pages.applicant.ApplicantCurrentAddressPage
+import pages.applicant.ApplicantCurrentUkAddressPage
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
@@ -26,11 +26,11 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ApplicantCurrentAddressSummary {
+object ApplicantCurrentUkAddressSummary {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ApplicantCurrentAddressPage).map {
+    answers.get(ApplicantCurrentUkAddressPage).map {
       answer =>
 
         val value =
@@ -39,11 +39,11 @@ object ApplicantCurrentAddressSummary {
             .mkString("<br/>")
 
         SummaryListRowViewModel(
-          key = "applicantCurrentAddress.checkYourAnswersLabel",
+          key = "applicantCurrentUkAddress.checkYourAnswersLabel",
           value = ValueViewModel(HtmlContent(value)),
           actions = Seq(
-            ActionItemViewModel("site.change", ApplicantCurrentAddressPage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("applicantCurrentAddress.change.hidden"))
+            ActionItemViewModel("site.change", ApplicantCurrentUkAddressPage.changeLink(waypoints, sourcePage).url)
+              .withVisuallyHiddenText(messages("applicantCurrentUkAddress.change.hidden"))
           )
         )
     }
