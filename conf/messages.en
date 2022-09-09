@@ -403,6 +403,31 @@ addApplicantPreviousFamilyName.addAnother = Do you need to add another last name
 addApplicantPreviousFamilyName.change.hidden = {0}
 addApplicantPreviousFamilyName.remove.hidden = {0}
 
+applicantCurrentAddressInUk.title = Is your current address in the UK?
+applicantCurrentAddressInUk.heading = Is your current address in the UK?
+applicantCurrentAddressInUk.checkYourAnswersLabel = Is your current address in the UK?
+applicantCurrentAddressInUk.error.required = Select yes if your current address is in the UK
+applicantCurrentAddressInUk.change.hidden = if your current address is in the UK
+
+applicantCurrentInternationalAddress.title = What is your current address?
+applicantCurrentInternationalAddress.heading = What is your current address?
+applicantCurrentInternationalAddress.line1 = Address line 1
+applicantCurrentInternationalAddress.line2 = Address line 2 (optional)
+applicantCurrentInternationalAddress.town = Town or city
+applicantCurrentInternationalAddress.state = State or region (optional)
+applicantCurrentInternationalAddress.postcode = Postcode (optional)
+applicantCurrentInternationalAddress.country = Country
+applicantCurrentInternationalAddress.checkYourAnswersLabel = Your current address
+applicantCurrentInternationalAddress.error.line1.required = Enter address line 1 of your current address
+applicantCurrentInternationalAddress.error.town.required = Enter the town or city of your current address
+applicantCurrentInternationalAddress.error.country.required = Enter the country of your current address
+applicantCurrentInternationalAddress.error.line1.length = Address line 1 of your current address must be 100 characters or less
+applicantCurrentInternationalAddress.error.line2.length = Address line 2 of your current address must be 100 characters or less
+applicantCurrentInternationalAddress.error.town.length = Town or city of your current address must be 100 characters or less
+applicantCurrentInternationalAddress.error.state.length = State or region of your current address must be 100 characters or less
+applicantCurrentInternationalAddress.error.postcode.length = Postcode of your current address must be 100 characters or less
+applicantCurrentInternationalAddress.change.hidden = your current address
+
 applicantCurrentUkAddress.title = What is your current address?
 applicantCurrentUkAddress.heading = What is your current address?
 applicantCurrentUkAddress.line1 = Address line 1
@@ -503,6 +528,31 @@ applicantPhoneNumber.checkYourAnswersLabel = Your telephone number
 applicantPhoneNumber.error.required = Enter your telephone number
 applicantPhoneNumber.error.invalid = Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192
 applicantPhoneNumber.change.hidden = your telephone number
+
+applicantPreviousAddressInUk.title = Is your previous address in the UK?
+applicantPreviousAddressInUk.heading = Is your previous address in the UK?
+applicantPreviousAddressInUk.checkYourAnswersLabel = Is your previous address in the UK?
+applicantPreviousAddressInUk.error.required = Select yes if your previous address is in the UK
+applicantPreviousAddressInUk.change.hidden = if your previous address is in the UK
+
+applicantPreviousInternationalAddress.title = What is your previous address?
+applicantPreviousInternationalAddress.heading = What is your previous address?
+applicantPreviousInternationalAddress.line1 = Address line 1
+applicantPreviousInternationalAddress.line2 = Address line 2 (optional)
+applicantPreviousInternationalAddress.town = Town or city
+applicantPreviousInternationalAddress.state = State or region (optional)
+applicantPreviousInternationalAddress.postcode = Postcode (optional)
+applicantPreviousInternationalAddress.country = Country
+applicantPreviousInternationalAddress.checkYourAnswersLabel = Your previous address
+applicantPreviousInternationalAddress.error.line1.required = Enter address line 1 of your previous address
+applicantPreviousInternationalAddress.error.town.required = Enter the town or city of your previous address
+applicantPreviousInternationalAddress.error.country.required = Enter the country of your previous address
+applicantPreviousInternationalAddress.error.line1.length = Address line 1 of your previous address must be 100 characters or less
+applicantPreviousInternationalAddress.error.line2.length = Address line 2 of your previous address must be 100 characters or less
+applicantPreviousInternationalAddress.error.town.length = Town or city of your previous address must be 100 characters or less
+applicantPreviousInternationalAddress.error.state.length = State or region of your previous address must be 100 characters or less
+applicantPreviousInternationalAddress.error.postcode.length = Postcode of your previous address must be 100 characters or less
+applicantPreviousInternationalAddress.change.hidden = your previous address
 
 applicantPreviousUkAddress.title = What was your previous address?
 applicantPreviousUkAddress.heading = What was your previous address?
@@ -777,6 +827,31 @@ childScottishBirthCertificateDetails.error.required = Enter the district number,
 childScottishBirthCertificateDetails.error.invalid = The district number, year and entry number on {1}’s birth certificate must be 10 digits.
 childScottishBirthCertificateDetails.change.hidden = the district number, year and entry number on this child’s birth certificate
 
+previousClaimantAddressInUk.title = Is the person who claimed Child Benefit for this child’s address in the UK?
+previousClaimantAddressInUk.heading = Is {0}’s address in the UK?
+previousClaimantAddressInUk.checkYourAnswersLabel = Is {0}’s address in the UK?
+previousClaimantAddressInUk.error.required = Select yes if {0}’s address is in the UK
+previousClaimantAddressInUk.change.hidden = if the previous claimant’s address is in the UK
+
+previousClaimantInternationalAddress.title = What is the person who claimed Child Benefit for this child’s address?
+previousClaimantInternationalAddress.heading = What is {0}’s address?
+previousClaimantInternationalAddress.line1 = Address line 1
+previousClaimantInternationalAddress.line2 = Address line 2 (optional)
+previousClaimantInternationalAddress.town = Town or city
+previousClaimantInternationalAddress.state = State or region (optional)
+previousClaimantInternationalAddress.postcode = Postcode (optional)
+previousClaimantInternationalAddress.country = Country
+previousClaimantInternationalAddress.checkYourAnswersLabel = The person who claimed Child Benefit for this child’s address
+previousClaimantInternationalAddress.error.line1.required = Enter address line 1 of {0}’s address
+previousClaimantInternationalAddress.error.town.required = Enter the town or city of {0}’s address
+previousClaimantInternationalAddress.error.country.required = Enter the country of {0}’s address
+previousClaimantInternationalAddress.error.line1.length = Address line 1 of {0}’s address must be 100 characters or less
+previousClaimantInternationalAddress.error.line2.length = Address line 2 of {0}’s address must be 100 characters or less
+previousClaimantInternationalAddress.error.town.length = Town or city of {0}’s address must be 100 characters or less
+previousClaimantInternationalAddress.error.state.length = State or region of {0}’s address must be 100 characters or less
+previousClaimantInternationalAddress.error.postcode.length = Postcode of {0}’s address must be 100 characters or less
+previousClaimantInternationalAddress.change.hidden = the previous claimant’s address
+
 previousClaimantUkAddress.title = What is the person who claimed Child Benefit for this child’s address?
 previousClaimantUkAddress.heading = What is {0}’s address?
 previousClaimantUkAddress.line1 = Address line 1
@@ -793,7 +868,7 @@ previousClaimantUkAddress.error.line2.length = Address line 2 of {1}’s address
 previousClaimantUkAddress.error.town.length = Town or city of {1}’s address must be 100 characters or less
 previousClaimantUkAddress.error.county.length = County of {1}’s address must be 100 characters or less
 previousClaimantUkAddress.error.postcode.length = Postcode of {1}’s address must be 100 characters or less
-previousClaimantUkAddress.change.hidden = the claimant’s address
+previousClaimantUkAddress.change.hidden = the previous claimant’s address
 
 previousClaimantName.title = What is the name of the person who claimed Child Benefit for this child?
 previousClaimantName.heading = What is the name of the person who claimed Child Benefit for {0}?
