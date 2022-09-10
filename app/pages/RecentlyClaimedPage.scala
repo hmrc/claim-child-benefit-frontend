@@ -25,7 +25,7 @@ case object RecentlyClaimedPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "anyChildLivedWithOthers"
+  override def toString: String = "recentlyClaimed"
 
   override def route(waypoints: Waypoints): Call =
     routes.RecentlyClaimedController.onPageLoad(waypoints)
