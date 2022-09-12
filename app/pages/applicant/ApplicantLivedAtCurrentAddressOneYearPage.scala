@@ -35,13 +35,16 @@ case object ApplicantLivedAtCurrentAddressOneYearPage extends QuestionPage[Boole
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
-      case true => ApplicantPhoneNumberPage
-      case false => ApplicantPreviousUkAddressPage
+      case true  => ApplicantPhoneNumberPage
+      case false => ApplicantPreviousAddressInUkPage
     }.orRecover
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
     if (value.contains(true)) {
-      userAnswers.remove(ApplicantPreviousUkAddressPage)
+      userAnswers
+        .remove(ApplicantPreviousAddressInUkPage)
+        .flatMap(_.remove(ApplicantPreviousUkAddressPage))
+        .flatMap(_.remove(ApplicantPreviousInternationalAddressPage))
     } else {
       super.cleanup(value, userAnswers)
     }

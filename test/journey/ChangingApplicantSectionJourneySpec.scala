@@ -17,7 +17,7 @@
 package journey
 
 import generators.ModelGenerators
-import models.{Index, UkAddress}
+import models.{Index, InternationalAddress, UkAddress}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.freespec.AnyFreeSpec
 import pages.CheckYourAnswersPage
@@ -28,10 +28,11 @@ import java.time.LocalDate
 
 class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
-  private def previousName = arbitrary[String].sample.value
-  private def nino         = arbitrary[Nino].sample.value
-  private def address      = arbitrary[UkAddress].sample.value
-  private def phoneNumber  = arbitrary[String].sample.value
+  private def previousName         = arbitrary[String].sample.value
+  private def nino                 = arbitrary[Nino].sample.value
+  private def ukAddress            = arbitrary[UkAddress].sample.value
+  private def internationalAddress = arbitrary[InternationalAddress].sample.value
+  private def phoneNumber          = arbitrary[String].sample.value
 
   "when the user initially said they had previous names" - {
 
@@ -182,10 +183,56 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
 
   "when the user initially said they had lived at their current address for a year" - {
 
-    "changing that answer to `no` must collect their previous address then return to Check Answers" in {
+    "changing that answer to `no` must collect their previous address then return to Check Answers" - {
+
+      "when the address is in the UK" in {
+
+        val initialise = journeyOf(
+          submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+          submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
+          goTo(CheckYourAnswersPage)
+        )
+
+        startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
+          .run(
+            initialise,
+            goToChangeAnswer(ApplicantLivedAtCurrentAddressOneYearPage),
+            submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
+            submitAnswer(ApplicantPreviousAddressInUkPage, true),
+            submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
+            pageMustBe(CheckYourAnswersPage)
+          )
+      }
+
+      "when the address is not in the UK" in {
+
+        val initialise = journeyOf(
+          submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+          submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
+          goTo(CheckYourAnswersPage)
+        )
+
+        startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
+          .run(
+            initialise,
+            goToChangeAnswer(ApplicantLivedAtCurrentAddressOneYearPage),
+            submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
+            submitAnswer(ApplicantPreviousAddressInUkPage, false),
+            submitAnswer(ApplicantPreviousInternationalAddressPage, internationalAddress),
+            pageMustBe(CheckYourAnswersPage)
+          )
+      }
+    }
+  }
+
+  "when the user initially said their previous address was in the UK" - {
+
+    "changing that answer to `international` must collect their international address and remove their UK address" in {
 
       val initialise = journeyOf(
-        submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+        submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
+        submitAnswer(ApplicantPreviousAddressInUkPage, true),
+        submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
         submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
         goTo(CheckYourAnswersPage)
       )
@@ -193,10 +240,35 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
       startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
         .run(
           initialise,
-          goToChangeAnswer(ApplicantLivedAtCurrentAddressOneYearPage),
-          submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
-          submitAnswer(ApplicantPreviousUkAddressPage, address),
-          pageMustBe(CheckYourAnswersPage)
+          goToChangeAnswer(ApplicantPreviousAddressInUkPage),
+          submitAnswer(ApplicantPreviousAddressInUkPage, false),
+          submitAnswer(ApplicantPreviousInternationalAddressPage, internationalAddress),
+          pageMustBe(CheckYourAnswersPage),
+          answersMustNotContain(ApplicantPreviousUkAddressPage)
+        )
+    }
+  }
+
+  "when the user initially said their previous address was no in the UK" - {
+
+    "changing that answer to `UK` must collect their UK address and remove their international address" in {
+
+      val initialise = journeyOf(
+        submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
+        submitAnswer(ApplicantPreviousAddressInUkPage, false),
+        submitAnswer(ApplicantPreviousInternationalAddressPage, internationalAddress),
+        submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
+        goTo(CheckYourAnswersPage)
+      )
+
+      startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
+        .run(
+          initialise,
+          goToChangeAnswer(ApplicantPreviousAddressInUkPage),
+          submitAnswer(ApplicantPreviousAddressInUkPage, true),
+          submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
+          pageMustBe(CheckYourAnswersPage),
+          answersMustNotContain(ApplicantPreviousInternationalAddressPage)
         )
     }
   }
@@ -207,9 +279,11 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
 
       val initialise = journeyOf(
         submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
-        submitAnswer(ApplicantPreviousUkAddressPage, address),
+        submitAnswer(ApplicantPreviousAddressInUkPage, true),
+        submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
         submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
-        goTo(CheckYourAnswersPage)
+        goTo(CheckYourAnswersPage),
+        setUserAnswerTo(ApplicantPreviousInternationalAddressPage, internationalAddress)
       )
 
       startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
@@ -218,7 +292,9 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
           goToChangeAnswer(ApplicantLivedAtCurrentAddressOneYearPage),
           submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
           pageMustBe(CheckYourAnswersPage),
-          answersMustNotContain(ApplicantPreviousUkAddressPage)
+          answersMustNotContain(ApplicantPreviousAddressInUkPage),
+          answersMustNotContain(ApplicantPreviousUkAddressPage),
+          answersMustNotContain(ApplicantPreviousInternationalAddressPage)
         )
     }
   }

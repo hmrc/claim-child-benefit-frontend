@@ -18,7 +18,7 @@ package journey
 
 import generators.ModelGenerators
 import models.RelationshipStatus._
-import models.{BestTimeToContact, EmploymentStatus, Index, UkAddress, UserAnswers}
+import models.{BestTimeToContact, Country, EmploymentStatus, Index, InternationalAddress, UkAddress, UserAnswers}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.freespec.AnyFreeSpec
 import pages.RelationshipStatusPage
@@ -94,19 +94,36 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
       )
   }
 
-  "users who need to give a previous address must be asked for it" in {
+  "users who need to give a previous address must be asked for it" - {
 
-    val address = UkAddress("line 1", None, "town", None, "postcode")
+    "when the address was in the UK" in {
 
-    startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
-      .run(
-        submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
-        submitAnswer(ApplicantPreviousUkAddressPage, address),
-        pageMustBe(ApplicantPhoneNumberPage)
-      )
+      val address = UkAddress("line 1", None, "town", None, "postcode")
+
+      startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
+        .run(
+          submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
+          submitAnswer(ApplicantPreviousAddressInUkPage, true),
+          submitAnswer(ApplicantPreviousUkAddressPage, address),
+          pageMustBe(ApplicantPhoneNumberPage)
+        )
+    }
+
+    "when the address was not in the UK" in {
+
+      val address = InternationalAddress("line 1", None, "town", None, Some("postcode"), Country.internationalCountries.head)
+
+      startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
+        .run(
+          submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
+          submitAnswer(ApplicantPreviousAddressInUkPage, false),
+          submitAnswer(ApplicantPreviousInternationalAddressPage, address),
+          pageMustBe(ApplicantPhoneNumberPage)
+        )
+    }
   }
 
-  "users proceeding from Applicant Is HM Forces or Civil Servant" - {
+  "users proceeding from Applicant Employment Status" - {
 
     "must go to Partner Name if they are Married" in {
 
