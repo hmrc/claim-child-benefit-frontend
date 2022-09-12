@@ -15,6 +15,7 @@
  *@
 
 @import controllers.applicant.routes
+@import models.Country._
 @import viewmodels.InputWidth._
 
 @this(
@@ -22,6 +23,7 @@
         formHelper: FormWithCSRF,
         govukErrorSummary: GovukErrorSummary,
         govukInput: GovukInput,
+        govukSelect: GovukSelect,
         govukButton: GovukButton
 )
 
@@ -81,12 +83,14 @@
             .withAutocomplete("postal-code")
         )
 
-        @govukInput(
-            InputViewModel(
+        @govukSelect(
+            SelectViewModel(
                 field = form("country"),
+                items = selectItems(internationalCountries),
                 label = LabelViewModel(messages("applicantPreviousInternationalAddress.country"))
             )
-            .withWidth(Fixed10)
+            .withCssClass(Fixed20.toString)
+            .withCssClass("autocomplete")
         )
 
         @govukButton(
