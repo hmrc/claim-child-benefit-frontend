@@ -14,25 +14,20 @@
  * limitations under the License.
  */
 
-package pages
+package pages.applicant
 
-import controllers.routes
-import models.UserAnswers
+import controllers.applicant.routes
+import models.InternationalAddress
+import pages.{QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object RecentlyClaimedPage extends QuestionPage[Boolean] {
+case object ApplicantCurrentInternationalAddressPage extends QuestionPage[InternationalAddress] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "recentlyClaimed"
+  override def toString: String = "applicantCurrentInternationalAddress"
 
   override def route(waypoints: Waypoints): Call =
-    routes.RecentlyClaimedController.onPageLoad(waypoints)
-
-  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case true  => AlreadyClaimedPage
-      case false => AnyChildLivedWithOthersPage
-    }.orRecover
+    routes.ApplicantCurrentInternationalAddressController.onPageLoad(waypoints)
 }
