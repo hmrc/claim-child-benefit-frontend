@@ -30,13 +30,14 @@ import java.time.LocalDate
 
 class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
-    private val childName         = arbitrary[ChildName].sample.value
-    private val sex               = arbitrary[ChildBiologicalSex].sample.value
-    private val systemNumber      = Gen.listOfN(9, Gen.numChar).sample.value.mkString
-    private val claimantName      = arbitrary[AdultName].sample.value
-    private val claimantAddress   = arbitrary[UkAddress].sample.value
-    private val scottishBcDetails = Gen.listOfN(10, Gen.numChar).sample.value.mkString
-    private val relationship      = arbitrary[Relationship].sample.value
+  private val childName                    = arbitrary[ChildName].sample.value
+  private val sex                          = arbitrary[ChildBiologicalSex].sample.value
+  private val systemNumber                 = Gen.listOfN(9, Gen.numChar).sample.value.mkString
+  private val claimantName                 = arbitrary[AdultName].sample.value
+  private val claimantUkAddress            = arbitrary[UkAddress].sample.value
+  private val claimantInternationalAddress = arbitrary[InternationalAddress].sample.value
+  private val scottishBcDetails            = Gen.listOfN(10, Gen.numChar).sample.value.mkString
+  private val relationship                 = arbitrary[Relationship].sample.value
 
   "when a user has added a child" - {
 
@@ -56,29 +57,48 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
 
     "that no one has claimed Child Benefit for previously" - {
 
-      "changing `Anyone claimed before` to `true` must gather previous claimant details then return the user to the Check page" in {
+      "changing `Anyone claimed before` to `true` must gather previous claimant details then return the user to the Check page" - {
 
-        startingFrom(ChildNamePage(Index(0)))
-          .run(
-            basicChildJourney,
-            goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
-            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
-            submitAnswer(PreviousClaimantNamePage(Index(0)), claimantName),
-            submitAnswer(PreviousClaimantUkAddressPage(Index(0)), claimantAddress),
-            pageMustBe(CheckChildDetailsPage(Index(0)))
-          )
+        "when the previous claimant's address is in the UK" in {
+
+          startingFrom(ChildNamePage(Index(0)))
+            .run(
+              basicChildJourney,
+              goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
+              submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
+              submitAnswer(PreviousClaimantNamePage(Index(0)), claimantName),
+              submitAnswer(PreviousClaimantAddressInUkPage(Index(0)), true),
+              submitAnswer(PreviousClaimantUkAddressPage(Index(0)), claimantUkAddress),
+              pageMustBe(CheckChildDetailsPage(Index(0)))
+            )
+        }
+
+        "when the previous claimant's address is not in the UK" in {
+
+          startingFrom(ChildNamePage(Index(0)))
+            .run(
+              basicChildJourney,
+              goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
+              submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
+              submitAnswer(PreviousClaimantNamePage(Index(0)), claimantName),
+              submitAnswer(PreviousClaimantAddressInUkPage(Index(0)), false),
+              submitAnswer(PreviousClaimantInternationalAddressPage(Index(0)), claimantInternationalAddress),
+              pageMustBe(CheckChildDetailsPage(Index(0)))
+            )
+        }
       }
     }
 
-    "that someone has claimed Child Benefit for previously" - {
+    "that someone has claimed Child Benefit for previously with a UK address" - {
 
-        val initialState =
-          journeyOf(
-              basicChildJourney,
-              setUserAnswerTo(AnyoneClaimedForChildBeforePage(Index(0)), true),
-              setUserAnswerTo(PreviousClaimantNamePage(Index(0)), claimantName),
-              setUserAnswerTo(PreviousClaimantUkAddressPage(Index(0)), claimantAddress)
-            )
+      val initialState =
+        journeyOf(
+          basicChildJourney,
+          setUserAnswerTo(AnyoneClaimedForChildBeforePage(Index(0)), true),
+          setUserAnswerTo(PreviousClaimantNamePage(Index(0)), claimantName),
+          setUserAnswerTo(PreviousClaimantAddressInUkPage(Index(0)), true),
+          setUserAnswerTo(PreviousClaimantUkAddressPage(Index(0)), claimantUkAddress)
+        )
 
       "changing `Anyone claimed before` to `false` must remove the previous claimant details and return the user to the Check page" in {
 
@@ -89,7 +109,60 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
             pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(PreviousClaimantNamePage(Index(0))),
+            answersMustNotContain(PreviousClaimantAddressInUkPage(Index(0))),
             answersMustNotContain(PreviousClaimantUkAddressPage(Index(0)))
+          )
+      }
+
+      "changing to say they had an international address must collect the address and remove the UK address" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(PreviousClaimantAddressInUkPage(Index(0))),
+            submitAnswer(PreviousClaimantAddressInUkPage(Index(0)), false),
+            submitAnswer(PreviousClaimantInternationalAddressPage(Index(0)), claimantInternationalAddress),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(PreviousClaimantUkAddressPage(Index(0)))
+          )
+      }
+    }
+
+    "that someone has claimed Child Benefit for previously with an international address" - {
+
+      val initialState =
+        journeyOf(
+          basicChildJourney,
+          setUserAnswerTo(AnyoneClaimedForChildBeforePage(Index(0)), true),
+          setUserAnswerTo(PreviousClaimantNamePage(Index(0)), claimantName),
+          setUserAnswerTo(PreviousClaimantAddressInUkPage(Index(0)), false),
+          setUserAnswerTo(PreviousClaimantInternationalAddressPage(Index(0)), claimantInternationalAddress)
+        )
+
+      "changing `Anyone claimed before` to `false` must remove the previous claimant details and return the user to the Check page" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
+            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(PreviousClaimantNamePage(Index(0))),
+            answersMustNotContain(PreviousClaimantAddressInUkPage(Index(0))),
+            answersMustNotContain(PreviousClaimantInternationalAddressPage(Index(0)))
+          )
+      }
+
+      "changing to say they had a UK address must collect the address and remove the international address" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(PreviousClaimantAddressInUkPage(Index(0))),
+            submitAnswer(PreviousClaimantAddressInUkPage(Index(0)), true),
+            submitAnswer(PreviousClaimantUkAddressPage(Index(0)), claimantUkAddress),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(PreviousClaimantInternationalAddressPage(Index(0)))
           )
       }
     }

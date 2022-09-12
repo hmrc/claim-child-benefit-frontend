@@ -32,5 +32,5 @@ final case class PreviousClaimantNamePage(index: Index) extends ChildQuestionPag
     routes.PreviousClaimantNameController.onPageLoad(waypoints, index)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    PreviousClaimantUkAddressPage(index)
+    PreviousClaimantAddressInUkPage(index)
 }

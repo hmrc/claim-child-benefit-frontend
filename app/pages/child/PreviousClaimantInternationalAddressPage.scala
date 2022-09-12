@@ -17,8 +17,8 @@
 package pages.child
 
 import controllers.child.routes
-import models.{Index, InternationalAddress}
-import pages.Waypoints
+import models.{Index, InternationalAddress, UserAnswers}
+import pages.{Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -30,4 +30,7 @@ final case class PreviousClaimantInternationalAddressPage(index: Index) extends 
 
   override def route(waypoints: Waypoints): Call =
     routes.PreviousClaimantInternationalAddressController.onPageLoad(waypoints, index)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    CheckChildDetailsPage(index)
 }

@@ -17,10 +17,12 @@
 package pages.child
 
 import controllers.child.routes
-import models.Index
-import pages.Waypoints
+import models.{Index, UserAnswers}
+import pages.{Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+
+import scala.util.Try
 
 final case class PreviousClaimantAddressInUkPage(index: Index) extends ChildQuestionPage[Boolean] {
 
@@ -30,4 +32,16 @@ final case class PreviousClaimantAddressInUkPage(index: Index) extends ChildQues
 
   override def route(waypoints: Waypoints): Call =
     routes.PreviousClaimantAddressInUkController.onPageLoad(waypoints, index)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true  => PreviousClaimantUkAddressPage(index)
+      case false => PreviousClaimantInternationalAddressPage(index)
+    }.orRecover
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    value.map {
+      case true => userAnswers.remove(PreviousClaimantInternationalAddressPage(index))
+      case false => userAnswers.remove(PreviousClaimantUkAddressPage(index))
+    }.getOrElse(super.cleanup(value, userAnswers))
 }
