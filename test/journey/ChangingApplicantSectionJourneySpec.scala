@@ -17,11 +17,12 @@
 package journey
 
 import generators.ModelGenerators
-import models.{Index, InternationalAddress, UkAddress}
+import models.{Index, InternationalAddress, RelationshipStatus, UkAddress}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.freespec.AnyFreeSpec
-import pages.CheckYourAnswersPage
+import pages.{CheckYourAnswersPage, LivedOrWorkedAbroadPage, RelationshipStatusPage}
 import pages.applicant._
+import pages.partner.PartnerIsHmfOrCivilServantPage
 import uk.gov.hmrc.domain.Nino
 
 import java.time.LocalDate
@@ -33,6 +34,118 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
   private def ukAddress            = arbitrary[UkAddress].sample.value
   private def internationalAddress = arbitrary[InternationalAddress].sample.value
   private def phoneNumber          = arbitrary[String].sample.value
+
+  "when the user is HM Forces or a civil servant abroad" - {
+
+    "and originally gave a current UK address" - {
+
+      "changing to say their address is international must collect the address, remove the UK address and return to Check Answers" in{
+
+        val initialise = journeyOf(
+          setUserAnswerTo(LivedOrWorkedAbroadPage, true),
+          setUserAnswerTo(RelationshipStatusPage, RelationshipStatus.Single),
+          setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, true),
+          submitAnswer(ApplicantCurrentAddressInUkPage, true),
+          submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
+          submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+          goTo(CheckYourAnswersPage)
+        )
+
+        startingFrom(ApplicantCurrentAddressInUkPage)
+          .run(
+            initialise,
+            goToChangeAnswer(ApplicantCurrentAddressInUkPage),
+            submitAnswer(ApplicantCurrentAddressInUkPage, false),
+            submitAnswer(ApplicantCurrentInternationalAddressPage, internationalAddress),
+            pageMustBe(CheckYourAnswersPage),
+            answersMustNotContain(ApplicantCurrentUkAddressPage)
+          )
+      }
+    }
+
+    "and originally gave a current international address" - {
+
+      "changing to say their address is in the UK must collect the address, remove the international address and return to Check Answers" in{
+
+        val initialise = journeyOf(
+          setUserAnswerTo(LivedOrWorkedAbroadPage, true),
+          setUserAnswerTo(RelationshipStatusPage, RelationshipStatus.Single),
+          setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, true),
+          submitAnswer(ApplicantCurrentAddressInUkPage, false),
+          submitAnswer(ApplicantCurrentInternationalAddressPage, internationalAddress),
+          submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+          goTo(CheckYourAnswersPage)
+        )
+
+        startingFrom(ApplicantCurrentAddressInUkPage)
+          .run(
+            initialise,
+            goToChangeAnswer(ApplicantCurrentAddressInUkPage),
+            submitAnswer(ApplicantCurrentAddressInUkPage, true),
+            submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
+            pageMustBe(CheckYourAnswersPage),
+            answersMustNotContain(ApplicantCurrentInternationalAddressPage)
+          )
+      }
+    }
+  }
+
+  "when the user's partner is HM Forces or a civil servant living abroad" - {
+
+    "and originally gave a current UK address" - {
+
+      "changing to say their address is international must collect the address, remove the UK address and return to Check Answers" in{
+
+        val initialise = journeyOf(
+          setUserAnswerTo(LivedOrWorkedAbroadPage, true),
+          setUserAnswerTo(RelationshipStatusPage, RelationshipStatus.Married),
+          setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, false),
+          setUserAnswerTo(PartnerIsHmfOrCivilServantPage, true),
+          submitAnswer(ApplicantCurrentAddressInUkPage, true),
+          submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
+          submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+          goTo(CheckYourAnswersPage)
+        )
+
+        startingFrom(ApplicantCurrentAddressInUkPage)
+          .run(
+            initialise,
+            goToChangeAnswer(ApplicantCurrentAddressInUkPage),
+            submitAnswer(ApplicantCurrentAddressInUkPage, false),
+            submitAnswer(ApplicantCurrentInternationalAddressPage, internationalAddress),
+            pageMustBe(CheckYourAnswersPage),
+            answersMustNotContain(ApplicantCurrentUkAddressPage)
+          )
+      }
+    }
+
+    "and originally gave a current international address" - {
+
+      "changing to say their address is in the UK must collect the address, remove the international address and return to Check Answers" in{
+
+        val initialise = journeyOf(
+          setUserAnswerTo(LivedOrWorkedAbroadPage, true),
+          setUserAnswerTo(RelationshipStatusPage, RelationshipStatus.Married),
+          setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, false),
+          setUserAnswerTo(PartnerIsHmfOrCivilServantPage, true),
+          submitAnswer(ApplicantCurrentAddressInUkPage, false),
+          submitAnswer(ApplicantCurrentInternationalAddressPage, internationalAddress),
+          submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+          goTo(CheckYourAnswersPage)
+        )
+
+        startingFrom(ApplicantCurrentAddressInUkPage)
+          .run(
+            initialise,
+            goToChangeAnswer(ApplicantCurrentAddressInUkPage),
+            submitAnswer(ApplicantCurrentAddressInUkPage, true),
+            submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
+            pageMustBe(CheckYourAnswersPage),
+            answersMustNotContain(ApplicantCurrentInternationalAddressPage)
+          )
+      }
+    }
+  }
 
   "when the user initially said they had previous names" - {
 

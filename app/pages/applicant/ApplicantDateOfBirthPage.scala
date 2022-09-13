@@ -17,10 +17,13 @@
 package pages.applicant
 
 import controllers.applicant.routes
+import models.RelationshipStatus._
 import models.UserAnswers
-import pages.{Page, QuestionPage, Waypoints}
+import pages.partner.PartnerIsHmfOrCivilServantPage
+import pages.{LivedOrWorkedAbroadPage, Page, QuestionPage, RelationshipStatusPage, UsePrintAndPostFormPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+import utils.MonadOps._
 
 import java.time.LocalDate
 
@@ -34,5 +37,22 @@ case object ApplicantDateOfBirthPage extends QuestionPage[LocalDate] {
     routes.ApplicantDateOfBirthController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantCurrentUkAddressPage
+    answers.get(LivedOrWorkedAbroadPage).map {
+      case false =>
+        ApplicantCurrentUkAddressPage
+
+      case true =>
+        val partnerRelationships = Seq(Married, Cohabiting)
+
+        val canContinue =
+          answers.get(ApplicantIsHmfOrCivilServantPage) ||
+            (answers.get(RelationshipStatusPage).map(partnerRelationships.contains)
+              && answers.get(PartnerIsHmfOrCivilServantPage)
+            )
+
+        canContinue.map {
+          case true  => ApplicantCurrentAddressInUkPage
+          case false => UsePrintAndPostFormPage
+        }.orRecover
+    }.orRecover
 }
