@@ -18,20 +18,21 @@ package journey
 
 import generators.ModelGenerators
 import models.RelationshipStatus._
-import models.{BestTimeToContact, EmploymentStatus, Index, UkAddress, UserAnswers}
+import models.{BestTimeToContact, Country, EmploymentStatus, Index, InternationalAddress, UkAddress, UserAnswers}
 import org.scalacheck.Arbitrary.arbitrary
+import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
-import pages.RelationshipStatusPage
+import pages.{LivedOrWorkedAbroadPage, RelationshipStatusPage, UsePrintAndPostFormPage}
 import pages.applicant._
 import pages.child.ChildNamePage
-import pages.partner.PartnerNamePage
+import pages.partner.{PartnerIsHmfOrCivilServantPage, PartnerNamePage}
 import uk.gov.hmrc.domain.Nino
 
 import java.time.LocalDate
 
 class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
-  "users without any previous names or previous addresses, who do not know their NINO" - {
+  "users without any previous names or previous addresses, not HM Forces or a civil servant abroad, who do not know their NINO" - {
 
     "must be asked all of the applicant questions" in {
 
@@ -39,6 +40,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
       startingFrom(ApplicantHasPreviousFamilyNamePage)
         .run(
+          setUserAnswerTo(LivedOrWorkedAbroadPage, false),
           submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
           submitAnswer(ApplicantNinoKnownPage, false),
           submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
@@ -94,19 +96,108 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
       )
   }
 
-  "users who need to give a previous address must be asked for it" in {
+  "users who are HM Forces or a civil servant abroad must be asked if their address is in the UK" - {
 
-    val address = UkAddress("line 1", None, "town", None, "postcode")
+    "and proceed if they say yes" in {
 
-    startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
-      .run(
-        submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
-        submitAnswer(ApplicantPreviousUkAddressPage, address),
-        pageMustBe(ApplicantPhoneNumberPage)
-      )
+      val address = UkAddress("line 1", None, "town", None, "postcode")
+
+      startingFrom(ApplicantDateOfBirthPage)
+        .run(
+          setUserAnswerTo(LivedOrWorkedAbroadPage, true),
+          setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, true),
+          submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
+          submitAnswer(ApplicantCurrentAddressInUkPage, true),
+          submitAnswer(ApplicantCurrentUkAddressPage, address),
+          pageMustBe(ApplicantLivedAtCurrentAddressOneYearPage)
+        )
+    }
+
+    "and proceed if they say no" in {
+
+      val address = InternationalAddress("line 1", None, "town", None, None, Country.internationalCountries.head)
+
+      startingFrom(ApplicantDateOfBirthPage)
+        .run(
+          setUserAnswerTo(LivedOrWorkedAbroadPage, true),
+          setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, true),
+          submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
+          submitAnswer(ApplicantCurrentAddressInUkPage, false),
+          submitAnswer(ApplicantCurrentInternationalAddressPage, address),
+          pageMustBe(ApplicantLivedAtCurrentAddressOneYearPage)
+        )
+    }
   }
 
-  "users proceeding from Applicant Is HM Forces or Civil Servant" - {
+  "users whose partner is HM Forces or a civil servant abroad must be asked if their address is in the UK" - {
+
+    "and proceed if they say yes" in {
+
+      val address = UkAddress("line 1", None, "town", None, "postcode")
+      val relationship = Gen.oneOf(Married, Cohabiting).sample.value
+
+      startingFrom(ApplicantDateOfBirthPage)
+        .run(
+          setUserAnswerTo(LivedOrWorkedAbroadPage, true),
+          setUserAnswerTo(RelationshipStatusPage, relationship),
+          setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, false),
+          setUserAnswerTo(PartnerIsHmfOrCivilServantPage, true),
+          submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
+          submitAnswer(ApplicantCurrentAddressInUkPage, true),
+          submitAnswer(ApplicantCurrentUkAddressPage, address),
+          pageMustBe(ApplicantLivedAtCurrentAddressOneYearPage)
+        )
+    }
+
+    "and proceed if they say no" in {
+
+      val address = InternationalAddress("line 1", None, "town", None, None, Country.internationalCountries.head)
+      val relationship = Gen.oneOf(Married, Cohabiting).sample.value
+
+      startingFrom(ApplicantDateOfBirthPage)
+        .run(
+          setUserAnswerTo(LivedOrWorkedAbroadPage, true),
+          setUserAnswerTo(RelationshipStatusPage, relationship),
+          setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, false),
+          setUserAnswerTo(PartnerIsHmfOrCivilServantPage, true),
+          submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
+          submitAnswer(ApplicantCurrentAddressInUkPage, false),
+          submitAnswer(ApplicantCurrentInternationalAddressPage, address),
+          pageMustBe(ApplicantLivedAtCurrentAddressOneYearPage)
+        )
+    }
+  }
+
+  "users who need to give a previous address must be asked for it" - {
+
+    "when the address was in the UK" in {
+
+      val address = UkAddress("line 1", None, "town", None, "postcode")
+
+      startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
+        .run(
+          submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
+          submitAnswer(ApplicantPreviousAddressInUkPage, true),
+          submitAnswer(ApplicantPreviousUkAddressPage, address),
+          pageMustBe(ApplicantPhoneNumberPage)
+        )
+    }
+
+    "when the address was not in the UK" in {
+
+      val address = InternationalAddress("line 1", None, "town", None, Some("postcode"), Country.internationalCountries.head)
+
+      startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
+        .run(
+          submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
+          submitAnswer(ApplicantPreviousAddressInUkPage, false),
+          submitAnswer(ApplicantPreviousInternationalAddressPage, address),
+          pageMustBe(ApplicantPhoneNumberPage)
+        )
+    }
+  }
+
+  "users proceeding from Applicant Employment Status" - {
 
     "must go to Partner Name if they are Married" in {
 
@@ -177,6 +268,46 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
         .run(
           submitAnswer(ApplicantEmploymentStatusPage, employmentStatus),
           pageMustBe(ChildNamePage(Index(0)))
+        )
+    }
+  }
+
+  "a user proceeding from the date of birth page must be kicked out" - {
+
+    "when they are Single, Separated, Widowed or Divorced, have lived or worked abroad, and are not HM Forces or a civil servant abroad" in {
+
+      val relationship = Gen.oneOf(Single, Separated, Widowed, Divorced).sample.value
+
+      val initialise = journeyOf(
+        setUserAnswerTo(RelationshipStatusPage, relationship),
+        setUserAnswerTo(LivedOrWorkedAbroadPage, true),
+        setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, false)
+      )
+
+      startingFrom(ApplicantDateOfBirthPage)
+        .run(
+          initialise,
+          submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
+          pageMustBe(UsePrintAndPostFormPage)
+        )
+    }
+
+    "when they are Married or Cohabiting, have lived or worked abroad, and neither they nor their partner are HM Forces or a civil servant abroad" in {
+
+      val relationship = Gen.oneOf(Married, Cohabiting).sample.value
+
+      val initialise = journeyOf(
+        setUserAnswerTo(RelationshipStatusPage, relationship),
+        setUserAnswerTo(LivedOrWorkedAbroadPage, true),
+        setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, false),
+        setUserAnswerTo(PartnerIsHmfOrCivilServantPage, false)
+      )
+
+      startingFrom(ApplicantDateOfBirthPage)
+        .run(
+          initialise,
+          submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
+          pageMustBe(UsePrintAndPostFormPage)
         )
     }
   }

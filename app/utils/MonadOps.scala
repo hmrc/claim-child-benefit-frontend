@@ -14,32 +14,25 @@
  * limitations under the License.
  */
 
-package forms
+package utils
 
-import forms.behaviours.BooleanFieldBehaviours
-import play.api.data.FormError
+import cats.implicits._
+import cats.Monad
 
-class LivedOrWorkedAbroadFormProviderSpec extends BooleanFieldBehaviours {
+import scala.language.higherKinds
 
-  val requiredKey = "livedOrWorkedAbroad.single.error.required"
-  val invalidKey = "error.boolean"
+object MonadOps {
 
-  val form = new LivedOrWorkedAbroadFormProvider()("single")
+  implicit class BooleanMonadSyntax[F[_]](fa: F[Boolean])(implicit m: Monad[F]) {
 
-  ".value" - {
+    def &&(that: F[Boolean]): F[Boolean] = fa.flatMap {
+      case false => m.pure(false)
+      case true  => that
+    }
 
-    val fieldName = "value"
-
-    behave like booleanField(
-      form,
-      fieldName,
-      invalidError = FormError(fieldName, invalidKey)
-    )
-
-    behave like mandatoryField(
-      form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
-    )
+    def ||(that: F[Boolean]): F[Boolean] = fa.flatMap {
+      case true  => m.pure(true)
+      case false => that
+    }
   }
 }

@@ -255,24 +255,49 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
   "users whose child has been claimed for before" - {
 
-    "must be asked for details of the previous claimant" in {
+    "must be asked for details of the previous claimant" - {
 
-      val country      = arbitrary[ChildBirthRegistrationCountry].sample.value
-      val claimantName = AdultName("first", None, "last")
-      val claimantAddress = UkAddress("line 1", None, "town", None, "postcode")
+      "when their address is in the UK" in {
 
-      val initialise = journeyOf(
-        setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), country)
-      )
+        val country = arbitrary[ChildBirthRegistrationCountry].sample.value
+        val claimantName = AdultName("first", None, "last")
+        val claimantAddress = UkAddress("line 1", None, "town", None, "postcode")
 
-      startingFrom(AnyoneClaimedForChildBeforePage(Index(0)))
-        .run(
-          initialise,
-          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
-          submitAnswer(PreviousClaimantNamePage(Index(0)), claimantName),
-          submitAnswer(PreviousClaimantUkAddressPage(Index(0)), claimantAddress),
-          pageMustBe(CheckChildDetailsPage(Index(0)))
+        val initialise = journeyOf(
+          setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), country)
         )
+
+        startingFrom(AnyoneClaimedForChildBeforePage(Index(0)))
+          .run(
+            initialise,
+            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
+            submitAnswer(PreviousClaimantNamePage(Index(0)), claimantName),
+            submitAnswer(PreviousClaimantAddressInUkPage(Index(0)), true),
+            submitAnswer(PreviousClaimantUkAddressPage(Index(0)), claimantAddress),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
+          )
+      }
+
+      "when their address is not in the UK" in {
+
+        val country = arbitrary[ChildBirthRegistrationCountry].sample.value
+        val claimantName = AdultName("first", None, "last")
+        val claimantAddress = InternationalAddress("line 1", None, "town", None, Some("postcode"), Country.internationalCountries.head)
+
+        val initialise = journeyOf(
+          setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), country)
+        )
+
+        startingFrom(AnyoneClaimedForChildBeforePage(Index(0)))
+          .run(
+            initialise,
+            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
+            submitAnswer(PreviousClaimantNamePage(Index(0)), claimantName),
+            submitAnswer(PreviousClaimantAddressInUkPage(Index(0)), false),
+            submitAnswer(PreviousClaimantInternationalAddressPage(Index(0)), claimantAddress),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
+          )
+      }
     }
   }
 }

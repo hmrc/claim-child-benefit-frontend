@@ -18,10 +18,11 @@ package controllers
 
 import controllers.actions._
 import forms.LivedOrWorkedAbroadFormProvider
+import models.RelationshipStatus._
 import models.UserAnswers
 
 import javax.inject.Inject
-import pages.{LivedOrWorkedAbroadPage, Waypoints}
+import pages.{LivedOrWorkedAbroadPage, RelationshipStatusPage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -39,34 +40,54 @@ class LivedOrWorkedAbroadController @Inject()(
                                                formProvider: LivedOrWorkedAbroadFormProvider,
                                                val controllerComponents: MessagesControllerComponents,
                                                view: LivedOrWorkedAbroadView
-                                 )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
-
-  val form = formProvider()
+                                 )(implicit ec: ExecutionContext)
+  extends FrontendBaseController
+    with I18nSupport
+    with AnswerExtractor {
 
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
+      getAnswer(RelationshipStatusPage) {
+        relationshipStatus =>
 
-      val preparedForm = request.userAnswers.get(LivedOrWorkedAbroadPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
+          val singleOrCouple = relationshipStatus match {
+            case Married | Cohabiting                    => "couple"
+            case Single | Separated | Widowed | Divorced => "single"
+          }
+
+          val form = formProvider(singleOrCouple)
+
+          val preparedForm = request.userAnswers.get(LivedOrWorkedAbroadPage) match {
+            case None => form
+            case Some(value) => form.fill(value)
+          }
+
+          Ok(view(preparedForm, waypoints, singleOrCouple))
       }
-
-      Ok(view(preparedForm, waypoints))
   }
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      getAnswerAsync(RelationshipStatusPage) {
+        relationshipStatus =>
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints))),
+          val singleOrCouple = relationshipStatus match {
+            case Married | Cohabiting                    => "couple"
+            case Single | Separated | Widowed | Divorced => "single"
+          }
 
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(LivedOrWorkedAbroadPage, value))
-            _ <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(LivedOrWorkedAbroadPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+          val form = formProvider(singleOrCouple)
+          form.bindFromRequest().fold(
+            formWithErrors =>
+              Future.successful(BadRequest(view(formWithErrors, waypoints, singleOrCouple))),
 
-      )
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(LivedOrWorkedAbroadPage, value))
+                _ <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(LivedOrWorkedAbroadPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+
+          )
+      }
   }
 }
