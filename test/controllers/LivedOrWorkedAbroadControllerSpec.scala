@@ -18,13 +18,12 @@ package controllers
 
 import base.SpecBase
 import forms.LivedOrWorkedAbroadFormProvider
-import models.UserAnswers
+import models.RelationshipStatus.Single
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{EmptyWaypoints, LivedOrWorkedAbroadPage}
+import pages.{EmptyWaypoints, LivedOrWorkedAbroadPage, RelationshipStatusPage}
 import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
@@ -34,19 +33,19 @@ import scala.concurrent.Future
 
 class LivedOrWorkedAbroadControllerSpec extends SpecBase with MockitoSugar {
 
-  def onwardRoute = Call("GET", "/foo")
-
-  val formProvider = new LivedOrWorkedAbroadFormProvider()
-  val form = formProvider()
+  private val relationshipStatus = Single
+  private val formProvider = new LivedOrWorkedAbroadFormProvider()
+  private val form = formProvider("single")
   private val waypoints = EmptyWaypoints
 
-  lazy val livedOrWorkedAbroadRoute = routes.LivedOrWorkedAbroadController.onPageLoad(waypoints).url
+  private lazy val livedOrWorkedAbroadRoute = routes.LivedOrWorkedAbroadController.onPageLoad(waypoints).url
+  private val baseAnswers = emptyUserAnswers.set(RelationshipStatusPage, relationshipStatus).success.value
 
   "LivedOrWorkedAbroad Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, livedOrWorkedAbroadRoute)
@@ -56,13 +55,13 @@ class LivedOrWorkedAbroadControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[LivedOrWorkedAbroadView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, "single")(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(LivedOrWorkedAbroadPage, true).success.value
+      val userAnswers = baseAnswers.set(LivedOrWorkedAbroadPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -74,7 +73,7 @@ class LivedOrWorkedAbroadControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), waypoints, "single")(request, messages(application)).toString
       }
     }
 
@@ -85,7 +84,7 @@ class LivedOrWorkedAbroadControllerSpec extends SpecBase with MockitoSugar {
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
             bind[SessionRepository].toInstance(mockSessionRepository)
           )
@@ -97,17 +96,17 @@ class LivedOrWorkedAbroadControllerSpec extends SpecBase with MockitoSugar {
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(LivedOrWorkedAbroadPage, true).success.value
+        val expectedAnswers = baseAnswers.set(LivedOrWorkedAbroadPage, true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual LivedOrWorkedAbroadPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual LivedOrWorkedAbroadPage.navigate(waypoints, baseAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request =
@@ -121,7 +120,7 @@ class LivedOrWorkedAbroadControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, "single")(request, messages(application)).toString
       }
     }
 
