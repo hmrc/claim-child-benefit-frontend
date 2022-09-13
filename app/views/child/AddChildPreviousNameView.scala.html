@@ -42,7 +42,7 @@
         case i => messages("addChildPreviousName.heading.plural", i, childName)
     }
 }
-
+addChildPreviousName.heading.plural
 @layout(pageTitle = title(form, titleText)) {
 
     @formHelper(action = routes.AddChildPreviousNameController.onSubmit(waypoints, index), 'autoComplete -> "off") {

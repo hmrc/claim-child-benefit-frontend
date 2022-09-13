@@ -28,6 +28,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import uk.gov.hmrc.hmrcfrontend.views.viewmodels.addtoalist.ListItem
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import viewmodels.checkAnswers.child.AddChildSummary
 
 object AddChildSummary {
 
@@ -48,13 +49,19 @@ object AddChildSummary {
       summaries =>
 
         val value = summaries.map(summary => HtmlFormat.escape(summary.childName.fullName).toString).mkString("<br/>")
+        val children = AddChildSummary.rows(answers, waypoints, AddChildPage)
+        val visuallyHiddenText =
+        children.size match {
+          case 1 => messages("addChild.change.hidden.singular")
+          case i => messages("addChildren.change.hidden.plural")
+        }
 
         SummaryListRowViewModel(
           key = "addChild.checkYourAnswersLabel",
           value = ValueViewModel(HtmlContent(value)),
           actions = Seq(
             ActionItemViewModel("site.change", AddChildPage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("addChild.change.hidden"))
+              .withVisuallyHiddenText(visuallyHiddenText)
           )
         )
     }

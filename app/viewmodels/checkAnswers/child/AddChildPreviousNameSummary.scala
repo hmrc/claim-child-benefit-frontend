@@ -42,20 +42,24 @@ object AddChildPreviousNameSummary {
         )
     }
 
-  def checkAnswersRow(answers: UserAnswers, childIndex: Index, waypoints: Waypoints, sourcePage: CheckAnswersPage)
-                     (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AllChildPreviousNames(childIndex)).map {
-      names =>
+def checkAnswersRow(answers: UserAnswers, childIndex: Index, waypoints: Waypoints, sourcePage: CheckAnswersPage)
+                   (implicit messages: Messages): Option[SummaryListRow] =
+  answers.get(AllChildPreviousNames(childIndex)).map {
+    names =>
 
-        val value = HtmlContent(names.map(name => HtmlFormat.escape(name.fullName).toString).mkString("<br/>"))
-
-        SummaryListRowViewModel(
-          key = "addChildPreviousName.checkYourAnswersLabel",
-          value = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel("site.change", AddChildPreviousNamePage(childIndex).changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("addChildPreviousName.change.hidden"))
-          )
+      val value = HtmlContent(names.map(name => HtmlFormat.escape(name.fullName).toString).mkString("<br/>"))
+      val visuallyHiddenText =
+        names.size match {
+          case 1 => messages("addChildPreviousName.change.hidden.singular")
+          case i => messages("addChildPreviousName.change.hidden.plural")
+        }
+      SummaryListRowViewModel(
+        key = "addChildPreviousName.checkYourAnswersLabel",
+        value = ValueViewModel(value),
+        actions = Seq(
+          ActionItemViewModel("site.change", AddChildPreviousNamePage(childIndex).changeLink(waypoints, sourcePage).url)
+            .withVisuallyHiddenText(messages(visuallyHiddenText))
         )
-    }
+      )
+  }
 }
