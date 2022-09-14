@@ -20,7 +20,7 @@ import models.Enumerable
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import play.api.data.{Form, FormError}
+import play.api.data.{Form, FormError, Forms}
 
 object MappingsSpec {
 
@@ -165,6 +165,62 @@ class MappingsSpec extends AnyFreeSpec with Matchers with OptionValues with Mapp
     "must not bind an empty map" in {
       val result = testForm.bind(Map.empty[String, String])
       result.errors must contain(FormError("value", "error.required"))
+    }
+  }
+
+  "optional" - {
+
+    val testForm = Form(
+      "value" -> optional(Forms.text)
+    )
+
+    "must bind none when the field is missing" in {
+      val result = testForm.bind(Map.empty[String, String])
+      result.get mustBe None
+    }
+
+    "must bind non when the field is an empty string" in {
+      val result = testForm.bind(Map("value" -> ""))
+      result.get mustBe None
+    }
+
+    "must bind none when the field is just whitespace" in {
+      val result = testForm.bind(Map("value" -> "   "))
+      result.get mustBe None
+    }
+
+    "must bind some when the field has a non-whitespace value" in {
+      val result = testForm.bind(Map("value" -> "foo"))
+      result.get.value mustBe "foo"
+    }
+
+    "must unbind none" in {
+      val filledForm = testForm.fill(None)
+      filledForm("value").value mustBe None
+    }
+
+    "must unbind some" in {
+      val filledForm = testForm.fill(Some("foo"))
+      filledForm("value").value.value mustBe "foo"
+    }
+
+    "must support additional constraints" - {
+
+      "when the inner mapping is skipped" in {
+        val testForm = Form(
+          "value" -> optional(Forms.text).verifying("some.error", _.isDefined)
+        )
+        val result = testForm.bind(Map.empty[String, String])
+        result.errors must contain only FormError("value", "some.error")
+      }
+
+      "when the inner mapping is used" in {
+        val testForm = Form(
+          "value" -> optional(Forms.text).verifying("some.error", _.contains("foo"))
+        )
+        val result = testForm.bind(Map("value" -> "bar"))
+        result.errors must contain only FormError("value", "some.error")
+      }
     }
   }
 }
