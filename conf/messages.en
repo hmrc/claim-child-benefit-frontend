@@ -300,6 +300,8 @@ eldestChildName.error.lastName.required = Enter the oldest child you are claimin
 eldestChildName.error.lastName.length = Last name of the oldest child you are claiming Child Benefit for must be 100 characters or less
 eldestChildName.change.hidden = the name of the oldest child you are claiming Child Benefit for
 
+taxChargeExplanation.error.required = Select yes if you want to be paid Child Benefit
+
 taxChargeExplanation.couple.under50k.title = How the tax charge works for you or your partner
 taxChargeExplanation.couple.under50k.heading = How the tax charge works for you or your partner
 taxChargeExplanation.couple.under50k.p1.1 = Your individual income and your partner’s income is less than £50,000 in a year, so you will not need to pay the
