@@ -18,16 +18,19 @@ package controllers.income
 
 import controllers.AnswerExtractor
 import controllers.actions._
+import forms.income.TaxChargeExplanationFormProvider
 import models.Income._
 import models.RelationshipStatus._
 import pages.{RelationshipStatusPage, Waypoints}
 import pages.income._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.income._
 
 import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class TaxChargeExplanationController @Inject()(
                                        override val messagesApi: MessagesApi,
@@ -40,30 +43,68 @@ class TaxChargeExplanationController @Inject()(
                                        coupleOver60kView: TaxChargeExplanationCoupleOver60kView,
                                        singleUnder50kView: TaxChargeExplanationSingleUnder50kView,
                                        singleUnder60kView: TaxChargeExplanationSingleUnder60kView,
-                                       singleOver60kView: TaxChargeExplanationSingleOver60kView
-                                     ) extends FrontendBaseController with I18nSupport with AnswerExtractor {
+                                       singleOver60kView: TaxChargeExplanationSingleOver60kView,
+                                       formProvider: TaxChargeExplanationFormProvider,
+                                       sessionRepository: SessionRepository
+                                     )(implicit ec: ExecutionContext)
+  extends FrontendBaseController
+    with I18nSupport
+    with AnswerExtractor {
+
+  private val form = formProvider()
 
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
+
+      val preparedForm = request.userAnswers.get(TaxChargeExplanationPage) match {
+        case Some(value) => form.fill(value)
+        case None        => form
+      }
+
       getAnswer(RelationshipStatusPage) {
         case Married | Cohabiting =>
           getAnswer(ApplicantOrPartnerIncomePage) {
             case BelowLowerThreshold => Ok(coupleUnder50kView(waypoints))
-            case BetweenThresholds   => Ok(coupleUnder60kView(waypoints))
-            case AboveUpperThreshold => Ok(coupleOver60kView(waypoints))
+            case BetweenThresholds   => Ok(coupleUnder60kView(preparedForm, waypoints))
+            case AboveUpperThreshold => Ok(coupleOver60kView(preparedForm, waypoints))
           }
 
         case Single | Divorced | Separated | Widowed =>
           getAnswer(ApplicantIncomePage) {
             case BelowLowerThreshold => Ok(singleUnder50kView(waypoints))
-            case BetweenThresholds   => Ok(singleUnder60kView(waypoints))
-            case AboveUpperThreshold => Ok(singleOver60kView(waypoints))
+            case BetweenThresholds   => Ok(singleUnder60kView(preparedForm, waypoints))
+            case AboveUpperThreshold => Ok(singleOver60kView(preparedForm, waypoints))
           }
       }
   }
 
-  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      Redirect(TaxChargeExplanationPage.navigate(waypoints, request.userAnswers, request.userAnswers).route)
+
+      form.bindFromRequest().fold(
+        formWithErrors => {
+          getAnswerAsync(RelationshipStatusPage) {
+            case Married | Cohabiting =>
+              getAnswerAsync(ApplicantOrPartnerIncomePage) {
+                case BelowLowerThreshold => Future.successful(BadRequest(coupleUnder50kView(waypoints)))
+                case BetweenThresholds   => Future.successful(BadRequest(coupleUnder60kView(formWithErrors, waypoints)))
+                case AboveUpperThreshold => Future.successful(BadRequest(coupleOver60kView(formWithErrors, waypoints)))
+              }
+
+            case Single | Divorced | Separated | Widowed =>
+              getAnswerAsync(ApplicantIncomePage) {
+                case BelowLowerThreshold => Future.successful(BadRequest(singleUnder50kView(waypoints)))
+                case BetweenThresholds   => Future.successful(BadRequest(singleUnder60kView(formWithErrors, waypoints)))
+                case AboveUpperThreshold => Future.successful(BadRequest(singleOver60kView(formWithErrors, waypoints)))
+              }
+          }
+        },
+
+        value =>
+          for {
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(TaxChargeExplanationPage, value))
+            _              <- sessionRepository.set(updatedAnswers)
+          } yield Redirect(TaxChargeExplanationPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+      )
   }
 }

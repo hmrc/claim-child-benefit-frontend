@@ -20,10 +20,11 @@
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukButton: GovukButton,
-        govukPanel: GovukPanel
+        govukPanel: GovukPanel,
+        govukRadios: GovukRadios
 )
 
-@(waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("taxChargeExplanation.couple.under60k.title"))) {
 
@@ -53,6 +54,26 @@
         </p>
 
         <div class="govuk-inset-text">@messages("taxChargeExplanation.couple.under60k.p6")</div>
+
+
+        @govukRadios(
+            RadiosViewModel(
+                field = form("value"),
+                legend = LegendViewModel(messages("taxChargeExplanation.wantToBePaid")),
+                items = Seq(
+                    RadioItem(
+                        content = messages("taxChargeExplanation.couple.yes"),
+                        value = Some("true"),
+                        id = Some("value_0")
+                    ),
+                    RadioItem(
+                        content = messages("taxChargeExplanation.couple.no"),
+                        value = Some("false"),
+                        id = Some("value_1")
+                    )
+                )
+            )
+        )
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))
