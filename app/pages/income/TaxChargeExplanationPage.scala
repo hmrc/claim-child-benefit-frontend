@@ -21,10 +21,13 @@ import models.RelationshipStatus._
 import models.{Benefits, UserAnswers}
 import pages.partner.PartnerNamePage
 import pages.payments.{CurrentlyReceivingChildBenefitPage, PaymentFrequencyPage, WantToBePaidPage}
-import pages.{NonEmptyWaypoints, Page, RelationshipStatusPage, Waypoints}
+import pages.{NonEmptyWaypoints, Page, QuestionPage, RelationshipStatusPage, Waypoints}
+import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object TaxChargeExplanationPage extends Page {
+case object TaxChargeExplanationPage extends QuestionPage[Boolean] {
+
+  override def path: JsPath = JsPath \ "wantsToBePaid"
 
   override def route(waypoints: Waypoints): Call =
     routes.TaxChargeExplanationController.onPageLoad(waypoints)
