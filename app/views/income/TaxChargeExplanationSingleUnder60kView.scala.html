@@ -20,7 +20,6 @@
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukButton: GovukButton,
-        govukPanel: GovukPanel,
         govukRadios: GovukRadios
 )
 
@@ -30,35 +29,37 @@
 
     @formHelper(action = routes.TaxChargeExplanationController.onSubmit(waypoints)) {
 
-        @govukPanel(Panel(title = messages("taxChargeExplanation.single.under60k.heading")))
+        <h1 class="govuk-heading-xl">@messages("taxChargeExplanation.single.under60k.heading")</h1>
 
         <p class="govuk-body">
-            @messages("taxChargeExplanation.single.under60k.p1.1")
+            @messages("taxChargeExplanation.single.under60k.p1")
             <a href="@messages("taxChargeExplanation.single.under60k.p1.link.href")" class="govuk-link">@messages("taxChargeExplanation.single.under60k.p1.link.text")</a>.
         </p>
 
         <p class="govuk-body">@messages("taxChargeExplanation.single.under60k.p2")</p>
 
-        <p class="govuk-body">@messages("taxChargeExplanation.single.under60k.p3")</p>
-
-        <div class="govuk-inset-text">
-            @messages("taxChargeExplanation.single.under60k.p4.1")
-            <a href="@messages("taxChargeExplanation.single.under60k.p4.link.href")" class="govuk-link">@messages("taxChargeExplanation.single.under60k.p4.link.text")</a>.
-            @messages("taxChargeExplanation.single.under60k.p4.2")
+        <div class="govuk-warning-text">
+            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+            <strong class="govuk-warning-text__text">
+                <span class="govuk-warning-text__assistive">@messages("site.warning")</span>
+                @messages("taxChargeExplanation.single.under60k.p3.1")
+                <a href="@messages("taxChargeExplanation.single.under60k.p3.link.href")" class="govuk-link">@messages("taxChargeExplanation.single.under60k.p3.link.text")</a>.
+                @messages("taxChargeExplanation.single.under60k.p3.2")
+            </strong>
         </div>
 
         <p class="govuk-body">
-            @messages("taxChargeExplanation.single.under60k.p5.1")
-            <a href="@messages("taxChargeExplanation.single.under60k.p5.link.href")" class="govuk-link">@messages("taxChargeExplanation.single.under60k.p5.link.text")</a>
-            @messages("taxChargeExplanation.single.under60k.p5.2")
+            @messages("taxChargeExplanation.single.under60k.p4.1")
+            <a href="@messages("taxChargeExplanation.single.under60k.p4.link.href")" class="govuk-link">@messages("taxChargeExplanation.single.under60k.p4.link.text")</a>
+            @messages("taxChargeExplanation.single.under60k.p4.2")
         </p>
 
-        <div class="govuk-inset-text">@messages("taxChargeExplanation.single.under60k.p6")</div>
+        <p class="govuk-body govuk-!-margin-bottom-7">@messages("taxChargeExplanation.single.under60k.p5")</p>
 
         @govukRadios(
             RadiosViewModel(
                 field = form("value"),
-                legend = LegendViewModel(messages("taxChargeExplanation.wantToBePaid")),
+                legend = LegendViewModel(messages("taxChargeExplanation.wantToBePaid")).withCssClass("govuk-!-font-weight-bold"),
                 items = Seq(
                     RadioItem(
                         content = messages("taxChargeExplanation.single.yes"),
