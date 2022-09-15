@@ -73,6 +73,7 @@ class CheckYourAnswersController @Inject()(
           WantToBePaidSummary.row(request.userAnswers, waypoints, thisPage),
           PaymentFrequencySummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantHasSuitableAccountSummary.row(request.userAnswers, waypoints, thisPage),
+          BankAccountHolderSummary.row(request.userAnswers, waypoints, thisPage),
           BankAccountDetailsSummary.row(request.userAnswers, waypoints, thisPage)
         ).flatten
       )

@@ -17,7 +17,7 @@
 package audit
 
 import audit.DownloadAuditEvent._
-import models.{Country, JourneyModel}
+import models.{BankAccountHolder, Country, JourneyModel}
 import play.api.libs.json.{JsString, Json, Writes}
 
 import java.time.LocalDate
@@ -85,17 +85,17 @@ object DownloadAuditEvent {
       },
       benefits          = model.benefits.map(_.toString),
       paymentPreference = model.paymentPreference match {
-        case JourneyModel.PaymentPreference.Weekly(bankAccountDetails) =>
-          Weekly(bankAccountDetails.map(convertBankAccountDetails))
+        case JourneyModel.PaymentPreference.Weekly(bankAccount) =>
+          Weekly(bankAccount.map(convertBankAccount))
 
-        case JourneyModel.PaymentPreference.EveryFourWeeks(bankAccountDetails) =>
-          EveryFourWeeks(bankAccountDetails.map(convertBankAccountDetails))
+        case JourneyModel.PaymentPreference.EveryFourWeeks(bankAccount) =>
+          EveryFourWeeks(bankAccount.map(convertBankAccount))
 
         case JourneyModel.PaymentPreference.ExistingAccount(eldestChild) =>
           ExistingAccount(convertEldestChild(eldestChild))
 
-        case JourneyModel.PaymentPreference.ExistingFrequency(bankAccountDetails, eldestChild) =>
-          ExistingFrequency(bankAccountDetails.map(convertBankAccountDetails), convertEldestChild(eldestChild))
+        case JourneyModel.PaymentPreference.ExistingFrequency(bankAccount, eldestChild) =>
+          ExistingFrequency(bankAccount.map(convertBankAccount), convertEldestChild(eldestChild))
 
         case JourneyModel.PaymentPreference.DoNotPay =>
           DoNotPay
@@ -111,7 +111,7 @@ object DownloadAuditEvent {
       postcode   = address.postcode
     )
 
-  private def convertInternationlAddress(address: models.InternationalAddress): InternationalAddress =
+  private def convertInternationalAddress(address: models.InternationalAddress): InternationalAddress =
     InternationalAddress(
       line1         = address.line1,
       line2         = address.line2,
@@ -124,16 +124,17 @@ object DownloadAuditEvent {
   private def convertAddress(address: models.Address): Address = {
     address match {
       case u: models.UkAddress            => convertUkAddress(u)
-      case i: models.InternationalAddress => convertInternationlAddress(i)
+      case i: models.InternationalAddress => convertInternationalAddress(i)
     }
   }
 
-  private def convertBankAccountDetails(details: models.BankAccountDetails): BankAccountDetails =
-    BankAccountDetails(
-      accountName   = details.accountName,
-      sortCode      = details.sortCode,
-      accountNumber = details.accountNumber,
-      rollNumber    = details.rollNumber
+  private def convertBankAccount(bankAccount: JourneyModel.BankAccount): BankAccount =
+    BankAccount(
+      holder = bankAccount.holder.toString,
+      accountName   = bankAccount.details.accountName,
+      sortCode      = bankAccount.details.sortCode,
+      accountNumber = bankAccount.details.accountNumber,
+      rollNumber    = bankAccount.details.rollNumber
     )
 
   private def convertAdultName(name: models.AdultName): AdultName =
@@ -247,19 +248,19 @@ object DownloadAuditEvent {
     implicit lazy val writes: Writes[Child] = Json.writes
   }
 
-  private[audit] final case class BankAccountDetails(accountName: String, sortCode: String, accountNumber: String, rollNumber: Option[String])
-  object BankAccountDetails {
-    implicit lazy val writes: Writes[BankAccountDetails] = Json.writes
+  private[audit] final case class BankAccount(holder: String, accountName: String, sortCode: String, accountNumber: String, rollNumber: Option[String])
+  object BankAccount {
+    implicit lazy val writes: Writes[BankAccount] = Json.writes
   }
 
   private[audit] sealed trait PaymentPreference
 
-  private[audit] final case class Weekly(bankAccountDetails: Option[BankAccountDetails]) extends PaymentPreference
+  private[audit] final case class Weekly(bankAccount: Option[BankAccount]) extends PaymentPreference
   object Weekly {
     implicit lazy val writes: Writes[Weekly] = Writes {
       x =>
 
-        val accountJsonValue = x.bankAccountDetails.map(Json.toJson(_)).getOrElse(JsString("no suitable account"))
+        val accountJsonValue = x.bankAccount.map(Json.toJson(_)).getOrElse(JsString("no suitable account"))
         val accountJson      = Json.obj("account" -> accountJsonValue)
 
         Json.obj(
@@ -268,12 +269,12 @@ object DownloadAuditEvent {
     }
   }
 
-  private[audit] final case class EveryFourWeeks(bankAccountDetails: Option[BankAccountDetails]) extends PaymentPreference
+  private[audit] final case class EveryFourWeeks(bankAccount: Option[BankAccount]) extends PaymentPreference
   object EveryFourWeeks {
     implicit lazy val writes: Writes[EveryFourWeeks] = Writes {
       x =>
 
-        val accountJsonValue = x.bankAccountDetails.map(Json.toJson(_)).getOrElse(JsString("no suitable account"))
+        val accountJsonValue = x.bankAccount.map(Json.toJson(_)).getOrElse(JsString("no suitable account"))
         val accountJson      = Json.obj("account" -> accountJsonValue)
 
         Json.obj(
@@ -294,11 +295,11 @@ object DownloadAuditEvent {
     }
   }
 
-  private[audit] final case class  ExistingFrequency(bankAccountDetails: Option[BankAccountDetails], eldestChild: EldestChild) extends PaymentPreference
+  private[audit] final case class  ExistingFrequency(bankAccount: Option[BankAccount], eldestChild: EldestChild) extends PaymentPreference
   object ExistingFrequency {
     implicit lazy val writes: Writes[ExistingFrequency] = Writes {
       x =>
-        val accountJsonValue = x.bankAccountDetails.map(Json.toJson(_)).getOrElse(JsString("no suitable account"))
+        val accountJsonValue = x.bankAccount.map(Json.toJson(_)).getOrElse(JsString("no suitable account"))
         val accountJson      = Json.obj("account" -> accountJsonValue)
 
         Json.obj(

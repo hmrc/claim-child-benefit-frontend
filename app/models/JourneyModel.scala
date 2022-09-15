@@ -51,14 +51,16 @@ object JourneyModel {
   final case class EldestChild(name: ChildName, dateOfBirth: LocalDate)
   final case class PaymentDetails(wantToBePaid: Boolean, wantToBePaidWeekly: Option[Boolean])
 
+  final case class BankAccount(holder: BankAccountHolder, details: BankAccountDetails)
+
   sealed trait PaymentPreference
 
   object PaymentPreference {
 
-    final case class  Weekly(bankAccountDetails: Option[BankAccountDetails]) extends PaymentPreference
-    final case class  EveryFourWeeks(bankAccountDetails: Option[BankAccountDetails]) extends PaymentPreference
+    final case class  Weekly(bankAccount: Option[BankAccount]) extends PaymentPreference
+    final case class  EveryFourWeeks(bankAccount: Option[BankAccount]) extends PaymentPreference
     final case class  ExistingAccount(eldestChild: EldestChild) extends PaymentPreference
-    final case class  ExistingFrequency(bankAccountDetails: Option[BankAccountDetails], eldestChild: EldestChild) extends PaymentPreference
+    final case class  ExistingFrequency(bankAccount: Option[BankAccount], eldestChild: EldestChild) extends PaymentPreference
     final case object DoNotPay extends PaymentPreference
   }
 
@@ -341,10 +343,15 @@ object JourneyModel {
 
     import PaymentPreference._
 
-    def getAccountDetails: IorNec[Query, Option[BankAccountDetails]] =
+    def getBankAccount: IorNec[Query, Option[BankAccount]] =
       answers.getIor(ApplicantHasSuitableAccountPage).flatMap {
-        case true  => answers.getIor(BankAccountDetailsPage).map(Some(_))
-        case false => Ior.Right(None)
+        case true  =>
+          (
+            answers.getIor(BankAccountHolderPage),
+            answers.getIor(BankAccountDetailsPage)
+          ).parMapN(BankAccount.apply).map(Some(_))
+        case false =>
+          Ior.Right(None)
       }
 
     def getEldestChild: IorNec[Query, EldestChild] =
@@ -357,8 +364,8 @@ object JourneyModel {
       answers.getIor(WantToBePaidPage).flatMap {
         case true =>
           answers.get(PaymentFrequencyPage) match {
-            case Some(PaymentFrequency.Weekly) => getAccountDetails.map(Weekly)
-            case _                             => getAccountDetails.map(EveryFourWeeks)
+            case Some(PaymentFrequency.Weekly) => getBankAccount.map(Weekly)
+            case _                             => getBankAccount.map(EveryFourWeeks)
           }
 
         case false =>
@@ -369,7 +376,7 @@ object JourneyModel {
       case true =>
         answers.getIor(WantToBePaidToExistingAccountPage).flatMap {
           case true  => getEldestChild.map(ExistingAccount)
-          case false => (getAccountDetails, getEldestChild).parMapN(ExistingFrequency.apply)
+          case false => (getBankAccount, getEldestChild).parMapN(ExistingFrequency.apply)
         }
 
       case false =>

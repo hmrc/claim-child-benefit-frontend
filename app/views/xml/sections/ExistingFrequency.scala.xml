@@ -1,9 +1,9 @@
 @this(
     line: Line,
-    bankAccount: BankAccount
+    bankAccountSection: BankAccountSection
 )
 
-@(bankAccountDetails: Option[BankAccountDetails], eldestChild: JourneyModel.EldestChild)(implicit messages: Messages)
+@(bankAccount: Option[JourneyModel.BankAccount], eldestChild: JourneyModel.EldestChild)(implicit messages: Messages)
 
 @line("pdf.wantToBePaidToExistingAccount", messages("site.yes"))
 
@@ -13,7 +13,7 @@
 
 @line("pdf.wantToBePaidToExistingAccount", messages("site.no"))
 
-@bankAccountDetails.map(x => bankAccount(x)).getOrElse(line("pdf.applicantHasSuitableAccount", messages("site.no")))
+@bankAccount.map(x => bankAccountSection(x)).getOrElse(line("pdf.applicantHasSuitableAccount", messages("site.no")))
 
 @line("pdf.eldestChildName", eldestChild.name.fullName)
 
