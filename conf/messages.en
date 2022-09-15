@@ -231,6 +231,15 @@ applicantHasSuitableAccount.checkYourAnswersLabel = Do you have an account that 
 applicantHasSuitableAccount.error.required = Select yes if you have an account that Child Benefit can be paid to
 applicantHasSuitableAccount.change.hidden = if you have an account that Child Benefit can be paid to
 
+bankAccountHolder.title = Who is the account holder?
+bankAccountHolder.heading = Who is the account holder?
+bankAccountHolder.checkYourAnswersLabel = Account holder
+bankAccountHolder.applicant = The account is in my name
+bankAccountHolder.jointNames = The account is in joint names
+bankAccountHolder.someoneElse = The account is in someone else’s name
+bankAccountHolder.error.required = Select who the account holder is
+bankAccountHolder.change.hidden = who the account holder is
+
 bankAccountDetails.title = What are the bank or building society account details?
 bankAccountDetails.heading = What are the bank or building society account details?
 bankAccountDetails.error.sortCode.failedModulusCheck = Enter a recognised sort code and account number
