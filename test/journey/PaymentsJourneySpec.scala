@@ -18,7 +18,7 @@ package journey
 
 import generators.ModelGenerators
 import models.RelationshipStatus._
-import models.{BankAccountDetails, Benefits, ChildName, PaymentFrequency, UserAnswers}
+import models.{BankAccountDetails, BankAccountHolder, Benefits, ChildName, PaymentFrequency, UserAnswers}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.freespec.AnyFreeSpec
 import pages.RelationshipStatusPage
@@ -63,6 +63,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
             submitAnswer(EldestChildDateOfBirthPage, childDob),
             submitAnswer(WantToBePaidToExistingAccountPage, false),
             submitAnswer(ApplicantHasSuitableAccountPage, true),
+            submitAnswer(BankAccountHolderPage, BankAccountHolder.Applicant),
             submitAnswer(BankAccountDetailsPage, bankDetails),
             pageMustBe(ApplicantHasPreviousFamilyNamePage)
           )
@@ -85,6 +86,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
           .run(
             submitAnswer(WantToBePaidPage, true),
             submitAnswer(ApplicantHasSuitableAccountPage, true),
+            submitAnswer(BankAccountHolderPage, BankAccountHolder.Applicant),
             submitAnswer(BankAccountDetailsPage, bankDetails),
             pageMustBe(ApplicantHasPreviousFamilyNamePage)
           )

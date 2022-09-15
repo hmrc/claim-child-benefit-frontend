@@ -32,5 +32,5 @@ case object BankAccountHolderPage extends QuestionPage[BankAccountHolder] {
     routes.BankAccountHolderController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantHasSuitableAccountPage
+    BankAccountDetailsPage
 }

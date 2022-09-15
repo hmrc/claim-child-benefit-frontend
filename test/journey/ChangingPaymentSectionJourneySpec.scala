@@ -18,7 +18,7 @@ package journey
 
 import generators.ModelGenerators
 import models.RelationshipStatus._
-import models.{BankAccountDetails, Benefits, ChildName, PaymentFrequency}
+import models.{BankAccountDetails, BankAccountHolder, Benefits, ChildName, PaymentFrequency}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
@@ -32,6 +32,7 @@ import java.time.LocalDate
 class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
   private val childName               = arbitrary[ChildName].sample.value
+  private val bankAccountHolder       = arbitrary[BankAccountHolder].sample.value
   private val bankDetails             = arbitrary[BankAccountDetails].sample.value
   private val benefits: Set[Benefits] = Set(Gen.oneOf(Benefits.values).sample.value)
 
@@ -85,6 +86,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
         val initialise = journeyOf(
           submitAnswer(WantToBePaidToExistingAccountPage, false),
           submitAnswer(ApplicantHasSuitableAccountPage, true),
+          submitAnswer(BankAccountHolderPage, bankAccountHolder),
           submitAnswer(BankAccountDetailsPage, bankDetails),
           setUserAnswerTo(ApplicantHasPreviousFamilyNamePage, false),
           goTo(CheckYourAnswersPage)
@@ -97,6 +99,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             submitAnswer(WantToBePaidToExistingAccountPage, true),
             pageMustBe(CheckYourAnswersPage),
             answersMustNotContain(ApplicantHasSuitableAccountPage),
+            answersMustNotContain(BankAccountHolderPage),
             answersMustNotContain(BankAccountDetailsPage)
           )
       }
@@ -225,6 +228,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
           submitAnswer(WantToBePaidPage, true),
           submitAnswer(PaymentFrequencyPage, arbitrary[PaymentFrequency].sample.value),
           submitAnswer(ApplicantHasSuitableAccountPage, true),
+          submitAnswer(BankAccountHolderPage, bankAccountHolder),
           submitAnswer(BankAccountDetailsPage, bankDetails),
           setUserAnswerTo(ApplicantHasPreviousFamilyNamePage, false),
           goTo(CheckYourAnswersPage)
@@ -238,6 +242,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             pageMustBe(CheckYourAnswersPage),
             answersMustNotContain(PaymentFrequencyPage),
             answersMustNotContain(ApplicantHasSuitableAccountPage),
+            answersMustNotContain(BankAccountHolderPage),
             answersMustNotContain(BankAccountDetailsPage)
           )
       }
@@ -250,6 +255,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
 
       val initialise = journeyOf(
         submitAnswer(ApplicantHasSuitableAccountPage, true),
+        submitAnswer(BankAccountHolderPage, bankAccountHolder),
         submitAnswer(BankAccountDetailsPage, bankDetails),
         setUserAnswerTo(ApplicantHasPreviousFamilyNamePage, false),
         goTo(CheckYourAnswersPage)
@@ -261,6 +267,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
           goToChangeAnswer(ApplicantHasSuitableAccountPage),
           submitAnswer(ApplicantHasSuitableAccountPage, false),
           pageMustBe(CheckYourAnswersPage),
+          answersMustNotContain(BankAccountHolderPage),
           answersMustNotContain(BankAccountDetailsPage)
         )
     }
@@ -281,6 +288,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             initialise,
             goToChangeAnswer(ApplicantHasSuitableAccountPage),
             submitAnswer(ApplicantHasSuitableAccountPage, true),
+            submitAnswer(BankAccountHolderPage, bankAccountHolder),
             submitAnswer(BankAccountDetailsPage, bankDetails),
             pageMustBe(CheckYourAnswersPage)
           )
