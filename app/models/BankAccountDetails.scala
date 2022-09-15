@@ -20,6 +20,7 @@ import play.api.libs.json._
 
 case class BankAccountDetails (
                                 accountName: String,
+                                bankName: String,
                                 sortCode: String,
                                 accountNumber: String,
                                 rollNumber: Option[String]

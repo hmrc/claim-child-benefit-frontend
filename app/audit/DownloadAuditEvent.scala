@@ -17,7 +17,7 @@
 package audit
 
 import audit.DownloadAuditEvent._
-import models.{BankAccountHolder, Country, JourneyModel}
+import models.{Country, JourneyModel}
 import play.api.libs.json.{JsString, Json, Writes}
 
 import java.time.LocalDate
@@ -130,7 +130,8 @@ object DownloadAuditEvent {
 
   private def convertBankAccount(bankAccount: JourneyModel.BankAccount): BankAccount =
     BankAccount(
-      holder = bankAccount.holder.toString,
+      holder        = bankAccount.holder.toString,
+      bankName      = bankAccount.details.bankName,
       accountName   = bankAccount.details.accountName,
       sortCode      = bankAccount.details.sortCode,
       accountNumber = bankAccount.details.accountNumber,
@@ -248,7 +249,7 @@ object DownloadAuditEvent {
     implicit lazy val writes: Writes[Child] = Json.writes
   }
 
-  private[audit] final case class BankAccount(holder: String, accountName: String, sortCode: String, accountNumber: String, rollNumber: Option[String])
+  private[audit] final case class BankAccount(holder: String, accountName: String, bankName: String, sortCode: String, accountNumber: String, rollNumber: Option[String])
   object BankAccount {
     implicit lazy val writes: Writes[BankAccount] = Json.writes
   }
