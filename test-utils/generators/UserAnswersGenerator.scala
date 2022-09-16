@@ -50,12 +50,11 @@ trait UserAnswersGenerator extends TryValues {
     arbitrary[(AnyoneClaimedForChildBeforePage, JsValue)] ::
     arbitrary[(AddChildPreviousNamePage, JsValue)] ::
     arbitrary[(AddChildPage.type, JsValue)] ::
-    arbitrary[(PartnerWaitingForEntitlementDecisionPage.type, JsValue)] ::
     arbitrary[(PartnerNinoKnownPage.type, JsValue)] ::
     arbitrary[(PartnerNinoPage.type, JsValue)] ::
     arbitrary[(PartnerNationalityPage.type, JsValue)] ::
     arbitrary[(PartnerNamePage.type, JsValue)] ::
-    arbitrary[(PartnerEntitledToChildBenefitPage.type, JsValue)] ::
+    arbitrary[(PartnerClaimingChildBenefitPage.type, JsValue)] ::
     arbitrary[(PartnerEmploymentStatusPage.type, JsValue)] ::
     arbitrary[(PartnerEldestChildNamePage.type, JsValue)] ::
     arbitrary[(PartnerEldestChildDateOfBirthPage.type, JsValue)] ::

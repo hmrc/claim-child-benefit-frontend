@@ -17,8 +17,9 @@
 package journey
 
 import generators.ModelGenerators
-import models.{ChildName, Index}
+import models.{ChildName, Index, PartnerClaimingChildBenefit}
 import org.scalacheck.Arbitrary.arbitrary
+import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import pages.CheckYourAnswersPage
 import pages.child.ChildNamePage
@@ -76,91 +77,55 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
     }
   }
 
-  "when a user initially said their partner was entitled to claim Child Benefit" - {
+  "when a user initially said their partner was entitled to claim Child Benefit or waiting to hear" - {
 
-    "changing that answer should ask if they are waiting to hear if they are entitled" in {
+    "changing that answer should remove their eldest child's details" in {
+
+      import models.PartnerClaimingChildBenefit._
+
+      val partnerClaiming = Gen.oneOf(GettingPayments, NotGettingPayments, WaitingToHear).sample.value
 
       val initialise = journeyOf(
-        submitAnswer(PartnerEntitledToChildBenefitPage, true),
+        submitAnswer(PartnerClaimingChildBenefitPage, partnerClaiming),
         submitAnswer(PartnerEldestChildNamePage, eldestChildName),
         submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
         goTo(CheckYourAnswersPage)
       )
 
-      startingFrom(PartnerEntitledToChildBenefitPage)
+      startingFrom(PartnerClaimingChildBenefitPage)
         .run(
           initialise,
-          goToChangeAnswer(PartnerEntitledToChildBenefitPage),
-          submitAnswer(PartnerEntitledToChildBenefitPage, false),
-          pageMustBe(PartnerWaitingForEntitlementDecisionPage),
-          answersMustContain(PartnerEldestChildNamePage),
-          answersMustContain(PartnerEldestChildDateOfBirthPage)
+          goToChangeAnswer(PartnerClaimingChildBenefitPage),
+          submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
+          pageMustBe(ChildNamePage(Index(0))),
+          answersMustNotContain(PartnerEldestChildNamePage),
+          answersMustNotContain(PartnerEldestChildDateOfBirthPage)
         )
     }
   }
 
-  "when a user initially said their partner was not entitled to claim Child Benefit" - {
+  "when a user initially said their partner was not entitled to claim Child Benefit or waiting to hear" - {
 
-    "and they were waiting for a decision" - {
+    "changing that answer should collect their oldest child's details" in {
+
+      import models.PartnerClaimingChildBenefit._
+
+      val partnerClaiming = Gen.oneOf(GettingPayments, NotGettingPayments, WaitingToHear).sample.value
 
       val initialise = journeyOf(
-        submitAnswer(PartnerEntitledToChildBenefitPage, false),
-        submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
-        submitAnswer(PartnerEldestChildNamePage, eldestChildName),
-        submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
-        submitAnswer(ChildNamePage(Index(0)), childName),
+        submitAnswer(PartnerClaimingChildBenefitPage, NotClaiming),
         goTo(CheckYourAnswersPage)
       )
 
-      "changing whether they are entitled must remove the answer to `waiting for a decision` then return to Check Answers" in {
-
-        startingFrom(PartnerEntitledToChildBenefitPage)
-          .run(
-            initialise,
-            goToChangeAnswer(PartnerEntitledToChildBenefitPage),
-            submitAnswer(PartnerEntitledToChildBenefitPage, true),
-            pageMustBe(CheckYourAnswersPage),
-            answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
-            answersMustContain(PartnerEldestChildNamePage),
-            answersMustContain(PartnerEldestChildDateOfBirthPage)
-          )
-      }
-
-      "changing whether they are waiting a decision to `no` must remove the partner's eldest child details and return to Check Answers" in {
-
-        startingFrom(PartnerEntitledToChildBenefitPage)
-          .run(
-            initialise,
-            goToChangeAnswer(PartnerWaitingForEntitlementDecisionPage),
-            submitAnswer(PartnerWaitingForEntitlementDecisionPage, false),
-            pageMustBe(CheckYourAnswersPage),
-            answersMustNotContain(PartnerEldestChildNamePage),
-            answersMustNotContain(PartnerEldestChildDateOfBirthPage)
-          )
-      }
-    }
-
-    "and they were not waiting for a decision" - {
-
-      "changing to say they are waiting for a decision must collect their partner's eldest child details and return to Check Answers" in {
-
-        val initialise = journeyOf(
-          submitAnswer(PartnerEntitledToChildBenefitPage, false),
-          submitAnswer(PartnerWaitingForEntitlementDecisionPage, false),
-          submitAnswer(ChildNamePage(Index(0)), childName),
-          goTo(CheckYourAnswersPage)
+      startingFrom(PartnerClaimingChildBenefitPage)
+        .run(
+          initialise,
+          goToChangeAnswer(PartnerClaimingChildBenefitPage),
+          submitAnswer(PartnerClaimingChildBenefitPage, partnerClaiming),
+          submitAnswer(PartnerEldestChildNamePage, childName),
+          submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
+          pageMustBe(ChildNamePage(Index(0)))
         )
-
-        startingFrom(PartnerEntitledToChildBenefitPage)
-          .run(
-            initialise,
-            goToChangeAnswer(PartnerWaitingForEntitlementDecisionPage),
-            submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
-            submitAnswer(PartnerEldestChildNamePage, eldestChildName),
-            submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
-            pageMustBe(CheckYourAnswersPage)
-          )
-      }
     }
   }
 }

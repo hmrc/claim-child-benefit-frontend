@@ -19,7 +19,7 @@ package audit
 import audit.DownloadAuditEvent._
 import cats.data.NonEmptyList
 import generators.ModelGenerators
-import models.JourneyModel
+import models.{JourneyModel, PartnerClaimingChildBenefit}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
 import org.scalacheck.Arbitrary.arbitrary
@@ -76,8 +76,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             nationalInsuranceNumber = Some(partnerNino),
             employmentStatus = Set(models.EmploymentStatus.Employed, models.EmploymentStatus.SelfEmployed),
             memberOfHMForcesOrCivilServantAbroad = false,
-            currentlyEntitledToChildBenefit = false,
-            waitingToHearAboutEntitlement = Some(true),
+            currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments,
             eldestChild = Some(JourneyModel.EldestChild(
               name        = models.ChildName("partner eldest child first", Some("partner eldest child middle"), "partner eldest child last"),
               dateOfBirth = now
@@ -138,8 +137,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             nationalInsuranceNumber = Some(partnerNino),
             employmentStatus = Set("employed", "selfEmployed"),
             memberOfHMForcesOrCivilServantAbroad = false,
-            currentlyEntitledToChildBenefit = false,
-            waitingToHearAboutEntitlement = Some(true),
+            currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments.toString,
             eldestChild = Some(EldestChild(
               name        = ChildName("partner eldest child first", Some("partner eldest child middle"), "partner eldest child last"),
               dateOfBirth = now

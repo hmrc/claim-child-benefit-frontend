@@ -16,25 +16,25 @@
 
 package forms.partner
 
-import forms.behaviours.BooleanFieldBehaviours
+import forms.behaviours.OptionFieldBehaviours
+import models.PartnerClaimingChildBenefit
 import play.api.data.FormError
 
-class PartnerEntitledToChildBenefitFormProviderSpec extends BooleanFieldBehaviours {
+class PartnerClaimingChildBenefitFormProviderSpec extends OptionFieldBehaviours {
 
   val name = "name"
-  val requiredKey = "partnerEntitledToChildBenefit.error.required"
-  val invalidKey = "error.boolean"
-
-  val form = new PartnerEntitledToChildBenefitFormProvider()(name)
+  val form = new PartnerClaimingChildBenefitFormProvider()(name)
 
   ".value" - {
 
     val fieldName = "value"
+    val requiredKey = "partnerClaimingChildBenefit.error.required"
 
-    behave like booleanField(
+    behave like optionsField[PartnerClaimingChildBenefit](
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey, Seq(name))
+      validValues  = PartnerClaimingChildBenefit.values,
+      invalidError = FormError(fieldName, "error.invalid", Seq(name))
     )
 
     behave like mandatoryField(

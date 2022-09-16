@@ -161,8 +161,8 @@ POST       /partners-eldest-child-name                        controllers.partne
 GET        /partners-employment-status                        controllers.partner.PartnerEmploymentStatusController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /partners-employment-status                        controllers.partner.PartnerEmploymentStatusController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /partner-currently-entitled-to-child-benefit                        controllers.partner.PartnerEntitledToChildBenefitController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /partner-currently-entitled-to-child-benefit                        controllers.partner.PartnerEntitledToChildBenefitController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /partner-claiming-child-benefit                        controllers.partner.PartnerClaimingChildBenefitController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /partner-claiming-child-benefit                        controllers.partner.PartnerClaimingChildBenefitController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /partners-name                        controllers.partner.PartnerNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /partners-name                        controllers.partner.PartnerNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
@@ -175,9 +175,6 @@ POST       /partners-national-insurance-number                        controller
 
 GET        /know-partners-national-insurance-number                        controllers.partner.PartnerNinoKnownController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /know-partners-national-insurance-number                        controllers.partner.PartnerNinoKnownController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /partner-waiting-to-hear-about-eligibility                        controllers.partner.PartnerWaitingForEntitlementDecisionController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /partner-waiting-to-hear-about-eligibility                        controllers.partner.PartnerWaitingForEntitlementDecisionController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 # Child section
 GET        /add-child                        controllers.child.AddChildController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)

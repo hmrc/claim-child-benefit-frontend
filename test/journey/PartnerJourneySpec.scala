@@ -17,8 +17,9 @@
 package journey
 
 import generators.ModelGenerators
-import models.{AdultName, ChildName, EmploymentStatus, Index}
+import models.{AdultName, ChildName, EmploymentStatus, Index, PartnerClaimingChildBenefit}
 import org.scalacheck.Arbitrary.arbitrary
+import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import pages.child.ChildNamePage
 import pages.partner._
@@ -40,8 +41,7 @@ class PartnerJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGener
         submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
         submitAnswer(PartnerNationalityPage, "nationality"),
         submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-        submitAnswer(PartnerEntitledToChildBenefitPage, false),
-        submitAnswer(PartnerWaitingForEntitlementDecisionPage, false),
+        submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
         pageMustBe(ChildNamePage(Index(0)))
       )
   }
@@ -58,27 +58,16 @@ class PartnerJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGener
       )
   }
 
-  "users whose partner is entitled to Child Benefit must be asked for their partner's eldest child's details then go to Child Name" in {
+  "users whose partner is entitled to Child Benefit or waiting to hear must be asked for their partner's eldest child's details then go to Child Name" in {
+
+    import PartnerClaimingChildBenefit._
 
     val childName = ChildName("first", None, "last")
+    val partnerClaiming = Gen.oneOf(GettingPayments, NotGettingPayments, WaitingToHear).sample.value
 
-    startingFrom(PartnerEntitledToChildBenefitPage)
+    startingFrom(PartnerClaimingChildBenefitPage)
       .run(
-        submitAnswer(PartnerEntitledToChildBenefitPage, true),
-        submitAnswer(PartnerEldestChildNamePage, childName),
-        submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
-        pageMustBe(ChildNamePage(Index(0)))
-      )
-  }
-
-  "users whose partner is waiting to hear if they are entitled must be asked for their partner's eldest child's details then go to Child Name" in {
-
-    val childName = ChildName("first", None, "last")
-
-    startingFrom(PartnerEntitledToChildBenefitPage)
-      .run(
-        submitAnswer(PartnerEntitledToChildBenefitPage, false),
-        submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
+        submitAnswer(PartnerClaimingChildBenefitPage, partnerClaiming),
         submitAnswer(PartnerEldestChildNamePage, childName),
         submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
         pageMustBe(ChildNamePage(Index(0)))

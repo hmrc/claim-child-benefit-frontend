@@ -17,14 +17,15 @@
 package forms.partner
 
 import forms.mappings.Mappings
+import models.PartnerClaimingChildBenefit
 import play.api.data.Form
 
 import javax.inject.Inject
 
-class PartnerEntitledToChildBenefitFormProvider @Inject() extends Mappings {
+class PartnerClaimingChildBenefitFormProvider @Inject() extends Mappings {
 
-  def apply(partnerFirstName: String): Form[Boolean] =
+  def apply(partnerFirstName: String): Form[PartnerClaimingChildBenefit] =
     Form(
-      "value" -> boolean("partnerEntitledToChildBenefit.error.required", args = Seq(partnerFirstName))
+      "value" -> enumerable[PartnerClaimingChildBenefit]("partnerClaimingChildBenefit.error.required", args = Seq(partnerFirstName))
     )
 }

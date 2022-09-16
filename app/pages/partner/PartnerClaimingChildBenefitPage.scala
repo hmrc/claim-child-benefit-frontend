@@ -17,32 +17,37 @@
 package pages.partner
 
 import controllers.partner.routes
-import models.UserAnswers
+import models.PartnerClaimingChildBenefit._
+import models.{Index, PartnerClaimingChildBenefit, UserAnswers}
+import pages.child.ChildNamePage
 import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
 import scala.util.Try
 
-case object PartnerEntitledToChildBenefitPage extends QuestionPage[Boolean] {
+case object PartnerClaimingChildBenefitPage extends QuestionPage[PartnerClaimingChildBenefit] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "partnerEntitledToChildBenefit"
+  override def toString: String = "partnerClaimingChildBenefit"
 
   override def route(waypoints: Waypoints): Call =
-    routes.PartnerEntitledToChildBenefitController.onPageLoad(waypoints)
+    routes.PartnerClaimingChildBenefitController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
-      case true => PartnerEldestChildNamePage
-      case false => PartnerWaitingForEntitlementDecisionPage
+      case GettingPayments | NotGettingPayments | WaitingToHear => PartnerEldestChildNamePage
+      case NotClaiming                                          => ChildNamePage(Index(0))
     }.orRecover
 
-  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
-    if (value.contains(true)) {
-      userAnswers.remove(PartnerWaitingForEntitlementDecisionPage)
-    } else {
-      super.cleanup(value, userAnswers)
-    }
+  override def cleanup(value: Option[PartnerClaimingChildBenefit], userAnswers: UserAnswers): Try[UserAnswers] =
+    value.map {
+      case NotClaiming =>
+        userAnswers.remove(PartnerEldestChildNamePage)
+          .flatMap(_.remove(PartnerEldestChildDateOfBirthPage))
+
+      case GettingPayments | NotGettingPayments | WaitingToHear =>
+        super.cleanup(value, userAnswers)
+    }.getOrElse(super.cleanup(value, userAnswers))
 }
