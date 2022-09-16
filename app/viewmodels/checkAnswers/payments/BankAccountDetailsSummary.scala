@@ -35,6 +35,7 @@ object BankAccountDetailsSummary {
 
         val value = Seq(
           Some(HtmlFormat.escape(answer.accountName).toString),
+          Some(HtmlFormat.escape(answer.bankName).toString),
           Some(HtmlFormat.escape(answer.sortCode).toString),
           Some(HtmlFormat.escape(answer.accountNumber).toString),
           answer.rollNumber.map(HtmlFormat.escape)
