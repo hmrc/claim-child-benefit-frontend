@@ -17,14 +17,15 @@
 package pages.partner
 
 import controllers.partner.routes
-import models.UserAnswers
+import models.PartnerClaimingChildBenefit._
+import models.{PartnerClaimingChildBenefit, UserAnswers}
 import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
 import scala.util.Try
 
-case object PartnerClaimingChildBenefitPage extends QuestionPage[Boolean] {
+case object PartnerClaimingChildBenefitPage extends QuestionPage[PartnerClaimingChildBenefit] {
 
   override def path: JsPath = JsPath \ toString
 
@@ -35,14 +36,16 @@ case object PartnerClaimingChildBenefitPage extends QuestionPage[Boolean] {
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
-      case true => PartnerEldestChildNamePage
-      case false => PartnerWaitingForEntitlementDecisionPage
+      case GettingPayments | NotGettingPayments | WaitingToHear => PartnerEldestChildNamePage
+      case NotClaiming                                          => PartnerWaitingForEntitlementDecisionPage
     }.orRecover
 
-  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
-    if (value.contains(true)) {
-      userAnswers.remove(PartnerWaitingForEntitlementDecisionPage)
-    } else {
-      super.cleanup(value, userAnswers)
-    }
+  override def cleanup(value: Option[PartnerClaimingChildBenefit], userAnswers: UserAnswers): Try[UserAnswers] =
+    value.map {
+      case GettingPayments | NotGettingPayments | WaitingToHear =>
+        userAnswers.remove(PartnerWaitingForEntitlementDecisionPage)
+
+      case NotClaiming =>
+        super.cleanup(value, userAnswers)
+    }.getOrElse(super.cleanup(value, userAnswers))
 }

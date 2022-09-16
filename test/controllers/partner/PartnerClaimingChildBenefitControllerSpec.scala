@@ -19,7 +19,7 @@ package controllers.partner
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.partner.PartnerClaimingChildBenefitFormProvider
-import models.AdultName
+import models.{AdultName, PartnerClaimingChildBenefit}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -37,6 +37,7 @@ class PartnerClaimingChildBenefitControllerSpec extends SpecBase with MockitoSug
 
   private val name = AdultName("first", None, "last")
   private val baseAnswers = emptyUserAnswers.set(PartnerNamePage, name).success.value
+  private val validAnswer = PartnerClaimingChildBenefit.values.head
 
   val formProvider = new PartnerClaimingChildBenefitFormProvider()
   val form = formProvider(name.firstName)
@@ -64,7 +65,7 @@ class PartnerClaimingChildBenefitControllerSpec extends SpecBase with MockitoSug
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = baseAnswers.set(PartnerClaimingChildBenefitPage, true).success.value
+      val userAnswers = baseAnswers.set(PartnerClaimingChildBenefitPage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -76,7 +77,7 @@ class PartnerClaimingChildBenefitControllerSpec extends SpecBase with MockitoSug
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), waypoints, name.firstName)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints, name.firstName)(request, messages(application)).toString
       }
     }
 
@@ -96,10 +97,10 @@ class PartnerClaimingChildBenefitControllerSpec extends SpecBase with MockitoSug
       running(application) {
         val request =
           FakeRequest(POST, partnerClaimingChildBenefitRoute)
-            .withFormUrlEncodedBody(("value", "true"))
+            .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value
-        val expectedAnswers = baseAnswers.set(PartnerClaimingChildBenefitPage, true).success.value
+        val expectedAnswers = baseAnswers.set(PartnerClaimingChildBenefitPage, validAnswer).success.value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual PartnerClaimingChildBenefitPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
@@ -148,7 +149,7 @@ class PartnerClaimingChildBenefitControllerSpec extends SpecBase with MockitoSug
       running(application) {
         val request =
           FakeRequest(POST, partnerClaimingChildBenefitRoute)
-            .withFormUrlEncodedBody(("value", "true"))
+            .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value
 

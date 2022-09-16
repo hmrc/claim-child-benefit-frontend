@@ -30,14 +30,12 @@ object PartnerClaimingChildBenefitSummary {
          (implicit messages: Messages): Option[SummaryListRow] =
     for {
       partnerName <- answers.get(PartnerNamePage)
-      entitled <- answers.get(PartnerClaimingChildBenefitPage)
+      claiming <- answers.get(PartnerClaimingChildBenefitPage)
     } yield {
-
-      val value = if (entitled) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
         key = messages("partnerClaimingChildBenefit.checkYourAnswersLabel", partnerName.firstName),
-        value = ValueViewModel(value),
+        value = ValueViewModel(messages(s"partnerClaimingChildBenefit.${claiming.toString}")),
         actions = Seq(
           ActionItemViewModel(
             messages("site.change"),

@@ -23,6 +23,11 @@ import uk.gov.hmrc.domain.Nino
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryPartnerClaimingChildBenefit: Arbitrary[PartnerClaimingChildBenefit] =
+    Arbitrary {
+      Gen.oneOf(PartnerClaimingChildBenefit.values)
+    }
+
   implicit lazy val arbitraryBankAccountHolder: Arbitrary[BankAccountHolder] =
     Arbitrary {
       Gen.oneOf(BankAccountHolder.values)

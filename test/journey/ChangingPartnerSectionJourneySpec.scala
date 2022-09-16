@@ -17,7 +17,7 @@
 package journey
 
 import generators.ModelGenerators
-import models.{ChildName, Index}
+import models.{ChildName, Index, PartnerClaimingChildBenefit}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.freespec.AnyFreeSpec
 import pages.CheckYourAnswersPage
@@ -81,7 +81,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
     "changing that answer should ask if they are waiting to hear if they are entitled" in {
 
       val initialise = journeyOf(
-        submitAnswer(PartnerClaimingChildBenefitPage, true),
+        submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
         submitAnswer(PartnerEldestChildNamePage, eldestChildName),
         submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
         goTo(CheckYourAnswersPage)
@@ -91,7 +91,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
         .run(
           initialise,
           goToChangeAnswer(PartnerClaimingChildBenefitPage),
-          submitAnswer(PartnerClaimingChildBenefitPage, false),
+          submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
           pageMustBe(PartnerWaitingForEntitlementDecisionPage),
           answersMustContain(PartnerEldestChildNamePage),
           answersMustContain(PartnerEldestChildDateOfBirthPage)
@@ -104,7 +104,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
     "and they were waiting for a decision" - {
 
       val initialise = journeyOf(
-        submitAnswer(PartnerClaimingChildBenefitPage, false),
+        submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
         submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
         submitAnswer(PartnerEldestChildNamePage, eldestChildName),
         submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
@@ -118,7 +118,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
           .run(
             initialise,
             goToChangeAnswer(PartnerClaimingChildBenefitPage),
-            submitAnswer(PartnerClaimingChildBenefitPage, true),
+            submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
             pageMustBe(CheckYourAnswersPage),
             answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
             answersMustContain(PartnerEldestChildNamePage),
@@ -145,7 +145,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
       "changing to say they are waiting for a decision must collect their partner's eldest child details and return to Check Answers" in {
 
         val initialise = journeyOf(
-          submitAnswer(PartnerClaimingChildBenefitPage, false),
+          submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
           submitAnswer(PartnerWaitingForEntitlementDecisionPage, false),
           submitAnswer(ChildNamePage(Index(0)), childName),
           goTo(CheckYourAnswersPage)

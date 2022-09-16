@@ -56,10 +56,9 @@ object DownloadAuditEvent {
             dateOfBirth                          = partner.dateOfBirth,
             nationality                          = partner.nationality,
             nationalInsuranceNumber              = partner.nationalInsuranceNumber,
-            currentlyClaimingChildBenefit        = partner.currentlyClaimingChildBenefit,
+            currentlyClaimingChildBenefit        = partner.currentlyClaimingChildBenefit.toString,
             employmentStatus                     = partner.employmentStatus.map(_.toString),
             memberOfHMForcesOrCivilServantAbroad = partner.memberOfHMForcesOrCivilServantAbroad,
-            waitingToHearAboutEntitlement        = partner.waitingToHearAboutEntitlement,
             eldestChild                          = partner.eldestChild.map(convertEldestChild)
           )
         }
@@ -212,11 +211,10 @@ object DownloadAuditEvent {
                                            name: AdultName,
                                            dateOfBirth: LocalDate,
                                            nationality: String,
-                                           currentlyClaimingChildBenefit: Boolean,
+                                           currentlyClaimingChildBenefit: String,
                                            nationalInsuranceNumber: Option[String],
                                            employmentStatus: Set[String],
                                            memberOfHMForcesOrCivilServantAbroad: Boolean,
-                                           waitingToHearAboutEntitlement: Option[Boolean],
                                            eldestChild: Option[EldestChild]
                                          )
   object Partner {

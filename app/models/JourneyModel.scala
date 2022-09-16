@@ -85,14 +85,9 @@ object JourneyModel {
                             nationalInsuranceNumber: Option[String],
                             employmentStatus: Set[EmploymentStatus],
                             memberOfHMForcesOrCivilServantAbroad: Boolean,
-                            currentlyClaimingChildBenefit: Boolean,
-                            waitingToHearAboutEntitlement: Option[Boolean],
+                            currentlyClaimingChildBenefit: PartnerClaimingChildBenefit,
                             eldestChild: Option[EldestChild]
-                          ) {
-
-    val entitledToChildBenefitOrWaiting: Boolean =
-      waitingToHearAboutEntitlement.getOrElse(currentlyClaimingChildBenefit)
-  }
+                          )
 
   final case class Child(
                           name: ChildName,
@@ -258,16 +253,12 @@ object JourneyModel {
 
   private def getPartner(answers: UserAnswers): IorNec[Query, Partner] = {
 
+    import models.PartnerClaimingChildBenefit._
+
     def getPartnerNino: IorNec[Query, Option[String]] =
       answers.getIor(PartnerNinoKnownPage).flatMap {
         case true  => answers.getIor(PartnerNinoPage).map(nino => Some(nino.value))
         case false => Ior.Right(None)
-      }
-
-    def getPartnerWaitingToHear: IorNec[Query, Option[Boolean]] =
-      answers.getIor(PartnerClaimingChildBenefitPage).flatMap {
-        case false => answers.getIor(PartnerWaitingForEntitlementDecisionPage).map(Some(_))
-        case true  => Ior.Right(None)
       }
 
     def getPartnerEldestChild: IorNec[Query, Option[EldestChild]] = {
@@ -278,10 +269,10 @@ object JourneyModel {
       ).parMapN { (name, dateOfBirth) => Some(EldestChild(name, dateOfBirth)) }
 
       answers.getIor(PartnerClaimingChildBenefitPage).flatMap {
-        case true =>
+        case GettingPayments | NotGettingPayments | WaitingToHear =>
           getDetails
 
-        case false =>
+        case NotClaiming =>
           answers.getIor(PartnerWaitingForEntitlementDecisionPage).flatMap {
             case true  => getDetails
             case false => Ior.Right(None)
@@ -302,7 +293,6 @@ object JourneyModel {
       answers.getIor(PartnerEmploymentStatusPage),
       getHmForces,
       answers.getIor(PartnerClaimingChildBenefitPage),
-      getPartnerWaitingToHear,
       getPartnerEldestChild
     ).parMapN(Partner.apply)
   }

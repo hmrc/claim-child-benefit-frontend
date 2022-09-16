@@ -655,11 +655,15 @@ partnerEmploymentStatus.error.required = Select {0}’s employment status
 partnerEmploymentStatus.error.mutuallyExclusive = Select {0}’s employment status or none of these apply
 partnerEmploymentStatus.change.hidden = {0}’s employment status
 
-partnerClaimingChildBenefit.title = Is your partner entitled to receive Child Benefit now?
-partnerClaimingChildBenefit.heading = Is {0} entitled to receive Child Benefit now?
-partnerClaimingChildBenefit.checkYourAnswersLabel = Is {0} entitled to receive Child Benefit now?
-partnerClaimingChildBenefit.error.required = Select yes if {0} is to receive Child Benefit now
-partnerClaimingChildBenefit.change.hidden = if {0} is entitled to receive Child Benefit now
+partnerClaimingChildBenefit.title = Is your partner getting Child Benefit now?
+partnerClaimingChildBenefit.heading = Is {0} getting Child Benefit now?
+partnerClaimingChildBenefit.checkYourAnswersLabel = Is {0} getting Child Benefit now?
+partnerClaimingChildBenefit.gettingPayments = Claiming Child Benefit and getting payments
+partnerClaimingChildBenefit.notGettingPayments = Claiming Child Benefit and not getting payments
+partnerClaimingChildBenefit.notClaiming = Not getting Child Benefit
+partnerClaimingChildBenefit.waitingToHear = Waiting to hear if they are eligible for Child Benefit
+partnerClaimingChildBenefit.error.required = Select yes if {0} is getting Child Benefit now
+partnerClaimingChildBenefit.change.hidden = if {0} is getting Child Benefit now
 
 partnerName.title = What is your partner’s name?
 partnerName.heading = What is your partner’s name?
