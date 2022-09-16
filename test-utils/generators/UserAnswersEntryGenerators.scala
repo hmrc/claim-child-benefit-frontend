@@ -174,14 +174,6 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryPartnerWaitingForEntitlementDecisionUserAnswersEntry: Arbitrary[(PartnerWaitingForEntitlementDecisionPage.type, JsValue)] =
-    Arbitrary {
-      for {
-        page  <- arbitrary[PartnerWaitingForEntitlementDecisionPage.type]
-        value <- arbitrary[Boolean].map(Json.toJson(_))
-      } yield (page, value)
-    }
-
   implicit lazy val arbitraryPartnerNinoKnownUserAnswersEntry: Arbitrary[(PartnerNinoKnownPage.type, JsValue)] =
     Arbitrary {
       for {
@@ -214,11 +206,11 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryPartnerEntitledToChildBenefitUserAnswersEntry: Arbitrary[(PartnerClaimingChildBenefitPage.type, JsValue)] =
+  implicit lazy val arbitraryPartnerClaimingChildBenefitUserAnswersEntry: Arbitrary[(PartnerClaimingChildBenefitPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[PartnerClaimingChildBenefitPage.type]
-        value <- arbitrary[Boolean].map(Json.toJson(_))
+        value <- arbitrary[PartnerClaimingChildBenefit].map(Json.toJson(_))
       } yield (page, value)
     }
 

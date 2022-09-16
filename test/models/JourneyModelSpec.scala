@@ -147,7 +147,6 @@ class JourneyModelSpec
           .set(PartnerEmploymentStatusPage, partnerEmployment).success.value
           .set(PartnerIsHmfOrCivilServantPage, false).success.value
           .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming).success.value
-          .set(PartnerWaitingForEntitlementDecisionPage, false).success.value
 
         val expectedModel = JourneyModel(
           applicant = JourneyModel.Applicant(
@@ -633,8 +632,7 @@ class JourneyModelSpec
           .withMinimalPaymentDetails
           .withMinimalPartnerDetails
           .set(RelationshipStatusPage, Married).success.value
-          .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming).success.value
-          .set(PartnerWaitingForEntitlementDecisionPage, true).success.value
+          .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments).success.value
           .set(PartnerEldestChildNamePage, partnerEldestChildName).success.value
           .set(PartnerEldestChildDateOfBirthPage, now).success.value
 
@@ -645,7 +643,7 @@ class JourneyModelSpec
           nationalInsuranceNumber = None,
           employmentStatus = partnerEmployment,
           memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
+          currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments,
           eldestChild = Some(JourneyModel.EldestChild(partnerEldestChildName, now))
         )
 
@@ -1153,7 +1151,6 @@ class JourneyModelSpec
           .withMinimalPartnerDetails
           .set(RelationshipStatusPage, Married).success.value
           .set(PartnerClaimingChildBenefitPage, partnerClaiming).success.value
-          .set(PartnerWaitingForEntitlementDecisionPage, true).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1284,7 +1281,6 @@ class JourneyModelSpec
         .set(PartnerNationalityPage, partnerNationality).success.value
         .set(PartnerEmploymentStatusPage, partnerEmployment).success.value
         .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming).success.value
-        .set(PartnerWaitingForEntitlementDecisionPage, false).success.value
 
     def withOneChild: UserAnswers =
       answers

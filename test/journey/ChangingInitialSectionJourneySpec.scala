@@ -67,7 +67,6 @@ class ChangingInitialSectionJourneySpec
       setUserAnswerTo(PartnerEmploymentStatusPage, employmentStatus),
       setUserAnswerTo(PartnerIsHmfOrCivilServantPage, false),
       setUserAnswerTo(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
-      setUserAnswerTo(PartnerWaitingForEntitlementDecisionPage, true),
       setUserAnswerTo(PartnerEldestChildNamePage, eldestChildName),
       setUserAnswerTo(PartnerEldestChildDateOfBirthPage, LocalDate.now),
       setUserAnswerTo(ChildNamePage(Index(0)), childName),
@@ -96,7 +95,6 @@ class ChangingInitialSectionJourneySpec
             answersMustContain(PartnerEmploymentStatusPage),
             answersMustContain(PartnerIsHmfOrCivilServantPage),
             answersMustContain(PartnerClaimingChildBenefitPage),
-            answersMustContain(PartnerWaitingForEntitlementDecisionPage),
             answersMustContain(PartnerEldestChildNamePage),
             answersMustContain(PartnerEldestChildDateOfBirthPage)
           )
@@ -131,7 +129,6 @@ class ChangingInitialSectionJourneySpec
                 answersMustNotContain(PartnerEmploymentStatusPage),
                 answersMustNotContain(PartnerIsHmfOrCivilServantPage),
                 answersMustNotContain(PartnerClaimingChildBenefitPage),
-                answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
                 answersMustNotContain(PartnerEldestChildNamePage),
                 answersMustNotContain(PartnerEldestChildDateOfBirthPage)
               )
@@ -163,7 +160,6 @@ class ChangingInitialSectionJourneySpec
                 answersMustNotContain(PartnerEmploymentStatusPage),
                 answersMustNotContain(PartnerIsHmfOrCivilServantPage),
                 answersMustNotContain(PartnerClaimingChildBenefitPage),
-                answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
                 answersMustNotContain(PartnerEldestChildNamePage),
                 answersMustNotContain(PartnerEldestChildDateOfBirthPage)
               )
@@ -202,7 +198,6 @@ class ChangingInitialSectionJourneySpec
                     answersMustNotContain(PartnerEmploymentStatusPage),
                     answersMustNotContain(PartnerIsHmfOrCivilServantPage),
                     answersMustNotContain(PartnerClaimingChildBenefitPage),
-                    answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
                     answersMustNotContain(PartnerEldestChildNamePage),
                     answersMustNotContain(PartnerEldestChildDateOfBirthPage)
                   )
@@ -237,7 +232,6 @@ class ChangingInitialSectionJourneySpec
                     answersMustNotContain(PartnerEmploymentStatusPage),
                     answersMustNotContain(PartnerIsHmfOrCivilServantPage),
                     answersMustNotContain(PartnerClaimingChildBenefitPage),
-                    answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
                     answersMustNotContain(PartnerEldestChildNamePage),
                     answersMustNotContain(PartnerEldestChildDateOfBirthPage)
                   )
@@ -270,7 +264,6 @@ class ChangingInitialSectionJourneySpec
             answersMustContain(PartnerEmploymentStatusPage),
             answersMustContain(PartnerIsHmfOrCivilServantPage),
             answersMustContain(PartnerClaimingChildBenefitPage),
-            answersMustContain(PartnerWaitingForEntitlementDecisionPage),
             answersMustContain(PartnerEldestChildNamePage),
             answersMustContain(PartnerEldestChildDateOfBirthPage),
             answersMustContain(PaymentFrequencyPage)
@@ -306,7 +299,6 @@ class ChangingInitialSectionJourneySpec
                 answersMustNotContain(PartnerEmploymentStatusPage),
                 answersMustNotContain(PartnerIsHmfOrCivilServantPage),
                 answersMustNotContain(PartnerClaimingChildBenefitPage),
-                answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
                 answersMustNotContain(PartnerEldestChildNamePage),
                 answersMustNotContain(PartnerEldestChildDateOfBirthPage),
                 answersMustContain(PaymentFrequencyPage)
@@ -339,7 +331,6 @@ class ChangingInitialSectionJourneySpec
                 answersMustNotContain(PartnerEmploymentStatusPage),
                 answersMustNotContain(PartnerIsHmfOrCivilServantPage),
                 answersMustNotContain(PartnerClaimingChildBenefitPage),
-                answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
                 answersMustNotContain(PartnerEldestChildNamePage),
                 answersMustNotContain(PartnerEldestChildDateOfBirthPage)
               )
@@ -378,7 +369,6 @@ class ChangingInitialSectionJourneySpec
                     answersMustNotContain(PartnerEmploymentStatusPage),
                     answersMustNotContain(PartnerIsHmfOrCivilServantPage),
                     answersMustNotContain(PartnerClaimingChildBenefitPage),
-                    answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
                     answersMustNotContain(PartnerEldestChildNamePage),
                     answersMustNotContain(PartnerEldestChildDateOfBirthPage),
                     answersMustContain(PaymentFrequencyPage)
@@ -414,7 +404,6 @@ class ChangingInitialSectionJourneySpec
                     answersMustNotContain(PartnerEmploymentStatusPage),
                     answersMustNotContain(PartnerIsHmfOrCivilServantPage),
                     answersMustNotContain(PartnerClaimingChildBenefitPage),
-                    answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
                     answersMustNotContain(PartnerEldestChildNamePage),
                     answersMustNotContain(PartnerEldestChildDateOfBirthPage)
                   )
@@ -443,7 +432,6 @@ class ChangingInitialSectionJourneySpec
       setUserAnswerTo(PartnerEmploymentStatusPage, employmentStatus),
       setUserAnswerTo(PartnerIsHmfOrCivilServantPage, false),
       setUserAnswerTo(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
-      setUserAnswerTo(PartnerWaitingForEntitlementDecisionPage, true),
       setUserAnswerTo(PartnerEldestChildNamePage, eldestChildName),
       setUserAnswerTo(PartnerEldestChildDateOfBirthPage, LocalDate.now),
       setUserAnswerTo(ChildNamePage(Index(0)), childName),
@@ -474,7 +462,6 @@ class ChangingInitialSectionJourneySpec
               answersMustContain(PartnerEmploymentStatusPage),
               answersMustContain(PartnerIsHmfOrCivilServantPage),
               answersMustContain(PartnerClaimingChildBenefitPage),
-              answersMustContain(PartnerWaitingForEntitlementDecisionPage),
               answersMustContain(PartnerEldestChildNamePage),
               answersMustContain(PartnerEldestChildDateOfBirthPage)
             )
@@ -511,7 +498,6 @@ class ChangingInitialSectionJourneySpec
                 answersMustNotContain(PartnerEmploymentStatusPage),
                 answersMustNotContain(PartnerIsHmfOrCivilServantPage),
                 answersMustNotContain(PartnerClaimingChildBenefitPage),
-                answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
                 answersMustNotContain(PartnerEldestChildNamePage),
                 answersMustNotContain(PartnerEldestChildDateOfBirthPage)
               )
@@ -544,7 +530,6 @@ class ChangingInitialSectionJourneySpec
                 answersMustNotContain(PartnerEmploymentStatusPage),
                 answersMustNotContain(PartnerIsHmfOrCivilServantPage),
                 answersMustNotContain(PartnerClaimingChildBenefitPage),
-                answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
                 answersMustNotContain(PartnerEldestChildNamePage),
                 answersMustNotContain(PartnerEldestChildDateOfBirthPage)
               )
@@ -584,7 +569,6 @@ class ChangingInitialSectionJourneySpec
                     answersMustNotContain(PartnerEmploymentStatusPage),
                     answersMustNotContain(PartnerIsHmfOrCivilServantPage),
                     answersMustNotContain(PartnerClaimingChildBenefitPage),
-                    answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
                     answersMustNotContain(PartnerEldestChildNamePage),
                     answersMustNotContain(PartnerEldestChildDateOfBirthPage)
                   )
@@ -620,7 +604,6 @@ class ChangingInitialSectionJourneySpec
                     answersMustNotContain(PartnerEmploymentStatusPage),
                     answersMustNotContain(PartnerIsHmfOrCivilServantPage),
                     answersMustNotContain(PartnerClaimingChildBenefitPage),
-                    answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
                     answersMustNotContain(PartnerEldestChildNamePage),
                     answersMustNotContain(PartnerEldestChildDateOfBirthPage)
                   )
@@ -655,7 +638,6 @@ class ChangingInitialSectionJourneySpec
               answersMustContain(PartnerEmploymentStatusPage),
               answersMustContain(PartnerIsHmfOrCivilServantPage),
               answersMustContain(PartnerClaimingChildBenefitPage),
-              answersMustContain(PartnerWaitingForEntitlementDecisionPage),
               answersMustContain(PartnerEldestChildNamePage),
               answersMustContain(PartnerEldestChildDateOfBirthPage),
               answersMustContain(PaymentFrequencyPage)
@@ -693,7 +675,6 @@ class ChangingInitialSectionJourneySpec
                 answersMustNotContain(PartnerEmploymentStatusPage),
                 answersMustNotContain(PartnerIsHmfOrCivilServantPage),
                 answersMustNotContain(PartnerClaimingChildBenefitPage),
-                answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
                 answersMustNotContain(PartnerEldestChildNamePage),
                 answersMustNotContain(PartnerEldestChildDateOfBirthPage),
                 answersMustContain(PaymentFrequencyPage)
@@ -727,7 +708,6 @@ class ChangingInitialSectionJourneySpec
                 answersMustNotContain(PartnerEmploymentStatusPage),
                 answersMustNotContain(PartnerIsHmfOrCivilServantPage),
                 answersMustNotContain(PartnerClaimingChildBenefitPage),
-                answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
                 answersMustNotContain(PartnerEldestChildNamePage),
                 answersMustNotContain(PartnerEldestChildDateOfBirthPage)
               )
@@ -767,7 +747,6 @@ class ChangingInitialSectionJourneySpec
                     answersMustNotContain(PartnerEmploymentStatusPage),
                     answersMustNotContain(PartnerIsHmfOrCivilServantPage),
                     answersMustNotContain(PartnerClaimingChildBenefitPage),
-                    answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
                     answersMustNotContain(PartnerEldestChildNamePage),
                     answersMustNotContain(PartnerEldestChildDateOfBirthPage),
                     answersMustContain(PaymentFrequencyPage)
@@ -803,7 +782,6 @@ class ChangingInitialSectionJourneySpec
                     answersMustNotContain(PartnerEmploymentStatusPage),
                     answersMustNotContain(PartnerIsHmfOrCivilServantPage),
                     answersMustNotContain(PartnerClaimingChildBenefitPage),
-                    answersMustNotContain(PartnerWaitingForEntitlementDecisionPage),
                     answersMustNotContain(PartnerEldestChildNamePage),
                     answersMustNotContain(PartnerEldestChildDateOfBirthPage)
                   )
@@ -851,8 +829,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                 submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
-                submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
+                submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                 submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
                 pageMustBe(CheckYourAnswersPage),
@@ -887,8 +864,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                 submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
-                submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
+                submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.WaitingToHear),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                 submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
                 pageMustBe(CheckYourAnswersPage),
@@ -924,8 +900,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                 submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
-                submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
+                submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotGettingPayments),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                 submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
                 pageMustBe(CheckYourAnswersPage),
@@ -958,8 +933,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                 submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
-                submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
+                submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                 submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
                 pageMustBe(CheckYourAnswersPage),
@@ -990,8 +964,7 @@ class ChangingInitialSectionJourneySpec
               submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
               submitAnswer(PartnerNationalityPage, "nationality"),
               submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-              submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
-              submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
+              submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
               submitAnswer(PartnerEldestChildNamePage, eldestChildName),
               submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
               pageMustBe(CheckYourAnswersPage),
@@ -1029,8 +1002,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                 submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
-                submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
+                submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                 submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
                 pageMustBe(CheckYourAnswersPage),
@@ -1066,8 +1038,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                 submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
-                submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
+                submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                 submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
                 pageMustBe(CheckYourAnswersPage),
@@ -1104,8 +1075,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                 submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
-                submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
+                submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                 submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
                 pageMustBe(CheckYourAnswersPage),
@@ -1139,8 +1109,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                 submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
-                submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
+                submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                 submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
                 pageMustBe(CheckYourAnswersPage),
@@ -1172,8 +1141,7 @@ class ChangingInitialSectionJourneySpec
               submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
               submitAnswer(PartnerNationalityPage, "nationality"),
               submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-              submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
-              submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
+              submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
               submitAnswer(PartnerEldestChildNamePage, eldestChildName),
               submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
               pageMustBe(CheckYourAnswersPage),
@@ -1242,8 +1210,7 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                   submitAnswer(PartnerNationalityPage, "nationality"),
                   submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                  submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
-                  submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
+                  submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                   submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                   submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
                   pageMustBe(CheckYourAnswersPage),
@@ -1280,8 +1247,7 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                   submitAnswer(PartnerNationalityPage, "nationality"),
                   submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                  submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
-                  submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
+                  submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                   submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                   submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
                   pageMustBe(CheckYourAnswersPage),
@@ -1319,8 +1285,7 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                   submitAnswer(PartnerNationalityPage, "nationality"),
                   submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                  submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
-                  submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
+                  submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                   submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                   submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
                   pageMustBe(CheckYourAnswersPage),
@@ -1355,8 +1320,7 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                   submitAnswer(PartnerNationalityPage, "nationality"),
                   submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                  submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
-                  submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
+                  submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                   submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                   submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
                   pageMustBe(CheckYourAnswersPage),
@@ -1389,8 +1353,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                 submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
-                submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
+                submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                 submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
                 pageMustBe(CheckYourAnswersPage),
@@ -1430,8 +1393,7 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                   submitAnswer(PartnerNationalityPage, "nationality"),
                   submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                  submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
-                  submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
+                  submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                   submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                   submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
                   pageMustBe(CheckYourAnswersPage),
@@ -1469,8 +1431,7 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                   submitAnswer(PartnerNationalityPage, "nationality"),
                   submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                  submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
-                  submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
+                  submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                   submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                   submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
                   pageMustBe(CheckYourAnswersPage),
@@ -1509,8 +1470,7 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                   submitAnswer(PartnerNationalityPage, "nationality"),
                   submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                  submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
-                  submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
+                  submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                   submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                   submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
                   pageMustBe(CheckYourAnswersPage),
@@ -1546,8 +1506,7 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
                   submitAnswer(PartnerNationalityPage, "nationality"),
                   submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-                  submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
-                  submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
+                  submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                   submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                   submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
                   pageMustBe(CheckYourAnswersPage),

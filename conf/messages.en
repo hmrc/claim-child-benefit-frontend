@@ -702,12 +702,6 @@ partnerNinoKnown.checkYourAnswersLabel = Do you know {0}’s National Insurance 
 partnerNinoKnown.error.required = Select yes if you know {0}’s National Insurance number
 partnerNinoKnown.change.hidden = if you know {0}’s National Insurance number
 
-partnerWaitingForEntitlementDecision.title = Is your partner waiting to hear if they are entitled to receive Child Benefit?
-partnerWaitingForEntitlementDecision.heading = Is {0} waiting to hear if they are entitled to receive Child Benefit?
-partnerWaitingForEntitlementDecision.checkYourAnswersLabel = Is {0} waiting to hear if they are entitled to receive Child Benefit?
-partnerWaitingForEntitlementDecision.error.required = Select yes if {0} is waiting to hear if they are entitled to receive Child Benefit
-partnerWaitingForEntitlementDecision.change.hidden = if {0} is waiting to hear if they are entitled to receive Child Benefit
-
 addChild.title.plural = You have added {0} children
 addChild.title.singular = You have added 1 child
 addChild.heading.plural = You have added {0} children

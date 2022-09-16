@@ -87,9 +87,6 @@ trait PageGenerators {
   implicit lazy val arbitraryAddChildPage: Arbitrary[AddChildPage.type] =
     Arbitrary(AddChildPage)
 
-  implicit lazy val arbitraryPartnerWaitingForEntitlementDecisionPage: Arbitrary[PartnerWaitingForEntitlementDecisionPage.type] =
-    Arbitrary(PartnerWaitingForEntitlementDecisionPage)
-
   implicit lazy val arbitraryPartnerNinoKnownPage: Arbitrary[PartnerNinoKnownPage.type] =
     Arbitrary(PartnerNinoKnownPage)
 

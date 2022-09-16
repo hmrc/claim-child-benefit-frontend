@@ -42,7 +42,6 @@ class PartnerJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGener
         submitAnswer(PartnerNationalityPage, "nationality"),
         submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
         submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
-        submitAnswer(PartnerWaitingForEntitlementDecisionPage, false),
         pageMustBe(ChildNamePage(Index(0)))
       )
   }
@@ -59,7 +58,7 @@ class PartnerJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGener
       )
   }
 
-  "users whose partner is entitled to Child Benefit must be asked for their partner's eldest child's details then go to Child Name" in {
+  "users whose partner is entitled to Child Benefit or waiting to hear must be asked for their partner's eldest child's details then go to Child Name" in {
 
     import PartnerClaimingChildBenefit._
 
@@ -69,20 +68,6 @@ class PartnerJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGener
     startingFrom(PartnerClaimingChildBenefitPage)
       .run(
         submitAnswer(PartnerClaimingChildBenefitPage, partnerClaiming),
-        submitAnswer(PartnerEldestChildNamePage, childName),
-        submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
-        pageMustBe(ChildNamePage(Index(0)))
-      )
-  }
-
-  "users whose partner is waiting to hear if they are entitled must be asked for their partner's eldest child's details then go to Child Name" in {
-
-    val childName = ChildName("first", None, "last")
-
-    startingFrom(PartnerClaimingChildBenefitPage)
-      .run(
-        submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
-        submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
         submitAnswer(PartnerEldestChildNamePage, childName),
         submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
         pageMustBe(ChildNamePage(Index(0)))

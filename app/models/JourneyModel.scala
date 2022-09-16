@@ -273,10 +273,7 @@ object JourneyModel {
           getDetails
 
         case NotClaiming =>
-          answers.getIor(PartnerWaitingForEntitlementDecisionPage).flatMap {
-            case true  => getDetails
-            case false => Ior.Right(None)
-          }
+          Ior.Right(None)
       }
     }
 
