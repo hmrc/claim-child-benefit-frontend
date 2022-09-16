@@ -19,11 +19,11 @@
         case JourneyModel.PaymentPreference.DoNotPay =>
             doNotPay()
 
-        case JourneyModel.PaymentPreference.Weekly(bankDetails) =>
-            weekly(bankDetails)
+        case JourneyModel.PaymentPreference.Weekly(bankAccount) =>
+            weekly(bankAccount)
 
-        case JourneyModel.PaymentPreference.EveryFourWeeks(bankDetails) =>
-            everyFourWeeks(bankDetails)
+        case JourneyModel.PaymentPreference.EveryFourWeeks(bankAccount) =>
+            everyFourWeeks(bankAccount)
 
         case JourneyModel.PaymentPreference.ExistingAccount(eldestChild) =>
             existingAccount(eldestChild)

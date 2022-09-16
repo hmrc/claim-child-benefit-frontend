@@ -60,6 +60,7 @@ case object WantToBePaidPage extends QuestionPage[Boolean] {
     if (value.contains(false)) {
       userAnswers.remove(PaymentFrequencyPage)
         .flatMap(_.remove(ApplicantHasSuitableAccountPage))
+        .flatMap(_.remove(BankAccountHolderPage))
         .flatMap(_.remove(BankAccountDetailsPage))
     } else {
       super.cleanup(value, userAnswers)

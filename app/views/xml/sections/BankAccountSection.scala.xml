@@ -1,0 +1,17 @@
+@this(
+    line: Line
+)
+
+@(bankAccount: JourneyModel.BankAccount)(implicit messages: Messages)
+
+@line("pdf.accountholder", messages(s"pdf.accountHolder.${bankAccount.holder.toString}"))
+
+@line("pdf.sortCode", bankAccount.details.sortCode)
+
+@line("pdf.accountNumber", bankAccount.details.accountNumber)
+
+@line("pdf.accountName", bankAccount.details.accountName)
+
+@bankAccount.details.rollNumber.map { rollNumber =>
+    line("pdf.rollNumber", rollNumber)
+}

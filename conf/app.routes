@@ -69,6 +69,9 @@ POST       /tax-charge-explanation                       controllers.income.TaxC
 GET        /have-suitable-bank-account                        controllers.payments.ApplicantHasSuitableAccountController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /have-suitable-bank-account                        controllers.payments.ApplicantHasSuitableAccountController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
+GET        /bank-account-holder                         controllers.payments.BankAccountHolderController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /bank-account-holder                         controllers.payments.BankAccountHolderController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 GET        /bank-account-details                        controllers.payments.BankAccountDetailsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /bank-account-details                        controllers.payments.BankAccountDetailsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 

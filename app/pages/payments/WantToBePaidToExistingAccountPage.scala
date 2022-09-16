@@ -43,6 +43,7 @@ case object WantToBePaidToExistingAccountPage extends QuestionPage[Boolean] {
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
     if (value.contains(true)) {
       userAnswers.remove(ApplicantHasSuitableAccountPage)
+        .flatMap(_.remove(BankAccountHolderPage))
         .flatMap(_.remove(BankAccountDetailsPage))
     } else {
       super.cleanup(value, userAnswers)

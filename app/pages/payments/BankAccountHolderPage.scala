@@ -17,35 +17,20 @@
 package pages.payments
 
 import controllers.payments.routes
-import models.UserAnswers
-import pages.applicant.ApplicantHasPreviousFamilyNamePage
+import models.{BankAccountHolder, UserAnswers}
 import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-import scala.util.Try
-
-case object ApplicantHasSuitableAccountPage extends QuestionPage[Boolean] {
+case object BankAccountHolderPage extends QuestionPage[BankAccountHolder] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "applicantHasSuitableAccount"
+  override def toString: String = "bankAccountHolder"
 
   override def route(waypoints: Waypoints): Call =
-    routes.ApplicantHasSuitableAccountController.onPageLoad(waypoints)
+    routes.BankAccountHolderController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case true  => BankAccountHolderPage
-      case false => ApplicantHasPreviousFamilyNamePage
-    }.orRecover
-
-  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
-    if (value.contains(false)) {
-      userAnswers
-        .remove(BankAccountHolderPage)
-        .flatMap(_.remove(BankAccountDetailsPage))
-    } else {
-      super.cleanup(value, userAnswers)
-    }
+    BankAccountDetailsPage
 }

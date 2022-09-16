@@ -29,12 +29,13 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
 
     "when bank account details are present" in {
 
-      val preference = Weekly(Some(BankAccountDetails("name", "000000", "00000000", None)))
+      val preference = Weekly(Some(BankAccount("applicant", "name", "000000", "00000000", None)))
       val json = Json.toJson(preference)
 
       json mustEqual Json.obj(
         "frequency" -> "weekly",
         "account"   -> Json.obj(
+          "holder"        -> "applicant",
           "accountName"   -> "name",
           "sortCode"      -> "000000",
           "accountNumber" -> "00000000"
@@ -58,12 +59,13 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
 
     "when bank account details are present" in {
 
-      val preference = EveryFourWeeks(Some(BankAccountDetails("name", "000000", "00000000", None)))
+      val preference = EveryFourWeeks(Some(BankAccount("applicant", "name", "000000", "00000000", None)))
       val json = Json.toJson(preference)
 
       json mustEqual Json.obj(
         "frequency" -> "every four weeks",
         "account"   -> Json.obj(
+          "holder"        -> "applicant",
           "accountName"   -> "name",
           "sortCode"      -> "000000",
           "accountNumber" -> "00000000"
@@ -90,8 +92,8 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
       val dateOfBirth = LocalDate.of(2020, 12, 31)
 
       val preference = ExistingFrequency(
-        bankAccountDetails = Some(BankAccountDetails("name", "000000", "00000000", None)),
-        eldestChild        = EldestChild(ChildName("first", None, "last"), dateOfBirth)
+        bankAccount = Some(BankAccount("applicant", "name", "000000", "00000000", None)),
+        eldestChild = EldestChild(ChildName("first", None, "last"), dateOfBirth)
       )
 
       val json = Json.toJson(preference)
@@ -106,6 +108,7 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
           "dateOfBirth" -> "2020-12-31"
         ),
         "account"   -> Json.obj(
+          "holder"        -> "applicant",
           "accountName"   -> "name",
           "sortCode"      -> "000000",
           "accountNumber" -> "00000000"
@@ -118,8 +121,8 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
       val dateOfBirth = LocalDate.of(2020, 12, 31)
 
       val preference = ExistingFrequency(
-        bankAccountDetails = None,
-        eldestChild        = EldestChild(ChildName("first", None, "last"), dateOfBirth)
+        bankAccount = None,
+        eldestChild = EldestChild(ChildName("first", None, "last"), dateOfBirth)
       )
 
       val json = Json.toJson(preference)

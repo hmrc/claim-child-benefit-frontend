@@ -58,6 +58,7 @@ class JourneyModelSpec
   private val previousName2 = "previous name 2"
 
   private val bankAccountDetails = BankAccountDetails("name", "00000000", "000000", None)
+  private val bankAccountHolder = BankAccountHolder.Applicant
   private val eldestChildName = ChildName("first", None, "last")
 
   private val partnerName = AdultName("partner first", None, "partner last")
@@ -327,10 +328,11 @@ class JourneyModelSpec
               .set(EldestChildDateOfBirthPage, now).success.value
               .set(WantToBePaidToExistingAccountPage, false).success.value
               .set(ApplicantHasSuitableAccountPage, true).success.value
+              .set(BankAccountHolderPage, bankAccountHolder).success.value
               .set(BankAccountDetailsPage, bankAccountDetails).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.ExistingFrequency(
-              bankAccountDetails = Some(bankAccountDetails),
+              bankAccount = Some(JourneyModel.BankAccount(bankAccountHolder, bankAccountDetails)),
               eldestChild = JourneyModel.EldestChild(eldestChildName, now)
             )
 
@@ -355,7 +357,7 @@ class JourneyModelSpec
               .set(ApplicantHasSuitableAccountPage, false).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.ExistingFrequency(
-              bankAccountDetails = None,
+              bankAccount = None,
               eldestChild = JourneyModel.EldestChild(eldestChildName, now)
             )
 
@@ -385,10 +387,11 @@ class JourneyModelSpec
               .set(WantToBePaidPage, true).success.value
               .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks).success.value
               .set(ApplicantHasSuitableAccountPage, true).success.value
+              .set(BankAccountHolderPage, bankAccountHolder).success.value
               .set(BankAccountDetailsPage, bankAccountDetails).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(
-              bankAccountDetails = Some(bankAccountDetails)
+              bankAccount = Some(JourneyModel.BankAccount(bankAccountHolder, bankAccountDetails))
             )
 
             val (errors, data) = JourneyModel.from(answers).pad
@@ -402,10 +405,11 @@ class JourneyModelSpec
             val answers = baseAnswers
               .set(WantToBePaidPage, true).success.value
               .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks).success.value
+              .set(BankAccountHolderPage, bankAccountHolder).success.value
               .set(ApplicantHasSuitableAccountPage, false).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(
-              bankAccountDetails = None
+              bankAccount = None
             )
 
             val (errors, data) = JourneyModel.from(answers).pad
@@ -423,10 +427,11 @@ class JourneyModelSpec
               .set(WantToBePaidPage, true).success.value
               .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
               .set(ApplicantHasSuitableAccountPage, true).success.value
+              .set(BankAccountHolderPage, bankAccountHolder).success.value
               .set(BankAccountDetailsPage, bankAccountDetails).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.Weekly(
-              bankAccountDetails = Some(bankAccountDetails)
+              bankAccount = Some(JourneyModel.BankAccount(bankAccountHolder, bankAccountDetails))
             )
 
             val (errors, data) = JourneyModel.from(answers).pad
@@ -443,7 +448,7 @@ class JourneyModelSpec
               .set(ApplicantHasSuitableAccountPage, false).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.Weekly(
-              bankAccountDetails = None
+              bankAccount = None
             )
 
             val (errors, data) = JourneyModel.from(answers).pad
@@ -1018,7 +1023,7 @@ class JourneyModelSpec
 
           val (errors, data) = JourneyModel.from(answers).pad
 
-          errors.value.toChain.toList must contain only BankAccountDetailsPage
+          errors.value.toChain.toList must contain theSameElementsAs Seq(BankAccountHolderPage, BankAccountDetailsPage)
           data mustBe empty
         }
       }
@@ -1052,7 +1057,7 @@ class JourneyModelSpec
 
         val (errors, data) = JourneyModel.from(answers).pad
 
-        errors.value.toChain.toList must contain only BankAccountDetailsPage
+        errors.value.toChain.toList must contain theSameElementsAs Seq(BankAccountHolderPage, BankAccountDetailsPage)
         data mustBe empty
       }
 

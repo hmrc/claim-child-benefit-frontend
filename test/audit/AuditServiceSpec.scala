@@ -103,7 +103,10 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
         ),
         benefits = Set(models.Benefits.IncomeSupport, models.Benefits.JobseekersAllowance),
         paymentPreference = JourneyModel.PaymentPreference.ExistingFrequency(
-          bankAccountDetails = Some(models.BankAccountDetails("account name", "000000", "00000000", Some("roll number"))),
+          bankAccount = Some(JourneyModel.BankAccount(
+            holder = models.BankAccountHolder.Applicant,
+            details = models.BankAccountDetails("account name", "000000", "00000000", Some("roll number"))
+          )),
           eldestChild        = JourneyModel.EldestChild(
             name        = models.ChildName("applicant eldest first", Some("applicant eldest middle"), "applicant eldest last"),
             dateOfBirth = now
@@ -162,7 +165,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
         ),
         benefits = Set("incomeSupport", "jobseekersAllowance"),
         paymentPreference = ExistingFrequency(
-          bankAccountDetails = Some(BankAccountDetails("account name", "000000", "00000000", Some("roll number"))),
+          bankAccount = Some(BankAccount("applicant", "account name", "000000", "00000000", Some("roll number"))),
           eldestChild        = EldestChild(
             name        = ChildName("applicant eldest first", Some("applicant eldest middle"), "applicant eldest last"),
             dateOfBirth = now
