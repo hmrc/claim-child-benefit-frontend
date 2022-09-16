@@ -214,10 +214,10 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryPartnerEntitledToChildBenefitUserAnswersEntry: Arbitrary[(PartnerEntitledToChildBenefitPage.type, JsValue)] =
+  implicit lazy val arbitraryPartnerEntitledToChildBenefitUserAnswersEntry: Arbitrary[(PartnerClaimingChildBenefitPage.type, JsValue)] =
     Arbitrary {
       for {
-        page  <- arbitrary[PartnerEntitledToChildBenefitPage.type]
+        page  <- arbitrary[PartnerClaimingChildBenefitPage.type]
         value <- arbitrary[Boolean].map(Json.toJson(_))
       } yield (page, value)
     }

@@ -26,9 +26,9 @@
 
 @(form: Form[_], waypoints: Waypoints, partnerFirstName: String)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("partnerEntitledToChildBenefit.title"))) {
+@layout(pageTitle = title(form, messages("partnerClaimingChildBenefit.title"))) {
 
-    @formHelper(action = routes.PartnerEntitledToChildBenefitController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.PartnerClaimingChildBenefitController.onSubmit(waypoints), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -37,7 +37,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("partnerEntitledToChildBenefit.heading", partnerFirstName)).asPageHeading()
+                legend = LegendViewModel(messages("partnerClaimingChildBenefit.heading", partnerFirstName)).asPageHeading()
             )
         )
 

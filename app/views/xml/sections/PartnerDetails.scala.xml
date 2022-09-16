@@ -24,7 +24,7 @@
 
     @line("pdf.hmfOrCivilServant", booleanToYesNo(model.memberOfHMForcesOrCivilServantAbroad))
 
-    @line("pdf.entitledToChildBenefit", booleanToYesNo(model.currentlyEntitledToChildBenefit))
+    @line("pdf.claimingChildBenefit", booleanToYesNo(model.currentlyClaimingChildBenefit))
 
     @model.waitingToHearAboutEntitlement.map { answer =>
         line("pdf.waitingToHearAboutEntitlement", booleanToYesNo(answer))

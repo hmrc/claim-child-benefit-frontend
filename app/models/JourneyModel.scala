@@ -85,13 +85,13 @@ object JourneyModel {
                             nationalInsuranceNumber: Option[String],
                             employmentStatus: Set[EmploymentStatus],
                             memberOfHMForcesOrCivilServantAbroad: Boolean,
-                            currentlyEntitledToChildBenefit: Boolean,
+                            currentlyClaimingChildBenefit: Boolean,
                             waitingToHearAboutEntitlement: Option[Boolean],
                             eldestChild: Option[EldestChild]
                           ) {
 
     val entitledToChildBenefitOrWaiting: Boolean =
-      waitingToHearAboutEntitlement.getOrElse(currentlyEntitledToChildBenefit)
+      waitingToHearAboutEntitlement.getOrElse(currentlyClaimingChildBenefit)
   }
 
   final case class Child(
@@ -265,7 +265,7 @@ object JourneyModel {
       }
 
     def getPartnerWaitingToHear: IorNec[Query, Option[Boolean]] =
-      answers.getIor(PartnerEntitledToChildBenefitPage).flatMap {
+      answers.getIor(PartnerClaimingChildBenefitPage).flatMap {
         case false => answers.getIor(PartnerWaitingForEntitlementDecisionPage).map(Some(_))
         case true  => Ior.Right(None)
       }
@@ -277,7 +277,7 @@ object JourneyModel {
         answers.getIor(PartnerEldestChildDateOfBirthPage)
       ).parMapN { (name, dateOfBirth) => Some(EldestChild(name, dateOfBirth)) }
 
-      answers.getIor(PartnerEntitledToChildBenefitPage).flatMap {
+      answers.getIor(PartnerClaimingChildBenefitPage).flatMap {
         case true =>
           getDetails
 
@@ -301,7 +301,7 @@ object JourneyModel {
       getPartnerNino,
       answers.getIor(PartnerEmploymentStatusPage),
       getHmForces,
-      answers.getIor(PartnerEntitledToChildBenefitPage),
+      answers.getIor(PartnerClaimingChildBenefitPage),
       getPartnerWaitingToHear,
       getPartnerEldestChild
     ).parMapN(Partner.apply)

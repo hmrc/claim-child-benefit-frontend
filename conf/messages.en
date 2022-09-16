@@ -655,11 +655,11 @@ partnerEmploymentStatus.error.required = Select {0}’s employment status
 partnerEmploymentStatus.error.mutuallyExclusive = Select {0}’s employment status or none of these apply
 partnerEmploymentStatus.change.hidden = {0}’s employment status
 
-partnerEntitledToChildBenefit.title = Is your partner entitled to receive Child Benefit now?
-partnerEntitledToChildBenefit.heading = Is {0} entitled to receive Child Benefit now?
-partnerEntitledToChildBenefit.checkYourAnswersLabel = Is {0} entitled to receive Child Benefit now?
-partnerEntitledToChildBenefit.error.required = Select yes if {0} is to receive Child Benefit now
-partnerEntitledToChildBenefit.change.hidden = if {0} is entitled to receive Child Benefit now
+partnerClaimingChildBenefit.title = Is your partner entitled to receive Child Benefit now?
+partnerClaimingChildBenefit.heading = Is {0} entitled to receive Child Benefit now?
+partnerClaimingChildBenefit.checkYourAnswersLabel = Is {0} entitled to receive Child Benefit now?
+partnerClaimingChildBenefit.error.required = Select yes if {0} is to receive Child Benefit now
+partnerClaimingChildBenefit.change.hidden = if {0} is entitled to receive Child Benefit now
 
 partnerName.title = What is your partner’s name?
 partnerName.heading = What is your partner’s name?
@@ -1033,7 +1033,7 @@ pdf.accountNumber = Account number
 pdf.applicantHasSuitableAccount = Has an account we can pay into
 pdf.partnerDetails = Partner details
 pdf.partnerNino = Partner National Insurance number
-pdf.entitledToChildBenefit = Entitled to receive Child Benefit
+pdf.claimingChildBenefit = Currently claiming Child Benefit
 pdf.waitingToHearAboutEntitlement = Waiting to hear about entitlement to Child Benefit
 pdf.childDetails = Child {0} details
 pdf.childName = Name

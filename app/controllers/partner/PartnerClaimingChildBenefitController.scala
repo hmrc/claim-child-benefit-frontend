@@ -18,28 +18,28 @@ package controllers.partner
 
 import controllers.AnswerExtractor
 import controllers.actions._
-import forms.partner.PartnerEntitledToChildBenefitFormProvider
+import forms.partner.PartnerClaimingChildBenefitFormProvider
 import pages.Waypoints
-import pages.partner.{PartnerEntitledToChildBenefitPage, PartnerNamePage}
+import pages.partner.{PartnerClaimingChildBenefitPage, PartnerNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.partner.PartnerEntitledToChildBenefitView
+import views.html.partner.PartnerClaimingChildBenefitView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class PartnerEntitledToChildBenefitController @Inject()(
-                                         override val messagesApi: MessagesApi,
-                                         sessionRepository: SessionRepository,
-                                         identify: IdentifierAction,
-                                         getData: DataRetrievalAction,
-                                         requireData: DataRequiredAction,
-                                         formProvider: PartnerEntitledToChildBenefitFormProvider,
-                                         val controllerComponents: MessagesControllerComponents,
-                                         view: PartnerEntitledToChildBenefitView
-                                 )(implicit ec: ExecutionContext)
+class PartnerClaimingChildBenefitController @Inject()(
+                                                       override val messagesApi: MessagesApi,
+                                                       sessionRepository: SessionRepository,
+                                                       identify: IdentifierAction,
+                                                       getData: DataRetrievalAction,
+                                                       requireData: DataRequiredAction,
+                                                       formProvider: PartnerClaimingChildBenefitFormProvider,
+                                                       val controllerComponents: MessagesControllerComponents,
+                                                       view: PartnerClaimingChildBenefitView
+                                                     )(implicit ec: ExecutionContext)
   extends FrontendBaseController
     with I18nSupport
     with AnswerExtractor {
@@ -51,7 +51,7 @@ class PartnerEntitledToChildBenefitController @Inject()(
 
           val form = formProvider(partnerName.firstName)
 
-          val preparedForm = request.userAnswers.get(PartnerEntitledToChildBenefitPage) match {
+          val preparedForm = request.userAnswers.get(PartnerClaimingChildBenefitPage) match {
             case None => form
             case Some(value) => form.fill(value)
           }
@@ -73,9 +73,9 @@ class PartnerEntitledToChildBenefitController @Inject()(
 
             value =>
               for {
-                updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerEntitledToChildBenefitPage, value))
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerClaimingChildBenefitPage, value))
                 _ <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(PartnerEntitledToChildBenefitPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+              } yield Redirect(PartnerClaimingChildBenefitPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
           )
       }
   }

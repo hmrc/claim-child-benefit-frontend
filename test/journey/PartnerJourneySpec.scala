@@ -40,7 +40,7 @@ class PartnerJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGener
         submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
         submitAnswer(PartnerNationalityPage, "nationality"),
         submitAnswer(PartnerEmploymentStatusPage, employmentStatus),
-        submitAnswer(PartnerEntitledToChildBenefitPage, false),
+        submitAnswer(PartnerClaimingChildBenefitPage, false),
         submitAnswer(PartnerWaitingForEntitlementDecisionPage, false),
         pageMustBe(ChildNamePage(Index(0)))
       )
@@ -62,9 +62,9 @@ class PartnerJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGener
 
     val childName = ChildName("first", None, "last")
 
-    startingFrom(PartnerEntitledToChildBenefitPage)
+    startingFrom(PartnerClaimingChildBenefitPage)
       .run(
-        submitAnswer(PartnerEntitledToChildBenefitPage, true),
+        submitAnswer(PartnerClaimingChildBenefitPage, true),
         submitAnswer(PartnerEldestChildNamePage, childName),
         submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
         pageMustBe(ChildNamePage(Index(0)))
@@ -75,9 +75,9 @@ class PartnerJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGener
 
     val childName = ChildName("first", None, "last")
 
-    startingFrom(PartnerEntitledToChildBenefitPage)
+    startingFrom(PartnerClaimingChildBenefitPage)
       .run(
-        submitAnswer(PartnerEntitledToChildBenefitPage, false),
+        submitAnswer(PartnerClaimingChildBenefitPage, false),
         submitAnswer(PartnerWaitingForEntitlementDecisionPage, true),
         submitAnswer(PartnerEldestChildNamePage, childName),
         submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),

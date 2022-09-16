@@ -19,13 +19,13 @@ package forms.partner
 import forms.behaviours.BooleanFieldBehaviours
 import play.api.data.FormError
 
-class PartnerEntitledToChildBenefitFormProviderSpec extends BooleanFieldBehaviours {
+class PartnerClaimingChildBenefitFormProviderSpec extends BooleanFieldBehaviours {
 
   val name = "name"
-  val requiredKey = "partnerEntitledToChildBenefit.error.required"
+  val requiredKey = "partnerClaimingChildBenefit.error.required"
   val invalidKey = "error.boolean"
 
-  val form = new PartnerEntitledToChildBenefitFormProvider()(name)
+  val form = new PartnerClaimingChildBenefitFormProvider()(name)
 
   ".value" - {
 

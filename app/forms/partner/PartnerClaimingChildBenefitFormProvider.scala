@@ -21,10 +21,10 @@ import play.api.data.Form
 
 import javax.inject.Inject
 
-class PartnerEntitledToChildBenefitFormProvider @Inject() extends Mappings {
+class PartnerClaimingChildBenefitFormProvider @Inject() extends Mappings {
 
   def apply(partnerFirstName: String): Form[Boolean] =
     Form(
-      "value" -> boolean("partnerEntitledToChildBenefit.error.required", args = Seq(partnerFirstName))
+      "value" -> boolean("partnerClaimingChildBenefit.error.required", args = Seq(partnerFirstName))
     )
 }

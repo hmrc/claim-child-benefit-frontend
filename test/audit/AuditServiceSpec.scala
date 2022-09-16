@@ -76,7 +76,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             nationalInsuranceNumber = Some(partnerNino),
             employmentStatus = Set(models.EmploymentStatus.Employed, models.EmploymentStatus.SelfEmployed),
             memberOfHMForcesOrCivilServantAbroad = false,
-            currentlyEntitledToChildBenefit = false,
+            currentlyClaimingChildBenefit = false,
             waitingToHearAboutEntitlement = Some(true),
             eldestChild = Some(JourneyModel.EldestChild(
               name        = models.ChildName("partner eldest child first", Some("partner eldest child middle"), "partner eldest child last"),
@@ -138,7 +138,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             nationalInsuranceNumber = Some(partnerNino),
             employmentStatus = Set("employed", "selfEmployed"),
             memberOfHMForcesOrCivilServantAbroad = false,
-            currentlyEntitledToChildBenefit = false,
+            currentlyClaimingChildBenefit = false,
             waitingToHearAboutEntitlement = Some(true),
             eldestChild = Some(EldestChild(
               name        = ChildName("partner eldest child first", Some("partner eldest child middle"), "partner eldest child last"),

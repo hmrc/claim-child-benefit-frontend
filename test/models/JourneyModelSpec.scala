@@ -145,7 +145,7 @@ class JourneyModelSpec
           .set(PartnerNationalityPage, partnerNationality).success.value
           .set(PartnerEmploymentStatusPage, partnerEmployment).success.value
           .set(PartnerIsHmfOrCivilServantPage, false).success.value
-          .set(PartnerEntitledToChildBenefitPage, false).success.value
+          .set(PartnerClaimingChildBenefitPage, false).success.value
           .set(PartnerWaitingForEntitlementDecisionPage, false).success.value
 
         val expectedModel = JourneyModel(
@@ -172,7 +172,7 @@ class JourneyModelSpec
               nationalInsuranceNumber = None,
               employmentStatus = partnerEmployment,
               memberOfHMForcesOrCivilServantAbroad = false,
-              currentlyEntitledToChildBenefit = false,
+              currentlyClaimingChildBenefit = false,
               waitingToHearAboutEntitlement = Some(false),
               eldestChild = None
             ))
@@ -247,7 +247,7 @@ class JourneyModelSpec
               nationalInsuranceNumber = None,
               employmentStatus = partnerEmployment,
               memberOfHMForcesOrCivilServantAbroad = false,
-              currentlyEntitledToChildBenefit = false,
+              currentlyClaimingChildBenefit = false,
               waitingToHearAboutEntitlement = Some(false),
               eldestChild = None
             ))
@@ -585,7 +585,7 @@ class JourneyModelSpec
           nationalInsuranceNumber = Some(partnerNino.value),
           employmentStatus = partnerEmployment,
           memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyEntitledToChildBenefit = false,
+          currentlyClaimingChildBenefit = false,
           waitingToHearAboutEntitlement = Some(false),
           eldestChild = None
         )
@@ -605,7 +605,7 @@ class JourneyModelSpec
           .withMinimalPaymentDetails
           .withMinimalPartnerDetails
           .set(RelationshipStatusPage, Married).success.value
-          .set(PartnerEntitledToChildBenefitPage, true).success.value
+          .set(PartnerClaimingChildBenefitPage, true).success.value
           .set(PartnerEldestChildNamePage, partnerEldestChildName).success.value
           .set(PartnerEldestChildDateOfBirthPage, now).success.value
 
@@ -616,7 +616,7 @@ class JourneyModelSpec
           nationalInsuranceNumber = None,
           employmentStatus = partnerEmployment,
           memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyEntitledToChildBenefit = true,
+          currentlyClaimingChildBenefit = true,
           waitingToHearAboutEntitlement = None,
           eldestChild = Some(JourneyModel.EldestChild(partnerEldestChildName, now))
         )
@@ -636,7 +636,7 @@ class JourneyModelSpec
           .withMinimalPaymentDetails
           .withMinimalPartnerDetails
           .set(RelationshipStatusPage, Married).success.value
-          .set(PartnerEntitledToChildBenefitPage, false).success.value
+          .set(PartnerClaimingChildBenefitPage, false).success.value
           .set(PartnerWaitingForEntitlementDecisionPage, true).success.value
           .set(PartnerEldestChildNamePage, partnerEldestChildName).success.value
           .set(PartnerEldestChildDateOfBirthPage, now).success.value
@@ -648,7 +648,7 @@ class JourneyModelSpec
           nationalInsuranceNumber = None,
           employmentStatus = partnerEmployment,
           memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyEntitledToChildBenefit = false,
+          currentlyClaimingChildBenefit = false,
           waitingToHearAboutEntitlement = Some(true),
           eldestChild = Some(JourneyModel.EldestChild(partnerEldestChildName, now))
         )
@@ -892,7 +892,7 @@ class JourneyModelSpec
           PartnerNationalityPage,
           PartnerNinoKnownPage,
           PartnerEmploymentStatusPage,
-          PartnerEntitledToChildBenefitPage
+          PartnerClaimingChildBenefitPage
         )
         data mustBe empty
       }
@@ -931,7 +931,7 @@ class JourneyModelSpec
           PartnerNationalityPage,
           PartnerNinoKnownPage,
           PartnerEmploymentStatusPage,
-          PartnerEntitledToChildBenefitPage
+          PartnerClaimingChildBenefitPage
         )
         data mustBe empty
       }
@@ -1135,7 +1135,7 @@ class JourneyModelSpec
           .withMinimalPaymentDetails
           .withMinimalPartnerDetails
           .set(RelationshipStatusPage, Married).success.value
-          .set(PartnerEntitledToChildBenefitPage, true).success.value
+          .set(PartnerClaimingChildBenefitPage, true).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1156,7 +1156,7 @@ class JourneyModelSpec
           .withMinimalPaymentDetails
           .withMinimalPartnerDetails
           .set(RelationshipStatusPage, Married).success.value
-          .set(PartnerEntitledToChildBenefitPage, false).success.value
+          .set(PartnerClaimingChildBenefitPage, false).success.value
           .set(PartnerWaitingForEntitlementDecisionPage, true).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
@@ -1287,7 +1287,7 @@ class JourneyModelSpec
         .set(PartnerDateOfBirthPage, now).success.value
         .set(PartnerNationalityPage, partnerNationality).success.value
         .set(PartnerEmploymentStatusPage, partnerEmployment).success.value
-        .set(PartnerEntitledToChildBenefitPage, false).success.value
+        .set(PartnerClaimingChildBenefitPage, false).success.value
         .set(PartnerWaitingForEntitlementDecisionPage, false).success.value
 
     def withOneChild: UserAnswers =

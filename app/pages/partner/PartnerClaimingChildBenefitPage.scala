@@ -24,14 +24,14 @@ import play.api.mvc.Call
 
 import scala.util.Try
 
-case object PartnerEntitledToChildBenefitPage extends QuestionPage[Boolean] {
+case object PartnerClaimingChildBenefitPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "partnerEntitledToChildBenefit"
+  override def toString: String = "partnerClaimingChildBenefit"
 
   override def route(waypoints: Waypoints): Call =
-    routes.PartnerEntitledToChildBenefitController.onPageLoad(waypoints)
+    routes.PartnerClaimingChildBenefitController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {

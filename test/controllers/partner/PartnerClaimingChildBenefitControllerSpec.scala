@@ -18,46 +18,44 @@ package controllers.partner
 
 import base.SpecBase
 import controllers.{routes => baseRoutes}
-import forms.partner.PartnerEntitledToChildBenefitFormProvider
+import forms.partner.PartnerClaimingChildBenefitFormProvider
 import models.AdultName
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.EmptyWaypoints
-import pages.partner.{PartnerEntitledToChildBenefitPage, PartnerNamePage}
+import pages.partner.{PartnerClaimingChildBenefitPage, PartnerNamePage}
 import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
-import views.html.partner.PartnerEntitledToChildBenefitView
+import views.html.partner.PartnerClaimingChildBenefitView
 
 import scala.concurrent.Future
 
-class PartnerEntitledToChildBenefitControllerSpec extends SpecBase with MockitoSugar {
+class PartnerClaimingChildBenefitControllerSpec extends SpecBase with MockitoSugar {
 
   private val name = AdultName("first", None, "last")
   private val baseAnswers = emptyUserAnswers.set(PartnerNamePage, name).success.value
-  def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new PartnerEntitledToChildBenefitFormProvider()
+  val formProvider = new PartnerClaimingChildBenefitFormProvider()
   val form = formProvider(name.firstName)
   private val waypoints = EmptyWaypoints
 
-  lazy val partnerEntitledToChildBenefitRoute = routes.PartnerEntitledToChildBenefitController.onPageLoad(waypoints).url
+  lazy val partnerClaimingChildBenefitRoute = routes.PartnerClaimingChildBenefitController.onPageLoad(waypoints).url
 
-  "PartnerEntitledToChildBenefit Controller" - {
+  "PartnerClaimingChildBenefit Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, partnerEntitledToChildBenefitRoute)
+        val request = FakeRequest(GET, partnerClaimingChildBenefitRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[PartnerEntitledToChildBenefitView]
+        val view = application.injector.instanceOf[PartnerClaimingChildBenefitView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, waypoints, name.firstName)(request, messages(application)).toString
@@ -66,14 +64,14 @@ class PartnerEntitledToChildBenefitControllerSpec extends SpecBase with MockitoS
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = baseAnswers.set(PartnerEntitledToChildBenefitPage, true).success.value
+      val userAnswers = baseAnswers.set(PartnerClaimingChildBenefitPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, partnerEntitledToChildBenefitRoute)
+        val request = FakeRequest(GET, partnerClaimingChildBenefitRoute)
 
-        val view = application.injector.instanceOf[PartnerEntitledToChildBenefitView]
+        val view = application.injector.instanceOf[PartnerClaimingChildBenefitView]
 
         val result = route(application, request).value
 
@@ -97,14 +95,14 @@ class PartnerEntitledToChildBenefitControllerSpec extends SpecBase with MockitoS
 
       running(application) {
         val request =
-          FakeRequest(POST, partnerEntitledToChildBenefitRoute)
+          FakeRequest(POST, partnerClaimingChildBenefitRoute)
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-        val expectedAnswers = baseAnswers.set(PartnerEntitledToChildBenefitPage, true).success.value
+        val expectedAnswers = baseAnswers.set(PartnerClaimingChildBenefitPage, true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual PartnerEntitledToChildBenefitPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual PartnerClaimingChildBenefitPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -115,12 +113,12 @@ class PartnerEntitledToChildBenefitControllerSpec extends SpecBase with MockitoS
 
       running(application) {
         val request =
-          FakeRequest(POST, partnerEntitledToChildBenefitRoute)
+          FakeRequest(POST, partnerClaimingChildBenefitRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[PartnerEntitledToChildBenefitView]
+        val view = application.injector.instanceOf[PartnerClaimingChildBenefitView]
 
         val result = route(application, request).value
 
@@ -134,7 +132,7 @@ class PartnerEntitledToChildBenefitControllerSpec extends SpecBase with MockitoS
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, partnerEntitledToChildBenefitRoute)
+        val request = FakeRequest(GET, partnerClaimingChildBenefitRoute)
 
         val result = route(application, request).value
 
@@ -149,7 +147,7 @@ class PartnerEntitledToChildBenefitControllerSpec extends SpecBase with MockitoS
 
       running(application) {
         val request =
-          FakeRequest(POST, partnerEntitledToChildBenefitRoute)
+          FakeRequest(POST, partnerClaimingChildBenefitRoute)
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
