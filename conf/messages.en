@@ -274,16 +274,16 @@ currentlyReceivingChildBenefit.notClaiming = No
 currentlyReceivingChildBenefit.error.required = Select if you are claiming Child Benefit right now
 currentlyReceivingChildBenefit.change.hidden = if you are claiming Child Benefit right now
 
-eldestChildDateOfBirth.title = What is your oldest child’s date of birth?
+eldestChildDateOfBirth.title = What is the oldest child you are claiming Child Benefit for’s date of birth?
 eldestChildDateOfBirth.heading = What is {0}’s date of birth?
 eldestChildDateOfBirth.hint = For example, 20 3 2007.
 eldestChildDateOfBirth.checkYourAnswersLabel = {0}’s date of birth
 eldestChildDateOfBirth.error.required.all = Enter {0}’s date of birth
-eldestChildDateOfBirth.error.required.two = The date of birth must include {0} and {1}
-eldestChildDateOfBirth.error.required = The date of birth must include {0}
-eldestChildDateOfBirth.error.invalid = Enter a real date
-eldestChildDateOfBirth.error.beforeMinimum = The date must be on or after {0}
-eldestChildDateOfBirth.error.afterMaximum = The date must be on or before {0}
+eldestChildDateOfBirth.error.required.two = {2}’s date of birth must include {0} and {1}
+eldestChildDateOfBirth.error.required = {1}’s date of birth must include {0}
+eldestChildDateOfBirth.error.invalid = Enter a real date of birth for {0}
+eldestChildDateOfBirth.error.beforeMinimum = {1}’s date of birth must be on or after {0}
+eldestChildDateOfBirth.error.afterMaximum = {1}’s date of birth must be on or before {0}
 eldestChildDateOfBirth.change.hidden = your oldest child’s date of birth
 
 eldestChildName.title = What is the name of the oldest child you are claiming Child Benefit for?
