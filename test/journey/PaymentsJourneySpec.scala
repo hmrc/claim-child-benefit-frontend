@@ -17,9 +17,11 @@
 package journey
 
 import generators.ModelGenerators
+import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotGettingPayments}
 import models.RelationshipStatus._
 import models.{BankAccountDetails, BankAccountHolder, Benefits, ChildName, PaymentFrequency, UserAnswers}
 import org.scalacheck.Arbitrary.arbitrary
+import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import pages.RelationshipStatusPage
 import pages.applicant.ApplicantHasPreviousFamilyNamePage
@@ -36,6 +38,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
 
     val childName = ChildName("first", None, "last")
     val childDob  = LocalDate.now
+    val currentlyReceiving = Gen.oneOf(GettingPayments, NotGettingPayments).sample.value
 
     "who want to be paid to their existing bank account" - {
 
@@ -43,7 +46,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
 
         startingFrom(CurrentlyReceivingChildBenefitPage)
           .run(
-            submitAnswer(CurrentlyReceivingChildBenefitPage, true),
+            submitAnswer(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
             submitAnswer(EldestChildNamePage, childName),
             submitAnswer(EldestChildDateOfBirthPage, childDob),
             submitAnswer(WantToBePaidToExistingAccountPage, true),
@@ -56,9 +59,11 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
 
       "must proceed to the bank details section" in {
 
+        val currentlyReceiving = Gen.oneOf(GettingPayments, NotGettingPayments).sample.value
+
         startingFrom(CurrentlyReceivingChildBenefitPage)
           .run(
-            submitAnswer(CurrentlyReceivingChildBenefitPage, true),
+            submitAnswer(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
             submitAnswer(EldestChildNamePage, childName),
             submitAnswer(EldestChildDateOfBirthPage, childDob),
             submitAnswer(WantToBePaidToExistingAccountPage, false),

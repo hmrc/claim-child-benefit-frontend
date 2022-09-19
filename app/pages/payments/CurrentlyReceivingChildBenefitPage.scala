@@ -17,14 +17,15 @@
 package pages.payments
 
 import controllers.payments.routes
-import models.UserAnswers
+import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments}
+import models.{CurrentlyReceivingChildBenefit, UserAnswers}
 import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
 import scala.util.Try
 
-case object CurrentlyReceivingChildBenefitPage extends QuestionPage[Boolean] {
+case object CurrentlyReceivingChildBenefitPage extends QuestionPage[CurrentlyReceivingChildBenefit] {
 
   override def path: JsPath = JsPath \ toString
 
@@ -35,17 +36,17 @@ case object CurrentlyReceivingChildBenefitPage extends QuestionPage[Boolean] {
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
-      case true  => EldestChildNamePage
-      case false => WantToBePaidPage
+      case GettingPayments | NotGettingPayments => EldestChildNamePage
+      case NotClaiming                          => WantToBePaidPage
     }.orRecover
 
-  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+  override def cleanup(value: Option[CurrentlyReceivingChildBenefit], userAnswers: UserAnswers): Try[UserAnswers] =
     value.map {
-      case true =>
+      case GettingPayments | NotGettingPayments =>
         userAnswers.remove(WantToBePaidPage)
           .flatMap(_.remove(PaymentFrequencyPage))
 
-      case false =>
+      case NotClaiming =>
         userAnswers.remove(EldestChildNamePage)
           .flatMap(_.remove(EldestChildDateOfBirthPage))
           .flatMap(_.remove(WantToBePaidToExistingAccountPage))

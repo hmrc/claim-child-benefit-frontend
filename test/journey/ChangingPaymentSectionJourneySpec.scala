@@ -17,6 +17,7 @@
 package journey
 
 import generators.ModelGenerators
+import models.CurrentlyReceivingChildBenefit._
 import models.RelationshipStatus._
 import models.{BankAccountDetails, BankAccountHolder, Benefits, ChildName, PaymentFrequency}
 import org.scalacheck.Arbitrary.arbitrary
@@ -35,11 +36,12 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
   private val bankAccountHolder       = arbitrary[BankAccountHolder].sample.value
   private val bankDetails             = arbitrary[BankAccountDetails].sample.value
   private val benefits: Set[Benefits] = Set(Gen.oneOf(Benefits.values).sample.value)
+  private val currentlyClaiming       = Gen.oneOf(GettingPayments, NotGettingPayments).sample.value
 
   "when the user initially said they were currently receiving Child Benefit" - {
 
     val initialise = journeyOf(
-      submitAnswer(CurrentlyReceivingChildBenefitPage, true),
+      submitAnswer(CurrentlyReceivingChildBenefitPage, currentlyClaiming),
       submitAnswer(EldestChildNamePage, childName),
       submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
       submitAnswer(WantToBePaidToExistingAccountPage, true),
@@ -52,7 +54,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
         .run(
           initialise,
           goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
-          submitAnswer(CurrentlyReceivingChildBenefitPage, false),
+          submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
           pageMustBe(WantToBePaidPage),
           answersMustNotContain(EldestChildNamePage),
           answersMustNotContain(EldestChildDateOfBirthPage),
@@ -112,7 +114,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
 
       val initialise = journeyOf(
         setUserAnswerTo(RelationshipStatusPage, Single),
-        submitAnswer(CurrentlyReceivingChildBenefitPage, false),
+        submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
         submitAnswer(WantToBePaidPage, true),
         submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
         goTo(CheckYourAnswersPage)
@@ -122,7 +124,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
         .run(
           initialise,
           goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
-          submitAnswer(CurrentlyReceivingChildBenefitPage, true),
+          submitAnswer(CurrentlyReceivingChildBenefitPage, currentlyClaiming),
           submitAnswer(EldestChildNamePage, childName),
           submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
           pageMustBe(WantToBePaidToExistingAccountPage),
@@ -141,7 +143,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
 
             val initialise = journeyOf(
               setUserAnswerTo(RelationshipStatusPage, status),
-              submitAnswer(CurrentlyReceivingChildBenefitPage, false),
+              submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
               submitAnswer(WantToBePaidPage, false),
               goTo(CheckYourAnswersPage)
             )
@@ -171,7 +173,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               val initialise = journeyOf(
                 setUserAnswerTo(RelationshipStatusPage, status),
                 setUserAnswerTo(ApplicantOrPartnerBenefitsPage, benefits),
-                submitAnswer(CurrentlyReceivingChildBenefitPage, false),
+                submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
                 submitAnswer(WantToBePaidPage, false),
                 goTo(CheckYourAnswersPage)
               )
@@ -199,7 +201,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               val initialise = journeyOf(
                 setUserAnswerTo(RelationshipStatusPage, status),
                 setUserAnswerTo(ApplicantOrPartnerBenefitsPage, benefits),
-                submitAnswer(CurrentlyReceivingChildBenefitPage, false),
+                submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
                 submitAnswer(WantToBePaidPage, false),
                 goTo(CheckYourAnswersPage)
               )
@@ -224,7 +226,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
         val initialise = journeyOf(
           setUserAnswerTo(RelationshipStatusPage, Single),
           setUserAnswerTo(ApplicantOrPartnerBenefitsPage, benefits),
-          submitAnswer(CurrentlyReceivingChildBenefitPage, false),
+          submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
           submitAnswer(WantToBePaidPage, true),
           submitAnswer(PaymentFrequencyPage, arbitrary[PaymentFrequency].sample.value),
           submitAnswer(ApplicantHasSuitableAccountPage, true),

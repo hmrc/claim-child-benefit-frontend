@@ -56,7 +56,7 @@ class ChangingInitialSectionJourneySpec
       submitAnswer(ApplicantOrPartnerIncomePage, income),
       submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
       next,
-      submitAnswer(CurrentlyReceivingChildBenefitPage, false),
+      submitAnswer(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming),
       setUserAnswerTo(WantToBePaidPage, true),
       setUserAnswerTo(ApplicantHasSuitableAccountPage, false),
       setUserAnswerTo(PartnerNamePage, partnerName),

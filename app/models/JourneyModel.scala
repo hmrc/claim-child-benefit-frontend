@@ -328,6 +328,7 @@ object JourneyModel {
 
   private def getPaymentPreference(answers: UserAnswers): IorNec[Query, PaymentPreference] = {
 
+    import CurrentlyReceivingChildBenefit._
     import PaymentPreference._
 
     def getBankAccount: IorNec[Query, Option[BankAccount]] =
@@ -360,13 +361,13 @@ object JourneyModel {
       }
 
     answers.getIor(CurrentlyReceivingChildBenefitPage).flatMap {
-      case true =>
+      case GettingPayments | NotGettingPayments =>
         answers.getIor(WantToBePaidToExistingAccountPage).flatMap {
           case true  => getEldestChild.map(ExistingAccount)
           case false => (getBankAccount, getEldestChild).parMapN(ExistingFrequency.apply)
         }
 
-      case false =>
+      case NotClaiming =>
         getPaymentDetails
     }
   }

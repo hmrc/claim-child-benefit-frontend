@@ -88,7 +88,7 @@ class JourneyModelSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
           .set(ApplicantBenefitsPage, applicantBenefits).success.value
-          .set(CurrentlyReceivingChildBenefitPage, false).success.value
+          .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
           .set(WantToBePaidPage, false).success.value
 
         val expectedModel = JourneyModel(
@@ -138,7 +138,7 @@ class JourneyModelSpec
           .set(RelationshipStatusPage, Married).success.value
           .set(ApplicantOrPartnerIncomePage, Income.BelowLowerThreshold).success.value
           .set(ApplicantOrPartnerBenefitsPage, applicantBenefits).success.value
-          .set(CurrentlyReceivingChildBenefitPage, false).success.value
+          .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
           .set(WantToBePaidPage, false).success.value
           .set(PartnerNamePage, partnerName).success.value
           .set(PartnerNinoKnownPage, false).success.value
@@ -297,7 +297,7 @@ class JourneyModelSpec
             .set(RelationshipStatusPage, Single).success.value
             .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
             .set(ApplicantBenefitsPage, applicantBenefits).success.value
-            .set(CurrentlyReceivingChildBenefitPage, true).success.value
+            .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
             .set(EldestChildNamePage, eldestChildName).success.value
             .set(EldestChildDateOfBirthPage, now).success.value
             .set(WantToBePaidToExistingAccountPage, true).success.value
@@ -321,7 +321,7 @@ class JourneyModelSpec
               .set(RelationshipStatusPage, Single).success.value
               .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
               .set(ApplicantBenefitsPage, applicantBenefits).success.value
-              .set(CurrentlyReceivingChildBenefitPage, true).success.value
+              .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
               .set(EldestChildNamePage, eldestChildName).success.value
               .set(EldestChildDateOfBirthPage, now).success.value
               .set(WantToBePaidToExistingAccountPage, false).success.value
@@ -348,7 +348,7 @@ class JourneyModelSpec
               .set(RelationshipStatusPage, Single).success.value
               .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
               .set(ApplicantBenefitsPage, applicantBenefits).success.value
-              .set(CurrentlyReceivingChildBenefitPage, true).success.value
+              .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
               .set(EldestChildNamePage, eldestChildName).success.value
               .set(EldestChildDateOfBirthPage, now).success.value
               .set(WantToBePaidToExistingAccountPage, false).success.value
@@ -375,7 +375,7 @@ class JourneyModelSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
           .set(ApplicantBenefitsPage, applicantBenefits).success.value
-          .set(CurrentlyReceivingChildBenefitPage, false).success.value
+          .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
 
         "and wants to be paid every 4 weeks" - {
 
@@ -954,7 +954,7 @@ class JourneyModelSpec
             .withOneChild
             .withMinimalSingleIncomeDetails
             .set(RelationshipStatusPage, Single).success.value
-            .set(CurrentlyReceivingChildBenefitPage, true).success.value
+            .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
             .set(EldestChildNamePage, eldestChildName).success.value
             .set(EldestChildDateOfBirthPage, now).success.value
 
@@ -971,7 +971,7 @@ class JourneyModelSpec
             .withOneChild
             .withMinimalSingleIncomeDetails
             .set(RelationshipStatusPage, Single).success.value
-            .set(CurrentlyReceivingChildBenefitPage, true).success.value
+            .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
             .set(WantToBePaidToExistingAccountPage, true).success.value
 
           val (errors, data) = JourneyModel.from(answers).pad
@@ -991,7 +991,7 @@ class JourneyModelSpec
             .withOneChild
             .withMinimalSingleIncomeDetails
             .set(RelationshipStatusPage, Single).success.value
-            .set(CurrentlyReceivingChildBenefitPage, true).success.value
+            .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
             .set(EldestChildNamePage, eldestChildName).success.value
             .set(EldestChildDateOfBirthPage, now).success.value
             .set(WantToBePaidToExistingAccountPage, false).success.value
@@ -1009,7 +1009,7 @@ class JourneyModelSpec
             .withOneChild
             .withMinimalSingleIncomeDetails
             .set(RelationshipStatusPage, Single).success.value
-            .set(CurrentlyReceivingChildBenefitPage, true).success.value
+            .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
             .set(EldestChildNamePage, eldestChildName).success.value
             .set(EldestChildDateOfBirthPage, now).success.value
             .set(WantToBePaidToExistingAccountPage, false).success.value
@@ -1029,7 +1029,7 @@ class JourneyModelSpec
           .withOneChild
           .withMinimalSingleIncomeDetails
           .set(RelationshipStatusPage, Single).success.value
-          .set(CurrentlyReceivingChildBenefitPage, false).success.value
+          .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
           .set(WantToBePaidPage, true).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
@@ -1045,7 +1045,7 @@ class JourneyModelSpec
           .withOneChild
           .withMinimalSingleIncomeDetails
           .set(RelationshipStatusPage, Single).success.value
-          .set(CurrentlyReceivingChildBenefitPage, false).success.value
+          .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
           .set(WantToBePaidPage, true).success.value
           .set(ApplicantHasSuitableAccountPage, true).success.value
 
@@ -1307,7 +1307,7 @@ class JourneyModelSpec
 
     def withMinimalPaymentDetails: UserAnswers =
       answers
-        .set(CurrentlyReceivingChildBenefitPage, false).success.value
+        .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
         .set(WantToBePaidPage, false).success.value
   }
 }

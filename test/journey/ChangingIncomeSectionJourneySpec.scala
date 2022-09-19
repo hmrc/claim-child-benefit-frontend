@@ -17,6 +17,7 @@
 package journey
 
 import generators.ModelGenerators
+import models.CurrentlyReceivingChildBenefit.NotClaiming
 import models.RelationshipStatus._
 import models.{AdultName, Benefits, Income, PaymentFrequency}
 import org.scalacheck.Arbitrary.arbitrary
@@ -44,7 +45,7 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
         submitAnswer(ApplicantIncomePage, income1),
         submitAnswer(ApplicantBenefitsPage, benefits),
         next,
-        submitAnswer(CurrentlyReceivingChildBenefitPage, false),
+        submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
         submitAnswer(WantToBePaidPage, false),
         goTo(CheckYourAnswersPage)
       )
@@ -75,7 +76,7 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
         submitAnswer(ApplicantOrPartnerIncomePage, income1),
         submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
         next,
-        submitAnswer(CurrentlyReceivingChildBenefitPage, false),
+        submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
         submitAnswer(WantToBePaidPage, false),
         setUserAnswerTo(PartnerNamePage, partnerName),
         goTo(CheckYourAnswersPage)
@@ -111,7 +112,7 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
           submitAnswer(ApplicantOrPartnerIncomePage, income),
           submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
           next,
-          submitAnswer(CurrentlyReceivingChildBenefitPage, false),
+          submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
           submitAnswer(WantToBePaidPage, true),
           setUserAnswerTo(PartnerNamePage, partnerName),
           setUserAnswerTo(ApplicantHasSuitableAccountPage, false),
@@ -143,7 +144,7 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
           submitAnswer(ApplicantOrPartnerIncomePage, income),
           submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
           next,
-          submitAnswer(CurrentlyReceivingChildBenefitPage, false),
+          submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
           submitAnswer(WantToBePaidPage, false),
           setUserAnswerTo(PartnerNamePage, partnerName),
           goTo(CheckYourAnswersPage)

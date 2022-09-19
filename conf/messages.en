@@ -265,11 +265,14 @@ bankAccountDetails.error.rollNumber.length = Building society roll number must b
 bankAccountDetails.error.rollNumber.invalid = Building society roll number must only include letters a to z, numbers, hyphens, spaces, forward slashes and full stops
 bankAccountDetails.change.hidden = the bank or building society account details
 
-currentlyReceivingChildBenefit.title = Are you currently receiving Child Benefit?
-currentlyReceivingChildBenefit.heading = Are you currently receiving Child Benefit?
-currentlyReceivingChildBenefit.checkYourAnswersLabel = Are you currently receiving Child Benefit?
-currentlyReceivingChildBenefit.error.required = Select yes if you are currently receiving Child Benefit
-currentlyReceivingChildBenefit.change.hidden = if you are currently receiving Child Benefit
+currentlyReceivingChildBenefit.title = Are you claiming Child Benefit right now?
+currentlyReceivingChildBenefit.heading = Are you claiming Child Benefit right now?
+currentlyReceivingChildBenefit.checkYourAnswersLabel = Claiming Child Benefit right not
+currentlyReceivingChildBenefit.gettingPayments = Yes and I am getting payments
+currentlyReceivingChildBenefit.notGettingPayments = Yes and I am not getting payments
+currentlyReceivingChildBenefit.notClaiming = No
+currentlyReceivingChildBenefit.error.required = Select if you are claiming Child Benefit right now
+currentlyReceivingChildBenefit.change.hidden = if you are claiming Child Benefit right now
 
 eldestChildDateOfBirth.title = What is your oldest child’s date of birth?
 eldestChildDateOfBirth.heading = What is {0}’s date of birth?

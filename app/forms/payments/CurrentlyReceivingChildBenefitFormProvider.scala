@@ -17,14 +17,15 @@
 package forms.payments
 
 import forms.mappings.Mappings
+import models.CurrentlyReceivingChildBenefit
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class CurrentlyReceivingChildBenefitFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(): Form[CurrentlyReceivingChildBenefit] =
     Form(
-      "value" -> boolean("currentlyReceivingChildBenefit.error.required")
+      "value" -> enumerable[CurrentlyReceivingChildBenefit]("currentlyReceivingChildBenefit.error.required")
     )
 }
