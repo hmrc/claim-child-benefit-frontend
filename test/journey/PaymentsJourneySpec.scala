@@ -17,7 +17,7 @@
 package journey
 
 import generators.ModelGenerators
-import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotGettingPayments}
+import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments}
 import models.RelationshipStatus._
 import models.{BankAccountDetails, BankAccountHolder, Benefits, ChildName, PaymentFrequency, UserAnswers}
 import org.scalacheck.Arbitrary.arbitrary
@@ -33,46 +33,93 @@ import java.time.LocalDate
 class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
   private def bankDetails = arbitrary[BankAccountDetails].sample.value
+  private val childName = ChildName("first", None, "last")
+  private val childDob  = LocalDate.now
 
-  "users who are currently receiving Child Benefit" - {
+  private val setupUserNotEligibleForWeeklyPayments = journeyOf(
+    setUserAnswerTo(RelationshipStatusPage, Married),
+    setUserAnswerTo(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove))
+  )
 
-    val childName = ChildName("first", None, "last")
-    val childDob  = LocalDate.now
-    val currentlyReceiving = Gen.oneOf(GettingPayments, NotGettingPayments).sample.value
+  "users who are currently getting Child Benefit payments" - {
 
-    "who want to be paid to their existing bank account" - {
+
+    "who want to be paid to their existing account" - {
 
       "must proceed to the Applicant section" in {
 
         startingFrom(CurrentlyReceivingChildBenefitPage)
           .run(
-            submitAnswer(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
+            setupUserNotEligibleForWeeklyPayments,
+            submitAnswer(CurrentlyReceivingChildBenefitPage, GettingPayments),
             submitAnswer(EldestChildNamePage, childName),
             submitAnswer(EldestChildDateOfBirthPage, childDob),
+            submitAnswer(WantToBePaidPage, true),
             submitAnswer(WantToBePaidToExistingAccountPage, true),
             pageMustBe(ApplicantHasPreviousFamilyNamePage)
           )
       }
     }
 
-    "who do not want to be paid to their existing bank account" -{
+    "who want to be paid to a different account" - {
 
-      "must proceed to the bank details section" in {
-
-        val currentlyReceiving = Gen.oneOf(GettingPayments, NotGettingPayments).sample.value
+      "must proceed to collect bank account details" in {
 
         startingFrom(CurrentlyReceivingChildBenefitPage)
           .run(
-            submitAnswer(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
+            setupUserNotEligibleForWeeklyPayments,
+            submitAnswer(CurrentlyReceivingChildBenefitPage, GettingPayments),
             submitAnswer(EldestChildNamePage, childName),
             submitAnswer(EldestChildDateOfBirthPage, childDob),
+            submitAnswer(WantToBePaidPage, true),
             submitAnswer(WantToBePaidToExistingAccountPage, false),
-            submitAnswer(ApplicantHasSuitableAccountPage, true),
-            submitAnswer(BankAccountHolderPage, BankAccountHolder.Applicant),
-            submitAnswer(BankAccountDetailsPage, bankDetails),
+            pageMustBe(ApplicantHasSuitableAccountPage)
+          )
+      }
+    }
+
+    "who do not want to be paid" - {
+
+      "must proceed to the Applicant section" in {
+
+        startingFrom(CurrentlyReceivingChildBenefitPage)
+          .run(
+            setupUserNotEligibleForWeeklyPayments,
+            submitAnswer(CurrentlyReceivingChildBenefitPage, GettingPayments),
+            submitAnswer(EldestChildNamePage, childName),
+            submitAnswer(EldestChildDateOfBirthPage, childDob),
+            submitAnswer(WantToBePaidPage, false),
             pageMustBe(ApplicantHasPreviousFamilyNamePage)
           )
       }
+    }
+  }
+
+  "users who are currently claiming Child Benefit but not getting payments" - {
+
+    "must be asked if they want to be paid" in {
+
+      startingFrom(CurrentlyReceivingChildBenefitPage)
+        .run(
+          setupUserNotEligibleForWeeklyPayments,
+          submitAnswer(CurrentlyReceivingChildBenefitPage, GettingPayments),
+          submitAnswer(EldestChildNamePage, childName),
+          submitAnswer(EldestChildDateOfBirthPage, childDob),
+          pageMustBe(WantToBePaidPage)
+        )
+    }
+  }
+
+  "users who are not claiming Child Benefit" - {
+
+    "must be asked if the want to be paid" in {
+
+      startingFrom(CurrentlyReceivingChildBenefitPage)
+        .run(
+          setupUserNotEligibleForWeeklyPayments,
+          submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
+          pageMustBe(WantToBePaidPage)
+        )
     }
   }
 

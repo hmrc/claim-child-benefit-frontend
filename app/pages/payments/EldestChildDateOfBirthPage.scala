@@ -34,5 +34,5 @@ case object EldestChildDateOfBirthPage extends QuestionPage[LocalDate] {
     routes.EldestChildDateOfBirthController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    WantToBePaidToExistingAccountPage
+    WantToBePaidPage
 }

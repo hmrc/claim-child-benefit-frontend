@@ -18,6 +18,7 @@ package pages.payments
 
 import controllers.payments.routes
 import models.Benefits.qualifyingBenefits
+import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments}
 import models.RelationshipStatus._
 import models.UserAnswers
 import pages.applicant.ApplicantHasPreviousFamilyNamePage
@@ -40,18 +41,24 @@ case object WantToBePaidPage extends QuestionPage[Boolean] {
   override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case true =>
-        answers.get(RelationshipStatusPage).map {
-          case Married | Cohabiting =>
-            if (answers.get(ApplicantOrPartnerBenefitsPage).forall(_.intersect(qualifyingBenefits).isEmpty)) {
-              ApplicantHasSuitableAccountPage
-            } else {
-              PaymentFrequencyPage
-            }
+        answers.get(CurrentlyReceivingChildBenefitPage).map {
+          case GettingPayments =>
+            WantToBePaidToExistingAccountPage
 
-          case Single | Separated | Divorced | Widowed =>
-            PaymentFrequencyPage
+          case NotGettingPayments | NotClaiming =>
+            answers.get(RelationshipStatusPage).map {
+              case Married | Cohabiting =>
+                if (answers.get(ApplicantOrPartnerBenefitsPage).forall(_.intersect(qualifyingBenefits).isEmpty)) {
+                  ApplicantHasSuitableAccountPage
+                } else {
+                  PaymentFrequencyPage
+                }
+
+              case Single | Separated | Divorced | Widowed =>
+                PaymentFrequencyPage
+            }.orRecover
         }.orRecover
-
+        
       case false =>
         ApplicantHasPreviousFamilyNamePage
     }.orRecover
