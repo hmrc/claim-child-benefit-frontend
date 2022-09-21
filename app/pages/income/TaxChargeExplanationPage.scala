@@ -27,7 +27,7 @@ import play.api.mvc.Call
 
 case object TaxChargeExplanationPage extends QuestionPage[Boolean] {
 
-  override def path: JsPath = JsPath \ "wantsToBePaid"
+  override def path: JsPath = JsPath \ "taxChargeExplanation"
 
   override def route(waypoints: Waypoints): Call =
     routes.TaxChargeExplanationController.onPageLoad(waypoints)

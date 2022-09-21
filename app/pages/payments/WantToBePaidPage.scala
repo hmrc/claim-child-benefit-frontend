@@ -17,15 +17,14 @@
 package pages.payments
 
 import controllers.payments.routes
-import models.Benefits.qualifyingBenefits
 import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments}
 import models.RelationshipStatus._
 import models.UserAnswers
 import pages.applicant.ApplicantHasPreviousFamilyNamePage
-import pages.income.ApplicantOrPartnerBenefitsPage
-import pages.{Page, QuestionPage, RelationshipStatusPage, Waypoints}
+import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+import queries.WeeklyPaymentEligibilityQuery
 
 import scala.util.Try
 
@@ -41,24 +40,18 @@ case object WantToBePaidPage extends QuestionPage[Boolean] {
   override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case true =>
-        answers.get(CurrentlyReceivingChildBenefitPage).map {
-          case GettingPayments =>
-            WantToBePaidToExistingAccountPage
+        answers.get(WeeklyPaymentEligibilityQuery).map {
+          case x if x.eligible =>
+            PaymentFrequencyPage
 
-          case NotGettingPayments | NotClaiming =>
-            answers.get(RelationshipStatusPage).map {
-              case Married | Cohabiting =>
-                if (answers.get(ApplicantOrPartnerBenefitsPage).forall(_.intersect(qualifyingBenefits).isEmpty)) {
-                  ApplicantHasSuitableAccountPage
-                } else {
-                  PaymentFrequencyPage
-                }
-
-              case Single | Separated | Divorced | Widowed =>
-                PaymentFrequencyPage
+          case _ =>
+            answers.get(CurrentlyReceivingChildBenefitPage).map {
+              case GettingPayments                  => WantToBePaidToExistingAccountPage
+              case NotGettingPayments | NotClaiming => ApplicantHasSuitableAccountPage
             }.orRecover
+
         }.orRecover
-        
+
       case false =>
         ApplicantHasPreviousFamilyNamePage
     }.orRecover
@@ -66,6 +59,7 @@ case object WantToBePaidPage extends QuestionPage[Boolean] {
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
     if (value.contains(false)) {
       userAnswers.remove(PaymentFrequencyPage)
+        .flatMap(_.remove(WantToBePaidToExistingAccountPage))
         .flatMap(_.remove(ApplicantHasSuitableAccountPage))
         .flatMap(_.remove(BankAccountHolderPage))
         .flatMap(_.remove(BankAccountDetailsPage))

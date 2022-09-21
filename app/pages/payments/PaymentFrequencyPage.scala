@@ -17,6 +17,7 @@
 package pages.payments
 
 import controllers.payments.routes
+import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments}
 import models.{PaymentFrequency, UserAnswers}
 import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
@@ -32,5 +33,8 @@ case object PaymentFrequencyPage extends QuestionPage[PaymentFrequency] {
     routes.PaymentFrequencyController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantHasSuitableAccountPage
+    answers.get(CurrentlyReceivingChildBenefitPage).map {
+      case GettingPayments                  => WantToBePaidToExistingAccountPage
+      case NotGettingPayments | NotClaiming => ApplicantHasSuitableAccountPage
+    }.orRecover
 }
