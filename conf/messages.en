@@ -205,6 +205,8 @@ applicantIncome.p2.link.href = https://www.gov.uk/child-benefit-tax-calculator
 applicantIncome.p2.2 = to get an estimate of your adjusted net income
 applicantIncome.error.required = Select your adjusted net income each year
 applicantIncome.error.hidden = your adjusted net income each year
+applicantIncome.checkYourAnswersLabel = What is your adjusted net income each year?
+applicantIncome.change.hidden = your adjusted net income each year
 
 applicantOrPartnerBenefits.title = Do you or your partner get any of these benefits?
 applicantOrPartnerBenefits.heading = Do you or your partner get any of these benefits?
@@ -224,6 +226,8 @@ applicantOrPartnerIncome.p3.link.href = https://www.gov.uk/child-benefit-tax-cal
 applicantOrPartnerIncome.p3.2 = to get an estimate of your or your partner’s adjusted net income
 applicantOrPartnerIncome.error.required = Select your or your partner’s adjusted net income each year
 applicantOrPartnerIncome.error.hidden = your or your partner’s adjusted net income each year
+applicantOrPartnerIncome.checkYourAnswersLabel = What is your or your partner’s adjusted net income each year?
+applicantOrPartnerIncome.change.hidden = your or your partner’s adjusted net income each year
 
 applicantHasSuitableAccount.title = Do you have an account that Child Benefit can be paid to?
 applicantHasSuitableAccount.heading = Do you have an account that Child Benefit can be paid to?
