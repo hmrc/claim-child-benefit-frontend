@@ -62,9 +62,6 @@ POST       /your-or-your-partners-income                                 control
 GET        /your-or-your-partners-benefits                        controllers.income.ApplicantOrPartnerBenefitsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-or-your-partners-benefits                        controllers.income.ApplicantOrPartnerBenefitsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /tax-charge-explanation                       controllers.income.TaxChargeExplanationController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /tax-charge-explanation                       controllers.income.TaxChargeExplanationController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
 # Payments section
 GET        /have-suitable-bank-account                        controllers.payments.ApplicantHasSuitableAccountController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /have-suitable-bank-account                        controllers.payments.ApplicantHasSuitableAccountController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

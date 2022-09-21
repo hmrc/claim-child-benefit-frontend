@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import controllers.income.routes
+@import controllers.payments.routes
 
 @this(
         layout: templates.Layout,
@@ -25,50 +25,51 @@
 
 @(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("taxChargeExplanation.single.over60k.title"))) {
+@layout(pageTitle = titleNoForm(messages("wantToBePaid.couple.under60k.title"))) {
 
-    @formHelper(action = routes.TaxChargeExplanationController.onSubmit(waypoints)) {
+    @formHelper(action = routes.WantToBePaidController.onSubmit(waypoints)) {
 
-        <h1 class="govuk-heading-xl">@messages("taxChargeExplanation.single.over60k.heading")</h1>
+        <h1 class="govuk-heading-xl">@messages("wantToBePaid.couple.under60k.heading")</h1>
 
         <p class="govuk-body">
-            @messages("taxChargeExplanation.single.over60k.p1")
-            <a href="@messages("taxChargeExplanation.single.over60k.p1.link.href")" class="govuk-link">@messages("taxChargeExplanation.single.over60k.p1.link.text")</a>.
+            @messages("wantToBePaid.couple.under60k.p1")
+            <a href="@messages("wantToBePaid.couple.under60k.p1.link.href")" class="govuk-link">@messages("wantToBePaid.couple.under60k.p1.link.text")</a>.
         </p>
 
-        <p class="govuk-body">@messages("taxChargeExplanation.single.over60k.p2")</p>
+        <p class="govuk-body">@messages("wantToBePaid.couple.under60k.p2")</p>
 
+        <p class="govuk-body">@messages("wantToBePaid.couple.under60k.p3")</p>
 
         <div class="govuk-warning-text">
             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
             <strong class="govuk-warning-text__text">
                 <span class="govuk-warning-text__assistive">@messages("site.warning")</span>
-                @messages("taxChargeExplanation.single.over60k.p3.1")
-                <a href="@messages("taxChargeExplanation.single.over60k.p3.link.href")" class="govuk-link">@messages("taxChargeExplanation.single.over60k.p3.link.text")</a>.
-                @messages("taxChargeExplanation.single.over60k.p3.2")
+                @messages("wantToBePaid.couple.under60k.p4.1")
+                <a href="@messages("wantToBePaid.couple.under60k.p4.link.href")" class="govuk-link">@messages("wantToBePaid.couple.under60k.p4.link.text")</a>.
+                @messages("wantToBePaid.couple.under60k.p4.2")
             </strong>
         </div>
 
         <p class="govuk-body">
-            @messages("taxChargeExplanation.single.over60k.p4.1")
-            <a href="@messages("taxChargeExplanation.single.over60k.p4.link.href")" class="govuk-link">@messages("taxChargeExplanation.single.over60k.p4.link.text")</a>
-            @messages("taxChargeExplanation.single.over60k.p4.2")
+            @messages("wantToBePaid.couple.under60k.p5.1")
+            <a href="@messages("wantToBePaid.couple.under60k.p5.link.href")" class="govuk-link">@messages("wantToBePaid.couple.under60k.p5.link.text")</a>
+            @messages("wantToBePaid.couple.under60k.p5.2")
         </p>
 
-        <p class="govuk-body govuk-!-margin-bottom-7">@messages("taxChargeExplanation.single.over60k.p5")</p>
+        <p class="govuk-body govuk-!-margin-bottom-7">@messages("wantToBePaid.couple.under60k.p6")</p>
 
         @govukRadios(
             RadiosViewModel(
                 field = form("value"),
-                legend = LegendViewModel(messages("taxChargeExplanation.wantToBePaid")).withCssClass("govuk-!-font-weight-bold"),
+                legend = LegendViewModel(messages("wantToBePaid.wantToBePaid")).withCssClass("govuk-!-font-weight-bold"),
                 items = Seq(
                     RadioItem(
-                        content = messages("taxChargeExplanation.single.yes"),
+                        content = messages("wantToBePaid.couple.yes"),
                         value = Some("true"),
                         id = Some("value_0")
                     ),
                     RadioItem(
-                        content = messages("taxChargeExplanation.single.no"),
+                        content = messages("wantToBePaid.couple.no"),
                         value = Some("false"),
                         id = Some("value_1")
                     )

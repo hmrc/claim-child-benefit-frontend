@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import controllers.income.routes
+@import controllers.payments.routes
 
 @this(
         layout: templates.Layout,
@@ -24,30 +24,30 @@
 
 @(waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("taxChargeExplanation.couple.under50k.title"))) {
+@layout(pageTitle = titleNoForm(messages("wantToBePaid.couple.under50k.title"))) {
 
-    @formHelper(action = routes.TaxChargeExplanationController.onSubmit(waypoints)) {
+    @formHelper(action = routes.WantToBePaidController.onSubmit(waypoints)) {
 
-        <h1 class="govuk-heading-xl">@messages("taxChargeExplanation.couple.under50k.heading")</h1>
+        <h1 class="govuk-heading-xl">@messages("wantToBePaid.couple.under50k.heading")</h1>
 
         <p class="govuk-body">
-            @messages("taxChargeExplanation.couple.under50k.p1")
-            <a href="@messages("taxChargeExplanation.couple.under50k.p1.link.href")" class="govuk-link">@messages("taxChargeExplanation.couple.under50k.p1.link.text")</a>.
+            @messages("wantToBePaid.couple.under50k.p1")
+            <a href="@messages("wantToBePaid.couple.under50k.p1.link.href")" class="govuk-link">@messages("wantToBePaid.couple.under50k.p1.link.text")</a>.
         </p>
 
-        <p class="govuk-body">@messages("taxChargeExplanation.couple.under50k.p2")</p>
+        <p class="govuk-body">@messages("wantToBePaid.couple.under50k.p2")</p>
 
         <div class="govuk-warning-text">
             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
             <strong class="govuk-warning-text__text">
                 <span class="govuk-warning-text__assistive">@messages("site.warning")</span>
-                @messages("taxChargeExplanation.couple.under50k.p3.1")
-                <a href="@messages("taxChargeExplanation.couple.under50k.p3.link.href")" class="govuk-link">@messages("taxChargeExplanation.couple.under50k.p3.link.text")</a>.
-                @messages("taxChargeExplanation.couple.under50k.p3.2")
+                @messages("wantToBePaid.couple.under50k.p3.1")
+                <a href="@messages("wantToBePaid.couple.under50k.p3.link.href")" class="govuk-link">@messages("wantToBePaid.couple.under50k.p3.link.text")</a>.
+                @messages("wantToBePaid.couple.under50k.p3.2")
             </strong>
         </div>
 
-        <p class="govuk-body govuk-!-margin-bottom-7">@messages("taxChargeExplanation.couple.under50k.p4")</p>
+        <p class="govuk-body govuk-!-margin-bottom-7">@messages("wantToBePaid.couple.under50k.p4")</p>
 
         <input type="hidden" name="value" value="true" />
 
