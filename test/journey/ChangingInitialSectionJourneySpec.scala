@@ -17,7 +17,7 @@
 package journey
 
 import generators.ModelGenerators
-import models.CurrentlyReceivingChildBenefit.NotGettingPayments
+import models.CurrentlyReceivingChildBenefit.{NotClaiming, NotGettingPayments}
 import models.RelationshipStatus._
 import models._
 import org.scalacheck.Arbitrary.arbitrary
@@ -56,7 +56,6 @@ class ChangingInitialSectionJourneySpec
       submitAnswer(LivedOrWorkedAbroadPage, false),
       submitAnswer(ApplicantOrPartnerIncomePage, income),
       submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
-      next,
       submitAnswer(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming),
       setUserAnswerTo(WantToBePaidPage, true),
       setUserAnswerTo(ApplicantHasSuitableAccountPage, false),
@@ -116,8 +115,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(SeparationDatePage, LocalDate.now),
                 submitAnswer(ApplicantIncomePage, income),
                 submitAnswer(ApplicantBenefitsPage, benefits),
-                pageMustBe(TaxChargeExplanationPage),
-                next,
+                submitAnswer(WantToBePaidPage, true),
                 submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
                 pageMustBe(CheckYourAnswersPage),
                 answersMustNotContain(ApplicantOrPartnerIncomePage),
@@ -185,7 +183,7 @@ class ChangingInitialSectionJourneySpec
                     submitAnswer(RelationshipStatusPage, status),
                     submitAnswer(ApplicantIncomePage, income),
                     submitAnswer(ApplicantBenefitsPage, benefits),
-                    pageMustBe(TaxChargeExplanationPage),
+                    pageMustBe(WantToBePaidPage),
                     next,
                     submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
                     pageMustBe(CheckYourAnswersPage),
@@ -287,7 +285,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(SeparationDatePage, LocalDate.now),
                 submitAnswer(ApplicantIncomePage, income),
                 submitAnswer(ApplicantBenefitsPage, benefits),
-                pageMustBe(TaxChargeExplanationPage),
+                pageMustBe(WantToBePaidPage),
                 next,
                 pageMustBe(CheckYourAnswersPage),
                 answersMustNotContain(ApplicantOrPartnerIncomePage),
@@ -357,7 +355,7 @@ class ChangingInitialSectionJourneySpec
                     submitAnswer(RelationshipStatusPage, status),
                     submitAnswer(ApplicantIncomePage, income),
                     submitAnswer(ApplicantBenefitsPage, benefits),
-                    pageMustBe(TaxChargeExplanationPage),
+                    pageMustBe(WantToBePaidPage),
                     next,
                     pageMustBe(CheckYourAnswersPage),
                     answersMustNotContain(ApplicantOrPartnerIncomePage),
@@ -474,7 +472,7 @@ class ChangingInitialSectionJourneySpec
 
         "when the user originally said they wanted to be paid Child Benefit" - {
 
-          "must remove cohab date, joint income and partner details, collect separation date and single income details, show the tax charge explanation, and ask whether they want to be paid weekly" ignore {
+          "must remove cohab date, joint income and partner details, collect separation date and single income details, show the tax charge explanation, and ask whether they want to be paid weekly" in {
 
             startingFrom(RelationshipStatusPage)
               .run(
@@ -485,7 +483,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(SeparationDatePage, LocalDate.now),
                 submitAnswer(ApplicantIncomePage, income),
                 submitAnswer(ApplicantBenefitsPage, benefits),
-                submitAnswer(TaxChargeExplanationPage, true),
+                pageMustBe(WantToBePaidPage),
                 next,
                 submitAnswer(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
                 pageMustBe(CheckYourAnswersPage),
@@ -543,7 +541,7 @@ class ChangingInitialSectionJourneySpec
 
         "when they originally said they wanted to be paid Child Benefit" - {
 
-          "must remove cohab date, joint income and partner details, then collect single income details, show the tax charge explanation, and ask whether they want to be paid weekly" ignore {
+          "must remove cohab date, joint income and partner details, then collect single income details, show the tax charge explanation, and ask whether they want to be paid weekly" in {
 
             forAll(Gen.oneOf(Single, Divorced, Widowed)) {
               status =>
@@ -556,8 +554,7 @@ class ChangingInitialSectionJourneySpec
                     submitAnswer(RelationshipStatusPage, status),
                     submitAnswer(ApplicantIncomePage, income),
                     submitAnswer(ApplicantBenefitsPage, benefits),
-                    submitAnswer(TaxChargeExplanationPage, true),
-                    dumpAnswers(),
+                    pageMustBe(WantToBePaidPage),
                     next,
                     submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
                     pageMustBe(CheckYourAnswersPage),
@@ -581,7 +578,7 @@ class ChangingInitialSectionJourneySpec
 
         "when they originally said they did not want to be paid Child Benefit" - {
 
-          "must remove cohab date, joint income and partner details, then collect single income details and whether they want to be paid weekly" in {
+          "must remove cohab date, joint income and partner details, then collect single income details" in {
 
             forAll(Gen.oneOf(Single, Divorced, Widowed)) {
               status =>
@@ -664,7 +661,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(SeparationDatePage, LocalDate.now),
                 submitAnswer(ApplicantIncomePage, income),
                 submitAnswer(ApplicantBenefitsPage, benefits),
-                pageMustBe(TaxChargeExplanationPage),
+                pageMustBe(WantToBePaidPage),
                 next,
                 pageMustBe(CheckYourAnswersPage),
                 answersMustNotContain(CohabitationDatePage),
@@ -736,7 +733,7 @@ class ChangingInitialSectionJourneySpec
                     submitAnswer(RelationshipStatusPage, status),
                     submitAnswer(ApplicantIncomePage, income),
                     submitAnswer(ApplicantBenefitsPage, benefits),
-                    pageMustBe(TaxChargeExplanationPage),
+                    pageMustBe(WantToBePaidPage),
                     next,
                     pageMustBe(CheckYourAnswersPage),
                     answersMustNotContain(CohabitationDatePage),
@@ -803,7 +800,12 @@ class ChangingInitialSectionJourneySpec
       submitAnswer(LivedOrWorkedAbroadPage, false),
       submitAnswer(ApplicantIncomePage, income),
       submitAnswer(ApplicantBenefitsPage, benefits),
+      submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
+      submitAnswer(WantToBePaidPage, true),
+      submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
+      submitAnswer(ApplicantHasSuitableAccountPage, false),
       setUserAnswerTo(ChildNamePage(Index(0)), childName),
+      setUserAnswerTo(CurrentlyReceivingChildBenefitPage, NotClaiming),
       goTo(CheckYourAnswersPage)
     )
 
@@ -824,7 +826,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(RelationshipStatusPage, Married),
                 submitAnswer(ApplicantOrPartnerIncomePage, income),
                 submitAnswer(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
-                pageMustBe(TaxChargeExplanationPage),
+                pageMustBe(WantToBePaidPage),
                 next,
                 submitAnswer(PartnerNamePage, partnerName),
                 submitAnswer(PartnerNinoKnownPage, true),
@@ -851,15 +853,13 @@ class ChangingInitialSectionJourneySpec
             startingFrom(RelationshipStatusPage)
               .run(
                 initialise,
-                setUserAnswerTo(WantToBePaidPage, true),
-                setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
                 goToChangeAnswer(RelationshipStatusPage),
                 submitAnswer(RelationshipStatusPage, Married),
                 submitAnswer(ApplicantOrPartnerIncomePage, income),
                 submitAnswer(ApplicantOrPartnerBenefitsPage, nonQualifyingBenefits),
                 pageMustBe(CannotBePaidWeeklyPage),
                 next,
-                pageMustBe(TaxChargeExplanationPage),
+                pageMustBe(WantToBePaidPage),
                 next,
                 submitAnswer(PartnerNamePage, partnerName),
                 submitAnswer(PartnerNinoKnownPage, true),
@@ -895,7 +895,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(RelationshipStatusPage, Married),
                 submitAnswer(ApplicantOrPartnerIncomePage, income),
                 submitAnswer(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
-                pageMustBe(TaxChargeExplanationPage),
+                pageMustBe(WantToBePaidPage),
                 next,
                 submitAnswer(PartnerNamePage, partnerName),
                 submitAnswer(PartnerNinoKnownPage, true),
@@ -928,7 +928,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(RelationshipStatusPage, Married),
                 submitAnswer(ApplicantOrPartnerIncomePage, income),
                 submitAnswer(ApplicantOrPartnerBenefitsPage, nonQualifyingBenefits),
-                pageMustBe(TaxChargeExplanationPage),
+                pageMustBe(WantToBePaidPage),
                 next,
                 submitAnswer(PartnerNamePage, partnerName),
                 submitAnswer(PartnerNinoKnownPage, true),
@@ -997,7 +997,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(CohabitationDatePage, LocalDate.now),
                 submitAnswer(ApplicantOrPartnerIncomePage, income),
                 submitAnswer(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
-                pageMustBe(TaxChargeExplanationPage),
+                pageMustBe(WantToBePaidPage),
                 next,
                 submitAnswer(PartnerNamePage, partnerName),
                 submitAnswer(PartnerNinoKnownPage, true),
@@ -1033,7 +1033,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(ApplicantOrPartnerBenefitsPage, nonQualifyingBenefits),
                 pageMustBe(CannotBePaidWeeklyPage),
                 next,
-                pageMustBe(TaxChargeExplanationPage),
+                pageMustBe(WantToBePaidPage),
                 next,
                 submitAnswer(PartnerNamePage, partnerName),
                 submitAnswer(PartnerNinoKnownPage, true),
@@ -1070,7 +1070,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(CohabitationDatePage, LocalDate.now),
                 submitAnswer(ApplicantOrPartnerIncomePage, income),
                 submitAnswer(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
-                pageMustBe(TaxChargeExplanationPage),
+                pageMustBe(WantToBePaidPage),
                 next,
                 submitAnswer(PartnerNamePage, partnerName),
                 submitAnswer(PartnerNinoKnownPage, true),
@@ -1104,7 +1104,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(CohabitationDatePage, LocalDate.now),
                 submitAnswer(ApplicantOrPartnerIncomePage, income),
                 submitAnswer(ApplicantOrPartnerBenefitsPage, nonQualifyingBenefits),
-                pageMustBe(TaxChargeExplanationPage),
+                pageMustBe(WantToBePaidPage),
                 next,
                 submitAnswer(PartnerNamePage, partnerName),
                 submitAnswer(PartnerNinoKnownPage, true),
@@ -1182,6 +1182,10 @@ class ChangingInitialSectionJourneySpec
       submitAnswer(LivedOrWorkedAbroadPage, false),
       submitAnswer(ApplicantIncomePage, income),
       submitAnswer(ApplicantBenefitsPage, benefits),
+      submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
+      submitAnswer(WantToBePaidPage, true),
+      submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
+      submitAnswer(ApplicantHasSuitableAccountPage, false),
       setUserAnswerTo(ChildNamePage(Index(0)), childName),
       goTo(CheckYourAnswersPage)
     )
@@ -1205,7 +1209,7 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(RelationshipStatusPage, Married),
                   submitAnswer(ApplicantOrPartnerIncomePage, income),
                   submitAnswer(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
-                  pageMustBe(TaxChargeExplanationPage),
+                  pageMustBe(WantToBePaidPage),
                   next,
                   submitAnswer(PartnerNamePage, partnerName),
                   submitAnswer(PartnerNinoKnownPage, true),
@@ -1242,7 +1246,7 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(ApplicantOrPartnerBenefitsPage, nonQualifyingBenefits),
                   pageMustBe(CannotBePaidWeeklyPage),
                   next,
-                  pageMustBe(TaxChargeExplanationPage),
+                  pageMustBe(WantToBePaidPage),
                   next,
                   submitAnswer(PartnerNamePage, partnerName),
                   submitAnswer(PartnerNinoKnownPage, true),
@@ -1280,7 +1284,7 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(RelationshipStatusPage, Married),
                   submitAnswer(ApplicantOrPartnerIncomePage, income),
                   submitAnswer(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
-                  pageMustBe(TaxChargeExplanationPage),
+                  pageMustBe(WantToBePaidPage),
                   next,
                   submitAnswer(PartnerNamePage, partnerName),
                   submitAnswer(PartnerNinoKnownPage, true),
@@ -1315,7 +1319,7 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(RelationshipStatusPage, Married),
                   submitAnswer(ApplicantOrPartnerIncomePage, income),
                   submitAnswer(ApplicantOrPartnerBenefitsPage, nonQualifyingBenefits),
-                  pageMustBe(TaxChargeExplanationPage),
+                  pageMustBe(WantToBePaidPage),
                   next,
                   submitAnswer(PartnerNamePage, partnerName),
                   submitAnswer(PartnerNinoKnownPage, true),
@@ -1388,7 +1392,7 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(CohabitationDatePage, LocalDate.now),
                   submitAnswer(ApplicantOrPartnerIncomePage, income),
                   submitAnswer(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
-                  pageMustBe(TaxChargeExplanationPage),
+                  pageMustBe(WantToBePaidPage),
                   next,
                   submitAnswer(PartnerNamePage, partnerName),
                   submitAnswer(PartnerNinoKnownPage, true),
@@ -1426,7 +1430,7 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(ApplicantOrPartnerBenefitsPage, nonQualifyingBenefits),
                   pageMustBe(CannotBePaidWeeklyPage),
                   next,
-                  pageMustBe(TaxChargeExplanationPage),
+                  pageMustBe(WantToBePaidPage),
                   next,
                   submitAnswer(PartnerNamePage, partnerName),
                   submitAnswer(PartnerNinoKnownPage, true),
@@ -1465,7 +1469,7 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(CohabitationDatePage, LocalDate.now),
                   submitAnswer(ApplicantOrPartnerIncomePage, income),
                   submitAnswer(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
-                  pageMustBe(TaxChargeExplanationPage),
+                  pageMustBe(WantToBePaidPage),
                   next,
                   submitAnswer(PartnerNamePage, partnerName),
                   submitAnswer(PartnerNinoKnownPage, true),
@@ -1501,7 +1505,7 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(CohabitationDatePage, LocalDate.now),
                   submitAnswer(ApplicantOrPartnerIncomePage, income),
                   submitAnswer(ApplicantOrPartnerBenefitsPage, nonQualifyingBenefits),
-                  pageMustBe(TaxChargeExplanationPage),
+                  pageMustBe(WantToBePaidPage),
                   next,
                   submitAnswer(PartnerNamePage, partnerName),
                   submitAnswer(PartnerNinoKnownPage, true),

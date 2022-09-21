@@ -18,8 +18,7 @@ package pages
 
 import controllers.routes
 import models.UserAnswers
-import pages.income.TaxChargeExplanationPage
-import pages.partner.PartnerNamePage
+import pages.payments.WantToBePaidPage
 import play.api.mvc.Call
 
 case object CannotBePaidWeeklyPage extends Page {
@@ -28,5 +27,5 @@ case object CannotBePaidWeeklyPage extends Page {
     routes.CannotBePaidWeeklyController.onPageLoad(waypoints)
 
   override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    TaxChargeExplanationPage
+    WantToBePaidPage
 }
