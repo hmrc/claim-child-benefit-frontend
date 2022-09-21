@@ -33,11 +33,11 @@ object ApplicantOrPartnerIncomeSummary {
       answer =>
 
         SummaryListRowViewModel(
-          key = "applicantIncome.checkYourAnswersLabel",
+          key = "applicantOrPartnerIncome.checkYourAnswersLabel",
           value = ValueViewModel(messages(s"income.$answer")),
           actions = Seq(
             ActionItemViewModel("site.change", ApplicantOrPartnerIncomePage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("applicantIncome.change.hidden"))
+              .withVisuallyHiddenText(messages("applicantOrPartnerIncome.change.hidden"))
           )
         )
     }
