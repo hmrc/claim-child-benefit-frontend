@@ -16,24 +16,24 @@
 
 package forms.payments
 
-import forms.behaviours.BooleanFieldBehaviours
+import forms.behaviours.OptionFieldBehaviours
+import models.CurrentlyReceivingChildBenefit
 import play.api.data.FormError
 
-class CurrentlyReceivingChildBenefitFormProviderSpec extends BooleanFieldBehaviours {
-
-  val requiredKey = "currentlyReceivingChildBenefit.error.required"
-  val invalidKey = "error.boolean"
+class CurrentlyReceivingChildBenefitFormProviderSpec extends OptionFieldBehaviours {
 
   val form = new CurrentlyReceivingChildBenefitFormProvider()()
 
   ".value" - {
 
     val fieldName = "value"
+    val requiredKey = "currentlyReceivingChildBenefit.error.required"
 
-    behave like booleanField(
+    behave like optionsField[CurrentlyReceivingChildBenefit](
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+      validValues  = CurrentlyReceivingChildBenefit.values,
+      invalidError = FormError(fieldName, "error.invalid")
     )
 
     behave like mandatoryField(

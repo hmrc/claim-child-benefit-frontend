@@ -31,11 +31,9 @@ object CurrentlyReceivingChildBenefitSummary {
     answers.get(CurrentlyReceivingChildBenefitPage).map {
       answer =>
 
-        val value = if (answer) "site.yes" else "site.no"
-
         SummaryListRowViewModel(
           key = "currentlyReceivingChildBenefit.checkYourAnswersLabel",
-          value = ValueViewModel(value),
+          value = ValueViewModel(messages(s"currentlyReceivingChildBenefit.${answer.toString}")),
           actions = Seq(
             ActionItemViewModel("site.change", CurrentlyReceivingChildBenefitPage.changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("currentlyReceivingChildBenefit.change.hidden"))
