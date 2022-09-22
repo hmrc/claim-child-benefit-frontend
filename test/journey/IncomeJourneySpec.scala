@@ -37,8 +37,6 @@ class IncomeJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenera
         .run(
           submitAnswer(ApplicantOrPartnerIncomePage, income),
           submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
-          pageMustBe(TaxChargeExplanationPage),
-          next,
           pageMustBe(CurrentlyReceivingChildBenefitPage)
         )
     }
@@ -55,8 +53,6 @@ class IncomeJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenera
         .run(
           submitAnswer(ApplicantIncomePage, income),
           submitAnswer(ApplicantBenefitsPage, benefits),
-          pageMustBe(TaxChargeExplanationPage),
-          next,
           pageMustBe(CurrentlyReceivingChildBenefitPage)
         )
     }

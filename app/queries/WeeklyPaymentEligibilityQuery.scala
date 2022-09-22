@@ -14,18 +14,11 @@
  * limitations under the License.
  */
 
-package pages
+package queries
 
-import controllers.routes
-import models.UserAnswers
-import pages.payments.WantToBePaidPage
-import play.api.mvc.Call
+import models.WeeklyPaymentEligibility
+import play.api.libs.json.{JsPath, __}
 
-case object CannotBePaidWeeklyPage extends Page {
-
-  override def route(waypoints: Waypoints): Call =
-    routes.CannotBePaidWeeklyController.onPageLoad(waypoints)
-
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    WantToBePaidPage
+object WeeklyPaymentEligibilityQuery extends Gettable[WeeklyPaymentEligibility] {
+  override def path: JsPath = __
 }

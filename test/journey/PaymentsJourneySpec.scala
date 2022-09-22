@@ -17,7 +17,7 @@
 package journey
 
 import generators.ModelGenerators
-import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotGettingPayments}
+import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments}
 import models.RelationshipStatus._
 import models.{BankAccountDetails, BankAccountHolder, Benefits, ChildName, PaymentFrequency, UserAnswers}
 import org.scalacheck.Arbitrary.arbitrary
@@ -33,50 +33,223 @@ import java.time.LocalDate
 class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
   private def bankDetails = arbitrary[BankAccountDetails].sample.value
+  private val childName = ChildName("first", None, "last")
+  private val childDob  = LocalDate.now
 
-  "users who are currently receiving Child Benefit" - {
+  private val setupUserNotEligibleForWeeklyPayments = journeyOf(
+    setUserAnswerTo(RelationshipStatusPage, Married),
+    setUserAnswerTo(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove))
+  )
 
-    val childName = ChildName("first", None, "last")
-    val childDob  = LocalDate.now
-    val currentlyReceiving = Gen.oneOf(GettingPayments, NotGettingPayments).sample.value
+  "users who are currently getting Child Benefit payments" - {
 
-    "who want to be paid to their existing bank account" - {
+    "who are Married or Cohabiting and not getting qualifying benefits" - {
 
-      "must proceed to the Applicant section" in {
+      val initialise = journeyOf(
+        setUserAnswerTo(RelationshipStatusPage, Gen.oneOf(Married, Cohabiting).sample.value),
+        setUserAnswerTo(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove))
+      )
 
-        startingFrom(CurrentlyReceivingChildBenefitPage)
-          .run(
-            submitAnswer(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
-            submitAnswer(EldestChildNamePage, childName),
-            submitAnswer(EldestChildDateOfBirthPage, childDob),
-            submitAnswer(WantToBePaidToExistingAccountPage, true),
-            pageMustBe(ApplicantHasPreviousFamilyNamePage)
-          )
+      "who want to be paid to their existing account" - {
+
+        "must proceed to the Applicant section" in {
+
+          startingFrom(CurrentlyReceivingChildBenefitPage)
+            .run(
+              initialise,
+              submitAnswer(CurrentlyReceivingChildBenefitPage, GettingPayments),
+              submitAnswer(EldestChildNamePage, childName),
+              submitAnswer(EldestChildDateOfBirthPage, childDob),
+              submitAnswer(WantToBePaidPage, true),
+              submitAnswer(WantToBePaidToExistingAccountPage, true),
+              pageMustBe(ApplicantHasPreviousFamilyNamePage)
+            )
+        }
+      }
+
+      "who want to be paid to a different account" - {
+
+        "must proceed to collect bank account details" in {
+
+          startingFrom(CurrentlyReceivingChildBenefitPage)
+            .run(
+              initialise,
+              submitAnswer(CurrentlyReceivingChildBenefitPage, GettingPayments),
+              submitAnswer(EldestChildNamePage, childName),
+              submitAnswer(EldestChildDateOfBirthPage, childDob),
+              submitAnswer(WantToBePaidPage, true),
+              submitAnswer(WantToBePaidToExistingAccountPage, false),
+              pageMustBe(ApplicantHasSuitableAccountPage)
+            )
+        }
+      }
+
+      "who do not want to be paid" - {
+
+        "must proceed to the Applicant section" in {
+
+          startingFrom(CurrentlyReceivingChildBenefitPage)
+            .run(
+              initialise,
+              submitAnswer(CurrentlyReceivingChildBenefitPage, GettingPayments),
+              submitAnswer(EldestChildNamePage, childName),
+              submitAnswer(EldestChildDateOfBirthPage, childDob),
+              submitAnswer(WantToBePaidPage, false),
+              pageMustBe(ApplicantHasPreviousFamilyNamePage)
+            )
+        }
       }
     }
 
-    "who do not want to be paid to their existing bank account" -{
+    "who are Married or Cohabiting and getting qualifying benefits" - {
 
-      "must proceed to the bank details section" in {
+      val initialise = journeyOf(
+        setUserAnswerTo(RelationshipStatusPage, Gen.oneOf(Married, Cohabiting).sample.value),
+        setUserAnswerTo(ApplicantOrPartnerBenefitsPage, Benefits.qualifyingBenefits)
+      )
 
-        val currentlyReceiving = Gen.oneOf(GettingPayments, NotGettingPayments).sample.value
+      "who want to be paid to their existing account" - {
 
-        startingFrom(CurrentlyReceivingChildBenefitPage)
-          .run(
-            submitAnswer(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
-            submitAnswer(EldestChildNamePage, childName),
-            submitAnswer(EldestChildDateOfBirthPage, childDob),
-            submitAnswer(WantToBePaidToExistingAccountPage, false),
-            submitAnswer(ApplicantHasSuitableAccountPage, true),
-            submitAnswer(BankAccountHolderPage, BankAccountHolder.Applicant),
-            submitAnswer(BankAccountDetailsPage, bankDetails),
-            pageMustBe(ApplicantHasPreviousFamilyNamePage)
-          )
+        "must proceed to the Applicant section" in {
+
+          startingFrom(CurrentlyReceivingChildBenefitPage)
+            .run(
+              initialise,
+              submitAnswer(CurrentlyReceivingChildBenefitPage, GettingPayments),
+              submitAnswer(EldestChildNamePage, childName),
+              submitAnswer(EldestChildDateOfBirthPage, childDob),
+              submitAnswer(WantToBePaidPage, true),
+              submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
+              submitAnswer(WantToBePaidToExistingAccountPage, true),
+              pageMustBe(ApplicantHasPreviousFamilyNamePage)
+            )
+        }
+      }
+
+      "who want to be paid to a different account" - {
+
+        "must proceed to collect bank account details" in {
+
+          startingFrom(CurrentlyReceivingChildBenefitPage)
+            .run(
+              initialise,
+              submitAnswer(CurrentlyReceivingChildBenefitPage, GettingPayments),
+              submitAnswer(EldestChildNamePage, childName),
+              submitAnswer(EldestChildDateOfBirthPage, childDob),
+              submitAnswer(WantToBePaidPage, true),
+              submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
+              submitAnswer(WantToBePaidToExistingAccountPage, false),
+              pageMustBe(ApplicantHasSuitableAccountPage)
+            )
+        }
+      }
+
+      "who do not want to be paid" - {
+
+        "must proceed to the Applicant section" in {
+
+          startingFrom(CurrentlyReceivingChildBenefitPage)
+            .run(
+              initialise,
+              submitAnswer(CurrentlyReceivingChildBenefitPage, GettingPayments),
+              submitAnswer(EldestChildNamePage, childName),
+              submitAnswer(EldestChildDateOfBirthPage, childDob),
+              submitAnswer(WantToBePaidPage, false),
+              pageMustBe(ApplicantHasPreviousFamilyNamePage)
+            )
+        }
+      }
+    }
+
+    "who are Single, Separated, Widowed or Divorced" - {
+
+      val initialise = journeyOf(
+        setUserAnswerTo(RelationshipStatusPage, Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value)
+      )
+
+      "who want to be paid to their existing account" - {
+
+        "must proceed to the Applicant section" in {
+
+          startingFrom(CurrentlyReceivingChildBenefitPage)
+            .run(
+              initialise,
+              submitAnswer(CurrentlyReceivingChildBenefitPage, GettingPayments),
+              submitAnswer(EldestChildNamePage, childName),
+              submitAnswer(EldestChildDateOfBirthPage, childDob),
+              submitAnswer(WantToBePaidPage, true),
+              submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
+              submitAnswer(WantToBePaidToExistingAccountPage, true),
+              pageMustBe(ApplicantHasPreviousFamilyNamePage)
+            )
+        }
+      }
+
+      "who want to be paid to a different account" - {
+
+        "must proceed to collect bank account details" in {
+
+          startingFrom(CurrentlyReceivingChildBenefitPage)
+            .run(
+              initialise,
+              submitAnswer(CurrentlyReceivingChildBenefitPage, GettingPayments),
+              submitAnswer(EldestChildNamePage, childName),
+              submitAnswer(EldestChildDateOfBirthPage, childDob),
+              submitAnswer(WantToBePaidPage, true),
+              submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
+              submitAnswer(WantToBePaidToExistingAccountPage, false),
+              pageMustBe(ApplicantHasSuitableAccountPage)
+            )
+        }
+      }
+
+      "who do not want to be paid" - {
+
+        "must proceed to the Applicant section" in {
+
+          startingFrom(CurrentlyReceivingChildBenefitPage)
+            .run(
+              initialise,
+              submitAnswer(CurrentlyReceivingChildBenefitPage, GettingPayments),
+              submitAnswer(EldestChildNamePage, childName),
+              submitAnswer(EldestChildDateOfBirthPage, childDob),
+              submitAnswer(WantToBePaidPage, false),
+              pageMustBe(ApplicantHasPreviousFamilyNamePage)
+            )
+        }
       }
     }
   }
 
-  "users wanting to be paid Child Benefit" - {
+  "users who are currently claiming Child Benefit but not getting payments" - {
+
+    "must be asked if they want to be paid" in {
+
+      startingFrom(CurrentlyReceivingChildBenefitPage)
+        .run(
+          setupUserNotEligibleForWeeklyPayments,
+          submitAnswer(CurrentlyReceivingChildBenefitPage, NotGettingPayments),
+          submitAnswer(EldestChildNamePage, childName),
+          submitAnswer(EldestChildDateOfBirthPage, childDob),
+          pageMustBe(WantToBePaidPage)
+        )
+    }
+  }
+
+  "users who are not claiming Child Benefit" - {
+
+    "must be asked if the want to be paid" in {
+
+      startingFrom(CurrentlyReceivingChildBenefitPage)
+        .run(
+          setupUserNotEligibleForWeeklyPayments,
+          submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
+          pageMustBe(WantToBePaidPage)
+        )
+    }
+  }
+
+  "users not receiving Child Benefit and wanting to be paid" - {
 
     "who are Married" - {
 
@@ -86,6 +259,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
           UserAnswers("id")
             .set(RelationshipStatusPage, Married).success.value
             .set(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)).success.value
+            .set(CurrentlyReceivingChildBenefitPage, NotClaiming).success.value
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
@@ -103,6 +277,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
           UserAnswers("id")
             .set(RelationshipStatusPage, Married).success.value
             .set(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.qualifyingBenefits.head)).success.value
+            .set(CurrentlyReceivingChildBenefitPage, NotClaiming).success.value
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
@@ -121,6 +296,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
           UserAnswers("id")
             .set(RelationshipStatusPage, Cohabiting).success.value
             .set(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)).success.value
+            .set(CurrentlyReceivingChildBenefitPage, NotClaiming).success.value
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
@@ -136,6 +312,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
           UserAnswers("id")
             .set(RelationshipStatusPage, Cohabiting).success.value
             .set(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.qualifyingBenefits.head)).success.value
+            .set(CurrentlyReceivingChildBenefitPage, NotClaiming).success.value
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
@@ -154,6 +331,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
           UserAnswers("id")
             .set(RelationshipStatusPage, Single).success.value
             .set(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)).success.value
+            .set(CurrentlyReceivingChildBenefitPage, NotClaiming).success.value
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
@@ -172,6 +350,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
           UserAnswers("id")
             .set(RelationshipStatusPage, Separated).success.value
             .set(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)).success.value
+            .set(CurrentlyReceivingChildBenefitPage, NotClaiming).success.value
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
@@ -190,6 +369,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
           UserAnswers("id")
             .set(RelationshipStatusPage, Divorced).success.value
             .set(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)).success.value
+            .set(CurrentlyReceivingChildBenefitPage, NotClaiming).success.value
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(
@@ -208,6 +388,7 @@ class PaymentsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGene
           UserAnswers("id")
             .set(RelationshipStatusPage, Widowed).success.value
             .set(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)).success.value
+            .set(CurrentlyReceivingChildBenefitPage, NotClaiming).success.value
 
         startingFrom(WantToBePaidPage, answers = initialAnswers)
           .run(

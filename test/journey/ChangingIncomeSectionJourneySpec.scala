@@ -23,14 +23,17 @@ import models.{AdultName, Benefits, Income, PaymentFrequency}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
+import pages.applicant.ApplicantHasPreviousFamilyNamePage
 import pages.income._
 import pages.partner.PartnerNamePage
 import pages.payments.{ApplicantHasSuitableAccountPage, CurrentlyReceivingChildBenefitPage, PaymentFrequencyPage, WantToBePaidPage}
-import pages.{CheckYourAnswersPage, RelationshipStatusPage}
+import pages.{CannotBePaidWeeklyPage, CheckYourAnswersPage, RelationshipStatusPage}
 
 class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
   private def benefits = Set(Gen.oneOf(Benefits.values).sample.value)
+  private def qualifyingBenefits = Set[Benefits](Gen.oneOf(Benefits.qualifyingBenefits).sample.value)
+  private def income = arbitrary[Income].sample.value
 
   "when the user changes their income answer" - {
 
@@ -44,9 +47,9 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
         setUserAnswerTo(RelationshipStatusPage, relationshipStatus),
         submitAnswer(ApplicantIncomePage, income1),
         submitAnswer(ApplicantBenefitsPage, benefits),
-        next,
         submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
         submitAnswer(WantToBePaidPage, false),
+        submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
         goTo(CheckYourAnswersPage)
       )
 
@@ -55,7 +58,7 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
           initialise,
           goToChangeAnswer(ApplicantIncomePage),
           submitAnswer(ApplicantIncomePage, income2),
-          pageMustBe(TaxChargeExplanationPage),
+          pageMustBe(WantToBePaidPage),
           next,
           pageMustBe(CheckYourAnswersPage)
         )
@@ -75,9 +78,9 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
         setUserAnswerTo(RelationshipStatusPage, relationshipStatus),
         submitAnswer(ApplicantOrPartnerIncomePage, income1),
         submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
-        next,
         submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
         submitAnswer(WantToBePaidPage, false),
+        submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
         setUserAnswerTo(PartnerNamePage, partnerName),
         goTo(CheckYourAnswersPage)
       )
@@ -87,18 +90,83 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
           initialise,
           goToChangeAnswer(ApplicantOrPartnerIncomePage),
           submitAnswer(ApplicantOrPartnerIncomePage, income2),
-          pageMustBe(TaxChargeExplanationPage),
+          pageMustBe(WantToBePaidPage),
           next,
           pageMustBe(CheckYourAnswersPage)
         )
     }
   }
 
+  "when the user initially said they or their partner received qualifying benefits" - {
+
+    "and wanted to be paid weekly" - {
+
+      "changing to say they do not receive benefits must tell the user they cannot be paid weekly, show the tax charge explanation, then return to Check Answers" in {
+
+        val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
+        val partnerName        = arbitrary[AdultName].sample.value
+
+        val initialise = journeyOf(
+          setUserAnswerTo(RelationshipStatusPage, relationshipStatus),
+          submitAnswer(ApplicantOrPartnerIncomePage, income),
+          submitAnswer(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
+          submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
+          submitAnswer(WantToBePaidPage, true),
+          submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
+          setUserAnswerTo(PartnerNamePage, partnerName),
+          setUserAnswerTo(ApplicantHasSuitableAccountPage, false),
+          goTo(CheckYourAnswersPage)
+        )
+
+        startingFrom(ApplicantOrPartnerIncomePage)
+          .run(
+            initialise,
+            goToChangeAnswer(ApplicantOrPartnerBenefitsPage),
+            submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
+            pageMustBe(CannotBePaidWeeklyPage),
+            next,
+            pageMustBe(WantToBePaidPage),
+            next,
+            pageMustBe(CheckYourAnswersPage)
+          )
+      }
+    }
+
+    "and wanted to be paid every 4 weeks" - {
+
+      "changing to say they do not receive benefits must show the tax charge explanation then return to Check Answers" in {
+
+        val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
+        val partnerName        = arbitrary[AdultName].sample.value
+
+        val initialise = journeyOf(
+          setUserAnswerTo(RelationshipStatusPage, relationshipStatus),
+          submitAnswer(ApplicantOrPartnerIncomePage, income),
+          submitAnswer(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
+          submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
+          submitAnswer(WantToBePaidPage, true),
+          submitAnswer(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
+          setUserAnswerTo(PartnerNamePage, partnerName),
+          setUserAnswerTo(ApplicantHasSuitableAccountPage, false),
+          goTo(CheckYourAnswersPage)
+        )
+
+        startingFrom(ApplicantOrPartnerIncomePage)
+          .run(
+            initialise,
+            goToChangeAnswer(ApplicantOrPartnerBenefitsPage),
+            submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
+            pageMustBe(WantToBePaidPage),
+            next,
+            pageMustBe(CheckYourAnswersPage)
+          )
+      }
+    }
+  }
 
   "when the user initially said they or their partner did not receive any qualifying benefits" - {
 
-    def qualifyingBenefits = Set[Benefits](Gen.oneOf(Benefits.qualifyingBenefits).sample.value)
-    def income = arbitrary[Income].sample.value
+
 
     "and they wanted to be paid Child Benefit" - {
 
@@ -111,7 +179,6 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
           setUserAnswerTo(RelationshipStatusPage, relationshipStatus),
           submitAnswer(ApplicantOrPartnerIncomePage, income),
           submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
-          next,
           submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
           submitAnswer(WantToBePaidPage, true),
           setUserAnswerTo(PartnerNamePage, partnerName),
@@ -124,8 +191,6 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
             initialise,
             goToChangeAnswer(ApplicantOrPartnerBenefitsPage),
             submitAnswer(ApplicantOrPartnerBenefitsPage, qualifyingBenefits),
-            pageMustBe(TaxChargeExplanationPage),
-            next,
             submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
             pageMustBe(CheckYourAnswersPage)
           )
@@ -143,7 +208,6 @@ class ChangingIncomeSectionJourneySpec extends AnyFreeSpec with JourneyHelpers w
           setUserAnswerTo(RelationshipStatusPage, relationshipStatus),
           submitAnswer(ApplicantOrPartnerIncomePage, income),
           submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
-          next,
           submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
           submitAnswer(WantToBePaidPage, false),
           setUserAnswerTo(PartnerNamePage, partnerName),

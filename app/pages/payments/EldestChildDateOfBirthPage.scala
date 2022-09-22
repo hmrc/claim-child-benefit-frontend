@@ -17,8 +17,9 @@
 package pages.payments
 
 import controllers.payments.routes
+import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments}
 import models.UserAnswers
-import pages.{Page, QuestionPage, Waypoints}
+import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -34,5 +35,22 @@ case object EldestChildDateOfBirthPage extends QuestionPage[LocalDate] {
     routes.EldestChildDateOfBirthController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    WantToBePaidToExistingAccountPage
+    WantToBePaidPage
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    answers.get(CurrentlyReceivingChildBenefitPage).map {
+      case GettingPayments =>
+        answers.get(WantToBePaidPage).map {
+          case true =>
+            answers.get(WantToBePaidToExistingAccountPage)
+              .map(_ => waypoints.next.page)
+              .getOrElse(WantToBePaidToExistingAccountPage)
+
+          case false =>
+            waypoints.next.page
+        }.orRecover
+
+      case NotGettingPayments | NotClaiming =>
+        waypoints.next.page
+    }.orRecover
 }

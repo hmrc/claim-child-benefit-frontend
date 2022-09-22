@@ -20,7 +20,7 @@ import controllers.income.routes
 import models.PaymentFrequency.{EveryFourWeeks, Weekly}
 import models.{Benefits, UserAnswers}
 import pages.partner.PartnerNamePage
-import pages.payments.{PaymentFrequencyPage, WantToBePaidPage}
+import pages.payments.{CurrentlyReceivingChildBenefitPage, PaymentFrequencyPage, WantToBePaidPage}
 import pages.{CannotBePaidWeeklyPage, NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
@@ -37,30 +37,41 @@ case object ApplicantOrPartnerBenefitsPage extends QuestionPage[Set[Benefits]] {
     routes.ApplicantOrPartnerBenefitsController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    TaxChargeExplanationPage
+    CurrentlyReceivingChildBenefitPage
 
   override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, originalAnswers: UserAnswers, updatedAnswers: UserAnswers): Page = {
     originalAnswers.get(PaymentFrequencyPage).map {
       case Weekly =>
-        updatedAnswers.get(ApplicantOrPartnerBenefitsPage).map {
+        updatedAnswers.get(this).map {
           benefits =>
             if (benefits.intersect(Benefits.qualifyingBenefits).isEmpty) {
               CannotBePaidWeeklyPage
             } else {
-              TaxChargeExplanationPage
+              WantToBePaidPage
             }
         }.orRecover
 
       case EveryFourWeeks =>
-        TaxChargeExplanationPage
+        WantToBePaidPage
+
     }.getOrElse {
-      updatedAnswers.get(WantToBePaidPage).map {
-        case true =>
-          TaxChargeExplanationPage
-        case false =>
-          updatedAnswers.get(PartnerNamePage)
-            .map(_ => waypoints.next.page)
-            .getOrElse(PartnerNamePage)
+      updatedAnswers.get(this).map {
+        benefits =>
+          if (benefits.intersect(Benefits.qualifyingBenefits).isEmpty) {
+            updatedAnswers.get(PartnerNamePage)
+              .map(_ => waypoints.next.page)
+              .getOrElse(PartnerNamePage)
+          } else {
+            updatedAnswers.get(WantToBePaidPage).map {
+              case true =>
+                PaymentFrequencyPage
+
+              case false =>
+                updatedAnswers.get(PartnerNamePage)
+                  .map(_ => waypoints.next.page)
+                  .getOrElse(PartnerNamePage)
+            }.orRecover
+          }
       }.orRecover
     }
   }
