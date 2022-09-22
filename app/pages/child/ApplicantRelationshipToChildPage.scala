@@ -32,5 +32,5 @@ final case class ApplicantRelationshipToChildPage(index: Index) extends ChildQue
     routes.ApplicantRelationshipToChildController.onPageLoad(waypoints, index)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    AdoptingThroughLocalAuthorityPage(index)
+    AnyoneClaimedForChildBeforePage(index)
 }
