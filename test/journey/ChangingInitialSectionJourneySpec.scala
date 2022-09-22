@@ -28,7 +28,7 @@ import pages.child.ChildNamePage
 import pages.income._
 import pages.partner._
 import pages.payments.{ApplicantHasSuitableAccountPage, CurrentlyReceivingChildBenefitPage, PaymentFrequencyPage, WantToBePaidPage}
-import pages.{CannotBePaidWeeklyPage, CheckYourAnswersPage, CohabitationDatePage, LivedOrWorkedAbroadPage, RelationshipStatusPage, SeparationDatePage}
+import pages.{CannotBePaidWeeklyPage, CheckYourAnswersPage, CohabitationDatePage, AlwaysLivedInUkPage, RelationshipStatusPage, SeparationDatePage}
 import uk.gov.hmrc.domain.Nino
 
 import java.time.LocalDate
@@ -53,7 +53,7 @@ class ChangingInitialSectionJourneySpec
 
     val initialise = journeyOf(
       submitAnswer(RelationshipStatusPage, Married),
-      submitAnswer(LivedOrWorkedAbroadPage, false),
+      submitAnswer(AlwaysLivedInUkPage, false),
       submitAnswer(ApplicantOrPartnerIncomePage, income),
       submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
       submitAnswer(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming),
@@ -418,7 +418,7 @@ class ChangingInitialSectionJourneySpec
     val initialise = journeyOf(
       submitAnswer(RelationshipStatusPage, Cohabiting),
       submitAnswer(CohabitationDatePage, LocalDate.now),
-      submitAnswer(LivedOrWorkedAbroadPage, false),
+      submitAnswer(AlwaysLivedInUkPage, false),
       submitAnswer(ApplicantOrPartnerIncomePage, income),
       submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
       setUserAnswerTo(CurrentlyReceivingChildBenefitPage, NotGettingPayments),
@@ -797,7 +797,7 @@ class ChangingInitialSectionJourneySpec
     val initialise = journeyOf(
       submitAnswer(RelationshipStatusPage, Separated),
       submitAnswer(SeparationDatePage, LocalDate.now),
-      submitAnswer(LivedOrWorkedAbroadPage, false),
+      submitAnswer(AlwaysLivedInUkPage, false),
       submitAnswer(ApplicantIncomePage, income),
       submitAnswer(ApplicantBenefitsPage, benefits),
       submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
@@ -1179,7 +1179,7 @@ class ChangingInitialSectionJourneySpec
 
     def initialise(status: RelationshipStatus) = journeyOf(
       submitAnswer(RelationshipStatusPage, status),
-      submitAnswer(LivedOrWorkedAbroadPage, false),
+      submitAnswer(AlwaysLivedInUkPage, false),
       submitAnswer(ApplicantIncomePage, income),
       submitAnswer(ApplicantBenefitsPage, benefits),
       submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),

@@ -16,15 +16,30 @@
 
 package forms
 
-import forms.mappings.Mappings
-import play.api.data.Form
+import forms.behaviours.BooleanFieldBehaviours
+import play.api.data.FormError
 
-import javax.inject.Inject
+class AlwaysLivedInUkFormProviderSpec extends BooleanFieldBehaviours {
 
-class LivedOrWorkedAbroadFormProvider @Inject() extends Mappings {
+  val requiredKey = "alwaysLivedInUk.single.error.required"
+  val invalidKey = "error.boolean"
 
-  def apply(singleOrCouple: String): Form[Boolean] =
-    Form(
-      "value" -> boolean(s"livedOrWorkedAbroad.$singleOrCouple.error.required")
+  val form = new AlwaysLivedInUkFormProvider()("single")
+
+  ".value" - {
+
+    val fieldName = "value"
+
+    behave like booleanField(
+      form,
+      fieldName,
+      invalidError = FormError(fieldName, invalidKey)
     )
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
+  }
 }

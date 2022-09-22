@@ -192,8 +192,8 @@ trait PageGenerators {
   implicit lazy val arbitraryRelationshipStatusDatePage: Arbitrary[CohabitationDatePage.type] =
     Arbitrary(CohabitationDatePage)
 
-  implicit lazy val arbitraryLivedOrWorkedAbroadPage: Arbitrary[LivedOrWorkedAbroadPage.type] =
-    Arbitrary(LivedOrWorkedAbroadPage)
+  implicit lazy val arbitraryAlwaysLivedInUkPage: Arbitrary[AlwaysLivedInUkPage.type] =
+    Arbitrary(AlwaysLivedInUkPage)
 
   implicit lazy val arbitraryAnyChildLivedWithOthersPage: Arbitrary[AnyChildLivedWithOthersPage.type] =
     Arbitrary(AnyChildLivedWithOthersPage)

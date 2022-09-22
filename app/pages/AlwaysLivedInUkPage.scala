@@ -24,14 +24,14 @@ import pages.income.{ApplicantIncomePage, ApplicantOrPartnerIncomePage}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object LivedOrWorkedAbroadPage extends QuestionPage[Boolean] {
+case object AlwaysLivedInUkPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "livedOrWorkedAbroad"
+  override def toString: String = "alwaysLivedInUk"
 
   override def route(waypoints: Waypoints): Call =
-    routes.LivedOrWorkedAbroadController.onPageLoad(waypoints)
+    routes.AlwaysLivedInUkController.onPageLoad(waypoints)
 
   override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {

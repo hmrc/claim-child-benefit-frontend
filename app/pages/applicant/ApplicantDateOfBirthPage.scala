@@ -20,7 +20,7 @@ import controllers.applicant.routes
 import models.RelationshipStatus._
 import models.UserAnswers
 import pages.partner.PartnerIsHmfOrCivilServantPage
-import pages.{LivedOrWorkedAbroadPage, Page, QuestionPage, RelationshipStatusPage, UsePrintAndPostFormPage, Waypoints}
+import pages.{AlwaysLivedInUkPage, Page, QuestionPage, RelationshipStatusPage, UsePrintAndPostFormPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 import utils.MonadOps._
@@ -37,7 +37,7 @@ case object ApplicantDateOfBirthPage extends QuestionPage[LocalDate] {
     routes.ApplicantDateOfBirthController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    answers.get(LivedOrWorkedAbroadPage).map {
+    answers.get(AlwaysLivedInUkPage).map {
       case false =>
         ApplicantCurrentUkAddressPage
 

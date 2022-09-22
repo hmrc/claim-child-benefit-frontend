@@ -100,16 +100,16 @@ anyChildLivedWithOthers.checkYourAnswersLabel = Have any of the children you wil
 anyChildLivedWithOthers.error.required = Select yes if any of the children you will claim for has lived with anyone else in the last year
 anyChildLivedWithOthers.change.hidden = if any of the children you will claim for has lived with anyone else in the last year
 
-livedOrWorkedAbroad.couple.title = Have you or your partner lived or worked outside the UK in the last 3 months?
-livedOrWorkedAbroad.couple.heading = Have you or your partner lived or worked outside the UK in the last 3 months?
-livedOrWorkedAbroad.couple.checkYourAnswersLabel = Have you or your partner lived or worked outside the UK in the last 3 months?
-livedOrWorkedAbroad.couple.error.required = Select yes if you or your partner have lived or worked outside the UK in the last 3 months
-livedOrWorkedAbroad.couple.change.hidden = if you or your partner have lived or worked outside the UK in the last 3 months
-livedOrWorkedAbroad.single.title = Have you lived or worked outside the UK in the last 3 months?
-livedOrWorkedAbroad.single.heading = Have you lived or worked outside the UK in the last 3 months?
-livedOrWorkedAbroad.single.checkYourAnswersLabel = Have you lived or worked outside the UK in the last 3 months?
-livedOrWorkedAbroad.single.error.required = Select yes if you have lived or worked outside the UK in the last 3 months
-livedOrWorkedAbroad.single.change.hidden = if you have lived or worked outside the UK in the last 3 months
+alwaysLivedInUk.couple.title = Have you or your partner always lived  in the UK?
+alwaysLivedInUk.couple.heading = Have you or your partner always lived in the UK?
+alwaysLivedInUk.couple.checkYourAnswersLabel = Have you or your partner always lived in the UK?
+alwaysLivedInUk.couple.error.required = Select yes if you or your partner have always lived in the UK
+alwaysLivedInUk.couple.change.hidden = if you or your partner have always lived in the UK
+alwaysLivedInUk.single.title = Have you always lived in the UK?
+alwaysLivedInUk.single.heading = Have you always lived in the UK?
+alwaysLivedInUk.single.checkYourAnswersLabel = Have you always lived in the UK?
+alwaysLivedInUk.single.error.required = Select yes if you have  always lived in the UK
+alwaysLivedInUk.single.change.hidden = if you have  always lived in the UK
 
 recentlyClaimed.title = Have you recently made a Child Benefit claim and are waiting to hear if you are eligible?
 recentlyClaimed.heading = Have you recently made a Child Benefit claim and are waiting to hear if you are eligible?

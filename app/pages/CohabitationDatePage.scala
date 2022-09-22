@@ -34,7 +34,7 @@ case object CohabitationDatePage extends QuestionPage[LocalDate] {
     routes.CohabitationDateController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    LivedOrWorkedAbroadPage
+    AlwaysLivedInUkPage
 
   override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
     answers.get(ApplicantOrPartnerIncomePage)
