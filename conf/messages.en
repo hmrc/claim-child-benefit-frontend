@@ -85,7 +85,11 @@ journeyRecovery.continue.heading = Sorry, there is a problem with the service
 journeyRecovery.continue.guidance = [Add content to explain how to proceed.]
 journeyRecovery.startAgain.title = Sorry, there is a problem with the service
 journeyRecovery.startAgain.heading = Sorry, there is a problem with the service
-journeyRecovery.startAgain.guidance = [Add content to explain why the user needs to start again.]
+journeyRecovery.startAgain.p1 = We have not saved your answers. You will have to start again.
+journeyRecovery.startAgain.p2.1 = Contact the
+journeyRecovery.startAgain.p2.link.href = https://www.gov.uk/government/organisations/hm-revenue-customs/contact/child-benefit
+journeyRecovery.startAgain.p2.link.text = Child Benefit helpline
+journeyRecovery.startAgain.p2.2 = if you need to speak to someone about claiming Child Benefit.
 
 signedOut.title = For your security, we reset your application form
 signedOut.heading = For your security, we reset your application form

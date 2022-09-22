@@ -25,12 +25,18 @@
 
     <h1 class="govuk-heading-xl">@messages("journeyRecovery.startAgain.heading")</h1>
 
-    <p class="govuk-body">@messages("journeyRecovery.startAgain.guidance")</p>
+    <p class="govuk-body">@messages("journeyRecovery.startAgain.p1")</p>
+
+    <p class="govuk-body">
+        @messages("journeyRecovery.startAgain.p2.1")
+        <a href="@messages("journeyRecovery.startAgain.p2.link.href")" class="govuk-link">@messages("journeyRecovery.startAgain.p2.link.text")</a>
+        @messages("journeyRecovery.startAgain.p2.2")
+    </p>
 
     <p class="govuk-body">
         @govukButton(
             ButtonViewModel(messages("site.startAgain"))
-                .asLink(routes.IndexController.onPageLoad.url)
+                .asLink(routes.IndexController.startAgain.url)
         )
     </p>
 }
