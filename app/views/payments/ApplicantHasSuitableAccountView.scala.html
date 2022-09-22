@@ -21,7 +21,8 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    h1WithCaption: components.h1WithCaption
 )
 
 @(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
@@ -34,13 +35,17 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        @h1WithCaption(
+            content = messages("applicantHasSuitableAccount.heading"),
+            caption = messages("section.payments")
+        )
+
+        <p class="govuk-body">@messages("applicantHasSuitableAccount.guidance")</p>
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = HmrcPageHeadingLegend(
-                    content = messages("applicantHasSuitableAccount.heading"),
-                    caption = HmrcSectionCaption(messages("section.payments"))
-                )
+                legend = LegendViewModel(messages("applicantHasSuitableAccount.heading")).visuallyHidden()
             )
         )
 
