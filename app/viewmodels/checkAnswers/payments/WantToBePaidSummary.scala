@@ -16,9 +16,12 @@
 
 package viewmodels.checkAnswers.payments
 
+import models.Income._
+import models.RelationshipStatus._
 import models.UserAnswers
+import pages.income.{ApplicantIncomePage, ApplicantOrPartnerIncomePage}
 import pages.payments.WantToBePaidPage
-import pages.{CheckAnswersPage, Waypoints}
+import pages.{CheckAnswersPage, RelationshipStatusPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -27,19 +30,36 @@ import viewmodels.implicits._
 object WantToBePaidSummary {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
-         (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(WantToBePaidPage).map {
-      answer =>
+         (implicit messages: Messages): Option[SummaryListRow] = {
 
-        val value = if (answer) "site.yes" else "site.no"
+    def buildRow: Option[SummaryListRow] =
+      answers.get(WantToBePaidPage).map {
+        answer =>
 
-        SummaryListRowViewModel(
-          key = "wantToBePaid.checkYourAnswersLabel",
-          value = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel("site.change", WantToBePaidPage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("wantToBePaid.change.hidden"))
+          val value = if (answer) "site.yes" else "site.no"
+
+          SummaryListRowViewModel(
+            key = "wantToBePaid.checkYourAnswersLabel",
+            value = ValueViewModel(value),
+            actions = Seq(
+              ActionItemViewModel("site.change", WantToBePaidPage.changeLink(waypoints, sourcePage).url)
+                .withVisuallyHiddenText(messages("wantToBePaid.change.hidden"))
+            )
           )
-        )
+      }
+
+    answers.get(RelationshipStatusPage).flatMap {
+      case Married | Cohabiting =>
+        answers.get(ApplicantOrPartnerIncomePage).flatMap {
+          case BelowLowerThreshold => None
+          case _                   => buildRow
+        }
+
+      case Single | Separated | Divorced | Widowed =>
+        answers.get(ApplicantIncomePage).flatMap {
+          case BelowLowerThreshold => None
+          case _                   => buildRow
+        }
     }
+  }
 }
