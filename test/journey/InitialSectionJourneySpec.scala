@@ -16,6 +16,7 @@
 
 package journey
 
+import models.RelationshipStatus._
 import models.{AdultName, RelationshipStatus}
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
@@ -129,22 +130,80 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
       )
   }
 
-  "users who not always lived in the UK" - {
+  "users who have not always lived in the UK" - {
 
     "who are HM Forces or a civil servant abroad" - {
 
-      "must continue to the income section" in {
+      "and are Single, Divorced or Widowed" - {
 
-        startingFrom(RecentlyClaimedPage)
-          .run(
-            submitAnswer(RecentlyClaimedPage, false),
-            submitAnswer(AnyChildLivedWithOthersPage, false),
-            submitAnswer(ApplicantNamePage, applicantName),
-            submitAnswer(RelationshipStatusPage, RelationshipStatus.Married),
-            submitAnswer(AlwaysLivedInUkPage, false),
-            submitAnswer(ApplicantIsHmfOrCivilServantPage, true),
-            pageMustBe(ApplicantOrPartnerIncomePage)
-          )
+        "must continue to the income section" in {
+
+          val relationship = Gen.oneOf(Single, Divorced, Widowed).sample.value
+
+          startingFrom(RecentlyClaimedPage)
+            .run(
+              submitAnswer(RecentlyClaimedPage, false),
+              submitAnswer(AnyChildLivedWithOthersPage, false),
+              submitAnswer(ApplicantNamePage, applicantName),
+              submitAnswer(RelationshipStatusPage, relationship),
+              submitAnswer(AlwaysLivedInUkPage, false),
+              submitAnswer(ApplicantIsHmfOrCivilServantPage, true),
+              pageMustBe(ApplicantIncomePage)
+            )
+        }
+      }
+
+      "and are Separated" - {
+
+        "must continue to the income section" in {
+
+          startingFrom(RecentlyClaimedPage)
+            .run(
+              submitAnswer(RecentlyClaimedPage, false),
+              submitAnswer(AnyChildLivedWithOthersPage, false),
+              submitAnswer(ApplicantNamePage, applicantName),
+              submitAnswer(RelationshipStatusPage, Separated),
+              submitAnswer(SeparationDatePage, LocalDate.now),
+              submitAnswer(AlwaysLivedInUkPage, false),
+              submitAnswer(ApplicantIsHmfOrCivilServantPage, true),
+              pageMustBe(ApplicantIncomePage)
+            )
+        }
+      }
+
+      "and are Married" - {
+
+        "must continue to the income section" in {
+
+          startingFrom(RecentlyClaimedPage)
+            .run(
+              submitAnswer(RecentlyClaimedPage, false),
+              submitAnswer(AnyChildLivedWithOthersPage, false),
+              submitAnswer(ApplicantNamePage, applicantName),
+              submitAnswer(RelationshipStatusPage, Married),
+              submitAnswer(AlwaysLivedInUkPage, false),
+              submitAnswer(ApplicantIsHmfOrCivilServantPage, true),
+              pageMustBe(ApplicantOrPartnerIncomePage)
+            )
+        }
+      }
+
+      "and are Cohabiting" - {
+
+        "must continue to the income section" in {
+
+          startingFrom(RecentlyClaimedPage)
+            .run(
+              submitAnswer(RecentlyClaimedPage, false),
+              submitAnswer(AnyChildLivedWithOthersPage, false),
+              submitAnswer(ApplicantNamePage, applicantName),
+              submitAnswer(RelationshipStatusPage, Cohabiting),
+              submitAnswer(CohabitationDatePage, LocalDate.now),
+              submitAnswer(AlwaysLivedInUkPage, false),
+              submitAnswer(ApplicantIsHmfOrCivilServantPage, true),
+              pageMustBe(ApplicantOrPartnerIncomePage)
+            )
+        }
       }
     }
 
