@@ -37,10 +37,7 @@
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = HmrcPageHeadingLegend(
-                    content = messages("bankAccountHolder.heading"),
-                    caption = HmrcSectionCaption(messages("section.payments"))
-                ),
+                legend = LegendViewModel(messages("bankAccountHolder.heading")).asPageHeading(),
                 items  = BankAccountHolder.options
             )
         )
