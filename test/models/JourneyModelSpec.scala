@@ -47,8 +47,11 @@ class JourneyModelSpec
   private val now = LocalDate.now
   private val applicantName = AdultName("first", None, "last")
   private val applicantNino = arbitrary[Nino].sample.value
-  private val currentAddress = UkAddress("line 1", None, "town", None, "AA11 1AA")
-  private val previousAddress = UkAddress("line 1", None, "town", None, "BB22 2BB")
+  private val currentUkAddress = UkAddress("line 1", None, "town", None, "AA11 1AA")
+  private val country = arbitrary[Country].sample.value
+  private val currentInternationalAddress = InternationalAddress("line 1", None, "town", None, None, country)
+  private val previousUkAddress = UkAddress("line 1", None, "town", None, "BB22 2BB")
+  private val previousInternationalAddress = InternationalAddress("line 1", None, "town", None, None, country)
   private val phoneNumber = "07777 777777"
   private val bestTimes = Set[BestTimeToContact](BestTimeToContact.Morning)
   private val applicantBenefits = Set[Benefits](Benefits.NoneOfTheAbove)
@@ -97,7 +100,7 @@ class JourneyModelSpec
             previousFamilyNames = Nil,
             dateOfBirth = now,
             nationalInsuranceNumber = None,
-            currentAddress = currentAddress,
+            currentAddress = currentUkAddress,
             previousAddress = None,
             telephoneNumber = phoneNumber,
             bestTimeToContact = bestTimes,
@@ -154,7 +157,7 @@ class JourneyModelSpec
             previousFamilyNames = Nil,
             dateOfBirth = now,
             nationalInsuranceNumber = None,
-            currentAddress = currentAddress,
+            currentAddress = currentUkAddress,
             previousAddress = None,
             telephoneNumber = phoneNumber,
             bestTimeToContact = bestTimes,
@@ -228,7 +231,7 @@ class JourneyModelSpec
             previousFamilyNames = Nil,
             dateOfBirth = now,
             nationalInsuranceNumber = None,
-            currentAddress = currentAddress,
+            currentAddress = currentUkAddress,
             previousAddress = None,
             telephoneNumber = phoneNumber,
             bestTimeToContact = bestTimes,
@@ -486,7 +489,7 @@ class JourneyModelSpec
           previousFamilyNames = Nil,
           dateOfBirth = now,
           nationalInsuranceNumber = Some(applicantNino.value),
-          currentAddress = currentAddress,
+          currentAddress = currentUkAddress,
           previousAddress = None,
           telephoneNumber = phoneNumber,
           bestTimeToContact = bestTimes,
@@ -518,7 +521,7 @@ class JourneyModelSpec
           previousFamilyNames = List(previousName1, previousName2),
           dateOfBirth = now,
           nationalInsuranceNumber = None,
-          currentAddress = currentAddress,
+          currentAddress = currentUkAddress,
           previousAddress = None,
           telephoneNumber = phoneNumber,
           bestTimeToContact = bestTimes,
@@ -533,7 +536,7 @@ class JourneyModelSpec
         data.value.applicant mustEqual expectedApplicant
       }
 
-      "when the applicant has not lived at their current address for a year" in {
+      "when the applicant's current address is international" in {
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -541,16 +544,16 @@ class JourneyModelSpec
           .withMinimalSingleIncomeDetails
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
-          .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
-          .set(ApplicantPreviousUkAddressPage, previousAddress).success.value
+          .set(ApplicantCurrentAddressInUkPage, false).success.value
+          .set(ApplicantCurrentInternationalAddressPage, currentInternationalAddress).success.value
 
         val expectedApplicant = JourneyModel.Applicant(
           name = applicantName,
           previousFamilyNames = Nil,
           dateOfBirth = now,
           nationalInsuranceNumber = None,
-          currentAddress = currentAddress,
-          previousAddress = Some(previousAddress),
+          currentAddress = currentInternationalAddress,
+          previousAddress = None,
           telephoneNumber = phoneNumber,
           bestTimeToContact = bestTimes,
           nationality = applicantNationality,
@@ -562,6 +565,71 @@ class JourneyModelSpec
 
         errors mustBe empty
         data.value.applicant mustEqual expectedApplicant
+      }
+
+      "when the applicant has not lived at their current address for a year" - {
+
+        "and their previous address is in the UK" in {
+          val answers = UserAnswers("id")
+            .withMinimalApplicantDetails
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .withMinimalPaymentDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
+            .set(ApplicantPreviousAddressInUkPage, true).success.value
+            .set(ApplicantPreviousUkAddressPage, previousUkAddress).success.value
+
+          val expectedApplicant = JourneyModel.Applicant(
+            name = applicantName,
+            previousFamilyNames = Nil,
+            dateOfBirth = now,
+            nationalInsuranceNumber = None,
+            currentAddress = currentUkAddress,
+            previousAddress = Some(previousUkAddress),
+            telephoneNumber = phoneNumber,
+            bestTimeToContact = bestTimes,
+            nationality = applicantNationality,
+            employmentStatus = applicantEmployment,
+            memberOfHMForcesOrCivilServantAbroad = false
+          )
+
+          val (errors, data) = JourneyModel.from(answers).pad
+
+          errors mustBe empty
+          data.value.applicant mustEqual expectedApplicant
+        }
+
+        "and their previous address is international" in {
+          val answers = UserAnswers("id")
+            .withMinimalApplicantDetails
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .withMinimalPaymentDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
+            .set(ApplicantPreviousAddressInUkPage, false).success.value
+            .set(ApplicantPreviousInternationalAddressPage, previousInternationalAddress).success.value
+
+          val expectedApplicant = JourneyModel.Applicant(
+            name = applicantName,
+            previousFamilyNames = Nil,
+            dateOfBirth = now,
+            nationalInsuranceNumber = None,
+            currentAddress = currentUkAddress,
+            previousAddress = Some(previousInternationalAddress),
+            telephoneNumber = phoneNumber,
+            bestTimeToContact = bestTimes,
+            nationality = applicantNationality,
+            employmentStatus = applicantEmployment,
+            memberOfHMForcesOrCivilServantAbroad = false
+          )
+
+          val (errors, data) = JourneyModel.from(answers).pad
+
+          errors mustBe empty
+          data.value.applicant mustEqual expectedApplicant
+        }
       }
 
       "when the applicant knows their partner's NINO" in {
@@ -1266,7 +1334,7 @@ class JourneyModelSpec
         .set(ApplicantHasPreviousFamilyNamePage, false).success.value
         .set(ApplicantNinoKnownPage, false).success.value
         .set(ApplicantDateOfBirthPage, now).success.value
-        .set(ApplicantCurrentUkAddressPage, currentAddress).success.value
+        .set(ApplicantCurrentUkAddressPage, currentUkAddress).success.value
         .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
         .set(ApplicantPhoneNumberPage, phoneNumber).success.value
         .set(BestTimeToContactPage, bestTimes).success.value
