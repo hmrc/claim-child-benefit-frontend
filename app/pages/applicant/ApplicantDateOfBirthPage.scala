@@ -38,10 +38,10 @@ case object ApplicantDateOfBirthPage extends QuestionPage[LocalDate] {
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(AlwaysLivedInUkPage).map {
-      case false =>
+      case true =>
         ApplicantCurrentUkAddressPage
 
-      case true =>
+      case false =>
         val partnerRelationships = Seq(Married, Cohabiting)
 
         val canContinue =

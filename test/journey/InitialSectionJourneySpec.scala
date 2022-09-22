@@ -38,7 +38,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Married),
-        submitAnswer(AlwaysLivedInUkPage, false),
+        submitAnswer(AlwaysLivedInUkPage, true),
         pageMustBe(ApplicantOrPartnerIncomePage)
       )
   }
@@ -52,7 +52,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Cohabiting),
         submitAnswer(CohabitationDatePage, LocalDate.now.minusDays(1)),
-        submitAnswer(AlwaysLivedInUkPage, false),
+        submitAnswer(AlwaysLivedInUkPage, true),
         pageMustBe(ApplicantOrPartnerIncomePage)
       )
   }
@@ -65,7 +65,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Single),
-        submitAnswer(AlwaysLivedInUkPage, false),
+        submitAnswer(AlwaysLivedInUkPage, true),
         pageMustBe(ApplicantIncomePage)
       )
   }
@@ -79,7 +79,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Separated),
         submitAnswer(SeparationDatePage, LocalDate.now.minusDays(1)),
-        submitAnswer(AlwaysLivedInUkPage, false),
+        submitAnswer(AlwaysLivedInUkPage, true),
         pageMustBe(ApplicantIncomePage)
       )
   }
@@ -92,7 +92,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Divorced),
-        submitAnswer(AlwaysLivedInUkPage, false),
+        submitAnswer(AlwaysLivedInUkPage, true),
         pageMustBe(ApplicantIncomePage)
       )
   }
@@ -105,7 +105,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
         submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Widowed),
-        submitAnswer(AlwaysLivedInUkPage, false),
+        submitAnswer(AlwaysLivedInUkPage, true),
         pageMustBe(ApplicantIncomePage)
       )
   }
@@ -129,7 +129,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
       )
   }
 
-  "users who have lived or worked abroad in the past 3 months" - {
+  "users who not always lived in the UK" - {
 
     "who are HM Forces or a civil servant abroad" - {
 
@@ -141,7 +141,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
             submitAnswer(AnyChildLivedWithOthersPage, false),
             submitAnswer(ApplicantNamePage, applicantName),
             submitAnswer(RelationshipStatusPage, RelationshipStatus.Married),
-            submitAnswer(AlwaysLivedInUkPage, true),
+            submitAnswer(AlwaysLivedInUkPage, false),
             submitAnswer(ApplicantIsHmfOrCivilServantPage, true),
             pageMustBe(ApplicantOrPartnerIncomePage)
           )
@@ -163,14 +163,14 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
               submitAnswer(AnyChildLivedWithOthersPage, false),
               submitAnswer(ApplicantNamePage, applicantName),
               submitAnswer(RelationshipStatusPage, relationshipStatus),
-              submitAnswer(AlwaysLivedInUkPage, true),
+              submitAnswer(AlwaysLivedInUkPage, false),
               submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
               pageMustBe(UsePrintAndPostFormPage)
             )
         }
       }
 
-      "and is Separated" - {
+      "and are Separated" - {
 
         "must go to the Use Print and Post Form page" in {
 
@@ -181,14 +181,14 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
               submitAnswer(ApplicantNamePage, applicantName),
               submitAnswer(RelationshipStatusPage, RelationshipStatus.Separated),
               submitAnswer(SeparationDatePage, LocalDate.now),
-              submitAnswer(AlwaysLivedInUkPage, true),
+              submitAnswer(AlwaysLivedInUkPage, false),
               submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
               pageMustBe(UsePrintAndPostFormPage)
             )
         }
       }
 
-      "and is Married" - {
+      "and are Married" - {
 
         "and their partner is HM Forces or a civil servant abroad" - {
 
@@ -200,7 +200,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
                 submitAnswer(AnyChildLivedWithOthersPage, false),
                 submitAnswer(ApplicantNamePage, applicantName),
                 submitAnswer(RelationshipStatusPage, RelationshipStatus.Married),
-                submitAnswer(AlwaysLivedInUkPage, true),
+                submitAnswer(AlwaysLivedInUkPage, false),
                 submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
                 submitAnswer(PartnerIsHmfOrCivilServantPage, true),
                 pageMustBe(ApplicantOrPartnerIncomePage)
@@ -218,7 +218,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
                 submitAnswer(AnyChildLivedWithOthersPage, false),
                 submitAnswer(ApplicantNamePage, applicantName),
                 submitAnswer(RelationshipStatusPage, RelationshipStatus.Married),
-                submitAnswer(AlwaysLivedInUkPage, true),
+                submitAnswer(AlwaysLivedInUkPage, false),
                 submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
                 submitAnswer(PartnerIsHmfOrCivilServantPage, false),
                 pageMustBe(UsePrintAndPostFormPage)
@@ -227,7 +227,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
         }
       }
 
-      "and is Cohabiting" - {
+      "and are Cohabiting" - {
 
         "and their partner is HM Forces or a civil servant abroad" - {
 
@@ -240,7 +240,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
                 submitAnswer(ApplicantNamePage, applicantName),
                 submitAnswer(RelationshipStatusPage, RelationshipStatus.Cohabiting),
                 submitAnswer(CohabitationDatePage, LocalDate.now),
-                submitAnswer(AlwaysLivedInUkPage, true),
+                submitAnswer(AlwaysLivedInUkPage, false),
                 submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
                 submitAnswer(PartnerIsHmfOrCivilServantPage, true),
                 pageMustBe(ApplicantOrPartnerIncomePage)
@@ -259,7 +259,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
                 submitAnswer(ApplicantNamePage, applicantName),
                 submitAnswer(RelationshipStatusPage, RelationshipStatus.Cohabiting),
                 submitAnswer(CohabitationDatePage, LocalDate.now),
-                submitAnswer(AlwaysLivedInUkPage, true),
+                submitAnswer(AlwaysLivedInUkPage, false),
                 submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
                 submitAnswer(PartnerIsHmfOrCivilServantPage, false),
                 pageMustBe(UsePrintAndPostFormPage)

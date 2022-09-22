@@ -53,7 +53,7 @@ class ChangingInitialSectionJourneySpec
 
     val initialise = journeyOf(
       submitAnswer(RelationshipStatusPage, Married),
-      submitAnswer(AlwaysLivedInUkPage, false),
+      submitAnswer(AlwaysLivedInUkPage, true),
       submitAnswer(ApplicantOrPartnerIncomePage, income),
       submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
       submitAnswer(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming),
@@ -418,7 +418,7 @@ class ChangingInitialSectionJourneySpec
     val initialise = journeyOf(
       submitAnswer(RelationshipStatusPage, Cohabiting),
       submitAnswer(CohabitationDatePage, LocalDate.now),
-      submitAnswer(AlwaysLivedInUkPage, false),
+      submitAnswer(AlwaysLivedInUkPage, true),
       submitAnswer(ApplicantOrPartnerIncomePage, income),
       submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
       setUserAnswerTo(CurrentlyReceivingChildBenefitPage, NotGettingPayments),
@@ -797,7 +797,7 @@ class ChangingInitialSectionJourneySpec
     val initialise = journeyOf(
       submitAnswer(RelationshipStatusPage, Separated),
       submitAnswer(SeparationDatePage, LocalDate.now),
-      submitAnswer(AlwaysLivedInUkPage, false),
+      submitAnswer(AlwaysLivedInUkPage, true),
       submitAnswer(ApplicantIncomePage, income),
       submitAnswer(ApplicantBenefitsPage, benefits),
       submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
@@ -1179,7 +1179,7 @@ class ChangingInitialSectionJourneySpec
 
     def initialise(status: RelationshipStatus) = journeyOf(
       submitAnswer(RelationshipStatusPage, status),
-      submitAnswer(AlwaysLivedInUkPage, false),
+      submitAnswer(AlwaysLivedInUkPage, true),
       submitAnswer(ApplicantIncomePage, income),
       submitAnswer(ApplicantBenefitsPage, benefits),
       submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),

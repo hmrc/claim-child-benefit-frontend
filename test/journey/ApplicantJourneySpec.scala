@@ -40,7 +40,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
       startingFrom(ApplicantHasPreviousFamilyNamePage)
         .run(
-          setUserAnswerTo(AlwaysLivedInUkPage, false),
+          setUserAnswerTo(AlwaysLivedInUkPage, true),
           submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
           submitAnswer(ApplicantNinoKnownPage, false),
           submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
@@ -104,7 +104,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
       startingFrom(ApplicantDateOfBirthPage)
         .run(
-          setUserAnswerTo(AlwaysLivedInUkPage, true),
+          setUserAnswerTo(AlwaysLivedInUkPage, false),
           setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, true),
           submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
           submitAnswer(ApplicantCurrentAddressInUkPage, true),
@@ -119,7 +119,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
       startingFrom(ApplicantDateOfBirthPage)
         .run(
-          setUserAnswerTo(AlwaysLivedInUkPage, true),
+          setUserAnswerTo(AlwaysLivedInUkPage, false),
           setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, true),
           submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
           submitAnswer(ApplicantCurrentAddressInUkPage, false),
@@ -138,7 +138,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
       startingFrom(ApplicantDateOfBirthPage)
         .run(
-          setUserAnswerTo(AlwaysLivedInUkPage, true),
+          setUserAnswerTo(AlwaysLivedInUkPage, false),
           setUserAnswerTo(RelationshipStatusPage, relationship),
           setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, false),
           setUserAnswerTo(PartnerIsHmfOrCivilServantPage, true),
@@ -156,7 +156,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
       startingFrom(ApplicantDateOfBirthPage)
         .run(
-          setUserAnswerTo(AlwaysLivedInUkPage, true),
+          setUserAnswerTo(AlwaysLivedInUkPage, false),
           setUserAnswerTo(RelationshipStatusPage, relationship),
           setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, false),
           setUserAnswerTo(PartnerIsHmfOrCivilServantPage, true),
@@ -280,7 +280,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
       val initialise = journeyOf(
         setUserAnswerTo(RelationshipStatusPage, relationship),
-        setUserAnswerTo(AlwaysLivedInUkPage, true),
+        setUserAnswerTo(AlwaysLivedInUkPage, false),
         setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, false)
       )
 
@@ -298,7 +298,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
       val initialise = journeyOf(
         setUserAnswerTo(RelationshipStatusPage, relationship),
-        setUserAnswerTo(AlwaysLivedInUkPage, true),
+        setUserAnswerTo(AlwaysLivedInUkPage, false),
         setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, false),
         setUserAnswerTo(PartnerIsHmfOrCivilServantPage, false)
       )

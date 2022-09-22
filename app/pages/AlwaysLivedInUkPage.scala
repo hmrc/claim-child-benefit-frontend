@@ -35,13 +35,13 @@ case object AlwaysLivedInUkPage extends QuestionPage[Boolean] {
 
   override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
-      case true  =>
-        ApplicantIsHmfOrCivilServantPage
-
-      case false =>
+      case true =>
         answers.get(RelationshipStatusPage).map {
           case Married | Cohabiting                    => ApplicantOrPartnerIncomePage
           case Single | Divorced | Widowed | Separated => ApplicantIncomePage
         }.orRecover
+
+      case false  =>
+        ApplicantIsHmfOrCivilServantPage
     }.orRecover
 }
