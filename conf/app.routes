@@ -112,8 +112,8 @@ POST       /your-employment-status                        controllers.applicant.
 GET        /have-previous-family-name                        controllers.applicant.ApplicantHasPreviousFamilyNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /have-previous-family-name                        controllers.applicant.ApplicantHasPreviousFamilyNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /lived-at-current-address-12-months                        controllers.applicant.ApplicantLivedAtCurrentAddressOneYearController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /lived-at-current-address-12-months                        controllers.applicant.ApplicantLivedAtCurrentAddressOneYearController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /lived-at-current-address-a-year                        controllers.applicant.ApplicantLivedAtCurrentAddressOneYearController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /lived-at-current-address-a-year                        controllers.applicant.ApplicantLivedAtCurrentAddressOneYearController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /your-nationality                        controllers.applicant.ApplicantNationalityController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-nationality                        controllers.applicant.ApplicantNationalityController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
