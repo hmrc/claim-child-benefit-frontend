@@ -38,10 +38,7 @@
             CheckboxesViewModel(
                 form   = form,
                 name   = "value",
-                legend = HmrcPageHeadingLegend(
-                    content = messages("applicantBenefits.heading"),
-                    caption = HmrcSectionCaption(messages("section.income"))
-                ),
+                legend = LegendViewModel(messages("applicantBenefits.heading")).asPageHeading(),
                 items  = Benefits.checkboxItems
             ).withHint(HintViewModel(messages("applicantBenefits.hint")))
         )
