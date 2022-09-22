@@ -183,11 +183,17 @@ object JourneyModel {
           case true =>
             (
               answers.getIor(PreviousClaimantNamePage(index)),
-              answers.getIor(PreviousClaimantUkAddressPage(index))
+              getPreviousClaimantAddress
             ).parMapN(PreviousClaimant.apply).map(Some(_))
 
           case false =>
             Ior.Right(None)
+        }
+
+      def getPreviousClaimantAddress: IorNec[Query, Address] =
+        answers.getIor(PreviousClaimantAddressInUkPage(index)).flatMap {
+          case true  => answers.getIor(PreviousClaimantUkAddressPage(index))
+          case false => answers.getIor(PreviousClaimantInternationalAddressPage(index))
         }
 
       (
@@ -222,7 +228,19 @@ object JourneyModel {
     def getPreviousAddress: IorNec[Query, Option[Address]] =
       answers.getIor(ApplicantLivedAtCurrentAddressOneYearPage).flatMap {
         case true  => Ior.Right(None)
-        case false => answers.getIor(ApplicantPreviousUkAddressPage).map(Some(_))
+        case false =>
+          answers.getIor(ApplicantPreviousAddressInUkPage).flatMap {
+            case true =>  answers.getIor(ApplicantPreviousUkAddressPage).map(Some(_))
+            case false => answers.getIor(ApplicantPreviousInternationalAddressPage).map(Some(_))
+          }
+
+      }
+
+    def getCurrentAddress: IorNec[Query, Address] =
+      if (answers.get(ApplicantCurrentAddressInUkPage).getOrElse(true)) {
+        answers.getIor(ApplicantCurrentUkAddressPage)
+      } else {
+        answers.getIor(ApplicantCurrentInternationalAddressPage)
       }
 
     def getPreviousFamilyNames: IorNec[Query, List[String]] =
@@ -241,7 +259,7 @@ object JourneyModel {
       getPreviousFamilyNames,
       answers.getIor(ApplicantDateOfBirthPage),
       getNino,
-      answers.getIor(ApplicantCurrentUkAddressPage),
+      getCurrentAddress,
       getPreviousAddress,
       answers.getIor(ApplicantPhoneNumberPage),
       answers.getIor(BestTimeToContactPage),

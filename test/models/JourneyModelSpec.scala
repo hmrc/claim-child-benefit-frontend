@@ -47,8 +47,11 @@ class JourneyModelSpec
   private val now = LocalDate.now
   private val applicantName = AdultName("first", None, "last")
   private val applicantNino = arbitrary[Nino].sample.value
-  private val currentAddress = UkAddress("line 1", None, "town", None, "AA11 1AA")
-  private val previousAddress = UkAddress("line 1", None, "town", None, "BB22 2BB")
+  private val currentUkAddress = UkAddress("line 1", None, "town", None, "AA11 1AA")
+  private val country = arbitrary[Country].sample.value
+  private val currentInternationalAddress = InternationalAddress("line 1", None, "town", None, None, country)
+  private val previousUkAddress = UkAddress("line 1", None, "town", None, "BB22 2BB")
+  private val previousInternationalAddress = InternationalAddress("line 1", None, "town", None, None, country)
   private val phoneNumber = "07777 777777"
   private val bestTimes = Set[BestTimeToContact](BestTimeToContact.Morning)
   private val applicantBenefits = Set[Benefits](Benefits.NoneOfTheAbove)
@@ -75,6 +78,9 @@ class JourneyModelSpec
   private val scottishBirthCertificateDetails = "0000000000"
   private val childPreviousName1 = ChildName("first 1", None, "last 1")
   private val childPreviousName2 = ChildName("first 2", None, "last 2")
+  private val previousClaimantName = AdultName("pc first", None, "pc last")
+  private val previousClaimantUkAddress = arbitrary[UkAddress].sample.value
+  private val previousClaimantInternationalAddress = arbitrary[InternationalAddress].sample.value
 
   ".from" - {
 
@@ -97,7 +103,7 @@ class JourneyModelSpec
             previousFamilyNames = Nil,
             dateOfBirth = now,
             nationalInsuranceNumber = None,
-            currentAddress = currentAddress,
+            currentAddress = currentUkAddress,
             previousAddress = None,
             telephoneNumber = phoneNumber,
             bestTimeToContact = bestTimes,
@@ -154,7 +160,7 @@ class JourneyModelSpec
             previousFamilyNames = Nil,
             dateOfBirth = now,
             nationalInsuranceNumber = None,
-            currentAddress = currentAddress,
+            currentAddress = currentUkAddress,
             previousAddress = None,
             telephoneNumber = phoneNumber,
             bestTimeToContact = bestTimes,
@@ -228,7 +234,7 @@ class JourneyModelSpec
             previousFamilyNames = Nil,
             dateOfBirth = now,
             nationalInsuranceNumber = None,
-            currentAddress = currentAddress,
+            currentAddress = currentUkAddress,
             previousAddress = None,
             telephoneNumber = phoneNumber,
             bestTimeToContact = bestTimes,
@@ -486,7 +492,7 @@ class JourneyModelSpec
           previousFamilyNames = Nil,
           dateOfBirth = now,
           nationalInsuranceNumber = Some(applicantNino.value),
-          currentAddress = currentAddress,
+          currentAddress = currentUkAddress,
           previousAddress = None,
           telephoneNumber = phoneNumber,
           bestTimeToContact = bestTimes,
@@ -518,7 +524,7 @@ class JourneyModelSpec
           previousFamilyNames = List(previousName1, previousName2),
           dateOfBirth = now,
           nationalInsuranceNumber = None,
-          currentAddress = currentAddress,
+          currentAddress = currentUkAddress,
           previousAddress = None,
           telephoneNumber = phoneNumber,
           bestTimeToContact = bestTimes,
@@ -533,7 +539,7 @@ class JourneyModelSpec
         data.value.applicant mustEqual expectedApplicant
       }
 
-      "when the applicant has not lived at their current address for a year" in {
+      "when the applicant's current address is international" in {
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -541,16 +547,16 @@ class JourneyModelSpec
           .withMinimalSingleIncomeDetails
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
-          .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
-          .set(ApplicantPreviousUkAddressPage, previousAddress).success.value
+          .set(ApplicantCurrentAddressInUkPage, false).success.value
+          .set(ApplicantCurrentInternationalAddressPage, currentInternationalAddress).success.value
 
         val expectedApplicant = JourneyModel.Applicant(
           name = applicantName,
           previousFamilyNames = Nil,
           dateOfBirth = now,
           nationalInsuranceNumber = None,
-          currentAddress = currentAddress,
-          previousAddress = Some(previousAddress),
+          currentAddress = currentInternationalAddress,
+          previousAddress = None,
           telephoneNumber = phoneNumber,
           bestTimeToContact = bestTimes,
           nationality = applicantNationality,
@@ -562,6 +568,71 @@ class JourneyModelSpec
 
         errors mustBe empty
         data.value.applicant mustEqual expectedApplicant
+      }
+
+      "when the applicant has not lived at their current address for a year" - {
+
+        "and their previous address is in the UK" in {
+          val answers = UserAnswers("id")
+            .withMinimalApplicantDetails
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .withMinimalPaymentDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
+            .set(ApplicantPreviousAddressInUkPage, true).success.value
+            .set(ApplicantPreviousUkAddressPage, previousUkAddress).success.value
+
+          val expectedApplicant = JourneyModel.Applicant(
+            name = applicantName,
+            previousFamilyNames = Nil,
+            dateOfBirth = now,
+            nationalInsuranceNumber = None,
+            currentAddress = currentUkAddress,
+            previousAddress = Some(previousUkAddress),
+            telephoneNumber = phoneNumber,
+            bestTimeToContact = bestTimes,
+            nationality = applicantNationality,
+            employmentStatus = applicantEmployment,
+            memberOfHMForcesOrCivilServantAbroad = false
+          )
+
+          val (errors, data) = JourneyModel.from(answers).pad
+
+          errors mustBe empty
+          data.value.applicant mustEqual expectedApplicant
+        }
+
+        "and their previous address is international" in {
+          val answers = UserAnswers("id")
+            .withMinimalApplicantDetails
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .withMinimalPaymentDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
+            .set(ApplicantPreviousAddressInUkPage, false).success.value
+            .set(ApplicantPreviousInternationalAddressPage, previousInternationalAddress).success.value
+
+          val expectedApplicant = JourneyModel.Applicant(
+            name = applicantName,
+            previousFamilyNames = Nil,
+            dateOfBirth = now,
+            nationalInsuranceNumber = None,
+            currentAddress = currentUkAddress,
+            previousAddress = Some(previousInternationalAddress),
+            telephoneNumber = phoneNumber,
+            bestTimeToContact = bestTimes,
+            nationality = applicantNationality,
+            employmentStatus = applicantEmployment,
+            memberOfHMForcesOrCivilServantAbroad = false
+          )
+
+          val (errors, data) = JourneyModel.from(answers).pad
+
+          errors mustBe empty
+          data.value.applicant mustEqual expectedApplicant
+        }
       }
 
       "when the applicant knows their partner's NINO" in {
@@ -802,6 +873,73 @@ class JourneyModelSpec
             relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = false,
             previousClaimant = None
+          )
+
+          val (errors, data) = JourneyModel.from(answers).pad
+
+          errors mustBe empty
+          data.value.children.toList must contain only expectedChildDetails
+        }
+      }
+
+      "when someone has claimed for this child before" - {
+
+        "and their address is in the UK" in {
+
+          val answers = UserAnswers("id")
+            .withMinimalApplicantDetails
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .withMinimalPaymentDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(AnyoneClaimedForChildBeforePage(Index(0)), true).success.value
+            .set(PreviousClaimantNamePage(Index(0)), previousClaimantName).success.value
+            .set(PreviousClaimantAddressInUkPage(Index(0)), true).success.value
+            .set(PreviousClaimantUkAddressPage(Index(0)), previousClaimantUkAddress).success.value
+
+          val expectedChildDetails = JourneyModel.Child(
+            name = childName,
+            nameChangedByDeedPoll = None,
+            previousNames = Nil,
+            biologicalSex = biologicalSex,
+            dateOfBirth = now,
+            countryOfRegistration = ChildBirthRegistrationCountry.England,
+            birthCertificateNumber = Some("000000000"),
+            relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
+            adoptingThroughLocalAuthority = false,
+            previousClaimant = Some(JourneyModel.PreviousClaimant(previousClaimantName, previousClaimantUkAddress))
+          )
+
+          val (errors, data) = JourneyModel.from(answers).pad
+
+          errors mustBe empty
+          data.value.children.toList must contain only expectedChildDetails
+        }
+
+        "and their address is international" in {
+
+          val answers = UserAnswers("id")
+            .withMinimalApplicantDetails
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .withMinimalPaymentDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(AnyoneClaimedForChildBeforePage(Index(0)), true).success.value
+            .set(PreviousClaimantNamePage(Index(0)), previousClaimantName).success.value
+            .set(PreviousClaimantAddressInUkPage(Index(0)), false).success.value
+            .set(PreviousClaimantInternationalAddressPage(Index(0)), previousClaimantInternationalAddress).success.value
+
+          val expectedChildDetails = JourneyModel.Child(
+            name = childName,
+            nameChangedByDeedPoll = None,
+            previousNames = Nil,
+            biologicalSex = ChildBiologicalSex.Female,
+            dateOfBirth = now,
+            countryOfRegistration = ChildBirthRegistrationCountry.England,
+            birthCertificateNumber = Some("000000000"),
+            relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
+            adoptingThroughLocalAuthority = false,
+            previousClaimant = Some(JourneyModel.PreviousClaimant(previousClaimantName, previousClaimantInternationalAddress))
           )
 
           val (errors, data) = JourneyModel.from(answers).pad
@@ -1099,7 +1237,41 @@ class JourneyModelSpec
 
         val (errors, data) = JourneyModel.from(answers).pad
 
+        errors.value.toChain.toList must contain only ApplicantPreviousAddressInUkPage
+        data mustBe empty
+      }
+
+      "when the applicant said they have lived at their current address less than a year but no previous UK address is provided" in {
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
+          .set(ApplicantPreviousAddressInUkPage, true).success.value
+
+        val (errors, data) = JourneyModel.from(answers).pad
+
         errors.value.toChain.toList must contain only ApplicantPreviousUkAddressPage
+        data mustBe empty
+      }
+
+      "when the applicant said they have lived at their current address less than a year but no previous international address is provided" in {
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
+          .set(ApplicantPreviousAddressInUkPage, false).success.value
+
+        val (errors, data) = JourneyModel.from(answers).pad
+
+        errors.value.toChain.toList must contain only ApplicantPreviousInternationalAddressPage
         data mustBe empty
       }
 
@@ -1235,8 +1407,46 @@ class JourneyModelSpec
 
         errors.value.toChain.toList must contain only (
           PreviousClaimantNamePage(Index(0)),
-          PreviousClaimantUkAddressPage(Index(0))
+          PreviousClaimantAddressInUkPage(Index(0))
         )
+
+        data mustBe empty
+      }
+
+      "when someone has claimed for this child before, but their UK address is not present" in {
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(AnyoneClaimedForChildBeforePage(Index(0)), true).success.value
+          .set(PreviousClaimantNamePage(Index(0)), previousClaimantName).success.value
+          .set(PreviousClaimantAddressInUkPage(Index(0)), true).success.value
+
+        val (errors, data) = JourneyModel.from(answers).pad
+
+        errors.value.toChain.toList must contain only PreviousClaimantUkAddressPage(Index(0))
+
+        data mustBe empty
+      }
+
+      "when someone has claimed for this child before, but their international address is not present" in {
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(AnyoneClaimedForChildBeforePage(Index(0)), true).success.value
+          .set(PreviousClaimantNamePage(Index(0)), previousClaimantName).success.value
+          .set(PreviousClaimantAddressInUkPage(Index(0)), false).success.value
+
+        val (errors, data) = JourneyModel.from(answers).pad
+
+        errors.value.toChain.toList must contain only PreviousClaimantInternationalAddressPage(Index(0))
 
         data mustBe empty
       }
@@ -1266,7 +1476,7 @@ class JourneyModelSpec
         .set(ApplicantHasPreviousFamilyNamePage, false).success.value
         .set(ApplicantNinoKnownPage, false).success.value
         .set(ApplicantDateOfBirthPage, now).success.value
-        .set(ApplicantCurrentUkAddressPage, currentAddress).success.value
+        .set(ApplicantCurrentUkAddressPage, currentUkAddress).success.value
         .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
         .set(ApplicantPhoneNumberPage, phoneNumber).success.value
         .set(BestTimeToContactPage, bestTimes).success.value
