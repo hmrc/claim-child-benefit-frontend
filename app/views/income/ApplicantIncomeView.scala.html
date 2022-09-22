@@ -42,9 +42,8 @@
         <p class="govuk-body">@messages("applicantIncome.p1")</p>
 
         <p class="govuk-body">
-            @messages("applicantIncome.p2.1")
-            @newTabLink(NewTabLinkHelper(text = messages("applicantIncome.p2.link.text"), href = Some(messages("applicantIncome.p2.link.href"))))
-            @messages("applicantIncome.p2.2")
+            @messages("applicantIncome.p2")
+            @{newTabLink(NewTabLinkHelper(text = messages("applicantIncome.p2.link.text"), href = Some(messages("applicantIncome.p2.link.href"))))}.
         </p>
 
         @govukRadios(

@@ -17,9 +17,7 @@
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
-        govukButton: GovukButton,
-        h1WithCaption: components.h1WithCaption,
-        govukPanel: GovukPanel
+        govukButton: GovukButton
 )
 
 @(waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
@@ -28,7 +26,7 @@
 
     @formHelper(action = routes.CannotBePaidWeeklyController.onSubmit(waypoints)) {
 
-        @govukPanel(Panel(title = messages("cannotBePaidWeekly.heading")))
+        <h1 class="govuk-heading-xl">@messages("cannotBePaidWeekly.heading")</h1>
 
         <p class="govuk-body">@messages("cannotBePaidWeekly.p1")</p>
 

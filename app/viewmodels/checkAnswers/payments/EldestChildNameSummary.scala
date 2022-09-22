@@ -33,15 +33,9 @@ object EldestChildNameSummary {
     answers.get(EldestChildNamePage).map {
       answer =>
 
-        val value = Seq(
-          Some(HtmlFormat.escape(answer.firstName).toString),
-          answer.middleNames.map(x => HtmlFormat.escape(x).toString),
-          Some(HtmlFormat.escape(answer.lastName).toString)
-        ).flatten.mkString("<br/>")
-
         SummaryListRowViewModel(
           key = "eldestChildName.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlContent(value)),
+          value = ValueViewModel(answer.fullName),
           actions = Seq(
             ActionItemViewModel("site.change", EldestChildNamePage.changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("eldestChildName.change.hidden"))

@@ -819,7 +819,7 @@ class JourneyModelSpec
           .withMinimalSingleIncomeDetails
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
-          .set(LivedOrWorkedAbroadPage, true).success.value
+          .set(AlwaysLivedInUkPage, true).success.value
           .set(ApplicantIsHmfOrCivilServantPage, true).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
@@ -839,7 +839,7 @@ class JourneyModelSpec
           .set(RelationshipStatusPage, Married).success.value
           .set(ApplicantOrPartnerIncomePage, Income.BelowLowerThreshold).success.value
           .set(ApplicantOrPartnerBenefitsPage, applicantBenefits).success.value
-          .set(LivedOrWorkedAbroadPage, true).success.value
+          .set(AlwaysLivedInUkPage, true).success.value
           .set(ApplicantIsHmfOrCivilServantPage, false).success.value
           .set(PartnerIsHmfOrCivilServantPage, true).success.value
 

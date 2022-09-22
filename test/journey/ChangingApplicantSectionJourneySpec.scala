@@ -20,7 +20,7 @@ import generators.ModelGenerators
 import models.{Index, InternationalAddress, RelationshipStatus, UkAddress}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.freespec.AnyFreeSpec
-import pages.{CheckYourAnswersPage, LivedOrWorkedAbroadPage, RelationshipStatusPage}
+import pages.{CheckYourAnswersPage, AlwaysLivedInUkPage, RelationshipStatusPage}
 import pages.applicant._
 import pages.partner.PartnerIsHmfOrCivilServantPage
 import uk.gov.hmrc.domain.Nino
@@ -42,7 +42,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
       "changing to say their address is international must collect the address, remove the UK address and return to Check Answers" in{
 
         val initialise = journeyOf(
-          setUserAnswerTo(LivedOrWorkedAbroadPage, true),
+          setUserAnswerTo(AlwaysLivedInUkPage, true),
           setUserAnswerTo(RelationshipStatusPage, RelationshipStatus.Single),
           setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, true),
           submitAnswer(ApplicantCurrentAddressInUkPage, true),
@@ -68,7 +68,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
       "changing to say their address is in the UK must collect the address, remove the international address and return to Check Answers" in{
 
         val initialise = journeyOf(
-          setUserAnswerTo(LivedOrWorkedAbroadPage, true),
+          setUserAnswerTo(AlwaysLivedInUkPage, true),
           setUserAnswerTo(RelationshipStatusPage, RelationshipStatus.Single),
           setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, true),
           submitAnswer(ApplicantCurrentAddressInUkPage, false),
@@ -97,7 +97,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
       "changing to say their address is international must collect the address, remove the UK address and return to Check Answers" in{
 
         val initialise = journeyOf(
-          setUserAnswerTo(LivedOrWorkedAbroadPage, true),
+          setUserAnswerTo(AlwaysLivedInUkPage, true),
           setUserAnswerTo(RelationshipStatusPage, RelationshipStatus.Married),
           setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, false),
           setUserAnswerTo(PartnerIsHmfOrCivilServantPage, true),
@@ -124,7 +124,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
       "changing to say their address is in the UK must collect the address, remove the international address and return to Check Answers" in{
 
         val initialise = journeyOf(
-          setUserAnswerTo(LivedOrWorkedAbroadPage, true),
+          setUserAnswerTo(AlwaysLivedInUkPage, true),
           setUserAnswerTo(RelationshipStatusPage, RelationshipStatus.Married),
           setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, false),
           setUserAnswerTo(PartnerIsHmfOrCivilServantPage, true),

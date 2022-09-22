@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers.payments
 
 import models.UserAnswers
-import pages.payments.EldestChildDateOfBirthPage
+import pages.payments.{EldestChildDateOfBirthPage, EldestChildNamePage}
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -29,19 +29,22 @@ import java.time.format.DateTimeFormatter
 object EldestChildDateOfBirthSummary {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
-         (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(EldestChildDateOfBirthPage).map {
-      answer =>
+         (implicit messages: Messages): Option[SummaryListRow] = {
+    for {
+      name        <- answers.get(EldestChildNamePage)
+      dateOfBirth <- answers.get(EldestChildDateOfBirthPage)
+    } yield {
 
-        val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+      val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
-        SummaryListRowViewModel(
-          key = "eldestChildDateOfBirth.checkYourAnswersLabel",
-          value = ValueViewModel(answer.format(dateFormatter)),
-          actions = Seq(
-            ActionItemViewModel("site.change", EldestChildDateOfBirthPage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("eldestChildDateOfBirth.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = messages("eldestChildDateOfBirth.checkYourAnswersLabel", name.firstName),
+        value = ValueViewModel(dateOfBirth.format(dateFormatter)),
+        actions = Seq(
+          ActionItemViewModel("site.change", EldestChildDateOfBirthPage.changeLink(waypoints, sourcePage).url)
+            .withVisuallyHiddenText(messages("eldestChildDateOfBirth.change.hidden"))
         )
+      )
     }
+  }
 }
