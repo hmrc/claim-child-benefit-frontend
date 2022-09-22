@@ -32,5 +32,5 @@ final case class ChildScottishBirthCertificateDetailsPage(index: Index) extends 
     routes.ChildScottishBirthCertificateDetailsController.onPageLoad(waypoints, index)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantRelationshipToChildPage(index)
+    AdoptingThroughLocalAuthorityPage(index)
 }

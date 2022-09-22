@@ -32,5 +32,5 @@ final case class ChildBirthCertificateSystemNumberPage(index: Index) extends Chi
     routes.ChildBirthCertificateSystemNumberController.onPageLoad(waypoints, index)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantRelationshipToChildPage(index)
+    AdoptingThroughLocalAuthorityPage(index)
 }

@@ -36,7 +36,7 @@ final case class BirthCertificateHasSystemNumberPage(index: Index) extends Child
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case true  => ChildBirthCertificateSystemNumberPage(index)
-      case false => ApplicantRelationshipToChildPage(index)
+      case false => AdoptingThroughLocalAuthorityPage(index)
     }.orRecover
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] = {

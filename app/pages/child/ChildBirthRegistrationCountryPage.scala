@@ -43,7 +43,7 @@ final case class ChildBirthRegistrationCountryPage(index: Index) extends ChildQu
         ScottishBirthCertificateHasNumbersPage(index)
 
       case NorthernIreland | Other | Unknown =>
-        ApplicantRelationshipToChildPage(index)
+        AdoptingThroughLocalAuthorityPage(index)
     }.orRecover
 
   override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =

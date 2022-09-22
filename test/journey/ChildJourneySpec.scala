@@ -95,8 +95,8 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
             submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), true),
             submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), "123456789"),
-            submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
             submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
+            submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
             submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
@@ -113,8 +113,8 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
           .run(
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
             submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), false),
-            submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
             submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
+            submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
             submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
@@ -135,8 +135,8 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Wales),
             submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), true),
             submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), "123456789"),
-            submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
             submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
+            submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
             submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
@@ -153,8 +153,8 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
           .run(
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Wales),
             submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), false),
-            submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
             submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
+            submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
             submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
@@ -175,8 +175,8 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
             submitAnswer(ScottishBirthCertificateHasNumbersPage(Index(0)), true),
             submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), "1234567890"),
-            submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
             submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
+            submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
             submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
@@ -193,8 +193,8 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
           .run(
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
             submitAnswer(ScottishBirthCertificateHasNumbersPage(Index(0)), false),
-            submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
             submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
+            submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
             submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
@@ -211,8 +211,8 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
       startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
         .run(
           submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland),
-          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
           submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
+          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
           submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
           pageMustBe(CheckChildDetailsPage(Index(0)))
         )
@@ -228,8 +228,8 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
       startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
         .run(
           submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Other),
-          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
           submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
+          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
           submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
           pageMustBe(CheckChildDetailsPage(Index(0)))
         )
@@ -245,8 +245,8 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
       startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
         .run(
           submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Unknown),
-          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
           submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
+          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
           submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
           pageMustBe(CheckChildDetailsPage(Index(0)))
         )
