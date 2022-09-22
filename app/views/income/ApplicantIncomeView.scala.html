@@ -23,7 +23,6 @@
         govukErrorSummary: GovukErrorSummary,
         govukRadios: GovukRadios,
         govukButton: GovukButton,
-        h1WithCaption: components.h1WithCaption,
         newTabLink: HmrcNewTabLinkHelper
 )
 
@@ -37,7 +36,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
         }
 
-        @h1WithCaption(messages("applicantIncome.heading"), messages("section.income"))
+        <h1 class="govuk-heading-xl">@messages("applicantIncome.heading")</h1>
 
         <p class="govuk-body">@messages("applicantIncome.p1")</p>
 
