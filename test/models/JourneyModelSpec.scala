@@ -78,6 +78,9 @@ class JourneyModelSpec
   private val scottishBirthCertificateDetails = "0000000000"
   private val childPreviousName1 = ChildName("first 1", None, "last 1")
   private val childPreviousName2 = ChildName("first 2", None, "last 2")
+  private val previousClaimantName = AdultName("pc first", None, "pc last")
+  private val previousClaimantUkAddress = arbitrary[UkAddress].sample.value
+  private val previousClaimantInternationalAddress = arbitrary[InternationalAddress].sample.value
 
   ".from" - {
 
@@ -879,6 +882,73 @@ class JourneyModelSpec
         }
       }
 
+      "when someone has claimed for this child before" - {
+
+        "and their address is in the UK" in {
+
+          val answers = UserAnswers("id")
+            .withMinimalApplicantDetails
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .withMinimalPaymentDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(AnyoneClaimedForChildBeforePage(Index(0)), true).success.value
+            .set(PreviousClaimantNamePage(Index(0)), previousClaimantName).success.value
+            .set(PreviousClaimantAddressInUkPage(Index(0)), true).success.value
+            .set(PreviousClaimantUkAddressPage(Index(0)), previousClaimantUkAddress).success.value
+
+          val expectedChildDetails = JourneyModel.Child(
+            name = childName,
+            nameChangedByDeedPoll = None,
+            previousNames = Nil,
+            biologicalSex = biologicalSex,
+            dateOfBirth = now,
+            countryOfRegistration = ChildBirthRegistrationCountry.England,
+            birthCertificateNumber = Some("000000000"),
+            relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
+            adoptingThroughLocalAuthority = false,
+            previousClaimant = Some(JourneyModel.PreviousClaimant(previousClaimantName, previousClaimantUkAddress))
+          )
+
+          val (errors, data) = JourneyModel.from(answers).pad
+
+          errors mustBe empty
+          data.value.children.toList must contain only expectedChildDetails
+        }
+
+        "and their address is international" in {
+
+          val answers = UserAnswers("id")
+            .withMinimalApplicantDetails
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .withMinimalPaymentDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(AnyoneClaimedForChildBeforePage(Index(0)), true).success.value
+            .set(PreviousClaimantNamePage(Index(0)), previousClaimantName).success.value
+            .set(PreviousClaimantAddressInUkPage(Index(0)), false).success.value
+            .set(PreviousClaimantInternationalAddressPage(Index(0)), previousClaimantInternationalAddress).success.value
+
+          val expectedChildDetails = JourneyModel.Child(
+            name = childName,
+            nameChangedByDeedPoll = None,
+            previousNames = Nil,
+            biologicalSex = ChildBiologicalSex.Female,
+            dateOfBirth = now,
+            countryOfRegistration = ChildBirthRegistrationCountry.England,
+            birthCertificateNumber = Some("000000000"),
+            relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
+            adoptingThroughLocalAuthority = false,
+            previousClaimant = Some(JourneyModel.PreviousClaimant(previousClaimantName, previousClaimantInternationalAddress))
+          )
+
+          val (errors, data) = JourneyModel.from(answers).pad
+
+          errors mustBe empty
+          data.value.children.toList must contain only expectedChildDetails
+        }
+      }
+
       "when the applicant is HM Forces or a civil servant abroad" in {
 
         val answers = UserAnswers("id")
@@ -1167,7 +1237,41 @@ class JourneyModelSpec
 
         val (errors, data) = JourneyModel.from(answers).pad
 
+        errors.value.toChain.toList must contain only ApplicantPreviousAddressInUkPage
+        data mustBe empty
+      }
+
+      "when the applicant said they have lived at their current address less than a year but no previous UK address is provided" in {
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
+          .set(ApplicantPreviousAddressInUkPage, true).success.value
+
+        val (errors, data) = JourneyModel.from(answers).pad
+
         errors.value.toChain.toList must contain only ApplicantPreviousUkAddressPage
+        data mustBe empty
+      }
+
+      "when the applicant said they have lived at their current address less than a year but no previous international address is provided" in {
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
+          .set(ApplicantPreviousAddressInUkPage, false).success.value
+
+        val (errors, data) = JourneyModel.from(answers).pad
+
+        errors.value.toChain.toList must contain only ApplicantPreviousInternationalAddressPage
         data mustBe empty
       }
 
@@ -1303,8 +1407,46 @@ class JourneyModelSpec
 
         errors.value.toChain.toList must contain only (
           PreviousClaimantNamePage(Index(0)),
-          PreviousClaimantUkAddressPage(Index(0))
+          PreviousClaimantAddressInUkPage(Index(0))
         )
+
+        data mustBe empty
+      }
+
+      "when someone has claimed for this child before, but their UK address is not present" in {
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(AnyoneClaimedForChildBeforePage(Index(0)), true).success.value
+          .set(PreviousClaimantNamePage(Index(0)), previousClaimantName).success.value
+          .set(PreviousClaimantAddressInUkPage(Index(0)), true).success.value
+
+        val (errors, data) = JourneyModel.from(answers).pad
+
+        errors.value.toChain.toList must contain only PreviousClaimantUkAddressPage(Index(0))
+
+        data mustBe empty
+      }
+
+      "when someone has claimed for this child before, but their international address is not present" in {
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(AnyoneClaimedForChildBeforePage(Index(0)), true).success.value
+          .set(PreviousClaimantNamePage(Index(0)), previousClaimantName).success.value
+          .set(PreviousClaimantAddressInUkPage(Index(0)), false).success.value
+
+        val (errors, data) = JourneyModel.from(answers).pad
+
+        errors.value.toChain.toList must contain only PreviousClaimantInternationalAddressPage(Index(0))
 
         data mustBe empty
       }
