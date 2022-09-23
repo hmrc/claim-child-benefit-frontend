@@ -15,11 +15,13 @@
  *@
 
 @import controllers.payments.routes
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.newtablinkhelper.NewTabLinkHelper
 
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        newTabLink: HmrcNewTabLinkHelper
 )
 
 @(waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
@@ -32,7 +34,7 @@
 
         <p class="govuk-body">
             @messages("wantToBePaid.single.under50k.p1")
-            <a href="@messages("wantToBePaid.single.under50k.p1.link.href")" class="govuk-link">@messages("wantToBePaid.single.under50k.p1.link.text")</a>.
+            @{newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.single.under50k.p1.link.text"), href = Some(messages("wantToBePaid.single.under50k.p1.link.href"))))}.
         </p>
 
         <div class="govuk-warning-text">
@@ -40,7 +42,7 @@
             <strong class="govuk-warning-text__text">
                 <span class="govuk-warning-text__assistive">@messages("site.warning")</span>
                 @messages("wantToBePaid.single.under50k.p2.1")
-                <a href="@messages("wantToBePaid.single.under50k.p2.link.href")" class="govuk-link">@messages("wantToBePaid.single.under50k.p2.link.text")</a>.
+                @{newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.single.under50k.p2.link.text"), href = Some(messages("wantToBePaid.single.under50k.p2.link.href"))))}.
                 @messages("wantToBePaid.single.under50k.p2.2")
             </strong>
         </div>
