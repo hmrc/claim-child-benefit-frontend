@@ -17,15 +17,29 @@
 package forms
 
 import forms.mappings.Mappings
+import models.AdditionalInformation
+import models.AdditionalInformation.{Information, NoInformation}
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class AdditionalInformationFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[String] =
+  def apply(): Form[AdditionalInformation] =
     Form(
-      "value" -> text("additionalInformation.error.required")
-        .verifying(maxLength(1000, "additionalInformation.error.length"))
+      "value" -> optional(text("additionalInformation.error.required")
+        .verifying(maxLength(1000, "additionalInformation.error.length")))
+        .transform(fromOptionalString, toOptionalString)
     )
+
+  private def fromOptionalString(maybeString: Option[String]): AdditionalInformation =
+    maybeString
+      .map(Information)
+      .getOrElse(NoInformation)
+
+  private def toOptionalString(additionalInformation: AdditionalInformation): Option[String] =
+    additionalInformation match {
+      case i: Information => Some(i.value)
+      case NoInformation  => None
+    }
 }

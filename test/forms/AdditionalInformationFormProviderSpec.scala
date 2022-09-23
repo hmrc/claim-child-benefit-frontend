@@ -17,7 +17,7 @@
 package forms
 
 import forms.behaviours.StringFieldBehaviours
-import org.scalacheck.Gen
+import models.AdditionalInformation.{Information, NoInformation}
 import play.api.data.FormError
 
 class AdditionalInformationFormProviderSpec extends StringFieldBehaviours {
@@ -27,22 +27,29 @@ class AdditionalInformationFormProviderSpec extends StringFieldBehaviours {
 
   val form = new AdditionalInformationFormProvider()()
 
-  ".value" - {
+  val fieldName = "value"
 
-    val fieldName = "value"
+  "must bind when an empty string is submitted" in {
 
-    behave like fieldThatBindsValidData(
-      form,
-      fieldName,
-      stringsWithMaxLength(1000)
-    )
+    val result = form.bind(Map(fieldName -> ""))
+    result.value.value mustEqual NoInformation
+  }
 
-    behave like mandatoryField(
-      form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
-    )
+  "must bind strings up to 1000 characters" in {
 
-    behave like fieldWithMaxLength(form, fieldName, 1000, FormError(fieldName, lengthKey, Seq(1000)))
+    forAll(stringsWithMaxLength(1000).map(_.trim)) {
+      str =>
+        val result = form.bind(Map(fieldName -> str))
+        result.value.value mustEqual Information(str)
+    }
+  }
+
+  "must not bind strings longer than 1000 characters" in {
+
+    forAll(stringsLongerThan(1000)) {
+      str =>
+        val result = form.bind(Map(fieldName -> str))
+        result.errors must contain only  FormError(fieldName, lengthKey, Seq(1000))
+    }
   }
 }

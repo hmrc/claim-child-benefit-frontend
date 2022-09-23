@@ -19,6 +19,7 @@ package controllers
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.AdditionalInformationFormProvider
+import models.AdditionalInformation.{Information, NoInformation}
 import models.UserAnswers
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
@@ -62,7 +63,7 @@ class AdditionalInformationControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(AdditionalInformationPage, "07777777777").success.value
+      val userAnswers = UserAnswers(userAnswersId).set(AdditionalInformationPage, Information("foo")).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -74,7 +75,7 @@ class AdditionalInformationControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("07777777777"), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(Information("foo")), waypoints)(request, messages(application)).toString
       }
     }
 
@@ -94,10 +95,37 @@ class AdditionalInformationControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, additionalInformationRoute)
-            .withFormUrlEncodedBody(("value", "07777777777"))
+            .withFormUrlEncodedBody(("value", "foo"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(AdditionalInformationPage, "07777777777").success.value
+        val expectedAnswers = emptyUserAnswers.set(AdditionalInformationPage, Information("foo")).success.value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual AdditionalInformationPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
+      }
+    }
+
+    "must save `no information` and redirect to the next page when an empty string is submitted" in {
+
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, additionalInformationRoute)
+            .withFormUrlEncodedBody(("value", ""))
+
+        val result = route(application, request).value
+        val expectedAnswers = emptyUserAnswers.set(AdditionalInformationPage, NoInformation).success.value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual AdditionalInformationPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
@@ -108,13 +136,14 @@ class AdditionalInformationControllerSpec extends SpecBase with MockitoSugar {
     "must return a Bad Request and errors when invalid data is submitted" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val invalidAnswer = "X" * 20000
 
       running(application) {
         val request =
           FakeRequest(POST, additionalInformationRoute)
-            .withFormUrlEncodedBody(("value", ""))
+            .withFormUrlEncodedBody(("value", invalidAnswer))
 
-        val boundForm = form.bind(Map("value" -> ""))
+        val boundForm = form.bind(Map("value" -> invalidAnswer))
 
         val view = application.injector.instanceOf[AdditionalInformationView]
 
@@ -146,7 +175,7 @@ class AdditionalInformationControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, additionalInformationRoute)
-            .withFormUrlEncodedBody(("value", "07777777777"))
+            .withFormUrlEncodedBody(("value", "foo"))
 
         val result = route(application, request).value
 

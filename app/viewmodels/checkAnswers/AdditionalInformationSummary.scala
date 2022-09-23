@@ -16,6 +16,7 @@
 
 package viewmodels.checkAnswers
 
+import models.AdditionalInformation.{Information, NoInformation}
 import models.UserAnswers
 import pages.AdditionalInformationPage
 import pages.{CheckAnswersPage, Waypoints}
@@ -31,9 +32,14 @@ object AdditionalInformationSummary {
     answers.get(AdditionalInformationPage).map {
       answer =>
 
+        val value = answer match {
+          case NoInformation  => messages("additionalInformation.none")
+          case Information(i) => i.value
+        }
+
         SummaryListRowViewModel(
           key = "additionalInformation.checkYourAnswersLabel",
-          value = ValueViewModel(answer),
+          value = ValueViewModel(value),
           actions = Seq(
             ActionItemViewModel("site.change", AdditionalInformationPage.changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("additionalInformation.change.hidden"))

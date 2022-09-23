@@ -17,10 +17,11 @@
 package pages
 
 import controllers.routes
+import models.AdditionalInformation
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object AdditionalInformationPage extends QuestionPage[String] {
+case object AdditionalInformationPage extends QuestionPage[AdditionalInformation] {
 
   override def path: JsPath = JsPath \ toString
 
