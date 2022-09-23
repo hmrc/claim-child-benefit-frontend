@@ -23,7 +23,7 @@
 
     @line("pdf.hmfOrCivilServant", booleanToYesNo(model.memberOfHMForcesOrCivilServantAbroad))
 
-    @line("pdf.claimingChildBenefit", messages(s"currentlyClaimingChildBenefit.${model.currentlyClaimingChildBenefit.toString}"))
+    @line("pdf.claimingChildBenefit", messages(s"currentlyReceivingChildBenefit.${model.currentlyClaimingChildBenefit.toString}"))
 
     @model.eldestChild.map { child =>
         @line("pdf.eldestChildName", child.name.fullName),

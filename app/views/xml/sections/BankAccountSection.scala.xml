@@ -4,7 +4,7 @@
 
 @(bankAccount: JourneyModel.BankAccount)(implicit messages: Messages)
 
-@line("pdf.accountholder", messages(s"pdf.accountHolder.${bankAccount.holder.toString}"))
+@line("pdf.accountHolder", messages(s"pdf.accountHolder.${bankAccount.holder.toString}"))
 
 @line("pdf.sortCode", bankAccount.details.sortCode)
 

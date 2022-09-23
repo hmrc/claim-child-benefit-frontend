@@ -279,7 +279,7 @@ bankAccountDetails.change.hidden = the bank or building society account details
 
 currentlyReceivingChildBenefit.title = Are you claiming Child Benefit right now?
 currentlyReceivingChildBenefit.heading = Are you claiming Child Benefit right now?
-currentlyReceivingChildBenefit.checkYourAnswersLabel = Claiming Child Benefit right not
+currentlyReceivingChildBenefit.checkYourAnswersLabel = Claiming Child Benefit right now
 currentlyReceivingChildBenefit.gettingPayments = Yes and I am getting payments
 currentlyReceivingChildBenefit.notGettingPayments = Yes and I am not getting payments
 currentlyReceivingChildBenefit.notClaiming = No
@@ -1038,7 +1038,7 @@ pdf.paymentFrequency.existing = Existing frequency
 pdf.wantToBePaidToExistingAccount = Paid into existing bank account
 pdf.accountHolder = Account holder
 pdf.accountHolder.applicant = Applicant
-pdf.accountHolder.jointNames = Joint Names
+pdf.accountHolder.jointNames = Joint names
 pdf.accountHolder.someoneElse = Someone else
 pdf.accountName = Name on account
 pdf.sortCode = Sort code
