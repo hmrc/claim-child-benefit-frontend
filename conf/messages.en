@@ -79,6 +79,7 @@ checkYourAnswers.paymentDetails = Payment details
 checkYourAnswers.applicantDetails = About you
 checkYourAnswers.partnerDetails = About your partner
 checkYourAnswers.childDetails = Children you want to claim for
+checkYourAnswers.additionalInformation = Additional information
 
 journeyRecovery.continue.title = Sorry, there is a problem with the service
 journeyRecovery.continue.heading = Sorry, there is a problem with the service
@@ -950,6 +951,7 @@ additionalInformation.guidance = Add any other relevant information you would li
 additionalInformation.checkYourAnswersLabel = Further information shared
 additionalInformation.error.length = Any other relevant information you would like to include must be 1,000 characters or less
 additionalInformation.change.hidden = any other relevant information you would like to include in this Child Benefit claim
+additionalInformation.noInformation = None
 
 print.title = Your Child Benefit claim form is ready to be posted
 print.heading = Your Child Benefit claim form is ready to be posted

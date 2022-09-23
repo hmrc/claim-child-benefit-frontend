@@ -25,7 +25,8 @@
         paymentDetails: SummaryList,
         applicantDetails: SummaryList,
         partnerDetails: SummaryList,
-        childDetails: SummaryList
+        childDetails: SummaryList,
+        additionalInformation: SummaryList
 )(implicit request: Request[_], messages: Messages)
 
     @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
@@ -52,5 +53,8 @@
         <h2 class="govuk-heading-m">@messages("checkYourAnswers.childDetails")</h2>
         @govukSummaryList(childDetails)
 
-    <a id="continue" href="@routes.PrintController.onPageLoad" class="govuk-button" role="button" data-module="govuk-button">@messages("site.continue")</a>
+        <h2 class="govuk-heading-m">@messages("checkYourAnswers.additionalInformation")</h2>
+        @govukSummaryList(additionalInformation)
+
+        <a id="continue" href="@routes.PrintController.onPageLoad" class="govuk-button" role="button" data-module="govuk-button">@messages("site.continue")</a>
     }

@@ -21,6 +21,8 @@ import models.UserAnswers
 import pages.AdditionalInformationPage
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -33,13 +35,16 @@ object AdditionalInformationSummary {
       answer =>
 
         val value = answer match {
-          case NoInformation  => messages("additionalInformation.none")
-          case Information(i) => i.value
+          case NoInformation =>
+            messages("additionalInformation.none")
+
+          case Information(i) =>
+            HtmlFormat.escape(i.value).toString.replace("\n", "<br/>")
         }
 
         SummaryListRowViewModel(
           key = "additionalInformation.checkYourAnswersLabel",
-          value = ValueViewModel(value),
+          value = ValueViewModel(HtmlContent(value)),
           actions = Seq(
             ActionItemViewModel("site.change", AdditionalInformationPage.changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("additionalInformation.change.hidden"))

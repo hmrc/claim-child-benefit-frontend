@@ -17,7 +17,7 @@
 package pages
 
 import controllers.routes
-import models.AdditionalInformation
+import models.{AdditionalInformation, UserAnswers}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -29,4 +29,7 @@ case object AdditionalInformationPage extends QuestionPage[AdditionalInformation
 
   override def route(waypoints: Waypoints): Call =
     routes.AdditionalInformationController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    CheckYourAnswersPage
 }
