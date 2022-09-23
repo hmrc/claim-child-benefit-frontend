@@ -31,6 +31,7 @@ class SeparationDateFormProviderSpec extends DateBehaviours {
   private val form         = formProvider()
 
   private val maxDate = LocalDate.now(clock)
+  private val minDate = LocalDate.now(clock).minusYears(100)
   private def dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
   ".value" - {
@@ -49,6 +50,13 @@ class SeparationDateFormProviderSpec extends DateBehaviours {
       key       = "value",
       max       = maxDate,
       formError = FormError("value", "separationDate.error.afterMaximum", Seq(maxDate.format(dateFormatter)))
+    )
+
+    behave like dateFieldWithMin(
+      form      = form,
+      key       = "value",
+      min       = minDate,
+      formError = FormError("value", "separationDate.error.beforeMinimum", Seq(minDate.format(dateFormatter)))
     )
   }
 }

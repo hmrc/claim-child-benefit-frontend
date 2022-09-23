@@ -21,8 +21,7 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton,
-    h1WithCaption: components.h1WithCaption
+    govukButton: GovukButton
 )
 
 @(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
@@ -35,10 +34,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h1WithCaption(
-            content = messages("wantToBePaidToExistingAccount.heading"),
-            caption = messages("section.payments")
-        )
+        <h1 class="govuk-heading-xl">@messages("wantToBePaidToExistingAccount.heading")</h1>
 
         <p class="govuk-body">@messages("wantToBePaidToExistingAccount.guidance")</p>
 

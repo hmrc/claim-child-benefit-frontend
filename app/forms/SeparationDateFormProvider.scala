@@ -26,6 +26,7 @@ import javax.inject.Inject
 class SeparationDateFormProvider @Inject()(clock: Clock) extends Mappings {
 
   private def maxDate       = LocalDate.now(clock)
+  private def minDate       = LocalDate.now(clock).minusYears(100)
   private def dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
   def apply(): Form[LocalDate] =
@@ -35,6 +36,9 @@ class SeparationDateFormProvider @Inject()(clock: Clock) extends Mappings {
         allRequiredKey = s"separationDate.error.required.all",
         twoRequiredKey = s"separationDate.error.required.two",
         requiredKey    = s"separationDate.error.required"
-      ).verifying(maxDate(maxDate, "separationDate.error.afterMaximum", maxDate.format(dateFormatter)))
+      ).verifying(
+        maxDate(maxDate, "separationDate.error.afterMaximum", maxDate.format(dateFormatter)),
+        minDate(minDate, "separationDate.error.beforeMinimum", minDate.format(dateFormatter))
+      )
     )
 }

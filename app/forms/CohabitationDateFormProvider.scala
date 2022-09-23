@@ -26,6 +26,7 @@ import javax.inject.Inject
 class CohabitationDateFormProvider @Inject()(clock: Clock) extends Mappings {
 
   private def maxDate       = LocalDate.now(clock)
+  private def minDate       = LocalDate.now(clock).minusYears(100)
   private def dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
   def apply(): Form[LocalDate] =
@@ -35,6 +36,9 @@ class CohabitationDateFormProvider @Inject()(clock: Clock) extends Mappings {
         allRequiredKey = s"cohabitationDate.error.required.all",
         twoRequiredKey = s"cohabitationDate.error.required.two",
         requiredKey    = s"cohabitationDate.error.required"
-      ).verifying(maxDate(maxDate, "cohabitationDate.error.afterMaximum", maxDate.format(dateFormatter)))
+      ).verifying(
+        maxDate(maxDate, "cohabitationDate.error.afterMaximum", maxDate.format(dateFormatter)),
+        minDate(minDate, "cohabitationDate.error.beforeMinimum", minDate.format(dateFormatter))
+      )
     )
 }
