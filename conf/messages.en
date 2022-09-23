@@ -118,7 +118,7 @@ alwaysLivedInUk.single.change.hidden = if you have  always lived in the UK
 recentlyClaimed.title = Have you recently made a Child Benefit claim and are waiting to hear if you are eligible?
 recentlyClaimed.heading = Have you recently made a Child Benefit claim and are waiting to hear if you are eligible?
 recentlyClaimed.checkYourAnswersLabel = Have you recently made a Child Benefit claim and are waiting to hear if you are eligible?
-recentlyClaimed.error.required = if you have recently made a Child Benefit claim and are waiting to hear if you are eligible
+recentlyClaimed.error.required = Select yes if you have recently made a Child Benefit claim and are waiting to hear if you are eligible
 recentlyClaimed.change.hidden = if you have recently made a Child Benefit claim and are waiting to hear if you are eligible
 
 alreadyClaimed.title = You have already made a Child Benefit claim
