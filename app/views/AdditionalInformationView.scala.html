@@ -44,11 +44,10 @@
                 id = form("value").id,
                 name = form("value").name,
                 maxLength = Some(1000),
-                label = HmrcPageHeadingLabel(
-                    content = messages("additionalInformation.heading")
-                ),
+                label = LabelViewModel(messages("additionalInformation.heading")).visuallyHidden(),
                 value = form("value").value,
-                errorMessage = form("value").error.map(error => ErrorMessage(content = error.format))
+                errorMessage = form("value").error.map(error => ErrorMessage(content = error.format)),
+                threshold = Some(75)
             )
         )
 
