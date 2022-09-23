@@ -27,7 +27,8 @@ final case class DownloadAuditEvent(
                                      relationship: Relationship,
                                      children: List[Child],
                                      benefits: Set[String],
-                                     paymentPreference: PaymentPreference
+                                     paymentPreference: PaymentPreference,
+                                     additionalInformation: String
                                    )
 
 object DownloadAuditEvent {
@@ -98,7 +99,8 @@ object DownloadAuditEvent {
 
         case JourneyModel.PaymentPreference.DoNotPay =>
           DoNotPay
-      }
+      },
+      additionalInformation = model.additionalInformation.toString
     )
 
   private def convertUkAddress(address: models.UkAddress): UkAddress =

@@ -38,7 +38,8 @@ final case class JourneyModel(
                                relationship: Relationship,
                                children: NonEmptyList[Child],
                                benefits: Set[Benefits],
-                               paymentPreference: PaymentPreference
+                               paymentPreference: PaymentPreference,
+                               additionalInformation: AdditionalInformation
                              ) {
 
   val anyDocumentsRequired: Boolean =
@@ -124,7 +125,8 @@ object JourneyModel {
       getRelationship(answers),
       getChildren(answers),
       getBenefits(answers),
-      getPaymentPreference(answers)
+      getPaymentPreference(answers),
+      answers.getIor(AdditionalInformationPage)
     ).parMapN(JourneyModel.apply)
 
   private def getBenefits(answers: UserAnswers): IorNec[Query, Set[Benefits]] = {

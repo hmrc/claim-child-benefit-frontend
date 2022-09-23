@@ -24,7 +24,10 @@ object AdditionalInformation {
 
   case object NoInformation extends WithName("noInformation") with AdditionalInformation
 
-  final case class Information(value: String) extends AdditionalInformation
+  final case class Information(value: String) extends AdditionalInformation {
+
+    override def toString: String = value
+  }
 
   implicit lazy val writes: Writes[AdditionalInformation] = Writes {
     case i: Information => JsString(i.value)
