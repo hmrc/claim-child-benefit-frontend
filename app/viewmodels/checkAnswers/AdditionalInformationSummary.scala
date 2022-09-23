@@ -36,7 +36,7 @@ object AdditionalInformationSummary {
 
         val value = answer match {
           case NoInformation =>
-            messages("additionalInformation.none")
+            messages("additionalInformation.noInformation")
 
           case Information(i) =>
             HtmlFormat.escape(i.value).toString.replace("\n", "<br/>")
