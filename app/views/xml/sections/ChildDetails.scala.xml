@@ -6,13 +6,13 @@
 
     <fo:block font-size="16pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.childDetails", index)</fo:block>
 
+    @line("pdf.name.last", child.name.lastName)
+
     @line("pdf.name.first", child.name.firstName)
 
     @child.name.middleNames.map { middleNames =>
         line("pdf.name.middle", middleNames)
     }
-
-    @line("pdf.name.last", child.name.lastName)
 
     @line("pdf.biologicalSex", messages(s"childBiologicalSex.${child.biologicalSex.toString}"))
 
@@ -36,7 +36,12 @@
 
     @child.previousClaimant.map { previousClaimant =>
         @line("pdf.previousClaimantName", previousClaimant.name.display)
-        @line("pdf.previousClaimantUkAddress", previousClaimant.address.lines.mkString(", "))
+        <fo:block margin-bottom="3mm">
+            <fo:block font-weight="bold">@messages("pdf.previousClaimantUkAddress")</fo:block>
+                @previousClaimant.address.lines.map { x =>
+            <fo:block width="8cm" wrap-option="wrap">@(x)</fo:block>
+            }
+        </fo:block>
     }
 
     @line("pdf.hasPreviousNames", booleanToYesNo(child.previousNames.nonEmpty))
@@ -48,7 +53,12 @@
     }
 
     @if(child.requiredDocuments.nonEmpty) {
-        @line("pdf.documents", child.requiredDocuments.map(x => messages(s"pdf.documents.${x.toString}")).mkString(", "))
+        <fo:block margin-bottom="3mm">
+            <fo:block font-weight="bold">@messages("pdf.documents")</fo:block>
+                @child.requiredDocuments.map { x =>
+            <fo:block width="8cm" wrap-option="wrap">@(messages(s"pdf.documents.${x.toString}")))</fo:block>
+            }
+        </fo:block>
     }
 
 </fo:block-container>

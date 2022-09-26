@@ -22,7 +22,12 @@
         @line("pdf.name.middle", middleNames)
     }
 
-    @line("pdf.currentAddress", model.applicant.currentAddress.lines.mkString(", "))
+    <fo:block margin-bottom="3mm">
+        <fo:block font-weight="bold">@messages("pdf.currentAddress")</fo:block>
+        @model.applicant.currentAddress.lines.map { line =>
+            <fo:block width="8cm" wrap-option="wrap">@(line)</fo:block>
+        }
+    </fo:block>
 
     @line("pdf.nationality", model.applicant.nationality)
 
@@ -31,7 +36,12 @@
     @line("pdf.hmfOrCivilServant", booleanToYesNo(model.applicant.memberOfHMForcesOrCivilServantAbroad))
 
     @if(model.applicant.previousFamilyNames.nonEmpty) {
-        @line("pdf.previousNames", model.applicant.previousFamilyNames.mkString(", "))
+        <fo:block margin-bottom="3mm">
+            <fo:block font-weight="bold">@messages("pdf.previousNames")</fo:block>
+            @model.applicant.previousFamilyNames.map { name =>
+                <fo:block width="8cm" wrap-option="wrap">@(name)</fo:block>
+            }
+        </fo:block>
     }
 
     @line("pdf.dateOfBirth", date(model.applicant.dateOfBirth))
@@ -44,11 +54,22 @@
 
     @line("pdf.employmentStatus", model.applicant.employmentStatus.map(x => messages(s"employmentStatus.${x.toString}")).mkString(", "))
 
-    @line("pdf.benefits", model.benefits.map(x => messages(s"benefits.${x.toString}")).mkString(", "))
+    <fo:block margin-bottom="3mm">
+        <fo:block font-weight="bold">@messages("pdf.benefits")</fo:block>
+        @model.benefits.map { x =>
+            <fo:block width="8cm" wrap-option="wrap">@messages(s"benefits.${x.toString}")</fo:block>
+        }
+    </fo:block>
 
     @model.applicant.previousAddress.map { address =>
         @line("pdf.livedAtAddressOneYear", messages("site.no"))
-        @line("pdf.previousAddress", address.lines.mkString(", "))
+        <fo:block margin-bottom="3mm">
+            <fo:block font-weight="bold">@messages("pdf.previousAddress")</fo:block>
+            @address.lines.map { x =>
+                <fo:block width="8cm" wrap-option="wrap">@(x)</fo:block>
+            }
+        </fo:block>
+        @line("pdf.previousAddress", address.lines.mkString("\n"))
     }.getOrElse(line("pdf.livedAtAddressOneYear", messages("site.yes")))
 
     @line("pdf.phoneNumber", model.applicant.telephoneNumber)

@@ -66,7 +66,7 @@ class PrintController @Inject()(
     maybeModel.map { model =>
       f(model)
     }.getOrElse {
-      logger.warn(s"Journey model creation failed$errors")
+      logger.warn(s"Journey model creation failed $errors")
       Redirect(routes.JourneyRecoveryController.onPageLoad())
     }
   }
