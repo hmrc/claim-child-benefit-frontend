@@ -11,11 +11,7 @@
 
     @line("pdf.nino", model.applicant.nationalInsuranceNumber.getOrElse(messages("pdf.notKnown")))
 
-    @line("pdf.nationality", model.applicant.nationality)
-
-    @line("pdf.alwaysLivedInUk", messages("site.yes"))
-
-    @line("pdf.hmfOrCivilServant", booleanToYesNo(model.applicant.memberOfHMForcesOrCivilServantAbroad))
+    @line("pdf.name.last", model.applicant.name.lastName)
 
     @line("pdf.name.first", model.applicant.name.firstName)
 
@@ -23,7 +19,13 @@
         @line("pdf.name.middle", middleNames)
     }
 
-    @line("pdf.name.last", model.applicant.name.lastName)
+    @line("pdf.currentAddress", model.applicant.currentAddress.lines.mkString(", "))
+
+    @line("pdf.nationality", model.applicant.nationality)
+
+    @line("pdf.alwaysLivedInUk", messages("site.yes"))
+
+    @line("pdf.hmfOrCivilServant", booleanToYesNo(model.applicant.memberOfHMForcesOrCivilServantAbroad))
 
     @if(model.applicant.previousFamilyNames.nonEmpty) {
         @line("pdf.previousNames", model.applicant.previousFamilyNames.mkString(", "))
@@ -41,10 +43,6 @@
 
     @line("pdf.benefits", model.benefits.map(x => messages(s"benefits.${x.toString}")).mkString(", "))
 
-    <!--TODO: claimed before (needs adding to journey model) -->
-
-    @line("pdf.currentAddress", model.applicant.currentAddress.lines.mkString(", "))
-
     @model.applicant.previousAddress.map { address =>
         @line("pdf.livedAtAddressOneYear", messages("site.no"))
         @line("pdf.previousAddress", address.lines.mkString(", "))
@@ -54,7 +52,7 @@
 
     @line("pdf.bestTimeToContact", model.applicant.bestTimeToContact.map(x => messages(s"bestTimeToContact.${x.toString}")).mkString(", "))
 
-
+    @line("pdf.currentlyReceiving", messages(s"pdf.currentlyReceiving.${model.applicant.currentlyReceivingChildBenefit.toString}"))
 
 
 </fo:block-container>
