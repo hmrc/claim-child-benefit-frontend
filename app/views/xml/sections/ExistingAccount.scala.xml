@@ -2,10 +2,10 @@
     line: Line
 )
 
-@(eldestChild: JourneyModel.EldestChild)(implicit messages: Messages)
+@(eldestChild: JourneyModel.EldestChild, frequency: PaymentFrequency)(implicit messages: Messages)
 
 @line("pdf.wantToBePaid", messages("site.yes"))
 
-@line("pdf.paymentFrequency", messages("pdf.paymentFrequency.existing"))
+@line("pdf.paymentFrequency", messages(s"pdf.paymentFrequency.${frequency.toString}"))
 
 @line("pdf.wantToBePaidToExistingAccount", messages("site.yes"))

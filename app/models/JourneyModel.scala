@@ -59,8 +59,7 @@ object JourneyModel {
 
     final case class Weekly(bankAccount: Option[BankAccount], eldestChild: Option[EldestChild]) extends PaymentPreference
     final case class EveryFourWeeks(bankAccount: Option[BankAccount], eldestChild: Option[EldestChild]) extends PaymentPreference
-    final case class ExistingAccount(eldestChild: EldestChild) extends PaymentPreference
-    final case class ExistingFrequency(bankAccount: Option[BankAccount], eldestChild: EldestChild) extends PaymentPreference
+    final case class ExistingAccount(eldestChild: EldestChild, frequency: PaymentFrequency) extends PaymentPreference
     final case class DoNotPay(eldestChild: Option[EldestChild]) extends PaymentPreference
   }
 
@@ -371,9 +370,37 @@ object JourneyModel {
 
     answers.getIor(CurrentlyReceivingChildBenefitPage).flatMap {
       case GettingPayments =>
-        answers.getIor(WantToBePaidToExistingAccountPage).flatMap {
-          case true  => getEldestChild.map(ExistingAccount)
-          case false => (getBankAccount, getEldestChild).parMapN(ExistingFrequency.apply)
+        answers.getIor(WantToBePaidPage).flatMap {
+          case true =>
+            answers.getIor(WantToBePaidToExistingAccountPage).flatMap {
+              case true =>
+                getEldestChild
+                  .map {
+                    child =>
+                      ExistingAccount(
+                        child,
+                        answers.get(PaymentFrequencyPage)
+                          .getOrElse(PaymentFrequency.EveryFourWeeks))
+                  }
+
+              case false =>
+                answers.get(PaymentFrequencyPage) match {
+                  case Some(PaymentFrequency.Weekly) =>
+                    (
+                      getBankAccount,
+                      getEldestChild
+                      ).parMapN((bank, child) => Weekly(bank, Some(child)))
+
+                  case _ =>
+                    (
+                      getBankAccount,
+                      getEldestChild
+                      ).parMapN((bank, child) => EveryFourWeeks(bank, Some(child)))
+                }
+            }
+
+          case false =>
+            getEldestChild.map(x => DoNotPay(Some(x)))
         }
 
       case NotClaiming =>

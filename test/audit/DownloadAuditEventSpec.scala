@@ -17,6 +17,7 @@
 package audit
 
 import audit.DownloadAuditEvent._
+import models.PaymentFrequency
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import play.api.libs.json.Json
@@ -39,7 +40,7 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
 
       json mustEqual Json.obj(
         "wantsToBePaid" -> true,
-        "frequency" -> "weekly",
+        "frequency" -> PaymentFrequency.Weekly.toString,
         "account"   -> Json.obj(
           "holder"        -> "applicant",
           "accountName"   -> "name on account",
@@ -64,7 +65,7 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
 
       json mustEqual Json.obj(
         "wantsToBePaid" -> true,
-        "frequency"    -> "weekly",
+        "frequency"    -> PaymentFrequency.Weekly.toString,
         "account"      -> "no suitable account"
       )
     }
@@ -74,7 +75,6 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
 
     "when bank account details and eldest child are present" in {
 
-
       val preference = EveryFourWeeks(
         Some(BankAccount("applicant", "name on account", "bank name", "000000", "00000000", None)),
         Some(EldestChild(ChildName("first", None, "last"), dateOfBirth))
@@ -83,7 +83,7 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
 
       json mustEqual Json.obj(
         "wantsToBePaid" -> true,
-        "frequency" -> "every four weeks",
+        "frequency" -> PaymentFrequency.EveryFourWeeks.toString,
         "account"   -> Json.obj(
           "holder"        -> "applicant",
           "accountName"   -> "name on account",
@@ -108,65 +108,8 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
 
       json mustEqual Json.obj(
         "wantsToBePaid" -> true,
-        "frequency" -> "every four weeks",
+        "frequency" -> PaymentFrequency.EveryFourWeeks.toString,
         "account"   -> "no suitable account"
-      )
-    }
-  }
-
-  "Existing frequency payment preference must serialise to JSON" - {
-
-    "when bank account details are present" in {
-
-      val dateOfBirth = LocalDate.of(2020, 12, 31)
-
-      val preference = ExistingFrequency(
-        bankAccount = Some(BankAccount("applicant", "name on account", "bank name", "000000", "00000000", None)),
-        eldestChild = EldestChild(ChildName("first", None, "last"), dateOfBirth)
-      )
-
-      val json = Json.toJson(preference)
-
-      json mustEqual Json.obj(
-        "wantsToBePaid" -> true,
-        "frequency" -> "use existing frequency",
-        "eldestChild" -> Json.obj(
-          "name" -> Json.obj(
-            "firstName" -> "first",
-            "lastName"  -> "last"
-          ),
-          "dateOfBirth" -> "2020-12-31"
-        ),
-        "account"   -> Json.obj(
-          "holder"        -> "applicant",
-          "accountName"   -> "name on account",
-          "bankName"      -> "bank name",
-          "sortCode"      -> "000000",
-          "accountNumber" -> "00000000"
-        )
-      )
-    }
-
-    "when bank account details are not present" in {
-
-      val preference = ExistingFrequency(
-        bankAccount = None,
-        eldestChild = EldestChild(ChildName("first", None, "last"), dateOfBirth)
-      )
-
-      val json = Json.toJson(preference)
-
-      json mustEqual Json.obj(
-        "wantsToBePaid" -> true,
-        "frequency" -> "use existing frequency",
-        "eldestChild" -> Json.obj(
-          "name" -> Json.obj(
-            "firstName" -> "first",
-            "lastName"  -> "last"
-          ),
-          "dateOfBirth" -> "2020-12-31"
-        ),
-        "account" -> "no suitable account"
       )
     }
   }
@@ -201,5 +144,23 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
         "wantsToBePaid" -> false
       )
     }
+  }
+
+  "Existing account payment preference must serialise to JSON" - {
+
+    val preference = ExistingAccount(EldestChild(ChildName("first", None, "last"), dateOfBirth), PaymentFrequency.Weekly.toString)
+    val json = Json.toJson(preference)
+
+    json mustEqual Json.obj(
+      "eldestChild" -> Json.obj(
+        "name" -> Json.obj(
+          "firstName" -> "first",
+          "lastName"  -> "last"
+        ),
+        "dateOfBirth" -> "2020-12-31"
+      ),
+      "frequency" -> PaymentFrequency.Weekly.toString
+    )
+
   }
 }

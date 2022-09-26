@@ -67,10 +67,7 @@
         case JourneyModel.PaymentPreference.EveryFourWeeks(_, maybeEldestChild) =>
             maybeEldestChild.map(x => eldestChildSection(x))
 
-        case JourneyModel.PaymentPreference.ExistingAccount(eldestChild) =>
-            eldestChildSection(eldestChild)
-
-        case JourneyModel.PaymentPreference.ExistingFrequency(_, eldestChild) =>
+        case JourneyModel.PaymentPreference.ExistingAccount(eldestChild, _) =>
             eldestChildSection(eldestChild)
     }}
 </fo:block-container>

@@ -17,7 +17,7 @@
 package audit
 
 import audit.DownloadAuditEvent._
-import models.{Country, JourneyModel}
+import models.{Country, JourneyModel, PaymentFrequency}
 import play.api.libs.json.{JsString, Json, Writes}
 
 import java.time.LocalDate
@@ -98,11 +98,8 @@ object DownloadAuditEvent {
             eldestChild.map(convertEldestChild)
           )
 
-        case JourneyModel.PaymentPreference.ExistingAccount(eldestChild) =>
-          ExistingAccount(convertEldestChild(eldestChild))
-
-        case JourneyModel.PaymentPreference.ExistingFrequency(bankAccount, eldestChild) =>
-          ExistingFrequency(bankAccount.map(convertBankAccount), convertEldestChild(eldestChild))
+        case JourneyModel.PaymentPreference.ExistingAccount(eldestChild, frequency) =>
+          ExistingAccount(convertEldestChild(eldestChild), frequency.toString)
 
         case JourneyModel.PaymentPreference.DoNotPay(eldestChild) =>
           DoNotPay(eldestChild.map(convertEldestChild))
@@ -279,7 +276,7 @@ object DownloadAuditEvent {
 
         Json.obj(
           "wantsToBePaid" -> true,
-          "frequency"     -> "weekly"
+          "frequency"     -> PaymentFrequency.Weekly.toString
         ) ++ accountJson ++ eldestChildJson
     }
   }
@@ -299,36 +296,21 @@ object DownloadAuditEvent {
 
         Json.obj(
           "wantsToBePaid" -> true,
-          "frequency"     -> "every four weeks"
+          "frequency"     -> PaymentFrequency.EveryFourWeeks.toString
         ) ++ accountJson ++ eldestChildJson
     }
   }
 
-  private[audit] final case class  ExistingAccount(eldestChild: EldestChild) extends PaymentPreference
+  private[audit] final case class  ExistingAccount(eldestChild: EldestChild, frequency: String) extends PaymentPreference
   object ExistingAccount {
     implicit lazy val writes: Writes[ExistingAccount] = Writes {
       x =>
         Json.obj(
           "wantsToBePaid" -> true,
-          "frequency"     -> "use existing frequency",
+          "frequency"     -> x.frequency,
           "account"       -> "use existing account",
           "eldestChild"   -> Json.toJson(x.eldestChild)
         )
-    }
-  }
-
-  private[audit] final case class  ExistingFrequency(bankAccount: Option[BankAccount], eldestChild: EldestChild) extends PaymentPreference
-  object ExistingFrequency {
-    implicit lazy val writes: Writes[ExistingFrequency] = Writes {
-      x =>
-        val accountJsonValue = x.bankAccount.map(Json.toJson(_)).getOrElse(JsString("no suitable account"))
-        val accountJson      = Json.obj("account" -> accountJsonValue)
-
-        Json.obj(
-          "wantsToBePaid" -> true,
-          "frequency"     -> "use existing frequency",
-          "eldestChild"   -> Json.toJson(x.eldestChild)
-        ) ++ accountJson
     }
   }
 
@@ -348,11 +330,10 @@ object DownloadAuditEvent {
   object PaymentPreference {
 
     implicit val writes: Writes[PaymentPreference] = Writes {
-      case weekly: Weekly                       => Json.toJson(weekly)(Weekly.writes)
-      case everyFourWeeks: EveryFourWeeks       => Json.toJson(everyFourWeeks)(EveryFourWeeks.writes)
-      case existingAccount: ExistingAccount     => Json.toJson(existingAccount)(ExistingAccount.writes)
-      case existingFrequency: ExistingFrequency => Json.toJson(existingFrequency)(ExistingFrequency.writes)
-      case doNotPay: DoNotPay                   => Json.toJson(doNotPay)(DoNotPay.writes)
+      case weekly: Weekly                   => Json.toJson(weekly)(Weekly.writes)
+      case everyFourWeeks: EveryFourWeeks   => Json.toJson(everyFourWeeks)(EveryFourWeeks.writes)
+      case existingAccount: ExistingAccount => Json.toJson(existingAccount)(ExistingAccount.writes)
+      case doNotPay: DoNotPay               => Json.toJson(doNotPay)(DoNotPay.writes)
     }
   }
 

@@ -5,8 +5,7 @@
     doNotPay: DoNotPay,
     weekly: Weekly,
     everyFourWeeks: EveryFourWeeks,
-    existingAccount: ExistingAccount,
-    existingFrequency: ExistingFrequency
+    existingAccount: ExistingAccount
 )
 
 @(model: JourneyModel)(implicit messages: Messages)
@@ -25,10 +24,7 @@
         case JourneyModel.PaymentPreference.EveryFourWeeks(bankAccount, maybeEldestChild) =>
             everyFourWeeks(bankAccount)
 
-        case JourneyModel.PaymentPreference.ExistingAccount(eldestChild) =>
-            existingAccount(eldestChild)
-
-        case JourneyModel.PaymentPreference.ExistingFrequency(bankAccount, eldestChild) =>
-            existingFrequency(bankAccount, eldestChild)
+        case JourneyModel.PaymentPreference.ExistingAccount(eldestChild, frequency) =>
+            existingAccount(eldestChild, frequency)
     }}
 </fo:block-container>
