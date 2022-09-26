@@ -17,11 +17,13 @@
 package journey
 
 import generators.ModelGenerators
+import models.AdditionalInformation.NoInformation
 import models.ChildBirthRegistrationCountry.{England, NorthernIreland, Other, Scotland, Unknown, Wales}
 import models._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
+import pages.{AdditionalInformationPage, CheckYourAnswersPage}
 import pages.child._
 
 import java.time.LocalDate
@@ -298,6 +300,19 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }
+    }
+  }
+
+  "when users do not want to add any more children" - {
+
+    "they must be asked for any additional information then to go Check Answers" in {
+
+      startingFrom(AddChildPage)
+        .run(
+          submitAnswer(AddChildPage, false),
+          submitAnswer(AdditionalInformationPage, NoInformation),
+          pageMustBe(CheckYourAnswersPage)
+        )
     }
   }
 }

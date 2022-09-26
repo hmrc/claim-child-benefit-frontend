@@ -20,6 +20,7 @@ import audit.AuditService
 import base.SpecBase
 import com.dmanchester.playfop.sapi.PlayFop
 import generators.ModelGenerators
+import models.AdditionalInformation.NoInformation
 import models._
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{never, times, verify, when}
@@ -81,6 +82,7 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
       .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
       .set(WantToBePaidPage, false).success.value
       .set(RelationshipStatusPage, RelationshipStatus.Single).success.value
+      .set(AdditionalInformationPage, NoInformation).success.value
 
   "Print Controller" - {
 

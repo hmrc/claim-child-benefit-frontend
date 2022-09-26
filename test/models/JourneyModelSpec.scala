@@ -18,6 +18,7 @@ package models
 
 import cats.data.NonEmptyList
 import generators.ModelGenerators
+import models.AdditionalInformation.{Information, NoInformation}
 import models.RelationshipStatus._
 import models.{ChildBirthRegistrationCountry => BirthCountry}
 import org.scalacheck.Arbitrary.arbitrary
@@ -96,6 +97,7 @@ class JourneyModelSpec
           .set(ApplicantBenefitsPage, applicantBenefits).success.value
           .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
           .set(WantToBePaidPage, false).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val expectedModel = JourneyModel(
           applicant = JourneyModel.Applicant(
@@ -127,7 +129,8 @@ class JourneyModelSpec
             ), Nil
           ),
           benefits = applicantBenefits,
-          paymentPreference = JourneyModel.PaymentPreference.DoNotPay
+          paymentPreference = JourneyModel.PaymentPreference.DoNotPay,
+          additionalInformation = NoInformation
         )
 
         val (errors, data) = JourneyModel.from(answers).pad
@@ -153,6 +156,7 @@ class JourneyModelSpec
           .set(PartnerEmploymentStatusPage, partnerEmployment).success.value
           .set(PartnerIsHmfOrCivilServantPage, false).success.value
           .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming).success.value
+          .set(AdditionalInformationPage, Information("info")).success.value
 
         val expectedModel = JourneyModel(
           applicant = JourneyModel.Applicant(
@@ -197,7 +201,8 @@ class JourneyModelSpec
             ), Nil
           ),
           benefits = applicantBenefits,
-          paymentPreference = JourneyModel.PaymentPreference.DoNotPay
+          paymentPreference = JourneyModel.PaymentPreference.DoNotPay,
+          additionalInformation = Information("info")
         )
 
         val (errors, data) = JourneyModel.from(answers).pad
@@ -227,6 +232,7 @@ class JourneyModelSpec
           .set(ApplicantRelationshipToChildPage(Index(1)), relationshipToChild).success.value
           .set(AdoptingThroughLocalAuthorityPage(Index(1)), false).success.value
           .set(AnyoneClaimedForChildBeforePage(Index(1)), false).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val expectedModel = JourneyModel(
           applicant = JourneyModel.Applicant(
@@ -284,7 +290,8 @@ class JourneyModelSpec
             )
           ),
           benefits = applicantBenefits,
-          paymentPreference = JourneyModel.PaymentPreference.DoNotPay
+          paymentPreference = JourneyModel.PaymentPreference.DoNotPay,
+          additionalInformation = NoInformation
         )
 
         val (errors, data) = JourneyModel.from(answers).pad
@@ -307,6 +314,7 @@ class JourneyModelSpec
             .set(EldestChildNamePage, eldestChildName).success.value
             .set(EldestChildDateOfBirthPage, now).success.value
             .set(WantToBePaidToExistingAccountPage, true).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
 
           val expectedPaymentPreference = JourneyModel.PaymentPreference.ExistingAccount(
             JourneyModel.EldestChild(eldestChildName, now)
@@ -334,6 +342,7 @@ class JourneyModelSpec
               .set(ApplicantHasSuitableAccountPage, true).success.value
               .set(BankAccountHolderPage, bankAccountHolder).success.value
               .set(BankAccountDetailsPage, bankAccountDetails).success.value
+              .set(AdditionalInformationPage, NoInformation).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.ExistingFrequency(
               bankAccount = Some(JourneyModel.BankAccount(bankAccountHolder, bankAccountDetails)),
@@ -359,6 +368,7 @@ class JourneyModelSpec
               .set(EldestChildDateOfBirthPage, now).success.value
               .set(WantToBePaidToExistingAccountPage, false).success.value
               .set(ApplicantHasSuitableAccountPage, false).success.value
+              .set(AdditionalInformationPage, NoInformation).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.ExistingFrequency(
               bankAccount = None,
@@ -382,6 +392,7 @@ class JourneyModelSpec
           .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
           .set(ApplicantBenefitsPage, applicantBenefits).success.value
           .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         "and wants to be paid every 4 weeks" - {
 
@@ -486,6 +497,7 @@ class JourneyModelSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantNinoKnownPage, true).success.value
           .set(ApplicantNinoPage, applicantNino).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val expectedApplicant = JourneyModel.Applicant(
           name = applicantName,
@@ -518,6 +530,7 @@ class JourneyModelSpec
           .set(ApplicantHasPreviousFamilyNamePage, true).success.value
           .set(ApplicantPreviousFamilyNamePage(Index(0)), previousName1).success.value
           .set(ApplicantPreviousFamilyNamePage(Index(1)), previousName2).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val expectedApplicant = JourneyModel.Applicant(
           name = applicantName,
@@ -549,6 +562,7 @@ class JourneyModelSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantCurrentAddressInUkPage, false).success.value
           .set(ApplicantCurrentInternationalAddressPage, currentInternationalAddress).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val expectedApplicant = JourneyModel.Applicant(
           name = applicantName,
@@ -582,6 +596,7 @@ class JourneyModelSpec
             .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
             .set(ApplicantPreviousAddressInUkPage, true).success.value
             .set(ApplicantPreviousUkAddressPage, previousUkAddress).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
 
           val expectedApplicant = JourneyModel.Applicant(
             name = applicantName,
@@ -613,6 +628,7 @@ class JourneyModelSpec
             .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
             .set(ApplicantPreviousAddressInUkPage, false).success.value
             .set(ApplicantPreviousInternationalAddressPage, previousInternationalAddress).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
 
           val expectedApplicant = JourneyModel.Applicant(
             name = applicantName,
@@ -646,6 +662,7 @@ class JourneyModelSpec
           .set(RelationshipStatusPage, Married).success.value
           .set(PartnerNinoKnownPage, true).success.value
           .set(PartnerNinoPage, partnerNino).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val expectedPartner = JourneyModel.Partner(
           name = partnerName,
@@ -676,6 +693,7 @@ class JourneyModelSpec
           .set(PartnerClaimingChildBenefitPage, partnerClaiming).success.value
           .set(PartnerEldestChildNamePage, partnerEldestChildName).success.value
           .set(PartnerEldestChildDateOfBirthPage, now).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val expectedPartner = JourneyModel.Partner(
           name = partnerName,
@@ -706,6 +724,7 @@ class JourneyModelSpec
           .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments).success.value
           .set(PartnerEldestChildNamePage, partnerEldestChildName).success.value
           .set(PartnerEldestChildDateOfBirthPage, now).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val expectedPartner = JourneyModel.Partner(
           name = partnerName,
@@ -736,6 +755,7 @@ class JourneyModelSpec
           .set(ChildNameChangedByDeedPollPage(Index(0)), true).success.value
           .set(ChildPreviousNamePage(Index(0), Index(0)), childPreviousName1).success.value
           .set(ChildPreviousNamePage(Index(0), Index(1)), childPreviousName2).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val expectedChildDetails = JourneyModel.Child(
           name = childName,
@@ -766,6 +786,7 @@ class JourneyModelSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.England).success.value
           .set(BirthCertificateHasSystemNumberPage(Index(0)), false).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
 
         val expectedChildDetails = JourneyModel.Child(
@@ -797,7 +818,7 @@ class JourneyModelSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.Wales).success.value
           .set(BirthCertificateHasSystemNumberPage(Index(0)), false).success.value
-
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val expectedChildDetails = JourneyModel.Child(
           name = childName,
@@ -831,6 +852,7 @@ class JourneyModelSpec
             .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.Scotland).success.value
             .set(ScottishBirthCertificateHasNumbersPage(Index(0)), true).success.value
             .set(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBirthCertificateDetails).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
 
           val expectedChildDetails = JourneyModel.Child(
             name = childName,
@@ -861,6 +883,7 @@ class JourneyModelSpec
             .set(RelationshipStatusPage, Single).success.value
             .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.Scotland).success.value
             .set(ScottishBirthCertificateHasNumbersPage(Index(0)), false).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
 
           val expectedChildDetails = JourneyModel.Child(
             name = childName,
@@ -896,6 +919,7 @@ class JourneyModelSpec
             .set(PreviousClaimantNamePage(Index(0)), previousClaimantName).success.value
             .set(PreviousClaimantAddressInUkPage(Index(0)), true).success.value
             .set(PreviousClaimantUkAddressPage(Index(0)), previousClaimantUkAddress).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
 
           val expectedChildDetails = JourneyModel.Child(
             name = childName,
@@ -928,6 +952,7 @@ class JourneyModelSpec
             .set(PreviousClaimantNamePage(Index(0)), previousClaimantName).success.value
             .set(PreviousClaimantAddressInUkPage(Index(0)), false).success.value
             .set(PreviousClaimantInternationalAddressPage(Index(0)), previousClaimantInternationalAddress).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
 
           val expectedChildDetails = JourneyModel.Child(
             name = childName,
@@ -959,6 +984,7 @@ class JourneyModelSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(AlwaysLivedInUkPage, true).success.value
           .set(ApplicantIsHmfOrCivilServantPage, true).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
@@ -980,6 +1006,7 @@ class JourneyModelSpec
           .set(AlwaysLivedInUkPage, true).success.value
           .set(ApplicantIsHmfOrCivilServantPage, false).success.value
           .set(PartnerIsHmfOrCivilServantPage, true).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1003,7 +1030,7 @@ class JourneyModelSpec
 
         val (errors, data) = JourneyModel.from(answers).pad
 
-        errors.value.toChain.toList must contain only ApplicantNamePage
+        errors.value.toChain.toList must contain theSameElementsAs Seq(ApplicantNamePage, AdditionalInformationPage)
         data mustBe empty
       }
 
@@ -1015,6 +1042,7 @@ class JourneyModelSpec
           .withMinimalCoupleIncomeDetails
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Married).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1038,6 +1066,7 @@ class JourneyModelSpec
           .withMinimalPaymentDetails
           .withMinimalPartnerDetails
           .set(RelationshipStatusPage, Cohabiting).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1054,6 +1083,7 @@ class JourneyModelSpec
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Cohabiting).success.value
           .set(CohabitationDatePage, now).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1076,6 +1106,7 @@ class JourneyModelSpec
           .withMinimalSingleIncomeDetails
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Separated).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1095,6 +1126,7 @@ class JourneyModelSpec
             .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
             .set(EldestChildNamePage, eldestChildName).success.value
             .set(EldestChildDateOfBirthPage, now).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
 
           val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1111,6 +1143,7 @@ class JourneyModelSpec
             .set(RelationshipStatusPage, Single).success.value
             .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
             .set(WantToBePaidToExistingAccountPage, true).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
 
           val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1133,6 +1166,7 @@ class JourneyModelSpec
             .set(EldestChildNamePage, eldestChildName).success.value
             .set(EldestChildDateOfBirthPage, now).success.value
             .set(WantToBePaidToExistingAccountPage, false).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
 
           val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1152,6 +1186,7 @@ class JourneyModelSpec
             .set(EldestChildDateOfBirthPage, now).success.value
             .set(WantToBePaidToExistingAccountPage, false).success.value
             .set(ApplicantHasSuitableAccountPage, true).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
 
           val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1169,6 +1204,7 @@ class JourneyModelSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
           .set(WantToBePaidPage, true).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1186,6 +1222,7 @@ class JourneyModelSpec
           .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
           .set(WantToBePaidPage, true).success.value
           .set(ApplicantHasSuitableAccountPage, true).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1202,6 +1239,7 @@ class JourneyModelSpec
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantHasPreviousFamilyNamePage, true).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1218,6 +1256,7 @@ class JourneyModelSpec
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantNinoKnownPage, true).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1234,6 +1273,7 @@ class JourneyModelSpec
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1251,6 +1291,7 @@ class JourneyModelSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
           .set(ApplicantPreviousAddressInUkPage, true).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1268,6 +1309,7 @@ class JourneyModelSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
           .set(ApplicantPreviousAddressInUkPage, false).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1285,6 +1327,7 @@ class JourneyModelSpec
           .withMinimalPartnerDetails
           .set(RelationshipStatusPage, Married).success.value
           .set(PartnerNinoKnownPage, true).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1302,6 +1345,7 @@ class JourneyModelSpec
           .withMinimalPartnerDetails
           .set(RelationshipStatusPage, Married).success.value
           .set(PartnerClaimingChildBenefitPage, partnerClaiming).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1323,6 +1367,7 @@ class JourneyModelSpec
           .withMinimalPartnerDetails
           .set(RelationshipStatusPage, Married).success.value
           .set(PartnerClaimingChildBenefitPage, partnerClaiming).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1343,6 +1388,7 @@ class JourneyModelSpec
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
           .set(ChildHasPreviousNamePage(Index(0)), true).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1367,6 +1413,7 @@ class JourneyModelSpec
           .set(ChildBirthRegistrationCountryPage(Index(0)), country).success.value
           .set(BirthCertificateHasSystemNumberPage(Index(0)), true).success.value
           .remove(ChildBirthCertificateSystemNumberPage(Index(0))).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1385,6 +1432,7 @@ class JourneyModelSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(ScottishBirthCertificateHasNumbersPage(Index(0)), true).success.value
           .set(ChildBirthRegistrationCountryPage(Index(0)), BirthCountry.Scotland).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1402,6 +1450,7 @@ class JourneyModelSpec
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
           .set(AnyoneClaimedForChildBeforePage(Index(0)), true).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1424,6 +1473,7 @@ class JourneyModelSpec
           .set(AnyoneClaimedForChildBeforePage(Index(0)), true).success.value
           .set(PreviousClaimantNamePage(Index(0)), previousClaimantName).success.value
           .set(PreviousClaimantAddressInUkPage(Index(0)), true).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1443,6 +1493,7 @@ class JourneyModelSpec
           .set(AnyoneClaimedForChildBeforePage(Index(0)), true).success.value
           .set(PreviousClaimantNamePage(Index(0)), previousClaimantName).success.value
           .set(PreviousClaimantAddressInUkPage(Index(0)), false).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
@@ -1458,6 +1509,7 @@ class JourneyModelSpec
           .withMinimalSingleIncomeDetails
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 

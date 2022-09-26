@@ -17,12 +17,13 @@
 package journey
 
 import generators.ModelGenerators
+import models.AdditionalInformation.NoInformation
 import models.ChildBirthRegistrationCountry._
 import models.{ApplicantRelationshipToChild => Relationship, _}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
-import pages.CheckYourAnswersPage
+import pages.{AdditionalInformationPage, CheckYourAnswersPage}
 import pages.child._
 import queries.ChildQuery
 
@@ -820,6 +821,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
         submitAnswer(AnyoneClaimedForChildBeforePage(Index(1)), false),
         next,
         submitAnswer(AddChildPage, false),
+        submitAnswer(AdditionalInformationPage, NoInformation),
         pageMustBe(CheckYourAnswersPage)
       )
 

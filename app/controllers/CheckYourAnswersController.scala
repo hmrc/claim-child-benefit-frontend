@@ -115,6 +115,10 @@ class CheckYourAnswersController @Inject()(
         ).flatten
       )
 
-      Ok(view(personalDetails, incomeDetails, paymentDetails, applicantDetails, partnerDetails, childDetails))
+      val additionalInformation = SummaryListViewModel(
+        rows = Seq(AdditionalInformationSummary.row(request.userAnswers, waypoints, thisPage)).flatten
+      )
+
+      Ok(view(personalDetails, incomeDetails, paymentDetails, applicantDetails, partnerDetails, childDetails, additionalInformation))
   }
 }

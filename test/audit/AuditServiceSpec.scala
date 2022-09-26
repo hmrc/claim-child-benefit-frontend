@@ -19,6 +19,7 @@ package audit
 import audit.DownloadAuditEvent._
 import cats.data.NonEmptyList
 import generators.ModelGenerators
+import models.AdditionalInformation.Information
 import models.{JourneyModel, PartnerClaimingChildBenefit}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
@@ -110,7 +111,8 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             name        = models.ChildName("applicant eldest first", Some("applicant eldest middle"), "applicant eldest last"),
             dateOfBirth = now
           )
-        )
+        ),
+        additionalInformation = Information("info")
       )
 
       val expectedAuditEvent: DownloadAuditEvent = DownloadAuditEvent(
@@ -168,7 +170,8 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             name        = ChildName("applicant eldest first", Some("applicant eldest middle"), "applicant eldest last"),
             dateOfBirth = now
           )
-        )
+        ),
+        "info"
       )
 
       val hc = HeaderCarrier()
