@@ -20,7 +20,7 @@ import audit.DownloadAuditEvent._
 import cats.data.NonEmptyList
 import generators.ModelGenerators
 import models.AdditionalInformation.Information
-import models.{JourneyModel, PartnerClaimingChildBenefit}
+import models.{CurrentlyReceivingChildBenefit, JourneyModel, PartnerClaimingChildBenefit}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
 import org.scalacheck.Arbitrary.arbitrary
@@ -65,7 +65,8 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           bestTimeToContact = Set(models.BestTimeToContact.Morning, models.BestTimeToContact.Afternoon, models.BestTimeToContact.Evening),
           nationality = "applicant nationality",
           employmentStatus = Set(models.EmploymentStatus.Employed, models.EmploymentStatus.SelfEmployed),
-          memberOfHMForcesOrCivilServantAbroad = false
+          memberOfHMForcesOrCivilServantAbroad = false,
+          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
         ),
         relationship = JourneyModel.Relationship(
           status = models.RelationshipStatus.Cohabiting,
@@ -127,7 +128,8 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           bestTimeToContact = Set("morning", "afternoon", "evening"),
           nationality = "applicant nationality",
           employmentStatus = Set("employed", "selfEmployed"),
-          memberOfHMForcesOrCivilServantAbroad = false
+          memberOfHMForcesOrCivilServantAbroad = false,
+          currentlyClaimingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming.toString
         ),
         relationship = Relationship(
           status = "cohabiting",

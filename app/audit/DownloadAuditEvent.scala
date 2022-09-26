@@ -46,7 +46,8 @@ object DownloadAuditEvent {
         bestTimeToContact                    = model.applicant.bestTimeToContact.map(_.toString),
         nationality                          = model.applicant.nationality,
         employmentStatus                     = model.applicant.employmentStatus.map(_.toString),
-        memberOfHMForcesOrCivilServantAbroad = model.applicant.memberOfHMForcesOrCivilServantAbroad
+        memberOfHMForcesOrCivilServantAbroad = model.applicant.memberOfHMForcesOrCivilServantAbroad,
+        currentlyClaimingChildBenefit        = model.applicant.currentlyReceivingChildBenefit.toString
       ),
       relationship = Relationship(
         status  = model.relationship.status.toString,
@@ -203,7 +204,8 @@ object DownloadAuditEvent {
                                              bestTimeToContact: Set[String],
                                              nationality: String,
                                              employmentStatus: Set[String],
-                                             memberOfHMForcesOrCivilServantAbroad: Boolean
+                                             memberOfHMForcesOrCivilServantAbroad: Boolean,
+                                             currentlyClaimingChildBenefit: String
                                            )
   object Applicant {
     implicit lazy val writes: Writes[Applicant] = Json.writes

@@ -19,6 +19,7 @@ package models
 import cats.data.NonEmptyList
 import generators.ModelGenerators
 import models.AdditionalInformation.{Information, NoInformation}
+import models.CurrentlyReceivingChildBenefit.NotClaiming
 import models.RelationshipStatus._
 import models.{ChildBirthRegistrationCountry => BirthCountry}
 import org.scalacheck.Arbitrary.arbitrary
@@ -111,7 +112,8 @@ class JourneyModelSpec
             bestTimeToContact = bestTimes,
             nationality = applicantNationality,
             employmentStatus = applicantEmployment,
-            memberOfHMForcesOrCivilServantAbroad = false
+            memberOfHMForcesOrCivilServantAbroad = false,
+            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
           ),
           relationship = JourneyModel.Relationship(Single, None, None),
           children = NonEmptyList(
@@ -170,7 +172,8 @@ class JourneyModelSpec
             bestTimeToContact = bestTimes,
             nationality = applicantNationality,
             employmentStatus = applicantEmployment,
-            memberOfHMForcesOrCivilServantAbroad = false
+            memberOfHMForcesOrCivilServantAbroad = false,
+            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
           ),
           relationship = JourneyModel.Relationship(
             status = Married,
@@ -246,7 +249,8 @@ class JourneyModelSpec
             bestTimeToContact = bestTimes,
             nationality = applicantNationality,
             employmentStatus = applicantEmployment,
-            memberOfHMForcesOrCivilServantAbroad = false
+            memberOfHMForcesOrCivilServantAbroad = false,
+            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
           ),
           relationship = JourneyModel.Relationship(
             status = Married,
@@ -510,7 +514,8 @@ class JourneyModelSpec
           bestTimeToContact = bestTimes,
           nationality = applicantNationality,
           employmentStatus = applicantEmployment,
-          memberOfHMForcesOrCivilServantAbroad = false
+          memberOfHMForcesOrCivilServantAbroad = false,
+          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
         )
 
         val (errors, data) = JourneyModel.from(answers).pad
@@ -543,7 +548,8 @@ class JourneyModelSpec
           bestTimeToContact = bestTimes,
           nationality = applicantNationality,
           employmentStatus = applicantEmployment,
-          memberOfHMForcesOrCivilServantAbroad = false
+          memberOfHMForcesOrCivilServantAbroad = false,
+          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
         )
 
         val (errors, data) = JourneyModel.from(answers).pad
@@ -575,7 +581,8 @@ class JourneyModelSpec
           bestTimeToContact = bestTimes,
           nationality = applicantNationality,
           employmentStatus = applicantEmployment,
-          memberOfHMForcesOrCivilServantAbroad = false
+          memberOfHMForcesOrCivilServantAbroad = false,
+          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
         )
 
         val (errors, data) = JourneyModel.from(answers).pad
@@ -609,7 +616,8 @@ class JourneyModelSpec
             bestTimeToContact = bestTimes,
             nationality = applicantNationality,
             employmentStatus = applicantEmployment,
-            memberOfHMForcesOrCivilServantAbroad = false
+            memberOfHMForcesOrCivilServantAbroad = false,
+            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
           )
 
           val (errors, data) = JourneyModel.from(answers).pad
@@ -641,7 +649,8 @@ class JourneyModelSpec
             bestTimeToContact = bestTimes,
             nationality = applicantNationality,
             employmentStatus = applicantEmployment,
-            memberOfHMForcesOrCivilServantAbroad = false
+            memberOfHMForcesOrCivilServantAbroad = false,
+            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
           )
 
           val (errors, data) = JourneyModel.from(answers).pad
@@ -1534,6 +1543,7 @@ class JourneyModelSpec
         .set(BestTimeToContactPage, bestTimes).success.value
         .set(ApplicantNationalityPage, applicantNationality).success.value
         .set(ApplicantEmploymentStatusPage, applicantEmployment).success.value
+        .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
 
     def withMinimalPartnerDetails: UserAnswers =
       answers

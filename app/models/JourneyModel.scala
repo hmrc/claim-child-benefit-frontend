@@ -76,7 +76,8 @@ object JourneyModel {
                               bestTimeToContact: Set[BestTimeToContact],
                               nationality: String,
                               employmentStatus: Set[EmploymentStatus],
-                              memberOfHMForcesOrCivilServantAbroad: Boolean
+                              memberOfHMForcesOrCivilServantAbroad: Boolean,
+                              currentlyReceivingChildBenefit: CurrentlyReceivingChildBenefit
                             )
 
   final case class Partner(
@@ -267,7 +268,8 @@ object JourneyModel {
       answers.getIor(BestTimeToContactPage),
       answers.getIor(ApplicantNationalityPage),
       answers.getIor(ApplicantEmploymentStatusPage),
-      getHmForces
+      getHmForces,
+      answers.getIor(CurrentlyReceivingChildBenefitPage)
     ).parMapN(Applicant.apply)
   }
 
