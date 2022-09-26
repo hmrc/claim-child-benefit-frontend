@@ -25,14 +25,20 @@ import java.time.LocalDate
 
 class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
 
+  private val dateOfBirth = LocalDate.of(2020, 12, 31)
+
   "Weekly payment preference must serialise to JSON" - {
 
-    "when bank account details are present" in {
+    "when bank account details and eldest child are present" in {
 
-      val preference = Weekly(Some(BankAccount("applicant", "name on account", "bank name", "000000", "00000000", None)))
+      val preference = Weekly(
+        Some(BankAccount("applicant", "name on account", "bank name", "000000", "00000000", None)),
+        Some(EldestChild(ChildName("first", None, "last"), dateOfBirth))
+      )
       val json = Json.toJson(preference)
 
       json mustEqual Json.obj(
+        "wantsToBePaid" -> true,
         "frequency" -> "weekly",
         "account"   -> Json.obj(
           "holder"        -> "applicant",
@@ -40,30 +46,43 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
           "bankName"      -> "bank name",
           "sortCode"      -> "000000",
           "accountNumber" -> "00000000"
+        ),
+        "eldestChild" -> Json.obj(
+          "name" -> Json.obj(
+            "firstName" -> "first",
+            "lastName"  -> "last"
+          ),
+          "dateOfBirth" -> "2020-12-31"
         )
       )
     }
 
-    "when bank account details are not present" in {
+    "when bank account details and eldest child are not present" in {
 
-      val preference = Weekly(None)
+      val preference = Weekly(None, None)
       val json = Json.toJson(preference)
 
       json mustEqual Json.obj(
-        "frequency" -> "weekly",
-        "account"   -> "no suitable account"
+        "wantsToBePaid" -> true,
+        "frequency"    -> "weekly",
+        "account"      -> "no suitable account"
       )
     }
   }
 
   "Every four weeks payment preference must serialise to JSON" - {
 
-    "when bank account details are present" in {
+    "when bank account details and eldest child are present" in {
 
-      val preference = EveryFourWeeks(Some(BankAccount("applicant", "name on account", "bank name", "000000", "00000000", None)))
+
+      val preference = EveryFourWeeks(
+        Some(BankAccount("applicant", "name on account", "bank name", "000000", "00000000", None)),
+        Some(EldestChild(ChildName("first", None, "last"), dateOfBirth))
+      )
       val json = Json.toJson(preference)
 
       json mustEqual Json.obj(
+        "wantsToBePaid" -> true,
         "frequency" -> "every four weeks",
         "account"   -> Json.obj(
           "holder"        -> "applicant",
@@ -71,16 +90,24 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
           "bankName"      -> "bank name",
           "sortCode"      -> "000000",
           "accountNumber" -> "00000000"
+        ),
+        "eldestChild" -> Json.obj(
+          "name" -> Json.obj(
+            "firstName" -> "first",
+            "lastName"  -> "last"
+          ),
+          "dateOfBirth" -> "2020-12-31"
         )
       )
     }
 
-    "when bank account details are not present" in {
+    "when bank account details and eldest child are not present" in {
 
-      val preference = EveryFourWeeks(None)
+      val preference = EveryFourWeeks(None, None)
       val json = Json.toJson(preference)
 
       json mustEqual Json.obj(
+        "wantsToBePaid" -> true,
         "frequency" -> "every four weeks",
         "account"   -> "no suitable account"
       )
@@ -101,6 +128,7 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
       val json = Json.toJson(preference)
 
       json mustEqual Json.obj(
+        "wantsToBePaid" -> true,
         "frequency" -> "use existing frequency",
         "eldestChild" -> Json.obj(
           "name" -> Json.obj(
@@ -121,8 +149,6 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
 
     "when bank account details are not present" in {
 
-      val dateOfBirth = LocalDate.of(2020, 12, 31)
-
       val preference = ExistingFrequency(
         bankAccount = None,
         eldestChild = EldestChild(ChildName("first", None, "last"), dateOfBirth)
@@ -131,6 +157,7 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
       val json = Json.toJson(preference)
 
       json mustEqual Json.obj(
+        "wantsToBePaid" -> true,
         "frequency" -> "use existing frequency",
         "eldestChild" -> Json.obj(
           "name" -> Json.obj(
@@ -140,6 +167,38 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
           "dateOfBirth" -> "2020-12-31"
         ),
         "account" -> "no suitable account"
+      )
+    }
+  }
+
+  "Do not pay payment preference must serialise to JSON" - {
+
+    "when eldest child is present" in {
+
+      val preference = DoNotPay(Some(EldestChild(ChildName("first", None, "last"), dateOfBirth)))
+
+      val json = Json.toJson(preference)
+
+      json mustEqual Json.obj(
+        "wantsToBePaid" -> false,
+        "eldestChild" -> Json.obj(
+          "name" -> Json.obj(
+            "firstName" -> "first",
+            "lastName"  -> "last"
+          ),
+          "dateOfBirth" -> "2020-12-31"
+        )
+      )
+    }
+
+    "when eldest child is not present" in {
+
+      val preference = DoNotPay(None)
+
+      val json = Json.toJson(preference)
+
+      json mustEqual Json.obj(
+        "wantsToBePaid" -> false
       )
     }
   }

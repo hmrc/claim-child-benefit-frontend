@@ -19,7 +19,6 @@ package models
 import cats.data.NonEmptyList
 import generators.ModelGenerators
 import models.AdditionalInformation.{Information, NoInformation}
-import models.CurrentlyReceivingChildBenefit.NotClaiming
 import models.RelationshipStatus._
 import models.{ChildBirthRegistrationCountry => BirthCountry}
 import org.scalacheck.Arbitrary.arbitrary
@@ -131,7 +130,7 @@ class JourneyModelSpec
             ), Nil
           ),
           benefits = applicantBenefits,
-          paymentPreference = JourneyModel.PaymentPreference.DoNotPay,
+          paymentPreference = JourneyModel.PaymentPreference.DoNotPay(None),
           additionalInformation = NoInformation
         )
 
@@ -204,7 +203,7 @@ class JourneyModelSpec
             ), Nil
           ),
           benefits = applicantBenefits,
-          paymentPreference = JourneyModel.PaymentPreference.DoNotPay,
+          paymentPreference = JourneyModel.PaymentPreference.DoNotPay(None),
           additionalInformation = Information("info")
         )
 
@@ -294,7 +293,7 @@ class JourneyModelSpec
             )
           ),
           benefits = applicantBenefits,
-          paymentPreference = JourneyModel.PaymentPreference.DoNotPay,
+          paymentPreference = JourneyModel.PaymentPreference.DoNotPay(None),
           additionalInformation = NoInformation
         )
 
@@ -387,6 +386,117 @@ class JourneyModelSpec
         }
       }
 
+      "when the applicant is claiming Child Benefit but not getting payments" - {
+
+        val baseAnswers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .set(RelationshipStatusPage, Single).success.value
+          .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
+          .set(ApplicantBenefitsPage, applicantBenefits).success.value
+          .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(EldestChildNamePage, eldestChildName).success.value
+          .set(EldestChildDateOfBirthPage, now).success.value
+
+
+        "and wants to be paid every 4 weeks" - {
+
+          "and has a suitable account" in {
+
+            val answers = baseAnswers
+              .set(WantToBePaidPage, true).success.value
+              .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks).success.value
+              .set(ApplicantHasSuitableAccountPage, true).success.value
+              .set(BankAccountHolderPage, bankAccountHolder).success.value
+              .set(BankAccountDetailsPage, bankAccountDetails).success.value
+
+            val expectedPaymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(
+              bankAccount = Some(JourneyModel.BankAccount(bankAccountHolder, bankAccountDetails)),
+              eldestChild = Some(JourneyModel.EldestChild(eldestChildName, now))
+            )
+
+            val (errors, data) = JourneyModel.from(answers).pad
+
+            errors mustBe empty
+            data.value.paymentPreference mustEqual expectedPaymentPreference
+          }
+
+          "and does not have a suitable account" in {
+
+            val answers = baseAnswers
+              .set(WantToBePaidPage, true).success.value
+              .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks).success.value
+              .set(BankAccountHolderPage, bankAccountHolder).success.value
+              .set(ApplicantHasSuitableAccountPage, false).success.value
+
+            val expectedPaymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(
+              bankAccount = None,
+              eldestChild = Some(JourneyModel.EldestChild(eldestChildName, now))
+            )
+
+            val (errors, data) = JourneyModel.from(answers).pad
+
+            errors mustBe empty
+            data.value.paymentPreference mustEqual expectedPaymentPreference
+          }
+        }
+
+        "and wants to be paid weekly" - {
+
+          "and has a suitable account" in {
+
+            val answers = baseAnswers
+              .set(WantToBePaidPage, true).success.value
+              .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
+              .set(ApplicantHasSuitableAccountPage, true).success.value
+              .set(BankAccountHolderPage, bankAccountHolder).success.value
+              .set(BankAccountDetailsPage, bankAccountDetails).success.value
+
+            val expectedPaymentPreference = JourneyModel.PaymentPreference.Weekly(
+              bankAccount = Some(JourneyModel.BankAccount(bankAccountHolder, bankAccountDetails)),
+              eldestChild = Some(JourneyModel.EldestChild(eldestChildName, now))
+            )
+
+            val (errors, data) = JourneyModel.from(answers).pad
+
+            errors mustBe empty
+            data.value.paymentPreference mustEqual expectedPaymentPreference
+          }
+
+          "and does not have a suitable account" in {
+
+            val answers = baseAnswers
+              .set(WantToBePaidPage, true).success.value
+              .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
+              .set(ApplicantHasSuitableAccountPage, false).success.value
+
+            val expectedPaymentPreference = JourneyModel.PaymentPreference.Weekly(
+              bankAccount = None,
+              eldestChild = Some(JourneyModel.EldestChild(eldestChildName, now))
+            )
+
+            val (errors, data) = JourneyModel.from(answers).pad
+
+            errors mustBe empty
+            data.value.paymentPreference mustEqual expectedPaymentPreference
+          }
+        }
+
+        "and does not want to be paid" in {
+
+          val answers = baseAnswers
+            .set(WantToBePaidPage, false).success.value
+
+          val expectedPaymentPreference = JourneyModel.PaymentPreference.DoNotPay(Some(JourneyModel.EldestChild(eldestChildName, now)))
+
+          val (errors, data) = JourneyModel.from(answers).pad
+
+          errors mustBe empty
+          data.value.paymentPreference mustEqual expectedPaymentPreference
+        }
+      }
+
       "when the applicant is not already receiving child benefit" - {
 
         val baseAnswers = UserAnswers("id")
@@ -410,7 +520,8 @@ class JourneyModelSpec
               .set(BankAccountDetailsPage, bankAccountDetails).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(
-              bankAccount = Some(JourneyModel.BankAccount(bankAccountHolder, bankAccountDetails))
+              bankAccount = Some(JourneyModel.BankAccount(bankAccountHolder, bankAccountDetails)),
+              eldestChild = None
             )
 
             val (errors, data) = JourneyModel.from(answers).pad
@@ -428,7 +539,8 @@ class JourneyModelSpec
               .set(ApplicantHasSuitableAccountPage, false).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(
-              bankAccount = None
+              bankAccount = None,
+              eldestChild = None
             )
 
             val (errors, data) = JourneyModel.from(answers).pad
@@ -450,7 +562,8 @@ class JourneyModelSpec
               .set(BankAccountDetailsPage, bankAccountDetails).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.Weekly(
-              bankAccount = Some(JourneyModel.BankAccount(bankAccountHolder, bankAccountDetails))
+              bankAccount = Some(JourneyModel.BankAccount(bankAccountHolder, bankAccountDetails)),
+              eldestChild = None
             )
 
             val (errors, data) = JourneyModel.from(answers).pad
@@ -467,7 +580,8 @@ class JourneyModelSpec
               .set(ApplicantHasSuitableAccountPage, false).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.Weekly(
-              bankAccount = None
+              bankAccount = None,
+              eldestChild = None
             )
 
             val (errors, data) = JourneyModel.from(answers).pad
@@ -482,7 +596,7 @@ class JourneyModelSpec
           val answers = baseAnswers
             .set(WantToBePaidPage, false).success.value
 
-          val expectedPaymentPreference = JourneyModel.PaymentPreference.DoNotPay
+          val expectedPaymentPreference = JourneyModel.PaymentPreference.DoNotPay(None)
 
           val (errors, data) = JourneyModel.from(answers).pad
 

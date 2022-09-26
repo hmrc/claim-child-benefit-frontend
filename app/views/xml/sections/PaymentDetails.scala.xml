@@ -16,13 +16,13 @@
     <fo:block font-size="16pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.paymentDetails")</fo:block>
 
     @{model.paymentPreference match {
-        case JourneyModel.PaymentPreference.DoNotPay =>
+        case JourneyModel.PaymentPreference.DoNotPay(maybeEldestChild) =>
             doNotPay()
 
-        case JourneyModel.PaymentPreference.Weekly(bankAccount) =>
+        case JourneyModel.PaymentPreference.Weekly(bankAccount, maybeEldestChild) =>
             weekly(bankAccount)
 
-        case JourneyModel.PaymentPreference.EveryFourWeeks(bankAccount) =>
+        case JourneyModel.PaymentPreference.EveryFourWeeks(bankAccount, maybeEldestChild) =>
             everyFourWeeks(bankAccount)
 
         case JourneyModel.PaymentPreference.ExistingAccount(eldestChild) =>

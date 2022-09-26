@@ -1,7 +1,10 @@
 
 @import views.xml.xml.sections._
 
-@this(line: Line)
+@this(
+    line: Line,
+    eldestChildSection: EldestChildSection
+)
 
 @(model: JourneyModel)(implicit messages: Messages)
 
@@ -54,5 +57,20 @@
 
     @line("pdf.currentlyReceiving", messages(s"pdf.currentlyReceiving.${model.applicant.currentlyReceivingChildBenefit.toString}"))
 
+    @{model.paymentPreference match {
+        case JourneyModel.PaymentPreference.DoNotPay(maybeEldestChild) =>
+            maybeEldestChild.map(x => eldestChildSection(x))
 
+        case JourneyModel.PaymentPreference.Weekly(_, maybeEldestChild) =>
+            maybeEldestChild.map(x => eldestChildSection(x))
+
+        case JourneyModel.PaymentPreference.EveryFourWeeks(_, maybeEldestChild) =>
+            maybeEldestChild.map(x => eldestChildSection(x))
+
+        case JourneyModel.PaymentPreference.ExistingAccount(eldestChild) =>
+            eldestChildSection(eldestChild)
+
+        case JourneyModel.PaymentPreference.ExistingFrequency(_, eldestChild) =>
+            eldestChildSection(eldestChild)
+    }}
 </fo:block-container>
