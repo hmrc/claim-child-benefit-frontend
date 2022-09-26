@@ -5,7 +5,8 @@
     main: Main,
     declaration: Declaration,
     instructions: Instructions,
-    addressLabel: AddressLabel
+    addressLabel: AddressLabel,
+    additionalInfoPage: AdditionalInfoPage
 )
 
 @(model: JourneyModel)(implicit messages: Messages)
@@ -15,12 +16,16 @@
 
     @main(model)
 
+    @{model.additionalInformation match {
+        case info: AdditionalInformation.Information => additionalInfoPage(info.value)
+    }}
+
     @declaration(model)
 
     @instructions(model)
 
-    @if(model.anyDocumentsRequired) {
+    @{if(model.anyDocumentsRequired) {
         addressLabel(model)
-    }
+    }}
 
 </fo:root>

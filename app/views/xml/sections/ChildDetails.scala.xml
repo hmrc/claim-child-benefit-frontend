@@ -56,7 +56,7 @@
         <fo:block margin-bottom="3mm">
             <fo:block font-weight="bold">@messages("pdf.documents")</fo:block>
                 @child.requiredDocuments.map { x =>
-            <fo:block width="8cm" wrap-option="wrap">@(messages(s"pdf.documents.${x.toString}")))</fo:block>
+            <fo:block width="8cm" wrap-option="wrap">@(messages(s"pdf.documents.${x.toString}"))</fo:block>
             }
         </fo:block>
     }

@@ -1,6 +1,6 @@
 @this()
 
-@(model: JourneyModel)(implicit messages: Messages)
+@()(implicit messages: Messages)
 
 <fo:static-content flow-name="xsl-region-before">
     <fo:block>

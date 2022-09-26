@@ -8,7 +8,7 @@
 
 @(model: JourneyModel)(implicit messages: Messages)
 
-<fo:block-container margin-bottom="1cm" keep-together.within-column="always" wrap-option="wrap">
+<fo:block-container margin-bottom="1cm" wrap-option="wrap" page-break-after="always">
 
     <fo:block font-size="16pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.personalDetails")</fo:block>
 

@@ -12,10 +12,9 @@
         </fo:block>
     </fo:static-content>
 
-
     <fo:flow flow-name="xsl-region-body" font-size="12pt" text-align="left">
         <fo:block margin-right="6cm" padding-left="2mm" padding-top="5mm" padding-bottom="5mm" margin-bottom="8mm" border="0.5mm solid black">
-            <fo:block margin-bottom="3mm">@model.applicant.name.display</fo:block>
+            <fo:block margin-bottom="3mm" font-size="14pt">@model.applicant.name.display</fo:block>
             @for(line <- model.applicant.currentAddress.lines) {
                 <fo:block margin-bottom="3mm" font-size="14pt">@line</fo:block>
             }
