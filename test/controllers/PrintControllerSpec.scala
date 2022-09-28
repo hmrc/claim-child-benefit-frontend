@@ -83,6 +83,7 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
       .set(WantToBePaidPage, false).success.value
       .set(RelationshipStatusPage, RelationshipStatus.Single).success.value
       .set(AdditionalInformationPage, NoInformation).success.value
+      .set(AlwaysLivedInUkPage, true).success.value
 
   "Print Controller" - {
 

@@ -14,7 +14,7 @@
 
 <fo:page-sequence master-reference="main" initial-page-number="1">
 
-    @mainHeader(model)
+    @mainHeader()
 
     @mainFooter()
 

@@ -5,8 +5,7 @@
     doNotPay: DoNotPay,
     weekly: Weekly,
     everyFourWeeks: EveryFourWeeks,
-    existingAccount: ExistingAccount,
-    existingFrequency: ExistingFrequency
+    existingAccount: ExistingAccount
 )
 
 @(model: JourneyModel)(implicit messages: Messages)
@@ -16,19 +15,16 @@
     <fo:block font-size="16pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.paymentDetails")</fo:block>
 
     @{model.paymentPreference match {
-        case JourneyModel.PaymentPreference.DoNotPay =>
+        case JourneyModel.PaymentPreference.DoNotPay(_) =>
             doNotPay()
 
-        case JourneyModel.PaymentPreference.Weekly(bankAccount) =>
+        case JourneyModel.PaymentPreference.Weekly(bankAccount, _) =>
             weekly(bankAccount)
 
-        case JourneyModel.PaymentPreference.EveryFourWeeks(bankAccount) =>
+        case JourneyModel.PaymentPreference.EveryFourWeeks(bankAccount, _) =>
             everyFourWeeks(bankAccount)
 
-        case JourneyModel.PaymentPreference.ExistingAccount(eldestChild) =>
-            existingAccount(eldestChild)
-
-        case JourneyModel.PaymentPreference.ExistingFrequency(bankAccount, eldestChild) =>
-            existingFrequency(bankAccount, eldestChild)
+        case JourneyModel.PaymentPreference.ExistingAccount(eldestChild, frequency) =>
+            existingAccount(eldestChild, frequency)
     }}
 </fo:block-container>

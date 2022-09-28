@@ -6,6 +6,8 @@
 
 @line("pdf.accountHolder", messages(s"pdf.accountHolder.${bankAccount.holder.toString}"))
 
+@line("pdf.bankName", bankAccount.details.bankName)
+
 @line("pdf.sortCode", bankAccount.details.sortCode)
 
 @line("pdf.accountNumber", bankAccount.details.accountNumber)

@@ -20,7 +20,7 @@ import audit.DownloadAuditEvent._
 import cats.data.NonEmptyList
 import generators.ModelGenerators
 import models.AdditionalInformation.Information
-import models.{JourneyModel, PartnerClaimingChildBenefit}
+import models.{CurrentlyReceivingChildBenefit, JourneyModel, PartnerClaimingChildBenefit}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
 import org.scalacheck.Arbitrary.arbitrary
@@ -65,7 +65,9 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           bestTimeToContact = Set(models.BestTimeToContact.Morning, models.BestTimeToContact.Afternoon, models.BestTimeToContact.Evening),
           nationality = "applicant nationality",
           employmentStatus = Set(models.EmploymentStatus.Employed, models.EmploymentStatus.SelfEmployed),
-          memberOfHMForcesOrCivilServantAbroad = false
+          alwaysLivedInUk = false,
+          memberOfHMForcesOrCivilServantAbroad = Some(false),
+          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
         ),
         relationship = JourneyModel.Relationship(
           status = models.RelationshipStatus.Cohabiting,
@@ -76,7 +78,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             nationality = "partner nationality",
             nationalInsuranceNumber = Some(partnerNino),
             employmentStatus = Set(models.EmploymentStatus.Employed, models.EmploymentStatus.SelfEmployed),
-            memberOfHMForcesOrCivilServantAbroad = false,
+            memberOfHMForcesOrCivilServantAbroad = Some(false),
             currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments,
             eldestChild = Some(JourneyModel.EldestChild(
               name        = models.ChildName("partner eldest child first", Some("partner eldest child middle"), "partner eldest child last"),
@@ -102,15 +104,15 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           ), Nil
         ),
         benefits = Set(models.Benefits.IncomeSupport, models.Benefits.JobseekersAllowance),
-        paymentPreference = JourneyModel.PaymentPreference.ExistingFrequency(
+        paymentPreference = JourneyModel.PaymentPreference.Weekly(
           bankAccount = Some(JourneyModel.BankAccount(
             holder = models.BankAccountHolder.Applicant,
             details = models.BankAccountDetails("name on account", "bank name", "000000", "00000000", Some("roll number"))
           )),
-          eldestChild        = JourneyModel.EldestChild(
+          eldestChild = Some(JourneyModel.EldestChild(
             name        = models.ChildName("applicant eldest first", Some("applicant eldest middle"), "applicant eldest last"),
             dateOfBirth = now
-          )
+          ))
         ),
         additionalInformation = Information("info")
       )
@@ -127,7 +129,9 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           bestTimeToContact = Set("morning", "afternoon", "evening"),
           nationality = "applicant nationality",
           employmentStatus = Set("employed", "selfEmployed"),
-          memberOfHMForcesOrCivilServantAbroad = false
+          alwaysLivedInUk = false,
+          memberOfHMForcesOrCivilServantAbroad = Some(false),
+          currentlyClaimingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming.toString
         ),
         relationship = Relationship(
           status = "cohabiting",
@@ -138,7 +142,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             nationality = "partner nationality",
             nationalInsuranceNumber = Some(partnerNino),
             employmentStatus = Set("employed", "selfEmployed"),
-            memberOfHMForcesOrCivilServantAbroad = false,
+            memberOfHMForcesOrCivilServantAbroad = Some(false),
             currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments.toString,
             eldestChild = Some(EldestChild(
               name        = ChildName("partner eldest child first", Some("partner eldest child middle"), "partner eldest child last"),
@@ -164,12 +168,12 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           )
         ),
         benefits = Set("incomeSupport", "jobseekersAllowance"),
-        paymentPreference = ExistingFrequency(
+        paymentPreference = Weekly(
           bankAccount = Some(BankAccount("applicant", "name on account", "bank name", "000000", "00000000", Some("roll number"))),
-          eldestChild        = EldestChild(
+          eldestChild = Some(EldestChild(
             name        = ChildName("applicant eldest first", Some("applicant eldest middle"), "applicant eldest last"),
             dateOfBirth = now
-          )
+          ))
         ),
         "info"
       )

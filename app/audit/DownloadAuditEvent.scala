@@ -17,7 +17,7 @@
 package audit
 
 import audit.DownloadAuditEvent._
-import models.{Country, JourneyModel}
+import models.{Country, JourneyModel, PaymentFrequency}
 import play.api.libs.json.{JsString, Json, Writes}
 
 import java.time.LocalDate
@@ -46,7 +46,9 @@ object DownloadAuditEvent {
         bestTimeToContact                    = model.applicant.bestTimeToContact.map(_.toString),
         nationality                          = model.applicant.nationality,
         employmentStatus                     = model.applicant.employmentStatus.map(_.toString),
-        memberOfHMForcesOrCivilServantAbroad = model.applicant.memberOfHMForcesOrCivilServantAbroad
+        alwaysLivedInUk                      = model.applicant.alwaysLivedInUk,
+        memberOfHMForcesOrCivilServantAbroad = model.applicant.memberOfHMForcesOrCivilServantAbroad,
+        currentlyClaimingChildBenefit        = model.applicant.currentlyReceivingChildBenefit.toString
       ),
       relationship = Relationship(
         status  = model.relationship.status.toString,
@@ -85,20 +87,23 @@ object DownloadAuditEvent {
       },
       benefits          = model.benefits.map(_.toString),
       paymentPreference = model.paymentPreference match {
-        case JourneyModel.PaymentPreference.Weekly(bankAccount) =>
-          Weekly(bankAccount.map(convertBankAccount))
+        case JourneyModel.PaymentPreference.Weekly(bankAccount, eldestChild) =>
+          Weekly(
+            bankAccount.map(convertBankAccount),
+            eldestChild.map(convertEldestChild)
+          )
 
-        case JourneyModel.PaymentPreference.EveryFourWeeks(bankAccount) =>
-          EveryFourWeeks(bankAccount.map(convertBankAccount))
+        case JourneyModel.PaymentPreference.EveryFourWeeks(bankAccount, eldestChild) =>
+          EveryFourWeeks(
+            bankAccount.map(convertBankAccount),
+            eldestChild.map(convertEldestChild)
+          )
 
-        case JourneyModel.PaymentPreference.ExistingAccount(eldestChild) =>
-          ExistingAccount(convertEldestChild(eldestChild))
+        case JourneyModel.PaymentPreference.ExistingAccount(eldestChild, frequency) =>
+          ExistingAccount(convertEldestChild(eldestChild), frequency.toString)
 
-        case JourneyModel.PaymentPreference.ExistingFrequency(bankAccount, eldestChild) =>
-          ExistingFrequency(bankAccount.map(convertBankAccount), convertEldestChild(eldestChild))
-
-        case JourneyModel.PaymentPreference.DoNotPay =>
-          DoNotPay
+        case JourneyModel.PaymentPreference.DoNotPay(eldestChild) =>
+          DoNotPay(eldestChild.map(convertEldestChild))
       },
       additionalInformation = model.additionalInformation.toString
     )
@@ -203,7 +208,9 @@ object DownloadAuditEvent {
                                              bestTimeToContact: Set[String],
                                              nationality: String,
                                              employmentStatus: Set[String],
-                                             memberOfHMForcesOrCivilServantAbroad: Boolean
+                                             alwaysLivedInUk: Boolean,
+                                             memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
+                                             currentlyClaimingChildBenefit: String
                                            )
   object Applicant {
     implicit lazy val writes: Writes[Applicant] = Json.writes
@@ -216,7 +223,7 @@ object DownloadAuditEvent {
                                            currentlyClaimingChildBenefit: String,
                                            nationalInsuranceNumber: Option[String],
                                            employmentStatus: Set[String],
-                                           memberOfHMForcesOrCivilServantAbroad: Boolean,
+                                           memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
                                            eldestChild: Option[EldestChild]
                                          )
   object Partner {
@@ -256,7 +263,7 @@ object DownloadAuditEvent {
 
   private[audit] sealed trait PaymentPreference
 
-  private[audit] final case class Weekly(bankAccount: Option[BankAccount]) extends PaymentPreference
+  private[audit] final case class Weekly(bankAccount: Option[BankAccount], eldestChild: Option[EldestChild]) extends PaymentPreference
   object Weekly {
     implicit lazy val writes: Writes[Weekly] = Writes {
       x =>
@@ -264,13 +271,19 @@ object DownloadAuditEvent {
         val accountJsonValue = x.bankAccount.map(Json.toJson(_)).getOrElse(JsString("no suitable account"))
         val accountJson      = Json.obj("account" -> accountJsonValue)
 
+        val eldestChildJson =
+          x.eldestChild
+            .map(child => Json.obj("eldestChild" -> Json.toJson(child)))
+            .getOrElse(Json.obj())
+
         Json.obj(
-          "frequency" -> "weekly"
-        ) ++ accountJson
+          "wantsToBePaid" -> true,
+          "frequency"     -> PaymentFrequency.Weekly.toString
+        ) ++ accountJson ++ eldestChildJson
     }
   }
 
-  private[audit] final case class EveryFourWeeks(bankAccount: Option[BankAccount]) extends PaymentPreference
+  private[audit] final case class EveryFourWeeks(bankAccount: Option[BankAccount], eldestChild: Option[EldestChild]) extends PaymentPreference
   object EveryFourWeeks {
     implicit lazy val writes: Writes[EveryFourWeeks] = Writes {
       x =>
@@ -278,48 +291,51 @@ object DownloadAuditEvent {
         val accountJsonValue = x.bankAccount.map(Json.toJson(_)).getOrElse(JsString("no suitable account"))
         val accountJson      = Json.obj("account" -> accountJsonValue)
 
+        val eldestChildJson =
+          x.eldestChild
+            .map(child => Json.obj("eldestChild" -> Json.toJson(child)))
+            .getOrElse(Json.obj())
+
         Json.obj(
-          "frequency" -> "every four weeks"
-        ) ++ accountJson
+          "wantsToBePaid" -> true,
+          "frequency"     -> PaymentFrequency.EveryFourWeeks.toString
+        ) ++ accountJson ++ eldestChildJson
     }
   }
 
-  private[audit] final case class  ExistingAccount(eldestChild: EldestChild) extends PaymentPreference
+  private[audit] final case class  ExistingAccount(eldestChild: EldestChild, frequency: String) extends PaymentPreference
   object ExistingAccount {
     implicit lazy val writes: Writes[ExistingAccount] = Writes {
       x =>
         Json.obj(
-          "frequency"   -> "use existing frequency",
-          "account"     -> "use existing account",
-          "eldestChild" -> Json.toJson(x.eldestChild)
+          "wantsToBePaid" -> true,
+          "frequency"     -> x.frequency,
+          "account"       -> "use existing account",
+          "eldestChild"   -> Json.toJson(x.eldestChild)
         )
     }
   }
 
-  private[audit] final case class  ExistingFrequency(bankAccount: Option[BankAccount], eldestChild: EldestChild) extends PaymentPreference
-  object ExistingFrequency {
-    implicit lazy val writes: Writes[ExistingFrequency] = Writes {
+  private[audit] final case class DoNotPay(eldestChild: Option[EldestChild]) extends PaymentPreference
+  object DoNotPay {
+    implicit lazy val writes: Writes[DoNotPay] = Writes {
       x =>
-        val accountJsonValue = x.bankAccount.map(Json.toJson(_)).getOrElse(JsString("no suitable account"))
-        val accountJson      = Json.obj("account" -> accountJsonValue)
 
-        Json.obj(
-          "frequency"   -> "use existing frequency",
-          "eldestChild" -> Json.toJson(x.eldestChild)
-        ) ++ accountJson
+      val eldestChildJson = x.eldestChild
+        .map(child => Json.obj("eldestChild" -> Json.toJson(child)))
+        .getOrElse(Json.obj())
+
+        Json.obj("wantsToBePaid" -> false) ++ eldestChildJson
     }
   }
-
-  private[audit] final case object DoNotPay extends PaymentPreference
 
   object PaymentPreference {
 
     implicit val writes: Writes[PaymentPreference] = Writes {
-      case weekly: Weekly                       => Json.toJson(weekly)(Weekly.writes)
-      case everyFourWeeks: EveryFourWeeks       => Json.toJson(everyFourWeeks)(EveryFourWeeks.writes)
-      case existingAccount: ExistingAccount     => Json.toJson(existingAccount)(ExistingAccount.writes)
-      case existingFrequency: ExistingFrequency => Json.toJson(existingFrequency)(ExistingFrequency.writes)
-      case DoNotPay                             => JsString("Do not pay")
+      case weekly: Weekly                   => Json.toJson(weekly)(Weekly.writes)
+      case everyFourWeeks: EveryFourWeeks   => Json.toJson(everyFourWeeks)(EveryFourWeeks.writes)
+      case existingAccount: ExistingAccount => Json.toJson(existingAccount)(ExistingAccount.writes)
+      case doNotPay: DoNotPay               => Json.toJson(doNotPay)(DoNotPay.writes)
     }
   }
 
