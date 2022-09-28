@@ -19,6 +19,7 @@ package controllers
 import audit.AuditService
 import base.SpecBase
 import com.dmanchester.playfop.sapi.PlayFop
+import config.FeatureFlags
 import generators.ModelGenerators
 import models.AdditionalInformation.NoInformation
 import models._
@@ -140,17 +141,20 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
       }
     }
 
-    "must return OK and audit the download for onDownload when user answers are complete" in {
+    "must return OK and audit the download for onDownload when user answers are complete and auditing is enabled" in {
 
       val mockAuditService = mock[AuditService]
       val mockFop = mock[PlayFop]
+      val mockFeatureFlags = mock[FeatureFlags]
       when(mockFop.processTwirlXml(any(), any(), any(), any())) thenReturn "hello".getBytes
+      when(mockFeatureFlags.auditDownload) thenReturn true
 
       val application =
         applicationBuilder(userAnswers = Some(completeAnswers))
           .overrides(
             bind[PlayFop].toInstance(mockFop),
-            bind[AuditService].toInstance(mockAuditService)
+            bind[AuditService].toInstance(mockAuditService),
+            bind[FeatureFlags].toInstance(mockFeatureFlags)
           )
           .build()
 
@@ -163,6 +167,35 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
         contentAsBytes(result).decodeString(Charset.defaultCharset()) mustEqual "hello"
 
         verify(mockAuditService, times(1)).auditDownload(any())(any())
+      }
+    }
+
+    "must return OK and not audit the download for onDownload when user answers are complete and auditing is disabled" in {
+
+      val mockAuditService = mock[AuditService]
+      val mockFop = mock[PlayFop]
+      val mockFeatureFlags = mock[FeatureFlags]
+      when(mockFop.processTwirlXml(any(), any(), any(), any())) thenReturn "hello".getBytes
+      when(mockFeatureFlags.auditDownload) thenReturn false
+
+      val application =
+        applicationBuilder(userAnswers = Some(completeAnswers))
+          .overrides(
+            bind[PlayFop].toInstance(mockFop),
+            bind[AuditService].toInstance(mockAuditService),
+            bind[FeatureFlags].toInstance(mockFeatureFlags)
+          )
+          .build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.PrintController.onDownload.url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual OK
+        contentAsBytes(result).decodeString(Charset.defaultCharset()) mustEqual "hello"
+
+        verify(mockAuditService, never()).auditDownload(any())(any())
       }
     }
 

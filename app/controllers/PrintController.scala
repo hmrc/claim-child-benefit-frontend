@@ -18,6 +18,7 @@ package controllers
 
 import audit.AuditService
 import com.dmanchester.playfop.sapi.PlayFop
+import config.FeatureFlags
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import logging.Logging
 import models.{JourneyModel, UserAnswers}
@@ -40,7 +41,8 @@ class PrintController @Inject()(
                                  fop: PlayFop,
                                  template: PrintTemplate,
                                  noDocumentsView: PrintNoDocumentsRequiredView,
-                                 documentsView: PrintDocumentsRequiredView
+                                 documentsView: PrintDocumentsRequiredView,
+                                 featureFlags: FeatureFlags
                                ) extends FrontendBaseController with I18nSupport with Logging {
 
 
@@ -76,7 +78,11 @@ class PrintController @Inject()(
       withJourneyModel(request.userAnswers) {
         journeyModel =>
           val pdf = fop.processTwirlXml(template.render(journeyModel, implicitly), MimeConstants.MIME_PDF, foUserAgentBlock = userAgentBlock)
-          auditService.auditDownload(journeyModel)
+
+          if (featureFlags.auditDownload) {
+            auditService.auditDownload(journeyModel)
+          }
+
           Ok(pdf).as("application/octet-stream").withHeaders(CONTENT_DISPOSITION -> "attachment; filename=claim-child-benefit-by-post.pdf")
       }
   }
