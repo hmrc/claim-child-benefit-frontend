@@ -21,7 +21,9 @@
 
     @line("pdf.employmentStatus", model.employmentStatus.map(x => messages(s"employmentStatus.${x.toString}")).mkString(", "))
 
-    @line("pdf.hmfOrCivilServant", booleanToYesNo(model.memberOfHMForcesOrCivilServantAbroad))
+    @model.memberOfHMForcesOrCivilServantAbroad.map { answer =>
+        @line("pdf.hmfOrCivilServant", booleanToYesNo(answer))
+    }
 
     @line("pdf.claimingChildBenefit", messages(s"currentlyReceivingChildBenefit.${model.currentlyClaimingChildBenefit.toString}"))
 

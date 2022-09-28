@@ -65,7 +65,8 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           bestTimeToContact = Set(models.BestTimeToContact.Morning, models.BestTimeToContact.Afternoon, models.BestTimeToContact.Evening),
           nationality = "applicant nationality",
           employmentStatus = Set(models.EmploymentStatus.Employed, models.EmploymentStatus.SelfEmployed),
-          memberOfHMForcesOrCivilServantAbroad = false,
+          alwaysLivedInUk = false,
+          memberOfHMForcesOrCivilServantAbroad = Some(false),
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
         ),
         relationship = JourneyModel.Relationship(
@@ -77,7 +78,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             nationality = "partner nationality",
             nationalInsuranceNumber = Some(partnerNino),
             employmentStatus = Set(models.EmploymentStatus.Employed, models.EmploymentStatus.SelfEmployed),
-            memberOfHMForcesOrCivilServantAbroad = false,
+            memberOfHMForcesOrCivilServantAbroad = Some(false),
             currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments,
             eldestChild = Some(JourneyModel.EldestChild(
               name        = models.ChildName("partner eldest child first", Some("partner eldest child middle"), "partner eldest child last"),
@@ -128,7 +129,8 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           bestTimeToContact = Set("morning", "afternoon", "evening"),
           nationality = "applicant nationality",
           employmentStatus = Set("employed", "selfEmployed"),
-          memberOfHMForcesOrCivilServantAbroad = false,
+          alwaysLivedInUk = false,
+          memberOfHMForcesOrCivilServantAbroad = Some(false),
           currentlyClaimingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming.toString
         ),
         relationship = Relationship(
@@ -140,7 +142,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             nationality = "partner nationality",
             nationalInsuranceNumber = Some(partnerNino),
             employmentStatus = Set("employed", "selfEmployed"),
-            memberOfHMForcesOrCivilServantAbroad = false,
+            memberOfHMForcesOrCivilServantAbroad = Some(false),
             currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments.toString,
             eldestChild = Some(EldestChild(
               name        = ChildName("partner eldest child first", Some("partner eldest child middle"), "partner eldest child last"),

@@ -46,6 +46,7 @@ object DownloadAuditEvent {
         bestTimeToContact                    = model.applicant.bestTimeToContact.map(_.toString),
         nationality                          = model.applicant.nationality,
         employmentStatus                     = model.applicant.employmentStatus.map(_.toString),
+        alwaysLivedInUk                      = model.applicant.alwaysLivedInUk,
         memberOfHMForcesOrCivilServantAbroad = model.applicant.memberOfHMForcesOrCivilServantAbroad,
         currentlyClaimingChildBenefit        = model.applicant.currentlyReceivingChildBenefit.toString
       ),
@@ -207,7 +208,8 @@ object DownloadAuditEvent {
                                              bestTimeToContact: Set[String],
                                              nationality: String,
                                              employmentStatus: Set[String],
-                                             memberOfHMForcesOrCivilServantAbroad: Boolean,
+                                             alwaysLivedInUk: Boolean,
+                                             memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
                                              currentlyClaimingChildBenefit: String
                                            )
   object Applicant {
@@ -221,7 +223,7 @@ object DownloadAuditEvent {
                                            currentlyClaimingChildBenefit: String,
                                            nationalInsuranceNumber: Option[String],
                                            employmentStatus: Set[String],
-                                           memberOfHMForcesOrCivilServantAbroad: Boolean,
+                                           memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
                                            eldestChild: Option[EldestChild]
                                          )
   object Partner {

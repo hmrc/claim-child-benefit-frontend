@@ -74,7 +74,8 @@ object JourneyModel {
                               bestTimeToContact: Set[BestTimeToContact],
                               nationality: String,
                               employmentStatus: Set[EmploymentStatus],
-                              memberOfHMForcesOrCivilServantAbroad: Boolean,
+                              alwaysLivedInUk: Boolean,
+                              memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
                               currentlyReceivingChildBenefit: CurrentlyReceivingChildBenefit
                             )
 
@@ -84,7 +85,7 @@ object JourneyModel {
                             nationality: String,
                             nationalInsuranceNumber: Option[String],
                             employmentStatus: Set[EmploymentStatus],
-                            memberOfHMForcesOrCivilServantAbroad: Boolean,
+                            memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
                             currentlyClaimingChildBenefit: PartnerClaimingChildBenefit,
                             eldestChild: Option[EldestChild]
                           )
@@ -250,10 +251,10 @@ object JourneyModel {
         case false => Ior.Right(Nil)
       }
 
-    def getHmForces: IorNec[Query, Boolean] =
+    def getHmForces: IorNec[Query, Option[Boolean]] =
       answers.get(ApplicantIsHmfOrCivilServantPage)
-        .map(Ior.Right(_))
-        .getOrElse(Ior.Right(false))
+        .map(x => Ior.Right(Some(x)))
+        .getOrElse(Ior.Right(None))
 
     (
       answers.getIor(ApplicantNamePage),
@@ -266,6 +267,7 @@ object JourneyModel {
       answers.getIor(BestTimeToContactPage),
       answers.getIor(ApplicantNationalityPage),
       answers.getIor(ApplicantEmploymentStatusPage),
+      answers.getIor(AlwaysLivedInUkPage),
       getHmForces,
       answers.getIor(CurrentlyReceivingChildBenefitPage)
     ).parMapN(Applicant.apply)
@@ -297,10 +299,10 @@ object JourneyModel {
       }
     }
 
-    def getHmForces: IorNec[Query, Boolean] =
+    def getHmForces: IorNec[Query, Option[Boolean]] =
       answers.get(PartnerIsHmfOrCivilServantPage)
-        .map(Ior.Right(_))
-        .getOrElse(Ior.Right(false))
+        .map(x => Ior.Right(Some(x)))
+        .getOrElse(Ior.Right(None))
 
     (
       answers.getIor(PartnerNamePage),

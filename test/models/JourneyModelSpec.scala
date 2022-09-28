@@ -111,7 +111,8 @@ class JourneyModelSpec
             bestTimeToContact = bestTimes,
             nationality = applicantNationality,
             employmentStatus = applicantEmployment,
-            memberOfHMForcesOrCivilServantAbroad = false,
+            alwaysLivedInUk = true,
+            memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
           ),
           relationship = JourneyModel.Relationship(Single, None, None),
@@ -155,7 +156,6 @@ class JourneyModelSpec
           .set(PartnerDateOfBirthPage, now).success.value
           .set(PartnerNationalityPage, partnerNationality).success.value
           .set(PartnerEmploymentStatusPage, partnerEmployment).success.value
-          .set(PartnerIsHmfOrCivilServantPage, false).success.value
           .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming).success.value
           .set(AdditionalInformationPage, Information("info")).success.value
 
@@ -171,7 +171,8 @@ class JourneyModelSpec
             bestTimeToContact = bestTimes,
             nationality = applicantNationality,
             employmentStatus = applicantEmployment,
-            memberOfHMForcesOrCivilServantAbroad = false,
+            alwaysLivedInUk = true,
+            memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
           ),
           relationship = JourneyModel.Relationship(
@@ -183,7 +184,7 @@ class JourneyModelSpec
               nationality = partnerNationality,
               nationalInsuranceNumber = None,
               employmentStatus = partnerEmployment,
-              memberOfHMForcesOrCivilServantAbroad = false,
+              memberOfHMForcesOrCivilServantAbroad = None,
               currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
               eldestChild = None
             ))
@@ -248,7 +249,8 @@ class JourneyModelSpec
             bestTimeToContact = bestTimes,
             nationality = applicantNationality,
             employmentStatus = applicantEmployment,
-            memberOfHMForcesOrCivilServantAbroad = false,
+            alwaysLivedInUk = true,
+            memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
           ),
           relationship = JourneyModel.Relationship(
@@ -260,7 +262,7 @@ class JourneyModelSpec
               nationality = partnerNationality,
               nationalInsuranceNumber = None,
               employmentStatus = partnerEmployment,
-              memberOfHMForcesOrCivilServantAbroad = false,
+              memberOfHMForcesOrCivilServantAbroad = None,
               currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
               eldestChild = None
             ))
@@ -659,7 +661,8 @@ class JourneyModelSpec
           bestTimeToContact = bestTimes,
           nationality = applicantNationality,
           employmentStatus = applicantEmployment,
-          memberOfHMForcesOrCivilServantAbroad = false,
+          alwaysLivedInUk = true,
+          memberOfHMForcesOrCivilServantAbroad = None,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
         )
 
@@ -693,7 +696,8 @@ class JourneyModelSpec
           bestTimeToContact = bestTimes,
           nationality = applicantNationality,
           employmentStatus = applicantEmployment,
-          memberOfHMForcesOrCivilServantAbroad = false,
+          alwaysLivedInUk = true,
+          memberOfHMForcesOrCivilServantAbroad = None,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
         )
 
@@ -726,7 +730,8 @@ class JourneyModelSpec
           bestTimeToContact = bestTimes,
           nationality = applicantNationality,
           employmentStatus = applicantEmployment,
-          memberOfHMForcesOrCivilServantAbroad = false,
+          alwaysLivedInUk = true,
+          memberOfHMForcesOrCivilServantAbroad = None,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
         )
 
@@ -761,7 +766,8 @@ class JourneyModelSpec
             bestTimeToContact = bestTimes,
             nationality = applicantNationality,
             employmentStatus = applicantEmployment,
-            memberOfHMForcesOrCivilServantAbroad = false,
+            alwaysLivedInUk = true,
+            memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
           )
 
@@ -794,7 +800,8 @@ class JourneyModelSpec
             bestTimeToContact = bestTimes,
             nationality = applicantNationality,
             employmentStatus = applicantEmployment,
-            memberOfHMForcesOrCivilServantAbroad = false,
+            alwaysLivedInUk = true,
+            memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
           )
 
@@ -824,7 +831,7 @@ class JourneyModelSpec
           nationality = partnerNationality,
           nationalInsuranceNumber = Some(partnerNino.value),
           employmentStatus = partnerEmployment,
-          memberOfHMForcesOrCivilServantAbroad = false,
+          memberOfHMForcesOrCivilServantAbroad = None,
           currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
           eldestChild = None
         )
@@ -855,7 +862,7 @@ class JourneyModelSpec
           nationality = partnerNationality,
           nationalInsuranceNumber = None,
           employmentStatus = partnerEmployment,
-          memberOfHMForcesOrCivilServantAbroad = false,
+          memberOfHMForcesOrCivilServantAbroad = None,
           currentlyClaimingChildBenefit = partnerClaiming,
           eldestChild = Some(JourneyModel.EldestChild(partnerEldestChildName, now))
         )
@@ -886,7 +893,7 @@ class JourneyModelSpec
           nationality = partnerNationality,
           nationalInsuranceNumber = None,
           employmentStatus = partnerEmployment,
-          memberOfHMForcesOrCivilServantAbroad = false,
+          memberOfHMForcesOrCivilServantAbroad = None,
           currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments,
           eldestChild = Some(JourneyModel.EldestChild(partnerEldestChildName, now))
         )
@@ -1136,14 +1143,14 @@ class JourneyModelSpec
           .withMinimalSingleIncomeDetails
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
-          .set(AlwaysLivedInUkPage, true).success.value
+          .set(AlwaysLivedInUkPage, false).success.value
           .set(ApplicantIsHmfOrCivilServantPage, true).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
         errors mustBe empty
-        data.value.applicant.memberOfHMForcesOrCivilServantAbroad mustEqual true
+        data.value.applicant.memberOfHMForcesOrCivilServantAbroad.value mustEqual true
       }
 
       "when the applicant's partner is HM Forces or a civil servant abroad" in {
@@ -1157,7 +1164,7 @@ class JourneyModelSpec
           .set(RelationshipStatusPage, Married).success.value
           .set(ApplicantOrPartnerIncomePage, Income.BelowLowerThreshold).success.value
           .set(ApplicantOrPartnerBenefitsPage, applicantBenefits).success.value
-          .set(AlwaysLivedInUkPage, true).success.value
+          .set(AlwaysLivedInUkPage, false).success.value
           .set(ApplicantIsHmfOrCivilServantPage, false).success.value
           .set(PartnerIsHmfOrCivilServantPage, true).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
@@ -1165,8 +1172,8 @@ class JourneyModelSpec
         val (errors, data) = JourneyModel.from(answers).pad
 
         errors mustBe empty
-        data.value.applicant.memberOfHMForcesOrCivilServantAbroad mustEqual false
-        data.value.relationship.partner.value.memberOfHMForcesOrCivilServantAbroad mustEqual true
+        data.value.applicant.memberOfHMForcesOrCivilServantAbroad.value mustEqual false
+        data.value.relationship.partner.value.memberOfHMForcesOrCivilServantAbroad.value mustEqual true
       }
     }
 
@@ -1700,6 +1707,7 @@ class JourneyModelSpec
 
     def withMinimalApplicantDetails: UserAnswers =
       answers
+        .set(AlwaysLivedInUkPage, true).success.value
         .set(ApplicantNamePage, applicantName).success.value
         .set(ApplicantHasPreviousFamilyNamePage, false).success.value
         .set(ApplicantNinoKnownPage, false).success.value

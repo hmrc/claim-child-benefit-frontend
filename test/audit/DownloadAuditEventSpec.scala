@@ -146,12 +146,13 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
     }
   }
 
-  "Existing account payment preference must serialise to JSON" - {
+  "Existing account payment preference must serialise to JSON" in {
 
     val preference = ExistingAccount(EldestChild(ChildName("first", None, "last"), dateOfBirth), PaymentFrequency.Weekly.toString)
     val json = Json.toJson(preference)
 
     json mustEqual Json.obj(
+      "wantsToBePaid" -> true,
       "eldestChild" -> Json.obj(
         "name" -> Json.obj(
           "firstName" -> "first",
@@ -159,7 +160,8 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
         ),
         "dateOfBirth" -> "2020-12-31"
       ),
-      "frequency" -> PaymentFrequency.Weekly.toString
+      "frequency" -> PaymentFrequency.Weekly.toString,
+      "account" -> "use existing account"
     )
 
   }

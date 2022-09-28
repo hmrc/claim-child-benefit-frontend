@@ -31,9 +31,11 @@
 
     @line("pdf.nationality", model.applicant.nationality)
 
-    @line("pdf.alwaysLivedInUk", messages("site.yes"))
+    @line("pdf.alwaysLivedInUk", booleanToYesNo(model.applicant.alwaysLivedInUk))
 
-    @line("pdf.hmfOrCivilServant", booleanToYesNo(model.applicant.memberOfHMForcesOrCivilServantAbroad))
+    @model.applicant.memberOfHMForcesOrCivilServantAbroad.map { answer =>
+        @line("pdf.hmfOrCivilServant", booleanToYesNo(answer))
+    }
 
     @if(model.applicant.previousFamilyNames.nonEmpty) {
         <fo:block margin-bottom="3mm">
