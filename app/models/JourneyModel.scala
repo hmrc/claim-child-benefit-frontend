@@ -370,6 +370,21 @@ object JourneyModel {
         answers.getIor(EldestChildDateOfBirthPage)
       ).parMapN(EldestChild.apply)
 
+    def getWeeklyOrEveryFourWeeksWithChild: IorNec[Query, PaymentPreference] =
+      answers.get(PaymentFrequencyPage) match {
+        case Some(PaymentFrequency.Weekly) =>
+          (
+            getBankAccount,
+            getEldestChild
+            ).parMapN((bank, child) => Weekly(bank, Some(child)))
+
+        case _ =>
+          (
+            getBankAccount,
+            getEldestChild
+            ).parMapN((bank, child) => EveryFourWeeks(bank, Some(child)))
+      }
+
     answers.getIor(CurrentlyReceivingChildBenefitPage).flatMap {
       case GettingPayments =>
         answers.getIor(WantToBePaidPage).flatMap {
@@ -386,19 +401,7 @@ object JourneyModel {
                   }
 
               case false =>
-                answers.get(PaymentFrequencyPage) match {
-                  case Some(PaymentFrequency.Weekly) =>
-                    (
-                      getBankAccount,
-                      getEldestChild
-                      ).parMapN((bank, child) => Weekly(bank, Some(child)))
-
-                  case _ =>
-                    (
-                      getBankAccount,
-                      getEldestChild
-                      ).parMapN((bank, child) => EveryFourWeeks(bank, Some(child)))
-                }
+                getWeeklyOrEveryFourWeeksWithChild
             }
 
           case false =>
@@ -420,19 +423,7 @@ object JourneyModel {
       case NotGettingPayments =>
         answers.getIor(WantToBePaidPage).flatMap {
           case true =>
-            answers.get(PaymentFrequencyPage) match {
-              case Some(PaymentFrequency.Weekly) =>
-                (
-                  getBankAccount,
-                  getEldestChild
-                ).parMapN((bank, child) => Weekly(bank, Some(child)))
-
-              case _ =>
-                (
-                  getBankAccount,
-                  getEldestChild
-                ).parMapN((bank, child) => EveryFourWeeks(bank, Some(child)))
-            }
+            getWeeklyOrEveryFourWeeksWithChild
 
           case false =>
             getEldestChild.map(child => DoNotPay(Some(child)))
