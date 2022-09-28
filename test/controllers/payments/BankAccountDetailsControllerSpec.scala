@@ -17,11 +17,12 @@
 package controllers.payments
 
 import base.SpecBase
+import config.FeatureFlags
 import controllers.{routes => baseRoutes}
 import forms.payments.BankAccountDetailsFormProvider
 import models.{BankAccountDetails, ReputationResponseEnum, ValidateBankDetailsResponseModel}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.Mockito.{times, verify, when}
+import org.mockito.Mockito.{never, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.EmptyWaypoints
 import pages.payments.BankAccountDetailsPage
@@ -79,69 +80,114 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
-    "must save the answer and redirect to the next page when valid data is submitted and the BARS response is successful" in {
+    "when the validate-bank-details flag is enabled" - {
 
-      val happyBarsResponse = ValidateBankDetailsResponseModel(
-        accountNumberIsWellFormatted = ReputationResponseEnum.Yes,
-        nonStandardAccountDetailsRequiredForBacs = ReputationResponseEnum.No,
-        sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes
-      )
+      "must save the answer and redirect to the next page when valid data is submitted and the BARS response is successful" in {
 
-      val mockBarsService = mock[BarsService]
-      val mockSessionRepository = mock[SessionRepository]
+        val happyBarsResponse = ValidateBankDetailsResponseModel(
+          accountNumberIsWellFormatted = ReputationResponseEnum.Yes,
+          nonStandardAccountDetailsRequiredForBacs = ReputationResponseEnum.No,
+          sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes
+        )
 
-      when(mockBarsService.validateBankDetails(any())(any(), any())) thenReturn Future.successful(Some(happyBarsResponse))
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+        val mockBarsService = mock[BarsService]
+        val mockSessionRepository = mock[SessionRepository]
+        val mockFeatureFlags = mock[FeatureFlags]
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[SessionRepository].toInstance(mockSessionRepository),
-            bind[BarsService].toInstance(mockBarsService)
-          )
-          .build()
+        when(mockBarsService.validateBankDetails(any())(any(), any())) thenReturn Future.successful(Some(happyBarsResponse))
+        when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+        when(mockFeatureFlags.validateBankDetails) thenReturn true
 
-      running(application) {
-        val request =
-          FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("accountName", "name on account"), ("bankName", "bank name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+        val application =
+          applicationBuilder(userAnswers = Some(emptyUserAnswers))
+            .overrides(
+              bind[SessionRepository].toInstance(mockSessionRepository),
+              bind[BarsService].toInstance(mockBarsService),
+              bind[FeatureFlags].toInstance(mockFeatureFlags)
+            )
+            .build()
 
-        val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(BankAccountDetailsPage, validAnswer).success.value
+        running(application) {
+          val request =
+            FakeRequest(POST, bankAccountDetailsRoute)
+              .withFormUrlEncodedBody(("accountName", "name on account"), ("bankName", "bank name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
-        verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
+          val result = route(application, request).value
+          val expectedAnswers = emptyUserAnswers.set(BankAccountDetailsPage, validAnswer).success.value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+          verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
+        }
+      }
+
+      "must save the answer and redirect to the next page when valid data is submitted and we cannot get a good response from BARS" in {
+
+        val mockBarsService = mock[BarsService]
+        val mockSessionRepository = mock[SessionRepository]
+        val mockFeatureFlags = mock[FeatureFlags]
+
+        when(mockBarsService.validateBankDetails(any())(any(), any())) thenReturn Future.successful(None)
+        when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+        when(mockFeatureFlags.validateBankDetails) thenReturn true
+
+        val application =
+          applicationBuilder(userAnswers = Some(emptyUserAnswers))
+            .overrides(
+              bind[SessionRepository].toInstance(mockSessionRepository),
+              bind[BarsService].toInstance(mockBarsService),
+              bind[FeatureFlags].toInstance(mockFeatureFlags)
+            )
+            .build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, bankAccountDetailsRoute)
+              .withFormUrlEncodedBody(("accountName", "name on account"), ("bankName", "bank name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+
+          val result = route(application, request).value
+          val expectedAnswers = emptyUserAnswers.set(BankAccountDetailsPage, validAnswer).success.value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+          verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
+        }
       }
     }
 
-    "must save the answer and redirect to the next page when valid data is submitted and we cannot get a good response from BARS" in {
+    "when the validate-bank-details flag is disabled" - {
 
-      val mockBarsService = mock[BarsService]
-      val mockSessionRepository = mock[SessionRepository]
+      "must save the answer and redirect to the next page without calling BARS" in {
 
-      when(mockBarsService.validateBankDetails(any())(any(), any())) thenReturn Future.successful(None)
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+        val mockBarsService = mock[BarsService]
+        val mockSessionRepository = mock[SessionRepository]
+        val mockFeatureFlags = mock[FeatureFlags]
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[SessionRepository].toInstance(mockSessionRepository),
-            bind[BarsService].toInstance(mockBarsService)
-          )
-          .build()
+        when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+        when(mockFeatureFlags.validateBankDetails) thenReturn false
 
-      running(application) {
-        val request =
-          FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("accountName", "name on account"), ("bankName", "bank name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+        val application =
+          applicationBuilder(userAnswers = Some(emptyUserAnswers))
+            .overrides(
+              bind[SessionRepository].toInstance(mockSessionRepository),
+              bind[BarsService].toInstance(mockBarsService),
+              bind[FeatureFlags].toInstance(mockFeatureFlags)
+            )
+            .build()
 
-        val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(BankAccountDetailsPage, validAnswer).success.value
+        running(application) {
+          val request =
+            FakeRequest(POST, bankAccountDetailsRoute)
+              .withFormUrlEncodedBody(("accountName", "name on account"), ("bankName", "bank name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
-        verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
+          val result = route(application, request).value
+          val expectedAnswers = emptyUserAnswers.set(BankAccountDetailsPage, validAnswer).success.value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+          verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
+          verify(mockBarsService, never()).validateBankDetails(any())(any(), any())
+        }
       }
     }
 

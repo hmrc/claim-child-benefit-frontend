@@ -16,6 +16,7 @@
 
 package controllers.payments
 
+import config.FeatureFlags
 import controllers.actions._
 import forms.payments.BankAccountDetailsFormProvider
 import models.{ReputationResponseEnum, ValidateBankDetailsResponseModel}
@@ -23,7 +24,7 @@ import pages.Waypoints
 import pages.payments.BankAccountDetailsPage
 import play.api.data.FormError
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.SessionRepository
 import services.BarsService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -41,7 +42,8 @@ class BankAccountDetailsController @Inject()(
                                       formProvider: BankAccountDetailsFormProvider,
                                       val controllerComponents: MessagesControllerComponents,
                                       view: BankAccountDetailsView,
-                                      barsService: BarsService
+                                      barsService: BarsService,
+                                      featureFlags: FeatureFlags
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form = formProvider()
@@ -64,17 +66,24 @@ class BankAccountDetailsController @Inject()(
         formWithErrors =>
           Future.successful(BadRequest(view(formWithErrors, waypoints))),
 
-        value =>
-          barsService.validateBankDetails(value).flatMap {
-            getBarsError(_).map { error =>
-              Future.successful(BadRequest(view(form.fill(value).withError(error), waypoints)))
-            }.getOrElse {
-              for {
-                updatedAnswers <- Future.fromTry(request.userAnswers.set(BankAccountDetailsPage, value))
-                _              <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(BankAccountDetailsPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+        value => {
+
+          def saveAndRedirect: Future[Result] =
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(BankAccountDetailsPage, value))
+              _ <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(BankAccountDetailsPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+
+          if (featureFlags.validateBankDetails) {
+            barsService.validateBankDetails(value).flatMap {
+              getBarsError(_).map { error =>
+                Future.successful(BadRequest(view(form.fill(value).withError(error), waypoints)))
+              }.getOrElse(saveAndRedirect)
             }
+          } else {
+            saveAndRedirect
           }
+        }
       )
   }
 
