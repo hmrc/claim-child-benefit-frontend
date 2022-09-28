@@ -38,8 +38,11 @@
             @{newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.single.over60k.p1.link.text"), href = Some(messages("wantToBePaid.single.over60k.p1.link.href"))))}.
         </p>
 
-        <p class="govuk-body">@messages("wantToBePaid.single.over60k.p2")</p>
-
+        <p class="govuk-body">
+            @messages("wantToBePaid.single.over60k.p2.1")
+            @{newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.single.over60k.p2.link.text"), href = Some(messages("wantToBePaid.single.over60k.p2.link.href"))))}
+            @messages("wantToBePaid.single.over60k.p2.2")
+        </p>
 
         <div class="govuk-warning-text">
             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>

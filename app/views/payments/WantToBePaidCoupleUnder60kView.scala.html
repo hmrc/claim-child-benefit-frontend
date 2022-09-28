@@ -38,7 +38,11 @@
             @{newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.couple.under60k.p1.link.text"), href = Some(messages("wantToBePaid.couple.under60k.p1.link.href"))))}.
         </p>
 
-        <p class="govuk-body">@messages("wantToBePaid.couple.under60k.p2")</p>
+        <p class="govuk-body">
+            @messages("wantToBePaid.couple.under60k.p2.1")
+            @{newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.couple.under60k.p2.link.text"), href = Some(messages("wantToBePaid.couple.under60k.p2.link.href"))))}
+            @messages("wantToBePaid.couple.under60k.p2.2")
+        </p>
 
         <p class="govuk-body">@messages("wantToBePaid.couple.under60k.p3")</p>
 
