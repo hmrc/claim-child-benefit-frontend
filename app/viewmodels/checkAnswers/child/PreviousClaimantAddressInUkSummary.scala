@@ -28,7 +28,7 @@ object PreviousClaimantAddressInUkSummary {
 
   def row(answers: UserAnswers, index: Index, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ChildHasPreviousNamePage(index)).map {
+    answers.get(PreviousClaimantAddressInUkPage(index)).map {
       answer =>
 
         val value = if (answer) "site.yes" else "site.no"
