@@ -871,7 +871,7 @@ childScottishBirthCertificateDetails.change.hidden = the district number, year a
 
 previousClaimantAddressInUk.title = Is the person who claimed Child Benefit for this child’s address in the UK?
 previousClaimantAddressInUk.heading = Is {0}’s address in the UK?
-previousClaimantAddressInUk.checkYourAnswersLabel = Is {0}’s address in the UK
+previousClaimantAddressInUk.checkYourAnswersLabel = Is the person who claimed Child Benefit for this child’s address in the UK?
 previousClaimantAddressInUk.error.required = Select yes if {0}’s address is in the UK
 previousClaimantAddressInUk.change.hidden = if the previous claimant’s address is in the UK
 
