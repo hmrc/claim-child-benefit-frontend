@@ -71,12 +71,16 @@
                 <fo:block width="8cm" wrap-option="wrap">@(x)</fo:block>
             }
         </fo:block>
-        @line("pdf.previousAddress", address.lines.mkString("\n"))
     }.getOrElse(line("pdf.livedAtAddressOneYear", messages("site.yes")))
 
     @line("pdf.phoneNumber", model.applicant.telephoneNumber)
 
-    @line("pdf.bestTimeToContact", model.applicant.bestTimeToContact.map(x => messages(s"bestTimeToContact.${x.toString}")).mkString(", "))
+    <fo:block margin-bottom="3mm">
+        <fo:block font-weight="bold">@messages("pdf.bestTimeToContact")</fo:block>
+        @model.applicant.bestTimeToContact.map { x =>
+            <fo:block width="8cm" wrap-option="wrap">@messages(s"pdf.bestTimeToContact.${x.toString}")</fo:block>
+        }
+    </fo:block>
 
     @line("pdf.currentlyReceiving", messages(s"pdf.currentlyReceiving.${model.applicant.currentlyReceivingChildBenefit.toString}"))
 
