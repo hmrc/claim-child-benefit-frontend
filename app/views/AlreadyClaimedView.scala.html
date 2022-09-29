@@ -14,9 +14,12 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.newtablinkhelper.NewTabLinkHelper
+
 @this(
         layout: templates.Layout,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        newTabLink: HmrcNewTabLinkHelper
 )
 
 @()(implicit request: Request[_], messages: Messages)
@@ -30,12 +33,14 @@
     </p>
 
     <p class="govuk-body">
-        @messages("alreadyClaimed.p2.1") <a href="@messages("alreadyClaimed.p2.link.href")" class="govuk-link">@messages("alreadyClaimed.p2.link.text")</a>,
+        @messages("alreadyClaimed.p2.1")
+        @{newTabLink(NewTabLinkHelper(text = messages("alreadyClaimed.p2.link.text"), href = Some(messages("alreadyClaimed.p2.link.href"))))},
         @messages("alreadyClaimed.p2.2")
     </p>
 
     <p class="govuk-body">
-        @messages("alreadyClaimed.p3") <a href="@messages("alreadyClaimed.p3.link.href")" class="govuk-link">@messages("alreadyClaimed.p3.link.text")</a>.
+        @messages("alreadyClaimed.p3")
+        @{newTabLink(NewTabLinkHelper(text = messages("alreadyClaimed.p3.link.text"), href = Some(messages("alreadyClaimed.p3.link.href"))))}.
     </p>
 
     <p class="govuk-body">

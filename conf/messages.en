@@ -335,7 +335,7 @@ wantToBePaid.couple.under50k.p4 = Claiming Child Benefit will help to protect yo
 
 wantToBePaid.single.under50k.title = How the tax charge works for you
 wantToBePaid.single.under50k.heading = How the tax charge works for you
-wantToBePaid.single.under50k.p1 = There is no tax charge if your income is below £51,000 in a year. If your income goes over this amount while claiming Child Benefit, you may need to pay the
+wantToBePaid.single.under50k.p1 = There is no tax charge if your income is below £50,100 in a year. If your income goes over this amount while claiming Child Benefit, you may need to pay the
 wantToBePaid.single.under50k.p1.link.href = https://www.gov.uk/child-benefit-tax-charge
 wantToBePaid.single.under50k.p1.link.text = High Income Child Benefit Charge
 wantToBePaid.single.under50k.p2.1 = You must
@@ -366,7 +366,7 @@ wantToBePaid.couple.under60k.p6 = It’s important to fill in this form even if 
 
 wantToBePaid.single.under60k.title = How the tax charge works for you
 wantToBePaid.single.under60k.heading = How the tax charge works for you
-wantToBePaid.single.under60k.p1 = You earn between £50,000 and £60,000 in a year. You may have to pay a tax charge, called the
+wantToBePaid.single.under60k.p1 = You earn between £50,100 and £60,000 in a year. You may have to pay a tax charge, called the
 wantToBePaid.single.under60k.p1.link.href = https://www.gov.uk/child-benefit-tax-charge
 wantToBePaid.single.under60k.p1.link.text = High Income Child Benefit Charge
 wantToBePaid.single.under60k.p2.1 = If you choose to receive Child Benefit payments, the payments you may get will be more than the value of the tax charge. To pay the charge you must set up and fill in a

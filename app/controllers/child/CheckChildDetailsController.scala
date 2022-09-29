@@ -52,13 +52,17 @@ class CheckChildDetailsController @Inject()(
               ChildBiologicalSexSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               ChildDateOfBirthSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               ChildBirthRegistrationCountrySummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              BirthCertificateHasSystemNumberSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               ChildBirthCertificateSystemNumberSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              ScottishBirthCertificateHasNumbersSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               ChildScottishBirthCertificateDetailsSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              AdoptingThroughLocalAuthoritySummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               ApplicantRelationshipToChildSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               AnyoneClaimedForChildBeforeSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               PreviousClaimantNameSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              PreviousClaimantAddressInUkSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               PreviousClaimantUkAddressSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
-              AdoptingThroughLocalAuthoritySummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index))
+              PreviousClaimantInternationalAddressSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index))
             ).flatten
           )
 
