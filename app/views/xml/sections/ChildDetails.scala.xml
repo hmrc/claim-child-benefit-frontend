@@ -11,7 +11,7 @@
     @line("pdf.name.first", child.name.firstName)
 
     @child.name.middleNames.map { middleNames =>
-        line("pdf.name.middle", middleNames)
+        @line("pdf.name.middle", middleNames)
     }
 
     @line("pdf.biologicalSex", messages(s"childBiologicalSex.${child.biologicalSex.toString}"))
