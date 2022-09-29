@@ -14,11 +14,14 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.newtablinkhelper.NewTabLinkHelper
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukButton: GovukButton,
-    govukWarningText: GovukWarningText
+    govukWarningText: GovukWarningText,
+    newTabLink: HmrcNewTabLinkHelper
 )
 
 @()(implicit request: Request[_], messages: Messages)
@@ -33,7 +36,7 @@
 
     <p class="govuk-body">
         @messages("index.p1")
-        <a href="@messages("index.p1.link.href")" class="govuk-link">@messages("index.p1.link.text")</a>.
+        @{newTabLink(NewTabLinkHelper(text = messages("index.p1.link.text"), href = Some(messages("index.p1.link.href"))))}.
     </p>
 
     <h2 class="govuk-heading-m">@messages("index.whoCanApply")</h2>

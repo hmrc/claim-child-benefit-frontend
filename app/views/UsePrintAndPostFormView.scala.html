@@ -14,9 +14,12 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.newtablinkhelper.NewTabLinkHelper
+
 @this(
         layout: templates.Layout,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        newTabLink: HmrcNewTabLinkHelper
 )
 
 @()(implicit request: Request[_], messages: Messages)
@@ -30,13 +33,16 @@
     </p>
 
     <p class="govuk-body">
-        @messages("usePrintAndPostForm.p2.1") <a href="@messages("usePrintAndPostForm.p2.link1.href")" class="govuk-link">@messages("usePrintAndPostForm.p2.link1.text")</a>,
-        @messages("usePrintAndPostForm.p2.2") <a href="@messages("usePrintAndPostForm.p2.link2.href")" class="govuk-link">@messages("usePrintAndPostForm.p2.link2.text")</a>
+        @messages("usePrintAndPostForm.p2.1")
+        @{newTabLink(NewTabLinkHelper(text = messages("usePrintAndPostForm.p2.link1.text"), href = Some(messages("usePrintAndPostForm.p2.link1.href"))))},
+        @messages("usePrintAndPostForm.p2.2")
+        @{newTabLink(NewTabLinkHelper(text = messages("usePrintAndPostForm.p2.link2.text"), href = Some(messages("usePrintAndPostForm.p2.link2.href"))))}
         @messages("usePrintAndPostForm.p2.3")
     </p>
 
     <p class="govuk-body">
-        @messages("usePrintAndPostForm.p3") <a href="@messages("usePrintAndPostForm.p3.link.href")" class="govuk-link">@messages("usePrintAndPostForm.p3.link.text")</a>.
+        @messages("usePrintAndPostForm.p3")
+        @{newTabLink(NewTabLinkHelper(text = messages("usePrintAndPostForm.p3.link.text"), href = Some(messages("usePrintAndPostForm.p3.link.href"))))}.
     </p>
 
     <p class="govuk-body">

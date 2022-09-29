@@ -14,11 +14,14 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.newtablinkhelper.NewTabLinkHelper
+
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
         govukInset: GovukInsetText,
-        govukPanel : GovukPanel
+        govukPanel : GovukPanel,
+        newTabLink: HmrcNewTabLinkHelper
 )
 
 @()(implicit request: Request[_], messages: Messages)
@@ -55,12 +58,12 @@
 
     <p class="govuk-body">
         @messages("print.circumstances.p1")
-        <a href="@messages("print.circumstances.p1.link.href")" class="govuk-link">@messages("print.circumstances.p1.link.text")</a>.
+        @{newTabLink(NewTabLinkHelper(text = messages("print.circumstances.p1.link.text"), href = Some(messages("print.circumstances.p1.link.href"))))}.
     </p>
 
     <p class="govuk-body">
         @messages("print.circumstances.p2")
-        <a href="@messages("print.circumstances.p2.link.href")" class="govuk-link">@messages("print.circumstances.p2.link.text")</a>.
+        @{newTabLink(NewTabLinkHelper(text = messages("print.circumstances.p2.link.text"), href = Some(messages("print.circumstances.p2.link.href"))))}.
     </p>
 
     <h2 class="govuk-heading-m">@messages("print.whatHappensNext")</h2>
@@ -74,12 +77,12 @@
 
     <p class="govuk-body">
         @messages("print.whatHappensNext.p2")
-        <a href="@messages("print.whatHappensNext.p2.link.href")" class="govuk-link">@messages("print.whatHappensNext.p2.link.text")</a>.
+        @{newTabLink(NewTabLinkHelper(text = messages("print.whatHappensNext.p2.link.text"), href = Some(messages("print.whatHappensNext.p2.link.href"))))}.
     </p>
 
     <p class="govuk-body">
         @messages("print.whatHappensNext.p3")
-        <a href="@messages("print.whatHappensNext.p3.link.href")" class="govuk-link">@messages("print.whatHappensNext.p3.link.text")</a>.
+        @{newTabLink(NewTabLinkHelper(text = messages("print.whatHappensNext.p3.link.text"), href = Some(messages("print.whatHappensNext.p3.link.href"))))}.
     </p>
 
     <p class="govuk-body">
