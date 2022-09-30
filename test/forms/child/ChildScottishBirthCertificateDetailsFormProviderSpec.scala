@@ -17,101 +17,105 @@
 package forms.child
 
 import forms.Validation
-import forms.behaviours.StringFieldBehaviours
+import forms.behaviours.IntFieldBehaviours
 import models.ChildName
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import play.api.data.FormError
 
-class ChildScottishBirthCertificateDetailsFormProviderSpec extends StringFieldBehaviours {
+import java.time.{Clock, Instant, LocalDate, ZoneId}
+
+class ChildScottishBirthCertificateDetailsFormProviderSpec extends IntFieldBehaviours {
+
+
+  private val fixedInstant: Instant = LocalDate.now.atStartOfDay(ZoneId.systemDefault).toInstant
+  private val clockAtFixedInstant: Clock = Clock.fixed(fixedInstant, ZoneId.systemDefault)
 
   private val childName = ChildName("first", None, "last")
 
   val requiredKey = "childScottishBirthCertificateDetails.error.required"
   val invalidKey = "childScottishBirthCertificateDetails.error.invalid"
-  val maxLength = 9
 
-  val form = new ChildScottishBirthCertificateDetailsFormProvider()(childName)
+  val form = new ChildScottishBirthCertificateDetailsFormProvider(clockAtFixedInstant)(childName)
 
-  ".value" - {
+  ".district" - {
 
-    val fieldName = "value"
+    val fieldName = "district"
+    val requiredKey = "childScottishBirthCertificateDetails.district.error.required"
+    val invalidKey = "childScottishBirthCertificateDetails.district.error.invalid"
+    val outOfRangeKey = "childScottishBirthCertificateDetails.district.error.outOfRange"
 
-    "must bind 10 digit strings" in {
+    behave like fieldThatBindsValidData(
+      form,
+      fieldName,
+      Gen.choose(100, 999).map(_.toString)
+    )
 
-      val gen = Gen.listOfN(10, Gen.numChar).map(_.mkString)
+    behave like intFieldWithRange(
+      form,
+      fieldName,
+      100,
+      999,
+      FormError(fieldName, outOfRangeKey, Seq(100, 999, childName.firstName))
+    )
 
-      forAll(gen) {
-        dataItem: String =>
-          val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
-          result.value.value mustBe dataItem
-          result.errors mustBe empty
-      }
-    }
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey, Seq(childName.firstName))
+    )
+  }
 
-    "must bind 10 digit strings that include spaces" in {
+  ".year" - {
 
-      val gen = Gen.listOfN(10, Gen.numChar).map(_.mkString(" "))
+    val max = LocalDate.now(clockAtFixedInstant).getYear
+    val min = max - 20
+    val fieldName = "year"
+    val requiredKey = "childScottishBirthCertificateDetails.year.error.required"
+    val invalidKey = "childScottishBirthCertificateDetails.year.error.invalid"
+    val outOfRangeKey = "childScottishBirthCertificateDetails.year.error.outOfRange"
 
-      forAll(gen) {
-        dataItem: String =>
-          val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
-          result.value.value mustBe dataItem
-          result.errors mustBe empty
-      }
-    }
+    behave like fieldThatBindsValidData(
+      form,
+      fieldName,
+      Gen.choose(min, max).map(_.toString)
+    )
 
-    "must bind 10 digit strings that include hyphens" in {
+    behave like intFieldWithRange(
+      form,
+      fieldName,
+      min,
+      max,
+      FormError(fieldName, outOfRangeKey, Seq(min.toString, max.toString, childName.firstName))
+    )
 
-      val gen = Gen.listOfN(10, Gen.numChar).map(_.mkString("-"))
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey, Seq(childName.firstName))
+    )
+  }
 
-      forAll(gen) {
-        dataItem: String =>
-          val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
-          result.value.value mustBe dataItem
-          result.errors mustBe empty
-      }
-    }
+  ".entry" - {
 
-    "must not bind values with fewer than 10 digits" in {
+    val fieldName = "entry"
+    val requiredKey = "childScottishBirthCertificateDetails.entry.error.required"
+    val invalidKey = "childScottishBirthCertificateDetails.entry.error.invalid"
+    val outOfRangeKey = "childScottishBirthCertificateDetails.entry.error.outOfRange"
 
-      val gen = for {
-        charCount <- Gen.choose(1, 9)
-        chars     <- Gen.listOfN(charCount, Gen.numChar)
-      } yield chars.mkString
+    behave like fieldThatBindsValidData(
+      form,
+      fieldName,
+      Gen.choose(1, 999).map(_.toString)
+    )
 
-      forAll(gen) {
-        dataItem =>
-          val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
-          result.errors must contain only FormError(fieldName, invalidKey, Seq(Validation.scottishBirthCertificateNumberPattern.toString, childName.firstName))
-      }
-    }
-
-    "must not bind values with more than 10 digits" in {
-
-      val gen = for {
-        charCount <- Gen.choose(11, 100)
-        chars     <- Gen.listOfN(charCount, Gen.numChar)
-      } yield chars.mkString
-
-      forAll(gen) {
-        dataItem =>
-          val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
-          result.errors must contain only FormError(fieldName, invalidKey, Seq(Validation.scottishBirthCertificateNumberPattern.toString, childName.firstName))
-      }
-    }
-
-    "must not bind vales that contain characters other than digits" in {
-
-      forAll(arbitrary[String]) {
-        value =>
-
-          whenever (!value.forall(_.isDigit) && !value.forall(_ == ' ')) {
-            val result = form.bind(Map(fieldName -> value)).apply(fieldName)
-            result.errors must contain only FormError(fieldName, invalidKey, Seq(Validation.scottishBirthCertificateNumberPattern.toString, childName.firstName))
-          }
-      }
-    }
+    behave like intFieldWithRange(
+      form,
+      fieldName,
+      1,
+      999,
+      FormError(fieldName, outOfRangeKey, Seq(1, 999, childName.firstName))
+    )
 
     behave like mandatoryField(
       form,
