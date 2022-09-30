@@ -41,11 +41,29 @@
 
         @govukInput(
             InputViewModel(
-                field = form("value"),
-                label = LabelViewModel(messages("childScottishBirthCertificateDetails.heading", childName.firstName)).visuallyHidden()
+                field = form("district"),
+                label = LabelViewModel(messages("childScottishBirthCertificateDetails.district"))
             )
-            .withWidth(Fixed10)
-            .withHint(HintViewModel(messages("childScottishBirthCertificateDetails.hint")))
+            .withWidth(Fixed5)
+            .withHint(HintViewModel("childScottishBirthCertificateDetails.district.hint"))
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("year"),
+                label = LabelViewModel(messages("childScottishBirthCertificateDetails.year"))
+            )
+            .withWidth(Fixed5)
+            .withHint(HintViewModel("childScottishBirthCertificateDetails.year.hint"))
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("entry"),
+                label = LabelViewModel(messages("childScottishBirthCertificateDetails.entry"))
+            )
+            .withWidth(Fixed5)
+            .withHint(HintViewModel("childScottishBirthCertificateDetails.entry.hint"))
         )
 
         @govukButton(

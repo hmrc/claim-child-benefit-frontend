@@ -176,7 +176,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
           .run(
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
             submitAnswer(ScottishBirthCertificateHasNumbersPage(Index(0)), true),
-            submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), "1234567890"),
+            submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), arbitrary[ScottishBirthCertificateDetails].sample.value),
             submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
             submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
             submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),

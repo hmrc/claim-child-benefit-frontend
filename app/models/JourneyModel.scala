@@ -171,7 +171,7 @@ object JourneyModel {
           case RegistrationCountry.Scotland =>
             answers.getIor(ScottishBirthCertificateHasNumbersPage(index)).flatMap {
               case true =>
-                answers.getIor(ChildScottishBirthCertificateDetailsPage(index)).map(Some(_))
+                answers.getIor(ChildScottishBirthCertificateDetailsPage(index)).map(x => Some(x.toString))
               case false =>
                 Ior.Right(None)
             }

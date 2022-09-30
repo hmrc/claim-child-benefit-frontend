@@ -37,7 +37,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
   private val claimantName                 = arbitrary[AdultName].sample.value
   private val claimantUkAddress            = arbitrary[UkAddress].sample.value
   private val claimantInternationalAddress = arbitrary[InternationalAddress].sample.value
-  private val scottishBcDetails            = Gen.listOfN(10, Gen.numChar).sample.value.mkString
+  private val scottishBcDetails            = arbitrary[ScottishBirthCertificateDetails].sample.value
   private val relationship                 = arbitrary[Relationship].sample.value
 
   "when a user has added a child" - {
@@ -651,7 +651,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             basicChildJourney,
             setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
             setUserAnswerTo(ScottishBirthCertificateHasNumbersPage(Index(0)), true),
-            setUserAnswerTo(ChildScottishBirthCertificateDetailsPage(Index(0)), "1234567890"),
+            setUserAnswerTo(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBcDetails),
             remove(BirthCertificateHasSystemNumberPage(Index(0))),
             remove(ChildBirthCertificateSystemNumberPage(Index(0)))
           )
@@ -685,7 +685,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             initialState,
             goToChangeAnswer(ScottishBirthCertificateHasNumbersPage(Index(0))),
             submitAnswer(ScottishBirthCertificateHasNumbersPage(Index(0)), true),
-            submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), "1234567890"),
+            submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBcDetails),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }

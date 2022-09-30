@@ -16,20 +16,55 @@
 
 package forms.child
 
-import forms.Validation
 import forms.mappings.Mappings
-import models.ChildName
+import models.{ChildName, ScottishBirthCertificateDetails}
 import play.api.data.Form
+import play.api.data.Forms._
+import play.api.data.validation.{Constraint, Invalid, Valid}
 
+import java.time.{Clock, LocalDate}
 import javax.inject.Inject
 
-class ChildScottishBirthCertificateDetailsFormProvider @Inject() extends Mappings {
+class ChildScottishBirthCertificateDetailsFormProvider @Inject()(clock: Clock) extends Mappings {
 
-  def apply(childName: ChildName): Form[String] =
+  def apply(childName: ChildName): Form[ScottishBirthCertificateDetails] = {
+
+    val maxYear = LocalDate.now(clock).getYear
+    val minYear = maxYear - 20
+
     Form(
-      "value" -> text("childScottishBirthCertificateDetails.error.required", args = Seq(childName.firstName))
-        .verifying(regexp(Validation.scottishBirthCertificateNumberPattern.toString, "childScottishBirthCertificateDetails.error.invalid", childName.firstName))
-        .transform[String](x => x.replace(" ", "").replace("-", ""), x => x)
+      mapping(
+        "district" -> int(
+          "childScottishBirthCertificateDetails.district.error.required",
+          "childScottishBirthCertificateDetails.district.error.invalid",
+          "childScottishBirthCertificateDetails.district.error.invalid",
+          args = Seq(childName.firstName)
+        ).verifying(inRange(100, 999, "childScottishBirthCertificateDetails.district.error.outOfRange", args = childName.firstName)),
+        "year" -> int(
+          "childScottishBirthCertificateDetails.year.error.required",
+          "childScottishBirthCertificateDetails.year.error.invalid",
+          "childScottishBirthCertificateDetails.year.error.invalid",
+          args = Seq(childName.firstName)
+        ).verifying(yearInRange(minYear, maxYear, "childScottishBirthCertificateDetails.year.error.outOfRange", args = childName.firstName)),
+        "entry" -> int(
+          "childScottishBirthCertificateDetails.entry.error.required",
+          "childScottishBirthCertificateDetails.entry.error.invalid",
+          "childScottishBirthCertificateDetails.entry.error.invalid",
+          args = Seq(childName.firstName)
+        ).verifying(inRange(1, 999, "childScottishBirthCertificateDetails.entry.error.outOfRange", args = childName.firstName))
+      )(ScottishBirthCertificateDetails.apply)(ScottishBirthCertificateDetails.unapply)
     )
+  }
+
+  private def yearInRange(minimum: Int, maximum: Int, errorKey: String, args: Any*): Constraint[Int] =
+    Constraint {
+      input =>
+
+        if (input >= minimum && input <= maximum) {
+          Valid
+        } else {
+          Invalid(errorKey, Seq(minimum.toString, maximum.toString) ++ args: _*)
+        }
+    }
 
 }
