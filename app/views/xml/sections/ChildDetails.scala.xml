@@ -4,14 +4,14 @@
 
 <fo:block-container margin-bottom="1cm" keep-together.within-column="always" wrap-option="wrap">
 
-    <fo:block font-size="16pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.childDetails", index)</fo:block>
+    <fo:block font-size="18pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.childDetails", index)</fo:block>
 
     @line("pdf.name.last", child.name.lastName)
 
     @line("pdf.name.first", child.name.firstName)
 
     @child.name.middleNames.map { middleNames =>
-        line("pdf.name.middle", middleNames)
+        @line("pdf.name.middle", middleNames)
     }
 
     @line("pdf.biologicalSex", messages(s"childBiologicalSex.${child.biologicalSex.toString}"))

@@ -18,7 +18,7 @@
 
     @mainFooter()
 
-    <fo:flow flow-name="xsl-region-body" font-size="10pt" text-align="left">
+    <fo:flow flow-name="xsl-region-body" font-size="12pt" text-align="left">
 
         <fo:block-container width="90%">
             <fo:block>
