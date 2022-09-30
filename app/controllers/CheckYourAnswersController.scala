@@ -93,7 +93,6 @@ class CheckYourAnswersController @Inject()(
           ApplicantPreviousUkAddressSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantPreviousInternationalAddressSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantPhoneNumberSummary.row(request.userAnswers, waypoints, thisPage),
-          BestTimeToContactSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantNationalitySummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantEmploymentStatusSummary.row(request.userAnswers, waypoints, thisPage)
         ).flatten

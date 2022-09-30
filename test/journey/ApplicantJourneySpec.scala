@@ -18,7 +18,7 @@ package journey
 
 import generators.ModelGenerators
 import models.RelationshipStatus._
-import models.{BestTimeToContact, Country, EmploymentStatus, Index, InternationalAddress, UkAddress, UserAnswers}
+import models.{Country, EmploymentStatus, Index, InternationalAddress, UkAddress, UserAnswers}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
@@ -47,7 +47,6 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
           submitAnswer(ApplicantCurrentUkAddressPage, address),
           submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
           submitAnswer(ApplicantPhoneNumberPage, "07777 7777777"),
-          submitAnswer(BestTimeToContactPage, Set[BestTimeToContact](BestTimeToContact.Morning)),
           submitAnswer(ApplicantNationalityPage, "nationality"),
           pageMustBe(ApplicantEmploymentStatusPage)
         )

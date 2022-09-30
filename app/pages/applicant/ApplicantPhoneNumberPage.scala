@@ -32,5 +32,5 @@ case object ApplicantPhoneNumberPage extends QuestionPage[String] {
     routes.ApplicantPhoneNumberController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    BestTimeToContactPage
+    ApplicantNationalityPage
 }

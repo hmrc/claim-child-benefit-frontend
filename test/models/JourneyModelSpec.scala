@@ -54,7 +54,6 @@ class JourneyModelSpec
   private val previousUkAddress = UkAddress("line 1", None, "town", None, "BB22 2BB")
   private val previousInternationalAddress = InternationalAddress("line 1", None, "town", None, None, country)
   private val phoneNumber = "07777 777777"
-  private val bestTimes = Set[BestTimeToContact](BestTimeToContact.Morning)
   private val applicantBenefits = Set[Benefits](Benefits.NoneOfTheAbove)
   private val applicantNationality = "applicant nationality"
   private val applicantEmployment = Set[EmploymentStatus](EmploymentStatus.Employed)
@@ -108,7 +107,6 @@ class JourneyModelSpec
             currentAddress = currentUkAddress,
             previousAddress = None,
             telephoneNumber = phoneNumber,
-            bestTimeToContact = bestTimes,
             nationality = applicantNationality,
             employmentStatus = applicantEmployment,
             alwaysLivedInUk = true,
@@ -168,7 +166,6 @@ class JourneyModelSpec
             currentAddress = currentUkAddress,
             previousAddress = None,
             telephoneNumber = phoneNumber,
-            bestTimeToContact = bestTimes,
             nationality = applicantNationality,
             employmentStatus = applicantEmployment,
             alwaysLivedInUk = true,
@@ -246,7 +243,6 @@ class JourneyModelSpec
             currentAddress = currentUkAddress,
             previousAddress = None,
             telephoneNumber = phoneNumber,
-            bestTimeToContact = bestTimes,
             nationality = applicantNationality,
             employmentStatus = applicantEmployment,
             alwaysLivedInUk = true,
@@ -658,7 +654,6 @@ class JourneyModelSpec
           currentAddress = currentUkAddress,
           previousAddress = None,
           telephoneNumber = phoneNumber,
-          bestTimeToContact = bestTimes,
           nationality = applicantNationality,
           employmentStatus = applicantEmployment,
           alwaysLivedInUk = true,
@@ -693,7 +688,6 @@ class JourneyModelSpec
           currentAddress = currentUkAddress,
           previousAddress = None,
           telephoneNumber = phoneNumber,
-          bestTimeToContact = bestTimes,
           nationality = applicantNationality,
           employmentStatus = applicantEmployment,
           alwaysLivedInUk = true,
@@ -727,7 +721,6 @@ class JourneyModelSpec
           currentAddress = currentInternationalAddress,
           previousAddress = None,
           telephoneNumber = phoneNumber,
-          bestTimeToContact = bestTimes,
           nationality = applicantNationality,
           employmentStatus = applicantEmployment,
           alwaysLivedInUk = true,
@@ -763,7 +756,6 @@ class JourneyModelSpec
             currentAddress = currentUkAddress,
             previousAddress = Some(previousUkAddress),
             telephoneNumber = phoneNumber,
-            bestTimeToContact = bestTimes,
             nationality = applicantNationality,
             employmentStatus = applicantEmployment,
             alwaysLivedInUk = true,
@@ -797,7 +789,6 @@ class JourneyModelSpec
             currentAddress = currentUkAddress,
             previousAddress = Some(previousInternationalAddress),
             telephoneNumber = phoneNumber,
-            bestTimeToContact = bestTimes,
             nationality = applicantNationality,
             employmentStatus = applicantEmployment,
             alwaysLivedInUk = true,
@@ -1715,7 +1706,6 @@ class JourneyModelSpec
         .set(ApplicantCurrentUkAddressPage, currentUkAddress).success.value
         .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
         .set(ApplicantPhoneNumberPage, phoneNumber).success.value
-        .set(BestTimeToContactPage, bestTimes).success.value
         .set(ApplicantNationalityPage, applicantNationality).success.value
         .set(ApplicantEmploymentStatusPage, applicantEmployment).success.value
         .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value

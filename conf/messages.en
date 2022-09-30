@@ -628,16 +628,6 @@ removeApplicantPreviousFamilyName.title = Are you sure you want to remove this o
 removeApplicantPreviousFamilyName.heading = Are you sure you want to remove {0}?
 removeApplicantPreviousFamilyName.error.required = Select yes if you are sure you want to remove {0}
 
-bestTimeToContact.title = What time of day is the best time to call you?
-bestTimeToContact.heading = What time of day is the best time to call you?
-bestTimeToContact.hint = Select all that apply.
-bestTimeToContact.checkYourAnswersLabel = Best time of day to call you
-bestTimeToContact.morning = Morning
-bestTimeToContact.afternoon = Afternoon
-bestTimeToContact.evening = Evening (we’re only able to call up to 8pm)
-bestTimeToContact.error.required = Select the best time of day to call you
-bestTimeToContact.change.hidden = the time of day that is the best time to call you
-
 partnerDateOfBirth.title = What is your partner’s date of birth?
 partnerDateOfBirth.heading = What is {0}’s date of birth?
 partnerDateOfBirth.hint = For example, 20 3 2001.
@@ -1055,10 +1045,6 @@ pdf.currentAddress = Current address
 pdf.livedAtAddressOneYear = Lived at address for more than a year
 pdf.previousAddress = Previous address
 pdf.phoneNumber = Telephone number
-pdf.bestTimeToContact = Best time to call
-pdf.bestTimeToContact.morning = Morning
-pdf.bestTimeToContact.afternoon = Afternoon
-pdf.bestTimeToContact.evening = Evening
 pdf.nationality = Nationality
 pdf.employmentStatus = Employment status
 pdf.incomeDetails = Income details

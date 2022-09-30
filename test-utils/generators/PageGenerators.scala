@@ -114,9 +114,6 @@ trait PageGenerators {
   implicit lazy val arbitraryPartnerDateOfBirthPage: Arbitrary[PartnerDateOfBirthPage.type] =
     Arbitrary(PartnerDateOfBirthPage)
 
-  implicit lazy val arbitraryBestTimeToContactPage: Arbitrary[BestTimeToContactPage.type] =
-    Arbitrary(BestTimeToContactPage)
-
   implicit lazy val arbitraryApplicantPreviousFamilyNamePage: Arbitrary[ApplicantPreviousFamilyNamePage] =
     Arbitrary(applicant.ApplicantPreviousFamilyNamePage(Index(0)))
 

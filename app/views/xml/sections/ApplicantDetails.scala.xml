@@ -73,13 +73,6 @@
 
     @line("pdf.phoneNumber", model.applicant.telephoneNumber)
 
-    <fo:block margin-bottom="3mm">
-        <fo:block font-weight="bold">@messages("pdf.bestTimeToContact")</fo:block>
-        @model.applicant.bestTimeToContact.map { x =>
-            <fo:block width="8cm" wrap-option="wrap">@messages(s"pdf.bestTimeToContact.${x.toString}")</fo:block>
-        }
-    </fo:block>
-
     @line("pdf.currentlyReceiving", messages(s"pdf.currentlyReceiving.${model.applicant.currentlyReceivingChildBenefit.toString}"))
 
     @{model.paymentPreference match {

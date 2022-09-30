@@ -83,12 +83,6 @@ trait ModelGenerators {
       Gen.oneOf(ApplicantRelationshipToChild.values)
     }
 
-  implicit lazy val arbitraryBestTimeToContact: Arbitrary[BestTimeToContact] = {
-    Arbitrary {
-      Gen.oneOf(BestTimeToContact.values)
-    }
-  }
-
   implicit lazy val arbitraryNino: Arbitrary[Nino] = Arbitrary {
     for {
       firstChar <- Gen.oneOf('A', 'C', 'E', 'H', 'J', 'L', 'M', 'O', 'P', 'R', 'S', 'W', 'X', 'Y').map(_.toString)
