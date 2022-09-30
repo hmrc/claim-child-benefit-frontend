@@ -425,7 +425,7 @@ wantToBePaid.single.over60k.p5 = It’s important to fill in this form even if y
 
 wantToBePaidToExistingAccount.title = Do you want your Child Benefit claim to be paid to your existing bank account?
 wantToBePaidToExistingAccount.heading = Do you want your Child Benefit claim to be paid to your existing bank account?
-wantToBePaidToExistingAccount.guidance = All Child Benefit payments are paid into the same account. If you are currently receiving Child Benefit and want this new claim to be paid into a different account, your current payments will move to this account as well.
+wantToBePaidToExistingAccount.guidance = All Child Benefit payments are paid into the same account. If you are currently receiving Child Benefit and want this new claim to be paid into a different account, your current payments will move to this account as well. This change will happen after this new claim has been processed.
 wantToBePaidToExistingAccount.checkYourAnswersLabel = Do you want your Child Benefit claim to be paid to your existing bank account?
 wantToBePaidToExistingAccount.error.required = Select yes if you want your Child Benefit claim to be paid to your existing bank account
 wantToBePaidToExistingAccount.change.hidden = if you want your Child Benefit claim to be paid to your existing bank account
