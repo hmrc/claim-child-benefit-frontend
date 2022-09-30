@@ -71,9 +71,7 @@ object JourneyModel {
                               currentAddress: Address,
                               previousAddress: Option[Address],
                               telephoneNumber: String,
-                              bestTimeToContact: Set[BestTimeToContact],
                               nationality: String,
-                              employmentStatus: Set[EmploymentStatus],
                               alwaysLivedInUk: Boolean,
                               memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
                               currentlyReceivingChildBenefit: CurrentlyReceivingChildBenefit
@@ -84,7 +82,6 @@ object JourneyModel {
                             dateOfBirth: LocalDate,
                             nationality: String,
                             nationalInsuranceNumber: Option[String],
-                            employmentStatus: Set[EmploymentStatus],
                             memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
                             currentlyClaimingChildBenefit: PartnerClaimingChildBenefit,
                             eldestChild: Option[EldestChild]
@@ -264,9 +261,7 @@ object JourneyModel {
       getCurrentAddress,
       getPreviousAddress,
       answers.getIor(ApplicantPhoneNumberPage),
-      answers.getIor(BestTimeToContactPage),
       answers.getIor(ApplicantNationalityPage),
-      answers.getIor(ApplicantEmploymentStatusPage),
       answers.getIor(AlwaysLivedInUkPage),
       getHmForces,
       answers.getIor(CurrentlyReceivingChildBenefitPage)
@@ -309,7 +304,6 @@ object JourneyModel {
       answers.getIor(PartnerDateOfBirthPage),
       answers.getIor(PartnerNationalityPage),
       getPartnerNino,
-      answers.getIor(PartnerEmploymentStatusPage),
       getHmForces,
       answers.getIor(PartnerClaimingChildBenefitPage),
       getPartnerEldestChild

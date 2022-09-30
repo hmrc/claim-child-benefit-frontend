@@ -55,6 +55,7 @@ index.whoCanApply.p2 = If you are in a couple and one of you does not work or ea
 index.whoCanApply.p3 = You do not need to be the parent of the child to claim Child Benefit.
 index.whenToApply = When to apply
 index.whenToApply.p1 = Claim as soon as your baby is born and registered or once a child comes to live with you, including adoption.
+index.whenToApply.p2 = To claim, the child must either be under 16 or under 20 and in full-time, non-advanced education or approved training.
 index.beforeYouStart = Before you start
 index.beforeYouStart.p1 = To complete this form, you’ll need the following documents for any children you are applying for, depending on your circumstance:
 index.beforeYouStart.p1.bullet1 = birth certificate
@@ -424,7 +425,7 @@ wantToBePaid.single.over60k.p5 = It’s important to fill in this form even if y
 
 wantToBePaidToExistingAccount.title = Do you want your Child Benefit claim to be paid to your existing bank account?
 wantToBePaidToExistingAccount.heading = Do you want your Child Benefit claim to be paid to your existing bank account?
-wantToBePaidToExistingAccount.guidance = All Child Benefit payments are paid into the same account. If you are currently receiving Child Benefit and want this new claim to be paid into a different account, your current payments will move to this account as well.
+wantToBePaidToExistingAccount.guidance = All Child Benefit payments are paid into the same account. If you are currently receiving Child Benefit and want this new claim to be paid into a different account, your current payments will move to this account as well. This change will happen after this new claim has been processed.
 wantToBePaidToExistingAccount.checkYourAnswersLabel = Do you want your Child Benefit claim to be paid to your existing bank account?
 wantToBePaidToExistingAccount.error.required = Select yes if you want your Child Benefit claim to be paid to your existing bank account
 wantToBePaidToExistingAccount.change.hidden = if you want your Child Benefit claim to be paid to your existing bank account
@@ -501,19 +502,6 @@ applicantDateOfBirth.error.invalid = Enter a real date
 applicantDateOfBirth.error.beforeMinimum = The date must be on or after {0}
 applicantDateOfBirth.error.afterMaximum = The date must be on or before {0}
 applicantDateOfBirth.change.hidden = your date of birth
-
-applicantEmploymentStatus.title = What is your employment status?
-applicantEmploymentStatus.heading = What is your employment status?
-applicantEmploymentStatus.hint = Select all that apply.
-applicantEmploymentStatus.checkYourAnswersLabel = Your employment status
-applicantEmploymentStatus.error.required = Select your employment status
-applicantEmploymentStatus.error.mutuallyExclusive = Select your employment status or none of these apply
-applicantEmploymentStatus.change.hidden = your employment status
-
-employmentStatus.lookingForWork = Looking for work
-employmentStatus.employed = Employed
-employmentStatus.selfEmployed = Self-employed
-employmentStatus.noneOfThese = None of these apply
 
 applicantHasPreviousFamilyName.title = Have you been known by any other last names or family names?
 applicantHasPreviousFamilyName.heading = Have you been known by any other last names or family names?
@@ -627,16 +615,6 @@ removeApplicantPreviousFamilyName.title = Are you sure you want to remove this o
 removeApplicantPreviousFamilyName.heading = Are you sure you want to remove {0}?
 removeApplicantPreviousFamilyName.error.required = Select yes if you are sure you want to remove {0}
 
-bestTimeToContact.title = What time of day is the best time to call you?
-bestTimeToContact.heading = What time of day is the best time to call you?
-bestTimeToContact.hint = Select all that apply.
-bestTimeToContact.checkYourAnswersLabel = Best time of day to call you
-bestTimeToContact.morning = Morning
-bestTimeToContact.afternoon = Afternoon
-bestTimeToContact.evening = Evening (we’re only able to call up to 8pm)
-bestTimeToContact.error.required = Select the best time of day to call you
-bestTimeToContact.change.hidden = the time of day that is the best time to call you
-
 partnerDateOfBirth.title = What is your partner’s date of birth?
 partnerDateOfBirth.heading = What is {0}’s date of birth?
 partnerDateOfBirth.hint = For example, 20 3 2001.
@@ -673,14 +651,6 @@ partnerEldestChildName.error.firstName.length = First name of {1}’s oldest chi
 partnerEldestChildName.error.middleNames.length = Middle names of {1}’s oldest child must be 100 characters or less
 partnerEldestChildName.error.lastName.length = Last name of {1}’s oldest child must be 100 characters or less
 partnerEldestChildName.change.hidden = the name of {0}’s oldest child
-
-partnerEmploymentStatus.title = What is your partner’s employment status?
-partnerEmploymentStatus.heading = What is {0}’s employment status?
-partnerEmploymentStatus.hint = Select all that apply.
-partnerEmploymentStatus.checkYourAnswersLabel = {0}’s employment status
-partnerEmploymentStatus.error.required = Select {0}’s employment status
-partnerEmploymentStatus.error.mutuallyExclusive = Select {0}’s employment status or none of these apply
-partnerEmploymentStatus.change.hidden = {0}’s employment status
 
 partnerClaimingChildBenefit.title = Is your partner getting Child Benefit now?
 partnerClaimingChildBenefit.heading = Is {0} getting Child Benefit now?
@@ -1054,12 +1024,7 @@ pdf.currentAddress = Current address
 pdf.livedAtAddressOneYear = Lived at address for more than a year
 pdf.previousAddress = Previous address
 pdf.phoneNumber = Telephone number
-pdf.bestTimeToContact = Best time to call
-pdf.bestTimeToContact.morning = Morning
-pdf.bestTimeToContact.afternoon = Afternoon
-pdf.bestTimeToContact.evening = Evening
 pdf.nationality = Nationality
-pdf.employmentStatus = Employment status
 pdf.incomeDetails = Income details
 pdf.benefits = Benefits received
 pdf.paymentDetails = Payment details

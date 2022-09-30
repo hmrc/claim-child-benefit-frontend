@@ -17,8 +17,11 @@
 package pages.applicant
 
 import controllers.applicant.routes
-import models.UserAnswers
-import pages.{Page, QuestionPage, Waypoints}
+import models.RelationshipStatus._
+import models.{Index, UserAnswers}
+import pages.child.ChildNamePage
+import pages.partner.PartnerNamePage
+import pages.{Page, QuestionPage, RelationshipStatusPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -31,6 +34,13 @@ case object ApplicantNationalityPage extends QuestionPage[String] {
   override def route(waypoints: Waypoints): Call =
     routes.ApplicantNationalityController.onPageLoad(waypoints)
 
-  override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantEmploymentStatusPage
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(RelationshipStatusPage).map {
+      case Married | Cohabiting =>
+        PartnerNamePage
+
+      case Single | Divorced | Separated | Widowed =>
+        ChildNamePage(Index(0))
+    }.orRecover
 }

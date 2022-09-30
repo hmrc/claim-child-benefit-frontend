@@ -54,10 +54,8 @@ class JourneyModelSpec
   private val previousUkAddress = UkAddress("line 1", None, "town", None, "BB22 2BB")
   private val previousInternationalAddress = InternationalAddress("line 1", None, "town", None, None, country)
   private val phoneNumber = "07777 777777"
-  private val bestTimes = Set[BestTimeToContact](BestTimeToContact.Morning)
   private val applicantBenefits = Set[Benefits](Benefits.NoneOfTheAbove)
   private val applicantNationality = "applicant nationality"
-  private val applicantEmployment = Set[EmploymentStatus](EmploymentStatus.Employed)
   private val previousName1 = "previous name 1"
   private val previousName2 = "previous name 2"
 
@@ -67,7 +65,6 @@ class JourneyModelSpec
 
   private val partnerName = AdultName("partner first", None, "partner last")
   private val partnerNationality = "partner nationality"
-  private val partnerEmployment = Set[EmploymentStatus](EmploymentStatus.Employed)
   private val partnerNino = arbitrary[Nino].sample.value
   private val partnerClaiming = PartnerClaimingChildBenefit.GettingPayments
   private val partnerEldestChildName = ChildName("partner child first", None, "partner child last")
@@ -108,9 +105,7 @@ class JourneyModelSpec
             currentAddress = currentUkAddress,
             previousAddress = None,
             telephoneNumber = phoneNumber,
-            bestTimeToContact = bestTimes,
             nationality = applicantNationality,
-            employmentStatus = applicantEmployment,
             alwaysLivedInUk = true,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -155,7 +150,6 @@ class JourneyModelSpec
           .set(PartnerNinoKnownPage, false).success.value
           .set(PartnerDateOfBirthPage, now).success.value
           .set(PartnerNationalityPage, partnerNationality).success.value
-          .set(PartnerEmploymentStatusPage, partnerEmployment).success.value
           .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming).success.value
           .set(AdditionalInformationPage, Information("info")).success.value
 
@@ -168,9 +162,7 @@ class JourneyModelSpec
             currentAddress = currentUkAddress,
             previousAddress = None,
             telephoneNumber = phoneNumber,
-            bestTimeToContact = bestTimes,
             nationality = applicantNationality,
-            employmentStatus = applicantEmployment,
             alwaysLivedInUk = true,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -183,7 +175,6 @@ class JourneyModelSpec
               dateOfBirth = now,
               nationality = partnerNationality,
               nationalInsuranceNumber = None,
-              employmentStatus = partnerEmployment,
               memberOfHMForcesOrCivilServantAbroad = None,
               currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
               eldestChild = None
@@ -246,9 +237,7 @@ class JourneyModelSpec
             currentAddress = currentUkAddress,
             previousAddress = None,
             telephoneNumber = phoneNumber,
-            bestTimeToContact = bestTimes,
             nationality = applicantNationality,
-            employmentStatus = applicantEmployment,
             alwaysLivedInUk = true,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -261,7 +250,6 @@ class JourneyModelSpec
               dateOfBirth = now,
               nationality = partnerNationality,
               nationalInsuranceNumber = None,
-              employmentStatus = partnerEmployment,
               memberOfHMForcesOrCivilServantAbroad = None,
               currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
               eldestChild = None
@@ -658,9 +646,7 @@ class JourneyModelSpec
           currentAddress = currentUkAddress,
           previousAddress = None,
           telephoneNumber = phoneNumber,
-          bestTimeToContact = bestTimes,
           nationality = applicantNationality,
-          employmentStatus = applicantEmployment,
           alwaysLivedInUk = true,
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -693,9 +679,7 @@ class JourneyModelSpec
           currentAddress = currentUkAddress,
           previousAddress = None,
           telephoneNumber = phoneNumber,
-          bestTimeToContact = bestTimes,
           nationality = applicantNationality,
-          employmentStatus = applicantEmployment,
           alwaysLivedInUk = true,
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -727,9 +711,7 @@ class JourneyModelSpec
           currentAddress = currentInternationalAddress,
           previousAddress = None,
           telephoneNumber = phoneNumber,
-          bestTimeToContact = bestTimes,
           nationality = applicantNationality,
-          employmentStatus = applicantEmployment,
           alwaysLivedInUk = true,
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -763,9 +745,7 @@ class JourneyModelSpec
             currentAddress = currentUkAddress,
             previousAddress = Some(previousUkAddress),
             telephoneNumber = phoneNumber,
-            bestTimeToContact = bestTimes,
             nationality = applicantNationality,
-            employmentStatus = applicantEmployment,
             alwaysLivedInUk = true,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -797,9 +777,7 @@ class JourneyModelSpec
             currentAddress = currentUkAddress,
             previousAddress = Some(previousInternationalAddress),
             telephoneNumber = phoneNumber,
-            bestTimeToContact = bestTimes,
             nationality = applicantNationality,
-            employmentStatus = applicantEmployment,
             alwaysLivedInUk = true,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -830,7 +808,6 @@ class JourneyModelSpec
           dateOfBirth = now,
           nationality = partnerNationality,
           nationalInsuranceNumber = Some(partnerNino.value),
-          employmentStatus = partnerEmployment,
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
           eldestChild = None
@@ -861,7 +838,6 @@ class JourneyModelSpec
           dateOfBirth = now,
           nationality = partnerNationality,
           nationalInsuranceNumber = None,
-          employmentStatus = partnerEmployment,
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyClaimingChildBenefit = partnerClaiming,
           eldestChild = Some(JourneyModel.EldestChild(partnerEldestChildName, now))
@@ -892,7 +868,6 @@ class JourneyModelSpec
           dateOfBirth = now,
           nationality = partnerNationality,
           nationalInsuranceNumber = None,
-          employmentStatus = partnerEmployment,
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments,
           eldestChild = Some(JourneyModel.EldestChild(partnerEldestChildName, now))
@@ -1212,7 +1187,6 @@ class JourneyModelSpec
           PartnerDateOfBirthPage,
           PartnerNationalityPage,
           PartnerNinoKnownPage,
-          PartnerEmploymentStatusPage,
           PartnerClaimingChildBenefitPage
         )
         data mustBe empty
@@ -1253,7 +1227,6 @@ class JourneyModelSpec
           PartnerDateOfBirthPage,
           PartnerNationalityPage,
           PartnerNinoKnownPage,
-          PartnerEmploymentStatusPage,
           PartnerClaimingChildBenefitPage
         )
         data mustBe empty
@@ -1715,9 +1688,7 @@ class JourneyModelSpec
         .set(ApplicantCurrentUkAddressPage, currentUkAddress).success.value
         .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
         .set(ApplicantPhoneNumberPage, phoneNumber).success.value
-        .set(BestTimeToContactPage, bestTimes).success.value
         .set(ApplicantNationalityPage, applicantNationality).success.value
-        .set(ApplicantEmploymentStatusPage, applicantEmployment).success.value
         .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
 
     def withMinimalPartnerDetails: UserAnswers =
@@ -1726,7 +1697,6 @@ class JourneyModelSpec
         .set(PartnerNinoKnownPage, false).success.value
         .set(PartnerDateOfBirthPage, now).success.value
         .set(PartnerNationalityPage, partnerNationality).success.value
-        .set(PartnerEmploymentStatusPage, partnerEmployment).success.value
         .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming).success.value
 
     def withOneChild: UserAnswers =

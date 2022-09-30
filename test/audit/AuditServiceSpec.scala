@@ -62,9 +62,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           currentAddress = models.UkAddress("current line 1", Some("current line 2"), "current town", Some("current county"), "current postcode"),
           previousAddress = Some(models.UkAddress("previous line 1", Some("previous line 2"), "previous town", Some("previous county"), "previous postcode")),
           telephoneNumber = "07777 777777",
-          bestTimeToContact = Set(models.BestTimeToContact.Morning, models.BestTimeToContact.Afternoon, models.BestTimeToContact.Evening),
           nationality = "applicant nationality",
-          employmentStatus = Set(models.EmploymentStatus.Employed, models.EmploymentStatus.SelfEmployed),
           alwaysLivedInUk = false,
           memberOfHMForcesOrCivilServantAbroad = Some(false),
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -77,7 +75,6 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             dateOfBirth = now,
             nationality = "partner nationality",
             nationalInsuranceNumber = Some(partnerNino),
-            employmentStatus = Set(models.EmploymentStatus.Employed, models.EmploymentStatus.SelfEmployed),
             memberOfHMForcesOrCivilServantAbroad = Some(false),
             currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments,
             eldestChild = Some(JourneyModel.EldestChild(
@@ -126,9 +123,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           currentAddress = UkAddress("current line 1", Some("current line 2"), "current town", Some("current county"), "current postcode"),
           previousAddress = Some(UkAddress("previous line 1", Some("previous line 2"), "previous town", Some("previous county"), "previous postcode")),
           telephoneNumber = "07777 777777",
-          bestTimeToContact = Set("morning", "afternoon", "evening"),
           nationality = "applicant nationality",
-          employmentStatus = Set("employed", "selfEmployed"),
           alwaysLivedInUk = false,
           memberOfHMForcesOrCivilServantAbroad = Some(false),
           currentlyClaimingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming.toString
@@ -141,7 +136,6 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             dateOfBirth = now,
             nationality = "partner nationality",
             nationalInsuranceNumber = Some(partnerNino),
-            employmentStatus = Set("employed", "selfEmployed"),
             memberOfHMForcesOrCivilServantAbroad = Some(false),
             currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments.toString,
             eldestChild = Some(EldestChild(

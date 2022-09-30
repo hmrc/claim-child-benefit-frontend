@@ -83,12 +83,6 @@ trait ModelGenerators {
       Gen.oneOf(ApplicantRelationshipToChild.values)
     }
 
-  implicit lazy val arbitraryBestTimeToContact: Arbitrary[BestTimeToContact] = {
-    Arbitrary {
-      Gen.oneOf(BestTimeToContact.values)
-    }
-  }
-
   implicit lazy val arbitraryNino: Arbitrary[Nino] = Arbitrary {
     for {
       firstChar <- Gen.oneOf('A', 'C', 'E', 'H', 'J', 'L', 'M', 'O', 'P', 'R', 'S', 'W', 'X', 'Y').map(_.toString)
@@ -105,11 +99,6 @@ trait ModelGenerators {
         middleNames <- Gen.option(arbitrary[String])
         lastName    <- arbitrary[String]
       } yield AdultName(firstName, middleNames, lastName)
-    }
-
-  implicit lazy val arbitraryApplicantEmploymentStatus: Arbitrary[EmploymentStatus] =
-    Arbitrary {
-      Gen.oneOf(EmploymentStatus.values)
     }
 
   implicit lazy val arbitraryUkAddress: Arbitrary[UkAddress] =

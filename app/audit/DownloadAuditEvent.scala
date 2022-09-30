@@ -43,9 +43,7 @@ object DownloadAuditEvent {
         currentAddress                       = convertAddress(model.applicant.currentAddress),
         previousAddress                      = model.applicant.previousAddress.map(convertAddress),
         telephoneNumber                      = model.applicant.telephoneNumber,
-        bestTimeToContact                    = model.applicant.bestTimeToContact.map(_.toString),
         nationality                          = model.applicant.nationality,
-        employmentStatus                     = model.applicant.employmentStatus.map(_.toString),
         alwaysLivedInUk                      = model.applicant.alwaysLivedInUk,
         memberOfHMForcesOrCivilServantAbroad = model.applicant.memberOfHMForcesOrCivilServantAbroad,
         currentlyClaimingChildBenefit        = model.applicant.currentlyReceivingChildBenefit.toString
@@ -60,7 +58,6 @@ object DownloadAuditEvent {
             nationality                          = partner.nationality,
             nationalInsuranceNumber              = partner.nationalInsuranceNumber,
             currentlyClaimingChildBenefit        = partner.currentlyClaimingChildBenefit.toString,
-            employmentStatus                     = partner.employmentStatus.map(_.toString),
             memberOfHMForcesOrCivilServantAbroad = partner.memberOfHMForcesOrCivilServantAbroad,
             eldestChild                          = partner.eldestChild.map(convertEldestChild)
           )
@@ -205,9 +202,7 @@ object DownloadAuditEvent {
                                              currentAddress: Address,
                                              previousAddress: Option[Address],
                                              telephoneNumber: String,
-                                             bestTimeToContact: Set[String],
                                              nationality: String,
-                                             employmentStatus: Set[String],
                                              alwaysLivedInUk: Boolean,
                                              memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
                                              currentlyClaimingChildBenefit: String
@@ -222,7 +217,6 @@ object DownloadAuditEvent {
                                            nationality: String,
                                            currentlyClaimingChildBenefit: String,
                                            nationalInsuranceNumber: Option[String],
-                                           employmentStatus: Set[String],
                                            memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
                                            eldestChild: Option[EldestChild]
                                          )
