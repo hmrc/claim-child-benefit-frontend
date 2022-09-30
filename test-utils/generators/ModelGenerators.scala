@@ -101,11 +101,6 @@ trait ModelGenerators {
       } yield AdultName(firstName, middleNames, lastName)
     }
 
-  implicit lazy val arbitraryApplicantEmploymentStatus: Arbitrary[EmploymentStatus] =
-    Arbitrary {
-      Gen.oneOf(EmploymentStatus.values)
-    }
-
   implicit lazy val arbitraryUkAddress: Arbitrary[UkAddress] =
     Arbitrary {
       for {

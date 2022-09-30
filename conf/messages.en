@@ -503,11 +503,6 @@ applicantDateOfBirth.error.beforeMinimum = The date must be on or after {0}
 applicantDateOfBirth.error.afterMaximum = The date must be on or before {0}
 applicantDateOfBirth.change.hidden = your date of birth
 
-employmentStatus.lookingForWork = Looking for work
-employmentStatus.employed = Employed
-employmentStatus.selfEmployed = Self-employed
-employmentStatus.noneOfThese = None of these apply
-
 applicantHasPreviousFamilyName.title = Have you been known by any other last names or family names?
 applicantHasPreviousFamilyName.heading = Have you been known by any other last names or family names?
 applicantHasPreviousFamilyName.checkYourAnswersLabel = Have you been known by any other last names or family names?
@@ -656,14 +651,6 @@ partnerEldestChildName.error.firstName.length = First name of {1}’s oldest chi
 partnerEldestChildName.error.middleNames.length = Middle names of {1}’s oldest child must be 100 characters or less
 partnerEldestChildName.error.lastName.length = Last name of {1}’s oldest child must be 100 characters or less
 partnerEldestChildName.change.hidden = the name of {0}’s oldest child
-
-partnerEmploymentStatus.title = What is your partner’s employment status?
-partnerEmploymentStatus.heading = What is {0}’s employment status?
-partnerEmploymentStatus.hint = Select all that apply.
-partnerEmploymentStatus.checkYourAnswersLabel = {0}’s employment status
-partnerEmploymentStatus.error.required = Select {0}’s employment status
-partnerEmploymentStatus.error.mutuallyExclusive = Select {0}’s employment status or none of these apply
-partnerEmploymentStatus.change.hidden = {0}’s employment status
 
 partnerClaimingChildBenefit.title = Is your partner getting Child Benefit now?
 partnerClaimingChildBenefit.heading = Is {0} getting Child Benefit now?
@@ -1038,7 +1025,6 @@ pdf.livedAtAddressOneYear = Lived at address for more than a year
 pdf.previousAddress = Previous address
 pdf.phoneNumber = Telephone number
 pdf.nationality = Nationality
-pdf.employmentStatus = Employment status
 pdf.incomeDetails = Income details
 pdf.benefits = Benefits received
 pdf.paymentDetails = Payment details

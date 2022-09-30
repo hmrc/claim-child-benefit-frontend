@@ -104,7 +104,6 @@ class CheckYourAnswersController @Inject()(
           PartnerNinoSummary.row(request.userAnswers, waypoints, thisPage),
           PartnerDateOfBirthSummary.row(request.userAnswers, waypoints, thisPage),
           PartnerNationalitySummary.row(request.userAnswers, waypoints, thisPage),
-          PartnerEmploymentStatusSummary.row(request.userAnswers, waypoints, thisPage),
           PartnerClaimingChildBenefitSummary.row(request.userAnswers, waypoints, thisPage),
           PartnerEldestChildNameSummary.row(request.userAnswers, waypoints, thisPage),
           PartnerEldestChildDateOfBirthSummary.row(request.userAnswers, waypoints, thisPage)

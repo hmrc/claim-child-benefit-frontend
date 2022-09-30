@@ -102,9 +102,6 @@ trait PageGenerators {
   implicit lazy val arbitraryPartnerEntitledToChildBenefitPage: Arbitrary[PartnerClaimingChildBenefitPage.type] =
     Arbitrary(PartnerClaimingChildBenefitPage)
 
-  implicit lazy val arbitraryPartnerEmploymentStatusPage: Arbitrary[PartnerEmploymentStatusPage.type] =
-    Arbitrary(PartnerEmploymentStatusPage)
-
   implicit lazy val arbitraryPartnerEldestChildNamePage: Arbitrary[PartnerEldestChildNamePage.type] =
     Arbitrary(PartnerEldestChildNamePage)
 

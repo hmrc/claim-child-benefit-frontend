@@ -19,8 +19,6 @@
 
     @line("pdf.nationality", model.nationality)
 
-    @line("pdf.employmentStatus", model.employmentStatus.map(x => messages(s"employmentStatus.${x.toString}")).mkString(", "))
-
     @model.memberOfHMForcesOrCivilServantAbroad.map { answer =>
         @line("pdf.hmfOrCivilServant", booleanToYesNo(answer))
     }

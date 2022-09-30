@@ -58,7 +58,6 @@ object DownloadAuditEvent {
             nationality                          = partner.nationality,
             nationalInsuranceNumber              = partner.nationalInsuranceNumber,
             currentlyClaimingChildBenefit        = partner.currentlyClaimingChildBenefit.toString,
-            employmentStatus                     = partner.employmentStatus.map(_.toString),
             memberOfHMForcesOrCivilServantAbroad = partner.memberOfHMForcesOrCivilServantAbroad,
             eldestChild                          = partner.eldestChild.map(convertEldestChild)
           )
@@ -218,7 +217,6 @@ object DownloadAuditEvent {
                                            nationality: String,
                                            currentlyClaimingChildBenefit: String,
                                            nationalInsuranceNumber: Option[String],
-                                           employmentStatus: Set[String],
                                            memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
                                            eldestChild: Option[EldestChild]
                                          )

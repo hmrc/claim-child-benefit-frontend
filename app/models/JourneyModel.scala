@@ -82,7 +82,6 @@ object JourneyModel {
                             dateOfBirth: LocalDate,
                             nationality: String,
                             nationalInsuranceNumber: Option[String],
-                            employmentStatus: Set[EmploymentStatus],
                             memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
                             currentlyClaimingChildBenefit: PartnerClaimingChildBenefit,
                             eldestChild: Option[EldestChild]
@@ -305,7 +304,6 @@ object JourneyModel {
       answers.getIor(PartnerDateOfBirthPage),
       answers.getIor(PartnerNationalityPage),
       getPartnerNino,
-      answers.getIor(PartnerEmploymentStatusPage),
       getHmForces,
       answers.getIor(PartnerClaimingChildBenefitPage),
       getPartnerEldestChild

@@ -150,9 +150,6 @@ POST       /partners-eldest-child-date-of-birth                  controllers.par
 GET        /partners-eldest-child-name                        controllers.partner.PartnerEldestChildNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /partners-eldest-child-name                        controllers.partner.PartnerEldestChildNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /partners-employment-status                        controllers.partner.PartnerEmploymentStatusController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /partners-employment-status                        controllers.partner.PartnerEmploymentStatusController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
 GET        /partner-claiming-child-benefit                        controllers.partner.PartnerClaimingChildBenefitController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /partner-claiming-child-benefit                        controllers.partner.PartnerClaimingChildBenefitController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
