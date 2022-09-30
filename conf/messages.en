@@ -503,14 +503,6 @@ applicantDateOfBirth.error.beforeMinimum = The date must be on or after {0}
 applicantDateOfBirth.error.afterMaximum = The date must be on or before {0}
 applicantDateOfBirth.change.hidden = your date of birth
 
-applicantEmploymentStatus.title = What is your employment status?
-applicantEmploymentStatus.heading = What is your employment status?
-applicantEmploymentStatus.hint = Select all that apply.
-applicantEmploymentStatus.checkYourAnswersLabel = Your employment status
-applicantEmploymentStatus.error.required = Select your employment status
-applicantEmploymentStatus.error.mutuallyExclusive = Select your employment status or none of these apply
-applicantEmploymentStatus.change.hidden = your employment status
-
 employmentStatus.lookingForWork = Looking for work
 employmentStatus.employed = Employed
 employmentStatus.selfEmployed = Self-employed

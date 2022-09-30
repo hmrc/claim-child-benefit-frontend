@@ -108,7 +108,6 @@ class JourneyModelSpec
             previousAddress = None,
             telephoneNumber = phoneNumber,
             nationality = applicantNationality,
-            employmentStatus = applicantEmployment,
             alwaysLivedInUk = true,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -167,7 +166,6 @@ class JourneyModelSpec
             previousAddress = None,
             telephoneNumber = phoneNumber,
             nationality = applicantNationality,
-            employmentStatus = applicantEmployment,
             alwaysLivedInUk = true,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -244,7 +242,6 @@ class JourneyModelSpec
             previousAddress = None,
             telephoneNumber = phoneNumber,
             nationality = applicantNationality,
-            employmentStatus = applicantEmployment,
             alwaysLivedInUk = true,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -655,7 +652,6 @@ class JourneyModelSpec
           previousAddress = None,
           telephoneNumber = phoneNumber,
           nationality = applicantNationality,
-          employmentStatus = applicantEmployment,
           alwaysLivedInUk = true,
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -689,7 +685,6 @@ class JourneyModelSpec
           previousAddress = None,
           telephoneNumber = phoneNumber,
           nationality = applicantNationality,
-          employmentStatus = applicantEmployment,
           alwaysLivedInUk = true,
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -722,7 +717,6 @@ class JourneyModelSpec
           previousAddress = None,
           telephoneNumber = phoneNumber,
           nationality = applicantNationality,
-          employmentStatus = applicantEmployment,
           alwaysLivedInUk = true,
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -757,7 +751,6 @@ class JourneyModelSpec
             previousAddress = Some(previousUkAddress),
             telephoneNumber = phoneNumber,
             nationality = applicantNationality,
-            employmentStatus = applicantEmployment,
             alwaysLivedInUk = true,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -790,7 +783,6 @@ class JourneyModelSpec
             previousAddress = Some(previousInternationalAddress),
             telephoneNumber = phoneNumber,
             nationality = applicantNationality,
-            employmentStatus = applicantEmployment,
             alwaysLivedInUk = true,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -1707,7 +1699,6 @@ class JourneyModelSpec
         .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
         .set(ApplicantPhoneNumberPage, phoneNumber).success.value
         .set(ApplicantNationalityPage, applicantNationality).success.value
-        .set(ApplicantEmploymentStatusPage, applicantEmployment).success.value
         .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
 
     def withMinimalPartnerDetails: UserAnswers =

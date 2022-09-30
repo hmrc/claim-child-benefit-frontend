@@ -63,7 +63,6 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           previousAddress = Some(models.UkAddress("previous line 1", Some("previous line 2"), "previous town", Some("previous county"), "previous postcode")),
           telephoneNumber = "07777 777777",
           nationality = "applicant nationality",
-          employmentStatus = Set(models.EmploymentStatus.Employed, models.EmploymentStatus.SelfEmployed),
           alwaysLivedInUk = false,
           memberOfHMForcesOrCivilServantAbroad = Some(false),
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -126,7 +125,6 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           previousAddress = Some(UkAddress("previous line 1", Some("previous line 2"), "previous town", Some("previous county"), "previous postcode")),
           telephoneNumber = "07777 777777",
           nationality = "applicant nationality",
-          employmentStatus = Set("employed", "selfEmployed"),
           alwaysLivedInUk = false,
           memberOfHMForcesOrCivilServantAbroad = Some(false),
           currentlyClaimingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming.toString

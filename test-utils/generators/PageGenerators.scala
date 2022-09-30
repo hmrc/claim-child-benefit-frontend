@@ -141,9 +141,6 @@ trait PageGenerators {
   implicit lazy val arbitraryApplicantHasPreviousFamilyNamePage: Arbitrary[ApplicantHasPreviousFamilyNamePage.type] =
     Arbitrary(ApplicantHasPreviousFamilyNamePage)
 
-  implicit lazy val arbitraryApplicantEmploymentStatusPage: Arbitrary[ApplicantEmploymentStatusPage.type] =
-    Arbitrary(ApplicantEmploymentStatusPage)
-
   implicit lazy val arbitraryApplicantDateOfBirthPage: Arbitrary[ApplicantDateOfBirthPage.type] =
     Arbitrary(ApplicantDateOfBirthPage)
 

@@ -107,9 +107,6 @@ POST       /your-current-international-address                        controller
 GET        /your-date-of-birth                  controllers.applicant.ApplicantDateOfBirthController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-date-of-birth                  controllers.applicant.ApplicantDateOfBirthController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /your-employment-status                        controllers.applicant.ApplicantEmploymentStatusController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /your-employment-status                        controllers.applicant.ApplicantEmploymentStatusController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
 GET        /have-previous-family-name                        controllers.applicant.ApplicantHasPreviousFamilyNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /have-previous-family-name                        controllers.applicant.ApplicantHasPreviousFamilyNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 

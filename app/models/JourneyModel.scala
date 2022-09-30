@@ -72,7 +72,6 @@ object JourneyModel {
                               previousAddress: Option[Address],
                               telephoneNumber: String,
                               nationality: String,
-                              employmentStatus: Set[EmploymentStatus],
                               alwaysLivedInUk: Boolean,
                               memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
                               currentlyReceivingChildBenefit: CurrentlyReceivingChildBenefit
@@ -264,7 +263,6 @@ object JourneyModel {
       getPreviousAddress,
       answers.getIor(ApplicantPhoneNumberPage),
       answers.getIor(ApplicantNationalityPage),
-      answers.getIor(ApplicantEmploymentStatusPage),
       answers.getIor(AlwaysLivedInUkPage),
       getHmForces,
       answers.getIor(CurrentlyReceivingChildBenefitPage)

@@ -18,7 +18,7 @@ package journey
 
 import generators.ModelGenerators
 import models.RelationshipStatus._
-import models.{Country, EmploymentStatus, Index, InternationalAddress, UkAddress, UserAnswers}
+import models.{Country, Index, InternationalAddress, UkAddress, UserAnswers}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
@@ -47,8 +47,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
           submitAnswer(ApplicantCurrentUkAddressPage, address),
           submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
           submitAnswer(ApplicantPhoneNumberPage, "07777 7777777"),
-          submitAnswer(ApplicantNationalityPage, "nationality"),
-          pageMustBe(ApplicantEmploymentStatusPage)
+          pageMustBe(ApplicantNationalityPage)
         )
     }
   }
@@ -196,16 +195,15 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
     }
   }
 
-  "users proceeding from Applicant Employment Status" - {
+  "users proceeding from Applicant Nationality" - {
 
     "must go to Partner Name if they are Married" in {
 
       val answers = UserAnswers("id").set(RelationshipStatusPage, Married).success.value
-      val employmentStatus = Set[EmploymentStatus](EmploymentStatus.Employed)
 
-      startingFrom(ApplicantEmploymentStatusPage, answers = answers)
+      startingFrom(ApplicantNationalityPage, answers = answers)
         .run(
-          submitAnswer(ApplicantEmploymentStatusPage, employmentStatus),
+          submitAnswer(ApplicantNationalityPage, "nationality"),
           pageMustBe(PartnerNamePage)
         )
     }
@@ -213,11 +211,10 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
     "must go to Partner Name if they are Cohabiting" in {
 
       val answers = UserAnswers("id").set(RelationshipStatusPage, Cohabiting).success.value
-      val employmentStatus = Set[EmploymentStatus](EmploymentStatus.Employed)
 
-      startingFrom(ApplicantEmploymentStatusPage, answers = answers)
+      startingFrom(ApplicantNationalityPage, answers = answers)
         .run(
-          submitAnswer(ApplicantEmploymentStatusPage, employmentStatus),
+          submitAnswer(ApplicantNationalityPage, "nationality"),
           pageMustBe(PartnerNamePage)
         )
     }
@@ -225,11 +222,10 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
     "must go to Child Name (for index 0) if they are Single" in {
 
       val answers = UserAnswers("id").set(RelationshipStatusPage, Single).success.value
-      val employmentStatus = Set[EmploymentStatus](EmploymentStatus.Employed)
 
-      startingFrom(ApplicantEmploymentStatusPage, answers = answers)
+      startingFrom(ApplicantNationalityPage, answers = answers)
         .run(
-          submitAnswer(ApplicantEmploymentStatusPage, employmentStatus),
+          submitAnswer(ApplicantNationalityPage, "nationality"),
           pageMustBe(ChildNamePage(Index(0)))
         )
     }
@@ -237,11 +233,10 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
     "must go to Child Name (for index 0) if they are Separated" in {
 
       val answers = UserAnswers("id").set(RelationshipStatusPage, Separated).success.value
-      val employmentStatus = Set[EmploymentStatus](EmploymentStatus.Employed)
 
-      startingFrom(ApplicantEmploymentStatusPage, answers = answers)
+      startingFrom(ApplicantNationalityPage, answers = answers)
         .run(
-          submitAnswer(ApplicantEmploymentStatusPage, employmentStatus),
+          submitAnswer(ApplicantNationalityPage, "nationality"),
           pageMustBe(ChildNamePage(Index(0)))
       )
     }
@@ -249,11 +244,10 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
     "must go to Child Name (for index 0) if they are Divorced" in {
 
       val answers = UserAnswers("id").set(RelationshipStatusPage, Divorced).success.value
-      val employmentStatus = Set[EmploymentStatus](EmploymentStatus.Employed)
 
-      startingFrom(ApplicantEmploymentStatusPage, answers = answers)
+      startingFrom(ApplicantNationalityPage, answers = answers)
         .run(
-          submitAnswer(ApplicantEmploymentStatusPage, employmentStatus),
+          submitAnswer(ApplicantNationalityPage, "nationality"),
           pageMustBe(ChildNamePage(Index(0)))
         )
     }
@@ -261,11 +255,10 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
     "must go to Child Name (for index 0) if they are Widowed" in {
 
       val answers = UserAnswers("id").set(RelationshipStatusPage, Widowed).success.value
-      val employmentStatus = Set[EmploymentStatus](EmploymentStatus.Employed)
 
-      startingFrom(ApplicantEmploymentStatusPage, answers = answers)
+      startingFrom(ApplicantNationalityPage, answers = answers)
         .run(
-          submitAnswer(ApplicantEmploymentStatusPage, employmentStatus),
+          submitAnswer(ApplicantNationalityPage, "nationality"),
           pageMustBe(ChildNamePage(Index(0)))
         )
     }
