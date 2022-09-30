@@ -55,6 +55,7 @@ index.whoCanApply.p2 = If you are in a couple and one of you does not work or ea
 index.whoCanApply.p3 = You do not need to be the parent of the child to claim Child Benefit.
 index.whenToApply = When to apply
 index.whenToApply.p1 = Claim as soon as your baby is born and registered or once a child comes to live with you, including adoption.
+index.whenToApply.p2 = To claim, the child must either be under 16 or under 20 and in full-time, non-advanced education or approved training.
 index.beforeYouStart = Before you start
 index.beforeYouStart.p1 = To complete this form, you’ll need the following documents for any children you are applying for, depending on your circumstance:
 index.beforeYouStart.p1.bullet1 = birth certificate
