@@ -52,16 +52,54 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
     }
   }
 
-  "users who know their NINO must be asked for it" in {
+  "users who know their NINO" - {
 
     val nino = arbitrary[Nino].sample.value
 
-    startingFrom(ApplicantNinoKnownPage)
-      .run(
-        submitAnswer(ApplicantNinoKnownPage, true),
-        submitAnswer(ApplicantNinoPage, nino),
-        pageMustBe(ApplicantDateOfBirthPage)
-      )
+    "must be asked for it" in {
+
+      startingFrom(ApplicantNinoKnownPage)
+        .run(
+          submitAnswer(ApplicantNinoKnownPage, true),
+          submitAnswer(ApplicantNinoPage, nino),
+          pageMustBe(ApplicantDateOfBirthPage)
+        )
+    }
+
+    "must not be asked if they have lived at their current address more than a year" - {
+
+      "when their current address is in the UK" in {
+
+        val address = UkAddress("line 1", None, "town", None, "postcode")
+
+        startingFrom(ApplicantNinoKnownPage)
+          .run(
+            setUserAnswerTo(AlwaysLivedInUkPage, true),
+            submitAnswer(ApplicantNinoKnownPage, true),
+            submitAnswer(ApplicantNinoPage, nino),
+            submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
+            submitAnswer(ApplicantCurrentUkAddressPage, address),
+            pageMustBe(ApplicantPhoneNumberPage)
+          )
+      }
+
+      "when their current address is not in the UK" in {
+
+        val address = InternationalAddress("line 1", None, "town", None, Some("postcode"), arbitrary[Country].sample.value)
+
+        startingFrom(ApplicantNinoKnownPage)
+          .run(
+            setUserAnswerTo(AlwaysLivedInUkPage, false),
+            setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, true),
+            submitAnswer(ApplicantNinoKnownPage, true),
+            submitAnswer(ApplicantNinoPage, nino),
+            submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
+            submitAnswer(ApplicantCurrentAddressInUkPage, false),
+            submitAnswer(ApplicantCurrentInternationalAddressPage, address),
+            pageMustBe(ApplicantPhoneNumberPage)
+          )
+      }
+    }
   }
 
   "users with previous names must be asked for as many as necessary" in {
@@ -166,32 +204,56 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
     }
   }
 
-  "users who need to give a previous address must be asked for it" - {
+  "users who did not give a NINO" - {
 
-    "when the address was in the UK" in {
+    val ukAddress = UkAddress("line 1", None, "town", None, "postcode")
+    val internationalAddress = InternationalAddress("line 1", None, "town", None, None, arbitrary[Country].sample.value)
 
-      val address = UkAddress("line 1", None, "town", None, "postcode")
+    "who have not lived at their current address for a year" - {
 
-      startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
-        .run(
-          submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
-          submitAnswer(ApplicantPreviousAddressInUkPage, true),
-          submitAnswer(ApplicantPreviousUkAddressPage, address),
-          pageMustBe(ApplicantPhoneNumberPage)
-        )
-    }
+      "who have always lived in the UK" - {
 
-    "when the address was not in the UK" in {
+        "must be asked for their previous UK address" in {
 
-      val address = InternationalAddress("line 1", None, "town", None, Some("postcode"), Country.internationalCountries.head)
+          startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
+            .run(
+              setUserAnswerTo(AlwaysLivedInUkPage, true),
+              submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
+              submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
+              pageMustBe(ApplicantPhoneNumberPage)
+            )
+        }
+      }
 
-      startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
-        .run(
-          submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
-          submitAnswer(ApplicantPreviousAddressInUkPage, false),
-          submitAnswer(ApplicantPreviousInternationalAddressPage, address),
-          pageMustBe(ApplicantPhoneNumberPage)
-        )
+      "who have not always lived in the UK" - {
+
+        "must be asked for their previous address" - {
+
+          "and proceed when it was in the UK" in {
+
+            startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
+              .run(
+                setUserAnswerTo(AlwaysLivedInUkPage, false),
+                submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
+                submitAnswer(ApplicantPreviousAddressInUkPage, true),
+                submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
+                pageMustBe(ApplicantPhoneNumberPage)
+              )
+          }
+
+          "and proceed when it was not in the UK" in {
+
+            startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
+              .run(
+                setUserAnswerTo(AlwaysLivedInUkPage, false),
+                submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
+                submitAnswer(ApplicantPreviousAddressInUkPage, false),
+                submitAnswer(ApplicantPreviousInternationalAddressPage, internationalAddress),
+                pageMustBe(ApplicantPhoneNumberPage)
+              )
+          }
+        }
+      }
     }
   }
 

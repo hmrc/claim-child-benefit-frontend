@@ -253,33 +253,80 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
 
   "when the user initially gave their NINO" - {
 
-    "changing to say they don't know it must remove the NINO and return to Check Answers" in {
+    "and has always lived in the UK" - {
 
-      val initialise = journeyOf(
-        submitAnswer(ApplicantNinoKnownPage, true),
-        submitAnswer(ApplicantNinoPage, nino),
-        submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
-        goTo(CheckYourAnswersPage)
-      )
+      "changing to say they don't know their NINO must remove the NINO, ask if they have lived at their current address a year, and return to Check Answers" in {
 
-      startingFrom(ApplicantNinoKnownPage)
-        .run(
-          initialise,
-          goToChangeAnswer(ApplicantNinoKnownPage),
-          submitAnswer(ApplicantNinoKnownPage, false),
-          pageMustBe(CheckYourAnswersPage),
-          answersMustNotContain(ApplicantNinoPage)
+        val initialise = journeyOf(
+          setUserAnswerTo(AlwaysLivedInUkPage, true),
+          submitAnswer(ApplicantNinoKnownPage, true),
+          submitAnswer(ApplicantNinoPage, nino),
+          submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
+          submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
+          submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
+          goTo(CheckYourAnswersPage)
         )
+
+        startingFrom(ApplicantNinoKnownPage)
+          .run(
+            initialise,
+            goToChangeAnswer(ApplicantNinoKnownPage),
+            submitAnswer(ApplicantNinoKnownPage, false),
+            submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
+            submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
+            pageMustBe(CheckYourAnswersPage),
+            answersMustNotContain(ApplicantNinoPage)
+          )
+      }
+    }
+
+    "and has not always lived in the UK" - {
+
+      "changing to say they don't know their NINO must remove the NINO, ask if they have lived at their current address a year, and return to Check Answers" in {
+
+        val initialise = journeyOf(
+          setUserAnswerTo(AlwaysLivedInUkPage, false),
+          setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, true),
+          setUserAnswerTo(RelationshipStatusPage, RelationshipStatus.Single),
+          submitAnswer(ApplicantNinoKnownPage, true),
+          submitAnswer(ApplicantNinoPage, nino),
+          submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
+          submitAnswer(ApplicantCurrentAddressInUkPage, true),
+          submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
+          setUserAnswerTo(ApplicantPhoneNumberPage, phoneNumber),
+          goTo(CheckYourAnswersPage)
+        )
+
+        startingFrom(ApplicantNinoKnownPage)
+          .run(
+            initialise,
+            goToChangeAnswer(ApplicantNinoKnownPage),
+            submitAnswer(ApplicantNinoKnownPage, false),
+            submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
+            submitAnswer(ApplicantPreviousAddressInUkPage, false),
+            submitAnswer(ApplicantPreviousInternationalAddressPage, internationalAddress),
+            pageMustBe(CheckYourAnswersPage),
+            answersMustNotContain(ApplicantNinoPage)
+          )
+      }
     }
   }
 
   "when the user initially said they did not know their NINO" - {
 
-    "changing to say they do know it must collect the NINO then return to Check Answers" in {
+    "changing to say they do know it must collect the NINO, remove their previous address then return to Check Answers" in {
 
       val initialise = journeyOf(
+        setUserAnswerTo(AlwaysLivedInUkPage, false),
+        setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, true),
         submitAnswer(ApplicantNinoKnownPage, false),
         submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
+        submitAnswer(ApplicantCurrentAddressInUkPage, true),
+        submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
+        submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
+        submitAnswer(ApplicantPreviousAddressInUkPage, true),
+        submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
+        setUserAnswerTo(ApplicantPreviousInternationalAddressPage, internationalAddress),
         goTo(CheckYourAnswersPage)
       )
 
@@ -289,7 +336,11 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
           goToChangeAnswer(ApplicantNinoKnownPage),
           submitAnswer(ApplicantNinoKnownPage, true),
           submitAnswer(ApplicantNinoPage, nino),
-          pageMustBe(CheckYourAnswersPage)
+          pageMustBe(CheckYourAnswersPage),
+          answersMustNotContain(ApplicantLivedAtCurrentAddressOneYearPage),
+          answersMustNotContain(ApplicantPreviousAddressInUkPage),
+          answersMustNotContain(ApplicantPreviousUkAddressPage),
+          answersMustNotContain(ApplicantPreviousInternationalAddressPage)
         )
     }
   }
@@ -301,6 +352,9 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
       "when the address is in the UK" in {
 
         val initialise = journeyOf(
+          setUserAnswerTo(AlwaysLivedInUkPage, false),
+          setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, true),
+          setUserAnswerTo(ApplicantNinoKnownPage, false),
           submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
           submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
           goTo(CheckYourAnswersPage)
@@ -320,6 +374,9 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
       "when the address is not in the UK" in {
 
         val initialise = journeyOf(
+          setUserAnswerTo(AlwaysLivedInUkPage, false),
+          setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, true),
+          setUserAnswerTo(ApplicantNinoKnownPage, false),
           submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
           submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
           goTo(CheckYourAnswersPage)
@@ -343,6 +400,8 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
     "changing that answer to `international` must collect their international address and remove their UK address" in {
 
       val initialise = journeyOf(
+        setUserAnswerTo(AlwaysLivedInUkPage, false),
+        setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, true),
         submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
         submitAnswer(ApplicantPreviousAddressInUkPage, true),
         submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
@@ -362,11 +421,13 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
     }
   }
 
-  "when the user initially said their previous address was no in the UK" - {
+  "when the user initially said their previous address was not in the UK" - {
 
     "changing that answer to `UK` must collect their UK address and remove their international address" in {
 
       val initialise = journeyOf(
+        setUserAnswerTo(AlwaysLivedInUkPage, false),
+        setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, true),
         submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
         submitAnswer(ApplicantPreviousAddressInUkPage, false),
         submitAnswer(ApplicantPreviousInternationalAddressPage, internationalAddress),
@@ -391,6 +452,8 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
     "changing that answer to `yes` must remove their previous address and return to Check Answers" in {
 
       val initialise = journeyOf(
+        setUserAnswerTo(AlwaysLivedInUkPage, false),
+        setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, true),
         submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
         submitAnswer(ApplicantPreviousAddressInUkPage, true),
         submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
