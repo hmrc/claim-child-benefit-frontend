@@ -18,7 +18,7 @@ package pages.applicant
 
 import controllers.applicant.routes
 import models.UserAnswers
-import pages.{Page, QuestionPage, Waypoints}
+import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -35,14 +35,31 @@ case object ApplicantNinoKnownPage extends QuestionPage[Boolean] {
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
-      case true => ApplicantNinoPage
+      case true  => ApplicantNinoPage
       case false => ApplicantDateOfBirthPage
+    }.orRecover
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true =>
+        answers.get(ApplicantNinoPage)
+          .map(_ => waypoints.next.page)
+          .getOrElse(ApplicantNinoPage)
+
+      case false =>
+        answers.get(ApplicantLivedAtCurrentAddressOneYearPage)
+          .map(_ => waypoints.next.page)
+          .getOrElse(ApplicantLivedAtCurrentAddressOneYearPage)
     }.orRecover
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
     if (value.contains(false)) {
       userAnswers.remove(ApplicantNinoPage)
     } else {
-      super.cleanup(value, userAnswers)
+      userAnswers
+        .remove(ApplicantLivedAtCurrentAddressOneYearPage)
+        .flatMap(_.remove(ApplicantPreviousAddressInUkPage))
+        .flatMap(_.remove(ApplicantPreviousUkAddressPage))
+        .flatMap(_.remove(ApplicantPreviousInternationalAddressPage))
     }
 }

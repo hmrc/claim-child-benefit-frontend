@@ -31,6 +31,9 @@ case object ApplicantCurrentUkAddressPage extends QuestionPage[UkAddress] {
   override def route(waypoints: Waypoints): Call =
     routes.ApplicantCurrentUkAddressController.onPageLoad(waypoints)
 
-  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantLivedAtCurrentAddressOneYearPage
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page = {
+    answers.get(ApplicantNinoPage)
+      .map(_ => ApplicantPhoneNumberPage)
+      .getOrElse(ApplicantLivedAtCurrentAddressOneYearPage)
+  }
 }

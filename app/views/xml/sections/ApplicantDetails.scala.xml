@@ -67,7 +67,11 @@
                 <fo:block width="8cm" wrap-option="wrap">@(x)</fo:block>
             }
         </fo:block>
-    }.getOrElse(line("pdf.livedAtAddressOneYear", messages("site.yes")))
+    }.getOrElse {
+        @if(model.applicant.nationalInsuranceNumber.isEmpty) {
+            @line("pdf.livedAtAddressOneYear", messages("site.yes"))
+        }
+    }
 
     @line("pdf.phoneNumber", model.applicant.telephoneNumber)
 

@@ -225,14 +225,27 @@ object JourneyModel {
       }
 
     def getPreviousAddress: IorNec[Query, Option[Address]] =
-      answers.getIor(ApplicantLivedAtCurrentAddressOneYearPage).flatMap {
-        case true  => Ior.Right(None)
-        case false =>
-          answers.getIor(ApplicantPreviousAddressInUkPage).flatMap {
-            case true =>  answers.getIor(ApplicantPreviousUkAddressPage).map(Some(_))
-            case false => answers.getIor(ApplicantPreviousInternationalAddressPage).map(Some(_))
-          }
+      answers.getIor(ApplicantNinoKnownPage).flatMap {
+        case true =>
+          Ior.Right(None)
 
+        case false =>
+          answers.getIor(ApplicantLivedAtCurrentAddressOneYearPage).flatMap {
+            case true =>
+              Ior.Right(None)
+
+            case false =>
+              answers.getIor(AlwaysLivedInUkPage).flatMap {
+                case true =>
+                  answers.getIor(ApplicantPreviousUkAddressPage).map(Some(_))
+
+                case false =>
+                  answers.getIor(ApplicantPreviousAddressInUkPage).flatMap {
+                    case true  => answers.getIor(ApplicantPreviousUkAddressPage).map(Some(_))
+                    case false => answers.getIor(ApplicantPreviousInternationalAddressPage).map(Some(_))
+                  }
+              }
+          }
       }
 
     def getCurrentAddress: IorNec[Query, Address] =

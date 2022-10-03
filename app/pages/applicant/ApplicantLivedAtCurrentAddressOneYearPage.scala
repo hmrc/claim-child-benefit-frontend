@@ -18,7 +18,7 @@ package pages.applicant
 
 import controllers.applicant.routes
 import models.UserAnswers
-import pages.{Page, QuestionPage, Waypoints}
+import pages.{AlwaysLivedInUkPage, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -35,8 +35,14 @@ case object ApplicantLivedAtCurrentAddressOneYearPage extends QuestionPage[Boole
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
-      case true  => ApplicantPhoneNumberPage
-      case false => ApplicantPreviousAddressInUkPage
+      case true =>
+        ApplicantPhoneNumberPage
+
+      case false =>
+        answers.get(AlwaysLivedInUkPage).map {
+          case true  => ApplicantPreviousUkAddressPage
+          case false => ApplicantPreviousAddressInUkPage
+        }.orRecover
     }.orRecover
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
