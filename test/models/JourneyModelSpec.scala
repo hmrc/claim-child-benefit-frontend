@@ -726,6 +726,7 @@ class JourneyModelSpec
       "when the applicant has not lived at their current address for a year" - {
 
         "and their previous address is in the UK" in {
+
           val answers = UserAnswers("id")
             .withMinimalApplicantDetails
             .withOneChild
@@ -758,11 +759,13 @@ class JourneyModelSpec
         }
 
         "and their previous address is international" in {
+
           val answers = UserAnswers("id")
             .withMinimalApplicantDetails
             .withOneChild
             .withMinimalSingleIncomeDetails
             .withMinimalPaymentDetails
+            .set(AlwaysLivedInUkPage, false).success.value
             .set(RelationshipStatusPage, Single).success.value
             .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
             .set(ApplicantPreviousAddressInUkPage, false).success.value
@@ -778,7 +781,7 @@ class JourneyModelSpec
             previousAddress = Some(previousInternationalAddress),
             telephoneNumber = phoneNumber,
             nationality = applicantNationality,
-            alwaysLivedInUk = true,
+            alwaysLivedInUk = false,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
           )
@@ -1420,7 +1423,7 @@ class JourneyModelSpec
         data mustBe empty
       }
 
-      "when the applicant said they have lived at their current address less than a year but no previous address is provided" in {
+      "when the applicant did not give a NINO but whether they have lived at their current address is missing" in {
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -1428,12 +1431,12 @@ class JourneyModelSpec
           .withMinimalSingleIncomeDetails
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
-          .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
+          .remove(ApplicantLivedAtCurrentAddressOneYearPage).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = JourneyModel.from(answers).pad
 
-        errors.value.toChain.toList must contain only ApplicantPreviousAddressInUkPage
+        errors.value.toChain.toList must contain only ApplicantLivedAtCurrentAddressOneYearPage
         data mustBe empty
       }
 
@@ -1462,6 +1465,7 @@ class JourneyModelSpec
           .withOneChild
           .withMinimalSingleIncomeDetails
           .withMinimalPaymentDetails
+          .set(AlwaysLivedInUkPage, false).success.value
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
           .set(ApplicantPreviousAddressInUkPage, false).success.value
