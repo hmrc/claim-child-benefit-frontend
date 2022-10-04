@@ -42,8 +42,12 @@ final case class JourneyModel(
                                additionalInformation: AdditionalInformation
                              ) {
 
-  val anyDocumentsRequired: Boolean =
-    children.exists(_.requiredDocuments.nonEmpty)
+  val allRequiredDocuments: List[RequiredDocument] =
+  children.toList.flatMap { child =>
+    child.requiredDocuments.map(doc => RequiredDocument(child.name, doc))
+  }
+
+  val anyDocumentsRequired: Boolean = allRequiredDocuments.nonEmpty
 }
 
 object JourneyModel {
