@@ -19,7 +19,7 @@ package controllers.payments
 import config.FeatureFlags
 import controllers.actions._
 import forms.payments.BankAccountDetailsFormProvider
-import models.{ReputationResponseEnum, ValidateBankDetailsResponseModel}
+import models.{BankAccountDetails, ReputationResponseEnum, ValidateBankDetailsResponseModel}
 import pages.Waypoints
 import pages.payments.BankAccountDetailsPage
 import play.api.data.FormError
@@ -76,7 +76,7 @@ class BankAccountDetailsController @Inject()(
 
           if (featureFlags.validateBankDetails) {
             barsService.validateBankDetails(value).flatMap {
-              getBarsError(_).map { error =>
+              getBarsError(value, _).map { error =>
                 Future.successful(BadRequest(view(form.fill(value).withError(error), waypoints)))
               }.getOrElse(saveAndRedirect)
             }
@@ -87,12 +87,14 @@ class BankAccountDetailsController @Inject()(
       )
   }
 
-  private def getBarsError(validationResult: Option[ValidateBankDetailsResponseModel]): Option[FormError] =
+  private def getBarsError(submittedDetails: BankAccountDetails, validationResult: Option[ValidateBankDetailsResponseModel]): Option[FormError] =
     validationResult.flatMap { result =>
       if (result.sortCodeIsPresentOnEISCD == ReputationResponseEnum.No) {
         Some(FormError("sortCode", "bankAccountDetails.error.sortCode.doesNotExist"))
       } else if (result.accountNumberIsWellFormatted == ReputationResponseEnum.No) {
         Some(FormError("sortCode", "bankAccountDetails.error.sortCode.failedModulusCheck"))
+      } else if (result.nonStandardAccountDetailsRequiredForBacs == ReputationResponseEnum.Yes && submittedDetails.rollNumber.isEmpty) {
+        Some(FormError("rollNumber", "bankAccountDetails.error.rollNumber.required"))
       } else {
         None
       }

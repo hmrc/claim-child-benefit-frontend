@@ -277,6 +277,7 @@ bankAccountDetails.error.accountNumber.invalid = Enter a valid account number fo
 bankAccountDetails.error.sortCode.invalid = Enter a valid sort code for the bank or building society account like 309430
 bankAccountDetails.error.rollNumber.length = Building society roll number must be between 1 and 18 characters
 bankAccountDetails.error.rollNumber.invalid = Building society roll number must only include letters a to z, numbers, hyphens, spaces, forward slashes and full stops
+bankAccountDetails.error.rollNumber.required = Enter the building society roll number
 bankAccountDetails.change.hidden = the bank or building society account details
 
 currentlyReceivingChildBenefit.title = Are you claiming Child Benefit right now?

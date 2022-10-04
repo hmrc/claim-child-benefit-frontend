@@ -121,6 +121,46 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
         }
       }
 
+      "must save the answer and redirect to the next page when valid data is submitted for an account needing a roll number and the BARS response is successful" in {
+
+        val happyBarsResponse = ValidateBankDetailsResponseModel(
+          accountNumberIsWellFormatted = ReputationResponseEnum.Yes,
+          nonStandardAccountDetailsRequiredForBacs = ReputationResponseEnum.Yes,
+          sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes
+        )
+
+        val mockBarsService = mock[BarsService]
+        val mockSessionRepository = mock[SessionRepository]
+        val mockFeatureFlags = mock[FeatureFlags]
+
+        when(mockBarsService.validateBankDetails(any())(any(), any())) thenReturn Future.successful(Some(happyBarsResponse))
+        when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+        when(mockFeatureFlags.validateBankDetails) thenReturn true
+
+        val application =
+          applicationBuilder(userAnswers = Some(emptyUserAnswers))
+            .overrides(
+              bind[SessionRepository].toInstance(mockSessionRepository),
+              bind[BarsService].toInstance(mockBarsService),
+              bind[FeatureFlags].toInstance(mockFeatureFlags)
+            )
+            .build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, bankAccountDetailsRoute)
+              .withFormUrlEncodedBody(("accountName", "name on account"), ("bankName", "bank name"), ("accountNumber", "00123456"), ("sortCode", "123456"), ("rollNumber", "abc/123"))
+
+          val answerWithRollNumber = validAnswer.copy(rollNumber = Some("abc/123"))
+          val result = route(application, request).value
+          val expectedAnswers = emptyUserAnswers.set(BankAccountDetailsPage, answerWithRollNumber).success.value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+          verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
+        }
+      }
+
       "must save the answer and redirect to the next page when valid data is submitted and we cannot get a good response from BARS" in {
 
         val mockBarsService = mock[BarsService]
@@ -263,7 +303,37 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("accountName", "name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+            .withFormUrlEncodedBody(("accountName", "name"), ("bankName", "bank name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+      }
+    }
+
+    "must return a Bad Request when the BARS response indicates a roll number is required and none was provided" in {
+
+      val invalidDetailsResponse = ValidateBankDetailsResponseModel(
+        accountNumberIsWellFormatted = ReputationResponseEnum.Yes,
+        nonStandardAccountDetailsRequiredForBacs = ReputationResponseEnum.Yes,
+        sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes
+      )
+
+      val mockBarsService = mock[BarsService]
+
+      when(mockBarsService.validateBankDetails(any())(any(), any())) thenReturn Future.successful(Some(invalidDetailsResponse))
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[BarsService].toInstance(mockBarsService)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, bankAccountDetailsRoute)
+            .withFormUrlEncodedBody(("accountName", "name"), ("bankName", "bank name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
 
         val result = route(application, request).value
 
