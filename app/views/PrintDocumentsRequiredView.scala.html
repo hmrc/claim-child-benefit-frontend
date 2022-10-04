@@ -49,19 +49,22 @@
 
     <h2 class="govuk-heading-m">@messages("print.documentsToSend")</h2>
 
-    @journeyModel.children.filter(_.requiredDocuments.nonEmpty).map { child =>
-      @if(child.requiredDocuments.size == 1) {
-          <p class="govuk-body">
-            @messages("print.documentsToSend.single", child.name.firstName, messages(s"print.documentsToSend.single.${child.requiredDocuments.head.toString}"))
-          </p>
-      } else {
-          <p class="govuk-body">@messages("print.documentsToSend.multiple", child.name.firstName)</p>
-          <ul class="govuk-list govuk-list--bullet">
-              @child.requiredDocuments.map { document =>
-                <li>@messages(s"print.documentsToSend.multiple.${document.toString}")</li>
-              }
-          </ul>
-      }
+    @if(journeyModel.allRequiredDocuments.size == 1) {
+        <p class="govuk-body">
+            @messages(
+                "print.documentsToSend.single",
+                journeyModel.allRequiredDocuments.head.childName.firstName,
+                messages(s"print.documentsToSend.single.${journeyModel.allRequiredDocuments.head.documentType.toString}"))
+        </p>
+    } else {
+        <p class="govuk-body">@messages("print.documentsToSend.multiple")</p>
+        <ul class="govuk-list govuk-list--bullet">
+        @journeyModel.allRequiredDocuments.map { requiredDoc =>
+            <li>
+                @messages(s"print.documentsToSend.multiple.${requiredDoc.documentType.toString}", requiredDoc.childName.firstName)
+            </li>
+        }
+        </ul>
     }
 
     <p class="govuk-body">@messages("print.documentsToSend.1")</p>

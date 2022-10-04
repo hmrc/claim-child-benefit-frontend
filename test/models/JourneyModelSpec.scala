@@ -80,6 +80,59 @@ class JourneyModelSpec
   private val previousClaimantUkAddress = arbitrary[UkAddress].sample.value
   private val previousClaimantInternationalAddress = arbitrary[InternationalAddress].sample.value
 
+  ".allRequiredDocuments" - {
+    
+    "must be a list of all documents required for all the children in the claim" in {
+
+      val answers = UserAnswers("id")
+        .withMinimalApplicantDetails
+        .set(RelationshipStatusPage, Single).success.value
+        .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
+        .set(ApplicantBenefitsPage, applicantBenefits).success.value
+        .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
+        .set(WantToBePaidPage, false).success.value
+        .set(AdditionalInformationPage, NoInformation).success.value
+        .set(ChildNamePage(Index(0)), childName).success.value
+        .set(ChildHasPreviousNamePage(Index(0)), false).success.value
+        .set(ChildBiologicalSexPage(Index(0)), biologicalSex).success.value
+        .set(ChildDateOfBirthPage(Index(0)), now).success.value
+        .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.England).success.value
+        .set(BirthCertificateHasSystemNumberPage(Index(0)), true).success.value
+        .set(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber).success.value
+        .set(ApplicantRelationshipToChildPage(Index(0)), relationshipToChild).success.value
+        .set(AdoptingThroughLocalAuthorityPage(Index(0)), false).success.value
+        .set(AnyoneClaimedForChildBeforePage(Index(0)), false).success.value
+        .set(ChildNamePage(Index(1)), ChildName("child 2 first", None, "child 2 last")).success.value
+        .set(ChildHasPreviousNamePage(Index(1)), false).success.value
+        .set(ChildBiologicalSexPage(Index(1)), biologicalSex).success.value
+        .set(ChildDateOfBirthPage(Index(1)), now).success.value
+        .set(ChildBirthRegistrationCountryPage(Index(1)), ChildBirthRegistrationCountry.Other).success.value
+        .set(ApplicantRelationshipToChildPage(Index(1)), relationshipToChild).success.value
+        .set(AdoptingThroughLocalAuthorityPage(Index(1)), false).success.value
+        .set(AnyoneClaimedForChildBeforePage(Index(1)), false).success.value
+        .set(ChildNamePage(Index(2)), ChildName("child 3 first", None, "child 3 last")).success.value
+        .set(ChildHasPreviousNamePage(Index(2)), false).success.value
+        .set(ChildBiologicalSexPage(Index(2)), biologicalSex).success.value
+        .set(ChildDateOfBirthPage(Index(2)), now).success.value
+        .set(ChildBirthRegistrationCountryPage(Index(2)), ChildBirthRegistrationCountry.Other).success.value
+        .set(ApplicantRelationshipToChildPage(Index(2)), ApplicantRelationshipToChild.AdoptedChild).success.value
+        .set(AdoptingThroughLocalAuthorityPage(Index(2)), false).success.value
+        .set(AnyoneClaimedForChildBeforePage(Index(2)), false).success.value
+
+      val (errors, data) = JourneyModel.from(answers).pad
+
+      errors mustBe empty
+
+      data.value.allRequiredDocuments must contain theSameElementsInOrderAs List(
+        RequiredDocument(ChildName("child 2 first", None, "child 2 last"), DocumentType.BirthCertificate),
+        RequiredDocument(ChildName("child 2 first", None, "child 2 last"), DocumentType.TravelDocument),
+        RequiredDocument(ChildName("child 3 first", None, "child 3 last"), DocumentType.BirthCertificate),
+        RequiredDocument(ChildName("child 3 first", None, "child 3 last"), DocumentType.TravelDocument),
+        RequiredDocument(ChildName("child 3 first", None, "child 3 last"), DocumentType.AdoptionCertificate),
+      )
+    }
+  }
+  
   ".from" - {
 
     "must create a journey model" - {
