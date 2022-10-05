@@ -26,6 +26,6 @@ class RemoveChildPreviousNameFormProvider @Inject() extends Mappings {
 
   def apply(previousName: ChildName): Form[Boolean] =
     Form(
-      "value" -> boolean("removeChildPreviousName.error.required", args = Seq(previousName.firstName))
+      "value" -> boolean("removeChildPreviousName.error.required", args = Seq(previousName.fullName))
     )
 }
