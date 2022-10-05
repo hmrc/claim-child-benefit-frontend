@@ -14,9 +14,9 @@
 
     <fo:flow flow-name="xsl-region-body" font-size="12pt" text-align="left">
         <fo:block margin-right="10.4cm" padding-left="2mm" padding-top="3mm" padding-bottom="3mm" margin-bottom="1.5cm">
-            <fo:block margin-bottom="1mm" font-size="12pt">@model.applicant.name.display</fo:block>
+            <fo:block margin-bottom="1mm" font-size="12pt">@model.applicant.name.display.toUpperCase</fo:block>
             @for(line <- model.applicant.currentAddress.lines) {
-                <fo:block margin-bottom="1mm" font-size="12pt">@line</fo:block>
+                <fo:block margin-bottom="1mm" font-size="12pt">@line.toUpperCase</fo:block>
             }
         </fo:block>
 

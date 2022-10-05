@@ -14,18 +14,20 @@
 
     @line("pdf.nino", model.applicant.nationalInsuranceNumber.getOrElse(messages("pdf.notKnown")))
 
-    @line("pdf.name.last", model.applicant.name.lastName)
+    @line("pdf.name.last", model.applicant.name.lastName.toUpperCase)
 
-    @line("pdf.name.first", model.applicant.name.firstName)
+    @line("pdf.name.first", model.applicant.name.firstName.toUpperCase)
 
     @model.applicant.name.middleNames.map { middleNames =>
-        @line("pdf.name.middle", middleNames)
+        @line("pdf.name.middle", middleNames.toUpperCase)
     }
+
+    @line("pdf.dateOfBirth", date(model.applicant.dateOfBirth))
 
     <fo:block margin-bottom="3mm">
         <fo:block font-weight="bold">@messages("pdf.currentAddress")</fo:block>
         @model.applicant.currentAddress.lines.map { line =>
-            <fo:block width="8cm" wrap-option="wrap">@(line)</fo:block>
+            <fo:block width="8cm" wrap-option="wrap">@(line.toUpperCase)</fo:block>
         }
     </fo:block>
 
@@ -43,8 +45,6 @@
             }
         </fo:block>
     }
-
-    @line("pdf.dateOfBirth", date(model.applicant.dateOfBirth))
 
     @line("pdf.relationshipStatus", messages(s"pdf.relationshipStatus.${model.relationship.status.toString}"))
 

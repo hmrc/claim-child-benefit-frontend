@@ -22,7 +22,7 @@
 
     @child.birthCertificateNumber.map { number =>
         @line("pdf.birthCertificateNumber", number)
-    }
+    }.getOrElse(line("pdf.birthCertificateNumber", messages("pdf.notProvided")))
 
     @line("pdf.childLivingWithApplicant", messages("site.yes"))
 
