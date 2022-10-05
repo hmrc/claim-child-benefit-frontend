@@ -613,8 +613,8 @@ applicantPreviousFamilyName.error.length = Your other last name or family name m
 applicantPreviousFamilyName.change.hidden = your other last name or family name
 
 removeApplicantPreviousFamilyName.title = Are you sure you want to remove this other last name or family name?
-removeApplicantPreviousFamilyName.heading = Are you sure you want to remove {0}?
-removeApplicantPreviousFamilyName.error.required = Select yes if you are sure you want to remove {0}
+removeApplicantPreviousFamilyName.heading = Are you sure you want to remove {0} as your other last name or family name?
+removeApplicantPreviousFamilyName.error.required = Select yes if you are sure you want to remove {0} as your other last name or family name
 
 partnerDateOfBirth.title = What is your partner’s date of birth?
 partnerDateOfBirth.heading = What is {0}’s date of birth?
@@ -749,7 +749,7 @@ birthCertificateHasSystemNumber.title = Does this child’s birth certificate ha
 birthCertificateHasSystemNumber.heading = Does {0}’s birth certificate have a system number?
 birthCertificateHasSystemNumber.guidance = This is the 9 digit number from the bottom left hand corner of their birth certificate. For example, 123456789.
 birthCertificateHasSystemNumber.checkYourAnswersLabel = Does this child’s birth certificate have a system number?
-birthCertificateHasSystemNumber.error.required = Select if you {0}’s birth certificate has a system number
+birthCertificateHasSystemNumber.error.required = Select yes if {0}’s birth certificate has a system number
 birthCertificateHasSystemNumber.change.hidden = if this child’s birth certificate has a system number
 
 childBirthCertificateSystemNumber.title = What is the system number on this child’s birth certificate?
@@ -828,7 +828,7 @@ scottishBirthCertificateHasNumbers.title = Does this child’s birth certificate
 scottishBirthCertificateHasNumbers.heading = Does {0}’s birth certificate have a district number, year and entry number?
 scottishBirthCertificateHasNumbers.guidance = This is at the top of their birth certificate. For example, 123 2000 45.
 scottishBirthCertificateHasNumbers.checkYourAnswersLabel = Does this child’s birth certificate have a district number, year and entry number?
-scottishBirthCertificateHasNumbers.error.required = Select if you {0}’s birth certificate has a district number, year and entry number
+scottishBirthCertificateHasNumbers.error.required = Select yes if {0}’s birth certificate has a district number, year and entry number
 scottishBirthCertificateHasNumbers.change.hidden = if this child’s birth certificate has a district number, year and entry number
 
 childScottishBirthCertificateDetails.title = What is the district number, year and entry number on this child’s birth certificate?
@@ -908,13 +908,13 @@ previousClaimantName.error.middleNames.length = Middle names of the person who c
 previousClaimantName.error.lastName.length = Last name of the person who claimed Child Benefit for {0} must be 100 characters or less
 previousClaimantName.change.hidden = the name of the person who claimed Child Benefit for this child
 
-removeChild.title = Are you sure you want to remove this child?
-removeChild.heading = Are you sure you want to remove {0}?
-removeChild.error.required = Select yes if you are sure you want to remove {0}
+removeChild.title = Are you sure you want to remove this child from this claim?
+removeChild.heading = Are you sure you want to remove {0} from this claim?
+removeChild.error.required = Select yes if you are sure you want to remove {0} from this claim
 
 removeChildPreviousName.title = Are you sure you want to remove this previous name?
-removeChildPreviousName.heading = Are you sure you want to remove {0}?
-removeChildPreviousName.error.required = Select yes if you are sure you want to remove {0}
+removeChildPreviousName.heading = Are you sure you want to remove {0} as a previous name?
+removeChildPreviousName.error.required = Select yes if you are sure you want to remove {0} as a previous name
 
 adoptingThroughLocalAuthority.title = Are you adopting or planning to adopt this child through a local authority?
 adoptingThroughLocalAuthority.heading = Are you adopting or planning to adopt {0} through a local authority?
