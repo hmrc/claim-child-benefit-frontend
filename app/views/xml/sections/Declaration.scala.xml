@@ -22,7 +22,7 @@
             <fo:table-column column-number="3" column-width="9mm"/>
             <fo:table-column column-number="4" column-width="27mm"/>
             <fo:table-column column-number="5" column-width="5mm"/>
-            <fo:table-column column-number="5" column-width="62mm"/>
+            <fo:table-column column-number="6" column-width="62mm"/>
 
             <fo:table-body>
                 <fo:table-row height="6m">
