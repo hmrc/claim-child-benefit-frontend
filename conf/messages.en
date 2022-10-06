@@ -1070,6 +1070,7 @@ pdf.adoptingThroughLocalAuthority = Applicant adopting child via Local Authority
 pdf.claimedBefore = Child Benefit claimed for this child
 pdf.previousClaimantName = Previous claimant name
 pdf.previousClaimantUkAddress = Previous claimant address
+pdf.child.hmrcUseOnly = For official use only
 pdf.documents = Documents being sent for child
 pdf.documents.birthCertificate = Birth certificate
 pdf.documents.travelDocument = Passport or travel documents

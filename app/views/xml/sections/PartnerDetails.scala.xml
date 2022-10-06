@@ -1,33 +1,52 @@
 
 @import views.xml.xml.sections._
 
-@this(line: Line)
+@this(
+    mainHeader: MainHeader,
+    mainFooter: MainFooter,
+    line: Line
+)
 
 @(model: JourneyModel.Partner)(implicit messages: Messages)
 
-<fo:block-container margin-bottom="1cm" keep-together.within-column="always" wrap-option="wrap">
+<fo:page-sequence master-reference="main">
 
-    <fo:block font-size="18pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.partnerDetails")</fo:block>
+    @mainHeader()
 
-    @line("pdf.partnerNino", model.nationalInsuranceNumber.getOrElse(messages("pdf.notKnown")))
+    @mainFooter()
 
-    @line("pdf.name.last", model.name.lastName)
+    <fo:flow flow-name="xsl-region-body" font-size="12pt" text-align="left">
 
-    @line("pdf.name.full", model.name.display)
+        <fo:block-container width="90%">
+            <fo:block>
 
-    @line("pdf.dateOfBirth", date(model.dateOfBirth))
+                <fo:block-container margin-bottom="1cm" keep-together.within-column="always" wrap-option="wrap">
 
-    @line("pdf.nationality", model.nationality)
+                    <fo:block font-size="18pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.partnerDetails")</fo:block>
 
-    @model.memberOfHMForcesOrCivilServantAbroad.map { answer =>
-        @line("pdf.hmfOrCivilServant", booleanToYesNo(answer))
-    }
+                    @line("pdf.partnerNino", model.nationalInsuranceNumber.getOrElse(messages("pdf.notKnown")))
 
-    @line("pdf.claimingChildBenefit", messages(s"currentlyReceivingChildBenefit.${model.currentlyClaimingChildBenefit.toString}"))
+                    @line("pdf.name.last", model.name.lastName)
 
-    @model.eldestChild.map { child =>
-        @line("pdf.eldestChildName", child.name.fullName),
-        @line("pdf.eldestChildDateOfBirth", date(child.dateOfBirth))
-    }
+                    @line("pdf.name.full", model.name.display)
 
-</fo:block-container>
+                    @line("pdf.dateOfBirth", date(model.dateOfBirth))
+
+                    @line("pdf.nationality", model.nationality)
+
+                    @model.memberOfHMForcesOrCivilServantAbroad.map { answer =>
+                        @line("pdf.hmfOrCivilServant", booleanToYesNo(answer))
+                    }
+
+                    @line("pdf.claimingChildBenefit", messages(s"currentlyReceivingChildBenefit.${model.currentlyClaimingChildBenefit.toString}"))
+
+                    @model.eldestChild.map { child =>
+                        @line("pdf.eldestChildName", child.name.fullName),
+                        @line("pdf.eldestChildDateOfBirth", date(child.dateOfBirth))
+                    }
+
+                </fo:block-container>
+            </fo:block>
+        </fo:block-container>
+    </fo:flow>
+</fo:page-sequence>

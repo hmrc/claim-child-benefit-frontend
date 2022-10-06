@@ -1,6 +1,8 @@
 @import views.xml.xml.sections._
 
 @this(
+    mainHeader: MainHeader,
+    mainFooter: MainFooter,
     line: Line,
     doNotPay: DoNotPay,
     weekly: Weekly,
@@ -10,21 +12,36 @@
 
 @(model: JourneyModel)(implicit messages: Messages)
 
-<fo:block-container margin-bottom="1cm" keep-together.within-column="always" wrap-option="wrap">
+<fo:page-sequence master-reference="main">
 
-    <fo:block font-size="18pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.paymentDetails")</fo:block>
+    @mainHeader()
 
-    @{model.paymentPreference match {
-        case JourneyModel.PaymentPreference.DoNotPay(_) =>
-            doNotPay()
+    @mainFooter()
 
-        case JourneyModel.PaymentPreference.Weekly(bankAccount, _) =>
-            weekly(bankAccount)
+    <fo:flow flow-name="xsl-region-body" font-size="12pt" text-align="left">
 
-        case JourneyModel.PaymentPreference.EveryFourWeeks(bankAccount, _) =>
-            everyFourWeeks(bankAccount)
+        <fo:block-container width="90%">
+            <fo:block>
 
-        case JourneyModel.PaymentPreference.ExistingAccount(eldestChild, frequency) =>
-            existingAccount(eldestChild, frequency)
-    }}
-</fo:block-container>
+                <fo:block-container margin-bottom="1cm" keep-together.within-column="always" wrap-option="wrap">
+
+                    <fo:block font-size="18pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.paymentDetails")</fo:block>
+
+                    @{model.paymentPreference match {
+                        case JourneyModel.PaymentPreference.DoNotPay(_) =>
+                            doNotPay()
+
+                        case JourneyModel.PaymentPreference.Weekly(bankAccount, _) =>
+                            weekly(bankAccount)
+
+                        case JourneyModel.PaymentPreference.EveryFourWeeks(bankAccount, _) =>
+                            everyFourWeeks(bankAccount)
+
+                        case JourneyModel.PaymentPreference.ExistingAccount(eldestChild, frequency) =>
+                            existingAccount(eldestChild, frequency)
+                    }}
+                </fo:block-container>
+            </fo:block>
+        </fo:block-container>
+    </fo:flow>
+</fo:page-sequence>

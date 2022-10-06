@@ -2,7 +2,10 @@
 
 @this(
     layout: Layout,
-    main: Main,
+    applicantDetails: ApplicantDetails,
+    paymentDetails: PaymentDetails,
+    partnerDetails: PartnerDetails,
+    childDetails: ChildDetails,
     declaration: Declaration,
     instructions: Instructions,
     addressLabel: AddressLabel,
@@ -14,7 +17,17 @@
 <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:fox="http://xmlgraphics.apache.org/fop/extensions" font-family="sans-serif">
     @layout()
 
-    @main(model)
+    @applicantDetails(model)
+
+    @model.relationship.partner.map { partner =>
+        @partnerDetails(partner)
+    }
+
+    @for((child, index) <- model.children.toList.zipWithIndex) {
+        @childDetails(child, (index + 1))
+    }
+
+    @paymentDetails(model)
 
     @{model.additionalInformation match {
         case info: AdditionalInformation.Information => additionalInfoPage(info.value)

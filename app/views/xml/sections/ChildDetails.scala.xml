@@ -2,63 +2,104 @@
 
 @(child: JourneyModel.Child, index: Int)(implicit messages: Messages)
 
-<fo:block-container margin-bottom="1cm" wrap-option="wrap" page-break-after="always">
+<fo:page-sequence master-reference="child">
 
-    <fo:block font-size="18pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.childDetails", index)</fo:block>
-
-    @line("pdf.name.last", child.name.lastName)
-
-    @line("pdf.name.first", child.name.firstName)
-
-    @child.name.middleNames.map { middleNames =>
-        @line("pdf.name.middle", middleNames)
-    }
-
-    @line("pdf.biologicalSex", messages(s"childBiologicalSex.${child.biologicalSex.toString}"))
-
-    @line("pdf.dateOfBirth", date(child.dateOfBirth))
-
-    @line("pdf.birthRegistrationCountry", messages(s"childBirthRegistrationCountry.${child.countryOfRegistration.toString}"))
-
-    @child.birthCertificateNumber.map { number =>
-        @line("pdf.birthCertificateNumber", number)
-    }.getOrElse(line("pdf.birthCertificateNumber", messages("pdf.notProvided")))
-
-    @line("pdf.childLivingWithApplicant", messages("site.yes"))
-
-    <!-- TODO: Applicant is parent of the child-->
-
-    @line("pdf.relationshipToApplicant", messages(s"applicantRelationshipToChild.${child.relationshipToApplicant.toString}"))
-
-    @line("pdf.adoptingThroughLocalAuthority", booleanToYesNo(child.adoptingThroughLocalAuthority))
-
-    @line("pdf.claimedBefore", booleanToYesNo(child.previousClaimant.nonEmpty))
-
-    @child.previousClaimant.map { previousClaimant =>
-        @line("pdf.previousClaimantName", previousClaimant.name.display)
-        <fo:block margin-bottom="3mm">
-            <fo:block font-weight="bold">@messages("pdf.previousClaimantUkAddress")</fo:block>
-                @previousClaimant.address.lines.map { x =>
-            <fo:block width="8cm" wrap-option="wrap">@(x)</fo:block>
-            }
+    <fo:static-content flow-name="xsl-region-before">
+        <fo:block>
+            <fo:external-graphic src="url(conf/resources/logo.jpg)" padding-right="1cm" fox:alt-text="HM Revenue and Customs logo" />
+            <fo:block margin-left="6cm" margin-top="-1.5cm" text-align="right" font-size="18pt" font-weight="bold">@messages("pdf.title")</fo:block>
         </fo:block>
-    }
+    </fo:static-content>
 
-    @line("pdf.hasPreviousNames", booleanToYesNo(child.previousNames.nonEmpty))
+    <fo:static-content flow-name="xsl-region-after">
 
-    @child.nameChangedByDeedPoll.map(value => line("pdf.nameChangedByDeedPoll", booleanToYesNo(value)))
+        <fo:table width="100%" table-layout="fixed" font-size="11pt">
+            <fo:table-column column-number="1" column-width="45mm"/>
+            <fo:table-column column-number="2" column-width="80mm"/>
+            <fo:table-column column-number="3" column-width="45mm"/>
 
-    @if(child.previousNames.nonEmpty) {
-        @line("pdf.previousNames", child.previousNames.map(name => name.fullName).mkString(", "))
-    }
+            <fo:table-body>
+                <fo:table-row height="6mm">
+                    <fo:table-cell padding="1mm">
+                        <fo:block>@messages("pdf.child.hmrcUseOnly")</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="0.4mm solid black" padding="1mm">
+                        <fo:block/>
+                    </fo:table-cell>
+                    <fo:table-cell border="0.4mm solid black" padding="1mm">
+                        <fo:block/>
+                    </fo:table-cell>
+                </fo:table-row>
+            </fo:table-body>
+        </fo:table>
 
-    @if(child.requiredDocuments.nonEmpty) {
-        <fo:block margin-bottom="3mm">
-            <fo:block font-weight="bold">@messages("pdf.documents")</fo:block>
-                @child.requiredDocuments.map { x =>
-            <fo:block width="8cm" wrap-option="wrap">@(messages(s"pdf.documents.${x.toString}"))</fo:block>
-            }
-        </fo:block>
-    }
+        <fo:block text-align="center" font-size="12pt" margin-top="1cm">@messages("pdf.page") <fo:page-number/> @messages("pdf.of") <fo:page-number-citation ref-id="FinalElement" /></fo:block>
+    </fo:static-content>
 
-</fo:block-container>
+    <fo:flow flow-name="xsl-region-body" font-size="12pt" text-align="left">
+
+        <fo:block-container width="90%">
+            <fo:block>
+
+                <fo:block-container margin-bottom="1cm" wrap-option="wrap" page-break-after="always">
+
+                    <fo:block font-size="18pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.childDetails", index)</fo:block>
+
+                    @line("pdf.name.last", child.name.lastName)
+
+                    @line("pdf.name.first", child.name.firstName)
+
+                    @child.name.middleNames.map { middleNames =>
+                        @line("pdf.name.middle", middleNames)
+                    }
+
+                    @line("pdf.biologicalSex", messages(s"childBiologicalSex.${child.biologicalSex.toString}"))
+
+                    @line("pdf.dateOfBirth", date(child.dateOfBirth))
+
+                    @line("pdf.birthRegistrationCountry", messages(s"childBirthRegistrationCountry.${child.countryOfRegistration.toString}"))
+
+                    @child.birthCertificateNumber.map { number =>
+                        @line("pdf.birthCertificateNumber", number)
+                    }.getOrElse(line("pdf.birthCertificateNumber", messages("pdf.notProvided")))
+
+                    @line("pdf.childLivingWithApplicant", messages("site.yes"))
+
+                    @line("pdf.relationshipToApplicant", messages(s"applicantRelationshipToChild.${child.relationshipToApplicant.toString}"))
+
+                    @line("pdf.adoptingThroughLocalAuthority", booleanToYesNo(child.adoptingThroughLocalAuthority))
+
+                    @line("pdf.claimedBefore", booleanToYesNo(child.previousClaimant.nonEmpty))
+
+                    @child.previousClaimant.map { previousClaimant =>
+                        @line("pdf.previousClaimantName", previousClaimant.name.display)
+                        <fo:block margin-bottom="3mm">
+                            <fo:block font-weight="bold">@messages("pdf.previousClaimantUkAddress")</fo:block>
+                                @previousClaimant.address.lines.map { x =>
+                            <fo:block width="8cm" wrap-option="wrap">@(x)</fo:block>
+                            }
+                        </fo:block>
+                    }
+
+                    @line("pdf.hasPreviousNames", booleanToYesNo(child.previousNames.nonEmpty))
+
+                    @child.nameChangedByDeedPoll.map(value => line("pdf.nameChangedByDeedPoll", booleanToYesNo(value)))
+
+                    @if(child.previousNames.nonEmpty) {
+                        @line("pdf.previousNames", child.previousNames.map(name => name.fullName).mkString(", "))
+                    }
+
+                    @if(child.requiredDocuments.nonEmpty) {
+                        <fo:block margin-bottom="3mm">
+                            <fo:block font-weight="bold">@messages("pdf.documents")</fo:block>
+                                @child.requiredDocuments.map { x =>
+                            <fo:block width="8cm" wrap-option="wrap">@(messages(s"pdf.documents.${x.toString}"))</fo:block>
+                            }
+                        </fo:block>
+                    }
+
+                </fo:block-container>
+            </fo:block>
+        </fo:block-container>
+    </fo:flow>
+</fo:page-sequence>
