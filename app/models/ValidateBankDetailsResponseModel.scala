@@ -21,7 +21,8 @@ import play.api.libs.json.{Format, Json}
 final case class ValidateBankDetailsResponseModel(
                                                    accountNumberIsWellFormatted: ReputationResponseEnum,
                                                    nonStandardAccountDetailsRequiredForBacs: ReputationResponseEnum,
-                                                   sortCodeIsPresentOnEISCD: ReputationResponseEnum
+                                                   sortCodeIsPresentOnEISCD: ReputationResponseEnum,
+                                                   sortCodeSupportsDirectCredit: Option[ReputationResponseEnum]
                                                  )
 
 object ValidateBankDetailsResponseModel {

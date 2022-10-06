@@ -49,7 +49,8 @@ class BarsServiceSpec
       val barsResponse = ValidateBankDetailsResponseModel(
         accountNumberIsWellFormatted = ReputationResponseEnum.Yes,
         nonStandardAccountDetailsRequiredForBacs = ReputationResponseEnum.Yes,
-        sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes
+        sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes,
+        sortCodeSupportsDirectCredit = None
       )
 
       val mockConnector = mock[BarsConnector]
