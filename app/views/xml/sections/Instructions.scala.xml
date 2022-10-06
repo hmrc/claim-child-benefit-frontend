@@ -37,6 +37,9 @@
 
             @if(model.anyDocumentsRequired) {
                 <fo:block margin-bottom="4mm">@messages("pdf.whatToDoNow.p3")</fo:block>
+                <fo:block margin-bottom="4mm">@messages("pdf.whatToDoNow.p4.documents")</fo:block>
+            } else {
+                <fo:block margin-bottom="4mm">@messages("pdf.whatToDoNow.p4.noDocuments")</fo:block>
             }
 
             <fo:block margin-bottom="0.5cm" font-weight="bold" font-size="18pt">@messages("pdf.whatHappensNext")</fo:block>

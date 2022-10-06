@@ -2,9 +2,9 @@
 
 <fo:layout-master-set>
     <fo:simple-page-master master-name="declaration" page-height="297mm" page-width="210mm" margin-top="1.5cm" margin-bottom="1.5cm" margin-left="2cm" margin-right="1.5cm">
-        <fo:region-body region-name="xsl-region-body" margin-top="3cm" margin-bottom="1.5cm"/>
+        <fo:region-body region-name="xsl-region-body" margin-top="3cm" margin-bottom="7cm"/>
         <fo:region-before region-name="xsl-region-before-declaration"/>
-        <fo:region-after region-name="xsl-region-after"/>
+        <fo:region-after region-name="xsl-region-after" extent="7cm"/>
     </fo:simple-page-master>
     <fo:simple-page-master master-name="instructions" page-height="297mm" page-width="210mm" margin-top="1.5cm" margin-bottom="1.5cm" margin-left="2cm" margin-right="1.5cm">
         <fo:region-body region-name="xsl-region-body" margin-top="3cm" margin-bottom="1.5cm"/>
@@ -12,9 +12,9 @@
         <fo:region-after region-name="xsl-region-after"/>
     </fo:simple-page-master>
     <fo:simple-page-master master-name="address-label" page-height="297mm" page-width="210mm" margin-top="1.5cm" margin-bottom="1.5cm" margin-left="2cm" margin-right="1.5cm">
-        <fo:region-body region-name="xsl-region-body" margin-top="3cm" margin-bottom="1.5cm"/>
+        <fo:region-body region-name="xsl-region-body" margin-top="3cm" margin-bottom="12cm"/>
         <fo:region-before region-name="xsl-region-before-address-label"/>
-        <fo:region-after region-name="xsl-region-after-address-label"/>
+        <fo:region-after region-name="xsl-region-after" extent="12cm"/>
     </fo:simple-page-master>
     <fo:simple-page-master master-name="additional-info" page-height="297mm" page-width="210mm" margin-top="1.5cm" margin-bottom="1.5cm" margin-left="2cm" margin-right="1.5cm">
         <fo:region-body region-name="xsl-region-body" margin-top="3cm" margin-bottom="1.5cm"/>
@@ -25,5 +25,10 @@
         <fo:region-body region-name="xsl-region-body" margin-top="3cm" margin-bottom="0.5cm" column-count="2" column-gap="1.5cm" />
         <fo:region-before region-name="xsl-region-before"/>
         <fo:region-after region-name="xsl-region-after"/>
+    </fo:simple-page-master>
+    <fo:simple-page-master master-name="child" page-height="297mm" page-width="210mm" margin-top="1.5cm" margin-bottom="1.5cm" margin-left="1.5cm" margin-right="1.5cm">
+        <fo:region-body region-name="xsl-region-body" margin-top= "3cm" margin-bottom="2.8cm" column-count="2" column-gap="1.5cm" />
+        <fo:region-before region-name="xsl-region-before"/>
+        <fo:region-after region-name="xsl-region-after" extent="2.3cm"/>
     </fo:simple-page-master>
 </fo:layout-master-set>
