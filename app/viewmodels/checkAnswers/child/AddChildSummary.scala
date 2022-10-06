@@ -54,7 +54,7 @@ object AddChildSummary {
           value = ValueViewModel(HtmlContent(value)),
           actions = Seq(
             ActionItemViewModel("site.change", AddChildPage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("addChild.change.hidden"))
+              .withVisuallyHiddenText(messages("addChild.checkAnswers.change.hidden"))
           )
         )
     }

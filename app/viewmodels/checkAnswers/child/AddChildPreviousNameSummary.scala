@@ -54,7 +54,7 @@ object AddChildPreviousNameSummary {
           value = ValueViewModel(value),
           actions = Seq(
             ActionItemViewModel("site.change", AddChildPreviousNamePage(childIndex).changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("addChildPreviousName.change.hidden"))
+              .withVisuallyHiddenText(messages("addChildPreviousName.checkAnswers.change.hidden"))
           )
         )
     }

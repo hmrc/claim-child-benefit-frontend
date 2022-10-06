@@ -57,7 +57,7 @@ object AddApplicantPreviousFamilyNameSummary {
             ActionItemViewModel(
               "site.change",
               AddApplicantPreviousFamilyNamePage.changeLink(waypoints, sourcePage).url
-            ).withVisuallyHiddenText(messages("addApplicantPreviousFamilyName.change.hidden"))
+            ).withVisuallyHiddenText(messages("addApplicantPreviousFamilyName.checkAnswers.change.hidden"))
           )
         )
     }
