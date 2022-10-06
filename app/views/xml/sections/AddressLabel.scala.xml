@@ -12,20 +12,7 @@
         </fo:block>
     </fo:static-content>
 
-    <fo:flow flow-name="xsl-region-body" font-size="12pt" text-align="left">
-        <fo:block margin-right="10.4cm" padding-left="2mm" padding-top="3mm" padding-bottom="3mm" margin-bottom="1.5cm">
-            <fo:block margin-bottom="1mm" font-size="12pt">@model.applicant.name.display.toUpperCase</fo:block>
-            @for(line <- model.applicant.currentAddress.lines) {
-                <fo:block margin-bottom="1mm" font-size="12pt">@line.toUpperCase</fo:block>
-            }
-        </fo:block>
-
-        <fo:block margin-bottom="4mm">@messages("pdf.addressLabel.p1")</fo:block>
-
-        <fo:block margin-bottom="4mm">@messages("pdf.addressLabel.p2")</fo:block>
-
-        <fo:block margin-bottom="4mm" font-weight="bold">@messages("pdf.addressLabel.p3")</fo:block>
-
+    <fo:static-content flow-name="xsl-region-after">
         <fo:block margin-bottom="4mm" margin-top="4cm" color="gray">@messages("pdf.addressLabel.hmrcUseOnly")</fo:block>
 
         <fo:block margin-right="1cm" padding-left="2mm" padding-top="2mm" padding-bottom="2mm" margin-bottom="8mm" border="0.5mm solid gray">
@@ -57,5 +44,21 @@
             </fo:block>
             <fo:block>@messages("pdf.addressLabel.yourDocuments.p2")</fo:block>
         </fo:block>
+    </fo:static-content>
+
+    <fo:flow flow-name="xsl-region-body" font-size="12pt" text-align="left">
+        <fo:block margin-right="10.4cm" padding-left="2mm" padding-top="3mm" padding-bottom="3mm" margin-bottom="1.5cm">
+            <fo:block margin-bottom="1mm" font-size="12pt">@model.applicant.name.display.toUpperCase</fo:block>
+            @for(line <- model.applicant.currentAddress.lines) {
+                <fo:block margin-bottom="1mm" font-size="12pt">@line.toUpperCase</fo:block>
+            }
+        </fo:block>
+
+        <fo:block margin-bottom="4mm">@messages("pdf.addressLabel.p1")</fo:block>
+
+        <fo:block margin-bottom="4mm">@messages("pdf.addressLabel.p2")</fo:block>
+
+        <fo:block margin-bottom="4mm" font-weight="bold">@messages("pdf.addressLabel.p3")</fo:block>
+
     </fo:flow>
 </fo:page-sequence>

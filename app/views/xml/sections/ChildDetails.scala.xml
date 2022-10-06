@@ -86,7 +86,12 @@
                     @child.nameChangedByDeedPoll.map(value => line("pdf.nameChangedByDeedPoll", booleanToYesNo(value)))
 
                     @if(child.previousNames.nonEmpty) {
-                        @line("pdf.previousNames", child.previousNames.map(name => name.fullName).mkString(", "))
+                        <fo:block margin-bottom="3mm">
+                            <fo:block font-weight="bold">@messages("pdf.previousNames")</fo:block>
+                                @child.previousNames.map { x =>
+                                    <fo:block width="8cm" wrap-option="wrap">@(x.fullName)</fo:block>
+                                }
+                        </fo:block>
                     }
 
                     @if(child.requiredDocuments.nonEmpty) {

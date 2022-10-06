@@ -14,7 +14,113 @@
     </fo:static-content>
 
     <fo:static-content flow-name="xsl-region-after">
-        <fo:block text-align="center" font-size="12pt">@messages("pdf.page") <fo:page-number/> @messages("pdf.of") <fo:page-number-citation ref-id="FinalElement" /></fo:block>
+        <fo:block font-weight="bold" margin-top="0.5cm" margin-bottom="2mm" padding-top="2mm" border-top="0.5mm solid black">@messages("pdf.declaration.hmrcUseOnly")</fo:block>
+
+        <fo:table width="100%" table-layout="fixed" font-size="11pt">
+            <fo:table-column column-number="1" column-width="36mm"/>
+            <fo:table-column column-number="2" column-width="36mm"/>
+            <fo:table-column column-number="3" column-width="9mm"/>
+            <fo:table-column column-number="4" column-width="27mm"/>
+            <fo:table-column column-number="5" column-width="5mm"/>
+            <fo:table-column column-number="5" column-width="62mm"/>
+
+            <fo:table-body>
+                <fo:table-row height="6m">
+                    <fo:table-cell border="0.4mm solid black" padding="1mm">
+                        <fo:block>@messages("pdf.declaration.corres")</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="0.4mm solid black" padding="1mm">
+                        <fo:block>@messages("pdf.declaration.traced")</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="0.4mm solid black" padding="1mm" number-columns-spanned="2">
+                        <fo:block>@messages("pdf.declaration.cli")</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell>
+                        <fo:block/>
+                    </fo:table-cell>
+                    <fo:table-cell border="0.4mm solid black" number-rows-spanned="6" text-align="center">
+                        <fo:block>@messages("pdf.declaration.dateReceived")</fo:block>
+                    </fo:table-cell>
+                </fo:table-row>
+
+                <fo:table-row height="6m">
+                    <fo:table-cell border="0.4mm solid black" padding="1mm" color="#ffffff">
+                        <fo:block>@messages("pdf.declaration.corres")</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="0.4mm solid black" padding="1mm" color="#ffffff">
+                        <fo:block>@messages("pdf.declaration.traced")</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="0.4mm solid black" padding="1mm" number-columns-spanned="2" color="#ffffff">
+                        <fo:block>@messages("pdf.declaration.cli")</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell>
+                        <fo:block/>
+                    </fo:table-cell>
+                </fo:table-row>
+
+                <fo:table-row>
+                    <fo:table-cell padding="1mm" number-columns-spanned="2">
+                        <fo:block>@messages("pdf.declaration.documentsReturned")</fo:block>
+                    </fo:table-cell>
+                </fo:table-row>
+
+                <fo:table-row height="6m">
+                    <fo:table-cell border="0.4mm solid black" padding="1mm">
+                        <fo:block>@messages("pdf.declaration.birthCertificate")</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="0.4mm solid black" padding="1mm">
+                        <fo:block>@messages("pdf.declaration.normal")</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="0.4mm solid black" padding="1mm">
+                        <fo:block/>
+                    </fo:table-cell>
+                    <fo:table-cell border="0.4mm solid black" padding="1mm">
+                        <fo:block/>
+                    </fo:table-cell>
+                    <fo:table-cell>
+                        <fo:block/>
+                    </fo:table-cell>
+                </fo:table-row>
+
+                <fo:table-row height="6m">
+                    <fo:table-cell border="0.4mm solid black" padding="1mm">
+                        <fo:block>@messages("pdf.declaration.passport")</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="0.4mm solid black" padding="1mm">
+                        <fo:block>@messages("pdf.declaration.recorded")</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="0.4mm solid black" padding="1mm">
+                        <fo:block/>
+                    </fo:table-cell>
+                    <fo:table-cell border="0.4mm solid black" padding="1mm">
+                        <fo:block/>
+                    </fo:table-cell>
+                    <fo:table-cell>
+                        <fo:block/>
+                    </fo:table-cell>
+                </fo:table-row>
+
+                <fo:table-row height="6m">
+                    <fo:table-cell border="0.4mm solid black" padding="1mm">
+                        <fo:block>@messages("pdf.declaration.other")</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="0.4mm solid black" padding="1mm">
+                        <fo:block>@messages("pdf.declaration.registered")</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="0.4mm solid black" padding="1mm">
+                        <fo:block/>
+                    </fo:table-cell>
+                    <fo:table-cell border="0.4mm solid black" padding="1mm">
+                        <fo:block/>
+                    </fo:table-cell>
+                    <fo:table-cell>
+                        <fo:block/>
+                    </fo:table-cell>
+                </fo:table-row>
+            </fo:table-body>
+        </fo:table>
+
+        <fo:block text-align="center" font-size="12pt" margin-top="1cm">@messages("pdf.page") <fo:page-number/> @messages("pdf.of") <fo:page-number-citation ref-id="FinalElement" /></fo:block>
     </fo:static-content>
 
     <fo:flow flow-name="xsl-region-body" font-size="12pt" text-align="left">
@@ -56,112 +162,7 @@
                 <fo:inline border="0.5mm solid black" padding-top="0.6cm" padding-left="0.6cm" color="#ffffff">Y</fo:inline>
                 <fo:inline border="0.5mm solid black" padding-top="0.6cm" padding-left="0.6cm" color="#ffffff">Y</fo:inline>
             </fo:block>
-            
-            <fo:block font-weight="bold" margin-top="3.5cm" margin-bottom="2mm" padding-top="2mm" border-top="0.5mm solid black">@messages("pdf.declaration.hmrcUseOnly")</fo:block>
 
-            <fo:table width="100%" table-layout="fixed" font-size="11pt">
-                <fo:table-column column-number="1" column-width="36mm"/>
-                <fo:table-column column-number="2" column-width="36mm"/>
-                <fo:table-column column-number="3" column-width="9mm"/>
-                <fo:table-column column-number="4" column-width="27mm"/>
-                <fo:table-column column-number="5" column-width="5mm"/>
-                <fo:table-column column-number="5" column-width="62mm"/>
-
-                <fo:table-body>
-                    <fo:table-row height="6m">
-                        <fo:table-cell border="0.4mm solid black" padding="1mm">
-                            <fo:block>@messages("pdf.declaration.corres")</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell border="0.4mm solid black" padding="1mm">
-                            <fo:block>@messages("pdf.declaration.traced")</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell border="0.4mm solid black" padding="1mm" number-columns-spanned="2">
-                            <fo:block>@messages("pdf.declaration.cli")</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell>
-                            <fo:block/>
-                        </fo:table-cell>
-                        <fo:table-cell border="0.4mm solid black" number-rows-spanned="6" text-align="center">
-                            <fo:block>@messages("pdf.declaration.dateReceived")</fo:block>
-                        </fo:table-cell>
-                    </fo:table-row>
-
-                    <fo:table-row height="6m">
-                        <fo:table-cell border="0.4mm solid black" padding="1mm" color="#ffffff">
-                            <fo:block>@messages("pdf.declaration.corres")</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell border="0.4mm solid black" padding="1mm" color="#ffffff">
-                            <fo:block>@messages("pdf.declaration.traced")</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell border="0.4mm solid black" padding="1mm" number-columns-spanned="2" color="#ffffff">
-                            <fo:block>@messages("pdf.declaration.cli")</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell>
-                            <fo:block/>
-                        </fo:table-cell>
-                    </fo:table-row>
-
-                    <fo:table-row>
-                        <fo:table-cell padding="1mm" number-columns-spanned="2">
-                            <fo:block>@messages("pdf.declaration.documentsReturned")</fo:block>
-                        </fo:table-cell>
-                    </fo:table-row>
-
-                    <fo:table-row height="6m">
-                        <fo:table-cell border="0.4mm solid black" padding="1mm">
-                            <fo:block>@messages("pdf.declaration.birthCertificate")</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell border="0.4mm solid black" padding="1mm">
-                            <fo:block>@messages("pdf.declaration.normal")</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell border="0.4mm solid black" padding="1mm">
-                            <fo:block/>
-                        </fo:table-cell>
-                        <fo:table-cell border="0.4mm solid black" padding="1mm">
-                            <fo:block/>
-                        </fo:table-cell>
-                        <fo:table-cell>
-                            <fo:block/>
-                        </fo:table-cell>
-                    </fo:table-row>
-
-                    <fo:table-row height="6m">
-                        <fo:table-cell border="0.4mm solid black" padding="1mm">
-                            <fo:block>@messages("pdf.declaration.passport")</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell border="0.4mm solid black" padding="1mm">
-                            <fo:block>@messages("pdf.declaration.recorded")</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell border="0.4mm solid black" padding="1mm">
-                            <fo:block/>
-                        </fo:table-cell>
-                        <fo:table-cell border="0.4mm solid black" padding="1mm">
-                            <fo:block/>
-                        </fo:table-cell>
-                        <fo:table-cell>
-                            <fo:block/>
-                        </fo:table-cell>
-                    </fo:table-row>
-
-                    <fo:table-row height="6m">
-                        <fo:table-cell border="0.4mm solid black" padding="1mm">
-                            <fo:block>@messages("pdf.declaration.other")</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell border="0.4mm solid black" padding="1mm">
-                            <fo:block>@messages("pdf.declaration.registered")</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell border="0.4mm solid black" padding="1mm">
-                            <fo:block/>
-                        </fo:table-cell>
-                        <fo:table-cell border="0.4mm solid black" padding="1mm">
-                            <fo:block/>
-                        </fo:table-cell>
-                        <fo:table-cell>
-                            <fo:block/>
-                        </fo:table-cell>
-                    </fo:table-row>
-                </fo:table-body>
-            </fo:table>
         </fo:block>
     </fo:flow>
 </fo:page-sequence>
