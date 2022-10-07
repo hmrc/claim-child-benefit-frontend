@@ -87,7 +87,8 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
         val happyBarsResponse = ValidateBankDetailsResponseModel(
           accountNumberIsWellFormatted = ReputationResponseEnum.Yes,
           nonStandardAccountDetailsRequiredForBacs = ReputationResponseEnum.No,
-          sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes
+          sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes,
+          sortCodeSupportsDirectCredit = Some(ReputationResponseEnum.Yes)
         )
 
         val mockBarsService = mock[BarsService]
@@ -126,7 +127,8 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
         val happyBarsResponse = ValidateBankDetailsResponseModel(
           accountNumberIsWellFormatted = ReputationResponseEnum.Yes,
           nonStandardAccountDetailsRequiredForBacs = ReputationResponseEnum.Yes,
-          sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes
+          sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes,
+          sortCodeSupportsDirectCredit = Some(ReputationResponseEnum.Yes)
         )
 
         val mockBarsService = mock[BarsService]
@@ -154,6 +156,46 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
           val answerWithRollNumber = validAnswer.copy(rollNumber = Some("abc/123"))
           val result = route(application, request).value
           val expectedAnswers = emptyUserAnswers.set(BankAccountDetailsPage, answerWithRollNumber).success.value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+          verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
+        }
+      }
+
+      "must save the answer and redirect to the next page when valid data is submitted and the BARS response does not indicate whether the account supports Direct Credit" in {
+
+        val happyBarsResponse = ValidateBankDetailsResponseModel(
+          accountNumberIsWellFormatted = ReputationResponseEnum.Yes,
+          nonStandardAccountDetailsRequiredForBacs = ReputationResponseEnum.No,
+          sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes,
+          sortCodeSupportsDirectCredit = None
+        )
+
+        val mockBarsService = mock[BarsService]
+        val mockSessionRepository = mock[SessionRepository]
+        val mockFeatureFlags = mock[FeatureFlags]
+
+        when(mockBarsService.validateBankDetails(any())(any(), any())) thenReturn Future.successful(Some(happyBarsResponse))
+        when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+        when(mockFeatureFlags.validateBankDetails) thenReturn true
+
+        val application =
+          applicationBuilder(userAnswers = Some(emptyUserAnswers))
+            .overrides(
+              bind[SessionRepository].toInstance(mockSessionRepository),
+              bind[BarsService].toInstance(mockBarsService),
+              bind[FeatureFlags].toInstance(mockFeatureFlags)
+            )
+            .build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, bankAccountDetailsRoute)
+              .withFormUrlEncodedBody(("accountName", "name on account"), ("bankName", "bank name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+
+          val result = route(application, request).value
+          val expectedAnswers = emptyUserAnswers.set(BankAccountDetailsPage, validAnswer).success.value
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
@@ -256,7 +298,8 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
       val invalidDetailsResponse = ValidateBankDetailsResponseModel(
         accountNumberIsWellFormatted = ReputationResponseEnum.Indeterminate,
         nonStandardAccountDetailsRequiredForBacs = ReputationResponseEnum.Indeterminate,
-        sortCodeIsPresentOnEISCD = ReputationResponseEnum.No
+        sortCodeIsPresentOnEISCD = ReputationResponseEnum.No,
+        sortCodeSupportsDirectCredit = Some(ReputationResponseEnum.Yes)
       )
 
       val mockBarsService = mock[BarsService]
@@ -286,7 +329,8 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
       val invalidDetailsResponse = ValidateBankDetailsResponseModel(
         accountNumberIsWellFormatted = ReputationResponseEnum.No,
         nonStandardAccountDetailsRequiredForBacs = ReputationResponseEnum.Indeterminate,
-        sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes
+        sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes,
+        sortCodeSupportsDirectCredit = Some(ReputationResponseEnum.Yes)
       )
 
       val mockBarsService = mock[BarsService]
@@ -316,7 +360,39 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
       val invalidDetailsResponse = ValidateBankDetailsResponseModel(
         accountNumberIsWellFormatted = ReputationResponseEnum.Yes,
         nonStandardAccountDetailsRequiredForBacs = ReputationResponseEnum.Yes,
-        sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes
+        sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes,
+        sortCodeSupportsDirectCredit = Some(ReputationResponseEnum.Yes)
+      )
+
+      val mockBarsService = mock[BarsService]
+
+      when(mockBarsService.validateBankDetails(any())(any(), any())) thenReturn Future.successful(Some(invalidDetailsResponse))
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[BarsService].toInstance(mockBarsService)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, bankAccountDetailsRoute)
+            .withFormUrlEncodedBody(("accountName", "name"), ("bankName", "bank name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+      }
+    }
+
+    "must return a Bad Request when the BARS response indicates the account does not support Direct Credit" in {
+
+      val invalidDetailsResponse = ValidateBankDetailsResponseModel(
+        accountNumberIsWellFormatted = ReputationResponseEnum.Yes,
+        nonStandardAccountDetailsRequiredForBacs = ReputationResponseEnum.No,
+        sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes,
+        sortCodeSupportsDirectCredit = Some(ReputationResponseEnum.No)
       )
 
       val mockBarsService = mock[BarsService]

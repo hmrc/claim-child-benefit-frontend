@@ -258,6 +258,7 @@ bankAccountDetails.title = What are the bank or building society account details
 bankAccountDetails.heading = What are the bank or building society account details that Child Benefit can be paid to?
 bankAccountDetails.error.sortCode.failedModulusCheck = Enter a recognised sort code and account number
 bankAccountDetails.error.sortCode.doesNotExist = Enter a sort code that is recognised
+bankAccountDetails.error.sortCode.doesNotSupportDirectCredit = You have entered a sort code that does not accept automated payments, like direct debits. Check the sort code or enter details for a different account.
 bankAccountDetails.accountName = Name(s) on the account
 bankAccountDetails.bankName = Name of bank or building society
 bankAccountDetails.accountNumber = Account number

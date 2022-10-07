@@ -73,7 +73,8 @@ class BarsConnectorSpec
           result.value mustEqual ValidateBankDetailsResponseModel(
             accountNumberIsWellFormatted = ReputationResponseEnum.Yes,
             nonStandardAccountDetailsRequiredForBacs = ReputationResponseEnum.No,
-            sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes
+            sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes,
+            sortCodeSupportsDirectCredit = Some(ReputationResponseEnum.Yes)
           )
 
           verify(auditService, times(1)).auditValidateBankDetails(
