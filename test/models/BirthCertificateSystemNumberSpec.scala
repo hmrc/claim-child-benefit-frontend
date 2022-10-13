@@ -16,25 +16,19 @@
 
 package models
 
-import play.api.libs.json._
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
+import play.api.libs.json.{JsString, JsSuccess, Json}
 
-final case class BirthCertificateSystemNumber(value: String) extends BirthCertificateNumber {
+class BirthCertificateSystemNumberSpec extends AnyFreeSpec with Matchers {
 
-  override val brmsFormat: String = value
-  override val display: String    = value
-}
+  "must serialise / deserialise to/from a JsString" in {
 
-object BirthCertificateSystemNumber {
+    val systemNumber = BirthCertificateSystemNumber("123456789")
 
-  implicit lazy val reads: Reads[BirthCertificateSystemNumber] = Reads {
-    case JsString(value) =>
-      JsSuccess(BirthCertificateSystemNumber(value))
+    val json = Json.toJson(systemNumber)
 
-    case _ =>
-      JsError("Unable to read value as a birth certificate system number")
-  }
-
-  implicit lazy val writes: Writes[BirthCertificateSystemNumber] = Writes {
-    value => JsString(value.display)
+    json mustEqual JsString("123456789")
+    json.validate[BirthCertificateSystemNumber] mustEqual JsSuccess(systemNumber)
   }
 }
