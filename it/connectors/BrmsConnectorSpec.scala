@@ -71,7 +71,7 @@ class BrmsConnectorSpec
         val app = application
 
         running(app) {
-          
+
           val connector = app.injector.instanceOf[BrmsConnector]
 
           server.stubFor(

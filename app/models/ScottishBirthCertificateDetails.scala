@@ -18,9 +18,13 @@ package models
 
 import play.api.libs.json.{Format, Json}
 
-final case class ScottishBirthCertificateDetails(district: Int, year: Int, entry: Int) {
+final case class ScottishBirthCertificateDetails(district: Int, year: Int, entry: Int) extends BirthReferenceNumber {
 
-  override def toString: String = s"$district $year $entry"
+  private val entryPadded: String = f"$entry%03d"
+
+  override val brmsFormat: String = f"$year$district$entryPadded"
+  override val display: String = s"$district $year $entry"
+  override def toString: String = display
 }
 
 object ScottishBirthCertificateDetails {
