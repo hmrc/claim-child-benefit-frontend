@@ -21,7 +21,7 @@ import com.dmanchester.playfop.sapi.PlayFop
 import config.FeatureFlags
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import logging.Logging
-import models.{JourneyModel, UserAnswers}
+import models.{JourneyModel, JourneyModelProvider, UserAnswers}
 import org.apache.fop.apps.FOUserAgent
 import org.apache.xmlgraphics.util.MimeConstants
 import play.api.i18n.I18nSupport
@@ -42,7 +42,8 @@ class PrintController @Inject()(
                                  template: PrintTemplate,
                                  noDocumentsView: PrintNoDocumentsRequiredView,
                                  documentsView: PrintDocumentsRequiredView,
-                                 featureFlags: FeatureFlags
+                                 featureFlags: FeatureFlags,
+                                 journeyModelProvider: JourneyModelProvider
                                ) extends FrontendBaseController with I18nSupport with Logging {
 
 
@@ -58,7 +59,7 @@ class PrintController @Inject()(
 
   private def withJourneyModel(answers: UserAnswers)(f: JourneyModel => Result): Result = {
 
-    val (maybeErrors, maybeModel) = JourneyModel.from(answers).pad
+    val (maybeErrors, maybeModel) = journeyModelProvider.buildFromUserAnswers(answers).pad
 
     val errors = maybeErrors.map { errors =>
       val message = errors.toChain.toList.map(_.path).mkString(", ")
