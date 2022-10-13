@@ -35,7 +35,7 @@ object BirthRegistrationMatchingRequest {
   implicit lazy val format: Format[BirthRegistrationMatchingRequest] = Json.format
 
   def apply(
-             birthCertificateNumber: Option[String],
+             birthCertificateNumber: Option[BirthCertificateNumber],
              name: ChildName,
              dateOfBirth: LocalDate,
              countryOfRegistration: ChildBirthRegistrationCountry
@@ -43,7 +43,7 @@ object BirthRegistrationMatchingRequest {
     countryOfRegistration match {
       case England | Scotland | Wales | NorthernIreland =>
         Some(BirthRegistrationMatchingRequest(
-          birthReferenceNumber = birthCertificateNumber.map(_.replace(" ", "")),
+          birthReferenceNumber = birthCertificateNumber.map(_.brmsFormat),
           firstName            = name.firstName,
           additionalNames      = name.middleNames,
           lastName             = name.lastName,
