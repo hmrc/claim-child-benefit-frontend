@@ -17,15 +17,20 @@
 package models
 
 import cats.data.NonEmptyList
+import connectors.BrmsConnector
 import generators.ModelGenerators
 import models.AdditionalInformation.{Information, NoInformation}
+import models.BirthRegistrationMatchingResult.NotAttempted
 import models.RelationshipStatus._
 import models.{ChildBirthRegistrationCountry => BirthCountry}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.{reset, when}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import org.scalatest.{EitherValues, OptionValues, TryValues}
+import org.scalatest.{BeforeAndAfterEach, EitherValues, OptionValues, TryValues}
+import org.scalatestplus.mockito.MockitoSugar
 import pages._
 import pages.applicant._
 import pages.child._
@@ -36,6 +41,8 @@ import queries.{AllChildPreviousNames, AllChildSummaries, AllPreviousFamilyNames
 import uk.gov.hmrc.domain.Nino
 
 import java.time.LocalDate
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class JourneyModelProviderSpec
   extends AnyFreeSpec
@@ -43,7 +50,9 @@ class JourneyModelProviderSpec
     with TryValues
     with EitherValues
     with OptionValues
-    with ModelGenerators {
+    with ModelGenerators
+    with MockitoSugar
+    with BeforeAndAfterEach {
 
   private val now = LocalDate.now
   private val applicantName = AdultName("first", None, "last")
@@ -79,8 +88,14 @@ class JourneyModelProviderSpec
   private val previousClaimantName = AdultName("pc first", None, "pc last")
   private val previousClaimantUkAddress = arbitrary[UkAddress].sample.value
   private val previousClaimantInternationalAddress = arbitrary[InternationalAddress].sample.value
-  
+
+  private val mockBrmsConnector = mock[BrmsConnector]
   private val journeyModelProvider = new JourneyModelProvider()
+
+  override def beforeEach(): Unit = {
+    reset(mockBrmsConnector)
+    super.beforeEach()
+  }
 
   ".buildFromUserAnswers" - {
 
@@ -122,6 +137,7 @@ class JourneyModelProviderSpec
               dateOfBirth = now,
               countryOfRegistration = ChildBirthRegistrationCountry.England,
               birthCertificateNumber = Some(systemNumber),
+              birthCertificateNumberMatched = NotAttempted,
               relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
               adoptingThroughLocalAuthority = false,
               previousClaimant = None
@@ -191,6 +207,7 @@ class JourneyModelProviderSpec
               dateOfBirth = now,
               countryOfRegistration = ChildBirthRegistrationCountry.England,
               birthCertificateNumber = Some(systemNumber),
+              birthCertificateNumberMatched = NotAttempted,
               relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
               adoptingThroughLocalAuthority = false,
               previousClaimant = None
@@ -266,6 +283,7 @@ class JourneyModelProviderSpec
               dateOfBirth = now,
               countryOfRegistration = ChildBirthRegistrationCountry.England,
               birthCertificateNumber = Some(systemNumber),
+              birthCertificateNumberMatched = NotAttempted,
               relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
               adoptingThroughLocalAuthority = false,
               previousClaimant = None
@@ -278,6 +296,7 @@ class JourneyModelProviderSpec
                 dateOfBirth = now,
                 countryOfRegistration = ChildBirthRegistrationCountry.Scotland,
                 birthCertificateNumber = Some(scottishBirthCertificateDetails),
+                birthCertificateNumberMatched = NotAttempted,
                 relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
                 adoptingThroughLocalAuthority = false,
                 previousClaimant = None
@@ -906,6 +925,7 @@ class JourneyModelProviderSpec
           dateOfBirth = now,
           countryOfRegistration = ChildBirthRegistrationCountry.England,
           birthCertificateNumber = Some(systemNumber),
+          birthCertificateNumberMatched = NotAttempted,
           relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
           adoptingThroughLocalAuthority = false,
           previousClaimant = None
@@ -938,6 +958,7 @@ class JourneyModelProviderSpec
           dateOfBirth = now,
           countryOfRegistration = ChildBirthRegistrationCountry.England,
           birthCertificateNumber = None,
+          birthCertificateNumberMatched = NotAttempted,
           relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
           adoptingThroughLocalAuthority = false,
           previousClaimant = None
@@ -969,6 +990,7 @@ class JourneyModelProviderSpec
           dateOfBirth = now,
           countryOfRegistration = ChildBirthRegistrationCountry.Wales,
           birthCertificateNumber = None,
+          birthCertificateNumberMatched = NotAttempted,
           relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
           adoptingThroughLocalAuthority = false,
           previousClaimant = None
@@ -1003,6 +1025,7 @@ class JourneyModelProviderSpec
             dateOfBirth = now,
             countryOfRegistration = ChildBirthRegistrationCountry.Scotland,
             birthCertificateNumber = Some(scottishBirthCertificateDetails),
+            birthCertificateNumberMatched = NotAttempted,
             relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = false,
             previousClaimant = None
@@ -1034,6 +1057,7 @@ class JourneyModelProviderSpec
             dateOfBirth = now,
             countryOfRegistration = ChildBirthRegistrationCountry.Scotland,
             birthCertificateNumber = None,
+            birthCertificateNumberMatched = NotAttempted,
             relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = false,
             previousClaimant = None
@@ -1070,6 +1094,7 @@ class JourneyModelProviderSpec
             dateOfBirth = now,
             countryOfRegistration = ChildBirthRegistrationCountry.England,
             birthCertificateNumber = Some(systemNumber),
+            birthCertificateNumberMatched = NotAttempted,
             relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = false,
             previousClaimant = Some(JourneyModel.PreviousClaimant(previousClaimantName, previousClaimantUkAddress))
@@ -1103,6 +1128,7 @@ class JourneyModelProviderSpec
             dateOfBirth = now,
             countryOfRegistration = ChildBirthRegistrationCountry.England,
             birthCertificateNumber = Some(systemNumber),
+            birthCertificateNumberMatched = NotAttempted,
             relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = false,
             previousClaimant = Some(JourneyModel.PreviousClaimant(previousClaimantName, previousClaimantInternationalAddress))
@@ -1155,6 +1181,8 @@ class JourneyModelProviderSpec
         data.value.applicant.memberOfHMForcesOrCivilServantAbroad.value mustEqual false
         data.value.relationship.partner.value.memberOfHMForcesOrCivilServantAbroad.value mustEqual true
       }
+
+      "when BRMS is called and returns an error" ignore {}
     }
 
     "must fail and report the missing pages" - {

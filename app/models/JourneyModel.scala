@@ -90,6 +90,7 @@ object JourneyModel {
                           dateOfBirth: LocalDate,
                           countryOfRegistration: ChildBirthRegistrationCountry,
                           birthCertificateNumber: Option[BirthCertificateNumber],
+                          birthCertificateNumberMatched: BirthRegistrationMatchingResult,
                           relationshipToApplicant: ApplicantRelationshipToChild,
                           adoptingThroughLocalAuthority: Boolean,
                           previousClaimant: Option[PreviousClaimant]

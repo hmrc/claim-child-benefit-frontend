@@ -18,6 +18,7 @@ package models
 
 import cats.data.{Ior, IorNec, NonEmptyChain, NonEmptyList}
 import cats.implicits._
+import connectors.BrmsConnector
 import models.JourneyModel._
 import models.{ChildBirthRegistrationCountry => RegistrationCountry}
 import pages._
@@ -120,6 +121,7 @@ class JourneyModelProvider @Inject()() {
         answers.getIor(ChildDateOfBirthPage(index)),
         answers.getIor(ChildBirthRegistrationCountryPage(index)),
         getBirthCertificateNumber,
+        Ior.Right(BirthRegistrationMatchingResult.NotAttempted),
         answers.getIor(ApplicantRelationshipToChildPage(index)),
         answers.getIor(AdoptingThroughLocalAuthorityPage(index)),
         getPreviousClaimant
