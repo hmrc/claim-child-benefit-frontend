@@ -113,7 +113,7 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
 
         val view = application.injector.instanceOf[PrintDocumentsRequiredView]
         val journeyModelProvider = application.injector.instanceOf[JourneyModelProvider]
-        val journeyModel =journeyModelProvider.buildFromUserAnswers(answers).right.value
+        val journeyModel = journeyModelProvider.buildFromUserAnswers(answers).futureValue.right.value
 
         status(result) mustEqual OK
 

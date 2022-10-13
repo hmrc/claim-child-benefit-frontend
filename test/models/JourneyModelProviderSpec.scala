@@ -27,6 +27,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, when}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{BeforeAndAfterEach, EitherValues, OptionValues, TryValues}
@@ -52,7 +53,8 @@ class JourneyModelProviderSpec
     with OptionValues
     with ModelGenerators
     with MockitoSugar
-    with BeforeAndAfterEach {
+    with BeforeAndAfterEach
+    with ScalaFutures {
 
   private val now = LocalDate.now
   private val applicantName = AdultName("first", None, "last")
@@ -148,7 +150,7 @@ class JourneyModelProviderSpec
           additionalInformation = NoInformation
         )
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors mustBe empty
         data.value mustEqual expectedModel
@@ -218,7 +220,7 @@ class JourneyModelProviderSpec
           additionalInformation = Information("info")
         )
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors mustBe empty
         data.value mustEqual expectedModel
@@ -308,7 +310,7 @@ class JourneyModelProviderSpec
           additionalInformation = NoInformation
         )
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors mustBe empty
         data.value mustEqual expectedModel
@@ -336,7 +338,7 @@ class JourneyModelProviderSpec
             JourneyModel.EldestChild(eldestChildName, now),
             PaymentFrequency.Weekly
           )
-          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
           errors mustBe empty
           data.value.paymentPreference mustEqual expectedPaymentPreference
@@ -368,7 +370,7 @@ class JourneyModelProviderSpec
               eldestChild = Some(JourneyModel.EldestChild(eldestChildName, now))
             )
 
-            val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+            val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
             errors mustBe empty
             data.value.paymentPreference mustEqual expectedPaymentPreference
@@ -396,7 +398,7 @@ class JourneyModelProviderSpec
               eldestChild = Some(JourneyModel.EldestChild(eldestChildName, now))
             )
 
-            val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+            val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
             errors mustBe empty
             data.value.paymentPreference mustEqual expectedPaymentPreference
@@ -420,7 +422,7 @@ class JourneyModelProviderSpec
               Some(JourneyModel.EldestChild(eldestChildName, now))
             )
 
-            val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+            val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
             errors mustBe empty
             data.value.paymentPreference mustEqual expectedPaymentPreference
@@ -458,7 +460,7 @@ class JourneyModelProviderSpec
               eldestChild = Some(JourneyModel.EldestChild(eldestChildName, now))
             )
 
-            val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+            val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
             errors mustBe empty
             data.value.paymentPreference mustEqual expectedPaymentPreference
@@ -477,7 +479,7 @@ class JourneyModelProviderSpec
               eldestChild = Some(JourneyModel.EldestChild(eldestChildName, now))
             )
 
-            val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+            val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
             errors mustBe empty
             data.value.paymentPreference mustEqual expectedPaymentPreference
@@ -500,7 +502,7 @@ class JourneyModelProviderSpec
               eldestChild = Some(JourneyModel.EldestChild(eldestChildName, now))
             )
 
-            val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+            val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
             errors mustBe empty
             data.value.paymentPreference mustEqual expectedPaymentPreference
@@ -518,7 +520,7 @@ class JourneyModelProviderSpec
               eldestChild = Some(JourneyModel.EldestChild(eldestChildName, now))
             )
 
-            val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+            val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
             errors mustBe empty
             data.value.paymentPreference mustEqual expectedPaymentPreference
@@ -532,7 +534,7 @@ class JourneyModelProviderSpec
 
           val expectedPaymentPreference = JourneyModel.PaymentPreference.DoNotPay(Some(JourneyModel.EldestChild(eldestChildName, now)))
 
-          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
           errors mustBe empty
           data.value.paymentPreference mustEqual expectedPaymentPreference
@@ -566,7 +568,7 @@ class JourneyModelProviderSpec
               eldestChild = None
             )
 
-            val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+            val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
             errors mustBe empty
             data.value.paymentPreference mustEqual expectedPaymentPreference
@@ -585,7 +587,7 @@ class JourneyModelProviderSpec
               eldestChild = None
             )
 
-            val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+            val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
             errors mustBe empty
             data.value.paymentPreference mustEqual expectedPaymentPreference
@@ -608,7 +610,7 @@ class JourneyModelProviderSpec
               eldestChild = None
             )
 
-            val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+            val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
             errors mustBe empty
             data.value.paymentPreference mustEqual expectedPaymentPreference
@@ -626,7 +628,7 @@ class JourneyModelProviderSpec
               eldestChild = None
             )
 
-            val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+            val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
             errors mustBe empty
             data.value.paymentPreference mustEqual expectedPaymentPreference
@@ -640,7 +642,7 @@ class JourneyModelProviderSpec
 
           val expectedPaymentPreference = JourneyModel.PaymentPreference.DoNotPay(None)
 
-          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
           errors mustBe empty
           data.value.paymentPreference mustEqual expectedPaymentPreference
@@ -673,7 +675,7 @@ class JourneyModelProviderSpec
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
         )
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors mustBe empty
         data.value.applicant mustEqual expectedApplicant
@@ -706,7 +708,7 @@ class JourneyModelProviderSpec
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
         )
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors mustBe empty
         data.value.applicant mustEqual expectedApplicant
@@ -738,7 +740,7 @@ class JourneyModelProviderSpec
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
         )
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors mustBe empty
         data.value.applicant mustEqual expectedApplicant
@@ -773,7 +775,7 @@ class JourneyModelProviderSpec
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
           )
 
-          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
           errors mustBe empty
           data.value.applicant mustEqual expectedApplicant
@@ -807,7 +809,7 @@ class JourneyModelProviderSpec
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
           )
 
-          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
           errors mustBe empty
           data.value.applicant mustEqual expectedApplicant
@@ -837,7 +839,7 @@ class JourneyModelProviderSpec
           eldestChild = None
         )
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors mustBe empty
         data.value.relationship.partner.value mustEqual expectedPartner
@@ -867,7 +869,7 @@ class JourneyModelProviderSpec
           eldestChild = Some(JourneyModel.EldestChild(partnerEldestChildName, now))
         )
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors mustBe empty
         data.value.relationship.partner.value mustEqual expectedPartner
@@ -897,7 +899,7 @@ class JourneyModelProviderSpec
           eldestChild = Some(JourneyModel.EldestChild(partnerEldestChildName, now))
         )
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors mustBe empty
         data.value.relationship.partner.value mustEqual expectedPartner
@@ -931,7 +933,7 @@ class JourneyModelProviderSpec
           previousClaimant = None
         )
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors mustBe empty
         data.value.children.toList must contain only expectedChildDetails
@@ -964,7 +966,7 @@ class JourneyModelProviderSpec
           previousClaimant = None
         )
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors mustBe empty
         data.value.children.toList must contain only expectedChildDetails
@@ -996,7 +998,7 @@ class JourneyModelProviderSpec
           previousClaimant = None
         )
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors mustBe empty
         data.value.children.toList must contain only expectedChildDetails
@@ -1031,7 +1033,7 @@ class JourneyModelProviderSpec
             previousClaimant = None
           )
 
-          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
           errors mustBe empty
           data.value.children.toList must contain only expectedChildDetails
@@ -1063,7 +1065,7 @@ class JourneyModelProviderSpec
             previousClaimant = None
           )
 
-          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
           errors mustBe empty
           data.value.children.toList must contain only expectedChildDetails
@@ -1100,7 +1102,7 @@ class JourneyModelProviderSpec
             previousClaimant = Some(JourneyModel.PreviousClaimant(previousClaimantName, previousClaimantUkAddress))
           )
 
-          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
           errors mustBe empty
           data.value.children.toList must contain only expectedChildDetails
@@ -1134,7 +1136,7 @@ class JourneyModelProviderSpec
             previousClaimant = Some(JourneyModel.PreviousClaimant(previousClaimantName, previousClaimantInternationalAddress))
           )
 
-          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
           errors mustBe empty
           data.value.children.toList must contain only expectedChildDetails
@@ -1153,7 +1155,7 @@ class JourneyModelProviderSpec
           .set(ApplicantIsHmfOrCivilServantPage, true).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors mustBe empty
         data.value.applicant.memberOfHMForcesOrCivilServantAbroad.value mustEqual true
@@ -1175,7 +1177,7 @@ class JourneyModelProviderSpec
           .set(PartnerIsHmfOrCivilServantPage, true).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors mustBe empty
         data.value.applicant.memberOfHMForcesOrCivilServantAbroad.value mustEqual false
@@ -1197,7 +1199,7 @@ class JourneyModelProviderSpec
           .set(RelationshipStatusPage, Single).success.value
           .remove(ApplicantNamePage).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors.value.toChain.toList must contain theSameElementsAs Seq(ApplicantNamePage, AdditionalInformationPage)
         data mustBe empty
@@ -1213,7 +1215,7 @@ class JourneyModelProviderSpec
           .set(RelationshipStatusPage, Married).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors.value.toChain.toList must contain only (
           PartnerNamePage,
@@ -1236,7 +1238,7 @@ class JourneyModelProviderSpec
           .set(RelationshipStatusPage, Cohabiting).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors.value.toChain.toList must contain only CohabitationDatePage
         data mustBe empty
@@ -1253,7 +1255,7 @@ class JourneyModelProviderSpec
           .set(CohabitationDatePage, now).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors.value.toChain.toList must contain only (
           PartnerNamePage,
@@ -1275,7 +1277,7 @@ class JourneyModelProviderSpec
           .set(RelationshipStatusPage, Separated).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors.value.toChain.toList must contain only SeparationDatePage
         data mustBe empty
@@ -1295,7 +1297,7 @@ class JourneyModelProviderSpec
             .set(EldestChildDateOfBirthPage, now).success.value
             .set(AdditionalInformationPage, NoInformation).success.value
 
-          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
           errors.value.toChain.toList must contain only WantToBePaidPage
           data mustBe empty
@@ -1314,7 +1316,7 @@ class JourneyModelProviderSpec
             .set(WantToBePaidPage, true).success.value
             .set(AdditionalInformationPage, NoInformation).success.value
 
-          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
           errors.value.toChain.toList must contain only WantToBePaidToExistingAccountPage
           data mustBe empty
@@ -1332,7 +1334,7 @@ class JourneyModelProviderSpec
             .set(WantToBePaidToExistingAccountPage, true).success.value
             .set(AdditionalInformationPage, NoInformation).success.value
 
-          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
           errors.value.toChain.toList must contain theSameElementsInOrderAs Seq(
             EldestChildNamePage,
@@ -1356,7 +1358,7 @@ class JourneyModelProviderSpec
             .set(WantToBePaidToExistingAccountPage, false).success.value
             .set(AdditionalInformationPage, NoInformation).success.value
 
-          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
           errors.value.toChain.toList must contain only ApplicantHasSuitableAccountPage
           data mustBe empty
@@ -1377,7 +1379,7 @@ class JourneyModelProviderSpec
             .set(ApplicantHasSuitableAccountPage, true).success.value
             .set(AdditionalInformationPage, NoInformation).success.value
 
-          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
           errors.value.toChain.toList must contain theSameElementsAs Seq(BankAccountHolderPage, BankAccountDetailsPage)
           data mustBe empty
@@ -1395,7 +1397,7 @@ class JourneyModelProviderSpec
           .set(WantToBePaidPage, true).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors.value.toChain.toList must contain only ApplicantHasSuitableAccountPage
         data mustBe empty
@@ -1413,7 +1415,7 @@ class JourneyModelProviderSpec
           .set(ApplicantHasSuitableAccountPage, true).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors.value.toChain.toList must contain theSameElementsAs Seq(BankAccountHolderPage, BankAccountDetailsPage)
         data mustBe empty
@@ -1430,7 +1432,7 @@ class JourneyModelProviderSpec
           .set(ApplicantHasPreviousFamilyNamePage, true).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors.value.toChain.toList must contain only AllPreviousFamilyNames
         data mustBe empty
@@ -1447,7 +1449,7 @@ class JourneyModelProviderSpec
           .set(ApplicantNinoKnownPage, true).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors.value.toChain.toList must contain only ApplicantNinoPage
         data mustBe empty
@@ -1464,7 +1466,7 @@ class JourneyModelProviderSpec
           .remove(ApplicantLivedAtCurrentAddressOneYearPage).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors.value.toChain.toList must contain only ApplicantLivedAtCurrentAddressOneYearPage
         data mustBe empty
@@ -1482,7 +1484,7 @@ class JourneyModelProviderSpec
           .set(ApplicantPreviousAddressInUkPage, true).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors.value.toChain.toList must contain only ApplicantPreviousUkAddressPage
         data mustBe empty
@@ -1501,7 +1503,7 @@ class JourneyModelProviderSpec
           .set(ApplicantPreviousAddressInUkPage, false).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors.value.toChain.toList must contain only ApplicantPreviousInternationalAddressPage
         data mustBe empty
@@ -1519,7 +1521,7 @@ class JourneyModelProviderSpec
           .set(PartnerNinoKnownPage, true).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors.value.toChain.toList must contain only PartnerNinoPage
         data mustBe empty
@@ -1537,7 +1539,7 @@ class JourneyModelProviderSpec
           .set(PartnerClaimingChildBenefitPage, partnerClaiming).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors.value.toChain.toList must contain theSameElementsInOrderAs Seq(
           PartnerEldestChildNamePage,
@@ -1559,7 +1561,7 @@ class JourneyModelProviderSpec
           .set(PartnerClaimingChildBenefitPage, partnerClaiming).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors.value.toChain.toList must contain only (
           PartnerEldestChildNamePage,
@@ -1580,7 +1582,7 @@ class JourneyModelProviderSpec
           .set(ChildHasPreviousNamePage(Index(0)), true).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors.value.toChain.toList must contain only (
           ChildNameChangedByDeedPollPage(Index(0)),
@@ -1605,7 +1607,7 @@ class JourneyModelProviderSpec
           .remove(ChildBirthCertificateSystemNumberPage(Index(0))).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors.value.toChain.toList must contain only ChildBirthCertificateSystemNumberPage(Index(0))
 
@@ -1624,7 +1626,7 @@ class JourneyModelProviderSpec
           .set(ChildBirthRegistrationCountryPage(Index(0)), BirthCountry.Scotland).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors.value.toChain.toList must contain only ChildScottishBirthCertificateDetailsPage(Index(0))
 
@@ -1642,7 +1644,7 @@ class JourneyModelProviderSpec
           .set(AnyoneClaimedForChildBeforePage(Index(0)), true).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors.value.toChain.toList must contain only (
           PreviousClaimantNamePage(Index(0)),
@@ -1665,7 +1667,7 @@ class JourneyModelProviderSpec
           .set(PreviousClaimantAddressInUkPage(Index(0)), true).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors.value.toChain.toList must contain only PreviousClaimantUkAddressPage(Index(0))
 
@@ -1685,7 +1687,7 @@ class JourneyModelProviderSpec
           .set(PreviousClaimantAddressInUkPage(Index(0)), false).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors.value.toChain.toList must contain only PreviousClaimantInternationalAddressPage(Index(0))
 
@@ -1701,7 +1703,7 @@ class JourneyModelProviderSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors.value.toChain.toList must contain only AllChildSummaries
 

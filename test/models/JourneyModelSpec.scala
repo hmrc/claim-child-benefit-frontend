@@ -19,6 +19,7 @@ package models
 import generators.ModelGenerators
 import models.AdditionalInformation.NoInformation
 import models.RelationshipStatus._
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{EitherValues, OptionValues, TryValues}
@@ -28,6 +29,7 @@ import pages.child._
 import pages.income._
 import pages.payments._
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import java.time.LocalDate
 
 class JourneyModelSpec
@@ -36,7 +38,8 @@ class JourneyModelSpec
     with TryValues
     with EitherValues
     with OptionValues
-    with ModelGenerators {
+    with ModelGenerators
+    with ScalaFutures {
 
   private val now = LocalDate.now
   private val applicantName = AdultName("first", None, "last")
@@ -100,7 +103,7 @@ class JourneyModelSpec
         .set(AdoptingThroughLocalAuthorityPage(Index(2)), false).success.value
         .set(AnyoneClaimedForChildBeforePage(Index(2)), false).success.value
 
-      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).pad
+      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
       errors mustBe empty
 

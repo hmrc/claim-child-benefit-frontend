@@ -18,7 +18,6 @@ package models
 
 import cats.data.{Ior, IorNec, NonEmptyChain, NonEmptyList}
 import cats.implicits._
-import connectors.BrmsConnector
 import models.JourneyModel._
 import models.{ChildBirthRegistrationCountry => RegistrationCountry}
 import pages._
@@ -30,19 +29,21 @@ import pages.payments._
 import queries.{AllChildPreviousNames, AllChildSummaries, AllPreviousFamilyNames, Query}
 
 import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
-class JourneyModelProvider @Inject()() {
+class JourneyModelProvider @Inject()()(implicit ec: ExecutionContext) {
 
-  def buildFromUserAnswers(answers: UserAnswers): IorNec[Query, JourneyModel] =
-    (
-      getApplicant(answers),
-      getRelationship(answers),
-      getChildren(answers),
-      getBenefits(answers),
-      getPaymentPreference(answers),
-      answers.getIor(AdditionalInformationPage)
-    ).parMapN(JourneyModel.apply)
-
+  def buildFromUserAnswers(answers: UserAnswers): Future[IorNec[Query, JourneyModel]] =
+    Future.successful(
+      (
+        getApplicant(answers),
+        getRelationship(answers),
+        getChildren(answers),
+        getBenefits(answers),
+        getPaymentPreference(answers),
+        answers.getIor(AdditionalInformationPage)
+      ).parMapN(JourneyModel.apply)
+    )
 
   private def getBenefits(answers: UserAnswers): IorNec[Query, Set[Benefits]] = {
 
