@@ -60,7 +60,7 @@
                     @line("pdf.birthRegistrationCountry", messages(s"childBirthRegistrationCountry.${child.countryOfRegistration.toString}"))
 
                     @child.birthCertificateNumber.map { number =>
-                        @line("pdf.birthCertificateNumber", number)
+                        @line("pdf.birthCertificateNumber", number.display)
                     }.getOrElse(line("pdf.birthCertificateNumber", messages("pdf.notProvided")))
 
                     @line("pdf.childLivingWithApplicant", messages("site.yes"))

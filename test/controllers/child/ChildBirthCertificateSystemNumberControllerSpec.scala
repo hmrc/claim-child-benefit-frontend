@@ -19,7 +19,7 @@ package controllers.child
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.child.ChildBirthCertificateSystemNumberFormProvider
-import models.ChildName
+import models.{BirthCertificateSystemNumber, ChildName}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -38,7 +38,7 @@ class ChildBirthCertificateSystemNumberControllerSpec extends SpecBase with Mock
   private val waypoints = EmptyWaypoints
   private val childName = ChildName("first", None, "last")
   private val baseAnswers = emptyUserAnswers.set(ChildNamePage(index), childName).success.value
-  private val validAnswer = "123456789"
+  private val validAnswer = BirthCertificateSystemNumber("123456789")
 
   val formProvider = new ChildBirthCertificateSystemNumberFormProvider()
   val form = formProvider(childName)
@@ -97,7 +97,7 @@ class ChildBirthCertificateSystemNumberControllerSpec extends SpecBase with Mock
       running(application) {
         val request =
           FakeRequest(POST, childBirthCertificateSystemNumberRoute)
-            .withFormUrlEncodedBody(("value", validAnswer))
+            .withFormUrlEncodedBody(("value", validAnswer.value))
 
         val result = route(application, request).value
         val expectedAnswers = baseAnswers.set(child.ChildBirthCertificateSystemNumberPage(index), validAnswer).success.value
@@ -149,7 +149,7 @@ class ChildBirthCertificateSystemNumberControllerSpec extends SpecBase with Mock
       running(application) {
         val request =
           FakeRequest(POST, childBirthCertificateSystemNumberRoute)
-            .withFormUrlEncodedBody(("value", validAnswer))
+            .withFormUrlEncodedBody(("value", validAnswer.value))
 
         val result = route(application, request).value
 

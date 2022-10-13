@@ -72,7 +72,7 @@ class JourneyModelSpec
   private val childName = ChildName("first", None, "last")
   private val biologicalSex = ChildBiologicalSex.Female
   private val relationshipToChild = ApplicantRelationshipToChild.BirthChild
-  private val systemNumber = "000000000"
+  private val systemNumber = BirthCertificateSystemNumber("000000000")
   private val scottishBirthCertificateDetails = arbitrary[ScottishBirthCertificateDetails].sample.value
   private val childPreviousName1 = ChildName("first 1", None, "last 1")
   private val childPreviousName2 = ChildName("first 2", None, "last 2")
@@ -328,7 +328,7 @@ class JourneyModelSpec
                 biologicalSex = biologicalSex,
                 dateOfBirth = now,
                 countryOfRegistration = ChildBirthRegistrationCountry.Scotland,
-                birthCertificateNumber = Some(scottishBirthCertificateDetails.toString),
+                birthCertificateNumber = Some(scottishBirthCertificateDetails),
                 relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
                 adoptingThroughLocalAuthority = false,
                 previousClaimant = None
@@ -1053,7 +1053,7 @@ class JourneyModelSpec
             biologicalSex = ChildBiologicalSex.Female,
             dateOfBirth = now,
             countryOfRegistration = ChildBirthRegistrationCountry.Scotland,
-            birthCertificateNumber = Some(scottishBirthCertificateDetails.toString),
+            birthCertificateNumber = Some(scottishBirthCertificateDetails),
             relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = false,
             previousClaimant = None
@@ -1120,7 +1120,7 @@ class JourneyModelSpec
             biologicalSex = biologicalSex,
             dateOfBirth = now,
             countryOfRegistration = ChildBirthRegistrationCountry.England,
-            birthCertificateNumber = Some("000000000"),
+            birthCertificateNumber = Some(systemNumber),
             relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = false,
             previousClaimant = Some(JourneyModel.PreviousClaimant(previousClaimantName, previousClaimantUkAddress))
@@ -1153,7 +1153,7 @@ class JourneyModelSpec
             biologicalSex = ChildBiologicalSex.Female,
             dateOfBirth = now,
             countryOfRegistration = ChildBirthRegistrationCountry.England,
-            birthCertificateNumber = Some("000000000"),
+            birthCertificateNumber = Some(systemNumber),
             relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = false,
             previousClaimant = Some(JourneyModel.PreviousClaimant(previousClaimantName, previousClaimantInternationalAddress))

@@ -20,7 +20,7 @@ import audit.DownloadAuditEvent._
 import cats.data.NonEmptyList
 import generators.ModelGenerators
 import models.AdditionalInformation.Information
-import models.{CurrentlyReceivingChildBenefit, JourneyModel, PartnerClaimingChildBenefit}
+import models.{BirthCertificateSystemNumber, CurrentlyReceivingChildBenefit, JourneyModel, PartnerClaimingChildBenefit}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
 import org.scalacheck.Arbitrary.arbitrary
@@ -91,7 +91,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             biologicalSex = models.ChildBiologicalSex.Female,
             dateOfBirth = now,
             countryOfRegistration = models.ChildBirthRegistrationCountry.England,
-            birthCertificateNumber = Some("000000000"),
+            birthCertificateNumber = Some(BirthCertificateSystemNumber("000000000")),
             relationshipToApplicant = models.ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = true,
             previousClaimant = Some(JourneyModel.PreviousClaimant(

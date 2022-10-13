@@ -21,10 +21,9 @@ import models.AdditionalInformation.NoInformation
 import models.ChildBirthRegistrationCountry.{England, NorthernIreland, Other, Scotland, Unknown, Wales}
 import models._
 import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
-import pages.{AdditionalInformationPage, CheckYourAnswersPage}
 import pages.child._
+import pages.{AdditionalInformationPage, CheckYourAnswersPage}
 
 import java.time.LocalDate
 
@@ -96,7 +95,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
           .run(
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
             submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), true),
-            submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), "123456789"),
+            submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), BirthCertificateSystemNumber("123456789")),
             submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
             submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
             submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
@@ -136,7 +135,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
           .run(
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Wales),
             submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), true),
-            submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), "123456789"),
+            submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), BirthCertificateSystemNumber("123456789")),
             submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
             submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
             submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),

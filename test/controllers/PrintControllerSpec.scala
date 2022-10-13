@@ -51,7 +51,7 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
   private val childName = ChildName("first", None, "last")
   private val biologicalSex = ChildBiologicalSex.Female
   private val relationshipToChild = ApplicantRelationshipToChild.BirthChild
-  private val systemNumber = "000000000"
+  private val systemNumber = BirthCertificateSystemNumber("000000000")
 
   private val completeAnswers =
     UserAnswers("id")

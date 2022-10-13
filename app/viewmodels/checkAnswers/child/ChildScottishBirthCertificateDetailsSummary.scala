@@ -33,7 +33,7 @@ object ChildScottishBirthCertificateDetailsSummary {
 
         SummaryListRowViewModel(
           key = "childScottishBirthCertificateDetails.checkYourAnswersLabel",
-          value = ValueViewModel(answer.toString),
+          value = ValueViewModel(answer.display),
           actions = Seq(
             ActionItemViewModel("site.change", ChildScottishBirthCertificateDetailsPage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("childScottishBirthCertificateDetails.change.hidden"))
