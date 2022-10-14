@@ -20,11 +20,11 @@ import cats.data.NonEmptyList
 import connectors.BrmsConnector
 import generators.ModelGenerators
 import models.AdditionalInformation.{Information, NoInformation}
-import models.BirthRegistrationMatchingResult.NotAttempted
+import models.BirthRegistrationMatchingResult.{Matched, MatchingAttemptFailed, NotAttempted, NotMatched}
 import models.RelationshipStatus._
 import models.{ChildBirthRegistrationCountry => BirthCountry}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{reset, when}
+import org.mockito.Mockito.{never, reset, verify, when}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.concurrent.ScalaFutures
@@ -40,6 +40,7 @@ import pages.partner._
 import pages.payments._
 import queries.{AllChildPreviousNames, AllChildSummaries, AllPreviousFamilyNames}
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.LocalDate
 import scala.concurrent.Future
@@ -92,7 +93,8 @@ class JourneyModelProviderSpec
   private val previousClaimantInternationalAddress = arbitrary[InternationalAddress].sample.value
 
   private val mockBrmsConnector = mock[BrmsConnector]
-  private val journeyModelProvider = new JourneyModelProvider()
+  private val journeyModelProvider = new JourneyModelProvider(mockBrmsConnector)
+  private implicit val hc: HeaderCarrier = HeaderCarrier()
 
   override def beforeEach(): Unit = {
     reset(mockBrmsConnector)
@@ -104,6 +106,8 @@ class JourneyModelProviderSpec
     "must create a journey model" - {
 
       "from minimal answers when the applicant does not have a partner" in {
+
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -139,7 +143,7 @@ class JourneyModelProviderSpec
               dateOfBirth = now,
               countryOfRegistration = ChildBirthRegistrationCountry.England,
               birthCertificateNumber = Some(systemNumber),
-              birthCertificateNumberMatched = NotAttempted,
+              birthCertificateNumberMatched = Matched,
               relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
               adoptingThroughLocalAuthority = false,
               previousClaimant = None
@@ -157,6 +161,8 @@ class JourneyModelProviderSpec
       }
 
       "from minimal answers when the applicant has a partner" in {
+
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(false))
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -209,7 +215,7 @@ class JourneyModelProviderSpec
               dateOfBirth = now,
               countryOfRegistration = ChildBirthRegistrationCountry.England,
               birthCertificateNumber = Some(systemNumber),
-              birthCertificateNumberMatched = NotAttempted,
+              birthCertificateNumberMatched = NotMatched,
               relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
               adoptingThroughLocalAuthority = false,
               previousClaimant = None
@@ -227,6 +233,8 @@ class JourneyModelProviderSpec
       }
 
       "when the applicant has multiple children" in {
+
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
         val childName2 = ChildName("first 2", None, "last 2")
 
@@ -285,7 +293,7 @@ class JourneyModelProviderSpec
               dateOfBirth = now,
               countryOfRegistration = ChildBirthRegistrationCountry.England,
               birthCertificateNumber = Some(systemNumber),
-              birthCertificateNumberMatched = NotAttempted,
+              birthCertificateNumberMatched = Matched,
               relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
               adoptingThroughLocalAuthority = false,
               previousClaimant = None
@@ -298,7 +306,7 @@ class JourneyModelProviderSpec
                 dateOfBirth = now,
                 countryOfRegistration = ChildBirthRegistrationCountry.Scotland,
                 birthCertificateNumber = Some(scottishBirthCertificateDetails),
-                birthCertificateNumberMatched = NotAttempted,
+                birthCertificateNumberMatched = Matched,
                 relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
                 adoptingThroughLocalAuthority = false,
                 previousClaimant = None
@@ -319,6 +327,8 @@ class JourneyModelProviderSpec
       "when the applicant is already receiving child benefit" - {
 
         "and wants to be paid to their existing account" in {
+
+          when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
           val answers = UserAnswers("id")
             .withMinimalApplicantDetails
@@ -347,6 +357,8 @@ class JourneyModelProviderSpec
         "and does not want to be paid into their existing account" - {
 
           "and has a suitable account" in {
+
+            when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
             val answers = UserAnswers("id")
               .withMinimalApplicantDetails
@@ -378,6 +390,8 @@ class JourneyModelProviderSpec
 
           "and does not have a suitable account" in {
 
+            when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
             val answers = UserAnswers("id")
               .withMinimalApplicantDetails
               .withOneChild
@@ -405,6 +419,8 @@ class JourneyModelProviderSpec
           }
 
           "and does not want to be paid" in {
+
+            when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
             val answers = UserAnswers("id")
               .withMinimalApplicantDetails
@@ -443,10 +459,11 @@ class JourneyModelProviderSpec
           .set(EldestChildNamePage, eldestChildName).success.value
           .set(EldestChildDateOfBirthPage, now).success.value
 
-
         "and wants to be paid every 4 weeks" - {
 
           "and has a suitable account" in {
+
+            when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
             val answers = baseAnswers
               .set(WantToBePaidPage, true).success.value
@@ -467,6 +484,8 @@ class JourneyModelProviderSpec
           }
 
           "and does not have a suitable account" in {
+
+            when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
             val answers = baseAnswers
               .set(WantToBePaidPage, true).success.value
@@ -490,6 +509,8 @@ class JourneyModelProviderSpec
 
           "and has a suitable account" in {
 
+            when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
             val answers = baseAnswers
               .set(WantToBePaidPage, true).success.value
               .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
@@ -510,6 +531,8 @@ class JourneyModelProviderSpec
 
           "and does not have a suitable account" in {
 
+            when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
             val answers = baseAnswers
               .set(WantToBePaidPage, true).success.value
               .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
@@ -528,6 +551,8 @@ class JourneyModelProviderSpec
         }
 
         "and does not want to be paid" in {
+
+          when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
           val answers = baseAnswers
             .set(WantToBePaidPage, false).success.value
@@ -543,6 +568,8 @@ class JourneyModelProviderSpec
 
       "when the applicant is not already receiving child benefit" - {
 
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
         val baseAnswers = UserAnswers("id")
           .withMinimalApplicantDetails
           .withOneChild
@@ -555,6 +582,8 @@ class JourneyModelProviderSpec
         "and wants to be paid every 4 weeks" - {
 
           "and has a suitable account" in {
+
+            when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
             val answers = baseAnswers
               .set(WantToBePaidPage, true).success.value
@@ -575,6 +604,8 @@ class JourneyModelProviderSpec
           }
 
           "and does not have a suitable account" in {
+
+            when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
             val answers = baseAnswers
               .set(WantToBePaidPage, true).success.value
@@ -598,6 +629,8 @@ class JourneyModelProviderSpec
 
           "and has a suitable account" in {
 
+            when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
             val answers = baseAnswers
               .set(WantToBePaidPage, true).success.value
               .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
@@ -618,6 +651,8 @@ class JourneyModelProviderSpec
 
           "and does not have a suitable account" in {
 
+            when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
             val answers = baseAnswers
               .set(WantToBePaidPage, true).success.value
               .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
@@ -637,6 +672,8 @@ class JourneyModelProviderSpec
 
         "and does not want to be paid" in {
 
+          when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
           val answers = baseAnswers
             .set(WantToBePaidPage, false).success.value
 
@@ -650,6 +687,8 @@ class JourneyModelProviderSpec
       }
 
       "when the applicant knows their NINO" in {
+
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -683,6 +722,8 @@ class JourneyModelProviderSpec
 
       "when the applicant has some previous family names" in {
 
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
           .withOneChild
@@ -715,6 +756,8 @@ class JourneyModelProviderSpec
       }
 
       "when the applicant's current address is international" in {
+
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -750,6 +793,8 @@ class JourneyModelProviderSpec
 
         "and their previous address is in the UK" in {
 
+          when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
           val answers = UserAnswers("id")
             .withMinimalApplicantDetails
             .withOneChild
@@ -782,6 +827,8 @@ class JourneyModelProviderSpec
         }
 
         "and their previous address is international" in {
+
+          when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
           val answers = UserAnswers("id")
             .withMinimalApplicantDetails
@@ -818,6 +865,8 @@ class JourneyModelProviderSpec
 
       "when the applicant knows their partner's NINO" in {
 
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
           .withOneChild
@@ -846,6 +895,8 @@ class JourneyModelProviderSpec
       }
 
       "when the applicant's partner is entitled to Child Benefit" in {
+
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -877,6 +928,8 @@ class JourneyModelProviderSpec
 
       "when the applicant's partner is waiting to hear if they are entitled to Child Benefit" in {
 
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
           .withOneChild
@@ -907,6 +960,8 @@ class JourneyModelProviderSpec
 
       "when a child has previous names" in {
 
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
           .withOneChild
@@ -927,7 +982,7 @@ class JourneyModelProviderSpec
           dateOfBirth = now,
           countryOfRegistration = ChildBirthRegistrationCountry.England,
           birthCertificateNumber = Some(systemNumber),
-          birthCertificateNumberMatched = NotAttempted,
+          birthCertificateNumberMatched = Matched,
           relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
           adoptingThroughLocalAuthority = false,
           previousClaimant = None
@@ -940,6 +995,8 @@ class JourneyModelProviderSpec
       }
 
       "when a child was born in England and their birth certificate does not have a system number" in {
+
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -960,7 +1017,7 @@ class JourneyModelProviderSpec
           dateOfBirth = now,
           countryOfRegistration = ChildBirthRegistrationCountry.England,
           birthCertificateNumber = None,
-          birthCertificateNumberMatched = NotAttempted,
+          birthCertificateNumberMatched = Matched,
           relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
           adoptingThroughLocalAuthority = false,
           previousClaimant = None
@@ -973,6 +1030,8 @@ class JourneyModelProviderSpec
       }
 
       "when a child was born in Wales and their birth certificate does not have a system number" in {
+
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -992,7 +1051,7 @@ class JourneyModelProviderSpec
           dateOfBirth = now,
           countryOfRegistration = ChildBirthRegistrationCountry.Wales,
           birthCertificateNumber = None,
-          birthCertificateNumberMatched = NotAttempted,
+          birthCertificateNumberMatched = Matched,
           relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
           adoptingThroughLocalAuthority = false,
           previousClaimant = None
@@ -1007,6 +1066,8 @@ class JourneyModelProviderSpec
       "when a child was born in Scotland" - {
 
         "and their birth certificate has details" in {
+
+          when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
           val answers = UserAnswers("id")
             .withMinimalApplicantDetails
@@ -1027,7 +1088,7 @@ class JourneyModelProviderSpec
             dateOfBirth = now,
             countryOfRegistration = ChildBirthRegistrationCountry.Scotland,
             birthCertificateNumber = Some(scottishBirthCertificateDetails),
-            birthCertificateNumberMatched = NotAttempted,
+            birthCertificateNumberMatched = Matched,
             relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = false,
             previousClaimant = None
@@ -1040,6 +1101,8 @@ class JourneyModelProviderSpec
         }
 
         "and their birth certificate does not have details" in {
+
+          when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
           val answers = UserAnswers("id")
             .withMinimalApplicantDetails
@@ -1059,7 +1122,7 @@ class JourneyModelProviderSpec
             dateOfBirth = now,
             countryOfRegistration = ChildBirthRegistrationCountry.Scotland,
             birthCertificateNumber = None,
-            birthCertificateNumberMatched = NotAttempted,
+            birthCertificateNumberMatched = Matched,
             relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = false,
             previousClaimant = None
@@ -1072,9 +1135,81 @@ class JourneyModelProviderSpec
         }
       }
 
+      "when a child was born outside the UK" in {
+
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.Other).success.value
+          .set(BirthCertificateHasSystemNumberPage(Index(0)), false).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
+
+        val expectedChildDetails = JourneyModel.Child(
+          name = childName,
+          nameChangedByDeedPoll = None,
+          previousNames = Nil,
+          biologicalSex = ChildBiologicalSex.Female,
+          dateOfBirth = now,
+          countryOfRegistration = ChildBirthRegistrationCountry.Other,
+          birthCertificateNumber = None,
+          birthCertificateNumberMatched = NotAttempted,
+          relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
+          adoptingThroughLocalAuthority = false,
+          previousClaimant = None
+        )
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors mustBe empty
+        data.value.children.toList must contain only expectedChildDetails
+        verify(mockBrmsConnector, never()).matchChild(any())(any())
+      }
+
+      "when a child's country of registration is unknown" in {
+
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.Unknown).success.value
+          .set(BirthCertificateHasSystemNumberPage(Index(0)), false).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
+
+        val expectedChildDetails = JourneyModel.Child(
+          name = childName,
+          nameChangedByDeedPoll = None,
+          previousNames = Nil,
+          biologicalSex = ChildBiologicalSex.Female,
+          dateOfBirth = now,
+          countryOfRegistration = ChildBirthRegistrationCountry.Unknown,
+          birthCertificateNumber = None,
+          birthCertificateNumberMatched = NotAttempted,
+          relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
+          adoptingThroughLocalAuthority = false,
+          previousClaimant = None
+        )
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors mustBe empty
+        data.value.children.toList must contain only expectedChildDetails
+        verify(mockBrmsConnector, never()).matchChild(any())(any())
+      }
+
       "when someone has claimed for this child before" - {
 
         "and their address is in the UK" in {
+
+          when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
           val answers = UserAnswers("id")
             .withMinimalApplicantDetails
@@ -1096,7 +1231,7 @@ class JourneyModelProviderSpec
             dateOfBirth = now,
             countryOfRegistration = ChildBirthRegistrationCountry.England,
             birthCertificateNumber = Some(systemNumber),
-            birthCertificateNumberMatched = NotAttempted,
+            birthCertificateNumberMatched = Matched,
             relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = false,
             previousClaimant = Some(JourneyModel.PreviousClaimant(previousClaimantName, previousClaimantUkAddress))
@@ -1109,6 +1244,8 @@ class JourneyModelProviderSpec
         }
 
         "and their address is international" in {
+
+          when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
           val answers = UserAnswers("id")
             .withMinimalApplicantDetails
@@ -1130,7 +1267,7 @@ class JourneyModelProviderSpec
             dateOfBirth = now,
             countryOfRegistration = ChildBirthRegistrationCountry.England,
             birthCertificateNumber = Some(systemNumber),
-            birthCertificateNumberMatched = NotAttempted,
+            birthCertificateNumberMatched = Matched,
             relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = false,
             previousClaimant = Some(JourneyModel.PreviousClaimant(previousClaimantName, previousClaimantInternationalAddress))
@@ -1144,6 +1281,8 @@ class JourneyModelProviderSpec
       }
 
       "when the applicant is HM Forces or a civil servant abroad" in {
+
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -1162,6 +1301,8 @@ class JourneyModelProviderSpec
       }
 
       "when the applicant's partner is HM Forces or a civil servant abroad" in {
+
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -1184,12 +1325,46 @@ class JourneyModelProviderSpec
         data.value.relationship.partner.value.memberOfHMForcesOrCivilServantAbroad.value mustEqual true
       }
 
-      "when BRMS is called and returns an error" ignore {}
+      "when BRMS is called and returns an error" in {
+
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.failed(new Exception("something went wrong"))
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.England).success.value
+          .set(BirthCertificateHasSystemNumberPage(Index(0)), false).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
+
+        val expectedChildDetails = JourneyModel.Child(
+          name = childName,
+          nameChangedByDeedPoll = None,
+          previousNames = Nil,
+          biologicalSex = ChildBiologicalSex.Female,
+          dateOfBirth = now,
+          countryOfRegistration = ChildBirthRegistrationCountry.England,
+          birthCertificateNumber = None,
+          birthCertificateNumberMatched = MatchingAttemptFailed,
+          relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
+          adoptingThroughLocalAuthority = false,
+          previousClaimant = None
+        )
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors mustBe empty
+        data.value.children.toList must contain only expectedChildDetails
+      }
     }
 
     "must fail and report the missing pages" - {
 
       "when any mandatory data is missing" in {
+
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -1206,6 +1381,8 @@ class JourneyModelProviderSpec
       }
 
       "when the applicant is married and partner details are missing" in {
+
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -1229,6 +1406,8 @@ class JourneyModelProviderSpec
 
       "when the applicant is cohabiting and cohabitation date is missing" in {
 
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
           .withOneChild
@@ -1245,6 +1424,8 @@ class JourneyModelProviderSpec
       }
 
       "when the applicant is cohabiting and partner details are missing" in {
+
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -1269,6 +1450,8 @@ class JourneyModelProviderSpec
 
       "when the applicant is separated and separation date is missing" in {
 
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
           .withOneChild
@@ -1286,6 +1469,8 @@ class JourneyModelProviderSpec
       "when the applicant is currently receiving child benefit" - {
 
         "and whether they want to be paid is missing" in {
+
+          when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
           val answers = UserAnswers("id")
             .withMinimalApplicantDetails
@@ -1305,6 +1490,8 @@ class JourneyModelProviderSpec
 
         "and whether they want to be paid to their existing account is missing" in {
 
+          when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
           val answers = UserAnswers("id")
             .withMinimalApplicantDetails
             .withOneChild
@@ -1323,6 +1510,8 @@ class JourneyModelProviderSpec
         }
 
         "and their eldest child's details are missing" in {
+
+          when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
           val answers = UserAnswers("id")
             .withMinimalApplicantDetails
@@ -1346,6 +1535,8 @@ class JourneyModelProviderSpec
 
         "and they do not want to be paid to their existing account but whether they have a suitable account is missing" in {
 
+          when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
           val answers = UserAnswers("id")
             .withMinimalApplicantDetails
             .withOneChild
@@ -1365,6 +1556,8 @@ class JourneyModelProviderSpec
         }
 
         "and they do not want to be paid to their existing account but the account details are missing" in {
+
+          when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
           val answers = UserAnswers("id")
             .withMinimalApplicantDetails
@@ -1388,6 +1581,8 @@ class JourneyModelProviderSpec
 
       "when the applicant wants to be paid but whether they have a suitable account is missing" in {
 
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
           .withOneChild
@@ -1404,6 +1599,8 @@ class JourneyModelProviderSpec
       }
 
       "when the applicant wants to be paid but their account details are missing" in {
+
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -1423,6 +1620,8 @@ class JourneyModelProviderSpec
 
       "when the applicant says they have previous names but none are provided" in {
 
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
           .withOneChild
@@ -1439,6 +1638,8 @@ class JourneyModelProviderSpec
       }
 
       "when the applicant says they know their NINO but none is provided" in {
+
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -1457,6 +1658,8 @@ class JourneyModelProviderSpec
 
       "when the applicant did not give a NINO but whether they have lived at their current address is missing" in {
 
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
           .withOneChild
@@ -1473,6 +1676,8 @@ class JourneyModelProviderSpec
       }
 
       "when the applicant said they have lived at their current address less than a year but no previous UK address is provided" in {
+
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -1491,6 +1696,8 @@ class JourneyModelProviderSpec
       }
 
       "when the applicant said they have lived at their current address less than a year but no previous international address is provided" in {
+
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -1511,6 +1718,8 @@ class JourneyModelProviderSpec
 
       "when the applicant said they know their partner's NINO but one is not provided" in {
 
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
           .withOneChild
@@ -1528,6 +1737,8 @@ class JourneyModelProviderSpec
       }
 
       "when the applicant said their partner is entitled to Child Benefit but their partner's eldest child's details are not provided" in {
+
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -1551,6 +1762,8 @@ class JourneyModelProviderSpec
 
       "when the applicant said their partner is waiting to hear about entitlement to Child Benefit but their partner's eldest child's details are not provided" in {
 
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
           .withOneChild
@@ -1573,6 +1786,8 @@ class JourneyModelProviderSpec
 
       "when the applicant said a child had previous names, but none are provided" in {
 
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
           .withOneChild
@@ -1593,6 +1808,8 @@ class JourneyModelProviderSpec
       }
 
       "when a child's birth was registered in England or Wales, the user said their birth certificate has a system number, but none is provided" in {
+
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
         val country = Gen.oneOf(BirthCountry.England, BirthCountry.Wales).sample.value
 
@@ -1616,6 +1833,8 @@ class JourneyModelProviderSpec
 
       "when a child's birth was registered in Scotland, the user said their birth certificate had details, but none are provided" in {
 
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
           .withOneChild
@@ -1634,6 +1853,8 @@ class JourneyModelProviderSpec
       }
 
       "when someone has claimed for this child before, but their details are not present" in {
+
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -1656,6 +1877,8 @@ class JourneyModelProviderSpec
 
       "when someone has claimed for this child before, but their UK address is not present" in {
 
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
           .withOneChild
@@ -1676,6 +1899,8 @@ class JourneyModelProviderSpec
 
       "when someone has claimed for this child before, but their international address is not present" in {
 
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
           .withOneChild
@@ -1695,6 +1920,8 @@ class JourneyModelProviderSpec
       }
 
       "when no children are present" in {
+
+        when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails

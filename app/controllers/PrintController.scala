@@ -26,6 +26,7 @@ import org.apache.fop.apps.FOUserAgent
 import org.apache.xmlgraphics.util.MimeConstants
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.{PrintDocumentsRequiredView, PrintNoDocumentsRequiredView}
 import views.xml.xml.PrintTemplate
@@ -58,7 +59,7 @@ class PrintController @Inject()(
     foUserAgent.setTitle("Claim Child Benefit by post form")
   }
 
-  private def withJourneyModel(answers: UserAnswers)(f: JourneyModel => Future[Result]): Future[Result] =
+  private def withJourneyModel(answers: UserAnswers)(f: JourneyModel => Future[Result])(implicit hc: HeaderCarrier): Future[Result] =
     journeyModelProvider.buildFromUserAnswers(answers).flatMap {
       result =>
         val (maybeErrors, maybeModel) = result.pad

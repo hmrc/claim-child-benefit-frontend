@@ -16,8 +16,10 @@
 
 package models
 
-import cats.data.{Ior, IorNec, NonEmptyChain, NonEmptyList}
+import cats.data.{Ior, IorNec, IorT, NonEmptyChain, NonEmptyList}
 import cats.implicits._
+import connectors.BrmsConnector
+import logging.Logging
 import models.JourneyModel._
 import models.{ChildBirthRegistrationCountry => RegistrationCountry}
 import pages._
@@ -27,23 +29,22 @@ import pages.income._
 import pages.partner._
 import pages.payments._
 import queries.{AllChildPreviousNames, AllChildSummaries, AllPreviousFamilyNames, Query}
+import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class JourneyModelProvider @Inject()()(implicit ec: ExecutionContext) {
+class JourneyModelProvider @Inject()(brmsConnector: BrmsConnector)(implicit ec: ExecutionContext) extends Logging {
 
-  def buildFromUserAnswers(answers: UserAnswers): Future[IorNec[Query, JourneyModel]] =
-    Future.successful(
+  def buildFromUserAnswers(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[IorNec[Query, JourneyModel]] =
       (
-        getApplicant(answers),
-        getRelationship(answers),
+        IorT.fromIor[Future](getApplicant(answers)),
+        IorT.fromIor[Future](getRelationship(answers)),
         getChildren(answers),
-        getBenefits(answers),
-        getPaymentPreference(answers),
-        answers.getIor(AdditionalInformationPage)
-      ).parMapN(JourneyModel.apply)
-    )
+        IorT.fromIor[Future](getBenefits(answers)),
+        IorT.fromIor[Future](getPaymentPreference(answers)),
+        IorT.fromIor[Future](answers.getIor(AdditionalInformationPage))
+      ).parMapN(JourneyModel.apply).value
 
   private def getBenefits(answers: UserAnswers): IorNec[Query, Set[Benefits]] = {
 
@@ -58,9 +59,9 @@ class JourneyModelProvider @Inject()()(implicit ec: ExecutionContext) {
     }
   }
 
-  private def getChildren(answers: UserAnswers): IorNec[Query, NonEmptyList[Child]] = {
+  private def getChildren(answers: UserAnswers)(implicit hc: HeaderCarrier): IorT[Future, NonEmptyChain[Query], NonEmptyList[Child]] = {
 
-    def getChild(index: Index): IorNec[Query, Child] = {
+    def getChild(index: Index): IorT[Future, NonEmptyChain[Query], Child] = {
 
       def getNameChangedByDeedPoll: IorNec[Query, Option[Boolean]] =
         answers.getIor(ChildHasPreviousNamePage(index)).flatMap {
@@ -96,6 +97,30 @@ class JourneyModelProvider @Inject()()(implicit ec: ExecutionContext) {
             Ior.Right(None)
         }
 
+      def matchBirthCertificateNumber: IorT[Future, NonEmptyChain[Query], BirthRegistrationMatchingResult] =
+        (
+          IorT.fromIor[Future](getBirthCertificateNumber),
+          IorT.fromIor[Future](answers.getIor(ChildNamePage(index))),
+          IorT.fromIor[Future](answers.getIor(ChildDateOfBirthPage(index))),
+          IorT.fromIor[Future](answers.getIor(ChildBirthRegistrationCountryPage(index)))
+        ).parMapN(BirthRegistrationMatchingRequest.apply).flatMap {
+          _.map { request =>
+            IorT.liftF[Future, NonEmptyChain[Query], BirthRegistrationMatchingResult](
+              brmsConnector.matchChild(request).map { response =>
+                if (response.matched) {
+                  BirthRegistrationMatchingResult.Matched
+                } else {
+                  BirthRegistrationMatchingResult.NotMatched
+                }
+            }.recover {
+                case e: Exception =>
+                  logger.warn("Error calling BRMS", e.getMessage)
+                  BirthRegistrationMatchingResult.MatchingAttemptFailed
+              }
+            )
+          }.getOrElse(IorT.pure[Future, NonEmptyChain[Query]](BirthRegistrationMatchingResult.NotAttempted))
+        }
+
       def getPreviousClaimant: IorNec[Query, Option[PreviousClaimant]] =
         answers.getIor(AnyoneClaimedForChildBeforePage(index)).flatMap {
           case true =>
@@ -115,24 +140,24 @@ class JourneyModelProvider @Inject()()(implicit ec: ExecutionContext) {
         }
 
       (
-        answers.getIor(ChildNamePage(index)),
-        getNameChangedByDeedPoll,
-        getPreviousNames,
-        answers.getIor(ChildBiologicalSexPage(index)),
-        answers.getIor(ChildDateOfBirthPage(index)),
-        answers.getIor(ChildBirthRegistrationCountryPage(index)),
-        getBirthCertificateNumber,
-        Ior.Right(BirthRegistrationMatchingResult.NotAttempted),
-        answers.getIor(ApplicantRelationshipToChildPage(index)),
-        answers.getIor(AdoptingThroughLocalAuthorityPage(index)),
-        getPreviousClaimant
+        IorT.fromIor[Future](answers.getIor(ChildNamePage(index))),
+        IorT.fromIor[Future](getNameChangedByDeedPoll),
+        IorT.fromIor[Future](getPreviousNames),
+        IorT.fromIor[Future](answers.getIor(ChildBiologicalSexPage(index))),
+        IorT.fromIor[Future](answers.getIor(ChildDateOfBirthPage(index))),
+        IorT.fromIor[Future](answers.getIor(ChildBirthRegistrationCountryPage(index))),
+        IorT.fromIor[Future](getBirthCertificateNumber),
+        matchBirthCertificateNumber,
+        IorT.fromIor[Future](answers.getIor(ApplicantRelationshipToChildPage(index))),
+        IorT.fromIor[Future](answers.getIor(AdoptingThroughLocalAuthorityPage(index))),
+        IorT.fromIor[Future](getPreviousClaimant)
       ).parMapN(Child.apply)
     }
 
     answers.getIor(AllChildSummaries).getOrElse(Nil).indices.toList.parTraverse { i =>
       getChild(Index(i))
     }.flatMap { children =>
-      NonEmptyList.fromList(children).toRightIor(NonEmptyChain.one(AllChildSummaries))
+      IorT.fromIor[Future](NonEmptyList.fromList(children).toRightIor(NonEmptyChain.one(AllChildSummaries)))
     }
   }
 

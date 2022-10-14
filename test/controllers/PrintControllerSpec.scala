@@ -20,6 +20,7 @@ import audit.AuditService
 import base.SpecBase
 import com.dmanchester.playfop.sapi.PlayFop
 import config.FeatureFlags
+import connectors.BrmsConnector
 import generators.ModelGenerators
 import models.AdditionalInformation.NoInformation
 import models._
@@ -34,12 +35,16 @@ import pages.payments._
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.HeaderCarrier
 import views.html.{PrintDocumentsRequiredView, PrintNoDocumentsRequiredView}
 
 import java.nio.charset.Charset
 import java.time.LocalDate
+import scala.concurrent.Future
 
 class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSugar {
+
+  private implicit val hc: HeaderCarrier = HeaderCarrier()
 
   private val now = LocalDate.now
   private val applicantName = AdultName("first", None, "last")
@@ -86,7 +91,13 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
 
     "must return OK and the correct view for onPageLoad when user answers are complete and no documents are required" in {
 
-      val application = applicationBuilder(userAnswers = Some(completeAnswers)).build()
+      val mockBrmsConnector = mock[BrmsConnector]
+      when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
+      val application =
+        applicationBuilder(userAnswers = Some(completeAnswers))
+          .overrides(bind[BrmsConnector].toInstance(mockBrmsConnector))
+          .build()
 
       running(application) {
         val request = FakeRequest(GET, routes.PrintController.onPageLoad.url)
@@ -103,8 +114,15 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
 
     "must return OK and the correct view for onPageLoad when user answers are complete and some documents are required" in {
 
+      val mockBrmsConnector = mock[BrmsConnector]
+      when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
       val answers = completeAnswers.set(ApplicantRelationshipToChildPage(Index(0)), ApplicantRelationshipToChild.AdoptedChild).success.value
-      val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+      val application =
+        applicationBuilder(userAnswers = Some(answers))
+          .overrides(bind[BrmsConnector].toInstance(mockBrmsConnector))
+          .build()
 
       running(application) {
         val request = FakeRequest(GET, routes.PrintController.onPageLoad.url)
@@ -123,9 +141,15 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
 
     "must redirect to journey recovery for onPageLoad when user answers are not complete" in {
 
+      val mockBrmsConnector = mock[BrmsConnector]
+      when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+
       val incompleteAnswers = completeAnswers.remove(ApplicantNamePage).success.value
 
-      val application = applicationBuilder(userAnswers = Some(incompleteAnswers)).build()
+      val application =
+        applicationBuilder(userAnswers = Some(incompleteAnswers))
+          .overrides(bind[BrmsConnector].toInstance(mockBrmsConnector))
+          .build()
 
       running(application) {
         val request = FakeRequest(GET, routes.PrintController.onPageLoad.url)
@@ -143,15 +167,18 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
       val mockAuditService = mock[AuditService]
       val mockFop = mock[PlayFop]
       val mockFeatureFlags = mock[FeatureFlags]
+      val mockBrmsConnector = mock[BrmsConnector]
       when(mockFop.processTwirlXml(any(), any(), any(), any())) thenReturn "hello".getBytes
       when(mockFeatureFlags.auditDownload) thenReturn true
+      when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
       val application =
         applicationBuilder(userAnswers = Some(completeAnswers))
           .overrides(
             bind[PlayFop].toInstance(mockFop),
             bind[AuditService].toInstance(mockAuditService),
-            bind[FeatureFlags].toInstance(mockFeatureFlags)
+            bind[FeatureFlags].toInstance(mockFeatureFlags),
+            bind[BrmsConnector].toInstance(mockBrmsConnector)
           )
           .build()
 
@@ -172,15 +199,18 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
       val mockAuditService = mock[AuditService]
       val mockFop = mock[PlayFop]
       val mockFeatureFlags = mock[FeatureFlags]
+      val mockBrmsConnector = mock[BrmsConnector]
       when(mockFop.processTwirlXml(any(), any(), any(), any())) thenReturn "hello".getBytes
       when(mockFeatureFlags.auditDownload) thenReturn false
+      when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
       val application =
         applicationBuilder(userAnswers = Some(completeAnswers))
           .overrides(
             bind[PlayFop].toInstance(mockFop),
             bind[AuditService].toInstance(mockAuditService),
-            bind[FeatureFlags].toInstance(mockFeatureFlags)
+            bind[FeatureFlags].toInstance(mockFeatureFlags),
+            bind[BrmsConnector].toInstance(mockBrmsConnector)
           )
           .build()
 
@@ -202,13 +232,16 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
 
       val mockAuditService = mock[AuditService]
       val mockFop = mock[PlayFop]
+      val mockBrmsConnector = mock[BrmsConnector]
+      when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
       when(mockFop.processTwirlXml(any(), any(), any(), any())) thenReturn "hello".getBytes
 
       val application =
         applicationBuilder(userAnswers = Some(incompleteAnswers))
           .overrides(
             bind[PlayFop].toInstance(mockFop),
-            bind[AuditService].toInstance(mockAuditService)
+            bind[AuditService].toInstance(mockAuditService),
+            bind[BrmsConnector].toInstance(mockBrmsConnector)
           )
           .build()
 

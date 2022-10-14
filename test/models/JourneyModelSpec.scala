@@ -16,21 +16,27 @@
 
 package models
 
+import connectors.BrmsConnector
 import generators.ModelGenerators
 import models.AdditionalInformation.NoInformation
 import models.RelationshipStatus._
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{EitherValues, OptionValues, TryValues}
+import org.scalatestplus.mockito.MockitoSugar
 import pages._
 import pages.applicant._
 import pages.child._
 import pages.income._
 import pages.payments._
+import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import java.time.LocalDate
+import scala.concurrent.Future
 
 class JourneyModelSpec
   extends AnyFreeSpec
@@ -39,7 +45,12 @@ class JourneyModelSpec
     with EitherValues
     with OptionValues
     with ModelGenerators
-    with ScalaFutures {
+    with ScalaFutures
+    with MockitoSugar {
+
+  private implicit val hc: HeaderCarrier = HeaderCarrier()
+  private val mockBrmsConnector = mock[BrmsConnector]
+  when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
   private val now = LocalDate.now
   private val applicantName = AdultName("first", None, "last")
@@ -53,7 +64,7 @@ class JourneyModelSpec
   private val relationshipToChild = ApplicantRelationshipToChild.BirthChild
   private val systemNumber = BirthCertificateSystemNumber("000000000")
 
-  private val journeyModelProvider = new JourneyModelProvider()
+  private val journeyModelProvider = new JourneyModelProvider(mockBrmsConnector)
 
   ".allRequiredDocuments" - {
 

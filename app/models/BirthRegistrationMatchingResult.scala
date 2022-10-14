@@ -22,7 +22,7 @@ object BirthRegistrationMatchingResult extends Enumerable.Implicits {
 
   case object Matched extends WithName("matched") with BirthRegistrationMatchingResult
   case object NotMatched extends WithName("notMatched") with BirthRegistrationMatchingResult
-  case object NotAttempted extends WithName("ntoAttempted") with BirthRegistrationMatchingResult
+  case object NotAttempted extends WithName("notAttempted") with BirthRegistrationMatchingResult
   case object MatchingAttemptFailed extends WithName("matchingAttemptFailed") with BirthRegistrationMatchingResult
 
   val values: Seq[BirthRegistrationMatchingResult] = Seq(
