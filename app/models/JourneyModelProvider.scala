@@ -106,11 +106,7 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
         ).parMapN(BirthRegistrationMatchingRequest.apply).flatMap {
           _.map { request =>
             IorT.liftF[Future, NonEmptyChain[Query], BirthRegistrationMatchingResult](
-              brmsService.matchChild(request).map(result => result).recover {
-                case e: Exception =>
-                  logger.warn("Error calling BRMS", e.getMessage)
-                  BirthRegistrationMatchingResult.MatchingAttemptFailed
-              }
+              brmsService.matchChild(request)
             )
           }.getOrElse(IorT.pure[Future, NonEmptyChain[Query]](BirthRegistrationMatchingResult.NotAttempted))
         }

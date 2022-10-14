@@ -16,7 +16,6 @@
 
 package models
 
-import connectors.BrmsConnector
 import generators.ModelGenerators
 import models.AdditionalInformation.NoInformation
 import models.RelationshipStatus._
@@ -35,8 +34,8 @@ import pages.payments._
 import services.BrmsService
 import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import java.time.LocalDate
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class JourneyModelSpec

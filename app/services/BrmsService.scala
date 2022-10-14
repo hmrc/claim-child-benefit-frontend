@@ -16,7 +16,9 @@
 
 package services
 
+import config.FeatureFlags
 import connectors.BrmsConnector
+import logging.Logging
 import models.BirthRegistrationMatchingResult._
 import models.{BirthRegistrationMatchingRequest, BirthRegistrationMatchingResult}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -24,11 +26,21 @@ import uk.gov.hmrc.http.HeaderCarrier
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class BrmsService @Inject()(brmsConnector: BrmsConnector) {
+class BrmsService @Inject()(brmsConnector: BrmsConnector, featureFlags: FeatureFlags) extends Logging {
 
   def matchChild(request: BirthRegistrationMatchingRequest)
-                (implicit ec: ExecutionContext, hc: HeaderCarrier): Future[BirthRegistrationMatchingResult] =
-    brmsConnector.matchChild(request).map { response =>
-      if (response.matched) Matched else NotMatched
+                (implicit ec: ExecutionContext, hc: HeaderCarrier): Future[BirthRegistrationMatchingResult] = {
+    if (featureFlags.matchBirthRegistrationDetails) {
+      brmsConnector.matchChild(request).map { response =>
+        if (response.matched) Matched
+        else                  NotMatched
+      }.recover {
+        case e: Exception =>
+          logger.warn("Error calling BRMS", e.getMessage)
+          BirthRegistrationMatchingResult.MatchingAttemptFailed
+      }
+    } else {
+      Future.successful(NotAttempted)
     }
+  }
 }

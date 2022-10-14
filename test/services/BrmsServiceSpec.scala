@@ -17,11 +17,11 @@
 package services
 
 import connectors.BrmsConnector
-import models.BirthRegistrationMatchingResult.{Matched, NotMatched}
+import models.BirthRegistrationMatchingResult.{Matched, MatchingAttemptFailed, NotAttempted, NotMatched}
 import models.ChildBirthRegistrationCountry.England
 import models.{BirthRegistrationMatchingRequest, BirthRegistrationMatchingResponseModel, ChildName}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import org.mockito.Mockito.{never, verify, when}
 import org.scalatest.OptionValues
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
@@ -48,41 +48,90 @@ class BrmsServiceSpec
     implicit val hc: HeaderCarrier = HeaderCarrier()
     val request = BirthRegistrationMatchingRequest(None, ChildName("first", None, "last"), LocalDate.now, England).value
 
-    "must return `matched` if the call to BRMS responds with `true`" in {
+    "when the `match birth registration details` feature is turned on " - {
 
-      val mockConnector = mock[BrmsConnector]
-      when(mockConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+      "must return `matched` if the call to BRMS responds with `true`" in {
 
-      val app =
-        new GuiceApplicationBuilder()
-          .overrides(bind[BrmsConnector].toInstance(mockConnector))
-          .build()
+        val mockConnector = mock[BrmsConnector]
+        when(mockConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
-      running(app) {
+        val app =
+          new GuiceApplicationBuilder()
+            .overrides(bind[BrmsConnector].toInstance(mockConnector))
+            .configure("features.match-birth-registration-details" -> true)
+            .build()
 
-        val service = app.injector.instanceOf[BrmsService]
-        val result = service.matchChild(request).futureValue
+        running(app) {
 
-        result mustEqual Matched
+          val service = app.injector.instanceOf[BrmsService]
+          val result = service.matchChild(request).futureValue
+
+          result mustEqual Matched
+        }
+      }
+
+      "must return `not matched` if the call to BRMS responds with `false`" in {
+
+        val mockConnector = mock[BrmsConnector]
+        when(mockConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(false))
+
+        val app =
+          new GuiceApplicationBuilder()
+            .overrides(bind[BrmsConnector].toInstance(mockConnector))
+            .configure("features.match-birth-registration-details" -> true)
+            .build()
+
+        running(app) {
+
+          val service = app.injector.instanceOf[BrmsService]
+          val result = service.matchChild(request).futureValue
+
+          result mustEqual NotMatched
+        }
+      }
+
+      "must return `matching attempt failed` if the call to BARS fails" in {
+
+        val mockConnector = mock[BrmsConnector]
+        when(mockConnector.matchChild(any())(any())) thenReturn Future.failed(new Exception("foo"))
+
+        val app =
+          new GuiceApplicationBuilder()
+            .overrides(bind[BrmsConnector].toInstance(mockConnector))
+            .configure("features.match-birth-registration-details" -> true)
+            .build()
+
+        running(app) {
+
+          val service = app.injector.instanceOf[BrmsService]
+          val result = service.matchChild(request).futureValue
+
+          result mustEqual MatchingAttemptFailed
+        }
       }
     }
 
-    "must return `not matched` if the call to BRMS responds with `false`" in {
+    "when the `match birth registration details` feature is turned off" - {
 
-      val mockConnector = mock[BrmsConnector]
-      when(mockConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(false))
+      "must return `not attempted` and not call BARS" in {
 
-      val app =
-        new GuiceApplicationBuilder()
-          .overrides(bind[BrmsConnector].toInstance(mockConnector))
-          .build()
+        val mockConnector = mock[BrmsConnector]
+        when(mockConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
 
-      running(app) {
+        val app =
+          new GuiceApplicationBuilder()
+            .overrides(bind[BrmsConnector].toInstance(mockConnector))
+            .configure("features.match-birth-registration-details" -> false)
+            .build()
 
-        val service = app.injector.instanceOf[BrmsService]
-        val result = service.matchChild(request).futureValue
+        running(app) {
 
-        result mustEqual NotMatched
+          val service = app.injector.instanceOf[BrmsService]
+          val result = service.matchChild(request).futureValue
+
+          result mustEqual NotAttempted
+          verify(mockConnector, never()).matchChild(any())(any())
+        }
       }
     }
   }
