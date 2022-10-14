@@ -16,9 +16,8 @@
 
 package models
 
-import cats.data.{Ior, IorNec, IorT, NonEmptyChain, NonEmptyList}
+import cats.data._
 import cats.implicits._
-import connectors.BrmsConnector
 import logging.Logging
 import models.JourneyModel._
 import models.{ChildBirthRegistrationCountry => RegistrationCountry}
@@ -29,12 +28,13 @@ import pages.income._
 import pages.partner._
 import pages.payments._
 import queries.{AllChildPreviousNames, AllChildSummaries, AllPreviousFamilyNames, Query}
+import services.BrmsService
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class JourneyModelProvider @Inject()(brmsConnector: BrmsConnector)(implicit ec: ExecutionContext) extends Logging {
+class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: ExecutionContext) extends Logging {
 
   def buildFromUserAnswers(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[IorNec[Query, JourneyModel]] =
       (
@@ -106,13 +106,7 @@ class JourneyModelProvider @Inject()(brmsConnector: BrmsConnector)(implicit ec: 
         ).parMapN(BirthRegistrationMatchingRequest.apply).flatMap {
           _.map { request =>
             IorT.liftF[Future, NonEmptyChain[Query], BirthRegistrationMatchingResult](
-              brmsConnector.matchChild(request).map { response =>
-                if (response.matched) {
-                  BirthRegistrationMatchingResult.Matched
-                } else {
-                  BirthRegistrationMatchingResult.NotMatched
-                }
-            }.recover {
+              brmsService.matchChild(request).map(result => result).recover {
                 case e: Exception =>
                   logger.warn("Error calling BRMS", e.getMessage)
                   BirthRegistrationMatchingResult.MatchingAttemptFailed

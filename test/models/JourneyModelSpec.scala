@@ -32,6 +32,7 @@ import pages.applicant._
 import pages.child._
 import pages.income._
 import pages.payments._
+import services.BrmsService
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -49,8 +50,8 @@ class JourneyModelSpec
     with MockitoSugar {
 
   private implicit val hc: HeaderCarrier = HeaderCarrier()
-  private val mockBrmsConnector = mock[BrmsConnector]
-  when(mockBrmsConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+  private val mockBrmsService = mock[BrmsService]
+  when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(BirthRegistrationMatchingResult.Matched)
 
   private val now = LocalDate.now
   private val applicantName = AdultName("first", None, "last")
@@ -64,7 +65,7 @@ class JourneyModelSpec
   private val relationshipToChild = ApplicantRelationshipToChild.BirthChild
   private val systemNumber = BirthCertificateSystemNumber("000000000")
 
-  private val journeyModelProvider = new JourneyModelProvider(mockBrmsConnector)
+  private val journeyModelProvider = new JourneyModelProvider(mockBrmsService)
 
   ".allRequiredDocuments" - {
 
