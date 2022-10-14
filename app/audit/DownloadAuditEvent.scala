@@ -65,16 +65,17 @@ object DownloadAuditEvent {
       ),
       children = model.children.toList.map { child =>
         Child(
-          name                          = convertChildName(child.name),
-          nameChangedByDeedPoll         = child.nameChangedByDeedPoll,
-          previousNames                 = child.previousNames.map(convertChildName),
-          biologicalSex                 = child.biologicalSex.toString,
-          dateOfBirth                   = child.dateOfBirth,
-          birthRegistrationCountry      = child.countryOfRegistration.toString,
-          birthCertificateNumber        = child.birthCertificateNumber.map(_.display),
-          relationshipToApplicant       = child.relationshipToApplicant.toString,
-          adoptingThroughLocalAuthority = child.adoptingThroughLocalAuthority,
-          previousClaimant              = child.previousClaimant.map { claimant =>
+          name                            = convertChildName(child.name),
+          nameChangedByDeedPoll           = child.nameChangedByDeedPoll,
+          previousNames                   = child.previousNames.map(convertChildName),
+          biologicalSex                   = child.biologicalSex.toString,
+          dateOfBirth                     = child.dateOfBirth,
+          birthRegistrationCountry        = child.countryOfRegistration.toString,
+          birthCertificateNumber          = child.birthCertificateNumber.map(_.display),
+          birthCertificateNumberMatched = child.birthCertificateNumberMatched.toString,
+          relationshipToApplicant         = child.relationshipToApplicant.toString,
+          adoptingThroughLocalAuthority   = child.adoptingThroughLocalAuthority,
+          previousClaimant                = child.previousClaimant.map { claimant =>
             PreviousClaimant(
               name    = convertAdultName(claimant.name),
               address = convertAddress(claimant.address)
@@ -242,6 +243,7 @@ object DownloadAuditEvent {
                                          dateOfBirth: LocalDate,
                                          birthRegistrationCountry: String,
                                          birthCertificateNumber: Option[String],
+                                         birthCertificateNumberMatched: String,
                                          relationshipToApplicant: String,
                                          adoptingThroughLocalAuthority: Boolean,
                                          previousClaimant: Option[PreviousClaimant]

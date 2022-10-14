@@ -155,6 +155,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             dateOfBirth = now,
             birthRegistrationCountry = "england",
             birthCertificateNumber = Some("000000000"),
+            birthCertificateNumberMatched = "notAttempted",
             relationshipToApplicant = "birthChild",
             adoptingThroughLocalAuthority = true,
             previousClaimant = Some(PreviousClaimant(
