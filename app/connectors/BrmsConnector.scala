@@ -32,7 +32,7 @@ class BrmsConnector @Inject()(config: Configuration, httpClient: HttpClientV2)
 
   private val auditSource = "claim-child-benefit-frontend"
   private val baseUrl     = config.get[Service]("microservice.services.birth-registration-matching")
-  private val matchUrl    = url"$baseUrl/match"
+  private val matchUrl    = url"$baseUrl/birth-registration-matching/match"
 
   def matchChild(request: BirthRegistrationMatchingRequest)
                 (implicit hc: HeaderCarrier): Future[BirthRegistrationMatchingResponseModel] = {

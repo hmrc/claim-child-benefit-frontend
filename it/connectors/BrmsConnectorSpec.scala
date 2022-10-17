@@ -48,7 +48,7 @@ class BrmsConnectorSpec
           val connector = app.injector.instanceOf[BrmsConnector]
 
           server.stubFor(
-            post(urlEqualTo("/match"))
+            post(urlEqualTo("/birth-registration-matching/match"))
               .withHeader(HeaderNames.ACCEPT, equalTo("application/vnd.hmrc.1.0+json"))
               .withHeader("Audit-Source", equalTo("claim-child-benefit-frontend"))
               .withHeader("Content-Type", equalTo("application/json"))
@@ -75,7 +75,7 @@ class BrmsConnectorSpec
           val connector = app.injector.instanceOf[BrmsConnector]
 
           server.stubFor(
-            post(urlEqualTo("/match"))
+            post(urlEqualTo("/birth-registration-matching/match"))
               .willReturn(aResponse().withStatus(500))
           )
 
