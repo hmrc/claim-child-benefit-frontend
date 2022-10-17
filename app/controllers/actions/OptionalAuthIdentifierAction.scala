@@ -15,6 +15,7 @@
  */
 
 package controllers.actions
+
 import models.requests.IdentifierRequest
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{BodyParsers, Request, Result}
@@ -23,9 +24,10 @@ import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class OptionalAuthIdentifierAction(
+class OptionalAuthIdentifierAction @Inject()(
                                     val authConnector: AuthConnector,
                                     val parser: BodyParsers.Default
                                   )(implicit val executionContext: ExecutionContext) extends IdentifierAction with AuthorisedFunctions {

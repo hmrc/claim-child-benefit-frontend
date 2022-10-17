@@ -22,6 +22,7 @@ import javax.inject.Inject
 
 class FeatureFlags @Inject()(configuration: Configuration) {
 
-  val validateBankDetails: Boolean = configuration.get[Boolean]("features.validate-bank-details")
-  val auditDownload: Boolean       = configuration.get[Boolean]("features.audit-download")
+  val validateBankDetails: Boolean        = configuration.get[Boolean]("features.validate-bank-details")
+  val auditDownload: Boolean              = configuration.get[Boolean]("features.audit-download")
+  val allowAuthenticatedSessions: Boolean = configuration.get[Boolean]("features.allow-authenticated-sessions")
 }
