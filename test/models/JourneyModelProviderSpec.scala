@@ -19,7 +19,7 @@ package models
 import cats.data.NonEmptyList
 import generators.ModelGenerators
 import models.AdditionalInformation.{Information, NoInformation}
-import models.BirthRegistrationMatchingResult.{Matched, MatchingAttemptFailed, NotAttempted, NotMatched}
+import models.BirthRegistrationMatchingResult.{Matched, NotAttempted, NotMatched}
 import models.RelationshipStatus._
 import models.{ChildBirthRegistrationCountry => BirthCountry}
 import org.mockito.ArgumentMatchers.any
@@ -1323,40 +1323,6 @@ class JourneyModelProviderSpec
         errors mustBe empty
         data.value.applicant.memberOfHMForcesOrCivilServantAbroad.value mustEqual false
         data.value.relationship.partner.value.memberOfHMForcesOrCivilServantAbroad.value mustEqual true
-      }
-
-      "when BRMS is called and returns an error" in {
-
-        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.failed(new Exception("something went wrong"))
-
-        val answers = UserAnswers("id")
-          .withMinimalApplicantDetails
-          .withOneChild
-          .withMinimalSingleIncomeDetails
-          .withMinimalPaymentDetails
-          .set(RelationshipStatusPage, Single).success.value
-          .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.England).success.value
-          .set(BirthCertificateHasSystemNumberPage(Index(0)), false).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
-
-        val expectedChildDetails = JourneyModel.Child(
-          name = childName,
-          nameChangedByDeedPoll = None,
-          previousNames = Nil,
-          biologicalSex = ChildBiologicalSex.Female,
-          dateOfBirth = now,
-          countryOfRegistration = ChildBirthRegistrationCountry.England,
-          birthCertificateNumber = None,
-          birthCertificateNumberMatched = MatchingAttemptFailed,
-          relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
-          adoptingThroughLocalAuthority = false,
-          previousClaimant = None
-        )
-
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
-
-        errors mustBe empty
-        data.value.children.toList must contain only expectedChildDetails
       }
     }
 
