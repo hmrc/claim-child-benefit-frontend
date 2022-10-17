@@ -19,6 +19,7 @@ package services
 import config.FeatureFlags
 import connectors.BrmsConnector
 import logging.Logging
+import metrics.{BrmsMonitor, MetricsService}
 import models.BirthRegistrationMatchingResult._
 import models.{BirthRegistrationMatchingRequest, BirthRegistrationMatchingResult}
 import repositories.BrmsCacheRepository
@@ -30,7 +31,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class BrmsService @Inject()(
                              brmsConnector: BrmsConnector,
                              brmsCacheRepository: BrmsCacheRepository,
-                             featureFlags: FeatureFlags
+                             featureFlags: FeatureFlags,
+                             metricsService: MetricsService
                            ) extends Logging {
 
   def matchChild(request: BirthRegistrationMatchingRequest)
@@ -41,6 +43,7 @@ class BrmsService @Inject()(
           .getOrElse {
             brmsConnector.matchChild(request).flatMap { response =>
               val result = if (response.matched) Matched else NotMatched
+              metricsService.count(BrmsMonitor.getCounter(result))
 
               brmsCacheRepository.set(request, result)
                 .map(_ => result)
@@ -52,7 +55,8 @@ class BrmsService @Inject()(
             }.recover {
               case e: Exception =>
                 logger.warn("Error calling BRMS", e.getMessage)
-                BirthRegistrationMatchingResult.MatchingAttemptFailed
+                metricsService.count(BrmsMonitor.getCounter(MatchingAttemptFailed))
+                MatchingAttemptFailed
             }
           }
       }
