@@ -35,30 +35,35 @@ class BrmsService @Inject()(
                              metricsService: MetricsService
                            ) extends Logging {
 
-  def matchChild(request: BirthRegistrationMatchingRequest)
+  def matchChild(maybeRequest: Option[BirthRegistrationMatchingRequest])
                 (implicit ec: ExecutionContext, hc: HeaderCarrier): Future[BirthRegistrationMatchingResult] = {
     if (featureFlags.matchBirthRegistrationDetails) {
-      brmsCacheRepository.getResult(request).flatMap {
-        _.map(Future.successful)
-          .getOrElse {
-            brmsConnector.matchChild(request).flatMap { response =>
-              val result = if (response.matched) Matched else NotMatched
-              metricsService.count(BrmsMonitor.getCounter(result))
+      maybeRequest.map { request =>
+        brmsCacheRepository.getResult(request).flatMap {
+          _.map(Future.successful)
+            .getOrElse {
+              brmsConnector.matchChild(request).flatMap { response =>
+                val result = if (response.matched) Matched else NotMatched
+                metricsService.count(BrmsMonitor.getCounter(result))
 
-              brmsCacheRepository.set(request, result)
-                .map(_ => result)
-                .recover {
-                  case e: Exception =>
-                    logger.warn("Error caching BRMS response", e.getMessage)
-                    result
-                }
-            }.recover {
-              case e: Exception =>
-                logger.warn("Error calling BRMS", e.getMessage)
-                metricsService.count(BrmsMonitor.getCounter(MatchingAttemptFailed))
-                MatchingAttemptFailed
+                brmsCacheRepository.set(request, result)
+                  .map(_ => result)
+                  .recover {
+                    case e: Exception =>
+                      logger.warn("Error caching BRMS response", e.getMessage)
+                      result
+                  }
+              }.recover {
+                case e: Exception =>
+                  logger.warn("Error calling BRMS", e.getMessage)
+                  metricsService.count(BrmsMonitor.getCounter(MatchingAttemptFailed))
+                  MatchingAttemptFailed
+              }
             }
-          }
+        }
+      }.getOrElse {
+        metricsService.count(BrmsMonitor.getCounter(NotAttempted))
+        Future.successful(NotAttempted)
       }
     } else {
       Future.successful(NotAttempted)

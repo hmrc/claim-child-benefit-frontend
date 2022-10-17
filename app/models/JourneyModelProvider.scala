@@ -104,11 +104,10 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
           IorT.fromIor[Future](answers.getIor(ChildDateOfBirthPage(index))),
           IorT.fromIor[Future](answers.getIor(ChildBirthRegistrationCountryPage(index)))
         ).parMapN(BirthRegistrationMatchingRequest.apply).flatMap {
-          _.map { request =>
+          maybeRequest =>
             IorT.liftF[Future, NonEmptyChain[Query], BirthRegistrationMatchingResult](
-              brmsService.matchChild(request)
+              brmsService.matchChild(maybeRequest)
             )
-          }.getOrElse(IorT.pure[Future, NonEmptyChain[Query]](BirthRegistrationMatchingResult.NotAttempted))
         }
 
       def getPreviousClaimant: IorNec[Query, Option[PreviousClaimant]] =

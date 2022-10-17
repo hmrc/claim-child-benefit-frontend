@@ -22,8 +22,8 @@ import models.AdditionalInformation.{Information, NoInformation}
 import models.BirthRegistrationMatchingResult.{Matched, NotAttempted, NotMatched}
 import models.RelationshipStatus._
 import models.{ChildBirthRegistrationCountry => BirthCountry}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{never, reset, verify, when}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito.{never, reset, times, verify, when}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.concurrent.ScalaFutures
@@ -1137,7 +1137,7 @@ class JourneyModelProviderSpec
 
       "when a child was born outside the UK" in {
 
-        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(NotAttempted)
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -1167,12 +1167,12 @@ class JourneyModelProviderSpec
 
         errors mustBe empty
         data.value.children.toList must contain only expectedChildDetails
-        verify(mockBrmsService, never()).matchChild(any())(any(), any())
+        verify(mockBrmsService, times(1)).matchChild(eqTo(None))(any(), any())
       }
 
       "when a child's country of registration is unknown" in {
 
-        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(NotAttempted)
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -1202,7 +1202,7 @@ class JourneyModelProviderSpec
 
         errors mustBe empty
         data.value.children.toList must contain only expectedChildDetails
-        verify(mockBrmsService, never()).matchChild(any())(any(), any())
+        verify(mockBrmsService, times(1)).matchChild(eqTo(None))(any(), any())
       }
 
       "when someone has claimed for this child before" - {
