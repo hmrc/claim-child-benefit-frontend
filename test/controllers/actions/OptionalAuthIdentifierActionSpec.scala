@@ -45,9 +45,10 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
       val authAction = new OptionalAuthIdentifierAction(new FakeAuthConnector(Some(userId)), bodyParsers)
       val request = FakeRequest().withSession(SessionKeys.sessionId -> sessionId)
 
-      val result = authAction(a => Ok(a.userId))(request)
+      val result = authAction(a => Ok(a.userId).withHeaders("authenticated" -> a.authenticated.toString))(request)
 
       status(result) mustBe OK
+      header("authenticated", result).value mustEqual "true"
       contentAsString(result) mustEqual userId
     }
 
@@ -56,9 +57,10 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
       val authAction = new OptionalAuthIdentifierAction(new FakeFailingAuthConnector(new MissingBearerToken), bodyParsers)
       val request = FakeRequest().withSession(SessionKeys.sessionId -> sessionId)
 
-      val result = authAction(a => Ok(a.userId))(request)
+      val result = authAction(a => Ok(a.userId).withHeaders("authenticated" -> a.authenticated.toString))(request)
 
       status(result) mustBe OK
+      header("authenticated", result).value mustEqual "false"
       contentAsString(result) mustEqual sessionId
     }
 
@@ -67,9 +69,10 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
       val authAction = new OptionalAuthIdentifierAction(new FakeAuthConnector(None), bodyParsers)
       val request = FakeRequest().withSession(SessionKeys.sessionId -> sessionId)
 
-      val result = authAction(a => Ok(a.userId))(request)
+      val result = authAction(a => Ok(a.userId).withHeaders("authenticated" -> a.authenticated.toString))(request)
 
       status(result) mustBe OK
+      header("authenticated", result).value mustEqual "false"
       contentAsString(result) mustEqual sessionId
     }
 
@@ -78,7 +81,7 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
       val authAction = new OptionalAuthIdentifierAction(new FakeFailingAuthConnector(new MissingBearerToken), bodyParsers)
       val request = FakeRequest()
 
-      val result = authAction(a => Ok(a.userId))(request)
+      val result = authAction(a => Ok(a.userId).withHeaders("authenticated" -> a.authenticated.toString))(request)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).value must startWith(controllers.routes.JourneyRecoveryController.onPageLoad().url)
@@ -89,7 +92,7 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
       val authAction = new OptionalAuthIdentifierAction(new FakeAuthConnector(None), bodyParsers)
       val request = FakeRequest()
 
-      val result = authAction(a => Ok(a.userId))(request)
+      val result = authAction(a => Ok(a.userId).withHeaders("authenticated" -> a.authenticated.toString))(request)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).value must startWith(controllers.routes.JourneyRecoveryController.onPageLoad().url)

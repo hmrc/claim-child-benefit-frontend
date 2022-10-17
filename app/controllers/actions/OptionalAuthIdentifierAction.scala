@@ -16,7 +16,7 @@
 
 package controllers.actions
 
-import models.requests.IdentifierRequest
+import models.requests.{AuthenticatedIdentifierRequest, IdentifierRequest, UnauthenticatedIdentifierRequest}
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{BodyParsers, Request, Result}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
@@ -44,8 +44,12 @@ class OptionalAuthIdentifierAction @Inject()(
   }
 
   private def runBlock[A](internalId: Option[String], request: Request[A], block: IdentifierRequest[A] => Future[Result])
-                         (implicit hc: HeaderCarrier): Future[Result] =
-    (internalId orElse hc.sessionId.map(_.value)).map { userId =>
-      block(IdentifierRequest(request, userId))
-    }.getOrElse(Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())))
+                         (implicit hc: HeaderCarrier): Future[Result] = {
+    val authenticatedRequest = internalId.map(AuthenticatedIdentifierRequest(request ,_))
+    lazy val unauthenticatedRequest = hc.sessionId.map(sessionId => UnauthenticatedIdentifierRequest(request, sessionId.value))
+    authenticatedRequest
+      .orElse(unauthenticatedRequest)
+      .map(block)
+      .getOrElse(Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())))
+  }
 }
