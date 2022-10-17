@@ -97,7 +97,7 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
             Ior.Right(None)
         }
 
-      def matchBirthCertificateNumber: IorT[Future, NonEmptyChain[Query], BirthRegistrationMatchingResult] =
+      def matchBirthCertificateDetails: IorT[Future, NonEmptyChain[Query], BirthRegistrationMatchingResult] =
         (
           IorT.fromIor[Future](getBirthCertificateNumber),
           IorT.fromIor[Future](answers.getIor(ChildNamePage(index))),
@@ -137,7 +137,7 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
         IorT.fromIor[Future](answers.getIor(ChildDateOfBirthPage(index))),
         IorT.fromIor[Future](answers.getIor(ChildBirthRegistrationCountryPage(index))),
         IorT.fromIor[Future](getBirthCertificateNumber),
-        matchBirthCertificateNumber,
+        matchBirthCertificateDetails,
         IorT.fromIor[Future](answers.getIor(ApplicantRelationshipToChildPage(index))),
         IorT.fromIor[Future](answers.getIor(AdoptingThroughLocalAuthorityPage(index))),
         IorT.fromIor[Future](getPreviousClaimant)

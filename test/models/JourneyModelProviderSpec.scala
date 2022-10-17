@@ -143,7 +143,7 @@ class JourneyModelProviderSpec
               dateOfBirth = now,
               countryOfRegistration = ChildBirthRegistrationCountry.England,
               birthCertificateNumber = Some(systemNumber),
-              birthCertificateNumberMatched = Matched,
+              birthCertificateDetailsMatched = Matched,
               relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
               adoptingThroughLocalAuthority = false,
               previousClaimant = None
@@ -215,7 +215,7 @@ class JourneyModelProviderSpec
               dateOfBirth = now,
               countryOfRegistration = ChildBirthRegistrationCountry.England,
               birthCertificateNumber = Some(systemNumber),
-              birthCertificateNumberMatched = NotMatched,
+              birthCertificateDetailsMatched = NotMatched,
               relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
               adoptingThroughLocalAuthority = false,
               previousClaimant = None
@@ -293,7 +293,7 @@ class JourneyModelProviderSpec
               dateOfBirth = now,
               countryOfRegistration = ChildBirthRegistrationCountry.England,
               birthCertificateNumber = Some(systemNumber),
-              birthCertificateNumberMatched = Matched,
+              birthCertificateDetailsMatched = Matched,
               relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
               adoptingThroughLocalAuthority = false,
               previousClaimant = None
@@ -306,7 +306,7 @@ class JourneyModelProviderSpec
                 dateOfBirth = now,
                 countryOfRegistration = ChildBirthRegistrationCountry.Scotland,
                 birthCertificateNumber = Some(scottishBirthCertificateDetails),
-                birthCertificateNumberMatched = Matched,
+                birthCertificateDetailsMatched = Matched,
                 relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
                 adoptingThroughLocalAuthority = false,
                 previousClaimant = None
@@ -982,7 +982,7 @@ class JourneyModelProviderSpec
           dateOfBirth = now,
           countryOfRegistration = ChildBirthRegistrationCountry.England,
           birthCertificateNumber = Some(systemNumber),
-          birthCertificateNumberMatched = Matched,
+          birthCertificateDetailsMatched = Matched,
           relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
           adoptingThroughLocalAuthority = false,
           previousClaimant = None
@@ -1017,7 +1017,7 @@ class JourneyModelProviderSpec
           dateOfBirth = now,
           countryOfRegistration = ChildBirthRegistrationCountry.England,
           birthCertificateNumber = None,
-          birthCertificateNumberMatched = Matched,
+          birthCertificateDetailsMatched = Matched,
           relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
           adoptingThroughLocalAuthority = false,
           previousClaimant = None
@@ -1051,7 +1051,7 @@ class JourneyModelProviderSpec
           dateOfBirth = now,
           countryOfRegistration = ChildBirthRegistrationCountry.Wales,
           birthCertificateNumber = None,
-          birthCertificateNumberMatched = Matched,
+          birthCertificateDetailsMatched = Matched,
           relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
           adoptingThroughLocalAuthority = false,
           previousClaimant = None
@@ -1088,7 +1088,7 @@ class JourneyModelProviderSpec
             dateOfBirth = now,
             countryOfRegistration = ChildBirthRegistrationCountry.Scotland,
             birthCertificateNumber = Some(scottishBirthCertificateDetails),
-            birthCertificateNumberMatched = Matched,
+            birthCertificateDetailsMatched = Matched,
             relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = false,
             previousClaimant = None
@@ -1122,7 +1122,7 @@ class JourneyModelProviderSpec
             dateOfBirth = now,
             countryOfRegistration = ChildBirthRegistrationCountry.Scotland,
             birthCertificateNumber = None,
-            birthCertificateNumberMatched = Matched,
+            birthCertificateDetailsMatched = Matched,
             relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = false,
             previousClaimant = None
@@ -1157,7 +1157,7 @@ class JourneyModelProviderSpec
           dateOfBirth = now,
           countryOfRegistration = ChildBirthRegistrationCountry.Other,
           birthCertificateNumber = None,
-          birthCertificateNumberMatched = NotAttempted,
+          birthCertificateDetailsMatched = NotAttempted,
           relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
           adoptingThroughLocalAuthority = false,
           previousClaimant = None
@@ -1192,7 +1192,7 @@ class JourneyModelProviderSpec
           dateOfBirth = now,
           countryOfRegistration = ChildBirthRegistrationCountry.Unknown,
           birthCertificateNumber = None,
-          birthCertificateNumberMatched = NotAttempted,
+          birthCertificateDetailsMatched = NotAttempted,
           relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
           adoptingThroughLocalAuthority = false,
           previousClaimant = None
@@ -1231,7 +1231,7 @@ class JourneyModelProviderSpec
             dateOfBirth = now,
             countryOfRegistration = ChildBirthRegistrationCountry.England,
             birthCertificateNumber = Some(systemNumber),
-            birthCertificateNumberMatched = Matched,
+            birthCertificateDetailsMatched = Matched,
             relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = false,
             previousClaimant = Some(JourneyModel.PreviousClaimant(previousClaimantName, previousClaimantUkAddress))
@@ -1267,7 +1267,7 @@ class JourneyModelProviderSpec
             dateOfBirth = now,
             countryOfRegistration = ChildBirthRegistrationCountry.England,
             birthCertificateNumber = Some(systemNumber),
-            birthCertificateNumberMatched = Matched,
+            birthCertificateDetailsMatched = Matched,
             relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = false,
             previousClaimant = Some(JourneyModel.PreviousClaimant(previousClaimantName, previousClaimantInternationalAddress))

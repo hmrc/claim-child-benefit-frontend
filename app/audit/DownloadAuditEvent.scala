@@ -72,7 +72,7 @@ object DownloadAuditEvent {
           dateOfBirth                     = child.dateOfBirth,
           birthRegistrationCountry        = child.countryOfRegistration.toString,
           birthCertificateNumber          = child.birthCertificateNumber.map(_.display),
-          birthCertificateNumberMatched = child.birthCertificateNumberMatched.toString,
+          birthCertificateDetailsMatched = child.birthCertificateDetailsMatched.toString,
           relationshipToApplicant         = child.relationshipToApplicant.toString,
           adoptingThroughLocalAuthority   = child.adoptingThroughLocalAuthority,
           previousClaimant                = child.previousClaimant.map { claimant =>
@@ -243,7 +243,7 @@ object DownloadAuditEvent {
                                          dateOfBirth: LocalDate,
                                          birthRegistrationCountry: String,
                                          birthCertificateNumber: Option[String],
-                                         birthCertificateNumberMatched: String,
+                                         birthCertificateDetailsMatched: String,
                                          relationshipToApplicant: String,
                                          adoptingThroughLocalAuthority: Boolean,
                                          previousClaimant: Option[PreviousClaimant]
