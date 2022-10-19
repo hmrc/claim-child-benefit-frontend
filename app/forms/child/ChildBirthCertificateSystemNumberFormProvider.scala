@@ -18,17 +18,17 @@ package forms.child
 
 import forms.Validation
 import forms.mappings.Mappings
-import models.ChildName
+import models.{BirthCertificateSystemNumber, ChildName}
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class ChildBirthCertificateSystemNumberFormProvider @Inject() extends Mappings {
 
-  def apply(childName: ChildName): Form[String] =
+  def apply(childName: ChildName): Form[BirthCertificateSystemNumber] =
     Form(
       "value" -> text("childBirthCertificateSystemNumber.error.required", args = Seq(childName.firstName))
         .verifying(regexp(Validation.systemNumberPattern.toString, "childBirthCertificateSystemNumber.error.invalid", childName.firstName))
-        .transform[String](x => x.replace(" ", "").replace("-", ""), x => x)
+        .transform[BirthCertificateSystemNumber](x => BirthCertificateSystemNumber(x.replace(" ", "").replace("-", "")), x => x.value)
     )
 }

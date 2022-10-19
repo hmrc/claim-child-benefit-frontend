@@ -21,8 +21,13 @@ import org.scalatest.matchers.must.Matchers
 
 class ScottishBirthCertificateDetailsSpec extends AnyFreeSpec with Matchers {
 
-  ".toString must space-separate the values" in {
+  ".display must space-separate the values" in {
 
-    ScottishBirthCertificateDetails(123, 2022, 456).toString mustEqual "123 2022 456"
+    ScottishBirthCertificateDetails(123, 2022, 456).display mustEqual "123 2022 456"
+  }
+
+  ".brmsFormat must concatenate year, district then entry, left-padding entry with zeroes to three digits" in {
+
+    ScottishBirthCertificateDetails(123, 2022, 45).brmsFormat mustEqual "2022123045"
   }
 }

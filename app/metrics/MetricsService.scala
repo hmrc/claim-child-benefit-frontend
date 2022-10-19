@@ -14,20 +14,22 @@
  * limitations under the License.
  */
 
-package models
+package metrics
 
-import play.api.libs.json.{Format, Json}
+import com.codahale.metrics.MetricRegistry
+import com.kenshoo.play.metrics.Metrics
+import models.BirthRegistrationMatchingResult
 
-final case class ScottishBirthCertificateDetails(district: Int, year: Int, entry: Int) extends BirthCertificateNumber {
+import javax.inject.Inject
 
-  private val entryPadded: String = f"$entry%03d"
+class MetricsService @Inject()(kenshooMetrics: Metrics) {
+  private val registry: MetricRegistry = kenshooMetrics.defaultRegistry
 
-  override val brmsFormat: String = f"$year$district$entryPadded"
-  override val display: String = s"$district $year $entry"
-  override def toString: String = display
+  def count(counter: Counter): Unit = registry.counter(counter.path).inc()
 }
 
-object ScottishBirthCertificateDetails {
+case class Counter(name: String) { val path = s"$name.count"}
 
-  implicit lazy val format: Format[ScottishBirthCertificateDetails] = Json.format
+object BrmsMonitor {
+  def getCounter(result: BirthRegistrationMatchingResult): Counter = Counter(result.toString)
 }

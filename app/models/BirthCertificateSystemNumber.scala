@@ -16,18 +16,25 @@
 
 package models
 
-import play.api.libs.json.{Format, Json}
+import play.api.libs.json._
 
-final case class ScottishBirthCertificateDetails(district: Int, year: Int, entry: Int) extends BirthCertificateNumber {
+final case class BirthCertificateSystemNumber(value: String) extends BirthCertificateNumber {
 
-  private val entryPadded: String = f"$entry%03d"
-
-  override val brmsFormat: String = f"$year$district$entryPadded"
-  override val display: String = s"$district $year $entry"
-  override def toString: String = display
+  override val brmsFormat: String = value
+  override val display: String    = value
 }
 
-object ScottishBirthCertificateDetails {
+object BirthCertificateSystemNumber {
 
-  implicit lazy val format: Format[ScottishBirthCertificateDetails] = Json.format
+  implicit lazy val reads: Reads[BirthCertificateSystemNumber] = Reads {
+    case JsString(value) =>
+      JsSuccess(BirthCertificateSystemNumber(value))
+
+    case _ =>
+      JsError("Unable to read value as a birth certificate system number")
+  }
+
+  implicit lazy val writes: Writes[BirthCertificateSystemNumber] = Writes {
+    value => JsString(value.display)
+  }
 }

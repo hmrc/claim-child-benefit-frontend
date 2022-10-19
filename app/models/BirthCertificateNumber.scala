@@ -16,18 +16,8 @@
 
 package models
 
-import play.api.libs.json.{Format, Json}
+trait BirthCertificateNumber {
 
-final case class ScottishBirthCertificateDetails(district: Int, year: Int, entry: Int) extends BirthCertificateNumber {
-
-  private val entryPadded: String = f"$entry%03d"
-
-  override val brmsFormat: String = f"$year$district$entryPadded"
-  override val display: String = s"$district $year $entry"
-  override def toString: String = display
-}
-
-object ScottishBirthCertificateDetails {
-
-  implicit lazy val format: Format[ScottishBirthCertificateDetails] = Json.format
+  val display: String
+  val brmsFormat: String
 }

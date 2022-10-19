@@ -21,16 +21,18 @@ import com.dmanchester.playfop.sapi.PlayFop
 import config.FeatureFlags
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import logging.Logging
-import models.{JourneyModel, UserAnswers}
+import models.{JourneyModel, JourneyModelProvider, UserAnswers}
 import org.apache.fop.apps.FOUserAgent
 import org.apache.xmlgraphics.util.MimeConstants
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.{PrintDocumentsRequiredView, PrintNoDocumentsRequiredView}
 import views.xml.xml.PrintTemplate
 
 import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class PrintController @Inject()(
                                  val controllerComponents: MessagesControllerComponents,
@@ -42,8 +44,9 @@ class PrintController @Inject()(
                                  template: PrintTemplate,
                                  noDocumentsView: PrintNoDocumentsRequiredView,
                                  documentsView: PrintDocumentsRequiredView,
-                                 featureFlags: FeatureFlags
-                               ) extends FrontendBaseController with I18nSupport with Logging {
+                                 featureFlags: FeatureFlags,
+                                 journeyModelProvider: JourneyModelProvider
+                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
 
   private val userAgentBlock: FOUserAgent => Unit = { foUserAgent: FOUserAgent =>
@@ -56,24 +59,25 @@ class PrintController @Inject()(
     foUserAgent.setTitle("Claim Child Benefit by post form")
   }
 
-  private def withJourneyModel(answers: UserAnswers)(f: JourneyModel => Result): Result = {
+  private def withJourneyModel(answers: UserAnswers)(f: JourneyModel => Future[Result])(implicit hc: HeaderCarrier): Future[Result] =
+    journeyModelProvider.buildFromUserAnswers(answers).flatMap {
+      result =>
+        val (maybeErrors, maybeModel) = result.pad
 
-    val (maybeErrors, maybeModel) = JourneyModel.from(answers).pad
+        val errors = maybeErrors.map { errors =>
+          val message = errors.toChain.toList.map(_.path).mkString(", ")
+          s" at: $message"
+        }.getOrElse("")
 
-    val errors = maybeErrors.map { errors =>
-      val message = errors.toChain.toList.map(_.path).mkString(", ")
-      s" at: $message"
-    }.getOrElse("")
-
-    maybeModel.map { model =>
-      f(model)
-    }.getOrElse {
-      logger.warn(s"Journey model creation failed $errors")
-      Redirect(routes.JourneyRecoveryController.onPageLoad())
+        maybeModel.map { model =>
+          f(model)
+        }.getOrElse {
+          logger.warn(s"Journey model creation failed $errors")
+          Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+        }
     }
-  }
 
-  def onDownload: Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onDownload: Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       withJourneyModel(request.userAnswers) {
         journeyModel =>
@@ -83,18 +87,20 @@ class PrintController @Inject()(
             auditService.auditDownload(journeyModel)
           }
 
-          Ok(pdf).as("application/octet-stream").withHeaders(CONTENT_DISPOSITION -> "attachment; filename=claim-child-benefit-by-post.pdf")
+          Future.successful(
+            Ok(pdf).as("application/octet-stream")
+              .withHeaders(CONTENT_DISPOSITION -> "attachment; filename=claim-child-benefit-by-post.pdf"))
       }
   }
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       withJourneyModel(request.userAnswers) {
         journeyModel =>
           if (journeyModel.children.exists(_.requiredDocuments.nonEmpty)) {
-            Ok(documentsView(journeyModel))
+            Future.successful(Ok(documentsView(journeyModel)))
           } else {
-            Ok(noDocumentsView())
+            Future.successful(Ok(noDocumentsView()))
           }
       }
   }

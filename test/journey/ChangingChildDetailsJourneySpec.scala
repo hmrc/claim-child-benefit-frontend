@@ -33,7 +33,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
 
   private val childName                    = arbitrary[ChildName].sample.value
   private val sex                          = arbitrary[ChildBiologicalSex].sample.value
-  private val systemNumber                 = Gen.listOfN(9, Gen.numChar).sample.value.mkString
+  private val systemNumber                 = Gen.listOfN(9, Gen.numChar).map(chars => BirthCertificateSystemNumber(chars.mkString)).sample.value
   private val claimantName                 = arbitrary[AdultName].sample.value
   private val claimantUkAddress            = arbitrary[UkAddress].sample.value
   private val claimantInternationalAddress = arbitrary[InternationalAddress].sample.value
@@ -636,7 +636,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             initialState,
             goToChangeAnswer(BirthCertificateHasSystemNumberPage(Index(0))),
             submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), true),
-            submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), "123456789"),
+            submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }

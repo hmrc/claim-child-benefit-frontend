@@ -16,18 +16,19 @@
 
 package models
 
-import play.api.libs.json.{Format, Json}
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
+import play.api.libs.json.{JsString, JsSuccess, Json}
 
-final case class ScottishBirthCertificateDetails(district: Int, year: Int, entry: Int) extends BirthCertificateNumber {
+class BirthCertificateSystemNumberSpec extends AnyFreeSpec with Matchers {
 
-  private val entryPadded: String = f"$entry%03d"
+  "must serialise / deserialise to/from a JsString" in {
 
-  override val brmsFormat: String = f"$year$district$entryPadded"
-  override val display: String = s"$district $year $entry"
-  override def toString: String = display
-}
+    val systemNumber = BirthCertificateSystemNumber("123456789")
 
-object ScottishBirthCertificateDetails {
+    val json = Json.toJson(systemNumber)
 
-  implicit lazy val format: Format[ScottishBirthCertificateDetails] = Json.format
+    json mustEqual JsString("123456789")
+    json.validate[BirthCertificateSystemNumber] mustEqual JsSuccess(systemNumber)
+  }
 }
