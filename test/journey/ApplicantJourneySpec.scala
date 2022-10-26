@@ -18,7 +18,7 @@ package journey
 
 import generators.ModelGenerators
 import models.RelationshipStatus._
-import models.{Country, Index, InternationalAddress, UkAddress, UserAnswers}
+import models.{Country, Index, InternationalAddress, Nationality, UkAddress, UserAnswers}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
@@ -265,7 +265,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
       startingFrom(ApplicantNationalityPage, answers = answers)
         .run(
-          submitAnswer(ApplicantNationalityPage, "nationality"),
+          submitAnswer(ApplicantNationalityPage, Nationality.British),
           pageMustBe(PartnerNamePage)
         )
     }
@@ -276,7 +276,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
       startingFrom(ApplicantNationalityPage, answers = answers)
         .run(
-          submitAnswer(ApplicantNationalityPage, "nationality"),
+          submitAnswer(ApplicantNationalityPage, Nationality.British),
           pageMustBe(PartnerNamePage)
         )
     }
@@ -287,7 +287,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
       startingFrom(ApplicantNationalityPage, answers = answers)
         .run(
-          submitAnswer(ApplicantNationalityPage, "nationality"),
+          submitAnswer(ApplicantNationalityPage, Nationality.British),
           pageMustBe(ChildNamePage(Index(0)))
         )
     }
@@ -298,7 +298,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
       startingFrom(ApplicantNationalityPage, answers = answers)
         .run(
-          submitAnswer(ApplicantNationalityPage, "nationality"),
+          submitAnswer(ApplicantNationalityPage, Nationality.British),
           pageMustBe(ChildNamePage(Index(0)))
       )
     }
@@ -309,7 +309,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
       startingFrom(ApplicantNationalityPage, answers = answers)
         .run(
-          submitAnswer(ApplicantNationalityPage, "nationality"),
+          submitAnswer(ApplicantNationalityPage, Nationality.British),
           pageMustBe(ChildNamePage(Index(0)))
         )
     }
@@ -320,7 +320,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
       startingFrom(ApplicantNationalityPage, answers = answers)
         .run(
-          submitAnswer(ApplicantNationalityPage, "nationality"),
+          submitAnswer(ApplicantNationalityPage, Nationality.British),
           pageMustBe(ChildNamePage(Index(0)))
         )
     }

@@ -21,7 +21,7 @@
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
+    govukRadios: GovukRadios,
     govukButton: GovukButton
 )
 
@@ -35,17 +35,12 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <h1 class="govuk-heading-xl">@messages("applicantNationality.heading")</h1>
-
-        <p class="govuk-body">@messages("applicantNationality.guidance")</p>
-
-        @govukInput(
-            InputViewModel(
-                field = form("value"),
-                label = LabelViewModel(messages("applicantNationality.heading")).visuallyHidden()
+        @govukRadios(
+            RadiosViewModel(
+                field  = form("value"),
+                legend = LegendViewModel(messages("applicantNationality.heading")).asPageHeading(),
+                items  = Nationality.options
             )
-            .withWidth(Full)
-            .withHint(HintViewModel(messages("applicantNationality.hint")))
         )
 
         @govukButton(
