@@ -246,3 +246,5 @@ POST       /partner-hm-forces-or-civil-servant-abroad                 controller
 
 GET        /additional-information                         controllers.AdditionalInformationController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /additional-information                         controllers.AdditionalInformationController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /cannot-use-service                       controllers.CannotUseServiceNationalityController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
