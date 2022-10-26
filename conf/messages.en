@@ -550,6 +550,7 @@ applicantNino.change.hidden = your National Insurance number
 
 applicantNinoKnown.title = Do you know your National Insurance number?
 applicantNinoKnown.heading = Do you know your National Insurance number?
+applicantNinoKnown.guidance = If you have a National Insurance number but you do not provide it, your application will be delayed.
 applicantNinoKnown.hint = It is on your National Insurance card, benefit letter, payslip or P60. For example, QQ 12 34 56 C.
 applicantNinoKnown.checkYourAnswersLabel = Do you know your National Insurance number?
 applicantNinoKnown.error.required = Select yes if you know your National Insurance number
