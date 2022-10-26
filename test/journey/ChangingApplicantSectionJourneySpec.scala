@@ -17,10 +17,10 @@
 package journey
 
 import generators.ModelGenerators
-import models.{Index, InternationalAddress, RelationshipStatus, UkAddress}
+import models.{Index, InternationalAddress, Nationality, RelationshipStatus, UkAddress}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.freespec.AnyFreeSpec
-import pages.{CheckYourAnswersPage, AlwaysLivedInUkPage, RelationshipStatusPage}
+import pages.{AlwaysLivedInUkPage, CannotUseServiceNationalityPage, CheckYourAnswersPage, RelationshipStatusPage}
 import pages.applicant._
 import pages.partner.PartnerIsHmfOrCivilServantPage
 import uk.gov.hmrc.domain.Nino
@@ -471,6 +471,25 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
           answersMustNotContain(ApplicantPreviousAddressInUkPage),
           answersMustNotContain(ApplicantPreviousUkAddressPage),
           answersMustNotContain(ApplicantPreviousInternationalAddressPage)
+        )
+    }
+  }
+
+  "when the user initially said they were British" - {
+
+    "changing to say they are not British must go to Cannot use Service Nationality" in {
+
+      val initialise = journeyOf(
+        setUserAnswerTo(ApplicantNationalityPage, Nationality.British),
+        goTo(CheckYourAnswersPage)
+      )
+
+      startingFrom(ApplicantNationalityPage)
+        .run(
+          initialise,
+          goToChangeAnswer(ApplicantNationalityPage),
+          submitAnswer(ApplicantNationalityPage, Nationality.Other),
+          pageMustBe(CannotUseServiceNationalityPage)
         )
     }
   }
