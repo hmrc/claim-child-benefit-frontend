@@ -541,7 +541,9 @@ applicantNationality.error.length = Nationality must be 100 characters or less
 applicantNationality.change.hidden = your nationality
 
 nationality.british = British
-nationality.other = Other
+nationality.british.hint = This includes English, Scottish, Welsh and Northern Irish.
+nationality.dualNationalityIncludingBritish = Dual nationality where one is British
+nationality.other = None of the above
 
 applicantNino.title = What is your National Insurance number?
 applicantNino.heading = What is your National Insurance number?
@@ -1033,6 +1035,9 @@ pdf.relationshipStatusDate.cohabiting = Living with partner since
 pdf.relationshipStatusDate.separated = Separated since
 pdf.currentAddress = Current address
 pdf.livedAtAddressOneYear = Lived at address for more than a year
+pdf.nationality.british = British
+pdf.nationality.dualNationalityIncludingBritish = Dual nationality where one is British
+pdf.nationality.other = Other nationality
 pdf.previousAddress = Previous address
 pdf.phoneNumber = Telephone number
 pdf.nationality = Nationality

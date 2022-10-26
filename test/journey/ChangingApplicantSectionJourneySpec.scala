@@ -19,6 +19,7 @@ package journey
 import generators.ModelGenerators
 import models.{Index, InternationalAddress, Nationality, RelationshipStatus, UkAddress}
 import org.scalacheck.Arbitrary.arbitrary
+import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import pages.{AlwaysLivedInUkPage, CannotUseServiceNationalityPage, CheckYourAnswersPage, RelationshipStatusPage}
 import pages.applicant._
@@ -475,12 +476,14 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
     }
   }
 
-  "when the user initially said they were British" - {
+  "when the user initially said they were British or had dual nationality where one is British" - {
 
     "changing to say they are not British must go to Cannot use Service Nationality" in {
 
+      val nationality = Gen.oneOf(Nationality.British, Nationality.DualWithBritish).sample.value
+
       val initialise = journeyOf(
-        setUserAnswerTo(ApplicantNationalityPage, Nationality.British),
+        setUserAnswerTo(ApplicantNationalityPage, nationality),
         goTo(CheckYourAnswersPage)
       )
 

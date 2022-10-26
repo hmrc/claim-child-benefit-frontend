@@ -36,7 +36,7 @@ case object ApplicantNationalityPage extends QuestionPage[Nationality] {
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
-      case Nationality.British =>
+      case Nationality.British | Nationality.DualWithBritish =>
         answers.get(RelationshipStatusPage).map {
           case Married | Cohabiting =>
             PartnerNamePage

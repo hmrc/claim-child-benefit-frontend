@@ -259,7 +259,9 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
   "users proceeding from Applicant Nationality" - {
 
-    "who are British" - {
+    "who are British or have dual nationality where one is british" - {
+
+      def nationality: Nationality = Gen.oneOf(Nationality.British, Nationality.DualWithBritish).sample.value
 
       "must go to Partner Name if they are Married" in {
 
@@ -267,7 +269,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
         startingFrom(ApplicantNationalityPage, answers = answers)
           .run(
-            submitAnswer(ApplicantNationalityPage, Nationality.British),
+            submitAnswer(ApplicantNationalityPage, nationality),
             pageMustBe(PartnerNamePage)
           )
       }
@@ -278,7 +280,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
         startingFrom(ApplicantNationalityPage, answers = answers)
           .run(
-            submitAnswer(ApplicantNationalityPage, Nationality.British),
+            submitAnswer(ApplicantNationalityPage, nationality),
             pageMustBe(PartnerNamePage)
           )
       }
@@ -289,7 +291,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
         startingFrom(ApplicantNationalityPage, answers = answers)
           .run(
-            submitAnswer(ApplicantNationalityPage, Nationality.British),
+            submitAnswer(ApplicantNationalityPage, nationality),
             pageMustBe(ChildNamePage(Index(0)))
           )
       }
@@ -300,7 +302,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
         startingFrom(ApplicantNationalityPage, answers = answers)
           .run(
-            submitAnswer(ApplicantNationalityPage, Nationality.British),
+            submitAnswer(ApplicantNationalityPage, nationality),
             pageMustBe(ChildNamePage(Index(0)))
           )
       }
@@ -311,7 +313,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
         startingFrom(ApplicantNationalityPage, answers = answers)
           .run(
-            submitAnswer(ApplicantNationalityPage, Nationality.British),
+            submitAnswer(ApplicantNationalityPage, nationality),
             pageMustBe(ChildNamePage(Index(0)))
           )
       }
@@ -322,7 +324,7 @@ class ApplicantJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGen
 
         startingFrom(ApplicantNationalityPage, answers = answers)
           .run(
-            submitAnswer(ApplicantNationalityPage, Nationality.British),
+            submitAnswer(ApplicantNationalityPage, nationality),
             pageMustBe(ChildNamePage(Index(0)))
           )
       }

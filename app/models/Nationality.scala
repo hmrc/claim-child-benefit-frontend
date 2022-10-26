@@ -25,9 +25,10 @@ sealed trait Nationality
 object Nationality extends Enumerable.Implicits {
 
   case object British extends WithName("british") with Nationality
+  case object DualWithBritish extends WithName("dualNationalityIncludingBritish") with Nationality
   case object Other extends WithName("other") with Nationality
 
-  val values: Seq[Nationality] = Seq(British, Other)
+  val values: Seq[Nationality] = Seq(British, DualWithBritish, Other)
 
   def options(implicit messages: Messages): Seq[RadioItem] =
     values.zipWithIndex.map {
