@@ -232,6 +232,9 @@ POST       /remove-child-previous-name/:childIndex/:nameIndex                   
 GET        /adopting-through-local-authority/:index                        controllers.child.AdoptingThroughLocalAuthorityController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /adopting-through-local-authority/:index                        controllers.child.AdoptingThroughLocalAuthorityController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
+GET        /child-lives-with-you/:index                      controllers.child.ChildLivesWithApplicantController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /child-lives-with-you/:index                      controllers.child.ChildLivesWithApplicantController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+
 GET        /check-child-details/:index                 controllers.child.CheckChildDetailsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /check-child-details/:index                 controllers.child.CheckChildDetailsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 

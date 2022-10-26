@@ -913,6 +913,12 @@ previousClaimantName.error.middleNames.length = Middle names of the person who c
 previousClaimantName.error.lastName.length = Last name of the person who claimed Child Benefit for {0} must be 100 characters or less
 previousClaimantName.change.hidden = the name of the person who claimed Child Benefit for this child
 
+childLivesWithApplicant.title = Does this child live with you?
+childLivesWithApplicant.heading = Does {0} live with you?
+childLivesWithApplicant.checkYourAnswersLabel = Does this child live with you?
+childLivesWithApplicant.error.required = Select if {0} lives with you
+childLivesWithApplicant.change.hidden = if this child lives with you
+
 removeChild.title = Are you sure you want to remove this child from this claim?
 removeChild.heading = Are you sure you want to remove {0} from this claim?
 removeChild.error.required = Select yes if you are sure you want to remove {0} from this claim
