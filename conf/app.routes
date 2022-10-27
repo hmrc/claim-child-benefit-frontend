@@ -250,6 +250,9 @@ POST       /person-child-lives-with-uk-address/:index        controllers.child.G
 GET        /child-lived-with-anyone-else/:index             controllers.child.ChildLivedWithAnyoneElseController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /child-lived-with-anyone-else/:index             controllers.child.ChildLivedWithAnyoneElseController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
+GET        /name-of-person-child-lived-with/:index          controllers.child.PreviousGuardianNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /name-of-person-child-lived-with/:index          controllers.child.PreviousGuardianNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+
 GET        /check-child-details/:index                 controllers.child.CheckChildDetailsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /check-child-details/:index                 controllers.child.CheckChildDetailsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
