@@ -938,6 +938,25 @@ guardianAddressInUk.checkYourAnswersLabel = Is the person this child lives with�
 guardianAddressInUk.error.required = Select yes if {0}’s address is in the UK
 guardianAddressInUk.change.hidden = if the person this child lives with’s address is in the UK
 
+guardianInternationalAddress.title = What is the person who this child lives with’s address?
+guardianInternationalAddress.heading = What is {0}’s address?
+guardianInternationalAddress.line1 = Address line 1
+guardianInternationalAddress.line2 = Address line 2 (optional)
+guardianInternationalAddress.town = Town or city
+guardianInternationalAddress.state = State or region (optional)
+guardianInternationalAddress.postcode = Postcode (optional)
+guardianInternationalAddress.country = Country
+guardianInternationalAddress.checkYourAnswersLabel = The person who this child lives with’s address
+guardianInternationalAddress.error.line1.required = Enter address line 1 of {0}’s address
+guardianInternationalAddress.error.town.required = Enter the town or city of {0}’s address
+guardianInternationalAddress.error.country.required = Enter the country of {0}’s address
+guardianInternationalAddress.error.line1.length = Address line 1 of {0}’s address must be 100 characters or less
+guardianInternationalAddress.error.line2.length = Address line 2 of {0}’s address must be 100 characters or less
+guardianInternationalAddress.error.town.length = Town or city of {0}’s address must be 100 characters or less
+guardianInternationalAddress.error.state.length = State or region of {0}’s address must be 100 characters or less
+guardianInternationalAddress.error.postcode.length = Postcode of {0}’s address must be 100 characters or less
+guardianInternationalAddress.change.hidden = the person who this child lives with’s address
+
 removeChild.title = Are you sure you want to remove this child from this claim?
 removeChild.heading = Are you sure you want to remove {0} from this claim?
 removeChild.error.required = Select yes if you are sure you want to remove {0} from this claim
