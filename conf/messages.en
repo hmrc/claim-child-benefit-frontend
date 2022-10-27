@@ -994,6 +994,12 @@ previousGuardianName.error.middleNames.length = Middle names of the person {0} l
 previousGuardianName.error.lastName.length = Last name of the person {0} lived with must be 100 characters or less
 previousGuardianName.change.hidden = the name of the person this child lived with
 
+previousGuardianAddressInUk.title = Is the person this child lived with’s address in the UK?
+previousGuardianAddressInUk.heading = Is {0}’s address in the UK?
+previousGuardianAddressInUk.checkYourAnswersLabel = Is the person this child lived with’s address in the UK?
+previousGuardianAddressInUk.error.required = Select yes if {0}’s address is in the UK
+previousGuardianAddressInUk.change.hidden = if the person this child lived with’s address is in the UK
+
 removeChild.title = Are you sure you want to remove this child from this claim?
 removeChild.heading = Are you sure you want to remove {0} from this claim?
 removeChild.error.required = Select yes if you are sure you want to remove {0} from this claim
