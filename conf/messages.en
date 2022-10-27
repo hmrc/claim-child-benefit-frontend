@@ -880,7 +880,7 @@ previousClaimantInternationalAddress.error.line2.length = Address line 2 of {0}�
 previousClaimantInternationalAddress.error.town.length = Town or city of {0}’s address must be 100 characters or less
 previousClaimantInternationalAddress.error.state.length = State or region of {0}’s address must be 100 characters or less
 previousClaimantInternationalAddress.error.postcode.length = Postcode of {0}’s address must be 100 characters or less
-previousClaimantInternationalAddress.change.hidden = the previous claimant’s address
+previousClaimantInternationalAddress.change.hidden = the person who claimed Child Benefit for this child’s address
 
 previousClaimantUkAddress.title = What is the person who claimed Child Benefit for this child’s address?
 previousClaimantUkAddress.heading = What is {0}’s address?
@@ -931,6 +931,12 @@ guardianName.error.firstName.length = First name of the person {0} lives with mu
 guardianName.error.middleNames.length = Middle names of the person {0} lives with must be 100 characters or less
 guardianName.error.lastName.length = Last name of the person {0} lives with must be 100 characters or less
 guardianName.change.hidden = the name of the person this child lives with
+
+guardianAddressInUk.title = Is the person this child lives with’s address in the UK?
+guardianAddressInUk.heading = Is {0}’s address in the UK?
+guardianAddressInUk.checkYourAnswersLabel = Is the person this child lives with’s address in the UK?
+guardianAddressInUk.error.required = Select yes if {0}’s address is in the UK
+guardianAddressInUk.change.hidden = if the person this child lives with’s address is in the UK
 
 removeChild.title = Are you sure you want to remove this child from this claim?
 removeChild.heading = Are you sure you want to remove {0} from this claim?

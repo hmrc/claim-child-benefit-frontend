@@ -238,6 +238,9 @@ POST       /child-lives-with-you/:index                      controllers.child.C
 GET        /name-of-person-child-lives-with/:index          controllers.child.GuardianNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /name-of-person-child-lives-with/:index          controllers.child.GuardianNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
+GET        /is-person-child-lives-with-address-in-uk/:index         controllers.child.GuardianAddressInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /is-person-child-lives-with-address-in-uk/:index         controllers.child.GuardianAddressInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+
 GET        /check-child-details/:index                 controllers.child.CheckChildDetailsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /check-child-details/:index                 controllers.child.CheckChildDetailsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
