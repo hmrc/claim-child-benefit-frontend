@@ -1000,6 +1000,25 @@ previousGuardianAddressInUk.checkYourAnswersLabel = Is the person this child liv
 previousGuardianAddressInUk.error.required = Select yes if {0}’s address is in the UK
 previousGuardianAddressInUk.change.hidden = if the person this child lived with’s address is in the UK
 
+previousGuardianInternationalAddress.title = What is the person this child lived with’s address?
+previousGuardianInternationalAddress.heading = What is {0}’s address?
+previousGuardianInternationalAddress.line1 = Address line 1
+previousGuardianInternationalAddress.line2 = Address line 2 (optional)
+previousGuardianInternationalAddress.town = Town or city
+previousGuardianInternationalAddress.state = State or region (optional)
+previousGuardianInternationalAddress.postcode = Postcode (optional)
+previousGuardianInternationalAddress.country = Country
+previousGuardianInternationalAddress.checkYourAnswersLabel = The person this child lived with’s address
+previousGuardianInternationalAddress.error.line1.required = Enter address line 1 of {0}’s address
+previousGuardianInternationalAddress.error.town.required = Enter the town or city of {0}’s address
+previousGuardianInternationalAddress.error.country.required = Enter the country of {0}’s address
+previousGuardianInternationalAddress.error.line1.length = Address line 1 of {0}’s address must be 100 characters or less
+previousGuardianInternationalAddress.error.line2.length = Address line 2 of {0}’s address must be 100 characters or less
+previousGuardianInternationalAddress.error.town.length = Town or city of {0}’s address must be 100 characters or less
+previousGuardianInternationalAddress.error.state.length = State or region of {0}’s address must be 100 characters or less
+previousGuardianInternationalAddress.error.postcode.length = Postcode of {0}’s address must be 100 characters or less
+previousGuardianInternationalAddress.change.hidden = the person this child lived with’s address
+
 removeChild.title = Are you sure you want to remove this child from this claim?
 removeChild.heading = Are you sure you want to remove {0} from this claim?
 removeChild.error.required = Select yes if you are sure you want to remove {0} from this claim
