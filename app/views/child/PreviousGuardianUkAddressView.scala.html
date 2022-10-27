@@ -1,0 +1,84 @@
+@*
+ * Copyright 2022 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import controllers.child.routes
+@import viewmodels.InputWidth._
+
+@this(
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukInput: GovukInput,
+        govukButton: GovukButton
+)
+
+@(form: Form[_], waypoints: Waypoints, index: Index, previousGuardianName: AdultName)(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = title(form, messages("previousGuardianUkAddress.title"))) {
+
+    @formHelper(action = routes.PreviousGuardianUkAddressController.onSubmit(waypoints, index), 'autoComplete -> "off") {
+
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
+
+        <h1 class="govuk-heading-xl">@messages("previousGuardianUkAddress.heading", previousGuardianName.firstName)</h1>
+
+        @govukInput(
+            InputViewModel(
+                field = form("line1"),
+                label = LabelViewModel(messages("previousGuardianUkAddress.line1"))
+            )
+                    .withWidth(Full)
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("line2"),
+                label = LabelViewModel(messages("previousGuardianUkAddress.line2"))
+            )
+                    .withWidth(Full)
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("town"),
+                label = LabelViewModel(messages("previousGuardianUkAddress.town"))
+            )
+                    .withWidth(TwoThirds)
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("county"),
+                label = LabelViewModel(messages("previousGuardianUkAddress.county"))
+            )
+                    .withWidth(TwoThirds)
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("postcode"),
+                label = LabelViewModel(messages("previousGuardianUkAddress.postcode"))
+            )
+                    .withWidth(Fixed10)
+        )
+
+        @govukButton(
+            ButtonViewModel(messages("site.continue"))
+        )
+    }
+}
