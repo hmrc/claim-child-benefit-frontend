@@ -265,6 +265,9 @@ POST       /person-child-lived-with-uk-address/:index            controllers.chi
 GET        /person-child-lived-with-telephone-number/:index         controllers.child.PreviousGuardianPhoneNumberController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /person-child-lived-with-telephone-number/:index         controllers.child.PreviousGuardianPhoneNumberController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
+GET        /child-started-living-with-you/:index           controllers.child.DateChildStartedLivingWithApplicantController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /child-started-living-with-you/:index           controllers.child.DateChildStartedLivingWithApplicantController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+
 GET        /check-child-details/:index                 controllers.child.CheckChildDetailsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /check-child-details/:index                 controllers.child.CheckChildDetailsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 

@@ -784,7 +784,7 @@ childDateOfBirth.hint = For example, 20 3 2021.
 childDateOfBirth.checkYourAnswersLabel = This child’s date of birth
 childDateOfBirth.error.required.all = Enter {0}’s date of birth
 childDateOfBirth.error.required.two = {2}’s date of birth must include {0} and {1}
-childDateOfBirth.error.required = {1}’date of birth must include {0}
+childDateOfBirth.error.required = {1}’s date of birth must include {0}
 childDateOfBirth.error.invalid = Enter a real date of {0}’s birth
 childDateOfBirth.error.beforeMinimum = The date of {1}’s birth must be on or after {0}
 childDateOfBirth.error.afterMaximum = The date of {1}’s birth must be on or before {0}
@@ -1044,6 +1044,18 @@ previousGuardianPhoneNumber.checkYourAnswersLabel = The person this child lived 
 previousGuardianPhoneNumber.error.required = Enter {0}’s telephone number
 previousGuardianPhoneNumber.error.invalid = Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192
 previousGuardianPhoneNumber.change.hidden = the person this child lived with’s telephone number
+
+dateChildStartedLivingWithApplicant.title = When did this child start living with you?
+dateChildStartedLivingWithApplicant.heading = When did {0}’s start living with you?
+dateChildStartedLivingWithApplicant.hint = For example, 20 9 2022.
+dateChildStartedLivingWithApplicant.checkYourAnswersLabel = Started living with you
+dateChildStartedLivingWithApplicant.error.required.all = Enter when {0} started living with you
+dateChildStartedLivingWithApplicant.error.required.two = When {2}’s started living with you must include {0} and {1}
+dateChildStartedLivingWithApplicant.error.required = When {1} started living with you must include {0}
+dateChildStartedLivingWithApplicant.error.invalid = Enter a real date of when {0} started living with you
+dateChildStartedLivingWithApplicant.error.beforeMinimum = The date {1} started living with you must be on or after {0}
+dateChildStartedLivingWithApplicant.error.afterMaximum = The date {1} started living with you must be on or before {0}
+dateChildStartedLivingWithApplicant.change.hidden = when this child started living with you
 
 removeChild.title = Are you sure you want to remove this child from this claim?
 removeChild.heading = Are you sure you want to remove {0} from this claim?
