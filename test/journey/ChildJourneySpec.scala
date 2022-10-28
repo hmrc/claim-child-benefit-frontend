@@ -29,6 +29,10 @@ import java.time.LocalDate
 
 class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
+  private val adultName = AdultName("first", None, "last")
+  private val internationalAddress = InternationalAddress("line 1", None, "town", None, Some("postcode"), Country.internationalCountries.head)
+  private val ukAddress = UkAddress("line 1", None, "town", None, "postcode")
+
   "users whose child has no previous names must not be asked for them" in {
 
     val childName = ChildName("first", None, "last")
@@ -98,8 +102,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
             submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), BirthCertificateSystemNumber("123456789")),
             submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
             submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
-            pageMustBe(CheckChildDetailsPage(Index(0)))
+            pageMustBe(AnyoneClaimedForChildBeforePage(Index(0)))
           )
       }
     }
@@ -116,8 +119,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
             submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), false),
             submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
             submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
-            pageMustBe(CheckChildDetailsPage(Index(0)))
+            pageMustBe(AnyoneClaimedForChildBeforePage(Index(0)))
           )
       }
     }
@@ -138,8 +140,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
             submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), BirthCertificateSystemNumber("123456789")),
             submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
             submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
-            pageMustBe(CheckChildDetailsPage(Index(0)))
+            pageMustBe(AnyoneClaimedForChildBeforePage(Index(0)))
           )
       }
     }
@@ -156,8 +157,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
             submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), false),
             submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
             submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
-            pageMustBe(CheckChildDetailsPage(Index(0)))
+            pageMustBe(AnyoneClaimedForChildBeforePage(Index(0)))
           )
       }
     }
@@ -178,8 +178,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
             submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), arbitrary[ScottishBirthCertificateDetails].sample.value),
             submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
             submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
-            pageMustBe(CheckChildDetailsPage(Index(0)))
+            pageMustBe(AnyoneClaimedForChildBeforePage(Index(0)))
           )
       }
     }
@@ -196,8 +195,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
             submitAnswer(ScottishBirthCertificateHasNumbersPage(Index(0)), false),
             submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
             submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
-            pageMustBe(CheckChildDetailsPage(Index(0)))
+            pageMustBe(AnyoneClaimedForChildBeforePage(Index(0)))
           )
       }
     }
@@ -214,8 +212,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
           submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland),
           submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
           submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
-          pageMustBe(CheckChildDetailsPage(Index(0)))
+          pageMustBe(AnyoneClaimedForChildBeforePage(Index(0)))
         )
     }
   }
@@ -231,8 +228,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
           submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Other),
           submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
           submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
-          pageMustBe(CheckChildDetailsPage(Index(0)))
+          pageMustBe(AnyoneClaimedForChildBeforePage(Index(0)))
         )
     }
   }
@@ -248,8 +244,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
           submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Unknown),
           submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
           submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
-          pageMustBe(CheckChildDetailsPage(Index(0)))
+          pageMustBe(AnyoneClaimedForChildBeforePage(Index(0)))
         )
     }
   }
@@ -261,8 +256,6 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
       "when their address is in the UK" in {
 
         val country = arbitrary[ChildBirthRegistrationCountry].sample.value
-        val claimantName = AdultName("first", None, "last")
-        val claimantAddress = UkAddress("line 1", None, "town", None, "postcode")
 
         val initialise = journeyOf(
           setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), country)
@@ -272,18 +265,16 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
           .run(
             initialise,
             submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
-            submitAnswer(PreviousClaimantNamePage(Index(0)), claimantName),
+            submitAnswer(PreviousClaimantNamePage(Index(0)), adultName),
             submitAnswer(PreviousClaimantAddressInUkPage(Index(0)), true),
-            submitAnswer(PreviousClaimantUkAddressPage(Index(0)), claimantAddress),
-            pageMustBe(CheckChildDetailsPage(Index(0)))
+            submitAnswer(PreviousClaimantUkAddressPage(Index(0)), ukAddress),
+            pageMustBe(ChildLivesWithApplicantPage(Index(0)))
           )
       }
 
       "when their address is not in the UK" in {
 
         val country = arbitrary[ChildBirthRegistrationCountry].sample.value
-        val claimantName = AdultName("first", None, "last")
-        val claimantAddress = InternationalAddress("line 1", None, "town", None, Some("postcode"), Country.internationalCountries.head)
 
         val initialise = journeyOf(
           setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), country)
@@ -293,9 +284,100 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
           .run(
             initialise,
             submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
-            submitAnswer(PreviousClaimantNamePage(Index(0)), claimantName),
+            submitAnswer(PreviousClaimantNamePage(Index(0)), adultName),
             submitAnswer(PreviousClaimantAddressInUkPage(Index(0)), false),
-            submitAnswer(PreviousClaimantInternationalAddressPage(Index(0)), claimantAddress),
+            submitAnswer(PreviousClaimantInternationalAddressPage(Index(0)), internationalAddress),
+            pageMustBe(ChildLivesWithApplicantPage(Index(0)))
+          )
+      }
+    }
+  }
+
+  "users whose child lives with them" - {
+
+    "must be asked if the child has lived with anyone else in the past year" in {
+
+      startingFrom(AnyoneClaimedForChildBeforePage(Index(0)))
+        .run(
+          submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
+          submitAnswer(ChildLivesWithApplicantPage(Index(0)), true),
+          pageMustBe(ChildLivedWithAnyoneElsePage(Index(0)))
+        )
+    }
+  }
+
+  "users whose child does not live with them" - {
+
+    "must be asked for details of the person the child lives with, then go to Check Child Details" - {
+
+      "when the person the child lives with has a UK address" in {
+
+        startingFrom(AnyoneClaimedForChildBeforePage(Index(0)))
+          .run(
+            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
+            submitAnswer(ChildLivesWithApplicantPage(Index(0)), false),
+            submitAnswer(GuardianNamePage(Index(0)), adultName),
+            submitAnswer(GuardianAddressInUkPage(Index(0)), true),
+            submitAnswer(GuardianUkAddressPage(Index(0)), ukAddress),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
+          )
+      }
+
+      "when the person the child lives with has an international address" in {
+
+        startingFrom(AnyoneClaimedForChildBeforePage(Index(0)))
+          .run(
+            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
+            submitAnswer(ChildLivesWithApplicantPage(Index(0)), false),
+            submitAnswer(GuardianNamePage(Index(0)), adultName),
+            submitAnswer(GuardianAddressInUkPage(Index(0)), false),
+            submitAnswer(GuardianInternationalAddressPage(Index(0)), internationalAddress),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
+          )
+      }
+    }
+  }
+
+  "users whose child has not lived with someone else in the past year" - {
+
+    "must go to Check Child Details" in {
+
+      startingFrom(ChildLivedWithAnyoneElsePage(Index(0)))
+        .run(
+          submitAnswer(ChildLivedWithAnyoneElsePage(Index(0)), false),
+          pageMustBe(CheckChildDetailsPage(Index(0)))
+        )
+    }
+  }
+
+  "users whose child lived with someone else in the past year" - {
+
+    "must be asked for details of the person the child lived with and when the child came to live with them" - {
+
+      "when the person the child lived with had a UK address" in {
+
+        startingFrom(ChildLivedWithAnyoneElsePage(Index(0)))
+          .run(
+            submitAnswer(ChildLivedWithAnyoneElsePage(Index(0)), true),
+            submitAnswer(PreviousGuardianNamePage(Index(0)), adultName),
+            submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), true),
+            submitAnswer(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
+            submitAnswer(PreviousGuardianPhoneNumberPage(Index(0)), "0777777777"),
+            submitAnswer(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
+          )
+      }
+
+      "when the person the child lived with had an international address" in {
+
+        startingFrom(ChildLivedWithAnyoneElsePage(Index(0)))
+          .run(
+            submitAnswer(ChildLivedWithAnyoneElsePage(Index(0)), true),
+            submitAnswer(PreviousGuardianNamePage(Index(0)), adultName),
+            submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), false),
+            submitAnswer(PreviousGuardianInternationalAddressPage(Index(0)), internationalAddress),
+            submitAnswer(PreviousGuardianPhoneNumberPage(Index(0)), "0777777777"),
+            submitAnswer(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }

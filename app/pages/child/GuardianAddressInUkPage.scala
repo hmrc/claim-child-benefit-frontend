@@ -32,4 +32,10 @@ final case class GuardianAddressInUkPage(index: Index) extends ChildQuestionPage
 
   override def route(waypoints: Waypoints): Call =
     routes.GuardianAddressInUkController.onPageLoad(waypoints, index)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true  => GuardianUkAddressPage(index)
+      case false => GuardianInternationalAddressPage(index)
+    }.orRecover
 }

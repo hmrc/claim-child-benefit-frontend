@@ -32,4 +32,7 @@ final case class DateChildStartedLivingWithApplicantPage(index: Index) extends C
 
   override def route(waypoints: Waypoints): Call =
     routes.DateChildStartedLivingWithApplicantController.onPageLoad(waypoints, index)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    CheckChildDetailsPage(index)
 }

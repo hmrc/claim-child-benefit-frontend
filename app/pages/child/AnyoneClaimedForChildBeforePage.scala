@@ -37,7 +37,7 @@ final case class AnyoneClaimedForChildBeforePage(index: Index) extends ChildQues
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case true  => PreviousClaimantNamePage(index)
-      case false => CheckChildDetailsPage(index)
+      case false => ChildLivesWithApplicantPage(index)
     }.orRecover
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
