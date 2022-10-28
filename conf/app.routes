@@ -262,6 +262,9 @@ POST       /person-child-lived-with-international-address/:index            cont
 GET        /person-child-lived-with-uk-address/:index            controllers.child.PreviousGuardianUkAddressController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /person-child-lived-with-uk-address/:index            controllers.child.PreviousGuardianUkAddressController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
+GET        /person-child-lived-with-telephone-number/:index         controllers.child.PreviousGuardianPhoneNumberController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /person-child-lived-with-telephone-number/:index         controllers.child.PreviousGuardianPhoneNumberController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+
 GET        /check-child-details/:index                 controllers.child.CheckChildDetailsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /check-child-details/:index                 controllers.child.CheckChildDetailsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
