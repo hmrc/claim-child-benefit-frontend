@@ -31,6 +31,7 @@ import queries.{AllChildPreviousNames, AllChildSummaries, AllPreviousFamilyNames
 import services.BrmsService
 import uk.gov.hmrc.http.HeaderCarrier
 
+import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -128,6 +129,64 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
           case false => answers.getIor(PreviousClaimantInternationalAddressPage(index))
         }
 
+      def getGuardian: IorNec[Query, Option[Guardian]] =
+        answers.getIor(ChildLivesWithApplicantPage(index)).flatMap {
+          case true =>
+            Ior.Right(None)
+
+          case false =>
+            (
+              answers.getIor(GuardianNamePage(index)),
+              getGuardianAddress
+            ).parMapN(Guardian.apply).map(Some(_))
+        }
+
+      def getGuardianAddress: IorNec[Query, Address] =
+        answers.getIor(GuardianAddressInUkPage(index)).flatMap {
+          case true => answers.getIor(GuardianUkAddressPage(index))
+          case false => answers.getIor(GuardianInternationalAddressPage(index))
+        }
+
+      def getPreviousGuardian: IorNec[Query, Option[PreviousGuardian]] =
+        answers.getIor(ChildLivesWithApplicantPage(index)).flatMap {
+          case true =>
+            answers.getIor(ChildLivedWithAnyoneElsePage(index)).flatMap {
+              case true =>
+                (
+                  answers.getIor(PreviousGuardianNamePage(index)),
+                  getPreviousGuardianAddress,
+                  answers.getIor(PreviousGuardianPhoneNumberPage(index))
+                  ).parMapN(PreviousGuardian.apply).map(Some(_))
+
+              case false =>
+                Ior.Right(None)
+            }
+
+          case false =>
+            Ior.Right(None)
+        }
+
+      def getPreviousGuardianAddress: IorNec[Query, Address] =
+        answers.getIor(PreviousGuardianAddressInUkPage(index)).flatMap {
+          case true => answers.getIor(PreviousGuardianUkAddressPage(index))
+          case false => answers.getIor(PreviousGuardianInternationalAddressPage(index))
+        }
+
+      def getDateChildStartedLivingWithApplicant: IorNec[Query, Option[LocalDate]] =
+        answers.getIor(ChildLivesWithApplicantPage(index)).flatMap {
+          case true =>
+            answers.getIor(ChildLivedWithAnyoneElsePage(index)).flatMap {
+              case true =>
+                answers.getIor(DateChildStartedLivingWithApplicantPage(index)).map(Some(_))
+
+              case false =>
+                Ior.Right(None)
+            }
+
+          case false =>
+            Ior.Right(None)
+        }
+
       (
         IorT.fromIor[Future](answers.getIor(ChildNamePage(index))),
         IorT.fromIor[Future](getNameChangedByDeedPoll),
@@ -139,7 +198,10 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
         matchBirthCertificateDetails,
         IorT.fromIor[Future](answers.getIor(ApplicantRelationshipToChildPage(index))),
         IorT.fromIor[Future](answers.getIor(AdoptingThroughLocalAuthorityPage(index))),
-        IorT.fromIor[Future](getPreviousClaimant)
+        IorT.fromIor[Future](getPreviousClaimant),
+        IorT.fromIor[Future](getGuardian),
+        IorT.fromIor[Future](getPreviousGuardian),
+        IorT.fromIor[Future](getDateChildStartedLivingWithApplicant)
       ).parMapN(Child.apply)
     }
 
