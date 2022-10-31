@@ -62,8 +62,20 @@ class CheckChildDetailsController @Inject()(
               PreviousClaimantNameSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               PreviousClaimantAddressInUkSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               PreviousClaimantUkAddressSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
-              PreviousClaimantInternationalAddressSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index))
-            ).flatten
+              PreviousClaimantInternationalAddressSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              ChildLivesWithApplicantSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              GuardianNameSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              GuardianAddressInUkSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              GuardianUkAddressSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              GuardianInternationalAddressSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              ChildLivedWithAnyoneElseSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              PreviousGuardianNameSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              PreviousGuardianAddressInUkSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              PreviousGuardianUkAddressSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              PreviousGuardianInternationalAddressSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              PreviousGuardianPhoneNumberSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              DateChildStartedLivingWithApplicantSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+          ).flatten
           )
 
           Ok(view(list, waypoints, index, childName))
