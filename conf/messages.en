@@ -100,12 +100,6 @@ signedOut.guidance = We did not save your answers.
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
-anyChildLivedWithOthers.title = Have any of the children you will claim for lived with anyone else in the last year?
-anyChildLivedWithOthers.heading = Have any of the children you will claim for lived with anyone else in the last year?
-anyChildLivedWithOthers.checkYourAnswersLabel = Have any of the children you will claim for lived with anyone else in the last year?
-anyChildLivedWithOthers.error.required = Select yes if any of the children you will claim for has lived with anyone else in the last year
-anyChildLivedWithOthers.change.hidden = if any of the children you will claim for has lived with anyone else in the last year
-
 alwaysLivedInUk.couple.title = Have you or your partner always lived  in the UK?
 alwaysLivedInUk.couple.heading = Have you or your partner always lived in the UK?
 alwaysLivedInUk.couple.checkYourAnswersLabel = Have you or your partner always lived in the UK?

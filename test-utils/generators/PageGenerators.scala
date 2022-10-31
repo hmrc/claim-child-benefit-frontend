@@ -185,7 +185,4 @@ trait PageGenerators {
 
   implicit lazy val arbitraryAlwaysLivedInUkPage: Arbitrary[AlwaysLivedInUkPage.type] =
     Arbitrary(AlwaysLivedInUkPage)
-
-  implicit lazy val arbitraryAnyChildLivedWithOthersPage: Arbitrary[AnyChildLivedWithOthersPage.type] =
-    Arbitrary(AnyChildLivedWithOthersPage)
 }

@@ -36,7 +36,6 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
     startingFrom(RecentlyClaimedPage)
       .run(
         submitAnswer(RecentlyClaimedPage, false),
-        submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Married),
         submitAnswer(AlwaysLivedInUkPage, true),
@@ -49,7 +48,6 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
     startingFrom(RecentlyClaimedPage)
       .run(
         submitAnswer(RecentlyClaimedPage, false),
-        submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Cohabiting),
         submitAnswer(CohabitationDatePage, LocalDate.now.minusDays(1)),
@@ -63,7 +61,6 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
     startingFrom(RecentlyClaimedPage)
       .run(
         submitAnswer(RecentlyClaimedPage, false),
-        submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Single),
         submitAnswer(AlwaysLivedInUkPage, true),
@@ -76,7 +73,6 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
     startingFrom(RecentlyClaimedPage)
       .run(
         submitAnswer(RecentlyClaimedPage, false),
-        submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Separated),
         submitAnswer(SeparationDatePage, LocalDate.now.minusDays(1)),
@@ -90,7 +86,6 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
     startingFrom(RecentlyClaimedPage)
       .run(
         submitAnswer(RecentlyClaimedPage, false),
-        submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Divorced),
         submitAnswer(AlwaysLivedInUkPage, true),
@@ -103,7 +98,6 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
     startingFrom(RecentlyClaimedPage)
       .run(
         submitAnswer(RecentlyClaimedPage, false),
-        submitAnswer(AnyChildLivedWithOthersPage, false),
         submitAnswer(ApplicantNamePage, applicantName),
         submitAnswer(RelationshipStatusPage, RelationshipStatus.Widowed),
         submitAnswer(AlwaysLivedInUkPage, true),
@@ -120,16 +114,6 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
       )
   }
 
-  "users claiming for a child who has recently lived with someone else must go to the Use Print and Post Form page" in {
-
-    startingFrom(RecentlyClaimedPage)
-      .run(
-        submitAnswer(RecentlyClaimedPage, false),
-        submitAnswer(AnyChildLivedWithOthersPage, true),
-        pageMustBe(UsePrintAndPostFormPage)
-      )
-  }
-
   "users who have not always lived in the UK" - {
 
     "who are HM Forces or a civil servant abroad" - {
@@ -143,7 +127,6 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
           startingFrom(RecentlyClaimedPage)
             .run(
               submitAnswer(RecentlyClaimedPage, false),
-              submitAnswer(AnyChildLivedWithOthersPage, false),
               submitAnswer(ApplicantNamePage, applicantName),
               submitAnswer(RelationshipStatusPage, relationship),
               submitAnswer(AlwaysLivedInUkPage, false),
@@ -160,7 +143,6 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
           startingFrom(RecentlyClaimedPage)
             .run(
               submitAnswer(RecentlyClaimedPage, false),
-              submitAnswer(AnyChildLivedWithOthersPage, false),
               submitAnswer(ApplicantNamePage, applicantName),
               submitAnswer(RelationshipStatusPage, Separated),
               submitAnswer(SeparationDatePage, LocalDate.now),
@@ -178,7 +160,6 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
           startingFrom(RecentlyClaimedPage)
             .run(
               submitAnswer(RecentlyClaimedPage, false),
-              submitAnswer(AnyChildLivedWithOthersPage, false),
               submitAnswer(ApplicantNamePage, applicantName),
               submitAnswer(RelationshipStatusPage, Married),
               submitAnswer(AlwaysLivedInUkPage, false),
@@ -195,7 +176,6 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
           startingFrom(RecentlyClaimedPage)
             .run(
               submitAnswer(RecentlyClaimedPage, false),
-              submitAnswer(AnyChildLivedWithOthersPage, false),
               submitAnswer(ApplicantNamePage, applicantName),
               submitAnswer(RelationshipStatusPage, Cohabiting),
               submitAnswer(CohabitationDatePage, LocalDate.now),
@@ -219,7 +199,6 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
           startingFrom(RecentlyClaimedPage)
             .run(
               submitAnswer(RecentlyClaimedPage, false),
-              submitAnswer(AnyChildLivedWithOthersPage, false),
               submitAnswer(ApplicantNamePage, applicantName),
               submitAnswer(RelationshipStatusPage, relationshipStatus),
               submitAnswer(AlwaysLivedInUkPage, false),
@@ -236,7 +215,6 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
           startingFrom(RecentlyClaimedPage)
             .run(
               submitAnswer(RecentlyClaimedPage, false),
-              submitAnswer(AnyChildLivedWithOthersPage, false),
               submitAnswer(ApplicantNamePage, applicantName),
               submitAnswer(RelationshipStatusPage, RelationshipStatus.Separated),
               submitAnswer(SeparationDatePage, LocalDate.now),
@@ -256,7 +234,6 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
             startingFrom(RecentlyClaimedPage)
               .run(
                 submitAnswer(RecentlyClaimedPage, false),
-                submitAnswer(AnyChildLivedWithOthersPage, false),
                 submitAnswer(ApplicantNamePage, applicantName),
                 submitAnswer(RelationshipStatusPage, RelationshipStatus.Married),
                 submitAnswer(AlwaysLivedInUkPage, false),
@@ -274,7 +251,6 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
             startingFrom(RecentlyClaimedPage)
               .run(
                 submitAnswer(RecentlyClaimedPage, false),
-                submitAnswer(AnyChildLivedWithOthersPage, false),
                 submitAnswer(ApplicantNamePage, applicantName),
                 submitAnswer(RelationshipStatusPage, RelationshipStatus.Married),
                 submitAnswer(AlwaysLivedInUkPage, false),
@@ -295,7 +271,6 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
             startingFrom(RecentlyClaimedPage)
               .run(
                 submitAnswer(RecentlyClaimedPage, false),
-                submitAnswer(AnyChildLivedWithOthersPage, false),
                 submitAnswer(ApplicantNamePage, applicantName),
                 submitAnswer(RelationshipStatusPage, RelationshipStatus.Cohabiting),
                 submitAnswer(CohabitationDatePage, LocalDate.now),
@@ -314,7 +289,6 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
             startingFrom(RecentlyClaimedPage)
               .run(
                 submitAnswer(RecentlyClaimedPage, false),
-                submitAnswer(AnyChildLivedWithOthersPage, false),
                 submitAnswer(ApplicantNamePage, applicantName),
                 submitAnswer(RelationshipStatusPage, RelationshipStatus.Cohabiting),
                 submitAnswer(CohabitationDatePage, LocalDate.now),

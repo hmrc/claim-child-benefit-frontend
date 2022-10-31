@@ -22,8 +22,6 @@ GET         /application-form-has-been-reset             controllers.auth.Signed
 GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
 # Initial section
-GET        /any-child-in-claim-lived-with-others                        controllers.AnyChildLivedWithOthersController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /any-child-in-claim-lived-with-others                        controllers.AnyChildLivedWithOthersController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /always-lived-in-uk                        controllers.AlwaysLivedInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /always-lived-in-uk                        controllers.AlwaysLivedInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
