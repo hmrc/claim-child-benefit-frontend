@@ -22,6 +22,8 @@ import pages.{Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
+import scala.util.Try
+
 final case class ChildLivesWithApplicantPage(index: Index) extends ChildQuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ "children" \ index.position \ toString
@@ -36,4 +38,24 @@ final case class ChildLivesWithApplicantPage(index: Index) extends ChildQuestion
       case true  => ChildLivedWithAnyoneElsePage(index)
       case false => GuardianNamePage(index)
     }.orRecover
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    value.map {
+      case true =>
+        userAnswers
+          .remove(GuardianNamePage(index))
+          .flatMap(_.remove(GuardianAddressInUkPage(index)))
+          .flatMap(_.remove(GuardianUkAddressPage(index)))
+          .flatMap(_.remove(GuardianInternationalAddressPage(index)))
+
+      case false =>
+        userAnswers
+          .remove(ChildLivedWithAnyoneElsePage(index))
+          .flatMap(_.remove(PreviousGuardianNamePage(index)))
+          .flatMap(_.remove(PreviousGuardianAddressInUkPage(index)))
+          .flatMap(_.remove(PreviousGuardianUkAddressPage(index)))
+          .flatMap(_.remove(PreviousGuardianInternationalAddressPage(index)))
+          .flatMap(_.remove(PreviousGuardianPhoneNumberPage(index)))
+          .flatMap(_.remove(DateChildStartedLivingWithApplicantPage(index)))
+    }.getOrElse(super.cleanup(value, userAnswers))
 }

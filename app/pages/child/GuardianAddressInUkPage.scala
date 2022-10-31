@@ -38,4 +38,10 @@ final case class GuardianAddressInUkPage(index: Index) extends ChildQuestionPage
       case true  => GuardianUkAddressPage(index)
       case false => GuardianInternationalAddressPage(index)
     }.orRecover
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    value.map {
+      case true  => userAnswers.remove(GuardianInternationalAddressPage(index))
+      case false => userAnswers.remove(GuardianUkAddressPage(index))
+    }.getOrElse(super.cleanup(value, userAnswers))
 }
