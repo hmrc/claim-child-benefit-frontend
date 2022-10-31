@@ -1,0 +1,100 @@
+@*
+ * Copyright 2022 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import controllers.child.routes
+@import models.Country._
+@import viewmodels.InputWidth._
+
+@this(
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukInput: GovukInput,
+        govukSelect: GovukSelect,
+        govukButton: GovukButton
+)
+
+@(form: Form[_], waypoints: Waypoints, index: Index, previousGuardian: AdultName)(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = title(form, messages("previousGuardianInternationalAddress.title"))) {
+
+    @formHelper(action = routes.PreviousGuardianInternationalAddressController.onSubmit(waypoints, index), 'autoComplete -> "off") {
+
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
+
+        <h1 class="govuk-heading-xl">@messages("previousGuardianInternationalAddress.heading", previousGuardian.firstName)</h1>
+
+        @govukInput(
+            InputViewModel(
+                field = form("line1"),
+                label = LabelViewModel(messages("previousGuardianInternationalAddress.line1"))
+            )
+                    .withWidth(Full)
+                    .withAutocomplete("address-line1")
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("line2"),
+                label = LabelViewModel(messages("previousGuardianInternationalAddress.line2"))
+            )
+                    .withWidth(Full)
+                    .withAutocomplete("address-line2")
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("town"),
+                label = LabelViewModel(messages("previousGuardianInternationalAddress.town"))
+            )
+                    .withWidth(TwoThirds)
+                    .withAutocomplete("address-level2")
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("state"),
+                label = LabelViewModel(messages("previousGuardianInternationalAddress.state"))
+            )
+                    .withWidth(TwoThirds)
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("postcode"),
+                label = LabelViewModel(messages("previousGuardianInternationalAddress.postcode"))
+            )
+                    .withWidth(Fixed10)
+                    .withAutocomplete("postal-code")
+        )
+
+        @govukSelect(
+            SelectViewModel(
+                field = form("country"),
+                items = selectItems(internationalCountries),
+                label = LabelViewModel(messages("previousGuardianInternationalAddress.country"))
+            )
+                    .withCssClass(Fixed20.toString)
+                    .withCssClass("autocomplete")
+        )
+
+        @govukButton(
+            ButtonViewModel(messages("site.continue"))
+        )
+    }
+}
