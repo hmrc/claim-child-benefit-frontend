@@ -534,16 +534,14 @@ applicantName.change.hidden = your name
 applicantNationality.title = What is your nationality?
 applicantNationality.heading = What is your nationality?
 applicantNationality.guidance = This is shown on your passport if you have one.
-applicantNationality.hint = For example British, Irish, French or Polish.
 applicantNationality.checkYourAnswersLabel = Your nationality
 applicantNationality.error.required = Enter your nationality
-applicantNationality.error.length = Nationality must be 100 characters or less
 applicantNationality.change.hidden = your nationality
 
 nationality.british = British
 nationality.british.hint = This includes English, Scottish, Welsh and Northern Irish.
 nationality.dualNationalityIncludingBritish = Dual nationality where one is British
-nationality.other = None of the above
+nationality.other = None of these apply
 
 applicantNino.title = What is your National Insurance number?
 applicantNino.heading = What is your National Insurance number?
