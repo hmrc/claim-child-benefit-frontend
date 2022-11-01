@@ -100,7 +100,7 @@
 
                     @child.guardian.map { guardian =>
                         @line("pdf.guardianName", guardian.name.display)
-                        <fo:block margin-bottom="3mm">
+                        <fo:block margin-bottom="3mm" keep-together="always">
                             <fo:block font-weight="bold">@messages("pdf.guardianAddress")</fo:block>
                             @guardian.address.lines.map { x =>
                                 <fo:block width="8cm" wrap-option="wrap">@(x)</fo:block>
@@ -118,7 +118,7 @@
 
                     @child.previousGuardian.map { previousGuardian =>
                         @line("pdf.previousGuardianName", previousGuardian.name.display)
-                        <fo:block margin-bottom="3mm">
+                        <fo:block margin-bottom="3mm" keep-together="always">
                             <fo:block font-weight="bold">@messages("pdf.previousGuardianAddress")</fo:block>
                             @previousGuardian.address.lines.map { x =>
                                 <fo:block width="8cm" wrap-option="wrap">@(x)</fo:block>
