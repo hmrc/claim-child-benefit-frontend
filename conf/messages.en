@@ -556,7 +556,7 @@ applicantNinoKnown.change.hidden = if you know your National Insurance number
 applicantPhoneNumber.title = What is your telephone number?
 applicantPhoneNumber.heading = What is your telephone number?
 applicantPhoneNumber.guidance = We may use this to contact you about your claim. Our number may not show up if we call you.
-applicantPhoneNumber.hint = For example, 01632 960 001, 07700 900 982 or +44 808 157 0192
+applicantPhoneNumber.hint = For example, 01632 960 001, 07700 900 982 or +44 808 157 0192.
 applicantPhoneNumber.checkYourAnswersLabel = Your telephone number
 applicantPhoneNumber.error.required = Enter your telephone number
 applicantPhoneNumber.error.invalid = Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192
@@ -972,11 +972,11 @@ guardianUkAddress.error.county.length = County of {1}’s address must be 100 ch
 guardianUkAddress.error.postcode.length = Postcode of {1}’s address must be 100 characters or less
 guardianUkAddress.change.hidden = the person this child lives with’s address
 
-childLivedWithAnyoneElse.title = Has this child lived with anyone else at a different address to you in the past year?
-childLivedWithAnyoneElse.heading = Has {0} lived with anyone else at a different address to you in the past year?
-childLivedWithAnyoneElse.checkYourAnswersLabel = Has this child lived with anyone else at a different address to you in the past year?
-childLivedWithAnyoneElse.error.required = Select yes if {0} has lived with anyone else at a different address to you in the past year
-childLivedWithAnyoneElse.change.hidden = if this child has lived with anyone else at a different address to you in the past year
+childLivedWithAnyoneElse.title = Has this child lived with anyone else that has a different address to you, in the past year?
+childLivedWithAnyoneElse.heading = Has {0} lived with anyone else that has a different address to you, in the past year?
+childLivedWithAnyoneElse.checkYourAnswersLabel = Has this child lived with anyone else that has a different address to you, in the past year?
+childLivedWithAnyoneElse.error.required = Select yes if {0} has lived with anyone else that has a different address to you, in the past year
+childLivedWithAnyoneElse.change.hidden = if this child has lived with anyone else that has a different address to you, in the past year
 
 previousGuardianName.title = What is the name of the person this child lived with?
 previousGuardianName.heading = What is the name of the person {0} lived with?
@@ -1036,7 +1036,7 @@ previousGuardianUkAddress.change.hidden = the person this child lived with’s a
 
 previousGuardianPhoneNumber.title = What is the person this child lived with’s telephone number?
 previousGuardianPhoneNumber.heading = What is {0}’s telephone number?
-previousGuardianPhoneNumber.hint = For example, 01632 960 001, 07700 900 982 or +44 808 157 0192
+previousGuardianPhoneNumber.hint = For example, 01632 960 001, 07700 900 982 or +44 808 157 0192.
 previousGuardianPhoneNumber.checkYourAnswersLabel = The person this child lived with’s telephone number
 previousGuardianPhoneNumber.error.required = Enter {0}’s telephone number
 previousGuardianPhoneNumber.error.invalid = Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192
