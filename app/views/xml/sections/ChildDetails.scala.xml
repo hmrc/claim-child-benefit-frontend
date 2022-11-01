@@ -63,8 +63,6 @@
                         @line("pdf.birthCertificateNumber", number.display)
                     }.getOrElse(line("pdf.birthCertificateNumber", messages("pdf.notProvided")))
 
-                    @line("pdf.childLivingWithApplicant", messages("site.yes"))
-
                     @line("pdf.relationshipToApplicant", messages(s"applicantRelationshipToChild.${child.relationshipToApplicant.toString}"))
 
                     @line("pdf.adoptingThroughLocalAuthority", booleanToYesNo(child.adoptingThroughLocalAuthority))
@@ -92,6 +90,45 @@
                                     <fo:block width="8cm" wrap-option="wrap">@(x.fullName)</fo:block>
                                 }
                         </fo:block>
+                    }
+
+                    @if(child.guardian.isEmpty) {
+                        @line("pdf.childLivingWithApplicant", messages("site.yes"))
+                    } else {
+                        @line("pdf.childLivingWithApplicant", messages("site.no"))
+                    }
+
+                    @child.guardian.map { guardian =>
+                        @line("pdf.guardianName", guardian.name.display)
+                        <fo:block margin-bottom="3mm">
+                            <fo:block font-weight="bold">@messages("pdf.guardianAddress")</fo:block>
+                            @guardian.address.lines.map { x =>
+                                <fo:block width="8cm" wrap-option="wrap">@(x)</fo:block>
+                            }
+                        </fo:block>
+                    }
+
+                    @if(child.guardian.isEmpty) {
+                        @if(child.previousGuardian.isEmpty) {
+                            @line("pdf.childLivedWithAnyoneElse", messages("site.no"))
+                        } else {
+                            @line("pdf.childLivedWithAnyoneElse", messages("site.yes"))
+                        }
+                    }
+
+                    @child.previousGuardian.map { previousGuardian =>
+                        @line("pdf.previousGuardianName", previousGuardian.name.display)
+                        <fo:block margin-bottom="3mm">
+                            <fo:block font-weight="bold">@messages("pdf.previousGuardianAddress")</fo:block>
+                            @previousGuardian.address.lines.map { x =>
+                                <fo:block width="8cm" wrap-option="wrap">@(x)</fo:block>
+                            }
+                        </fo:block>
+                        @line("pdf.previousGuardianPhoneNumber", previousGuardian.phoneNumber)
+                    }
+
+                    @child.dateChildStartedLivingWithApplicant.map { x =>
+                        @line("pdf.dateChildStartedLivingWithApplicant", date(x))
                     }
 
                     @if(child.requiredDocuments.nonEmpty) {
