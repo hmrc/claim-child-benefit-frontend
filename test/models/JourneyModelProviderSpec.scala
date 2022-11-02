@@ -23,7 +23,7 @@ import models.BirthRegistrationMatchingResult.{Matched, NotAttempted, NotMatched
 import models.RelationshipStatus._
 import models.{ChildBirthRegistrationCountry => BirthCountry}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.Mockito.{never, reset, times, verify, when}
+import org.mockito.Mockito.{reset, times, verify, when}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.concurrent.ScalaFutures
@@ -67,7 +67,7 @@ class JourneyModelProviderSpec
   private val previousInternationalAddress = InternationalAddress("line 1", None, "town", None, None, country)
   private val phoneNumber = "07777 777777"
   private val applicantBenefits = Set[Benefits](Benefits.NoneOfTheAbove)
-  private val applicantNationality = "applicant nationality"
+  private val applicantNationality = Nationality.British
   private val previousName1 = "previous name 1"
   private val previousName2 = "previous name 2"
 

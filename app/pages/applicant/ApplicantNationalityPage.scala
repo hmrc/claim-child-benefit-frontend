@@ -18,14 +18,14 @@ package pages.applicant
 
 import controllers.applicant.routes
 import models.RelationshipStatus._
-import models.{Index, UserAnswers}
+import models.{Index, Nationality, UserAnswers}
 import pages.child.ChildNamePage
 import pages.partner.PartnerNamePage
-import pages.{Page, QuestionPage, RelationshipStatusPage, Waypoints}
+import pages.{CannotUseServiceNationalityPage, Page, QuestionPage, RelationshipStatusPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object ApplicantNationalityPage extends QuestionPage[String] {
+case object ApplicantNationalityPage extends QuestionPage[Nationality] {
 
   override def path: JsPath = JsPath \ toString
 
@@ -34,13 +34,18 @@ case object ApplicantNationalityPage extends QuestionPage[String] {
   override def route(waypoints: Waypoints): Call =
     routes.ApplicantNationalityController.onPageLoad(waypoints)
 
-
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    answers.get(RelationshipStatusPage).map {
-      case Married | Cohabiting =>
-        PartnerNamePage
+    answers.get(this).map {
+      case Nationality.British | Nationality.DualWithBritish =>
+        answers.get(RelationshipStatusPage).map {
+          case Married | Cohabiting =>
+            PartnerNamePage
 
-      case Single | Divorced | Separated | Widowed =>
-        ChildNamePage(Index(0))
+          case Single | Divorced | Separated | Widowed =>
+            ChildNamePage(Index(0))
+        }.orRecover
+
+      case Nationality.Other =>
+        CannotUseServiceNationalityPage
     }.orRecover
 }

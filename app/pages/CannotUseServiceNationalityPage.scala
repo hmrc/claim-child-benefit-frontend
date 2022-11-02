@@ -14,19 +14,13 @@
  * limitations under the License.
  */
 
-package forms.applicant
+package pages
 
-import forms.mappings.Mappings
-import models.Nationality
-import play.api.data.Form
+import controllers.routes
+import play.api.mvc.Call
 
-import javax.inject.Inject
+case object CannotUseServiceNationalityPage extends Page {
 
-class ApplicantNationalityFormProvider @Inject() extends Mappings {
-
-  def apply(): Form[Nationality] =
-    Form(
-      "value" -> enumerable[Nationality]("applicantNationality.error.required")
-    )
+  override def route(waypoints: Waypoints): Call =
+    routes.CannotUseServiceNationalityController.onPageLoad(waypoints)
 }
-
