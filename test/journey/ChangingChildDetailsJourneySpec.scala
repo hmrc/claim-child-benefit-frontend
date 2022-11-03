@@ -31,14 +31,14 @@ import java.time.LocalDate
 
 class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
-  private val childName                    = arbitrary[ChildName].sample.value
-  private val sex                          = arbitrary[ChildBiologicalSex].sample.value
-  private val systemNumber                 = Gen.listOfN(9, Gen.numChar).map(chars => BirthCertificateSystemNumber(chars.mkString)).sample.value
-  private val claimantName                 = arbitrary[AdultName].sample.value
-  private val claimantUkAddress            = arbitrary[UkAddress].sample.value
-  private val claimantInternationalAddress = arbitrary[InternationalAddress].sample.value
-  private val scottishBcDetails            = arbitrary[ScottishBirthCertificateDetails].sample.value
-  private val relationship                 = arbitrary[Relationship].sample.value
+  private val childName            = arbitrary[ChildName].sample.value
+  private val sex                  = arbitrary[ChildBiologicalSex].sample.value
+  private val systemNumber         = Gen.listOfN(9, Gen.numChar).map(chars => BirthCertificateSystemNumber(chars.mkString)).sample.value
+  private val adultName            = arbitrary[AdultName].sample.value
+  private val ukAddress            = arbitrary[UkAddress].sample.value
+  private val internationalAddress = arbitrary[InternationalAddress].sample.value
+  private val scottishBcDetails    = arbitrary[ScottishBirthCertificateDetails].sample.value
+  private val relationship         = arbitrary[Relationship].sample.value
 
   "when a user has added a child" - {
 
@@ -53,7 +53,9 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
         submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
         submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
         submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-        submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false)
+        submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
+        submitAnswer(ChildLivesWithApplicantPage(Index(0)), true),
+        submitAnswer(ChildLivedWithAnyoneElsePage(Index(0)), false)
       )
 
     "that no one has claimed Child Benefit for previously" - {
@@ -67,9 +69,9 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
               basicChildJourney,
               goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
               submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
-              submitAnswer(PreviousClaimantNamePage(Index(0)), claimantName),
+              submitAnswer(PreviousClaimantNamePage(Index(0)), adultName),
               submitAnswer(PreviousClaimantAddressInUkPage(Index(0)), true),
-              submitAnswer(PreviousClaimantUkAddressPage(Index(0)), claimantUkAddress),
+              submitAnswer(PreviousClaimantUkAddressPage(Index(0)), ukAddress),
               pageMustBe(CheckChildDetailsPage(Index(0)))
             )
         }
@@ -81,9 +83,9 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
               basicChildJourney,
               goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
               submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
-              submitAnswer(PreviousClaimantNamePage(Index(0)), claimantName),
+              submitAnswer(PreviousClaimantNamePage(Index(0)), adultName),
               submitAnswer(PreviousClaimantAddressInUkPage(Index(0)), false),
-              submitAnswer(PreviousClaimantInternationalAddressPage(Index(0)), claimantInternationalAddress),
+              submitAnswer(PreviousClaimantInternationalAddressPage(Index(0)), internationalAddress),
               pageMustBe(CheckChildDetailsPage(Index(0)))
             )
         }
@@ -96,9 +98,9 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
         journeyOf(
           basicChildJourney,
           setUserAnswerTo(AnyoneClaimedForChildBeforePage(Index(0)), true),
-          setUserAnswerTo(PreviousClaimantNamePage(Index(0)), claimantName),
+          setUserAnswerTo(PreviousClaimantNamePage(Index(0)), adultName),
           setUserAnswerTo(PreviousClaimantAddressInUkPage(Index(0)), true),
-          setUserAnswerTo(PreviousClaimantUkAddressPage(Index(0)), claimantUkAddress)
+          setUserAnswerTo(PreviousClaimantUkAddressPage(Index(0)), ukAddress)
         )
 
       "changing `Anyone claimed before` to `false` must remove the previous claimant details and return the user to the Check page" in {
@@ -122,7 +124,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             initialState,
             goToChangeAnswer(PreviousClaimantAddressInUkPage(Index(0))),
             submitAnswer(PreviousClaimantAddressInUkPage(Index(0)), false),
-            submitAnswer(PreviousClaimantInternationalAddressPage(Index(0)), claimantInternationalAddress),
+            submitAnswer(PreviousClaimantInternationalAddressPage(Index(0)), internationalAddress),
             pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(PreviousClaimantUkAddressPage(Index(0)))
           )
@@ -135,9 +137,9 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
         journeyOf(
           basicChildJourney,
           setUserAnswerTo(AnyoneClaimedForChildBeforePage(Index(0)), true),
-          setUserAnswerTo(PreviousClaimantNamePage(Index(0)), claimantName),
+          setUserAnswerTo(PreviousClaimantNamePage(Index(0)), adultName),
           setUserAnswerTo(PreviousClaimantAddressInUkPage(Index(0)), false),
-          setUserAnswerTo(PreviousClaimantInternationalAddressPage(Index(0)), claimantInternationalAddress)
+          setUserAnswerTo(PreviousClaimantInternationalAddressPage(Index(0)), internationalAddress)
         )
 
       "changing `Anyone claimed before` to `false` must remove the previous claimant details and return the user to the Check page" in {
@@ -161,7 +163,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             initialState,
             goToChangeAnswer(PreviousClaimantAddressInUkPage(Index(0))),
             submitAnswer(PreviousClaimantAddressInUkPage(Index(0)), true),
-            submitAnswer(PreviousClaimantUkAddressPage(Index(0)), claimantUkAddress),
+            submitAnswer(PreviousClaimantUkAddressPage(Index(0)), ukAddress),
             pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(PreviousClaimantInternationalAddressPage(Index(0)))
           )
@@ -791,6 +793,151 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           )
       }
     }
+
+    "that the user said lives with them" - {
+
+      "changing to say they live with someone else must collect the other person's details, remove details of the person the child previously lived with, and go to Check Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            basicChildJourney,
+            setUserAnswerTo(ChildLivedWithAnyoneElsePage(Index(0)), true),
+            setUserAnswerTo(PreviousGuardianNamePage(Index(0)), adultName),
+            setUserAnswerTo(PreviousGuardianAddressInUkPage(Index(0)), true),
+            setUserAnswerTo(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
+            setUserAnswerTo(PreviousGuardianInternationalAddressPage(Index(0)), internationalAddress),
+            setUserAnswerTo(PreviousGuardianPhoneNumberPage(Index(0)),  "0777777777"),
+            setUserAnswerTo(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
+            goToChangeAnswer(ChildLivesWithApplicantPage(Index(0))),
+            submitAnswer(ChildLivesWithApplicantPage(Index(0)), false),
+            submitAnswer(GuardianNamePage(Index(0)), adultName),
+            submitAnswer(GuardianAddressInUkPage(Index(0)), true),
+            submitAnswer(GuardianUkAddressPage(Index(0)), ukAddress),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(ChildLivedWithAnyoneElsePage(Index(0))),
+            answersMustNotContain(PreviousGuardianNamePage(Index(0))),
+            answersMustNotContain(PreviousGuardianAddressInUkPage(Index(0))),
+            answersMustNotContain(PreviousGuardianUkAddressPage(Index(0))),
+            answersMustNotContain(PreviousGuardianInternationalAddressPage(Index(0))),
+            answersMustNotContain(PreviousGuardianPhoneNumberPage(Index(0))),
+            answersMustNotContain(DateChildStartedLivingWithApplicantPage(Index(0)))
+          )
+      }
+    }
+
+    "that the user said did not live with them" - {
+
+      "changing that answer must ask if the child lived with someone else in the past year, remove details of the person the child lives with, and go to Check Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            basicChildJourney,
+            setUserAnswerTo(ChildLivesWithApplicantPage(Index(0)), false),
+            setUserAnswerTo(GuardianNamePage(Index(0)), adultName),
+            setUserAnswerTo(GuardianAddressInUkPage(Index(0)), true),
+            setUserAnswerTo(GuardianUkAddressPage(Index(0)), ukAddress),
+            setUserAnswerTo(GuardianInternationalAddressPage(Index(0)), internationalAddress),
+            goToChangeAnswer(ChildLivesWithApplicantPage(Index(0))),
+            submitAnswer(ChildLivesWithApplicantPage(Index(0)), true),
+            submitAnswer(ChildLivedWithAnyoneElsePage(Index(0)), true),
+            submitAnswer(PreviousGuardianNamePage(Index(0)), adultName),
+            submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), true),
+            submitAnswer(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
+            submitAnswer(PreviousGuardianPhoneNumberPage(Index(0)), "077777777"),
+            submitAnswer(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(GuardianNamePage(Index(0))),
+            answersMustNotContain(GuardianAddressInUkPage(Index(0))),
+            answersMustNotContain(GuardianUkAddressPage(Index(0))),
+            answersMustNotContain(GuardianInternationalAddressPage(Index(0)))
+          )
+      }
+    }
+
+    "that the user said lives with someone with a UK address" - {
+
+      "changing to say the address is international must collect the international address, remove the UK address, and go to Check Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            basicChildJourney,
+            setUserAnswerTo(ChildLivesWithApplicantPage(Index(0)), false),
+            setUserAnswerTo(GuardianNamePage(Index(0)), adultName),
+            setUserAnswerTo(GuardianAddressInUkPage(Index(0)), true),
+            setUserAnswerTo(GuardianUkAddressPage(Index(0)), ukAddress),
+            goToChangeAnswer(GuardianAddressInUkPage(Index(0))),
+            submitAnswer(GuardianAddressInUkPage(Index(0)), false),
+            submitAnswer(GuardianInternationalAddressPage(Index(0)), internationalAddress),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(GuardianUkAddressPage(Index(0)))
+          )
+      }
+    }
+
+    "that the user said lives with someone with an international address" - {
+
+      "changing to say the address is UK must collect the UK address, remove the international address, and go to Check Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            basicChildJourney,
+            setUserAnswerTo(ChildLivesWithApplicantPage(Index(0)), false),
+            setUserAnswerTo(GuardianNamePage(Index(0)), adultName),
+            setUserAnswerTo(GuardianAddressInUkPage(Index(0)), false),
+            setUserAnswerTo(GuardianInternationalAddressPage(Index(0)), internationalAddress),
+            goToChangeAnswer(GuardianAddressInUkPage(Index(0))),
+            submitAnswer(GuardianAddressInUkPage(Index(0)), true),
+            submitAnswer(GuardianUkAddressPage(Index(0)), ukAddress),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(GuardianInternationalAddressPage(Index(0)))
+          )
+      }
+    }
+
+
+    "that the user said lived with someone in the past year with a UK address" - {
+
+      "changing to say the address is international must collect the international address, remove the UK address, and go to Check Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            basicChildJourney,
+            setUserAnswerTo(ChildLivedWithAnyoneElsePage(Index(0)), true),
+            setUserAnswerTo(PreviousGuardianNamePage(Index(0)), adultName),
+            setUserAnswerTo(PreviousGuardianAddressInUkPage(Index(0)), true),
+            setUserAnswerTo(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
+            setUserAnswerTo(PreviousGuardianPhoneNumberPage(Index(0)), "077777777"),
+            setUserAnswerTo(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
+            goToChangeAnswer(PreviousGuardianAddressInUkPage(Index(0))),
+            submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), false),
+            submitAnswer(PreviousGuardianInternationalAddressPage(Index(0)), internationalAddress),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(PreviousGuardianUkAddressPage(Index(0)))
+          )
+      }
+    }
+
+    "that the user said lived with someone in the past year with an international address" - {
+
+      "changing to say the address is UK must collect the UK address, remove the international address, and go to Check Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            basicChildJourney,
+            setUserAnswerTo(ChildLivedWithAnyoneElsePage(Index(0)), true),
+            setUserAnswerTo(PreviousGuardianNamePage(Index(0)), adultName),
+            setUserAnswerTo(PreviousGuardianAddressInUkPage(Index(0)), false),
+            setUserAnswerTo(PreviousGuardianInternationalAddressPage(Index(0)), internationalAddress),
+            setUserAnswerTo(PreviousGuardianPhoneNumberPage(Index(0)), "077777777"),
+            setUserAnswerTo(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
+            goToChangeAnswer(PreviousGuardianAddressInUkPage(Index(0))),
+            submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), true),
+            submitAnswer(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(PreviousGuardianInternationalAddressPage(Index(0)))
+          )
+      }
+    }
   }
   
   "when a user has added multiple children" - {
@@ -807,6 +954,8 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
         submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
         submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
         submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
+        submitAnswer(ChildLivesWithApplicantPage(Index(0)), true),
+        submitAnswer(ChildLivedWithAnyoneElsePage(Index(0)), false),
         next,
         submitAnswer(AddChildPage, true),
         submitAnswer(ChildNamePage(Index(1)), childName),
@@ -819,6 +968,8 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
         submitAnswer(AdoptingThroughLocalAuthorityPage(Index(1)), false),
         submitAnswer(ApplicantRelationshipToChildPage(Index(1)), relationship),
         submitAnswer(AnyoneClaimedForChildBeforePage(Index(1)), false),
+        submitAnswer(ChildLivesWithApplicantPage(Index(1)), true),
+        submitAnswer(ChildLivedWithAnyoneElsePage(Index(1)), false),
         next,
         submitAnswer(AddChildPage, false),
         submitAnswer(AdditionalInformationPage, NoInformation),
@@ -859,6 +1010,8 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
           submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
           submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
+          submitAnswer(ChildLivesWithApplicantPage(Index(0)), true),
+          submitAnswer(ChildLivedWithAnyoneElsePage(Index(0)), false),
           next,
           submitAnswer(AddChildPage, false),
           pageMustBe(CheckYourAnswersPage)

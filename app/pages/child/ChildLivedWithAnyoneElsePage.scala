@@ -21,9 +21,6 @@ import models.{Index, UserAnswers}
 import pages.{Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
-import queries.AllChildPreviousNames
-
-import scala.util.Try
 
 final case class ChildLivedWithAnyoneElsePage(index: Index) extends ChildQuestionPage[Boolean] {
 
@@ -33,4 +30,10 @@ final case class ChildLivedWithAnyoneElsePage(index: Index) extends ChildQuestio
 
   override def route(waypoints: Waypoints): Call =
     routes.ChildLivedWithAnyoneElseController.onPageLoad(waypoints, index)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true  => PreviousGuardianNamePage(index)
+      case false => CheckChildDetailsPage(index)
+    }.orRecover
 }

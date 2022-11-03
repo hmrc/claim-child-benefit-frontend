@@ -99,7 +99,18 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             previousClaimant = Some(JourneyModel.PreviousClaimant(
               name    = models.AdultName("previous claimant first", Some("previous claimant middle"), "previous claimant last"),
               address = models.UkAddress("previous claimant line 1", Some("previous claimant line 2"), "previous claimant town", Some("previous claimant county"), "previous claimant postcode")
-            ))
+            ),
+              ),
+            guardian = Some(JourneyModel.Guardian(
+              name    = models.AdultName("guardian first", Some("guardian middle"), "guardian last"),
+              address = models.UkAddress("guardian line 1", Some("guardian line 2"), "guardian town", Some("guardian county"), "guardian postcode")
+            )),
+            previousGuardian = Some(JourneyModel.PreviousGuardian(
+              name = models.AdultName("previous guardian first", Some("previous guardian middle"), "previous guardian last"),
+              address = models.UkAddress("previous guardian line 1", Some("previous guardian line 2"), "previous guardian town", Some("previous guardian county"), "previous guardian postcode"),
+              phoneNumber = "previous guardian phone"
+            )),
+            dateChildStartedLivingWithApplicant = Some(LocalDate.now)
           ), Nil
         ),
         benefits = Set(models.Benefits.IncomeSupport, models.Benefits.JobseekersAllowance),
@@ -161,7 +172,17 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             previousClaimant = Some(PreviousClaimant(
               name    = AdultName( "previous claimant first", Some("previous claimant middle"), "previous claimant last"),
               address = UkAddress("previous claimant line 1", Some("previous claimant line 2"), "previous claimant town", Some("previous claimant county"), "previous claimant postcode")
-            ))
+            )),
+            guardian = Some(Guardian(
+              name = AdultName("guardian first", Some("guardian middle"), "guardian last"),
+              address = UkAddress("guardian line 1", Some("guardian line 2"), "guardian town", Some("guardian county"), "guardian postcode")
+            )),
+            previousGuardian = Some(PreviousGuardian(
+              name = AdultName("previous guardian first", Some("previous guardian middle"), "previous guardian last"),
+              address = UkAddress("previous guardian line 1", Some("previous guardian line 2"), "previous guardian town", Some("previous guardian county"), "previous guardian postcode"),
+              phoneNumber = "previous guardian phone"
+            )),
+            dateChildStartedLivingWithApplicant = Some(LocalDate.now)
           )
         ),
         benefits = Set("incomeSupport", "jobseekersAllowance"),

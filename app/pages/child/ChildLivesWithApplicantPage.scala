@@ -17,7 +17,6 @@
 package pages.child
 
 import controllers.child.routes
-import models.ChildBirthRegistrationCountry._
 import models.{Index, UserAnswers}
 import pages.{Page, Waypoints}
 import play.api.libs.json.JsPath
@@ -34,4 +33,29 @@ final case class ChildLivesWithApplicantPage(index: Index) extends ChildQuestion
   override def route(waypoints: Waypoints): Call =
     routes.ChildLivesWithApplicantController.onPageLoad(waypoints, index)
 
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true  => ChildLivedWithAnyoneElsePage(index)
+      case false => GuardianNamePage(index)
+    }.orRecover
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    value.map {
+      case true =>
+        userAnswers
+          .remove(GuardianNamePage(index))
+          .flatMap(_.remove(GuardianAddressInUkPage(index)))
+          .flatMap(_.remove(GuardianUkAddressPage(index)))
+          .flatMap(_.remove(GuardianInternationalAddressPage(index)))
+
+      case false =>
+        userAnswers
+          .remove(ChildLivedWithAnyoneElsePage(index))
+          .flatMap(_.remove(PreviousGuardianNamePage(index)))
+          .flatMap(_.remove(PreviousGuardianAddressInUkPage(index)))
+          .flatMap(_.remove(PreviousGuardianUkAddressPage(index)))
+          .flatMap(_.remove(PreviousGuardianInternationalAddressPage(index)))
+          .flatMap(_.remove(PreviousGuardianPhoneNumberPage(index)))
+          .flatMap(_.remove(DateChildStartedLivingWithApplicantPage(index)))
+    }.getOrElse(super.cleanup(value, userAnswers))
 }

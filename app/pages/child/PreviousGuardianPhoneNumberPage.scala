@@ -30,4 +30,7 @@ final case class PreviousGuardianPhoneNumberPage(index: Index) extends ChildQues
 
   override def route(waypoints: Waypoints): Call =
     routes.PreviousGuardianPhoneNumberController.onPageLoad(waypoints, index)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    DateChildStartedLivingWithApplicantPage(index)
 }

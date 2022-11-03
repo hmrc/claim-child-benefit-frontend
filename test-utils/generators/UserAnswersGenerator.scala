@@ -82,7 +82,6 @@ trait UserAnswersGenerator extends TryValues {
     arbitrary[(RelationshipStatusPage.type, JsValue)] ::
     arbitrary[(CohabitationDatePage.type, JsValue)] ::
     arbitrary[(AlwaysLivedInUkPage.type, JsValue)] ::
-    arbitrary[(AnyChildLivedWithOthersPage.type, JsValue)] ::
     Nil
 
   implicit lazy val arbitraryUserData: Arbitrary[UserAnswers] = {

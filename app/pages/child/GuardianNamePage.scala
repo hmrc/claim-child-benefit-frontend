@@ -30,4 +30,7 @@ final case class GuardianNamePage(index: Index) extends ChildQuestionPage[AdultN
 
   override def route(waypoints: Waypoints): Call =
     routes.GuardianNameController.onPageLoad(waypoints, index)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    GuardianAddressInUkPage(index)
 }

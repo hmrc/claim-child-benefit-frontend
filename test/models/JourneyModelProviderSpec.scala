@@ -88,9 +88,9 @@ class JourneyModelProviderSpec
   private val scottishBirthCertificateDetails = arbitrary[ScottishBirthCertificateDetails].sample.value
   private val childPreviousName1 = ChildName("first 1", None, "last 1")
   private val childPreviousName2 = ChildName("first 2", None, "last 2")
-  private val previousClaimantName = AdultName("pc first", None, "pc last")
-  private val previousClaimantUkAddress = arbitrary[UkAddress].sample.value
-  private val previousClaimantInternationalAddress = arbitrary[InternationalAddress].sample.value
+  private val adultName = AdultName("pc first", None, "pc last")
+  private val ukAddress = arbitrary[UkAddress].sample.value
+  private val internationalAddress = arbitrary[InternationalAddress].sample.value
 
   private val mockBrmsService = mock[BrmsService]
   private val journeyModelProvider = new JourneyModelProvider(mockBrmsService)
@@ -146,7 +146,10 @@ class JourneyModelProviderSpec
               birthCertificateDetailsMatched = Matched,
               relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
               adoptingThroughLocalAuthority = false,
-              previousClaimant = None
+              previousClaimant = None,
+              guardian = None,
+              previousGuardian = None,
+              dateChildStartedLivingWithApplicant = None
             ), Nil
           ),
           benefits = applicantBenefits,
@@ -218,7 +221,10 @@ class JourneyModelProviderSpec
               birthCertificateDetailsMatched = NotMatched,
               relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
               adoptingThroughLocalAuthority = false,
-              previousClaimant = None
+              previousClaimant = None,
+              guardian = None,
+              previousGuardian = None,
+              dateChildStartedLivingWithApplicant = None
             ), Nil
           ),
           benefits = applicantBenefits,
@@ -255,6 +261,8 @@ class JourneyModelProviderSpec
           .set(ApplicantRelationshipToChildPage(Index(1)), relationshipToChild).success.value
           .set(AdoptingThroughLocalAuthorityPage(Index(1)), false).success.value
           .set(AnyoneClaimedForChildBeforePage(Index(1)), false).success.value
+          .set(ChildLivesWithApplicantPage(Index(1)), true).success.value
+          .set(ChildLivedWithAnyoneElsePage(Index(1)), false).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
         val expectedModel = JourneyModel(
@@ -296,7 +304,10 @@ class JourneyModelProviderSpec
               birthCertificateDetailsMatched = Matched,
               relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
               adoptingThroughLocalAuthority = false,
-              previousClaimant = None
+              previousClaimant = None,
+              guardian = None,
+              previousGuardian = None,
+              dateChildStartedLivingWithApplicant = None
             ), List(
               JourneyModel.Child(
                 name = childName2,
@@ -309,7 +320,10 @@ class JourneyModelProviderSpec
                 birthCertificateDetailsMatched = Matched,
                 relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
                 adoptingThroughLocalAuthority = false,
-                previousClaimant = None
+                previousClaimant = None,
+                guardian = None,
+                previousGuardian = None,
+                dateChildStartedLivingWithApplicant = None
               )
             )
           ),
@@ -985,7 +999,10 @@ class JourneyModelProviderSpec
           birthCertificateDetailsMatched = Matched,
           relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
           adoptingThroughLocalAuthority = false,
-          previousClaimant = None
+          previousClaimant = None,
+          guardian = None,
+          previousGuardian = None,
+          dateChildStartedLivingWithApplicant = None
         )
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -1008,7 +1025,6 @@ class JourneyModelProviderSpec
           .set(BirthCertificateHasSystemNumberPage(Index(0)), false).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
-
         val expectedChildDetails = JourneyModel.Child(
           name = childName,
           nameChangedByDeedPoll = None,
@@ -1020,7 +1036,10 @@ class JourneyModelProviderSpec
           birthCertificateDetailsMatched = Matched,
           relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
           adoptingThroughLocalAuthority = false,
-          previousClaimant = None
+          previousClaimant = None,
+          guardian = None,
+          previousGuardian = None,
+          dateChildStartedLivingWithApplicant = None
         )
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -1054,7 +1073,10 @@ class JourneyModelProviderSpec
           birthCertificateDetailsMatched = Matched,
           relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
           adoptingThroughLocalAuthority = false,
-          previousClaimant = None
+          previousClaimant = None,
+          guardian = None,
+          previousGuardian = None,
+          dateChildStartedLivingWithApplicant = None
         )
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -1091,7 +1113,10 @@ class JourneyModelProviderSpec
             birthCertificateDetailsMatched = Matched,
             relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = false,
-            previousClaimant = None
+            previousClaimant = None,
+            guardian = None,
+            previousGuardian = None,
+            dateChildStartedLivingWithApplicant = None
           )
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -1125,7 +1150,10 @@ class JourneyModelProviderSpec
             birthCertificateDetailsMatched = Matched,
             relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = false,
-            previousClaimant = None
+            previousClaimant = None,
+            guardian = None,
+            previousGuardian = None,
+            dateChildStartedLivingWithApplicant = None
           )
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -1160,7 +1188,10 @@ class JourneyModelProviderSpec
           birthCertificateDetailsMatched = NotAttempted,
           relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
           adoptingThroughLocalAuthority = false,
-          previousClaimant = None
+          previousClaimant = None,
+          guardian = None,
+          previousGuardian = None,
+          dateChildStartedLivingWithApplicant = None
         )
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -1195,7 +1226,10 @@ class JourneyModelProviderSpec
           birthCertificateDetailsMatched = NotAttempted,
           relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
           adoptingThroughLocalAuthority = false,
-          previousClaimant = None
+          previousClaimant = None,
+          guardian = None,
+          previousGuardian = None,
+          dateChildStartedLivingWithApplicant = None
         )
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -1218,9 +1252,9 @@ class JourneyModelProviderSpec
             .withMinimalPaymentDetails
             .set(RelationshipStatusPage, Single).success.value
             .set(AnyoneClaimedForChildBeforePage(Index(0)), true).success.value
-            .set(PreviousClaimantNamePage(Index(0)), previousClaimantName).success.value
+            .set(PreviousClaimantNamePage(Index(0)), adultName).success.value
             .set(PreviousClaimantAddressInUkPage(Index(0)), true).success.value
-            .set(PreviousClaimantUkAddressPage(Index(0)), previousClaimantUkAddress).success.value
+            .set(PreviousClaimantUkAddressPage(Index(0)), ukAddress).success.value
             .set(AdditionalInformationPage, NoInformation).success.value
 
           val expectedChildDetails = JourneyModel.Child(
@@ -1234,7 +1268,10 @@ class JourneyModelProviderSpec
             birthCertificateDetailsMatched = Matched,
             relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = false,
-            previousClaimant = Some(JourneyModel.PreviousClaimant(previousClaimantName, previousClaimantUkAddress))
+            previousClaimant = Some(JourneyModel.PreviousClaimant(adultName, ukAddress)),
+            guardian = None,
+            previousGuardian = None,
+            dateChildStartedLivingWithApplicant = None
           )
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -1254,9 +1291,9 @@ class JourneyModelProviderSpec
             .withMinimalPaymentDetails
             .set(RelationshipStatusPage, Single).success.value
             .set(AnyoneClaimedForChildBeforePage(Index(0)), true).success.value
-            .set(PreviousClaimantNamePage(Index(0)), previousClaimantName).success.value
+            .set(PreviousClaimantNamePage(Index(0)), adultName).success.value
             .set(PreviousClaimantAddressInUkPage(Index(0)), false).success.value
-            .set(PreviousClaimantInternationalAddressPage(Index(0)), previousClaimantInternationalAddress).success.value
+            .set(PreviousClaimantInternationalAddressPage(Index(0)), internationalAddress).success.value
             .set(AdditionalInformationPage, NoInformation).success.value
 
           val expectedChildDetails = JourneyModel.Child(
@@ -1270,7 +1307,177 @@ class JourneyModelProviderSpec
             birthCertificateDetailsMatched = Matched,
             relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = false,
-            previousClaimant = Some(JourneyModel.PreviousClaimant(previousClaimantName, previousClaimantInternationalAddress))
+            previousClaimant = Some(JourneyModel.PreviousClaimant(adultName, internationalAddress)),
+            guardian = None,
+            previousGuardian = None,
+            dateChildStartedLivingWithApplicant = None
+          )
+
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+          errors mustBe empty
+          data.value.children.toList must contain only expectedChildDetails
+        }
+      }
+
+      "when the child lives with someone else" - {
+
+        "and their address is in the UK" in {
+
+          when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+          val answers = UserAnswers("id")
+            .withMinimalApplicantDetails
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .withMinimalPaymentDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(ChildLivesWithApplicantPage(Index(0)), false).success.value
+            .set(GuardianNamePage(Index(0)), adultName).success.value
+            .set(GuardianAddressInUkPage(Index(0)), true).success.value
+            .set(GuardianUkAddressPage(Index(0)), ukAddress).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
+
+          val expectedChildDetails = JourneyModel.Child(
+            name = childName,
+            nameChangedByDeedPoll = None,
+            previousNames = Nil,
+            biologicalSex = ChildBiologicalSex.Female,
+            dateOfBirth = now,
+            countryOfRegistration = ChildBirthRegistrationCountry.England,
+            birthCertificateNumber = Some(systemNumber),
+            birthCertificateDetailsMatched = Matched,
+            relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
+            adoptingThroughLocalAuthority = false,
+            previousClaimant = None,
+            guardian = Some(JourneyModel.Guardian(adultName, ukAddress)),
+            previousGuardian = None,
+            dateChildStartedLivingWithApplicant = None
+          )
+
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+          errors mustBe empty
+          data.value.children.toList must contain only expectedChildDetails
+        }
+
+
+        "and their address is not in the UK" in {
+
+          when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+          val answers = UserAnswers("id")
+            .withMinimalApplicantDetails
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .withMinimalPaymentDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(ChildLivesWithApplicantPage(Index(0)), false).success.value
+            .set(GuardianNamePage(Index(0)), adultName).success.value
+            .set(GuardianAddressInUkPage(Index(0)), false).success.value
+            .set(GuardianInternationalAddressPage(Index(0)), internationalAddress).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
+
+          val expectedChildDetails = JourneyModel.Child(
+            name = childName,
+            nameChangedByDeedPoll = None,
+            previousNames = Nil,
+            biologicalSex = ChildBiologicalSex.Female,
+            dateOfBirth = now,
+            countryOfRegistration = ChildBirthRegistrationCountry.England,
+            birthCertificateNumber = Some(systemNumber),
+            birthCertificateDetailsMatched = Matched,
+            relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
+            adoptingThroughLocalAuthority = false,
+            previousClaimant = None,
+            guardian = Some(JourneyModel.Guardian(adultName, internationalAddress)),
+            previousGuardian = None,
+            dateChildStartedLivingWithApplicant = None
+          )
+
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+          errors mustBe empty
+          data.value.children.toList must contain only expectedChildDetails
+        }
+      }
+
+      "when the child lived with someone else in the past year" - {
+
+        "and their address is in the UK" in {
+
+          when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+          val answers = UserAnswers("id")
+            .withMinimalApplicantDetails
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .withMinimalPaymentDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(ChildLivedWithAnyoneElsePage(Index(0)), true).success.value
+            .set(PreviousGuardianNamePage(Index(0)), adultName).success.value
+            .set(PreviousGuardianAddressInUkPage(Index(0)), true).success.value
+            .set(PreviousGuardianUkAddressPage(Index(0)), ukAddress).success.value
+            .set(PreviousGuardianPhoneNumberPage(Index(0)), phoneNumber).success.value
+            .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
+
+          val expectedChildDetails = JourneyModel.Child(
+            name = childName,
+            nameChangedByDeedPoll = None,
+            previousNames = Nil,
+            biologicalSex = ChildBiologicalSex.Female,
+            dateOfBirth = now,
+            countryOfRegistration = ChildBirthRegistrationCountry.England,
+            birthCertificateNumber = Some(systemNumber),
+            birthCertificateDetailsMatched = Matched,
+            relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
+            adoptingThroughLocalAuthority = false,
+            previousClaimant = None,
+            guardian = None,
+            previousGuardian = Some(JourneyModel.PreviousGuardian(adultName, ukAddress, phoneNumber)),
+            dateChildStartedLivingWithApplicant = Some(LocalDate.now)
+          )
+
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+          errors mustBe empty
+          data.value.children.toList must contain only expectedChildDetails
+        }
+
+        "and their address is not in the UK" in {
+
+          when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+          val answers = UserAnswers("id")
+            .withMinimalApplicantDetails
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .withMinimalPaymentDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(ChildLivedWithAnyoneElsePage(Index(0)), true).success.value
+            .set(PreviousGuardianNamePage(Index(0)), adultName).success.value
+            .set(PreviousGuardianAddressInUkPage(Index(0)), false).success.value
+            .set(PreviousGuardianInternationalAddressPage(Index(0)), internationalAddress).success.value
+            .set(PreviousGuardianPhoneNumberPage(Index(0)), phoneNumber).success.value
+            .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
+
+          val expectedChildDetails = JourneyModel.Child(
+            name = childName,
+            nameChangedByDeedPoll = None,
+            previousNames = Nil,
+            biologicalSex = ChildBiologicalSex.Female,
+            dateOfBirth = now,
+            countryOfRegistration = ChildBirthRegistrationCountry.England,
+            birthCertificateNumber = Some(systemNumber),
+            birthCertificateDetailsMatched = Matched,
+            relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
+            adoptingThroughLocalAuthority = false,
+            previousClaimant = None,
+            guardian = None,
+            previousGuardian = Some(JourneyModel.PreviousGuardian(adultName, internationalAddress, phoneNumber)),
+            dateChildStartedLivingWithApplicant = Some(LocalDate.now)
           )
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -1852,7 +2059,7 @@ class JourneyModelProviderSpec
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
           .set(AnyoneClaimedForChildBeforePage(Index(0)), true).success.value
-          .set(PreviousClaimantNamePage(Index(0)), previousClaimantName).success.value
+          .set(PreviousClaimantNamePage(Index(0)), adultName).success.value
           .set(PreviousClaimantAddressInUkPage(Index(0)), true).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
@@ -1874,13 +2081,157 @@ class JourneyModelProviderSpec
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
           .set(AnyoneClaimedForChildBeforePage(Index(0)), true).success.value
-          .set(PreviousClaimantNamePage(Index(0)), previousClaimantName).success.value
+          .set(PreviousClaimantNamePage(Index(0)), adultName).success.value
           .set(PreviousClaimantAddressInUkPage(Index(0)), false).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors.value.toChain.toList must contain only PreviousClaimantInternationalAddressPage(Index(0))
+
+        data mustBe empty
+      }
+
+      "when the child lives with someone else, but their details are not present" in {
+
+        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(ChildLivesWithApplicantPage(Index(0)), false).success.value
+
+          .set(AdditionalInformationPage, NoInformation).success.value
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors.value.toChain.toList must contain theSameElementsAs Seq(
+          GuardianNamePage(Index(0)),
+          GuardianAddressInUkPage(Index(0))
+        )
+
+        data mustBe empty
+      }
+
+      "when the child lives with someone else, but their UK address are not present" in {
+
+        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(ChildLivesWithApplicantPage(Index(0)), false).success.value
+          .set(GuardianNamePage(Index(0)), adultName).success.value
+          .set(GuardianAddressInUkPage(Index(0)), true).success.value
+
+          .set(AdditionalInformationPage, NoInformation).success.value
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors.value.toChain.toList must contain only GuardianUkAddressPage(Index(0))
+
+        data mustBe empty
+      }
+
+      "when the child lives with someone else, but their international address are not present" in {
+
+        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(ChildLivesWithApplicantPage(Index(0)), false).success.value
+          .set(GuardianNamePage(Index(0)), adultName).success.value
+          .set(GuardianAddressInUkPage(Index(0)), false).success.value
+
+          .set(AdditionalInformationPage, NoInformation).success.value
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors.value.toChain.toList must contain only GuardianInternationalAddressPage(Index(0))
+
+        data mustBe empty
+      }
+
+      "when the child lived with someone else in the past year, but their details are not present" in {
+
+        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(ChildLivedWithAnyoneElsePage(Index(0)), true).success.value
+
+          .set(AdditionalInformationPage, NoInformation).success.value
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors.value.toChain.toList must contain theSameElementsAs Seq(
+          PreviousGuardianNamePage(Index(0)),
+          PreviousGuardianAddressInUkPage(Index(0)),
+          PreviousGuardianPhoneNumberPage(Index(0)),
+          DateChildStartedLivingWithApplicantPage(Index(0))
+        )
+
+        data mustBe empty
+      }
+
+      "when the child lived with someone else in the past year, but their UK address is not present" in {
+
+        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(ChildLivedWithAnyoneElsePage(Index(0)), true).success.value
+          .set(PreviousGuardianNamePage(Index(0)), adultName).success.value
+          .set(PreviousGuardianAddressInUkPage(Index(0)), true).success.value
+          .set(PreviousGuardianPhoneNumberPage(Index(0)), phoneNumber).success.value
+          .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors.value.toChain.toList must contain only PreviousGuardianUkAddressPage(Index(0))
+
+        data mustBe empty
+      }
+
+      "when the child lived with someone else in the past year, but their international address is not present" in {
+
+        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(ChildLivedWithAnyoneElsePage(Index(0)), true).success.value
+          .set(PreviousGuardianNamePage(Index(0)), adultName).success.value
+          .set(PreviousGuardianAddressInUkPage(Index(0)), false).success.value
+          .set(PreviousGuardianPhoneNumberPage(Index(0)), phoneNumber).success.value
+          .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors.value.toChain.toList must contain only PreviousGuardianInternationalAddressPage(Index(0))
 
         data mustBe empty
       }
@@ -1940,6 +2291,8 @@ class JourneyModelProviderSpec
         .set(ApplicantRelationshipToChildPage(Index(0)), relationshipToChild).success.value
         .set(AdoptingThroughLocalAuthorityPage(Index(0)), false).success.value
         .set(AnyoneClaimedForChildBeforePage(Index(0)), false).success.value
+        .set(ChildLivesWithApplicantPage(Index(0)), true).success.value
+        .set(ChildLivedWithAnyoneElsePage(Index(0)), false).success.value
 
     def withMinimalSingleIncomeDetails: UserAnswers =
       answers

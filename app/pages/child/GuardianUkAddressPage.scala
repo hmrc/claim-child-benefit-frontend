@@ -30,4 +30,7 @@ final case class GuardianUkAddressPage(index: Index) extends ChildQuestionPage[U
 
   override def route(waypoints: Waypoints): Call =
     routes.GuardianUkAddressController.onPageLoad(waypoints, index)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    CheckChildDetailsPage(index)
 }

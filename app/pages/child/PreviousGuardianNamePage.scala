@@ -31,4 +31,6 @@ final case class PreviousGuardianNamePage(index: Index) extends ChildQuestionPag
   override def route(waypoints: Waypoints): Call =
     routes.PreviousGuardianNameController.onPageLoad(waypoints, index)
 
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    PreviousGuardianAddressInUkPage(index)
 }

@@ -32,5 +32,5 @@ final case class PreviousClaimantInternationalAddressPage(index: Index) extends 
     routes.PreviousClaimantInternationalAddressController.onPageLoad(waypoints, index)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    CheckChildDetailsPage(index)
+    ChildLivesWithApplicantPage(index)
 }

@@ -80,7 +80,21 @@ object DownloadAuditEvent {
               name    = convertAdultName(claimant.name),
               address = convertAddress(claimant.address)
             )
-          }
+          },
+          guardian = child.guardian.map { guardian =>
+            Guardian(
+              name    = convertAdultName(guardian.name),
+              address = convertAddress(guardian.address)
+            )
+          },
+          previousGuardian = child.previousGuardian.map { previousGuardian =>
+            PreviousGuardian(
+              name        = convertAdultName(previousGuardian.name),
+              address     = convertAddress(previousGuardian.address),
+              phoneNumber = previousGuardian.phoneNumber
+            )
+          },
+          dateChildStartedLivingWithApplicant = child.dateChildStartedLivingWithApplicant
         )
       },
       benefits          = model.benefits.map(_.toString),
@@ -231,8 +245,19 @@ object DownloadAuditEvent {
   }
 
   private[audit] final case class PreviousClaimant(name: AdultName, address: Address)
+
   object PreviousClaimant {
     implicit lazy val writes: Writes[PreviousClaimant] = Json.writes
+  }
+
+  private[audit] final case class Guardian(name: AdultName, address: Address)
+  object Guardian {
+    implicit lazy val writes: Writes[Guardian] = Json.writes
+  }
+
+  private[audit] final case class PreviousGuardian(name: AdultName, address: Address, phoneNumber: String)
+  object PreviousGuardian {
+    implicit lazy val writes: Writes[PreviousGuardian] = Json.writes
   }
 
   private[audit] final case class Child(
@@ -246,7 +271,10 @@ object DownloadAuditEvent {
                                          birthCertificateDetailsMatched: String,
                                          relationshipToApplicant: String,
                                          adoptingThroughLocalAuthority: Boolean,
-                                         previousClaimant: Option[PreviousClaimant]
+                                         previousClaimant: Option[PreviousClaimant],
+                                         guardian: Option[Guardian],
+                                         previousGuardian: Option[PreviousGuardian],
+                                         dateChildStartedLivingWithApplicant: Option[LocalDate]
                                        )
   object Child {
     implicit lazy val writes: Writes[Child] = Json.writes

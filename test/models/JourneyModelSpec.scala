@@ -97,6 +97,8 @@ class JourneyModelSpec
         .set(ApplicantRelationshipToChildPage(Index(0)), relationshipToChild).success.value
         .set(AdoptingThroughLocalAuthorityPage(Index(0)), false).success.value
         .set(AnyoneClaimedForChildBeforePage(Index(0)), false).success.value
+        .set(ChildLivesWithApplicantPage(Index(0)), true).success.value
+        .set(ChildLivedWithAnyoneElsePage(Index(0)), false).success.value
         .set(ChildNamePage(Index(1)), ChildName("child 2 first", None, "child 2 last")).success.value
         .set(ChildHasPreviousNamePage(Index(1)), false).success.value
         .set(ChildBiologicalSexPage(Index(1)), biologicalSex).success.value
@@ -105,6 +107,8 @@ class JourneyModelSpec
         .set(ApplicantRelationshipToChildPage(Index(1)), relationshipToChild).success.value
         .set(AdoptingThroughLocalAuthorityPage(Index(1)), false).success.value
         .set(AnyoneClaimedForChildBeforePage(Index(1)), false).success.value
+        .set(ChildLivesWithApplicantPage(Index(1)), true).success.value
+        .set(ChildLivedWithAnyoneElsePage(Index(1)), false).success.value
         .set(ChildNamePage(Index(2)), ChildName("child 3 first", None, "child 3 last")).success.value
         .set(ChildHasPreviousNamePage(Index(2)), false).success.value
         .set(ChildBiologicalSexPage(Index(2)), biologicalSex).success.value
@@ -113,6 +117,8 @@ class JourneyModelSpec
         .set(ApplicantRelationshipToChildPage(Index(2)), ApplicantRelationshipToChild.AdoptedChild).success.value
         .set(AdoptingThroughLocalAuthorityPage(Index(2)), false).success.value
         .set(AnyoneClaimedForChildBeforePage(Index(2)), false).success.value
+        .set(ChildLivesWithApplicantPage(Index(2)), true).success.value
+        .set(ChildLivedWithAnyoneElsePage(Index(2)), false).success.value
 
       val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 

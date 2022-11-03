@@ -93,7 +93,10 @@ object JourneyModel {
                           birthCertificateDetailsMatched: BirthRegistrationMatchingResult,
                           relationshipToApplicant: ApplicantRelationshipToChild,
                           adoptingThroughLocalAuthority: Boolean,
-                          previousClaimant: Option[PreviousClaimant]
+                          previousClaimant: Option[PreviousClaimant],
+                          guardian: Option[Guardian],
+                          previousGuardian: Option[PreviousGuardian],
+                          dateChildStartedLivingWithApplicant: Option[LocalDate]
                         ) {
 
     private val adoptionCertificate =
@@ -111,5 +114,9 @@ object JourneyModel {
   }
 
   final case class PreviousClaimant(name: AdultName, address: Address)
+
+  final case class Guardian(name: AdultName, address: Address)
+
+  final case class PreviousGuardian(name: AdultName, address: Address, phoneNumber: String)
 }
 

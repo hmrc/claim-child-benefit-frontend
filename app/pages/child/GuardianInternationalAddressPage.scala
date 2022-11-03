@@ -30,4 +30,7 @@ final case class GuardianInternationalAddressPage(index: Index) extends ChildQue
 
   override def route(waypoints: Waypoints): Call =
     routes.GuardianInternationalAddressController.onPageLoad(waypoints, index)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    CheckChildDetailsPage(index)
 }
