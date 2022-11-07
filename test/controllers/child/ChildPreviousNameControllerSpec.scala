@@ -28,7 +28,7 @@ import pages.child.{ChildNamePage, ChildPreviousNamePage}
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import repositories.SessionRepository
+import services.UserDataService
 import views.html.child.ChildPreviousNameView
 
 import scala.concurrent.Future
@@ -83,14 +83,14 @@ class ChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
 
     "must save the answer and redirect to the next page when valid data is submitted" in {
 
-      val mockSessionRepository = mock[SessionRepository]
+      val mockUserDataService = mock[UserDataService]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[UserDataService].toInstance(mockUserDataService)
           )
           .build()
 
@@ -104,7 +104,7 @@ class ChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual ChildPreviousNamePage(index, index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
-        verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
       }
     }
 

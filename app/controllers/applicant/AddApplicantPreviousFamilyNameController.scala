@@ -22,7 +22,7 @@ import pages.Waypoints
 import pages.applicant.AddApplicantPreviousFamilyNamePage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
+import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.applicant.AddApplicantPreviousFamilyNameSummary
 import views.html.applicant.AddApplicantPreviousFamilyNameView
@@ -32,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AddApplicantPreviousFamilyNameController @Inject()(
                                          override val messagesApi: MessagesApi,
-                                         sessionRepository: SessionRepository,
+                                         userDataService: UserDataService,
                                          identify: IdentifierAction,
                                          getData: DataRetrievalAction,
                                          requireData: DataRequiredAction,
@@ -64,7 +64,7 @@ class AddApplicantPreviousFamilyNameController @Inject()(
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(AddApplicantPreviousFamilyNamePage, value))
-            _              <- sessionRepository.set(updatedAnswers)
+            _              <- userDataService.set(updatedAnswers)
           } yield Redirect(AddApplicantPreviousFamilyNamePage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
       )
   }

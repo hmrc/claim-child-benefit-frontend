@@ -27,7 +27,7 @@ import pages.{EmptyWaypoints, applicant}
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import repositories.SessionRepository
+import services.UserDataService
 import views.html.applicant.RemoveApplicantPreviousFamilyNameView
 
 import scala.concurrent.Future
@@ -63,14 +63,14 @@ class RemoveApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mock
 
     "must remove the previous name and redirect to the next page when the answer is yes" in {
 
-      val mockSessionRepository = mock[SessionRepository]
+      val mockUserDataService = mock[UserDataService]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[UserDataService].toInstance(mockUserDataService)
           )
           .build()
 
@@ -84,20 +84,20 @@ class RemoveApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mock
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual RemoveApplicantPreviousFamilyNamePage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
-        verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
       }
     }
 
     "must not remove the previous name and redirect to the next page when the answer is no" in {
 
-      val mockSessionRepository = mock[SessionRepository]
+      val mockUserDataService = mock[UserDataService]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[UserDataService].toInstance(mockUserDataService)
           )
           .build()
 
@@ -110,7 +110,7 @@ class RemoveApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mock
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual applicant.RemoveApplicantPreviousFamilyNamePage(index).navigate(waypoints, baseAnswers, baseAnswers).url
-        verify(mockSessionRepository, never()).set(any())
+        verify(mockUserDataService, never()).set(any())
       }
     }
 

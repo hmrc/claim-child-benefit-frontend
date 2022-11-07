@@ -24,7 +24,7 @@ import pages.Waypoints
 import pages.child.{ChildPreviousNamePage, RemoveChildPreviousNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
+import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.child.RemoveChildPreviousNameView
 
@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class RemoveChildPreviousNameController @Inject()(
                                          override val messagesApi: MessagesApi,
-                                         sessionRepository: SessionRepository,
+                                         userDataService: UserDataService,
                                          identify: IdentifierAction,
                                          getData: DataRetrievalAction,
                                          requireData: DataRequiredAction,
@@ -76,7 +76,7 @@ class RemoveChildPreviousNameController @Inject()(
               if (value) {
                 for {
                   updatedAnswers <- Future.fromTry(request.userAnswers.remove(ChildPreviousNamePage(childIndex, nameIndex)))
-                  _ <- sessionRepository.set(updatedAnswers)
+                  _ <- userDataService.set(updatedAnswers)
                 } yield Redirect(RemoveChildPreviousNamePage(childIndex, nameIndex).navigate(waypoints, request.userAnswers, updatedAnswers).route)
               } else {
                 Future.successful(Redirect(RemoveChildPreviousNamePage(childIndex, nameIndex).navigate(waypoints, request.userAnswers, request.userAnswers).route))

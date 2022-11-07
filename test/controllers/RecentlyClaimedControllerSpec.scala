@@ -27,7 +27,7 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import repositories.SessionRepository
+import services.UserDataService
 import views.html.RecentlyClaimedView
 
 import scala.concurrent.Future
@@ -80,14 +80,14 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
 
     "must save the answer and redirect to the next page when valid data is submitted" in {
 
-      val mockSessionRepository = mock[SessionRepository]
+      val mockUserDataService = mock[UserDataService]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[UserDataService].toInstance(mockUserDataService)
           )
           .build()
 
@@ -101,7 +101,7 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual RecentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
-        verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
       }
     }
 
@@ -140,14 +140,14 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to the next page for a POST if no existing data is found" in {
 
-      val mockSessionRepository = mock[SessionRepository]
+      val mockUserDataService = mock[UserDataService]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
 
       val application =
         applicationBuilder(userAnswers = None)
           .overrides(
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[UserDataService].toInstance(mockUserDataService)
           )
           .build()
 

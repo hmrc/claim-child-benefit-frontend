@@ -24,7 +24,7 @@ import pages.payments.{EldestChildDateOfBirthPage, EldestChildNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.twirl.api.HtmlFormat
-import repositories.SessionRepository
+import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.payments.EldestChildDateOfBirthView
 
@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class EldestChildDateOfBirthController @Inject()(
                                         override val messagesApi: MessagesApi,
-                                        sessionRepository: SessionRepository,
+                                        userDataService: UserDataService,
                                         identify: IdentifierAction,
                                         getData: DataRetrievalAction,
                                         requireData: DataRequiredAction,
@@ -77,7 +77,7 @@ class EldestChildDateOfBirthController @Inject()(
             value =>
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(EldestChildDateOfBirthPage, value))
-                _ <- sessionRepository.set(updatedAnswers)
+                _ <- userDataService.set(updatedAnswers)
               } yield Redirect(EldestChildDateOfBirthPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
           )
         }

@@ -24,7 +24,7 @@ import pages.Waypoints
 import pages.child.{BirthCertificateHasSystemNumberPage, ChildNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
+import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.child.BirthCertificateHasSystemNumberView
 
@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class BirthCertificateHasSystemNumberController @Inject()(
                                                          override val messagesApi: MessagesApi,
-                                                         sessionRepository: SessionRepository,
+                                                         userDataService: UserDataService,
                                                          identify: IdentifierAction,
                                                          getData: DataRetrievalAction,
                                                          requireData: DataRequiredAction,
@@ -75,7 +75,7 @@ class BirthCertificateHasSystemNumberController @Inject()(
             value =>
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(BirthCertificateHasSystemNumberPage(index), value))
-                _ <- sessionRepository.set(updatedAnswers)
+                _ <- userDataService.set(updatedAnswers)
               } yield Redirect(BirthCertificateHasSystemNumberPage(index).navigate(waypoints, request.userAnswers, updatedAnswers).route)
           )
       }

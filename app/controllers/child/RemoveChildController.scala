@@ -25,7 +25,7 @@ import pages.child.{ChildNamePage, RemoveChildPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import queries.ChildQuery
-import repositories.SessionRepository
+import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.child.RemoveChildView
 
@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class RemoveChildController @Inject()(
                                          override val messagesApi: MessagesApi,
-                                         sessionRepository: SessionRepository,
+                                         userDataService: UserDataService,
                                          identify: IdentifierAction,
                                          getData: DataRetrievalAction,
                                          requireData: DataRequiredAction,
@@ -77,7 +77,7 @@ class RemoveChildController @Inject()(
               if (value) {
                 for {
                   updatedAnswers <- Future.fromTry(request.userAnswers.remove(ChildQuery(index)))
-                  _ <- sessionRepository.set(updatedAnswers)
+                  _ <- userDataService.set(updatedAnswers)
                 } yield Redirect(RemoveChildPage(index).navigate(waypoints, request.userAnswers, updatedAnswers).route)
               } else {
                 Future.successful(Redirect(RemoveChildPage(index).navigate(waypoints, request.userAnswers, request.userAnswers).route))

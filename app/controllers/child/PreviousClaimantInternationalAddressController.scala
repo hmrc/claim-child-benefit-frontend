@@ -24,7 +24,7 @@ import pages.Waypoints
 import pages.child.{PreviousClaimantInternationalAddressPage, PreviousClaimantNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
+import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.child.PreviousClaimantInternationalAddressView
 
@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class PreviousClaimantInternationalAddressController @Inject()(
                                                      override val messagesApi: MessagesApi,
-                                                     sessionRepository: SessionRepository,
+                                                     userDataService: UserDataService,
                                                      identify: IdentifierAction,
                                                      getData: DataRetrievalAction,
                                                      requireData: DataRequiredAction,
@@ -75,7 +75,7 @@ class PreviousClaimantInternationalAddressController @Inject()(
             value =>
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(PreviousClaimantInternationalAddressPage(index), value))
-                _ <- sessionRepository.set(updatedAnswers)
+                _ <- userDataService.set(updatedAnswers)
               } yield Redirect(PreviousClaimantInternationalAddressPage(index).navigate(waypoints, request.userAnswers, updatedAnswers).route)
           )
       }

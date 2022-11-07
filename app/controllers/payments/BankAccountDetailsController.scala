@@ -25,7 +25,7 @@ import pages.payments.BankAccountDetailsPage
 import play.api.data.FormError
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import repositories.SessionRepository
+import services.UserDataService
 import services.BarsService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.payments.BankAccountDetailsView
@@ -35,7 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class BankAccountDetailsController @Inject()(
                                       override val messagesApi: MessagesApi,
-                                      sessionRepository: SessionRepository,
+                                      userDataService: UserDataService,
                                       identify: IdentifierAction,
                                       getData: DataRetrievalAction,
                                       requireData: DataRequiredAction,
@@ -71,7 +71,7 @@ class BankAccountDetailsController @Inject()(
           def saveAndRedirect: Future[Result] =
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(BankAccountDetailsPage, value))
-              _ <- sessionRepository.set(updatedAnswers)
+              _ <- userDataService.set(updatedAnswers)
             } yield Redirect(BankAccountDetailsPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
 
           if (featureFlags.validateBankDetails) {

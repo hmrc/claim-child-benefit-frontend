@@ -29,7 +29,7 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import queries.ChildQuery
-import repositories.SessionRepository
+import services.UserDataService
 import views.html.child.RemoveChildView
 
 import scala.concurrent.Future
@@ -64,14 +64,14 @@ class RemoveChildControllerSpec extends SpecBase with MockitoSugar {
 
     "must remove the child and redirect to the next page when the answer is yes" in {
 
-      val mockSessionRepository = mock[SessionRepository]
+      val mockUserDataService = mock[UserDataService]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[UserDataService].toInstance(mockUserDataService)
           )
           .build()
 
@@ -85,20 +85,20 @@ class RemoveChildControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual RemoveChildPage(index).navigate(waypoints, baseAnswers, expectedAnswers).url
-        verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
       }
     }
 
     "must not remove the child and redirect to the next page when the answer is no" in {
 
-      val mockSessionRepository = mock[SessionRepository]
+      val mockUserDataService = mock[UserDataService]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[UserDataService].toInstance(mockUserDataService)
           )
           .build()
 
@@ -111,7 +111,7 @@ class RemoveChildControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual child.RemoveChildPage(index).navigate(waypoints, baseAnswers, baseAnswers).url
-        verify(mockSessionRepository, never()).set(any())
+        verify(mockUserDataService, never()).set(any())
       }
     }
 

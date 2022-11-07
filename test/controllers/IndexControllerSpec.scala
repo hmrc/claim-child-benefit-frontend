@@ -23,7 +23,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import repositories.SessionRepository
+import services.UserDataService
 import views.html.IndexView
 
 import scala.concurrent.Future
@@ -51,12 +51,12 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
 
     ".startAgain must clear the user's cache and redirect to the home page" in {
 
-      val mockSessionRepository = mock[SessionRepository]
-      when(mockSessionRepository.clear(any())) thenReturn Future.successful(true)
+      val mockUserDataService = mock[UserDataService]
+      when(mockUserDataService.clear(any())) thenReturn Future.successful(true)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
+          .overrides(bind[UserDataService].toInstance(mockUserDataService))
           .build()
 
       running(application) {
@@ -66,7 +66,7 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.IndexController.onPageLoad.url
-        verify(mockSessionRepository, times(1)).clear(any())
+        verify(mockUserDataService, times(1)).clear(any())
       }
     }
   }

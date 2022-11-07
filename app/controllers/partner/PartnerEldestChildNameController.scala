@@ -24,7 +24,7 @@ import pages.partner.{PartnerEldestChildNamePage, PartnerNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.twirl.api.HtmlFormat
-import repositories.SessionRepository
+import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.partner.PartnerEldestChildNameView
 
@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class PartnerEldestChildNameController @Inject()(
                                       override val messagesApi: MessagesApi,
-                                      sessionRepository: SessionRepository,
+                                      userDataService: UserDataService,
                                       identify: IdentifierAction,
                                       getData: DataRetrievalAction,
                                       requireData: DataRequiredAction,
@@ -78,7 +78,7 @@ class PartnerEldestChildNameController @Inject()(
             value =>
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerEldestChildNamePage, value))
-                _ <- sessionRepository.set(updatedAnswers)
+                _ <- userDataService.set(updatedAnswers)
               } yield Redirect(PartnerEldestChildNamePage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
           )
       }
