@@ -26,7 +26,7 @@ import pages.payments._
 import pages.{RelationshipStatusPage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
+import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.payments._
 
@@ -46,7 +46,7 @@ class WantToBePaidController @Inject()(
                                                 singleUnder60kView: WantToBePaidSingleUnder60kView,
                                                 singleOver60kView: WantToBePaidSingleOver60kView,
                                                 formProvider: WantToBePaidFormProvider,
-                                                sessionRepository: SessionRepository
+                                                userDataService: UserDataService
                                               )(implicit ec: ExecutionContext)
   extends FrontendBaseController
     with I18nSupport
@@ -104,7 +104,7 @@ class WantToBePaidController @Inject()(
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(WantToBePaidPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
+            _              <- userDataService.set(updatedAnswers)
           } yield Redirect(WantToBePaidPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
       )
   }

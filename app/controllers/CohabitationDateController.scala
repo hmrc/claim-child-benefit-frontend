@@ -23,7 +23,7 @@ import javax.inject.Inject
 import pages.{CohabitationDatePage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
+import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.CohabitationDateView
 
@@ -31,7 +31,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class CohabitationDateController @Inject()(
                                                   override val messagesApi: MessagesApi,
-                                                  sessionRepository: SessionRepository,
+                                                  userDataService: UserDataService,
                                                   identify: IdentifierAction,
                                                   getData: DataRetrievalAction,
                                                   requireData: DataRequiredAction,
@@ -66,7 +66,7 @@ class CohabitationDateController @Inject()(
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(CohabitationDatePage, value))
-            _ <- sessionRepository.set(updatedAnswers)
+            _ <- userDataService.set(updatedAnswers)
           } yield Redirect(CohabitationDatePage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
       )
   }

@@ -24,7 +24,7 @@ import pages.Waypoints
 import pages.child.{GuardianInternationalAddressPage, GuardianNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
+import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.child.GuardianInternationalAddressView
 
@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class GuardianInternationalAddressController @Inject()(
                                                                 override val messagesApi: MessagesApi,
-                                                                sessionRepository: SessionRepository,
+                                                                userDataService: UserDataService,
                                                                 identify: IdentifierAction,
                                                                 getData: DataRetrievalAction,
                                                                 requireData: DataRequiredAction,
@@ -75,7 +75,7 @@ class GuardianInternationalAddressController @Inject()(
             value =>
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(GuardianInternationalAddressPage(index), value))
-                _ <- sessionRepository.set(updatedAnswers)
+                _ <- userDataService.set(updatedAnswers)
               } yield Redirect(GuardianInternationalAddressPage(index).navigate(waypoints, request.userAnswers, updatedAnswers).route)
           )
       }

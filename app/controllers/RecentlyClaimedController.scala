@@ -24,7 +24,7 @@ import javax.inject.Inject
 import pages.{RecentlyClaimedPage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
+import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.RecentlyClaimedView
 
@@ -32,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class RecentlyClaimedController @Inject()(
                                                    override val messagesApi: MessagesApi,
-                                                   sessionRepository: SessionRepository,
+                                                   userDataService: UserDataService,
                                                    identify: IdentifierAction,
                                                    getData: DataRetrievalAction,
                                                    formProvider: RecentlyClaimedFormProvider,
@@ -66,7 +66,7 @@ class RecentlyClaimedController @Inject()(
 
           for {
             updatedAnswers <- Future.fromTry(originalAnswers.set(RecentlyClaimedPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
+            _              <- userDataService.set(updatedAnswers)
           } yield Redirect(RecentlyClaimedPage.navigate(waypoints, originalAnswers, updatedAnswers).route)
         }
       )

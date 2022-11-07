@@ -25,7 +25,7 @@ import pages.applicant.{ApplicantPreviousFamilyNamePage, RemoveApplicantPrevious
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.twirl.api.HtmlFormat
-import repositories.SessionRepository
+import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.applicant.RemoveApplicantPreviousFamilyNameView
 
@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class RemoveApplicantPreviousFamilyNameController @Inject()(
                                          override val messagesApi: MessagesApi,
-                                         sessionRepository: SessionRepository,
+                                         userDataService: UserDataService,
                                          identify: IdentifierAction,
                                          getData: DataRetrievalAction,
                                          requireData: DataRequiredAction,
@@ -74,7 +74,7 @@ class RemoveApplicantPreviousFamilyNameController @Inject()(
               if (value) {
                 for {
                   updatedAnswers <- Future.fromTry(request.userAnswers.remove(ApplicantPreviousFamilyNamePage(index)))
-                  _ <- sessionRepository.set(updatedAnswers)
+                  _ <- userDataService.set(updatedAnswers)
                 } yield Redirect(RemoveApplicantPreviousFamilyNamePage(index).navigate(waypoints, request.userAnswers, updatedAnswers).route)
               } else {
                 Future.successful(Redirect(RemoveApplicantPreviousFamilyNamePage(index).navigate(waypoints, request.userAnswers, request.userAnswers).route))

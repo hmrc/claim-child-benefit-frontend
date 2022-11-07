@@ -23,7 +23,7 @@ import pages.Waypoints
 import pages.partner.{PartnerIsHmfOrCivilServantPage, PartnerNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
+import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.partner.PartnerIsHmfOrCivilServantView
 
@@ -32,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class PartnerIsHmfOrCivilServantController @Inject()(
                                          override val messagesApi: MessagesApi,
-                                         sessionRepository: SessionRepository,
+                                         userDataService: UserDataService,
                                          identify: IdentifierAction,
                                          getData: DataRetrievalAction,
                                          requireData: DataRequiredAction,
@@ -67,7 +67,7 @@ class PartnerIsHmfOrCivilServantController @Inject()(
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerIsHmfOrCivilServantPage, value))
-            _ <- sessionRepository.set(updatedAnswers)
+            _ <- userDataService.set(updatedAnswers)
           } yield Redirect(PartnerIsHmfOrCivilServantPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
       )
     }

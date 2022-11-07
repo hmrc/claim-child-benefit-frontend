@@ -30,7 +30,7 @@ import pages.partner.{PartnerNamePage, PartnerNinoPage}
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import repositories.SessionRepository
+import services.UserDataService
 import uk.gov.hmrc.domain.Nino
 import views.html.partner.PartnerNinoView
 
@@ -87,14 +87,14 @@ class PartnerNinoControllerSpec extends SpecBase with MockitoSugar with Generato
 
     "must save the answer and redirect to the next page when valid data is submitted" in {
 
-      val mockSessionRepository = mock[SessionRepository]
+      val mockUserDataService = mock[UserDataService]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[UserDataService].toInstance(mockUserDataService)
           )
           .build()
 
@@ -108,7 +108,7 @@ class PartnerNinoControllerSpec extends SpecBase with MockitoSugar with Generato
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual PartnerNinoPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
-        verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
       }
     }
 

@@ -29,7 +29,7 @@ import pages.payments.BankAccountDetailsPage
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import repositories.SessionRepository
+import services.UserDataService
 import services.BarsService
 import views.html.payments.BankAccountDetailsView
 
@@ -92,17 +92,17 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
         )
 
         val mockBarsService = mock[BarsService]
-        val mockSessionRepository = mock[SessionRepository]
+        val mockUserDataService = mock[UserDataService]
         val mockFeatureFlags = mock[FeatureFlags]
 
         when(mockBarsService.validateBankDetails(any())(any(), any())) thenReturn Future.successful(Some(happyBarsResponse))
-        when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+        when(mockUserDataService.set(any())) thenReturn Future.successful(true)
         when(mockFeatureFlags.validateBankDetails) thenReturn true
 
         val application =
           applicationBuilder(userAnswers = Some(emptyUserAnswers))
             .overrides(
-              bind[SessionRepository].toInstance(mockSessionRepository),
+              bind[UserDataService].toInstance(mockUserDataService),
               bind[BarsService].toInstance(mockBarsService),
               bind[FeatureFlags].toInstance(mockFeatureFlags)
             )
@@ -118,7 +118,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
-          verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
+          verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
         }
       }
 
@@ -132,17 +132,17 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
         )
 
         val mockBarsService = mock[BarsService]
-        val mockSessionRepository = mock[SessionRepository]
+        val mockUserDataService = mock[UserDataService]
         val mockFeatureFlags = mock[FeatureFlags]
 
         when(mockBarsService.validateBankDetails(any())(any(), any())) thenReturn Future.successful(Some(happyBarsResponse))
-        when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+        when(mockUserDataService.set(any())) thenReturn Future.successful(true)
         when(mockFeatureFlags.validateBankDetails) thenReturn true
 
         val application =
           applicationBuilder(userAnswers = Some(emptyUserAnswers))
             .overrides(
-              bind[SessionRepository].toInstance(mockSessionRepository),
+              bind[UserDataService].toInstance(mockUserDataService),
               bind[BarsService].toInstance(mockBarsService),
               bind[FeatureFlags].toInstance(mockFeatureFlags)
             )
@@ -159,7 +159,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
-          verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
+          verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
         }
       }
 
@@ -173,17 +173,17 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
         )
 
         val mockBarsService = mock[BarsService]
-        val mockSessionRepository = mock[SessionRepository]
+        val mockUserDataService = mock[UserDataService]
         val mockFeatureFlags = mock[FeatureFlags]
 
         when(mockBarsService.validateBankDetails(any())(any(), any())) thenReturn Future.successful(Some(happyBarsResponse))
-        when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+        when(mockUserDataService.set(any())) thenReturn Future.successful(true)
         when(mockFeatureFlags.validateBankDetails) thenReturn true
 
         val application =
           applicationBuilder(userAnswers = Some(emptyUserAnswers))
             .overrides(
-              bind[SessionRepository].toInstance(mockSessionRepository),
+              bind[UserDataService].toInstance(mockUserDataService),
               bind[BarsService].toInstance(mockBarsService),
               bind[FeatureFlags].toInstance(mockFeatureFlags)
             )
@@ -199,24 +199,24 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
-          verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
+          verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
         }
       }
 
       "must save the answer and redirect to the next page when valid data is submitted and we cannot get a good response from BARS" in {
 
         val mockBarsService = mock[BarsService]
-        val mockSessionRepository = mock[SessionRepository]
+        val mockUserDataService = mock[UserDataService]
         val mockFeatureFlags = mock[FeatureFlags]
 
         when(mockBarsService.validateBankDetails(any())(any(), any())) thenReturn Future.successful(None)
-        when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+        when(mockUserDataService.set(any())) thenReturn Future.successful(true)
         when(mockFeatureFlags.validateBankDetails) thenReturn true
 
         val application =
           applicationBuilder(userAnswers = Some(emptyUserAnswers))
             .overrides(
-              bind[SessionRepository].toInstance(mockSessionRepository),
+              bind[UserDataService].toInstance(mockUserDataService),
               bind[BarsService].toInstance(mockBarsService),
               bind[FeatureFlags].toInstance(mockFeatureFlags)
             )
@@ -232,7 +232,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
-          verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
+          verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
         }
       }
     }
@@ -242,16 +242,16 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
       "must save the answer and redirect to the next page without calling BARS" in {
 
         val mockBarsService = mock[BarsService]
-        val mockSessionRepository = mock[SessionRepository]
+        val mockUserDataService = mock[UserDataService]
         val mockFeatureFlags = mock[FeatureFlags]
 
-        when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+        when(mockUserDataService.set(any())) thenReturn Future.successful(true)
         when(mockFeatureFlags.validateBankDetails) thenReturn false
 
         val application =
           applicationBuilder(userAnswers = Some(emptyUserAnswers))
             .overrides(
-              bind[SessionRepository].toInstance(mockSessionRepository),
+              bind[UserDataService].toInstance(mockUserDataService),
               bind[BarsService].toInstance(mockBarsService),
               bind[FeatureFlags].toInstance(mockFeatureFlags)
             )
@@ -267,7 +267,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
-          verify(mockSessionRepository, times(1)).set(eqTo(expectedAnswers))
+          verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
           verify(mockBarsService, never()).validateBankDetails(any())(any(), any())
         }
       }
