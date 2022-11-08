@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers
+package viewmodels.checkAnswers.applicant
 
 import models.RelationshipStatus._
 import models.UserAnswers
-import pages.{CheckAnswersPage, AlwaysLivedInUkPage, RelationshipStatusPage, Waypoints}
+import pages.applicant.AlwaysLivedInUkPage
+import pages.{CheckAnswersPage, RelationshipStatusPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._

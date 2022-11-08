@@ -14,20 +14,22 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.applicant
 
 import base.SpecBase
-import forms.AlwaysLivedInUkFormProvider
+import controllers.{routes => baseRoutes}
+import forms.applicant.AlwaysLivedInUkFormProvider
 import models.RelationshipStatus.Single
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{EmptyWaypoints, AlwaysLivedInUkPage, RelationshipStatusPage}
+import pages.applicant.AlwaysLivedInUkPage
+import pages.{EmptyWaypoints, RelationshipStatusPage}
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserDataService
-import views.html.AlwaysLivedInUkView
+import views.html.applicant.AlwaysLivedInUkView
 
 import scala.concurrent.Future
 
@@ -134,7 +136,7 @@ class AlwaysLivedInUkControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -151,7 +153,7 @@ class AlwaysLivedInUkControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

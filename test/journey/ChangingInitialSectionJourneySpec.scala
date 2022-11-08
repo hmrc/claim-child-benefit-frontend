@@ -24,11 +24,12 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import pages.applicant.AlwaysLivedInUkPage
 import pages.child.ChildNamePage
 import pages.income._
 import pages.partner._
 import pages.payments.{ApplicantHasSuitableAccountPage, CurrentlyReceivingChildBenefitPage, PaymentFrequencyPage, WantToBePaidPage}
-import pages.{CannotBePaidWeeklyPage, CheckYourAnswersPage, CohabitationDatePage, AlwaysLivedInUkPage, RelationshipStatusPage, SeparationDatePage}
+import pages.{CannotBePaidWeeklyPage, CheckYourAnswersPage, CohabitationDatePage, RelationshipStatusPage, SeparationDatePage}
 import uk.gov.hmrc.domain.Nino
 
 import java.time.LocalDate

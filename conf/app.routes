@@ -23,8 +23,8 @@ GET         /unauthorised                                controllers.Unauthorise
 
 # Initial section
 
-GET        /always-lived-in-uk                        controllers.AlwaysLivedInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /always-lived-in-uk                        controllers.AlwaysLivedInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /always-lived-in-uk                        controllers.applicant.AlwaysLivedInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /always-lived-in-uk                        controllers.applicant.AlwaysLivedInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /recently-claimed-child-benefit                  controllers.RecentlyClaimedController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /recently-claimed-child-benefit                  controllers.RecentlyClaimedController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

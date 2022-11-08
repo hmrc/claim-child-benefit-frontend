@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.applicant
 
+import controllers.AnswerExtractor
 import controllers.actions._
-import forms.AlwaysLivedInUkFormProvider
+import forms.applicant.AlwaysLivedInUkFormProvider
 import models.RelationshipStatus._
-
-import javax.inject.Inject
-import pages.{AlwaysLivedInUkPage, RelationshipStatusPage, Waypoints}
+import pages.applicant.AlwaysLivedInUkPage
+import pages.{RelationshipStatusPage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.AlwaysLivedInUkView
+import views.html.applicant.AlwaysLivedInUkView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class AlwaysLivedInUkController @Inject()(
