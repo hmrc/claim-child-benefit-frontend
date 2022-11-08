@@ -138,6 +138,9 @@ POST       /your-previous-family-name/:index                        controllers.
 GET        /remove-previous-family-name/:index                        controllers.applicant.RemoveApplicantPreviousFamilyNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /remove-previous-family-name/:index                        controllers.applicant.RemoveApplicantPreviousFamilyNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
+GET        /usually-live-in-uk                        controllers.applicant.UsuallyLivesInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /usually-live-in-uk                        controllers.applicant.UsuallyLivesInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 # Partner section
 GET        /partners-date-of-birth                  controllers.partner.PartnerDateOfBirthController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /partners-date-of-birth                  controllers.partner.PartnerDateOfBirthController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

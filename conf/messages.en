@@ -616,6 +616,12 @@ removeApplicantPreviousFamilyName.title = Are you sure you want to remove this o
 removeApplicantPreviousFamilyName.heading = Are you sure you want to remove {0} as your other last name or family name?
 removeApplicantPreviousFamilyName.error.required = Select yes if you are sure you want to remove {0} as your other last name or family name
 
+usuallyLivesInUk.title = Do you usually live in the UK?
+usuallyLivesInUk.heading = Do you usually live in the UK?
+usuallyLivesInUk.checkYourAnswersLabel = Do you usually live in the UK?
+usuallyLivesInUk.error.required = Select yes if you usually live in the UK
+usuallyLivesInUk.change.hidden = if you usually live in the UK
+
 partnerDateOfBirth.title = What is your partner’s date of birth?
 partnerDateOfBirth.heading = What is {0}’s date of birth?
 partnerDateOfBirth.hint = For example, 20 3 2001.
