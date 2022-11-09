@@ -17,29 +17,29 @@
 package viewmodels.checkAnswers.applicant
 
 import models.UserAnswers
-import pages.applicant.AlwaysLivedInUkPage
+import pages.applicant.ApplicantRecentlyWorkedAbroadPage
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object AlwaysLivedInUkSummary  {
+object ApplicantRecentlyWorkedAbroadSummary  {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AlwaysLivedInUkPage).map {
+    answers.get(ApplicantRecentlyWorkedAbroadPage).map {
       answer =>
 
-      val value = if (answer) "site.yes" else "site.no"
+        val value = if (answer) "site.yes" else "site.no"
 
-      SummaryListRowViewModel(
-        key     = "alwaysLivedInUk.checkYourAnswersLabel",
-        value   = ValueViewModel(value),
-        actions = Seq(
-          ActionItemViewModel("site.change", AlwaysLivedInUkPage.changeLink(waypoints, sourcePage).url)
-            .withVisuallyHiddenText(messages("alwaysLivedInUk.change.hidden"))
+        SummaryListRowViewModel(
+          key     = "applicantRecentlyWorkedAbroad.checkYourAnswersLabel",
+          value   = ValueViewModel(value),
+          actions = Seq(
+            ActionItemViewModel("site.change", ApplicantRecentlyWorkedAbroadPage.changeLink(waypoints, sourcePage).url)
+              .withVisuallyHiddenText(messages("applicantRecentlyWorkedAbroad.change.hidden"))
+          )
         )
-      )
     }
 }
