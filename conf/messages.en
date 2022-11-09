@@ -634,11 +634,15 @@ dateApplicantArrivedInUk.error.invalid = Enter a real date of when you arrived i
 dateApplicantArrivedInUk.error.afterMaximum = When you arrived in the UK must be on or before {0}
 dateApplicantArrivedInUk.change.hidden = when you arrived in the UK
 
-subjectToImmigrationControl.title = Are you subject to immigration control?
-subjectToImmigrationControl.heading = Are you subject to immigration control?
-subjectToImmigrationControl.checkYourAnswersLabel = Are you subject to immigration control?
-subjectToImmigrationControl.error.required = Select yes if you are subject to immigration control
-subjectToImmigrationControl.change.hidden = if you are subject to immigration control
+subjectToImmigrationControl.title = Have you been subject to immigration control?
+subjectToImmigrationControl.heading = Have you been subject to immigration control?
+subjectToImmigrationControl.checkYourAnswersLabel = Have you been subject to immigration control?
+subjectToImmigrationControl.inLastThreeMonths = Yes, in the last 3 months
+subjectToImmigrationControl.inLastSixMonths = Yes, between 3 and 6 months ago
+subjectToImmigrationControl.moreThanSixMonthsAgo = Yes, more than 6 months ago
+subjectToImmigrationControl.no = No
+subjectToImmigrationControl.error.required = Select yes if you have been subject to immigration control
+subjectToImmigrationControl.change.hidden = if you have been subject to immigration control
 
 dateImmigrationStatusGranted.title = When was your immigration status granted?
 dateImmigrationStatusGranted.heading = When was your immigration status granted?

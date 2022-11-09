@@ -17,14 +17,15 @@
 package forms.applicant
 
 import forms.mappings.Mappings
+import models.SubjectToImmigrationControl
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class SubjectToImmigrationControlFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(): Form[SubjectToImmigrationControl] =
     Form(
-      "value" -> boolean("subjectToImmigrationControl.error.required")
+      "value" -> enumerable[SubjectToImmigrationControl]("subjectToImmigrationControl.error.required")
     )
 }

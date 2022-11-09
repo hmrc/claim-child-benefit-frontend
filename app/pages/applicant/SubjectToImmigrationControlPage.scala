@@ -17,11 +17,12 @@
 package pages.applicant
 
 import controllers.applicant.routes
+import models.SubjectToImmigrationControl
 import pages.{QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object SubjectToImmigrationControlPage extends QuestionPage[Boolean] {
+case object SubjectToImmigrationControlPage extends QuestionPage[SubjectToImmigrationControl] {
 
   override def path: JsPath = JsPath \ toString
 

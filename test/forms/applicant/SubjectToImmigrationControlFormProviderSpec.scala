@@ -16,10 +16,11 @@
 
 package forms.applicant
 
-import forms.behaviours.BooleanFieldBehaviours
+import forms.behaviours.OptionFieldBehaviours
+import models.SubjectToImmigrationControl
 import play.api.data.FormError
 
-class SubjectToImmigrationControlFormProviderSpec extends BooleanFieldBehaviours {
+class SubjectToImmigrationControlFormProviderSpec extends OptionFieldBehaviours {
 
   val requiredKey = "subjectToImmigrationControl.error.required"
   val invalidKey = "error.boolean"
@@ -30,10 +31,11 @@ class SubjectToImmigrationControlFormProviderSpec extends BooleanFieldBehaviours
 
     val fieldName = "value"
 
-    behave like booleanField(
+    behave like optionsField[SubjectToImmigrationControl](
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+      validValues = SubjectToImmigrationControl.values,
+      invalidError = FormError(fieldName, "error.invalid")
     )
 
     behave like mandatoryField(

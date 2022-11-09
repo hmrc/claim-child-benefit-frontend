@@ -19,6 +19,7 @@ package controllers.applicant
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.applicant.SubjectToImmigrationControlFormProvider
+import models.SubjectToImmigrationControl
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -39,6 +40,7 @@ class SubjectToImmigrationControlControllerSpec extends SpecBase with MockitoSug
   private val waypoints = EmptyWaypoints
 
   private lazy val subjectToImmigrationControlRoute = routes.SubjectToImmigrationControlController.onPageLoad(waypoints).url
+  private val validAnswer = SubjectToImmigrationControl.values.head
 
   "SubjectToImmigrationControl Controller" - {
 
@@ -60,7 +62,7 @@ class SubjectToImmigrationControlControllerSpec extends SpecBase with MockitoSug
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(SubjectToImmigrationControlPage, true).success.value
+      val userAnswers = emptyUserAnswers.set(SubjectToImmigrationControlPage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -72,7 +74,7 @@ class SubjectToImmigrationControlControllerSpec extends SpecBase with MockitoSug
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints)(request, messages(application)).toString
       }
     }
 
@@ -92,10 +94,10 @@ class SubjectToImmigrationControlControllerSpec extends SpecBase with MockitoSug
       running(application) {
         val request =
           FakeRequest(POST, subjectToImmigrationControlRoute)
-            .withFormUrlEncodedBody(("value", "true"))
+            .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(SubjectToImmigrationControlPage, true).success.value
+        val expectedAnswers = emptyUserAnswers.set(SubjectToImmigrationControlPage, validAnswer).success.value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual SubjectToImmigrationControlPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
@@ -145,7 +147,7 @@ class SubjectToImmigrationControlControllerSpec extends SpecBase with MockitoSug
       running(application) {
         val request =
           FakeRequest(POST, subjectToImmigrationControlRoute)
-            .withFormUrlEncodedBody(("value", "true"))
+            .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value
 

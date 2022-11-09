@@ -32,11 +32,9 @@ object SubjectToImmigrationControlSummary  {
     answers.get(SubjectToImmigrationControlPage).map {
       answer =>
 
-        val value = if (answer) "site.yes" else "site.no"
-
         SummaryListRowViewModel(
           key     = "subjectToImmigrationControl.checkYourAnswersLabel",
-          value   = ValueViewModel(value),
+          value   = ValueViewModel(messages(s"subjectToImmigrationControl.$answer")),
           actions = Seq(
             ActionItemViewModel("site.change", SubjectToImmigrationControlPage.changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("subjectToImmigrationControl.change.hidden"))
