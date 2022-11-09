@@ -29,24 +29,17 @@ object AlwaysLivedInUkSummary  {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    for {
-      alwaysLivedInUk <- answers.get(AlwaysLivedInUkPage)
-      relationshipStatus  <- answers.get(RelationshipStatusPage)
-    } yield {
+    answers.get(AlwaysLivedInUkPage).map {
+      answer =>
 
-      val singleOrCouple = relationshipStatus match {
-        case Married | Cohabiting                    => "couple"
-        case Single | Separated | Widowed | Divorced => "single"
-      }
-
-      val value = if (alwaysLivedInUk) "site.yes" else "site.no"
+      val value = if (answer) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
-        key     = s"alwaysLivedInUk.$singleOrCouple.checkYourAnswersLabel",
+        key     = "alwaysLivedInUk.checkYourAnswersLabel",
         value   = ValueViewModel(value),
         actions = Seq(
           ActionItemViewModel("site.change", AlwaysLivedInUkPage.changeLink(waypoints, sourcePage).url)
-            .withVisuallyHiddenText(messages(s"alwaysLivedInUk.$singleOrCouple.change.hidden"))
+            .withVisuallyHiddenText(messages("alwaysLivedInUk.change.hidden"))
         )
       )
     }

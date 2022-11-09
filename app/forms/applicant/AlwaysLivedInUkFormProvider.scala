@@ -23,8 +23,8 @@ import javax.inject.Inject
 
 class AlwaysLivedInUkFormProvider @Inject() extends Mappings {
 
-  def apply(singleOrCouple: String): Form[Boolean] =
+  def apply(): Form[Boolean] =
     Form(
-      "value" -> boolean(s"alwaysLivedInUk.$singleOrCouple.error.required")
+      "value" -> boolean("alwaysLivedInUk.error.required")
     )
 }

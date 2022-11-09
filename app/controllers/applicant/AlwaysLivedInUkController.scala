@@ -19,9 +19,8 @@ package controllers.applicant
 import controllers.AnswerExtractor
 import controllers.actions._
 import forms.applicant.AlwaysLivedInUkFormProvider
-import models.RelationshipStatus._
+import pages.Waypoints
 import pages.applicant.AlwaysLivedInUkPage
-import pages.{RelationshipStatusPage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserDataService
@@ -45,49 +44,33 @@ class AlwaysLivedInUkController @Inject()(
     with I18nSupport
     with AnswerExtractor {
 
+  private val form = formProvider()
+
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      getAnswer(RelationshipStatusPage) {
-        relationshipStatus =>
 
-          val singleOrCouple = relationshipStatus match {
-            case Married | Cohabiting                    => "couple"
-            case Single | Separated | Widowed | Divorced => "single"
-          }
-
-          val form = formProvider(singleOrCouple)
-
-          val preparedForm = request.userAnswers.get(AlwaysLivedInUkPage) match {
-            case None => form
-            case Some(value) => form.fill(value)
-          }
-
-          Ok(view(preparedForm, waypoints, singleOrCouple))
+      val preparedForm = request.userAnswers.get(AlwaysLivedInUkPage) match {
+        case None => form
+        case Some(value) => form.fill(value)
       }
+
+      Ok(view(preparedForm, waypoints))
+
   }
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      getAnswerAsync(RelationshipStatusPage) {
-        relationshipStatus =>
 
-          val singleOrCouple = relationshipStatus match {
-            case Married | Cohabiting                    => "couple"
-            case Single | Separated | Widowed | Divorced => "single"
-          }
+      val form = formProvider()
+      form.bindFromRequest().fold(
+        formWithErrors =>
+          Future.successful(BadRequest(view(formWithErrors, waypoints))),
 
-          val form = formProvider(singleOrCouple)
-          form.bindFromRequest().fold(
-            formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, waypoints, singleOrCouple))),
-
-            value =>
-              for {
-                updatedAnswers <- Future.fromTry(request.userAnswers.set(AlwaysLivedInUkPage, value))
-                _ <- userDataService.set(updatedAnswers)
-              } yield Redirect(AlwaysLivedInUkPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
-
-          )
-      }
+        value =>
+          for {
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(AlwaysLivedInUkPage, value))
+            _ <- userDataService.set(updatedAnswers)
+          } yield Redirect(AlwaysLivedInUkPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+      )
   }
 }

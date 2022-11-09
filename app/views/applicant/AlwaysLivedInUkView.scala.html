@@ -24,9 +24,9 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], waypoints: Waypoints, singleOrCouple: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages(s"alwaysLivedInUk.$singleOrCouple.title"))) {
+@layout(pageTitle = title(form, messages("alwaysLivedInUk.title"))) {
 
     @formHelper(action = routes.AlwaysLivedInUkController.onSubmit(waypoints), 'autoComplete -> "off") {
 
@@ -37,7 +37,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages(s"alwaysLivedInUk.$singleOrCouple.heading")).asPageHeading()
+                legend = LegendViewModel(messages("alwaysLivedInUk.heading")).asPageHeading()
             )
         )
 
