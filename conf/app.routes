@@ -147,6 +147,9 @@ POST       /country-where-you-usually-live                        controllers.ap
 GET        /date-you-arrived-in-uk                        controllers.applicant.DateApplicantArrivedInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /date-you-arrived-in-uk                        controllers.applicant.DateApplicantArrivedInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
+GET        /subject-to-immigration-control                        controllers.applicant.SubjectToImmigrationControlController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /subject-to-immigration-control                        controllers.applicant.SubjectToImmigrationControlController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 # Partner section
 GET        /partners-date-of-birth                  controllers.partner.PartnerDateOfBirthController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /partners-date-of-birth                  controllers.partner.PartnerDateOfBirthController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

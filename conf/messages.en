@@ -634,6 +634,12 @@ dateApplicantArrivedInUk.error.invalid = Enter a real date of when you arrived i
 dateApplicantArrivedInUk.error.afterMaximum = When you arrived in the UK must be on or before {0}
 dateApplicantArrivedInUk.change.hidden = when you arrived in the UK
 
+subjectToImmigrationControl.title = Are you subject to immigration control?
+subjectToImmigrationControl.heading = Are you subject to immigration control?
+subjectToImmigrationControl.checkYourAnswersLabel = Are you subject to immigration control?
+subjectToImmigrationControl.error.required = Select yes if you are subject to immigration control
+subjectToImmigrationControl.change.hidden = if you are subject to immigration control
+
 partnerDateOfBirth.title = What is your partner’s date of birth?
 partnerDateOfBirth.heading = What is {0}’s date of birth?
 partnerDateOfBirth.hint = For example, 20 3 2001.
