@@ -150,6 +150,9 @@ POST       /date-you-arrived-in-uk                        controllers.applicant.
 GET        /subject-to-immigration-control                        controllers.applicant.SubjectToImmigrationControlController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /subject-to-immigration-control                        controllers.applicant.SubjectToImmigrationControlController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
+GET        /date-immigration-status-granted                        controllers.applicant.DateImmigrationStatusGrantedController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /date-immigration-status-granted                        controllers.applicant.DateImmigrationStatusGrantedController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 # Partner section
 GET        /partners-date-of-birth                  controllers.partner.PartnerDateOfBirthController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /partners-date-of-birth                  controllers.partner.PartnerDateOfBirthController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

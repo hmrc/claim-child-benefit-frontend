@@ -640,6 +640,17 @@ subjectToImmigrationControl.checkYourAnswersLabel = Are you subject to immigrati
 subjectToImmigrationControl.error.required = Select yes if you are subject to immigration control
 subjectToImmigrationControl.change.hidden = if you are subject to immigration control
 
+dateImmigrationStatusGranted.title = When was your immigration status granted?
+dateImmigrationStatusGranted.heading = When was your immigration status granted?
+dateImmigrationStatusGranted.hint = For example, 20 3 2001.
+dateImmigrationStatusGranted.checkYourAnswersLabel = When you arrived in the UK
+dateImmigrationStatusGranted.error.required.all = Enter when you arrived in the UK
+dateImmigrationStatusGranted.error.required.two = When you arrived in the UK must include {0} and {1}
+dateImmigrationStatusGranted.error.required = When you arrived in the UK must include {0}
+dateImmigrationStatusGranted.error.invalid = Enter a real date of when you arrived in the UK
+dateImmigrationStatusGranted.error.afterMaximum = When you arrived in the UK must be on or before {0}
+dateImmigrationStatusGranted.change.hidden = when you arrived in the UK
+
 partnerDateOfBirth.title = What is your partner’s date of birth?
 partnerDateOfBirth.heading = What is {0}’s date of birth?
 partnerDateOfBirth.hint = For example, 20 3 2001.
