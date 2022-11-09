@@ -628,6 +628,17 @@ usuallyLivesInUk.checkYourAnswersLabel = Country you usually live in
 usuallyLivesInUk.error.required = Select the country you usually live in
 usuallyLivesInUk.change.hidden = the country you usually live in
 
+dateApplicantArrivedInUk.title = When did you arrive in the UK?
+dateApplicantArrivedInUk.heading = When did you arrive in the UK?
+dateApplicantArrivedInUk.hint = For example, 20 3 2001.
+dateApplicantArrivedInUk.checkYourAnswersLabel = When you arrived in the UK
+dateApplicantArrivedInUk.error.required.all = Enter when you arrived in the UK
+dateApplicantArrivedInUk.error.required.two = When you arrived in the UK must include {0} and {1}
+dateApplicantArrivedInUk.error.required = When you arrived in the UK must include {0}
+dateApplicantArrivedInUk.error.invalid = Enter a real date of when you arrived in the UK
+dateApplicantArrivedInUk.error.afterMaximum = When you arrived in the UK must be on or before {0}
+dateApplicantArrivedInUk.change.hidden = when you arrived in the UK
+
 partnerDateOfBirth.title = What is your partner’s date of birth?
 partnerDateOfBirth.heading = What is {0}’s date of birth?
 partnerDateOfBirth.hint = For example, 20 3 2001.
