@@ -187,6 +187,9 @@ POST       /partners-national-insurance-number                        controller
 GET        /know-partners-national-insurance-number                        controllers.partner.PartnerNinoKnownController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /know-partners-national-insurance-number                        controllers.partner.PartnerNinoKnownController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
+GET        /partner-recently-worked-or-claimed-benefits-abroad                        controllers.partner.PartnerRecentlyWorkedAbroadController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /partner-recently-worked-or-claimed-benefits-abroad                        controllers.partner.PartnerRecentlyWorkedAbroadController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 # Child section
 GET        /add-child                        controllers.child.AddChildController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /add-child                        controllers.child.AddChildController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

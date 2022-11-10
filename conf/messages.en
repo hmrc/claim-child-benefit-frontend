@@ -617,11 +617,11 @@ usuallyLivesInUk.checkYourAnswersLabel = Do you usually live in the UK?
 usuallyLivesInUk.error.required = Select yes if you usually live in the UK
 usuallyLivesInUk.change.hidden = if you usually live in the UK
 
-usuallyLivesInUk.title = Which country do you usually live in?
-usuallyLivesInUk.heading = Which country do you usually live in?
-usuallyLivesInUk.checkYourAnswersLabel = Country you usually live in
-usuallyLivesInUk.error.required = Select the country you usually live in
-usuallyLivesInUk.change.hidden = the country you usually live in
+usualCountryOfResidence.title = Which country do you usually live in?
+usualCountryOfResidence.heading = Which country do you usually live in?
+usualCountryOfResidence.checkYourAnswersLabel = Country you usually live in
+usualCountryOfResidence.error.required = Select the country you usually live in
+usualCountryOfResidence.change.hidden = the country you usually live in
 
 dateApplicantArrivedInUk.title = When did you arrive in the UK?
 dateApplicantArrivedInUk.heading = When did you arrive in the UK?
@@ -746,6 +746,12 @@ partnerNinoKnown.hint = It’s on their National Insurance card, benefit letter,
 partnerNinoKnown.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
 partnerNinoKnown.error.required = Select yes if you know {0}’s National Insurance number
 partnerNinoKnown.change.hidden = if you know {0}’s National Insurance number
+
+partnerRecentlyWorkedAbroad.title = Has your partner recently worked or claimed benefits in another country?
+partnerRecentlyWorkedAbroad.heading = Has {0} recently worked or claimed benefits in another country?
+partnerRecentlyWorkedAbroad.checkYourAnswersLabel = Has {0} recently worked or claimed benefits in another country?
+partnerRecentlyWorkedAbroad.error.required = Select yes if {0} has recently worked or claimed benefits in another country
+partnerRecentlyWorkedAbroad.change.hidden = if {0} has recently worked or claimed benefits in another country
 
 addChild.title.plural = You have added {0} children
 addChild.title.singular = You have added 1 child
