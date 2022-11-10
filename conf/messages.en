@@ -655,6 +655,12 @@ dateImmigrationStatusGranted.error.invalid = Enter a real date of when you arriv
 dateImmigrationStatusGranted.error.afterMaximum = When you arrived in the UK must be on or before {0}
 dateImmigrationStatusGranted.change.hidden = when you arrived in the UK
 
+applicantRecentlyWorkedAbroad.title = Have you recently worked or claimed benefits in another country?
+applicantRecentlyWorkedAbroad.heading = Have you recently worked or claimed benefits in another country?
+applicantRecentlyWorkedAbroad.checkYourAnswersLabel = Have you recently worked or claimed benefits in another country?
+applicantRecentlyWorkedAbroad.error.required = Select yes if you have recently worked or claimed benefits in another country
+applicantRecentlyWorkedAbroad.change.hidden = if you have recently worked or claimed benefits in another country
+
 applicantEmploymentStatus.title = What is your employment status?
 applicantEmploymentStatus.heading = What is your employment status?
 applicantEmploymentStatus.hint = Select all that apply.
