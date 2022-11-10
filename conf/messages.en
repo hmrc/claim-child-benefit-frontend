@@ -641,7 +641,7 @@ subjectToImmigrationControl.inLastThreeMonths = Yes, in the last 3 months
 subjectToImmigrationControl.inLastSixMonths = Yes, between 3 and 6 months ago
 subjectToImmigrationControl.moreThanSixMonthsAgo = Yes, more than 6 months ago
 subjectToImmigrationControl.no = No
-subjectToImmigrationControl.error.required = Select yes if you have been subject to immigration control
+subjectToImmigrationControl.error.required = Select if you have been subject to immigration control
 subjectToImmigrationControl.change.hidden = if you have been subject to immigration control
 
 dateImmigrationStatusGranted.title = When was your immigration status granted?
@@ -654,6 +654,14 @@ dateImmigrationStatusGranted.error.required = When you arrived in the UK must in
 dateImmigrationStatusGranted.error.invalid = Enter a real date of when you arrived in the UK
 dateImmigrationStatusGranted.error.afterMaximum = When you arrived in the UK must be on or before {0}
 dateImmigrationStatusGranted.change.hidden = when you arrived in the UK
+
+applicantEmploymentStatus.title = What is your employment status?
+applicantEmploymentStatus.heading = What is your employment status?
+applicantEmploymentStatus.hint = Select all that apply.
+applicantEmploymentStatus.checkYourAnswersLabel = Your employment status
+applicantEmploymentStatus.error.required = Select your employment status
+applicantEmploymentStatus.error.mutuallyExclusive = Select your employment status or none of these apply
+applicantEmploymentStatus.change.hidden = your employment status
 
 partnerDateOfBirth.title = What is your partner’s date of birth?
 partnerDateOfBirth.heading = What is {0}’s date of birth?
