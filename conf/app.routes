@@ -193,6 +193,9 @@ POST       /partner-recently-worked-or-claimed-benefits-abroad                  
 GET        /country-partner-worked-or-claimed-benefits-in                        controllers.partner.CountryPartnerWorkedInController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /country-partner-worked-or-claimed-benefits-in                        controllers.partner.CountryPartnerWorkedInController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
+GET        /partner-employment-status                        controllers.partner.PartnerEmploymentStatusController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /partner-employment-status                        controllers.partner.PartnerEmploymentStatusController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 # Child section
 GET        /add-child                        controllers.child.AddChildController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /add-child                        controllers.child.AddChildController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

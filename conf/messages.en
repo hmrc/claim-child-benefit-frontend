@@ -667,6 +667,11 @@ countryApplicantWorkedIn.checkYourAnswersLabel = Country you worked or claimed b
 countryApplicantWorkedIn.error.required = Select the country you worked or claimed benefits in
 countryApplicantWorkedIn.change.hidden = the country you worked or claimed benefits in
 
+employmentStatus.lookingForWork = Looking for work
+employmentStatus.employed = Employed
+employmentStatus.selfEmployed = Self-employed
+employmentStatus.noneOfThese = None of these apply
+
 applicantEmploymentStatus.title = What is your employment status?
 applicantEmploymentStatus.heading = What is your employment status?
 applicantEmploymentStatus.hint = Select all that apply.
@@ -770,6 +775,14 @@ countryPartnerWorkedIn.heading = Which country did {0} work or claim benefits in
 countryPartnerWorkedIn.checkYourAnswersLabel = Country {0} worked or claimed benefits in
 countryPartnerWorkedIn.error.required = Select the country {0} worked or claimed benefits in
 countryPartnerWorkedIn.change.hidden = the country {0} worked or claimed benefits in
+
+partnerEmploymentStatus.title = What is your partner’s employment status?
+partnerEmploymentStatus.heading = What is {0}’s employment status?
+partnerEmploymentStatus.hint = Select all that apply.
+partnerEmploymentStatus.checkYourAnswersLabel = {0}’s employment status
+partnerEmploymentStatus.error.required = Select {0}’s employment status
+partnerEmploymentStatus.error.mutuallyExclusive = Select {0}’s employment status or none of these apply
+partnerEmploymentStatus.change.hidden = {0}’s employment status
 
 addChild.title.plural = You have added {0} children
 addChild.title.singular = You have added 1 child
