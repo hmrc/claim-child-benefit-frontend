@@ -661,6 +661,12 @@ applicantRecentlyWorkedAbroad.checkYourAnswersLabel = Have you recently worked o
 applicantRecentlyWorkedAbroad.error.required = Select yes if you have recently worked or claimed benefits in another country
 applicantRecentlyWorkedAbroad.change.hidden = if you have recently worked or claimed benefits in another country
 
+countryApplicantWorkedIn.title = Which country did you work or claim benefits in?
+countryApplicantWorkedIn.heading = Which country did you work or claim benefits in?
+countryApplicantWorkedIn.checkYourAnswersLabel = Country you worked or claimed benefits in
+countryApplicantWorkedIn.error.required = Select the country you worked or claimed benefits in
+countryApplicantWorkedIn.change.hidden = the country you worked or claimed benefits in
+
 applicantEmploymentStatus.title = What is your employment status?
 applicantEmploymentStatus.heading = What is your employment status?
 applicantEmploymentStatus.hint = Select all that apply.
