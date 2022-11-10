@@ -190,6 +190,9 @@ POST       /know-partners-national-insurance-number                        contr
 GET        /partner-recently-worked-or-claimed-benefits-abroad                        controllers.partner.PartnerRecentlyWorkedAbroadController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /partner-recently-worked-or-claimed-benefits-abroad                        controllers.partner.PartnerRecentlyWorkedAbroadController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
+GET        /country-partner-worked-or-claimed-benefits-in                        controllers.partner.CountryPartnerWorkedInController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /country-partner-worked-or-claimed-benefits-in                        controllers.partner.CountryPartnerWorkedInController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 # Child section
 GET        /add-child                        controllers.child.AddChildController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /add-child                        controllers.child.AddChildController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

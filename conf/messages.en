@@ -765,6 +765,12 @@ partnerRecentlyWorkedAbroad.checkYourAnswersLabel = Has {0} recently worked or c
 partnerRecentlyWorkedAbroad.error.required = Select yes if {0} has recently worked or claimed benefits in another country
 partnerRecentlyWorkedAbroad.change.hidden = if {0} has recently worked or claimed benefits in another country
 
+countryPartnerWorkedIn.title = Which country did your partner work or claim benefits in?
+countryPartnerWorkedIn.heading = Which country did {0} work or claim benefits in?
+countryPartnerWorkedIn.checkYourAnswersLabel = Country {0} worked or claimed benefits in
+countryPartnerWorkedIn.error.required = Select the country {0} worked or claimed benefits in
+countryPartnerWorkedIn.change.hidden = the country {0} worked or claimed benefits in
+
 addChild.title.plural = You have added {0} children
 addChild.title.singular = You have added 1 child
 addChild.heading.plural = You have added {0} children
