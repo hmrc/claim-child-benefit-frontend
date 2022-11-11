@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
-package forms
+package forms.applicant
 
 import forms.mappings.Mappings
+import models.Country
 import play.api.data.Form
 
 import javax.inject.Inject
 
-class AlwaysLivedInUkFormProvider @Inject() extends Mappings {
+class CountryApplicantWorkedInFormProvider @Inject() extends Mappings {
 
-  def apply(singleOrCouple: String): Form[Boolean] =
+  def apply(): Form[Country] =
     Form(
-      "value" -> boolean(s"alwaysLivedInUk.$singleOrCouple.error.required")
+      "value" -> text("countryApplicantWorkedIn.error.required")
+        .verifying("countryApplicantWorkedIn.error.required", value => Country.internationalCountries.exists(_.code == value))
+        .transform[Country](value => Country.internationalCountries.find(_.code == value).get, _.code)
     )
 }

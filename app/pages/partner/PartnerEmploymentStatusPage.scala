@@ -14,32 +14,20 @@
  * limitations under the License.
  */
 
-package forms
+package pages.partner
 
-import forms.behaviours.BooleanFieldBehaviours
-import play.api.data.FormError
+import controllers.partner.routes
+import models.EmploymentStatus
+import pages.{QuestionPage, Waypoints}
+import play.api.libs.json.JsPath
+import play.api.mvc.Call
 
-class AlwaysLivedInUkFormProviderSpec extends BooleanFieldBehaviours {
+case object PartnerEmploymentStatusPage extends QuestionPage[Set[EmploymentStatus]] {
 
-  val requiredKey = "alwaysLivedInUk.single.error.required"
-  val invalidKey = "error.boolean"
+  override def path: JsPath = JsPath \ toString
 
-  val form = new AlwaysLivedInUkFormProvider()("single")
+  override def toString: String = "partnerEmploymentStatus"
 
-  ".value" - {
-
-    val fieldName = "value"
-
-    behave like booleanField(
-      form,
-      fieldName,
-      invalidError = FormError(fieldName, invalidKey)
-    )
-
-    behave like mandatoryField(
-      form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
-    )
-  }
+  override def route(waypoints: Waypoints): Call =
+    routes.PartnerEmploymentStatusController.onPageLoad(waypoints)
 }

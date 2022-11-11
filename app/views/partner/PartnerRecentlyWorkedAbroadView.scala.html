@@ -14,19 +14,21 @@
  * limitations under the License.
  *@
 
+@import controllers.partner.routes
+
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukRadios: GovukRadios,
-    govukButton: GovukButton
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukRadios: GovukRadios,
+        govukButton: GovukButton
 )
 
-@(form: Form[_], waypoints: Waypoints, singleOrCouple: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints, partnerFirstName: String)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages(s"alwaysLivedInUk.$singleOrCouple.title"))) {
+@layout(pageTitle = title(form, messages("partnerRecentlyWorkedAbroad.title"))) {
 
-    @formHelper(action = routes.AlwaysLivedInUkController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.PartnerRecentlyWorkedAbroadController.onSubmit(waypoints), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -35,7 +37,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages(s"alwaysLivedInUk.$singleOrCouple.heading")).asPageHeading()
+                legend = LegendViewModel(HtmlContent(messages("partnerRecentlyWorkedAbroad.heading", partnerFirstName))).asPageHeading()
             )
         )
 

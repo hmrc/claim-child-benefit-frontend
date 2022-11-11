@@ -14,66 +14,67 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.applicant
 
 import base.SpecBase
-import forms.AlwaysLivedInUkFormProvider
-import models.RelationshipStatus.Single
+import controllers.{routes => baseRoutes}
+import forms.applicant.SubjectToImmigrationControlFormProvider
+import models.SubjectToImmigrationControl
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{EmptyWaypoints, AlwaysLivedInUkPage, RelationshipStatusPage}
+import pages.EmptyWaypoints
+import pages.applicant.SubjectToImmigrationControlPage
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserDataService
-import views.html.AlwaysLivedInUkView
+import views.html.applicant.SubjectToImmigrationControlView
 
 import scala.concurrent.Future
 
-class AlwaysLivedInUkControllerSpec extends SpecBase with MockitoSugar {
+class SubjectToImmigrationControlControllerSpec extends SpecBase with MockitoSugar {
 
-  private val relationshipStatus = Single
-  private val formProvider = new AlwaysLivedInUkFormProvider()
-  private val form = formProvider("single")
+  private val formProvider = new SubjectToImmigrationControlFormProvider()
+  private val form = formProvider()
   private val waypoints = EmptyWaypoints
 
-  private lazy val alwaysLivedInUkRoute = routes.AlwaysLivedInUkController.onPageLoad(waypoints).url
-  private val baseAnswers = emptyUserAnswers.set(RelationshipStatusPage, relationshipStatus).success.value
+  private lazy val subjectToImmigrationControlRoute = routes.SubjectToImmigrationControlController.onPageLoad(waypoints).url
+  private val validAnswer = SubjectToImmigrationControl.values.head
 
-  "AlwaysLivedInUk Controller" - {
+  "SubjectToImmigrationControl Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, alwaysLivedInUkRoute)
+        val request = FakeRequest(GET, subjectToImmigrationControlRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[AlwaysLivedInUkView]
+        val view = application.injector.instanceOf[SubjectToImmigrationControlView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, "single")(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = baseAnswers.set(AlwaysLivedInUkPage, true).success.value
+      val userAnswers = emptyUserAnswers.set(SubjectToImmigrationControlPage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, alwaysLivedInUkRoute)
+        val request = FakeRequest(GET, subjectToImmigrationControlRoute)
 
-        val view = application.injector.instanceOf[AlwaysLivedInUkView]
+        val view = application.injector.instanceOf[SubjectToImmigrationControlView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), waypoints, "single")(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints)(request, messages(application)).toString
       }
     }
 
@@ -84,7 +85,7 @@ class AlwaysLivedInUkControllerSpec extends SpecBase with MockitoSugar {
       when(mockUserDataService.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(baseAnswers))
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[UserDataService].toInstance(mockUserDataService)
           )
@@ -92,35 +93,35 @@ class AlwaysLivedInUkControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, alwaysLivedInUkRoute)
-            .withFormUrlEncodedBody(("value", "true"))
+          FakeRequest(POST, subjectToImmigrationControlRoute)
+            .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value
-        val expectedAnswers = baseAnswers.set(AlwaysLivedInUkPage, true).success.value
+        val expectedAnswers = emptyUserAnswers.set(SubjectToImmigrationControlPage, validAnswer).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual AlwaysLivedInUkPage.navigate(waypoints, baseAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual SubjectToImmigrationControlPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
       }
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
         val request =
-          FakeRequest(POST, alwaysLivedInUkRoute)
+          FakeRequest(POST, subjectToImmigrationControlRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[AlwaysLivedInUkView]
+        val view = application.injector.instanceOf[SubjectToImmigrationControlView]
 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, "single")(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
       }
     }
 
@@ -129,12 +130,12 @@ class AlwaysLivedInUkControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, alwaysLivedInUkRoute)
+        val request = FakeRequest(GET, subjectToImmigrationControlRoute)
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -145,13 +146,13 @@ class AlwaysLivedInUkControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, alwaysLivedInUkRoute)
-            .withFormUrlEncodedBody(("value", "true"))
+          FakeRequest(POST, subjectToImmigrationControlRoute)
+            .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

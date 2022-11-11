@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package pages
+package pages.applicant
 
-import controllers.routes
+import controllers.applicant.routes
 import models.RelationshipStatus._
 import models.UserAnswers
-import pages.applicant.ApplicantIsHmfOrCivilServantPage
 import pages.income.{ApplicantIncomePage, ApplicantOrPartnerIncomePage}
+import pages.{Page, QuestionPage, RelationshipStatusPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 

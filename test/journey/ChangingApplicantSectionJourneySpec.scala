@@ -21,7 +21,7 @@ import models.{Index, InternationalAddress, Nationality, RelationshipStatus, UkA
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
-import pages.{AlwaysLivedInUkPage, CannotUseServiceNationalityPage, CheckYourAnswersPage, RelationshipStatusPage}
+import pages.{CannotUseServiceNationalityPage, CheckYourAnswersPage, RelationshipStatusPage}
 import pages.applicant._
 import pages.partner.PartnerIsHmfOrCivilServantPage
 import uk.gov.hmrc.domain.Nino

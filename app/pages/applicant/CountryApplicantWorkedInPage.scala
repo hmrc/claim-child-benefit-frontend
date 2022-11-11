@@ -14,31 +14,20 @@
  * limitations under the License.
  */
 
-package pages
+package pages.applicant
 
-import controllers.routes
-import models.UserAnswers
-import pages.applicant.AlwaysLivedInUkPage
-import pages.income.ApplicantOrPartnerIncomePage
+import controllers.applicant.routes
+import models.Country
+import pages.{QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-import java.time.LocalDate
-
-case object CohabitationDatePage extends QuestionPage[LocalDate] {
+case object CountryApplicantWorkedInPage extends QuestionPage[Country] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "cohabitationDate"
+  override def toString: String = "countryApplicantWorkedIn"
 
   override def route(waypoints: Waypoints): Call =
-    routes.CohabitationDateController.onPageLoad(waypoints)
-
-  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    AlwaysLivedInUkPage
-
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(ApplicantOrPartnerIncomePage)
-      .map(_ => waypoints.next.page)
-      .getOrElse(ApplicantOrPartnerIncomePage)
+    routes.CountryApplicantWorkedInController.onPageLoad(waypoints)
 }

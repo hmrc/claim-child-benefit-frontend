@@ -14,39 +14,34 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers
+package viewmodels.checkAnswers.applicant
 
-import models.RelationshipStatus._
 import models.UserAnswers
-import pages.{CheckAnswersPage, AlwaysLivedInUkPage, RelationshipStatusPage, Waypoints}
+import pages.applicant.DateApplicantArrivedInUkPage
+import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object AlwaysLivedInUkSummary  {
+import java.time.format.DateTimeFormatter
+
+object DateApplicantArrivedInUkSummary {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    for {
-      alwaysLivedInUk <- answers.get(AlwaysLivedInUkPage)
-      relationshipStatus  <- answers.get(RelationshipStatusPage)
-    } yield {
+    answers.get(DateApplicantArrivedInUkPage).map {
+      answer =>
 
-      val singleOrCouple = relationshipStatus match {
-        case Married | Cohabiting                    => "couple"
-        case Single | Separated | Widowed | Divorced => "single"
-      }
+        val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
-      val value = if (alwaysLivedInUk) "site.yes" else "site.no"
-
-      SummaryListRowViewModel(
-        key     = s"alwaysLivedInUk.$singleOrCouple.checkYourAnswersLabel",
-        value   = ValueViewModel(value),
-        actions = Seq(
-          ActionItemViewModel("site.change", AlwaysLivedInUkPage.changeLink(waypoints, sourcePage).url)
-            .withVisuallyHiddenText(messages(s"alwaysLivedInUk.$singleOrCouple.change.hidden"))
+        SummaryListRowViewModel(
+          key = "dateApplicantArrivedInUk.checkYourAnswersLabel",
+          value = ValueViewModel(answer.format(dateFormatter)),
+          actions = Seq(
+            ActionItemViewModel("site.change", DateApplicantArrivedInUkPage.changeLink(waypoints, sourcePage).url)
+              .withVisuallyHiddenText(messages("dateApplicantArrivedInUk.change.hidden"))
+          )
         )
-      )
     }
 }
