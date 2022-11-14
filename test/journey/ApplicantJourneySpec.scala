@@ -22,10 +22,10 @@ import models.{Country, Index, InternationalAddress, Nationality, UkAddress, Use
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
-import pages.{CannotUseServiceNationalityPage, RelationshipStatusPage, UsePrintAndPostFormPage}
 import pages.applicant._
 import pages.child.ChildNamePage
 import pages.partner.{PartnerIsHmfOrCivilServantPage, PartnerNamePage}
+import pages.{RelationshipStatusPage, UsePrintAndPostFormPage}
 import uk.gov.hmrc.domain.Nino
 
 import java.time.LocalDate

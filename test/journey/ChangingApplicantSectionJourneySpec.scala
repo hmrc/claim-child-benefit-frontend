@@ -17,13 +17,12 @@
 package journey
 
 import generators.ModelGenerators
-import models.{Index, InternationalAddress, Nationality, RelationshipStatus, UkAddress}
+import models.{Index, InternationalAddress, RelationshipStatus, UkAddress}
 import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
-import pages.{CannotUseServiceNationalityPage, CheckYourAnswersPage, RelationshipStatusPage}
 import pages.applicant._
 import pages.partner.PartnerIsHmfOrCivilServantPage
+import pages.{CheckYourAnswersPage, RelationshipStatusPage}
 import uk.gov.hmrc.domain.Nino
 
 import java.time.LocalDate
