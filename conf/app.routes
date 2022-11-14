@@ -96,6 +96,9 @@ POST       /add-previous-family-name                        controllers.applican
 GET        /is-your-current-address-in-uk                        controllers.applicant.ApplicantCurrentAddressInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /is-your-current-address-in-uk                        controllers.applicant.ApplicantCurrentAddressInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
+GET        /is-your-current-address-in-crown-dependency             controllers.applicant.ApplicantCurrentAddressCrownDependentController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /is-your-current-address-in-crown-dependency             controllers.applicant.ApplicantCurrentAddressCrownDependentController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 GET        /your-current-uk-address                        controllers.applicant.ApplicantCurrentUkAddressController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-current-uk-address                        controllers.applicant.ApplicantCurrentUkAddressController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
@@ -125,6 +128,9 @@ POST       /your-telephone-number                        controllers.applicant.A
 
 GET        /is-your-previous-address-in-uk                        controllers.applicant.ApplicantPreviousAddressInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /is-your-previous-address-in-uk                        controllers.applicant.ApplicantPreviousAddressInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /is-your-previous-address-in-crown-dependency                        controllers.applicant.ApplicantPreviousAddressCrownDependentController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /is-your-previous-address-in-crown-dependency                        controllers.applicant.ApplicantPreviousAddressCrownDependentController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /your-previous-uk-address                        controllers.applicant.ApplicantPreviousUkAddressController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-previous-uk-address                        controllers.applicant.ApplicantPreviousUkAddressController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
