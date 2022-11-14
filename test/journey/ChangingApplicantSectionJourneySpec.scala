@@ -475,25 +475,4 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
         )
     }
   }
-
-  "when the user initially said they were British or had dual nationality where one is British" - {
-
-    "changing to say they are not British must go to Cannot use Service Nationality" in {
-
-      val nationality = Gen.oneOf(Nationality.British, Nationality.DualWithBritish).sample.value
-
-      val initialise = journeyOf(
-        setUserAnswerTo(ApplicantNationalityPage, nationality),
-        goTo(CheckYourAnswersPage)
-      )
-
-      startingFrom(ApplicantNationalityPage)
-        .run(
-          initialise,
-          goToChangeAnswer(ApplicantNationalityPage),
-          submitAnswer(ApplicantNationalityPage, Nationality.Other),
-          pageMustBe(CannotUseServiceNationalityPage)
-        )
-    }
-  }
 }

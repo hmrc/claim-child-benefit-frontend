@@ -15,38 +15,19 @@
  *@
 
 @import controllers.applicant.routes
+@import models.Nationality.selectItems
 @import viewmodels.InputWidth._
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukRadios: GovukRadios,
+    govukSelect: GovukSelect,
     govukButton: GovukButton
 )
 
 @(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
-@options = @{
-    Seq(
-        RadioItem(
-            content = messages("nationality.british"),
-            value   = Some(Nationality.British.toString),
-            id      = Some("value_0"),
-            hint    = Some(HintViewModel(messages("nationality.british.hint")))
-        ),
-        RadioItem(
-            content = messages("nationality.dualNationalityIncludingBritish"),
-            value   = Some(Nationality.DualWithBritish.toString),
-            id      = Some("value_1")
-        ),
-        RadioItem(
-            content = messages("nationality.other"),
-            value   = Some(Nationality.Other.toString),
-            id      = Some("value_2")
-        )
-    )
-}
 
 @layout(pageTitle = title(form, messages("applicantNationality.title"))) {
 
@@ -60,12 +41,14 @@
 
         <p class="govuk-body govuk-!-margin-bottom-8">@messages("applicantNationality.guidance")</p>
 
-        @govukRadios(
-            RadiosViewModel(
-                field  = form("value"),
-                legend = LegendViewModel(messages("applicantNationality.heading")).visuallyHidden(),
-                items  = options
+        @govukSelect(
+            SelectViewModel(
+                field = form("value"),
+                items = selectItems,
+                label = LabelViewModel(messages("applicantNationality.heading")).visuallyHidden()
             )
+            .withCssClass(Fixed20.toString)
+            .withCssClass("autocomplete")
         )
 
         @govukButton(
