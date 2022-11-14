@@ -446,6 +446,12 @@ applicantCurrentAddressInUk.checkYourAnswersLabel = Is your current address in t
 applicantCurrentAddressInUk.error.required = Select yes if your current address is in the UK
 applicantCurrentAddressInUk.change.hidden = if your current address is in the UK
 
+applicantCurrentAddressCrownDependent.title = Do you live in the Channel Islands or the Isle of Man?
+applicantCurrentAddressCrownDependent.heading = Do you live in the Channel Islands or the Isle of Man?
+applicantCurrentAddressCrownDependent.checkYourAnswersLabel = Do you live in the Channel Islands or the Isle of Man?
+applicantCurrentAddressCrownDependent.error.required = Select yes if you live in the Channel Islands or the Isle of Man
+applicantCurrentAddressCrownDependent.change.hidden = if you live in the Channel Islands or the Isle of Man
+
 applicantCurrentInternationalAddress.title = What is your current address?
 applicantCurrentInternationalAddress.heading = What is your current address?
 applicantCurrentInternationalAddress.line1 = Address line 1
@@ -562,6 +568,12 @@ applicantPreviousAddressInUk.heading = Is your previous address in the UK?
 applicantPreviousAddressInUk.checkYourAnswersLabel = Is your previous address in the UK?
 applicantPreviousAddressInUk.error.required = Select yes if your previous address is in the UK
 applicantPreviousAddressInUk.change.hidden = if your previous address is in the UK
+
+applicantPreviousAddressCrownDependent.title = Was your previous home address in the Channel Islands or the Isle of Man?
+applicantPreviousAddressCrownDependent.heading = Was your previous home address in the Channel Islands or the Isle of Man?
+applicantPreviousAddressCrownDependent.checkYourAnswersLabel = Was your previous home address in the Channel Islands or the Isle of Man?
+applicantPreviousAddressCrownDependent.error.required = Select yes if your previous home address was in the Channel Islands or the Isle of Man
+applicantPreviousAddressCrownDependent.change.hidden = if your previous home address was in the Channel Islands or the Isle of Man
 
 applicantPreviousInternationalAddress.title = What is your previous address?
 applicantPreviousInternationalAddress.heading = What is your previous address?
