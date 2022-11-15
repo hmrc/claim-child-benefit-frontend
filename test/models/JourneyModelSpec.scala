@@ -21,6 +21,7 @@ import models.AdditionalInformation.NoInformation
 import models.RelationshipStatus._
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import org.scalacheck.Gen
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -57,7 +58,7 @@ class JourneyModelSpec
   private val currentUkAddress = UkAddress("line 1", None, "town", None, "AA11 1AA")
   private val phoneNumber = "07777 777777"
   private val applicantBenefits = Set[Benefits](Benefits.NoneOfTheAbove)
-  private val applicantNationality = Nationality.British
+  private val applicantNationality = Gen.oneOf(Nationality.allNationalities).sample.value
 
   private val childName = ChildName("first", None, "last")
   private val biologicalSex = ChildBiologicalSex.Female

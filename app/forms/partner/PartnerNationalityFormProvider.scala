@@ -17,15 +17,17 @@
 package forms.partner
 
 import forms.mappings.Mappings
+import models.Nationality
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class PartnerNationalityFormProvider @Inject() extends Mappings {
 
-  def apply(partnerFirstName: String): Form[String] =
+  def apply(partnerFirstName: String): Form[Nationality] =
     Form(
       "value" -> text("partnerNationality.error.required", args = Seq(partnerFirstName))
-        .verifying(maxLength(100, "partnerNationality.error.length"))
+        .verifying("partnerNationality.error.required", value => Nationality.allNationalities.exists(_.name == value))
+        .transform[Nationality](value => Nationality.allNationalities.find(_.name == value).get, _.name)
     )
 }

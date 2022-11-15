@@ -18,9 +18,14 @@ package forms.applicant
 
 import forms.behaviours.OptionFieldBehaviours
 import models.Nationality
+import org.scalacheck.Arbitrary.arbitrary
+import org.scalacheck.Gen
 import play.api.data.FormError
 
 class ApplicantNationalityFormProviderSpec extends OptionFieldBehaviours {
+
+  val requiredKey = "applicantNationality.error.required"
+  val invalidKey = "applicantNationality.error.invalid"
 
   val form = new ApplicantNationalityFormProvider()()
 
@@ -29,11 +34,10 @@ class ApplicantNationalityFormProviderSpec extends OptionFieldBehaviours {
     val fieldName = "value"
     val requiredKey = "applicantNationality.error.required"
 
-    behave like optionsField[Nationality](
+    behave like fieldThatBindsValidData(
       form,
       fieldName,
-      validValues = Nationality.values,
-      invalidError = FormError(fieldName, "error.invalid")
+      Gen.oneOf(Nationality.allNationalities.map(_.name))
     )
 
     behave like mandatoryField(
@@ -41,5 +45,16 @@ class ApplicantNationalityFormProviderSpec extends OptionFieldBehaviours {
       fieldName,
       requiredError = FormError(fieldName, requiredKey)
     )
+
+    "must not bind any values other than valid nationalities" in {
+
+      val invalidAnswers = arbitrary[String] suchThat (x => !Nationality.allNationalities.map(_.name).contains(x))
+
+      forAll(invalidAnswers) {
+        answer =>
+          val result = form.bind(Map("value" -> answer)).apply(fieldName)
+          result.errors must contain only FormError(fieldName, requiredKey)
+      }
+    }
   }
 }
