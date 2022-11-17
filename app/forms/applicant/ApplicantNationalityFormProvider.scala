@@ -17,16 +17,15 @@
 package forms.applicant
 
 import forms.mappings.Mappings
-import models.Nationality
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class ApplicantNationalityFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Nationality] =
+  def apply(): Form[String] =
     Form(
-      "value" -> enumerable[Nationality]("applicantNationality.error.required")
+      "value" -> text("applicantNationality.error.required")
+        .verifying(maxLength(100, "applicantNationality.error.length"))
     )
 }
-

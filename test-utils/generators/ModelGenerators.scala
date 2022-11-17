@@ -25,11 +25,6 @@ import java.time.LocalDate
 
 trait ModelGenerators {
 
-  implicit lazy val arbitraryNationality: Arbitrary[Nationality] =
-    Arbitrary {
-      Gen.oneOf(Nationality.values)
-    }
-
   implicit lazy val arbitraryScottishBirthCertificateDetails: Arbitrary[ScottishBirthCertificateDetails] =
     Arbitrary {
       for {
