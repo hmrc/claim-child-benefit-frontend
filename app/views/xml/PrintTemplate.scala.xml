@@ -14,7 +14,7 @@
 
 @(model: JourneyModel)(implicit messages: Messages)
 
-<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:fox="http://xmlgraphics.apache.org/fop/extensions" font-family="sans-serif">
+<fo:root xml:lang="en" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:fox="http://xmlgraphics.apache.org/fop/extensions" font-family="sans-serif">
     @layout()
 
     @applicantDetails(model)
