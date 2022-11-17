@@ -22,12 +22,17 @@
         formHelper: FormWithCSRF,
         govukButton: GovukButton,
         govukRadios: GovukRadios,
-        newTabLink: HmrcNewTabLinkHelper
+        newTabLink: HmrcNewTabLinkHelper,
+        govukErrorSummary: GovukErrorSummary,
 )
 
 @(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("wantToBePaid.couple.over60k.title"))) {
+
+    @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
 
     @formHelper(action = routes.WantToBePaidController.onSubmit(waypoints)) {
 
