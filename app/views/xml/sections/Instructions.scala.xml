@@ -21,35 +21,33 @@
     </fo:static-content>
 
     <fo:flow flow-name="xsl-region-body" font-size="12pt" text-align="left">
-        <fo:block>
-            <fo:block margin-bottom="0.5cm" font-weight="bold" font-size="18pt">@messages("pdf.whatToDoNow")</fo:block>
+        <fo:block margin-bottom="0.5cm" font-weight="bold" font-size="18pt">@messages("pdf.whatToDoNow")</fo:block>
 
-            <fo:block margin-bottom="4mm">@messages(s"pdf.whatToDoNow.p1.$documentsRequired")</fo:block>
+        <fo:block margin-bottom="4mm">@messages(s"pdf.whatToDoNow.p1.$documentsRequired")</fo:block>
 
-            <fo:block margin-bottom="6mm">
-                <fo:block>@messages("pdf.childBenefitAddress.1")</fo:block>
-                <fo:block>@messages("pdf.childBenefitAddress.2")</fo:block>
-                <fo:block>@messages("pdf.childBenefitAddress.3")</fo:block>
-                <fo:block>@messages("pdf.childBenefitAddress.4")</fo:block>
-            </fo:block>
-
-            <fo:block margin-bottom="4mm">@messages("pdf.whatToDoNow.p2")</fo:block>
-
-            @if(model.anyDocumentsRequired) {
-                <fo:block margin-bottom="4mm">@messages("pdf.whatToDoNow.p3")</fo:block>
-                <fo:block margin-bottom="4mm">@messages("pdf.whatToDoNow.p4.documents")</fo:block>
-            } else {
-                <fo:block margin-bottom="4mm">@messages("pdf.whatToDoNow.p4.noDocuments")</fo:block>
-            }
-
-            <fo:block margin-bottom="0.5cm" font-weight="bold" font-size="18pt">@messages("pdf.whatHappensNext")</fo:block>
-
-            <fo:block margin-bottom="4mm">@messages(s"pdf.whatHappensNext.p1.$documentsRequired")</fo:block>
-            <fo:block margin-bottom="4mm">@messages("pdf.whatHappensNext.p2")</fo:block>
-            <fo:block margin-bottom="4mm">@messages("pdf.whatHappensNext.p3")</fo:block>
-            <fo:block margin-bottom="4mm">@messages("pdf.whatHappensNext.p4")</fo:block>
-            <fo:block margin-bottom="4mm">@messages("pdf.whatHappensNext.p5")</fo:block>
-
+        <fo:block margin-bottom="6mm">
+            <fo:block>@messages("pdf.childBenefitAddress.1")</fo:block>
+            <fo:block>@messages("pdf.childBenefitAddress.2")</fo:block>
+            <fo:block>@messages("pdf.childBenefitAddress.3")</fo:block>
+            <fo:block>@messages("pdf.childBenefitAddress.4")</fo:block>
         </fo:block>
+
+        <fo:block margin-bottom="4mm">@messages("pdf.whatToDoNow.p2")</fo:block>
+
+        @if(model.anyDocumentsRequired) {
+            <fo:block margin-bottom="4mm">@messages("pdf.whatToDoNow.p3")</fo:block>
+            <fo:block margin-bottom="4mm">@messages("pdf.whatToDoNow.p4.documents")</fo:block>
+        } else {
+            <fo:block margin-bottom="4mm">@messages("pdf.whatToDoNow.p4.noDocuments")</fo:block>
+        }
+
+        <fo:block margin-bottom="0.5cm" font-weight="bold" font-size="18pt">@messages("pdf.whatHappensNext")</fo:block>
+
+        <fo:block margin-bottom="4mm">@messages(s"pdf.whatHappensNext.p1.$documentsRequired")</fo:block>
+        <fo:block margin-bottom="4mm">@messages("pdf.whatHappensNext.p2")</fo:block>
+        <fo:block margin-bottom="4mm">@messages("pdf.whatHappensNext.p3")</fo:block>
+        <fo:block margin-bottom="4mm">@messages("pdf.whatHappensNext.p4")</fo:block>
+        <fo:block margin-bottom="4mm">@messages("pdf.whatHappensNext.p5")</fo:block>
+
     </fo:flow>
 </fo:page-sequence>
