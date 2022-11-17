@@ -23,8 +23,8 @@ GET         /unauthorised                                controllers.Unauthorise
 
 # Initial section
 
-GET        /always-lived-in-uk                        controllers.applicant.AlwaysLivedInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /always-lived-in-uk                        controllers.applicant.AlwaysLivedInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /always-lived-in-uk                        controllers.AlwaysLivedInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /always-lived-in-uk                        controllers.AlwaysLivedInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /recently-claimed-child-benefit                  controllers.RecentlyClaimedController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /recently-claimed-child-benefit                  controllers.RecentlyClaimedController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
@@ -96,9 +96,6 @@ POST       /add-previous-family-name                        controllers.applican
 GET        /is-your-current-address-in-uk                        controllers.applicant.ApplicantCurrentAddressInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /is-your-current-address-in-uk                        controllers.applicant.ApplicantCurrentAddressInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /is-your-current-address-in-crown-dependency             controllers.applicant.ApplicantCurrentAddressCrownDependentController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /is-your-current-address-in-crown-dependency             controllers.applicant.ApplicantCurrentAddressCrownDependentController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
 GET        /your-current-uk-address                        controllers.applicant.ApplicantCurrentUkAddressController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-current-uk-address                        controllers.applicant.ApplicantCurrentUkAddressController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
@@ -129,9 +126,6 @@ POST       /your-telephone-number                        controllers.applicant.A
 GET        /is-your-previous-address-in-uk                        controllers.applicant.ApplicantPreviousAddressInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /is-your-previous-address-in-uk                        controllers.applicant.ApplicantPreviousAddressInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /is-your-previous-address-in-crown-dependency                        controllers.applicant.ApplicantPreviousAddressCrownDependentController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /is-your-previous-address-in-crown-dependency                        controllers.applicant.ApplicantPreviousAddressCrownDependentController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
 GET        /your-previous-uk-address                        controllers.applicant.ApplicantPreviousUkAddressController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-previous-uk-address                        controllers.applicant.ApplicantPreviousUkAddressController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
@@ -143,30 +137,6 @@ POST       /your-previous-family-name/:index                        controllers.
 
 GET        /remove-previous-family-name/:index                        controllers.applicant.RemoveApplicantPreviousFamilyNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /remove-previous-family-name/:index                        controllers.applicant.RemoveApplicantPreviousFamilyNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
-
-GET        /usually-live-in-uk                        controllers.applicant.UsuallyLivesInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /usually-live-in-uk                        controllers.applicant.UsuallyLivesInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /country-where-you-usually-live                        controllers.applicant.UsualCountryOfResidenceController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /country-where-you-usually-live                        controllers.applicant.UsualCountryOfResidenceController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /date-you-arrived-in-uk                        controllers.applicant.DateApplicantArrivedInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /date-you-arrived-in-uk                        controllers.applicant.DateApplicantArrivedInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /subject-to-immigration-control                        controllers.applicant.SubjectToImmigrationControlController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /subject-to-immigration-control                        controllers.applicant.SubjectToImmigrationControlController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /date-immigration-status-granted                        controllers.applicant.DateImmigrationStatusGrantedController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /date-immigration-status-granted                        controllers.applicant.DateImmigrationStatusGrantedController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /recently-worked-or-claimed-benefits-abroad                        controllers.applicant.ApplicantRecentlyWorkedAbroadController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /recently-worked-or-claimed-benefits-abroad                        controllers.applicant.ApplicantRecentlyWorkedAbroadController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /country-you-worked-or-claimed-benefits-in                        controllers.applicant.CountryApplicantWorkedInController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /country-you-worked-or-claimed-benefits-in                        controllers.applicant.CountryApplicantWorkedInController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /your-employment-status                        controllers.applicant.ApplicantEmploymentStatusController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /your-employment-status                        controllers.applicant.ApplicantEmploymentStatusController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 # Partner section
 GET        /partners-date-of-birth                  controllers.partner.PartnerDateOfBirthController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
@@ -192,15 +162,6 @@ POST       /partners-national-insurance-number                        controller
 
 GET        /know-partners-national-insurance-number                        controllers.partner.PartnerNinoKnownController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /know-partners-national-insurance-number                        controllers.partner.PartnerNinoKnownController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /partner-recently-worked-or-claimed-benefits-abroad                        controllers.partner.PartnerRecentlyWorkedAbroadController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /partner-recently-worked-or-claimed-benefits-abroad                        controllers.partner.PartnerRecentlyWorkedAbroadController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /country-partner-worked-or-claimed-benefits-in                        controllers.partner.CountryPartnerWorkedInController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /country-partner-worked-or-claimed-benefits-in                        controllers.partner.CountryPartnerWorkedInController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /partner-employment-status                        controllers.partner.PartnerEmploymentStatusController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /partner-employment-status                        controllers.partner.PartnerEmploymentStatusController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 # Child section
 GET        /add-child                        controllers.child.AddChildController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
@@ -319,3 +280,5 @@ POST       /partner-hm-forces-or-civil-servant-abroad                 controller
 
 GET        /additional-information                         controllers.AdditionalInformationController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /additional-information                         controllers.AdditionalInformationController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /cannot-use-service                       controllers.CannotUseServiceNationalityController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)

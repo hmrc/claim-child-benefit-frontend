@@ -100,11 +100,16 @@ signedOut.guidance = We did not save your answers.
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
-alwaysLivedInUk.title = Have you always lived in the UK?
-alwaysLivedInUk.heading = Have you always lived in the UK?
-alwaysLivedInUk.checkYourAnswersLabel = Have you always lived in the UK?
-alwaysLivedInUk.error.required = Select yes if you have  always lived in the UK
-alwaysLivedInUk.change.hidden = if you have always lived in the UK
+alwaysLivedInUk.couple.title = Have you or your partner always lived  in the UK?
+alwaysLivedInUk.couple.heading = Have you or your partner always lived in the UK?
+alwaysLivedInUk.couple.checkYourAnswersLabel = Have you or your partner always lived in the UK?
+alwaysLivedInUk.couple.error.required = Select yes if you or your partner have always lived in the UK
+alwaysLivedInUk.couple.change.hidden = if you or your partner have always lived in the UK
+alwaysLivedInUk.single.title = Have you always lived in the UK?
+alwaysLivedInUk.single.heading = Have you always lived in the UK?
+alwaysLivedInUk.single.checkYourAnswersLabel = Have you always lived in the UK?
+alwaysLivedInUk.single.error.required = Select yes if you have  always lived in the UK
+alwaysLivedInUk.single.change.hidden = if you have  always lived in the UK
 
 recentlyClaimed.title = Have you recently made a Child Benefit claim and are waiting to hear if you are eligible?
 recentlyClaimed.heading = Have you recently made a Child Benefit claim and are waiting to hear if you are eligible?
@@ -446,12 +451,6 @@ applicantCurrentAddressInUk.checkYourAnswersLabel = Is your current address in t
 applicantCurrentAddressInUk.error.required = Select yes if your current address is in the UK
 applicantCurrentAddressInUk.change.hidden = if your current address is in the UK
 
-applicantCurrentAddressCrownDependent.title = Do you live in the Channel Islands or the Isle of Man?
-applicantCurrentAddressCrownDependent.heading = Do you live in the Channel Islands or the Isle of Man?
-applicantCurrentAddressCrownDependent.checkYourAnswersLabel = Do you live in the Channel Islands or the Isle of Man?
-applicantCurrentAddressCrownDependent.error.required = Select yes if you live in the Channel Islands or the Isle of Man
-applicantCurrentAddressCrownDependent.change.hidden = if you live in the Channel Islands or the Isle of Man
-
 applicantCurrentInternationalAddress.title = What is your current address?
 applicantCurrentInternationalAddress.heading = What is your current address?
 applicantCurrentInternationalAddress.line1 = Address line 1
@@ -569,12 +568,6 @@ applicantPreviousAddressInUk.checkYourAnswersLabel = Is your previous address in
 applicantPreviousAddressInUk.error.required = Select yes if your previous address is in the UK
 applicantPreviousAddressInUk.change.hidden = if your previous address is in the UK
 
-applicantPreviousAddressCrownDependent.title = Was your previous home address in the Channel Islands or the Isle of Man?
-applicantPreviousAddressCrownDependent.heading = Was your previous home address in the Channel Islands or the Isle of Man?
-applicantPreviousAddressCrownDependent.checkYourAnswersLabel = Was your previous home address in the Channel Islands or the Isle of Man?
-applicantPreviousAddressCrownDependent.error.required = Select yes if your previous home address was in the Channel Islands or the Isle of Man
-applicantPreviousAddressCrownDependent.change.hidden = if your previous home address was in the Channel Islands or the Isle of Man
-
 applicantPreviousInternationalAddress.title = What is your previous address?
 applicantPreviousInternationalAddress.heading = What is your previous address?
 applicantPreviousInternationalAddress.line1 = Address line 1
@@ -622,75 +615,6 @@ applicantPreviousFamilyName.change.hidden = your other last name or family name
 removeApplicantPreviousFamilyName.title = Are you sure you want to remove this other last name or family name?
 removeApplicantPreviousFamilyName.heading = Are you sure you want to remove {0} as your other last name or family name?
 removeApplicantPreviousFamilyName.error.required = Select yes if you are sure you want to remove {0} as your other last name or family name
-
-usuallyLivesInUk.title = Do you usually live in the UK?
-usuallyLivesInUk.heading = Do you usually live in the UK?
-usuallyLivesInUk.checkYourAnswersLabel = Do you usually live in the UK?
-usuallyLivesInUk.error.required = Select yes if you usually live in the UK
-usuallyLivesInUk.change.hidden = if you usually live in the UK
-
-usualCountryOfResidence.title = Which country do you usually live in?
-usualCountryOfResidence.heading = Which country do you usually live in?
-usualCountryOfResidence.checkYourAnswersLabel = Country you usually live in
-usualCountryOfResidence.error.required = Select the country you usually live in
-usualCountryOfResidence.change.hidden = the country you usually live in
-
-dateApplicantArrivedInUk.title = When did you arrive in the UK?
-dateApplicantArrivedInUk.heading = When did you arrive in the UK?
-dateApplicantArrivedInUk.hint = For example, 20 3 2001.
-dateApplicantArrivedInUk.checkYourAnswersLabel = When you arrived in the UK
-dateApplicantArrivedInUk.error.required.all = Enter when you arrived in the UK
-dateApplicantArrivedInUk.error.required.two = When you arrived in the UK must include {0} and {1}
-dateApplicantArrivedInUk.error.required = When you arrived in the UK must include {0}
-dateApplicantArrivedInUk.error.invalid = Enter a real date of when you arrived in the UK
-dateApplicantArrivedInUk.error.afterMaximum = When you arrived in the UK must be on or before {0}
-dateApplicantArrivedInUk.change.hidden = when you arrived in the UK
-
-subjectToImmigrationControl.title = Have you been subject to immigration control?
-subjectToImmigrationControl.heading = Have you been subject to immigration control?
-subjectToImmigrationControl.checkYourAnswersLabel = Have you been subject to immigration control?
-subjectToImmigrationControl.inLastThreeMonths = Yes, in the last 3 months
-subjectToImmigrationControl.inLastSixMonths = Yes, between 3 and 6 months ago
-subjectToImmigrationControl.moreThanSixMonthsAgo = Yes, more than 6 months ago
-subjectToImmigrationControl.no = No
-subjectToImmigrationControl.error.required = Select if you have been subject to immigration control
-subjectToImmigrationControl.change.hidden = if you have been subject to immigration control
-
-dateImmigrationStatusGranted.title = When was your immigration status granted?
-dateImmigrationStatusGranted.heading = When was your immigration status granted?
-dateImmigrationStatusGranted.hint = For example, 20 3 2001.
-dateImmigrationStatusGranted.checkYourAnswersLabel = When you arrived in the UK
-dateImmigrationStatusGranted.error.required.all = Enter when you arrived in the UK
-dateImmigrationStatusGranted.error.required.two = When you arrived in the UK must include {0} and {1}
-dateImmigrationStatusGranted.error.required = When you arrived in the UK must include {0}
-dateImmigrationStatusGranted.error.invalid = Enter a real date of when you arrived in the UK
-dateImmigrationStatusGranted.error.afterMaximum = When you arrived in the UK must be on or before {0}
-dateImmigrationStatusGranted.change.hidden = when you arrived in the UK
-
-applicantRecentlyWorkedAbroad.title = Have you recently worked or claimed benefits in another country?
-applicantRecentlyWorkedAbroad.heading = Have you recently worked or claimed benefits in another country?
-applicantRecentlyWorkedAbroad.checkYourAnswersLabel = Have you recently worked or claimed benefits in another country?
-applicantRecentlyWorkedAbroad.error.required = Select yes if you have recently worked or claimed benefits in another country
-applicantRecentlyWorkedAbroad.change.hidden = if you have recently worked or claimed benefits in another country
-
-countryApplicantWorkedIn.title = Which country did you work or claim benefits in?
-countryApplicantWorkedIn.heading = Which country did you work or claim benefits in?
-countryApplicantWorkedIn.checkYourAnswersLabel = Country you worked or claimed benefits in
-countryApplicantWorkedIn.error.required = Select the country you worked or claimed benefits in
-countryApplicantWorkedIn.change.hidden = the country you worked or claimed benefits in
-
-employmentStatus.lookingForWork = Looking for work
-employmentStatus.employed = Employed
-employmentStatus.selfEmployed = Self-employed
-employmentStatus.noneOfThese = None of these apply
-
-applicantEmploymentStatus.title = What is your employment status?
-applicantEmploymentStatus.heading = What is your employment status?
-applicantEmploymentStatus.hint = Select all that apply.
-applicantEmploymentStatus.checkYourAnswersLabel = Your employment status
-applicantEmploymentStatus.error.required = Select your employment status
-applicantEmploymentStatus.error.mutuallyExclusive = Select your employment status or none of these apply
-applicantEmploymentStatus.change.hidden = your employment status
 
 partnerDateOfBirth.title = What is your partner’s date of birth?
 partnerDateOfBirth.heading = What is {0}’s date of birth?
@@ -775,26 +699,6 @@ partnerNinoKnown.hint = It’s on their National Insurance card, benefit letter,
 partnerNinoKnown.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
 partnerNinoKnown.error.required = Select yes if you know {0}’s National Insurance number
 partnerNinoKnown.change.hidden = if you know {0}’s National Insurance number
-
-partnerRecentlyWorkedAbroad.title = Has your partner recently worked or claimed benefits in another country?
-partnerRecentlyWorkedAbroad.heading = Has {0} recently worked or claimed benefits in another country?
-partnerRecentlyWorkedAbroad.checkYourAnswersLabel = Has {0} recently worked or claimed benefits in another country?
-partnerRecentlyWorkedAbroad.error.required = Select yes if {0} has recently worked or claimed benefits in another country
-partnerRecentlyWorkedAbroad.change.hidden = if {0} has recently worked or claimed benefits in another country
-
-countryPartnerWorkedIn.title = Which country did your partner work or claim benefits in?
-countryPartnerWorkedIn.heading = Which country did {0} work or claim benefits in?
-countryPartnerWorkedIn.checkYourAnswersLabel = Country {0} worked or claimed benefits in
-countryPartnerWorkedIn.error.required = Select the country {0} worked or claimed benefits in
-countryPartnerWorkedIn.change.hidden = the country {0} worked or claimed benefits in
-
-partnerEmploymentStatus.title = What is your partner’s employment status?
-partnerEmploymentStatus.heading = What is {0}’s employment status?
-partnerEmploymentStatus.hint = Select all that apply.
-partnerEmploymentStatus.checkYourAnswersLabel = {0}’s employment status
-partnerEmploymentStatus.error.required = Select {0}’s employment status
-partnerEmploymentStatus.error.mutuallyExclusive = Select {0}’s employment status or none of these apply
-partnerEmploymentStatus.change.hidden = {0}’s employment status
 
 addChild.title.plural = You have added {0} children
 addChild.title.singular = You have added 1 child
@@ -1400,3 +1304,19 @@ partnerIsHmfOrCivilServant.heading = Is your partner a member of HM&nbsp;Forces 
 partnerIsHmfOrCivilServant.checkYourAnswersLabel = Is your partner a member of HM Forces or a civil servant working abroad?
 partnerIsHmfOrCivilServant.error.required = Select yes if your partner is a member of HM Forces or a civil servant working abroad
 partnerIsHmfOrCivilServant.change.hidden = if your partner is a member of HM Forces or a civil servant working abroad
+
+cannotUseServiceNationality.title = You must use a different form to claim Child Benefit
+cannotUseServiceNationality.heading = You must use a different form to claim Child Benefit
+cannotUseServiceNationality.p1 = To use this service, your nationality has to include British. You must use a different form to claim Child Benefit.
+cannotUseServiceNationality.p2.1 = You must use the
+cannotUseServiceNationality.p2.link1.text = print and then fill in the CH2 form
+cannotUseServiceNationality.p2.link1.href = https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1064678/CH2_Child_Benefit_Claim_Form_English.pdf
+cannotUseServiceNationality.p2.2 = which can be used to claim for up to 2 children. For additional children, you will also need to
+cannotUseServiceNationality.p2.link2.text = print and then fill in the CH2 (CS) form
+cannotUseServiceNationality.p2.link2.href = https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1064679/CH2_CS.pdf
+cannotUseServiceNationality.p2.3 = for each extra child. By completing these steps, your claim will be processed faster.
+cannotUseServiceNationality.p3 = You can find out
+cannotUseServiceNationality.p3.link.text = more about claiming Child Benefit
+cannotUseServiceNationality.p3.link.href = https://www.gov.uk/child-benefit
+cannotUseServiceNationality.p4 = If you think that you’ve made a mistake you can
+cannotUseServiceNationality.p4.link.text = start your application again

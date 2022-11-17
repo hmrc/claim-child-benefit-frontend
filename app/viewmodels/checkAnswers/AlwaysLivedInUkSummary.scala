@@ -14,30 +14,39 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers.applicant
+package viewmodels.checkAnswers
 
+import models.RelationshipStatus._
 import models.UserAnswers
-import pages.applicant.ApplicantNationalityPage
-import pages.{CheckAnswersPage, Waypoints}
+import pages.{CheckAnswersPage, AlwaysLivedInUkPage, RelationshipStatusPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ApplicantNationalitySummary {
+object AlwaysLivedInUkSummary  {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ApplicantNationalityPage).map {
-      answer =>
+    for {
+      alwaysLivedInUk <- answers.get(AlwaysLivedInUkPage)
+      relationshipStatus  <- answers.get(RelationshipStatusPage)
+    } yield {
 
-        SummaryListRowViewModel(
-          key = "applicantNationality.checkYourAnswersLabel",
-          value = ValueViewModel(messages(s"nationality.${answer.toString}")),
-          actions = Seq(
-            ActionItemViewModel("site.change", ApplicantNationalityPage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("applicantNationality.change.hidden"))
-          )
+      val singleOrCouple = relationshipStatus match {
+        case Married | Cohabiting                    => "couple"
+        case Single | Separated | Widowed | Divorced => "single"
+      }
+
+      val value = if (alwaysLivedInUk) "site.yes" else "site.no"
+
+      SummaryListRowViewModel(
+        key     = s"alwaysLivedInUk.$singleOrCouple.checkYourAnswersLabel",
+        value   = ValueViewModel(value),
+        actions = Seq(
+          ActionItemViewModel("site.change", AlwaysLivedInUkPage.changeLink(waypoints, sourcePage).url)
+            .withVisuallyHiddenText(messages(s"alwaysLivedInUk.$singleOrCouple.change.hidden"))
         )
+      )
     }
 }

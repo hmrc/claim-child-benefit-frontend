@@ -14,18 +14,32 @@
  * limitations under the License.
  */
 
-package forms.partner
+package forms
 
-import forms.mappings.Mappings
-import play.api.data.Form
+import forms.behaviours.BooleanFieldBehaviours
+import play.api.data.FormError
 
-import javax.inject.Inject
+class AlwaysLivedInUkFormProviderSpec extends BooleanFieldBehaviours {
 
-class PartnerNationalityFormProvider @Inject() extends Mappings {
+  val requiredKey = "alwaysLivedInUk.single.error.required"
+  val invalidKey = "error.boolean"
 
-  def apply(partnerFirstName: String): Form[String] =
-    Form(
-      "value" -> text("partnerNationality.error.required", args = Seq(partnerFirstName))
-        .verifying(maxLength(100, "partnerNationality.error.length"))
+  val form = new AlwaysLivedInUkFormProvider()("single")
+
+  ".value" - {
+
+    val fieldName = "value"
+
+    behave like booleanField(
+      form,
+      fieldName,
+      invalidError = FormError(fieldName, invalidKey)
     )
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
+  }
 }

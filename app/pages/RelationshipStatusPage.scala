@@ -19,7 +19,6 @@ package pages
 import controllers.routes
 import models.RelationshipStatus._
 import models.{Benefits, RelationshipStatus, UserAnswers}
-import pages.applicant.AlwaysLivedInUkPage
 import pages.income._
 import pages.partner._
 import pages.payments.PaymentFrequencyPage

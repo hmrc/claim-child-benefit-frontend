@@ -75,7 +75,7 @@ object JourneyModel {
   final case class Partner(
                             name: AdultName,
                             dateOfBirth: LocalDate,
-                            nationality: Nationality,
+                            nationality: String,
                             nationalInsuranceNumber: Option[String],
                             memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
                             currentlyClaimingChildBenefit: PartnerClaimingChildBenefit,

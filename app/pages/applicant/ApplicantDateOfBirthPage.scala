@@ -20,7 +20,7 @@ import controllers.applicant.routes
 import models.RelationshipStatus._
 import models.UserAnswers
 import pages.partner.PartnerIsHmfOrCivilServantPage
-import pages.{Page, QuestionPage, RelationshipStatusPage, UsePrintAndPostFormPage, Waypoints}
+import pages.{AlwaysLivedInUkPage, Page, QuestionPage, RelationshipStatusPage, UsePrintAndPostFormPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 import utils.MonadOps._

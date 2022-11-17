@@ -20,6 +20,7 @@ import models.UserAnswers
 import pages.partner.{PartnerNamePage, PartnerNationalityPage}
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -35,7 +36,7 @@ object PartnerNationalitySummary {
 
       SummaryListRowViewModel(
         key = messages("partnerNationality.checkYourAnswersLabel", partnerName.firstName),
-        value = ValueViewModel(nationality.name),
+        value = ValueViewModel(nationality),
         actions = Seq(
           ActionItemViewModel(
             messages("site.change"),

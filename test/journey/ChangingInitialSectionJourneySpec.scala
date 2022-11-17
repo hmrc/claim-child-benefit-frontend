@@ -24,12 +24,11 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import pages.applicant.AlwaysLivedInUkPage
 import pages.child.ChildNamePage
 import pages.income._
 import pages.partner._
 import pages.payments.{ApplicantHasSuitableAccountPage, CurrentlyReceivingChildBenefitPage, PaymentFrequencyPage, WantToBePaidPage}
-import pages.{CannotBePaidWeeklyPage, CheckYourAnswersPage, CohabitationDatePage, RelationshipStatusPage, SeparationDatePage}
+import pages.{CannotBePaidWeeklyPage, CheckYourAnswersPage, CohabitationDatePage, AlwaysLivedInUkPage, RelationshipStatusPage, SeparationDatePage}
 import uk.gov.hmrc.domain.Nino
 
 import java.time.LocalDate
@@ -48,7 +47,6 @@ class ChangingInitialSectionJourneySpec
   private def eldestChildName       = arbitrary[ChildName].sample.value
   private def childName             = arbitrary[ChildName].sample.value
   private def income                = arbitrary[Income].sample.value
-  private def nationality           = arbitrary[Nationality].sample.value
 
   "when a user initially said they were Married" - {
 
@@ -64,7 +62,7 @@ class ChangingInitialSectionJourneySpec
       setUserAnswerTo(PartnerNinoKnownPage, true),
       setUserAnswerTo(PartnerNinoPage, nino),
       setUserAnswerTo(PartnerDateOfBirthPage, LocalDate.now),
-      setUserAnswerTo(PartnerNationalityPage, nationality),
+      setUserAnswerTo(PartnerNationalityPage, "nationality"),
       setUserAnswerTo(PartnerIsHmfOrCivilServantPage, false),
       setUserAnswerTo(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
       setUserAnswerTo(PartnerEldestChildNamePage, eldestChildName),
@@ -418,7 +416,7 @@ class ChangingInitialSectionJourneySpec
       setUserAnswerTo(PartnerNinoKnownPage, true),
       setUserAnswerTo(PartnerNinoPage, nino),
       setUserAnswerTo(PartnerDateOfBirthPage, LocalDate.now),
-      setUserAnswerTo(PartnerNationalityPage, nationality),
+      setUserAnswerTo(PartnerNationalityPage, "nationality"),
       setUserAnswerTo(PartnerIsHmfOrCivilServantPage, false),
       setUserAnswerTo(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
       setUserAnswerTo(PartnerEldestChildNamePage, eldestChildName),
@@ -811,7 +809,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerNinoKnownPage, true),
                 submitAnswer(PartnerNinoPage, nino),
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-                submitAnswer(PartnerNationalityPage, nationality),
+                submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                 submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
@@ -843,7 +841,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerNinoKnownPage, true),
                 submitAnswer(PartnerNinoPage, nino),
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-                submitAnswer(PartnerNationalityPage, nationality),
+                submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.WaitingToHear),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                 submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
@@ -878,7 +876,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerNinoKnownPage, true),
                 submitAnswer(PartnerNinoPage, nino),
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-                submitAnswer(PartnerNationalityPage, nationality),
+                submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotGettingPayments),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                 submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
@@ -910,7 +908,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerNinoKnownPage, true),
                 submitAnswer(PartnerNinoPage, nino),
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-                submitAnswer(PartnerNationalityPage, nationality),
+                submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                 submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
@@ -940,7 +938,7 @@ class ChangingInitialSectionJourneySpec
               submitAnswer(PartnerNinoKnownPage, true),
               submitAnswer(PartnerNinoPage, nino),
               submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-              submitAnswer(PartnerNationalityPage, nationality),
+              submitAnswer(PartnerNationalityPage, "nationality"),
               submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
               submitAnswer(PartnerEldestChildNamePage, eldestChildName),
               submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
@@ -977,7 +975,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerNinoKnownPage, true),
                 submitAnswer(PartnerNinoPage, nino),
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-                submitAnswer(PartnerNationalityPage, nationality),
+                submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                 submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
@@ -1012,7 +1010,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerNinoKnownPage, true),
                 submitAnswer(PartnerNinoPage, nino),
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-                submitAnswer(PartnerNationalityPage, nationality),
+                submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                 submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
@@ -1048,7 +1046,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerNinoKnownPage, true),
                 submitAnswer(PartnerNinoPage, nino),
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-                submitAnswer(PartnerNationalityPage, nationality),
+                submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                 submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
@@ -1081,7 +1079,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerNinoKnownPage, true),
                 submitAnswer(PartnerNinoPage, nino),
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-                submitAnswer(PartnerNationalityPage, nationality),
+                submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                 submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
@@ -1112,7 +1110,7 @@ class ChangingInitialSectionJourneySpec
               submitAnswer(PartnerNinoKnownPage, true),
               submitAnswer(PartnerNinoPage, nino),
               submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-              submitAnswer(PartnerNationalityPage, nationality),
+              submitAnswer(PartnerNationalityPage, "nationality"),
               submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
               submitAnswer(PartnerEldestChildNamePage, eldestChildName),
               submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
@@ -1184,7 +1182,7 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(PartnerNinoKnownPage, true),
                   submitAnswer(PartnerNinoPage, nino),
                   submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-                  submitAnswer(PartnerNationalityPage, nationality),
+                  submitAnswer(PartnerNationalityPage, "nationality"),
                   submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                   submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                   submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
@@ -1220,7 +1218,7 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(PartnerNinoKnownPage, true),
                   submitAnswer(PartnerNinoPage, nino),
                   submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-                  submitAnswer(PartnerNationalityPage, nationality),
+                  submitAnswer(PartnerNationalityPage, "nationality"),
                   submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                   submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                   submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
@@ -1257,7 +1255,7 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(PartnerNinoKnownPage, true),
                   submitAnswer(PartnerNinoPage, nino),
                   submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-                  submitAnswer(PartnerNationalityPage, nationality),
+                  submitAnswer(PartnerNationalityPage, "nationality"),
                   submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                   submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                   submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
@@ -1291,7 +1289,7 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(PartnerNinoKnownPage, true),
                   submitAnswer(PartnerNinoPage, nino),
                   submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-                  submitAnswer(PartnerNationalityPage, nationality),
+                  submitAnswer(PartnerNationalityPage, "nationality"),
                   submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                   submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                   submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
@@ -1323,7 +1321,7 @@ class ChangingInitialSectionJourneySpec
                 submitAnswer(PartnerNinoKnownPage, true),
                 submitAnswer(PartnerNinoPage, nino),
                 submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-                submitAnswer(PartnerNationalityPage, nationality),
+                submitAnswer(PartnerNationalityPage, "nationality"),
                 submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                 submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                 submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
@@ -1362,7 +1360,7 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(PartnerNinoKnownPage, true),
                   submitAnswer(PartnerNinoPage, nino),
                   submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-                  submitAnswer(PartnerNationalityPage, nationality),
+                  submitAnswer(PartnerNationalityPage, "nationality"),
                   submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                   submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                   submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
@@ -1399,7 +1397,7 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(PartnerNinoKnownPage, true),
                   submitAnswer(PartnerNinoPage, nino),
                   submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-                  submitAnswer(PartnerNationalityPage, nationality),
+                  submitAnswer(PartnerNationalityPage, "nationality"),
                   submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                   submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                   submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
@@ -1437,7 +1435,7 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(PartnerNinoKnownPage, true),
                   submitAnswer(PartnerNinoPage, nino),
                   submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-                  submitAnswer(PartnerNationalityPage, nationality),
+                  submitAnswer(PartnerNationalityPage, "nationality"),
                   submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                   submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                   submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
@@ -1472,7 +1470,7 @@ class ChangingInitialSectionJourneySpec
                   submitAnswer(PartnerNinoKnownPage, true),
                   submitAnswer(PartnerNinoPage, nino),
                   submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-                  submitAnswer(PartnerNationalityPage, nationality),
+                  submitAnswer(PartnerNationalityPage, "nationality"),
                   submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
                   submitAnswer(PartnerEldestChildNamePage, eldestChildName),
                   submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),

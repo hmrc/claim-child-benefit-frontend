@@ -17,27 +17,31 @@
 package pages
 
 import controllers.routes
+import models.RelationshipStatus._
 import models.UserAnswers
-import pages.income.ApplicantOrPartnerIncomePage
+import pages.applicant.ApplicantIsHmfOrCivilServantPage
+import pages.income.{ApplicantIncomePage, ApplicantOrPartnerIncomePage}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-import java.time.LocalDate
-
-case object CohabitationDatePage extends QuestionPage[LocalDate] {
+case object AlwaysLivedInUkPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "cohabitationDate"
+  override def toString: String = "alwaysLivedInUk"
 
   override def route(waypoints: Waypoints): Call =
-    routes.CohabitationDateController.onPageLoad(waypoints)
+    routes.AlwaysLivedInUkController.onPageLoad(waypoints)
 
-  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    AlwaysLivedInUkPage
+  override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true =>
+        answers.get(RelationshipStatusPage).map {
+          case Married | Cohabiting                    => ApplicantOrPartnerIncomePage
+          case Single | Divorced | Widowed | Separated => ApplicantIncomePage
+        }.orRecover
 
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(ApplicantOrPartnerIncomePage)
-      .map(_ => waypoints.next.page)
-      .getOrElse(ApplicantOrPartnerIncomePage)
+      case false  =>
+        ApplicantIsHmfOrCivilServantPage
+    }.orRecover
 }

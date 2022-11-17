@@ -44,7 +44,7 @@
                         }
                     </fo:block>
 
-                    @line("pdf.nationality", model.applicant.nationality.name)
+                    @line("pdf.nationality", messages(s"pdf.nationality.${model.applicant.nationality}"))
 
                     @line("pdf.alwaysLivedInUk", booleanToYesNo(model.applicant.alwaysLivedInUk))
 

@@ -27,7 +27,7 @@ trait ModelGenerators {
 
   implicit lazy val arbitraryNationality: Arbitrary[Nationality] =
     Arbitrary {
-      Gen.oneOf(Nationality.allNationalities)
+      Gen.oneOf(Nationality.values)
     }
 
   implicit lazy val arbitraryScottishBirthCertificateDetails: Arbitrary[ScottishBirthCertificateDetails] =
