@@ -26,9 +26,7 @@ class ApplicantNationalityFormProvider @Inject() extends Mappings {
 
   def apply(): Form[Nationality] =
     Form(
-      "value" -> text("applicantNationality.error.required")
-        .verifying("applicantNationality.error.required", value => Nationality.allNationalities.exists(_.name == value))
-        .transform[Nationality](value => Nationality.allNationalities.find(_.name == value).get, _.name)
+      "value" -> enumerable[Nationality]("applicantNationality.error.required")
     )
 }
 

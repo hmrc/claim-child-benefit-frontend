@@ -17,27 +17,10 @@
 package pages
 
 import controllers.routes
-import models.UserAnswers
-import pages.income.ApplicantOrPartnerIncomePage
-import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-import java.time.LocalDate
-
-case object CohabitationDatePage extends QuestionPage[LocalDate] {
-
-  override def path: JsPath = JsPath \ toString
-
-  override def toString: String = "cohabitationDate"
+case object CannotUseServiceNationalityPage extends Page {
 
   override def route(waypoints: Waypoints): Call =
-    routes.CohabitationDateController.onPageLoad(waypoints)
-
-  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    AlwaysLivedInUkPage
-
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(ApplicantOrPartnerIncomePage)
-      .map(_ => waypoints.next.page)
-      .getOrElse(ApplicantOrPartnerIncomePage)
+    routes.CannotUseServiceNationalityController.onPageLoad(waypoints)
 }

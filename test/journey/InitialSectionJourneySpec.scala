@@ -22,7 +22,7 @@ import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import pages.income.{ApplicantIncomePage, ApplicantOrPartnerIncomePage}
 import pages._
-import pages.applicant.{AlwaysLivedInUkPage, ApplicantIsHmfOrCivilServantPage}
+import pages.applicant.ApplicantIsHmfOrCivilServantPage
 import pages.partner.PartnerIsHmfOrCivilServantPage
 
 import java.time.LocalDate

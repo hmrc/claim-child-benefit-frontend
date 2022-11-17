@@ -17,28 +17,32 @@
 package forms.partner
 
 import forms.behaviours.StringFieldBehaviours
-import models.Nationality
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.Gen
 import play.api.data.FormError
 
 class PartnerNationalityFormProviderSpec extends StringFieldBehaviours {
 
   val name = "name"
-  val requiredKey = "usualCountryOfResidence.error.required"
-  val invalidKey = "usualCountryOfResidence.error.invalid"
+  val requiredKey = "partnerNationality.error.required"
+  val lengthKey = "partnerNationality.error.length"
+  val maxLength = 100
 
   val form = new PartnerNationalityFormProvider()(name)
 
   ".value" - {
 
     val fieldName = "value"
-    val requiredKey = "partnerNationality.error.required"
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      Gen.oneOf(Nationality.allNationalities.map(_.name))
+      stringsWithMaxLength(maxLength)
+    )
+
+    behave like fieldWithMaxLength(
+      form,
+      fieldName,
+      maxLength = maxLength,
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
     )
 
     behave like mandatoryField(
@@ -46,16 +50,5 @@ class PartnerNationalityFormProviderSpec extends StringFieldBehaviours {
       fieldName,
       requiredError = FormError(fieldName, requiredKey, Seq(name))
     )
-
-    "must not bind any values other than valid nationalities" in {
-
-      val invalidAnswers = arbitrary[String] suchThat (x => x.trim.nonEmpty && !Nationality.allNationalities.map(_.name).contains(x))
-
-      forAll(invalidAnswers) {
-        answer =>
-          val result = form.bind(Map("value" -> answer)).apply(fieldName)
-          result.errors must contain only FormError(fieldName, requiredKey)
-      }
-    }
   }
 }

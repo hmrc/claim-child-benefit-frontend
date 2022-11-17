@@ -39,7 +39,7 @@ class ApplicantNationalityControllerSpec extends SpecBase with MockitoSugar {
 
   private val formProvider = new ApplicantNationalityFormProvider()
   private val form = formProvider()
-  private val validAnswer = Nationality.allNationalities.head
+  private val validAnswer = Nationality.values.head
 
   lazy val applicantNationalityRoute = routes.ApplicantNationalityController.onPageLoad(waypoints).url
 
@@ -95,7 +95,7 @@ class ApplicantNationalityControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, applicantNationalityRoute)
-            .withFormUrlEncodedBody(("value", validAnswer.name))
+            .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value
         val expectedAnswers = emptyUserAnswers.set(ApplicantNationalityPage, validAnswer).success.value
@@ -147,7 +147,7 @@ class ApplicantNationalityControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, applicantNationalityRoute)
-            .withFormUrlEncodedBody(("value", validAnswer.name))
+            .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value
 

@@ -18,7 +18,6 @@ package pages
 
 import controllers.routes
 import models.UserAnswers
-import pages.applicant.AlwaysLivedInUkPage
 import pages.income.ApplicantIncomePage
 import play.api.libs.json.JsPath
 import play.api.mvc.Call

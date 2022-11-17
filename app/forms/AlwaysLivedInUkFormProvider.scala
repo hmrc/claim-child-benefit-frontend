@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package forms.partner
+package forms
 
 import forms.mappings.Mappings
 import play.api.data.Form
 
 import javax.inject.Inject
 
-class PartnerNationalityFormProvider @Inject() extends Mappings {
+class AlwaysLivedInUkFormProvider @Inject() extends Mappings {
 
-  def apply(partnerFirstName: String): Form[String] =
+  def apply(singleOrCouple: String): Form[Boolean] =
     Form(
-      "value" -> text("partnerNationality.error.required", args = Seq(partnerFirstName))
-        .verifying(maxLength(100, "partnerNationality.error.length"))
+      "value" -> boolean(s"alwaysLivedInUk.$singleOrCouple.error.required")
     )
 }

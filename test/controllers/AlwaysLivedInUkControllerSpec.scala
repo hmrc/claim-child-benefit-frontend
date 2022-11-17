@@ -14,69 +14,66 @@
  * limitations under the License.
  */
 
-package controllers.partner
+package controllers
 
 import base.SpecBase
-import controllers.{routes => baseRoutes}
-import forms.partner.PartnerNationalityFormProvider
-import models.AdultName
+import forms.AlwaysLivedInUkFormProvider
+import models.RelationshipStatus.Single
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.EmptyWaypoints
-import pages.partner.{PartnerNamePage, PartnerNationalityPage}
+import pages.{EmptyWaypoints, AlwaysLivedInUkPage, RelationshipStatusPage}
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserDataService
-import views.html.partner.PartnerNationalityView
+import views.html.AlwaysLivedInUkView
 
 import scala.concurrent.Future
 
-class PartnerNationalityControllerSpec extends SpecBase with MockitoSugar {
+class AlwaysLivedInUkControllerSpec extends SpecBase with MockitoSugar {
 
+  private val relationshipStatus = Single
+  private val formProvider = new AlwaysLivedInUkFormProvider()
+  private val form = formProvider("single")
   private val waypoints = EmptyWaypoints
-  private val name = AdultName("first", None, "last")
-  private val baseAnswers = emptyUserAnswers.set(PartnerNamePage, name).success.value
 
-  val formProvider = new PartnerNationalityFormProvider()
-  val form = formProvider(name.firstName)
+  private lazy val alwaysLivedInUkRoute = routes.AlwaysLivedInUkController.onPageLoad(waypoints).url
+  private val baseAnswers = emptyUserAnswers.set(RelationshipStatusPage, relationshipStatus).success.value
 
-  lazy val partnerNationalityRoute = routes.PartnerNationalityController.onPageLoad(waypoints).url
-
-  "PartnerNationality Controller" - {
+  "AlwaysLivedInUk Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, partnerNationalityRoute)
+        val request = FakeRequest(GET, alwaysLivedInUkRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[PartnerNationalityView]
+        val view = application.injector.instanceOf[AlwaysLivedInUkView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, name.firstName)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, "single")(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = baseAnswers.set(PartnerNationalityPage, "answer").success.value
+      val userAnswers = baseAnswers.set(AlwaysLivedInUkPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, partnerNationalityRoute)
+        val request = FakeRequest(GET, alwaysLivedInUkRoute)
 
-        val view = application.injector.instanceOf[PartnerNationalityView]
+        val view = application.injector.instanceOf[AlwaysLivedInUkView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), waypoints, name.firstName)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), waypoints, "single")(request, messages(application)).toString
       }
     }
 
@@ -95,14 +92,14 @@ class PartnerNationalityControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, partnerNationalityRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
+          FakeRequest(POST, alwaysLivedInUkRoute)
+            .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-        val expectedAnswers = baseAnswers.set(PartnerNationalityPage, "answer").success.value
+        val expectedAnswers = baseAnswers.set(AlwaysLivedInUkPage, true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual PartnerNationalityPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual AlwaysLivedInUkPage.navigate(waypoints, baseAnswers, expectedAnswers).url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -113,47 +110,48 @@ class PartnerNationalityControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, partnerNationalityRoute)
+          FakeRequest(POST, alwaysLivedInUkRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[PartnerNationalityView]
+        val view = application.injector.instanceOf[AlwaysLivedInUkView]
 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, name.firstName)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, "single")(request, messages(application)).toString
       }
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+    "must redirect to Journey Recovery if no existing data is found" in {
 
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, partnerNationalityRoute)
+        val request = FakeRequest(GET, alwaysLivedInUkRoute)
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+    "must redirect to the Journey Recovery for a POST if no existing data is found" in {
+
 
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
         val request =
-          FakeRequest(POST, partnerNationalityRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
+          FakeRequest(POST, alwaysLivedInUkRoute)
+            .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }
