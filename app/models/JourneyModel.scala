@@ -66,7 +66,7 @@ object JourneyModel {
                               currentAddress: Address,
                               previousAddress: Option[Address],
                               telephoneNumber: String,
-                              nationality: Nationality,
+                              nationality: String,
                               alwaysLivedInUk: Boolean,
                               memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
                               currentlyReceivingChildBenefit: CurrentlyReceivingChildBenefit

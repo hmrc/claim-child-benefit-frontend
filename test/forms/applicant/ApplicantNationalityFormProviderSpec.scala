@@ -16,24 +16,32 @@
 
 package forms.applicant
 
-import forms.behaviours.OptionFieldBehaviours
-import models.Nationality
+import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
 
-class ApplicantNationalityFormProviderSpec extends OptionFieldBehaviours {
+class ApplicantNationalityFormProviderSpec extends StringFieldBehaviours {
+
+  val requiredKey = "applicantNationality.error.required"
+  val lengthKey = "applicantNationality.error.length"
+  val maxLength = 100
 
   val form = new ApplicantNationalityFormProvider()()
 
   ".value" - {
 
     val fieldName = "value"
-    val requiredKey = "applicantNationality.error.required"
 
-    behave like optionsField[Nationality](
+    behave like fieldThatBindsValidData(
       form,
       fieldName,
-      validValues = Nationality.values,
-      invalidError = FormError(fieldName, "error.invalid")
+      stringsWithMaxLength(maxLength)
+    )
+
+    behave like fieldWithMaxLength(
+      form,
+      fieldName,
+      maxLength = maxLength,
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
     )
 
     behave like mandatoryField(

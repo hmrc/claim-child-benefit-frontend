@@ -67,7 +67,7 @@ class JourneyModelProviderSpec
   private val previousInternationalAddress = InternationalAddress("line 1", None, "town", None, None, country)
   private val phoneNumber = "07777 777777"
   private val applicantBenefits = Set[Benefits](Benefits.NoneOfTheAbove)
-  private val applicantNationality = Nationality.British
+  private val applicantNationality = "British"
   private val previousName1 = "previous name 1"
   private val previousName2 = "previous name 2"
 
