@@ -14,9 +14,17 @@
 
 @(model: JourneyModel)(implicit messages: Messages)
 
-<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:fox="http://xmlgraphics.apache.org/fop/extensions" font-family="sans-serif">
+<fo:root xml:lang="en" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:fox="http://xmlgraphics.apache.org/fop/extensions" font-family="sans-serif">
     @layout()
 
+    <fo:declarations>
+        <pdf:catalog xmlns:pdf="http://xmlgraphics.apache.org/fop/extensions/pdf">
+            <pdf:dictionary type="normal" key="ViewerPreferences">
+                <pdf:boolean key="DisplayDocTitle">true</pdf:boolean>
+            </pdf:dictionary>
+        </pdf:catalog>
+    </fo:declarations>
+    
     @applicantDetails(model)
 
     @model.relationship.partner.map { partner =>
