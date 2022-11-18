@@ -722,7 +722,7 @@ addChildPreviousName.checkAnswers.change.hidden = this child’s previous names
 anyoneClaimedForChildBefore.title = Have you or anyone else ever claimed Child Benefit for this child?
 anyoneClaimedForChildBefore.heading = Have you or anyone else ever claimed Child Benefit for {0}?
 anyoneClaimedForChildBefore.checkYourAnswersLabel = Have you or anyone else ever claimed Child Benefit for this child?
-anyoneClaimedForChildBefore.error.required = Select if you or anyone else has ever claimed Child Benefit for {0}
+anyoneClaimedForChildBefore.error.required = Select yes if you or anyone else has ever claimed Child Benefit for {0}
 anyoneClaimedForChildBefore.change.hidden = if you or anyone else has ever claimed Child Benefit for this child
 
 applicantRelationshipToChild.title = How are you related to this child?
@@ -910,7 +910,7 @@ previousClaimantName.change.hidden = the name of the person who claimed Child Be
 childLivesWithApplicant.title = Does this child live with you?
 childLivesWithApplicant.heading = Does {0} live with you?
 childLivesWithApplicant.checkYourAnswersLabel = Does this child live with you?
-childLivesWithApplicant.error.required = Select if {0} lives with you
+childLivesWithApplicant.error.required = Select yes if {0} lives with you
 childLivesWithApplicant.change.hidden = if this child lives with you
 
 guardianName.title = What is the name of the person this child lives with?
