@@ -25,7 +25,7 @@
             <fo:table-column column-number="6" column-width="62mm"/>
 
             <fo:table-body>
-                <fo:table-row height="6m">
+                <fo:table-row height="5mm">
                     <fo:table-cell border="0.4mm solid black" padding="1mm">
                         <fo:block>@messages("pdf.declaration.corres")</fo:block>
                     </fo:table-cell>
@@ -43,15 +43,15 @@
                     </fo:table-cell>
                 </fo:table-row>
 
-                <fo:table-row height="6m">
-                    <fo:table-cell border="0.4mm solid black" padding="1mm" color="#ffffff">
-                        <fo:block>@messages("pdf.declaration.corres")</fo:block>
+                <fo:table-row height="5mm">
+                    <fo:table-cell border="0.4mm solid black" padding="1mm">
+                        <fo:wrapper role="artefact"> </fo:wrapper>
                     </fo:table-cell>
-                    <fo:table-cell border="0.4mm solid black" padding="1mm" color="#ffffff">
-                        <fo:block>@messages("pdf.declaration.traced")</fo:block>
+                    <fo:table-cell border="0.4mm solid black" padding="1mm">
+                        <fo:wrapper role="artefact"> </fo:wrapper>
                     </fo:table-cell>
-                    <fo:table-cell border="0.4mm solid black" padding="1mm" number-columns-spanned="2" color="#ffffff">
-                        <fo:block>@messages("pdf.declaration.cli")</fo:block>
+                    <fo:table-cell border="0.4mm solid black" padding="1mm" number-columns-spanned="2">
+                        <fo:wrapper role="artefact"> </fo:wrapper>
                     </fo:table-cell>
                     <fo:table-cell>
                         <fo:block/>
@@ -64,7 +64,7 @@
                     </fo:table-cell>
                 </fo:table-row>
 
-                <fo:table-row height="6m">
+                <fo:table-row height="5mm">
                     <fo:table-cell border="0.4mm solid black" padding="1mm">
                         <fo:block>@messages("pdf.declaration.birthCertificate")</fo:block>
                     </fo:table-cell>
@@ -82,7 +82,7 @@
                     </fo:table-cell>
                 </fo:table-row>
 
-                <fo:table-row height="6m">
+                <fo:table-row height="5mm">
                     <fo:table-cell border="0.4mm solid black" padding="1mm">
                         <fo:block>@messages("pdf.declaration.passport")</fo:block>
                     </fo:table-cell>
@@ -100,7 +100,7 @@
                     </fo:table-cell>
                 </fo:table-row>
 
-                <fo:table-row height="6m">
+                <fo:table-row height="5mm">
                     <fo:table-cell border="0.4mm solid black" padding="1mm">
                         <fo:block>@messages("pdf.declaration.other")</fo:block>
                     </fo:table-cell>
@@ -129,13 +129,17 @@
 
             @if(model.anyDocumentsRequired) {
                 <fo:block margin-bottom="1.5cm">
-                    <fo:inline border="0.4mm solid black" padding-top="0.5cm" padding-left="0.5cm" color="#ffffff">X</fo:inline>
+                    <fo:inline border="0.4mm solid black" padding-top="0.5cm" padding-left="0.8cm">
+                        <fo:wrapper role="artefact"> </fo:wrapper>
+                    </fo:inline>
                     <fo:block margin-left="1.4cm" margin-top="-1cm">@messages("pdf.sendingDocuments")</fo:block>
                 </fo:block>
             }
 
             <fo:block margin-bottom="1.5cm">
-                <fo:inline border="0.4mm solid black" padding-top="0.5cm" padding-left="0.5cm" color="#ffffff">X</fo:inline>
+                <fo:inline border="0.4mm solid black" padding-top="0.5cm" padding-left="0.8cm">
+                    <fo:wrapper role="artefact"> </fo:wrapper>
+                </fo:inline>
                 <fo:block margin-left="1.4cm" margin-top="-1cm">@messages("pdf.informationCorrect")</fo:block>
             </fo:block>
 
@@ -149,18 +153,38 @@
                 <fo:inline padding-left="1.9cm">@messages("date.year")</fo:inline>
             </fo:block>
             <fo:block margin-top="0.9cm">
-                <fo:inline border="0.5mm solid black" padding-top="0.6cm" padding-left="0.6cm" color="#ffffff">D</fo:inline>
-                <fo:inline border="0.5mm solid black" padding-top="0.6cm" padding-left="0.6cm" color="#ffffff">D</fo:inline>
-                <fo:inline padding-top="0.6cm" padding-left="0.6cm" color="#ffffff">/</fo:inline>
+                <fo:inline border="0.5mm solid black" padding-top="0.6cm" padding-left="0.8cm">
+                    <fo:wrapper role="artefact"> </fo:wrapper>
+                </fo:inline>
+                <fo:inline border="0.5mm solid black" padding-top="0.6cm" padding-left="0.8cm">
+                    <fo:wrapper role="artefact"> </fo:wrapper>
+                </fo:inline>
+                <fo:inline padding-top="0.6cm" padding-left="0.6cm">
+                    <fo:wrapper role="artefact"> </fo:wrapper>
+                </fo:inline>
 
-                <fo:inline border="0.5mm solid black" padding-top="0.6cm" padding-left="0.6cm" color="#ffffff">M</fo:inline>
-                <fo:inline border="0.5mm solid black" padding-top="0.6cm" padding-left="0.6cm" color="#ffffff">M</fo:inline>
-                <fo:inline padding-top="0.6cm" padding-left="0.6cm" color="#ffffff">/</fo:inline>
+                <fo:inline border="0.5mm solid black" padding-top="0.6cm" padding-left="0.8cm">
+                    <fo:wrapper role="artefact"> </fo:wrapper>
+                </fo:inline>
+                <fo:inline border="0.5mm solid black" padding-top="0.6cm" padding-left="0.8cm">
+                    <fo:wrapper role="artefact"> </fo:wrapper>
+                </fo:inline>
+                <fo:inline padding-top="0.6cm" padding-left="0.6cm">
+                    <fo:wrapper role="artefact"> </fo:wrapper>
+                </fo:inline>
 
-                <fo:inline border="0.5mm solid black" padding-top="0.6cm" padding-left="0.6cm" color="#ffffff">Y</fo:inline>
-                <fo:inline border="0.5mm solid black" padding-top="0.6cm" padding-left="0.6cm" color="#ffffff">Y</fo:inline>
-                <fo:inline border="0.5mm solid black" padding-top="0.6cm" padding-left="0.6cm" color="#ffffff">Y</fo:inline>
-                <fo:inline border="0.5mm solid black" padding-top="0.6cm" padding-left="0.6cm" color="#ffffff">Y</fo:inline>
+                <fo:inline border="0.5mm solid black" padding-top="0.6cm" padding-left="0.8cm">
+                    <fo:wrapper role="artefact"> </fo:wrapper>
+                </fo:inline>
+                <fo:inline border="0.5mm solid black" padding-top="0.6cm" padding-left="0.8cm">
+                    <fo:wrapper role="artefact"> </fo:wrapper>
+                </fo:inline>
+                <fo:inline border="0.5mm solid black" padding-top="0.6cm" padding-left="0.8cm">
+                    <fo:wrapper role="artefact"> </fo:wrapper>
+                </fo:inline>
+                <fo:inline border="0.5mm solid black" padding-top="0.6cm" padding-left="0.8cm">
+                    <fo:wrapper role="artefact"> </fo:wrapper>
+                </fo:inline>
             </fo:block>
 
         </fo:block>
