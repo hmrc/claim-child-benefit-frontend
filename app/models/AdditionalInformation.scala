@@ -18,14 +18,19 @@ package models
 
 import play.api.libs.json.{JsError, JsString, JsSuccess, Reads, Writes}
 
-sealed trait AdditionalInformation
+sealed trait AdditionalInformation {
+  val nonEmpty: Boolean
+}
 
 object AdditionalInformation {
 
-  case object NoInformation extends WithName("noInformation") with AdditionalInformation
+  case object NoInformation extends WithName("noInformation") with AdditionalInformation {
+    override val nonEmpty: Boolean = false
+  }
 
   final case class Information(value: String) extends AdditionalInformation {
 
+    override val nonEmpty: Boolean = true
     override def toString: String = value
   }
 

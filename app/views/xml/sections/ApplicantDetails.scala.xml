@@ -23,7 +23,7 @@
 
                 <fo:block-container margin-bottom="1cm" wrap-option="wrap" page-break-after="always">
 
-                    <fo:block role="H2" font-size="18pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.personalDetails")</fo:block>
+                    <fo:block role="H2" id="personal-details" font-size="18pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.personalDetails")</fo:block>
 
                     @line("pdf.nino", model.applicant.nationalInsuranceNumber.getOrElse(messages("pdf.notKnown")))
 

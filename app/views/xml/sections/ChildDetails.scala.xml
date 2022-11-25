@@ -43,7 +43,7 @@
 
                 <fo:block-container margin-bottom="1cm" wrap-option="wrap" page-break-after="always">
 
-                    <fo:block font-size="18pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.childDetails", index)</fo:block>
+                    <fo:block role="H2" @if(index==1){id="child-details"} font-size="18pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.childDetails", index)</fo:block>
 
                     @line("pdf.name.last", child.name.lastName)
 

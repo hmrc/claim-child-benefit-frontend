@@ -21,7 +21,7 @@
     </fo:static-content>
 
     <fo:flow flow-name="xsl-region-body" font-size="12pt" text-align="left">
-        <fo:block role="H2" margin-bottom="0.5cm" font-weight="bold" font-size="18pt">@messages("pdf.whatToDoNow")</fo:block>
+        <fo:block role="H2" id="what-to-do-now" margin-bottom="0.5cm" font-weight="bold" font-size="18pt">@messages("pdf.whatToDoNow")</fo:block>
 
         <fo:block margin-bottom="4mm">@messages(s"pdf.whatToDoNow.p1.$documentsRequired")</fo:block>
 
