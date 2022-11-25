@@ -1267,6 +1267,7 @@ pdf.whatHappensNext.p2 = If you need further assistance with your claim, contact
 pdf.whatHappensNext.p3 = Telephone: 0300 200 3100
 pdf.whatHappensNext.p4 = Outside UK: +44 161 210 3086
 pdf.whatHappensNext.p5 = You can also use Relay UK if you cannot hear or speak on the phone: dial 18001 then 0300 200 3100.
+pdf.addressLabelSection = Address label
 pdf.addressLabel = Address label - send this back with your completed form
 pdf.addressLabel.p1 = Send this address label back to us with your completed claim form so that we can return your documents to you.
 pdf.addressLabel.p2 = You’ll need a stamp on the outside of your envelope to post your form and documents to us, don’t send the stamp to us separately. Make sure you pay the correct postage.

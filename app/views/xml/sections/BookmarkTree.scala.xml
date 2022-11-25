@@ -35,7 +35,7 @@
         </fo:bookmark>
         @if(model.anyDocumentsRequired) {
             <fo:bookmark internal-destination="address-label">
-                <fo:bookmark-title>@messages("pdf.addressLabel")</fo:bookmark-title>
+                <fo:bookmark-title>@messages("pdf.addressLabelSection")</fo:bookmark-title>
             </fo:bookmark>
         }
     </fo:bookmark>
