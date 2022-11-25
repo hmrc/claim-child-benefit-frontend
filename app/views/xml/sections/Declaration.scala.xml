@@ -125,7 +125,7 @@
 
     <fo:flow flow-name="xsl-region-body" font-size="12pt" text-align="left">
         <fo:block id="FinalElement">
-            <fo:block margin-bottom="1cm" font-weight="bold" font-size="18pt">@messages("pdf.declaration")</fo:block>
+            <fo:block role="H2" id="declaration" margin-bottom="1cm" font-weight="bold" font-size="18pt">@messages("pdf.declaration")</fo:block>
 
             @if(model.anyDocumentsRequired) {
                 <fo:block margin-bottom="1.5cm">

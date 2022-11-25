@@ -2,6 +2,7 @@
 
 @this(
     layout: Layout,
+    bookmarkTree: BookmarkTree,
     applicantDetails: ApplicantDetails,
     paymentDetails: PaymentDetails,
     partnerDetails: PartnerDetails,
@@ -24,7 +25,9 @@
             </pdf:dictionary>
         </pdf:catalog>
     </fo:declarations>
-    
+
+    @bookmarkTree(model)
+
     @applicantDetails(model)
 
     @model.relationship.partner.map { partner =>
