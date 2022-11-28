@@ -19,12 +19,12 @@ package controllers.child
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.child.DateChildStartedLivingWithApplicantFormProvider
-import models.ChildName
+import models.{AdultName, ChildName}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.child.{DateChildStartedLivingWithApplicantPage, ChildNamePage}
-import pages.{EmptyWaypoints, child}
+import pages.child.{ChildNamePage, DateChildStartedLivingWithApplicantPage}
+import pages.{ApplicantNamePage, EmptyWaypoints, child}
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
@@ -38,7 +38,11 @@ import scala.concurrent.Future
 class DateChildStartedLivingWithApplicantControllerSpec extends SpecBase with MockitoSugar {
 
   private val childName = ChildName("first", None, "last")
-  private val baseAnswers = emptyUserAnswers.set(ChildNamePage(index), childName).success.value
+  private val adultName = AdultName("first", None, "last")
+  private val baseAnswers =
+    emptyUserAnswers
+      .set(ChildNamePage(index), childName).success.value
+      .set(ApplicantNamePage, adultName).success.value
 
   val formProvider = new DateChildStartedLivingWithApplicantFormProvider(clockAtFixedInstant)
   private val form = formProvider(childName)
@@ -71,7 +75,7 @@ class DateChildStartedLivingWithApplicantControllerSpec extends SpecBase with Mo
         val view = application.injector.instanceOf[DateChildStartedLivingWithApplicantView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, index, childName)(getRequest, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index, childName, adultName)(getRequest, messages(application)).toString
       }
     }
 
@@ -87,7 +91,7 @@ class DateChildStartedLivingWithApplicantControllerSpec extends SpecBase with Mo
         val result = route(application, getRequest).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints, index, childName)(getRequest, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints, index, childName, adultName)(getRequest, messages(application)).toString
       }
     }
 
@@ -130,7 +134,7 @@ class DateChildStartedLivingWithApplicantControllerSpec extends SpecBase with Mo
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, index, childName)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index, childName, adultName)(request, messages(application)).toString
       }
     }
 

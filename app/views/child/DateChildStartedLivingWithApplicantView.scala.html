@@ -24,7 +24,7 @@
         govukButton: GovukButton
 )
 
-@(form: Form[_], waypoints: Waypoints, index: Index, childName: ChildName)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints, index: Index, childName: ChildName, applicantName: AdultName)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("dateChildStartedLivingWithApplicant.title"))) {
 
@@ -34,12 +34,16 @@
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value.day")))
         }
 
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">@messages("dateChildStartedLivingWithApplicant.heading", childName.firstName, applicantName.firstName)</h1>
+
+        <p class="govuk-body">@messages("dateChildStartedLivingWithApplicant.guidance")</p>
+
         @govukDateInput(
             DateViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(messages("dateChildStartedLivingWithApplicant.heading", childName.firstName)).asPageHeading()
+                legend = LegendViewModel(messages("dateChildStartedLivingWithApplicant.heading", childName.firstName)).visuallyHidden()
             )
-                    .withHint(HintViewModel(messages("dateChildStartedLivingWithApplicant.hint")))
+            .withHint(HintViewModel(messages("dateChildStartedLivingWithApplicant.hint")))
         )
 
         @govukButton(

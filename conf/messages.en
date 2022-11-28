@@ -1040,7 +1040,8 @@ previousGuardianPhoneNumber.error.invalid = Enter a telephone number, like 01632
 previousGuardianPhoneNumber.change.hidden = the person this child lived with’s telephone number
 
 dateChildStartedLivingWithApplicant.title = When did this child start living with you?
-dateChildStartedLivingWithApplicant.heading = When did {0} start living with you?
+dateChildStartedLivingWithApplicant.heading = When did {0} start living with you, {1}?
+dateChildStartedLivingWithApplicant.guidance = This date can be a rough estimate.
 dateChildStartedLivingWithApplicant.hint = For example, 20 9 2022.
 dateChildStartedLivingWithApplicant.checkYourAnswersLabel = Started living with you
 dateChildStartedLivingWithApplicant.error.required.all = Enter when {0} started living with you
