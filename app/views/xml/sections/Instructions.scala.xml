@@ -33,13 +33,12 @@
             <fo:block>@messages("pdf.childBenefitAddress.4")</fo:block>
         </fo:block>
 
-        <fo:block margin-bottom="4mm">@messages("pdf.whatToDoNow.p2")</fo:block>
 
         @if(model.anyDocumentsRequired) {
-            <fo:block margin-bottom="4mm">@messages("pdf.whatToDoNow.p3")</fo:block>
-            <fo:block margin-bottom="4mm">@messages("pdf.whatToDoNow.p4.documents")</fo:block>
+            <fo:block margin-bottom="4mm">@messages("pdf.whatToDoNow.p2")</fo:block>
+            <fo:block margin-bottom="4mm">@messages("pdf.whatToDoNow.p3.documents")</fo:block>
         } else {
-            <fo:block margin-bottom="4mm">@messages("pdf.whatToDoNow.p4.noDocuments")</fo:block>
+            <fo:block margin-bottom="4mm">@messages("pdf.whatToDoNow.p3.noDocuments")</fo:block>
         }
 
         <fo:block margin-bottom="0.5cm" font-weight="bold" font-size="18pt">@messages("pdf.whatHappensNext")</fo:block>
