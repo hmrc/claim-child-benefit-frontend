@@ -35,15 +35,17 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <h1 class="govuk-heading-xl">@messages("applicantNinoKnown.heading")</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">@messages("applicantNinoKnown.heading")</h1>
 
-        @govukWarningText(WarningText(content = messages("applicantNinoKnown.guidance")))
+        <p class="govuk-body">@messages("applicantNinoKnown.p1")</p>
+
+        @govukWarningText(WarningText(content = messages("applicantNinoKnown.p2")))
 
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
                 legend = LegendViewModel(messages("applicantNinoKnown.heading")).visuallyHidden()
-            ).withHint(HintViewModel(messages("applicantNinoKnown.hint")))
+            )
         )
 
         @govukButton(

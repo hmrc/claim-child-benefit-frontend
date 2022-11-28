@@ -536,7 +536,7 @@ applicantNationality.change.hidden = your nationality
 
 applicantNino.title = What is your National Insurance number?
 applicantNino.heading = What is your National Insurance number?
-applicantNino.hint = It is on your National Insurance card, benefit letter, payslip or P60. For example, QQ 12 34 56 C.
+applicantNino.hint = It is on your National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’.
 applicantNino.checkYourAnswersLabel = Your National Insurance number
 applicantNino.error.required = Enter your National Insurance number
 applicantNino.error.invalid = Enter your National Insurance number in the correct format
@@ -544,8 +544,8 @@ applicantNino.change.hidden = your National Insurance number
 
 applicantNinoKnown.title = Do you know your National Insurance number?
 applicantNinoKnown.heading = Do you know your National Insurance number?
-applicantNinoKnown.guidance = If you have a National Insurance number but you do not provide it, your application will be delayed.
-applicantNinoKnown.hint = It is on your National Insurance card, benefit letter, payslip or P60. For example, QQ 12 34 56 C.
+applicantNinoKnown.p1 = It is on your National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’.
+applicantNinoKnown.p2 = If you have a National Insurance number but you do not provide it, your application will be delayed.
 applicantNinoKnown.checkYourAnswersLabel = Do you know your National Insurance number?
 applicantNinoKnown.error.required = Select yes if you know your National Insurance number
 applicantNinoKnown.change.hidden = if you know your National Insurance number
@@ -684,7 +684,7 @@ partnerNationality.change.hidden = {0}’s nationality
 
 partnerNino.title = What is your partner’s National Insurance number?
 partnerNino.heading = What is {0}’s National Insurance number?
-partnerNino.hint = It’s on their National Insurance card, benefit letter, payslip or P60. For example, QQ 12 34 56 C.
+partnerNino.hint = It’s on their National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’.
 partnerNino.checkYourAnswersLabel = {0}’s National Insurance number?
 partnerNino.error.required = Enter {0}’s National Insurance number
 partnerNino.error.invalid = Enter the National Insurance number in the correct format
@@ -692,7 +692,7 @@ partnerNino.change.hidden = {0}’s National Insurance number
 
 partnerNinoKnown.title = Do you know your partner’s National Insurance number?
 partnerNinoKnown.heading = Do you know {0}’s National Insurance number?
-partnerNinoKnown.hint = It’s on their National Insurance card, benefit letter, payslip or P60.  For example, QQ 12 34 56 C.
+partnerNinoKnown.hint = It’s on their National Insurance card, benefit letter, payslip or P60.  For example, ‘QQ 12 34 56 C’.
 partnerNinoKnown.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
 partnerNinoKnown.error.required = Select yes if you know {0}’s National Insurance number
 partnerNinoKnown.change.hidden = if you know {0}’s National Insurance number
