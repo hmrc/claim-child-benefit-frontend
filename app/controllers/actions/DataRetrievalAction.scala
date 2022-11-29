@@ -16,7 +16,7 @@
 
 package controllers.actions
 
-import models.requests.{IdentifierRequest, OptionalDataRequest}
+import models.requests.{AuthenticatedIdentifierRequest, IdentifierRequest, OptionalDataRequest, UnauthenticatedIdentifierRequest}
 import play.api.mvc.ActionTransformer
 import services.UserDataService
 
@@ -29,8 +29,13 @@ class DataRetrievalActionImpl @Inject()(
 
   override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = {
 
-    userDataService.get(request.userId).map {
-      OptionalDataRequest(request, request.userId, _)
+    val nino: Option[String] = request match {
+      case a: AuthenticatedIdentifierRequest[_]   => Some(a.nino)
+      case _: UnauthenticatedIdentifierRequest[_] => None
+    }
+
+    userDataService.get(request.userId).map { maybeAnswers =>
+      OptionalDataRequest(request, request.userId, maybeAnswers.map(_.copy(nino = nino)))
     }
   }
 }

@@ -18,7 +18,7 @@ package controllers.actions
 
 import base.SpecBase
 import models.UserAnswers
-import models.requests.{IdentifierRequest, OptionalDataRequest, UnauthenticatedIdentifierRequest}
+import models.requests.{AuthenticatedIdentifierRequest, IdentifierRequest, OptionalDataRequest, UnauthenticatedIdentifierRequest}
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.test.FakeRequest
@@ -34,6 +34,9 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
   }
 
   "Data Retrieval Action" - {
+
+    val userId = "userId"
+    val nino = "nino"
 
     "when there is no data in the cache" - {
 
@@ -51,15 +54,35 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
 
     "when there is data in the cache" - {
 
-      "must build a userAnswers object and add it to the request" in {
+      "and the user is unauthenticated" - {
 
-        val sessionRepository = mock[UserDataService]
-        when(sessionRepository.get("id")) thenReturn Future(Some(UserAnswers("id")))
-        val action = new Harness(sessionRepository)
+        "must build a userAnswers object and add it to the request" in {
 
-        val result = action.callTransform(UnauthenticatedIdentifierRequest(FakeRequest(), "id")).futureValue
+          val sessionRepository = mock[UserDataService]
+          val userAnswers = UserAnswers(userId)
+          when(sessionRepository.get(userId)) thenReturn Future(Some(userAnswers))
+          val action = new Harness(sessionRepository)
 
-        result.userAnswers mustBe defined
+          val result = action.callTransform(UnauthenticatedIdentifierRequest(FakeRequest(), userId)).futureValue
+
+          result.userAnswers.value mustEqual userAnswers
+        }
+      }
+
+      "and the user is authenticated" - {
+
+        "must build a userAnswers object, including the NINO from the request, and add it to the request" in {
+
+          val sessionRepository = mock[UserDataService]
+          val cachedAnswers = UserAnswers(userId)
+          when(sessionRepository.get(userId)) thenReturn Future(Some(cachedAnswers))
+          val action = new Harness(sessionRepository)
+
+          val result = action.callTransform(AuthenticatedIdentifierRequest(FakeRequest(), userId, nino)).futureValue
+
+          val expectedAnswers = cachedAnswers.copy(nino = Some(nino))
+          result.userAnswers.value mustEqual expectedAnswers
+        }
       }
     }
   }

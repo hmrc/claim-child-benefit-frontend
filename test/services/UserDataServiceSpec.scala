@@ -42,7 +42,7 @@ class UserDataServiceSpec
   private val instant   = Instant.now.truncatedTo(ChronoUnit.MILLIS)
   private val stubClock = Clock.fixed(instant, ZoneId.systemDefault)
   private val userId    = "foo"
-  private val answers   = UserAnswers(userId, Json.obj("bar" -> "baz"), Instant.now(stubClock))
+  private val answers   = UserAnswers(userId, Json.obj("bar" -> "baz"), lastUpdated = Instant.now(stubClock))
 
   private val mockRepo = mock[SessionRepository]
 

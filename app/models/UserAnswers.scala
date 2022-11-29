@@ -28,6 +28,7 @@ import scala.util.{Failure, Success, Try}
 final case class UserAnswers(
                               id: String,
                               data: JsObject = Json.obj(),
+                              nino: Option[String] = None,
                               lastUpdated: Instant = Instant.now
                             ) {
 
@@ -90,6 +91,7 @@ object UserAnswers {
     (
       (__ \ "_id").read[String] and
       (__ \ "data").read[JsObject] and
+      (__ \ "nino").readNullable[String] and
       (__ \ "lastUpdated").read(MongoJavatimeFormats.instantFormat)
     ) (UserAnswers.apply _)
   }
@@ -101,6 +103,7 @@ object UserAnswers {
     (
       (__ \ "_id").write[String] and
       (__ \ "data").write[JsObject] and
+      (__ \ "nino").writeNullable[String] and
       (__ \ "lastUpdated").write(MongoJavatimeFormats.instantFormat)
     ) (unlift(UserAnswers.unapply))
   }
