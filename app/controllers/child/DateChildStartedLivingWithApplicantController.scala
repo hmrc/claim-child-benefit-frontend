@@ -20,8 +20,8 @@ import controllers.AnswerExtractor
 import controllers.actions._
 import forms.child.DateChildStartedLivingWithApplicantFormProvider
 import models.Index
-import pages.Waypoints
-import pages.child.{DateChildStartedLivingWithApplicantPage, ChildNamePage}
+import pages.{ApplicantNamePage, Waypoints}
+import pages.child.{ChildNamePage, DateChildStartedLivingWithApplicantPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserDataService
@@ -46,8 +46,8 @@ class DateChildStartedLivingWithApplicantController @Inject()(
 
   def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      getAnswer(ChildNamePage(index)) {
-        childName =>
+      getAnswers(ChildNamePage(index), ApplicantNamePage) {
+        case (childName, applicantName) =>
 
           val form = formProvider(childName)
 
@@ -56,20 +56,20 @@ class DateChildStartedLivingWithApplicantController @Inject()(
             case Some(value) => form.fill(value)
           }
 
-          Ok(view(preparedForm, waypoints, index, childName))
+          Ok(view(preparedForm, waypoints, index, childName, applicantName))
       }
   }
 
   def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      getAnswerAsync(ChildNamePage(index)) {
-        childName =>
+      getAnswersAsync(ChildNamePage(index), ApplicantNamePage) {
+        case (childName, applicantName) =>
 
           val form = formProvider(childName)
 
           form.bindFromRequest().fold(
             formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, waypoints, index, childName))),
+              Future.successful(BadRequest(view(formWithErrors, waypoints, index, childName, applicantName))),
 
             value =>
               for {

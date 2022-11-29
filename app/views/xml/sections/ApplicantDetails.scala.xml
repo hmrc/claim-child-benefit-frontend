@@ -12,7 +12,7 @@
 
 <fo:page-sequence master-reference="main">
 
-    @mainHeader()
+    @mainHeader(isH1 = true)
 
     @mainFooter()
 

@@ -39,10 +39,6 @@
         <li>@messages("print.whatYouNeedToDo.bullet4")</li>
     </ul>
 
-    <p class="govuk-body">@messages("print.whatYouNeedToDo.p1")</p>
-
-    <p class="govuk-body">@messages("print.whatYouNeedToDo.p2")</p>
-
     <p class="govuk-body">@messages("print.address")</p>
     <p class="govuk-body">
         @messages("print.address.1")<br />
@@ -50,6 +46,13 @@
         @messages("print.address.3")<br />
         @messages("print.address.4")
     </p>
+
+    @govukInset(InsetText(content = messages("print.whatYouNeedToDo.p1")))
+
+    <h2 class="govuk-heading-m">@messages("print.howToDownload")</h2>
+    <p class="govuk-body">@messages("print.howToDownload.p1")</p>
+    <p class="govuk-body">@messages("print.howToDownload.p2")</p>
+    <p class="govuk-body">@messages("print.howToDownload.p3")</p>
 
     <h2 class="govuk-heading-m">@messages("print.documentsToSend")</h2>
 
