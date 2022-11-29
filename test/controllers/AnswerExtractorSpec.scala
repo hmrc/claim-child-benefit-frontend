@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import models.UserAnswers
-import models.requests.DataRequest
+import models.requests.{DataRequest, UnauthenticatedIdentifierRequest}
 import pages.{QuestionPage, Waypoints}
 import play.api.libs.json.{JsPath, Json}
 import play.api.mvc.Results.{Ok, Redirect}
@@ -37,7 +37,7 @@ class AnswerExtractorSpec extends SpecBase {
   }
 
   private def buildRequest(answers: UserAnswers): DataRequest[AnyContent] =
-    DataRequest(FakeRequest(), answers.id, answers)
+    DataRequest(UnauthenticatedIdentifierRequest(FakeRequest(), "id"), answers.id, answers)
 
   private class TestController extends AnswerExtractor {
 
