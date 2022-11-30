@@ -25,7 +25,7 @@ import play.api.mvc.{BodyParsers, Call, Request, Result}
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.~
-import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions, CredentialStrength, IncorrectCredentialStrength, NoActiveSession}
+import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions, ConfidenceLevel, CredentialStrength, IncorrectCredentialStrength, NoActiveSession}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
@@ -45,19 +45,23 @@ class OptionalAuthIdentifierAction(
       .retrieve(
         Retrievals.affinityGroup and
           Retrievals.credentialStrength and
+          Retrievals.confidenceLevel and
           Retrievals.internalId and
           Retrievals.nino
       ) {
-        case Some(Agent) ~ _ ~ _ ~ _ =>
+        case Some(Agent) ~ _ ~ _ ~ _ ~ _ =>
           redirectTo(authRoutes.AuthController.unsupportedAffinityGroupAgent)
 
-        case Some(Organisation) ~ _ ~ _ ~ _ =>
+        case Some(Organisation) ~ _ ~ _ ~ _ ~ _ =>
           redirectTo(authRoutes.AuthController.unsupportedAffinityGroupOrganisation(config.loginContinueUrl + request.path))
 
-        case Some(Individual) ~ Some(CredentialStrength.weak) ~ _ ~ _ =>
+        case Some(Individual) ~ Some(CredentialStrength.weak) ~ _ ~ _ ~ _ =>
           upliftMfa(request)
 
-        case Some(Individual) ~ Some(CredentialStrength.strong) ~ Some(internalId) ~ Some(nino) =>
+        case Some(Individual) ~ _ ~ confidenceLevel ~ _ ~ _ if confidenceLevel < ConfidenceLevel.L250  =>
+          upliftIv(request)
+
+        case Some(Individual) ~ Some(CredentialStrength.strong) ~ _ ~ Some(internalId) ~ Some(nino) =>
           block(AuthenticatedIdentifierRequest(request, internalId, nino))
     }.recoverWith {
       case _: NoActiveSession =>
@@ -82,4 +86,15 @@ class OptionalAuthIdentifierAction(
       )
     ))
   }
+
+  private def upliftIv(request: Request[_]): Future[Result] =
+    Future.successful(Redirect(
+      config.upliftIvUrl,
+      Map(
+        "origin" -> Seq(config.origin),
+        "confidenceLevel" -> Seq(ConfidenceLevel.L250.toString),
+        "completionUrl" -> Seq(config.loginContinueUrl + request.path),
+        "failureUrl" -> Seq(config.loginContinueUrl + authRoutes.IvController.handleIvFailure.url)
+      )
+    ))
 }

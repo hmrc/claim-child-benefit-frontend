@@ -24,6 +24,7 @@ GET         /agent-unsupported                          controllers.auth.AuthCon
 GET         /organisation-unsupported                   controllers.auth.AuthController.unsupportedAffinityGroupOrganisation(continueUrl: String)
 GET         /register                                   controllers.auth.AuthController.redirectToRegister(continueUrl: String)
 
+GET         /identity-complete                          controllers.auth.IvController.handleIvFailure
 # Initial section
 
 GET        /always-lived-in-uk                        controllers.AlwaysLivedInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
