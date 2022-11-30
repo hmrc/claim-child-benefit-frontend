@@ -39,6 +39,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   val signOutUrl: String       = configuration.get[String]("urls.signOut")
   val registerUrl: String      = configuration.get[String]("urls.register")
   val origin: String           = configuration.get[String]("origin")
+  val upliftMfaUrl: String     = configuration.get[String]("urls.uplift-mfa")
 
   private val exitSurveyBaseUrl: String = configuration.get[Service]("microservice.services.feedback-frontend").baseUrl
   val exitSurveyUrl: String             = s"$exitSurveyBaseUrl/feedback/claim-child-benefit-frontend"

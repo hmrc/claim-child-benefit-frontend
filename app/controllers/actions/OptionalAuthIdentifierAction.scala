@@ -25,7 +25,7 @@ import play.api.mvc.{BodyParsers, Call, Request, Result}
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.~
-import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions, NoActiveSession}
+import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions, CredentialStrength, IncorrectCredentialStrength, NoActiveSession}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
@@ -41,15 +41,24 @@ class OptionalAuthIdentifierAction(
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    authorised().retrieve(Retrievals.affinityGroup and Retrievals.internalId and Retrievals.nino) {
-      case Some(Agent) ~ _ ~ _ =>
-        redirectTo(authRoutes.AuthController.unsupportedAffinityGroupAgent)
+    authorised()
+      .retrieve(
+        Retrievals.affinityGroup and
+          Retrievals.credentialStrength and
+          Retrievals.internalId and
+          Retrievals.nino
+      ) {
+        case Some(Agent) ~ _ ~ _ ~ _ =>
+          redirectTo(authRoutes.AuthController.unsupportedAffinityGroupAgent)
 
-      case Some(Organisation) ~ _ ~ _ =>
-        redirectTo(authRoutes.AuthController.unsupportedAffinityGroupOrganisation(config.loginContinueUrl + request.path))
+        case Some(Organisation) ~ _ ~ _ ~ _ =>
+          redirectTo(authRoutes.AuthController.unsupportedAffinityGroupOrganisation(config.loginContinueUrl + request.path))
 
-      case Some(Individual) ~ Some(internalId) ~ Some(nino) =>
-        block(AuthenticatedIdentifierRequest(request, internalId, nino))
+        case Some(Individual) ~ Some(CredentialStrength.weak) ~ _ ~ _ =>
+          upliftMfa(request)
+
+        case Some(Individual) ~ Some(CredentialStrength.strong) ~ Some(internalId) ~ Some(nino) =>
+          block(AuthenticatedIdentifierRequest(request, internalId, nino))
     }.recoverWith {
       case _: NoActiveSession =>
         hc.sessionId match {
@@ -63,4 +72,14 @@ class OptionalAuthIdentifierAction(
 
   private def redirectTo(call: Call): Future[Result] =
     Future.successful(Redirect(call))
+
+  private def upliftMfa(request: Request[_]): Future[Result] = {
+    Future.successful(Redirect(
+      config.upliftMfaUrl,
+      Map(
+        "origin" -> Seq(config.origin),
+        "continueUrl" -> Seq(config.loginContinueUrl + request.path)
+      )
+    ))
+  }
 }

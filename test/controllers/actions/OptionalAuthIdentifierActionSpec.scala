@@ -26,9 +26,9 @@ import play.api.mvc.Results.Ok
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
-import uk.gov.hmrc.auth.core.{AuthConnector, MissingBearerToken}
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
+import uk.gov.hmrc.auth.core.{AuthConnector, CredentialStrength, IncorrectCredentialStrength, MissingBearerToken}
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -49,48 +49,78 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
 
     "when the user is authenticated" - {
 
-      "as an agent" - {
+      "with weak credentials" in {
 
-        "they must be redirected to Unsupported Affinity Group - Agent" in {
+        val authAction = new OptionalAuthIdentifierAction(
+          new FakeAuthConnector(Some(Individual) ~ Some(CredentialStrength.weak) ~ Some(userId) ~ Some(nino)),
+          bodyParsers,
+          config
+        )
+        val request = FakeRequest().withSession(SessionKeys.sessionId -> sessionId)
 
-          val authAction = new OptionalAuthIdentifierAction(new FakeAuthConnector(Some(Agent) ~ Some(userId) ~ Some(nino)), bodyParsers, config)
-          val request = FakeRequest().withSession(SessionKeys.sessionId -> sessionId)
+        val result = authAction(a => Ok(a.userId))(request)
 
-          val result = authAction(a => Ok(a.userId))(request)
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual authRoutes.AuthController.unsupportedAffinityGroupAgent.url
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual "http://localhost:9553/bas-gateway/uplift-mfa?origin=CHB&continueUrl=http%3A%2F%2Flocalhost%3A11303%2Fclaim-child-benefit%2F"
       }
 
-      "as an organisation user" - {
+      "with strong credentials" - {
 
-        "they must be redirected to Unsupported Affinity Group - Organisation" in {
+        "as an agent" - {
 
-          val authAction = new OptionalAuthIdentifierAction(new FakeAuthConnector(Some(Organisation) ~ Some(userId) ~ Some(nino)), bodyParsers, config)
-          val request = FakeRequest().withSession(SessionKeys.sessionId -> sessionId)
+          "they must be redirected to Unsupported Affinity Group - Agent" in {
 
-          val result = authAction(a => Ok(a.userId))(request)
+            val authAction = new OptionalAuthIdentifierAction(
+              new FakeAuthConnector(Some(Agent) ~ Some(CredentialStrength.strong) ~ Some(userId) ~ Some(nino)),
+              bodyParsers,
+              config
+            )
+            val request = FakeRequest().withSession(SessionKeys.sessionId -> sessionId)
 
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual authRoutes.AuthController.unsupportedAffinityGroupOrganisation("http://localhost:11303/claim-child-benefit-frontend/").url
+            val result = authAction(a => Ok(a.userId))(request)
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual authRoutes.AuthController.unsupportedAffinityGroupAgent.url
+          }
         }
-      }
 
-      "as an individual" - {
+        "as an organisation user" - {
 
-        "must use an AuthenticatedIdentifierRequest" in {
+          "they must be redirected to Unsupported Affinity Group - Organisation" in {
 
-          val authAction = new OptionalAuthIdentifierAction(new FakeAuthConnector(Some(Individual) ~ Some(userId) ~ Some(nino)), bodyParsers, config)
-          val request = FakeRequest().withSession(SessionKeys.sessionId -> sessionId)
+            val authAction = new OptionalAuthIdentifierAction(
+              new FakeAuthConnector(Some(Organisation) ~ Some(CredentialStrength.strong) ~ Some(userId) ~ Some(nino)),
+              bodyParsers,
+              config
+            )
+            val request = FakeRequest().withSession(SessionKeys.sessionId -> sessionId)
 
-          val result = authAction(a => a match {
-            case x: AuthenticatedIdentifierRequest[_] => Ok(s"${x.userId} ${x.nino}")
-            case y: UnauthenticatedIdentifierRequest[_] => Ok(y.userId)
-          })(request)
+            val result = authAction(a => Ok(a.userId))(request)
 
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual s"$userId $nino"
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual authRoutes.AuthController.unsupportedAffinityGroupOrganisation("http://localhost:11303/claim-child-benefit/").url
+          }
+        }
+
+        "as an individual" - {
+
+          "must use an AuthenticatedIdentifierRequest" in {
+
+            val authAction = new OptionalAuthIdentifierAction(
+              new FakeAuthConnector(Some(Individual) ~ Some(CredentialStrength.strong) ~ Some(userId) ~ Some(nino)),
+              bodyParsers,
+              config
+            )
+            val request = FakeRequest().withSession(SessionKeys.sessionId -> sessionId)
+
+            val result = authAction(a => a match {
+              case x: AuthenticatedIdentifierRequest[_] => Ok(s"${x.userId} ${x.nino}")
+              case y: UnauthenticatedIdentifierRequest[_] => Ok(y.userId)
+            })(request)
+
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual s"$userId $nino"
+          }
         }
       }
     }
