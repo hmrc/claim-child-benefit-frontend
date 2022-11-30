@@ -19,8 +19,11 @@ GET         /check-your-answers                          controllers.CheckYourAn
 GET         /reset-application-form                      controllers.auth.AuthController.signOut
 GET         /application-form-has-been-reset             controllers.auth.SignedOutController.onPageLoad
 
-GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad
+GET         /unauthorised                               controllers.UnauthorisedController.onPageLoad
 GET         /agent-unsupported                          controllers.auth.AuthController.unsupportedAffinityGroupAgent
+GET         /organisation-unsupported                   controllers.auth.AuthController.unsupportedAffinityGroupOrganisation(continueUrl: String)
+GET         /register                                   controllers.auth.AuthController.redirectToRegister(continueUrl: String)
+
 # Initial section
 
 GET        /always-lived-in-uk                        controllers.AlwaysLivedInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)

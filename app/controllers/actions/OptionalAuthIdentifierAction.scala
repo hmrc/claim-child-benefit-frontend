@@ -16,12 +16,13 @@
 
 package controllers.actions
 
+import config.FrontendAppConfig
 import controllers.auth.{routes => authRoutes}
 import controllers.routes
 import models.requests.{AuthenticatedIdentifierRequest, IdentifierRequest, UnauthenticatedIdentifierRequest}
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{BodyParsers, Call, Request, Result}
-import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual}
+import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions, NoActiveSession}
@@ -32,7 +33,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class OptionalAuthIdentifierAction(
                                     val authConnector: AuthConnector,
-                                    val parser: BodyParsers.Default
+                                    val parser: BodyParsers.Default,
+                                    config: FrontendAppConfig
                                   )(implicit val executionContext: ExecutionContext) extends IdentifierAction with AuthorisedFunctions {
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
@@ -42,6 +44,9 @@ class OptionalAuthIdentifierAction(
     authorised().retrieve(Retrievals.affinityGroup and Retrievals.internalId and Retrievals.nino) {
       case Some(Agent) ~ _ ~ _ =>
         redirectTo(authRoutes.AuthController.unsupportedAffinityGroupAgent)
+
+      case Some(Organisation) ~ _ ~ _ =>
+        redirectTo(authRoutes.AuthController.unsupportedAffinityGroupOrganisation(config.loginContinueUrl + request.path))
 
       case Some(Individual) ~ Some(internalId) ~ Some(nino) =>
         block(AuthenticatedIdentifierRequest(request, internalId, nino))

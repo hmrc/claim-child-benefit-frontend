@@ -24,7 +24,7 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserDataService
-import views.html.auth.UnsupportedAffinityGroupAgentView
+import views.html.auth.{UnsupportedAffinityGroupAgentView, UnsupportedAffinityGroupOrganisationView}
 
 import scala.concurrent.Future
 
@@ -71,6 +71,41 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view()(request, messages(application)).toString
+      }
+    }
+  }
+
+  "unsupportedAffinityGroupOrganisation" - {
+
+    "must return Ok and the correct view" in {
+
+      val application = applicationBuilder(None).build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.AuthController.unsupportedAffinityGroupOrganisation("continueUrl").url)
+
+        val result = route(application, request).value
+        val view = application.injector.instanceOf[UnsupportedAffinityGroupOrganisationView]
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view("continueUrl")(request, messages(application)).toString
+      }
+    }
+  }
+
+  "redirectToRegister" - {
+
+    "must Redirect to bas-gateway login" in {
+
+      val application = applicationBuilder(None).build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.AuthController.redirectToRegister("continueUrl").url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual "http://localhost:9553/bas-gateway/register?origin=CHB&continueUrl=continueUrl&accountType=Individual"
       }
     }
   }

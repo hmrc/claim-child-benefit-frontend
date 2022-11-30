@@ -1312,3 +1312,9 @@ unsupportedAffinityGroupAgent.title = You cannot use this service
 unsupportedAffinityGroupAgent.heading = You cannot use this service
 unsupportedAffinityGroupAgent.p1 = Agents cannot make a claim through this scheme on behalf of their client.
 unsupportedAffinityGroupAgent.p2 = You should tell your clients that they will need to make the claim themselves.
+
+unsupportedAffinityGroupOrganisation.title = You cannot use this service
+unsupportedAffinityGroupOrganisation.heading = You cannot use this service
+unsupportedAffinityGroupOrganisation.p1 = You must sign in using a Government Gateway account that is not associated with a business.
+unsupportedAffinityGroupOrganisation.p2 = If you do not have a Government Gateway account you can register for one.
+unsupportedAffinityGroupOrganisation.link.text = Register or sign in to Government Gateway

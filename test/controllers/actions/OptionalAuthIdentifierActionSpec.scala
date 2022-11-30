@@ -18,13 +18,14 @@ package controllers.actions
 
 import auth.Retrievals._
 import base.SpecBase
+import config.FrontendAppConfig
 import controllers.auth.{routes => authRoutes}
 import models.requests.{AuthenticatedIdentifierRequest, UnauthenticatedIdentifierRequest}
 import play.api.mvc.BodyParsers
 import play.api.mvc.Results.Ok
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual}
+import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
 import uk.gov.hmrc.auth.core.{AuthConnector, MissingBearerToken}
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
@@ -40,6 +41,7 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
 
     val application = applicationBuilder(userAnswers = None).build()
     val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+    val config = application.injector.instanceOf[FrontendAppConfig]
 
     val sessionId = "sessionId"
     val userId = "userId"
@@ -49,9 +51,9 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
 
       "as an agent" - {
 
-        "must redirect to Unsupported Affinity Group - Agent" in {
+        "they must be redirected to Unsupported Affinity Group - Agent" in {
 
-          val authAction = new OptionalAuthIdentifierAction(new FakeAuthConnector(Some(Agent) ~ Some(userId) ~ Some(nino)), bodyParsers)
+          val authAction = new OptionalAuthIdentifierAction(new FakeAuthConnector(Some(Agent) ~ Some(userId) ~ Some(nino)), bodyParsers, config)
           val request = FakeRequest().withSession(SessionKeys.sessionId -> sessionId)
 
           val result = authAction(a => Ok(a.userId))(request)
@@ -61,11 +63,25 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
         }
       }
 
+      "as an organisation user" - {
+
+        "they must be redirected to Unsupported Affinity Group - Organisation" in {
+
+          val authAction = new OptionalAuthIdentifierAction(new FakeAuthConnector(Some(Organisation) ~ Some(userId) ~ Some(nino)), bodyParsers, config)
+          val request = FakeRequest().withSession(SessionKeys.sessionId -> sessionId)
+
+          val result = authAction(a => Ok(a.userId))(request)
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual authRoutes.AuthController.unsupportedAffinityGroupOrganisation("http://localhost:11303/claim-child-benefit-frontend/").url
+        }
+      }
+
       "as an individual" - {
 
         "must use an AuthenticatedIdentifierRequest" in {
 
-          val authAction = new OptionalAuthIdentifierAction(new FakeAuthConnector(Some(Individual) ~ Some(userId) ~ Some(nino)), bodyParsers)
+          val authAction = new OptionalAuthIdentifierAction(new FakeAuthConnector(Some(Individual) ~ Some(userId) ~ Some(nino)), bodyParsers, config)
           val request = FakeRequest().withSession(SessionKeys.sessionId -> sessionId)
 
           val result = authAction(a => a match {
@@ -83,7 +99,7 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
 
       "must use an UnauthenticatedIdentifierRequest" in {
 
-        val authAction = new OptionalAuthIdentifierAction(new FakeFailingAuthConnector(MissingBearerToken()), bodyParsers)
+        val authAction = new OptionalAuthIdentifierAction(new FakeFailingAuthConnector(MissingBearerToken()), bodyParsers, config)
         val request = FakeRequest().withSession(SessionKeys.sessionId -> sessionId)
 
         val result = authAction(a => a match {
@@ -97,7 +113,7 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
 
       "must redirect to the session expired page when the user is unauthenticated and has no session identifier" in {
 
-        val authAction = new OptionalAuthIdentifierAction(new FakeFailingAuthConnector(new MissingBearerToken), bodyParsers)
+        val authAction = new OptionalAuthIdentifierAction(new FakeFailingAuthConnector(new MissingBearerToken), bodyParsers, config)
         val request = FakeRequest()
 
         val result = authAction(a => Ok(a.userId))(request)
