@@ -28,7 +28,7 @@
 
 @layout(pageTitle = title(form, messages("applicantName.title"))) {
 
-    @formHelper(action = routes.ApplicantNameController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.ApplicantNameController.onSubmit(waypoints)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -42,6 +42,7 @@
                 label = LabelViewModel(messages("applicantName.field.firstName"))
             )
             .withWidth(Full)
+            .withAutocomplete("given-name")
         )
 
         @govukInput(
@@ -50,6 +51,7 @@
                 label = LabelViewModel(messages("applicantName.field.middleNames"))
             )
             .withWidth(Full)
+            .withAutocomplete("additional-name")
         )
 
         @govukInput(
@@ -58,6 +60,7 @@
                 label = LabelViewModel(messages("applicantName.field.lastName"))
             )
             .withWidth(Full)
+            .withAutocomplete("family-name")
         )
 
         @govukButton(
