@@ -98,9 +98,7 @@ object UserAnswers {
   val writes: OWrites[UserAnswers] = {
 
     import play.api.libs.functional.syntax._
-
-    val foo = unlift(UserAnswers.unapply)
-
+    
     (
       (__ \ "_id").write[String] and
       (__ \ "data").write[JsObject] and
