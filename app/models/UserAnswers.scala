@@ -91,21 +91,21 @@ object UserAnswers {
     (
       (__ \ "_id").read[String] and
       (__ \ "data").read[JsObject] and
-      (__ \ "nino").readNullable[String] and
       (__ \ "lastUpdated").read(MongoJavatimeFormats.instantFormat)
-    ) (UserAnswers.apply _)
+    ) ((id, data, lastUpdated) => UserAnswers(id, data, None, lastUpdated))
   }
 
   val writes: OWrites[UserAnswers] = {
 
     import play.api.libs.functional.syntax._
 
+    val foo = unlift(UserAnswers.unapply)
+
     (
       (__ \ "_id").write[String] and
       (__ \ "data").write[JsObject] and
-      (__ \ "nino").writeNullable[String] and
       (__ \ "lastUpdated").write(MongoJavatimeFormats.instantFormat)
-    ) (unlift(UserAnswers.unapply))
+    ) (ua => (ua.id, ua.data, ua.lastUpdated))
   }
 
   implicit val format: OFormat[UserAnswers] = OFormat(reads, writes)
