@@ -24,31 +24,31 @@
             <fo:block margin-top="8mm" margin-bottom="8mm">
                 <fo:block>
                     <fo:inline border="0.4mm solid gray" padding-top="0.3cm" padding-left="0.6cm">
-                        <fo:wrapper role="artefact"> </fo:wrapper>
+                        <fo:wrapper role="artifact"> </fo:wrapper>
                     </fo:inline>
                     <fo:block margin-left="1.2cm" margin-top="-0.6cm">@messages("pdf.addressLabel.birthCertificates")</fo:block>
                 </fo:block>
                 <fo:block margin-left="7cm" margin-top="-4mm">
                     <fo:inline border="0.4mm solid gray" padding-top="0.3cm" padding-left="0.6cm">
-                        <fo:wrapper role="artefact"> </fo:wrapper>
+                        <fo:wrapper role="artifact"> </fo:wrapper>
                     </fo:inline>
                     <fo:block margin-left="1.2cm" margin-top="-0.6cm">@messages("pdf.addressLabel.passports")</fo:block>
                 </fo:block>
                 <fo:block margin-top="9mm">
                     <fo:inline border="0.4mm solid gray" padding-top="0.3cm" padding-left="0.6cm">
-                        <fo:wrapper role="artefact"> </fo:wrapper>
+                        <fo:wrapper role="artifact"> </fo:wrapper>
                     </fo:inline>
                     <fo:block margin-left="1.2cm" margin-top="-0.6cm">@messages("pdf.addressLabel.travelDocuments")</fo:block>
                 </fo:block>
                 <fo:block margin-left="7cm" margin-top="-4mm">
                     <fo:inline border="0.4mm solid gray" padding-top="0.3cm" padding-left="0.6cm">
-                        <fo:wrapper role="artefact"> </fo:wrapper>
+                        <fo:wrapper role="artifact"> </fo:wrapper>
                     </fo:inline>
                     <fo:block margin-left="1.2cm" margin-top="-0.6cm">@messages("pdf.addressLabel.adoptionCertificates")</fo:block>
                 </fo:block>
                 <fo:block margin-top="9mm">
                     <fo:inline border="0.4mm solid gray" padding-top="0.3cm" padding-left="0.6cm">
-                        <fo:wrapper role="artefact"> </fo:wrapper>
+                        <fo:wrapper role="artifact"> </fo:wrapper>
                     </fo:inline>
                     <fo:block margin-left="1.2cm" margin-top="-0.6cm">@messages("pdf.addressLabel.otherDocuments")</fo:block>
                 </fo:block>
