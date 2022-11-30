@@ -1307,3 +1307,8 @@ partnerIsHmfOrCivilServant.heading = Is your partner a member of HM&nbsp;Forces 
 partnerIsHmfOrCivilServant.checkYourAnswersLabel = Is your partner a member of HM Forces or a civil servant working abroad?
 partnerIsHmfOrCivilServant.error.required = Select yes if your partner is a member of HM Forces or a civil servant working abroad
 partnerIsHmfOrCivilServant.change.hidden = if your partner is a member of HM Forces or a civil servant working abroad
+
+unsupportedAffinityGroupAgent.title = You cannot use this service
+unsupportedAffinityGroupAgent.heading = You cannot use this service
+unsupportedAffinityGroupAgent.p1 = Agents cannot make a claim through this scheme on behalf of their client.
+unsupportedAffinityGroupAgent.p2 = You should tell your clients that they will need to make the claim themselves.

@@ -16,10 +16,12 @@
 
 package controllers.actions
 
+import controllers.auth.{routes => authRoutes}
 import controllers.routes
 import models.requests.{AuthenticatedIdentifierRequest, IdentifierRequest, UnauthenticatedIdentifierRequest}
 import play.api.mvc.Results.Redirect
-import play.api.mvc.{BodyParsers, Request, Result}
+import play.api.mvc.{BodyParsers, Call, Request, Result}
+import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions, NoActiveSession}
@@ -37,8 +39,11 @@ class OptionalAuthIdentifierAction(
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    authorised().retrieve(Retrievals.internalId and Retrievals.nino) {
-      case Some(internalId) ~ Some(nino) =>
+    authorised().retrieve(Retrievals.affinityGroup and Retrievals.internalId and Retrievals.nino) {
+      case Some(Agent) ~ _ ~ _ =>
+        redirectTo(authRoutes.AuthController.unsupportedAffinityGroupAgent)
+
+      case Some(Individual) ~ Some(internalId) ~ Some(nino) =>
         block(AuthenticatedIdentifierRequest(request, internalId, nino))
     }.recoverWith {
       case _: NoActiveSession =>
@@ -50,4 +55,7 @@ class OptionalAuthIdentifierAction(
         }
     }
   }
+
+  private def redirectTo(call: Call): Future[Result] =
+    Future.successful(Redirect(call))
 }

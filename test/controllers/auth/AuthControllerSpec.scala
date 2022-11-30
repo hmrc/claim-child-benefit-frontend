@@ -24,6 +24,7 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserDataService
+import views.html.auth.UnsupportedAffinityGroupAgentView
 
 import scala.concurrent.Future
 
@@ -52,6 +53,24 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual expectedRedirectUrl
         verify(mockUserDataService, times(1)).clear(eqTo(userAnswersId))
+      }
+    }
+  }
+
+  "unsupportedAffinityGroupAgent" - {
+
+    "must return Ok and the correct view" in {
+
+      val application = applicationBuilder(None).build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.AuthController.unsupportedAffinityGroupAgent.url)
+
+        val result = route(application, request).value
+        val view = application.injector.instanceOf[UnsupportedAffinityGroupAgentView]
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view()(request, messages(application)).toString
       }
     }
   }

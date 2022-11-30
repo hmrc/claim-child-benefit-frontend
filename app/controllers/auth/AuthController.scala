@@ -21,6 +21,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import views.html.auth.UnsupportedAffinityGroupAgentView
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
@@ -28,7 +29,8 @@ import scala.concurrent.ExecutionContext
 class AuthController @Inject()(
                                 val controllerComponents: MessagesControllerComponents,
                                 userDataService: UserDataService,
-                                identify: IdentifierAction
+                                identify: IdentifierAction,
+                                unsupportedAffinityGroupAgentView: UnsupportedAffinityGroupAgentView
                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   def signOut(): Action[AnyContent] = identify.async {
@@ -39,5 +41,9 @@ class AuthController @Inject()(
           _ =>
             Redirect(routes.SignedOutController.onPageLoad)
       }
+  }
+
+  def unsupportedAffinityGroupAgent: Action[AnyContent] = Action { implicit request =>
+    Ok(unsupportedAffinityGroupAgentView())
   }
 }

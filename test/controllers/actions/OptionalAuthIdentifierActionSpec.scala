@@ -18,11 +18,13 @@ package controllers.actions
 
 import auth.Retrievals._
 import base.SpecBase
+import controllers.auth.{routes => authRoutes}
 import models.requests.{AuthenticatedIdentifierRequest, UnauthenticatedIdentifierRequest}
 import play.api.mvc.BodyParsers
 import play.api.mvc.Results.Ok
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual}
 import uk.gov.hmrc.auth.core.{AuthConnector, MissingBearerToken}
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
@@ -45,18 +47,35 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
 
     "when the user is authenticated" - {
 
-      "must use an AuthenticatedIdentifierRequest" in {
+      "as an agent" - {
 
-        val authAction = new OptionalAuthIdentifierAction(new FakeAuthConnector(Some(userId) ~ Some(nino)), bodyParsers)
-        val request = FakeRequest().withSession(SessionKeys.sessionId -> sessionId)
+        "must redirect to Unsupported Affinity Group - Agent" in {
 
-        val result = authAction(a => a match {
-          case x: AuthenticatedIdentifierRequest[_] => Ok(s"${x.userId} ${x.nino}")
-          case y: UnauthenticatedIdentifierRequest[_] => Ok(y.userId)
-        })(request)
+          val authAction = new OptionalAuthIdentifierAction(new FakeAuthConnector(Some(Agent) ~ Some(userId) ~ Some(nino)), bodyParsers)
+          val request = FakeRequest().withSession(SessionKeys.sessionId -> sessionId)
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual s"$userId $nino"
+          val result = authAction(a => Ok(a.userId))(request)
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual authRoutes.AuthController.unsupportedAffinityGroupAgent.url
+        }
+      }
+
+      "as an individual" - {
+
+        "must use an AuthenticatedIdentifierRequest" in {
+
+          val authAction = new OptionalAuthIdentifierAction(new FakeAuthConnector(Some(Individual) ~ Some(userId) ~ Some(nino)), bodyParsers)
+          val request = FakeRequest().withSession(SessionKeys.sessionId -> sessionId)
+
+          val result = authAction(a => a match {
+            case x: AuthenticatedIdentifierRequest[_] => Ok(s"${x.userId} ${x.nino}")
+            case y: UnauthenticatedIdentifierRequest[_] => Ok(y.userId)
+          })(request)
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual s"$userId $nino"
+        }
       }
     }
 
