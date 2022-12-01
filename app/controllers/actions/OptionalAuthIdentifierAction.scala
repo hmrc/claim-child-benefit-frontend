@@ -94,7 +94,7 @@ class OptionalAuthIdentifierAction(
         "origin" -> Seq(config.origin),
         "confidenceLevel" -> Seq(ConfidenceLevel.L250.toString),
         "completionUrl" -> Seq(config.loginContinueUrl + request.path),
-        "failureUrl" -> Seq(config.loginContinueUrl + authRoutes.IvController.handleIvFailure.url)
+        "failureUrl" -> Seq(config.loginContinueUrl + authRoutes.IvController.handleIvFailure(request.path, None).url)
       )
     ))
 }

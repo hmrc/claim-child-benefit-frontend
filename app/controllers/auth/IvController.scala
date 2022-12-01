@@ -16,17 +16,26 @@
 
 package controllers.auth
 
+import connectors.IvConnector
+import models.IvResult
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import javax.inject.Inject
+import scala.concurrent.ExecutionContext
 
 class IvController @Inject()(
-                              val controllerComponents: MessagesControllerComponents
-                            ) extends FrontendBaseController with I18nSupport {
+                              val controllerComponents: MessagesControllerComponents,
+                              ivConnector: IvConnector
+                            )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def handleIvFailure: Action[AnyContent] = Action { implicit request =>
-    ???
+  def handleIvFailure(continueUrl: String, journeyId: Option[String]): Action[AnyContent] = Action.async { implicit request =>
+    journeyId.map { id =>
+      ivConnector.getJourneyStatus(id).map {
+        case IvResult.Success =>
+          Redirect(continueUrl)
+      }
+    }.getOrElse(???)
   }
 }

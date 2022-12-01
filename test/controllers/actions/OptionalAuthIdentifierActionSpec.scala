@@ -118,7 +118,7 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
               val result = authAction(a => Ok(a.userId))(request)
 
               status(result) mustEqual SEE_OTHER
-              redirectLocation(result).value mustEqual "http://localhost:9948/mdtp/uplift?origin=CHB&confidenceLevel=250&completionUrl=http%3A%2F%2Flocalhost%3A11303%2F&failureUrl=http%3A%2F%2Flocalhost%3A11303%2Ffill-online%2Fclaim-child-benefit%2Fidentity-complete"
+              redirectLocation(result).value mustEqual "http://localhost:9948/mdtp/uplift?origin=CHB&confidenceLevel=250&completionUrl=http%3A%2F%2Flocalhost%3A11303%2F&failureUrl=http%3A%2F%2Flocalhost%3A11303%2Ffill-online%2Fclaim-child-benefit%2Fidentity-complete%3FcontinueUrl%3D%252F"
             }
           }
 
