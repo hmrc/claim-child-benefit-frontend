@@ -31,7 +31,7 @@ object IvResult {
   case object UserAborted extends IvResult
   case object Timeout extends IvResult
   case object TechnicalIssue extends IvResult
-  case object PreconditionFailed extends IvResult
+  case object IvPreconditionFailed extends IvResult
 
   implicit lazy val reads: Reads[IvResult] =
     (__ \ "progress" \ "result").read[String].flatMap {
@@ -44,6 +44,6 @@ object IvResult {
       case "UserAborted"                => Reads.pure(UserAborted)
       case "Timeout"                    => Reads.pure(Timeout)
       case "TechnicalIssue"             => Reads.pure(TechnicalIssue)
-      case "PreconditionFailed"         => Reads.pure(PreconditionFailed)
+      case "PreconditionFailed"         => Reads.pure(IvPreconditionFailed)
     }
 }

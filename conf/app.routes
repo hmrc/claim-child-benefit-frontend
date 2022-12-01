@@ -24,7 +24,17 @@ GET         /agent-unsupported                          controllers.auth.AuthCon
 GET         /organisation-unsupported                   controllers.auth.AuthController.unsupportedAffinityGroupOrganisation(continueUrl: String)
 GET         /register                                   controllers.auth.AuthController.redirectToRegister(continueUrl: String)
 
-GET         /identity-complete                          controllers.auth.IvController.handleIvFailure(continueUrl: String, journeyId: Option[String])
+GET         /identity-verification/complete                          controllers.auth.IvController.handleIvFailure(continueUrl: String, journeyId: Option[String])
+GET         /identity-verification/incomplete                        controllers.auth.IvController.ivIncomplete
+GET         /identity-verification/failed-matching                   controllers.auth.IvController.ivFailedMatching(continueUrl: String)
+GET         /identity-verification/failed-identity-verification      controllers.auth.IvController.ivFailedIdentityVerification(continueUrl: String)
+GET         /identity-verification/insufficient-evidence             controllers.auth.IvController.ivInsufficientEvidence
+GET         /identity-verification/user-aborted                      controllers.auth.IvController.ivUserAborted(continueUrl: String)
+GET         /identity-verification/locked-out                        controllers.auth.IvController.ivLockedOut
+GET         /identity-verification/precondition-failed               controllers.auth.IvController.ivPreconditionFailed
+GET         /identity-verification/technical-issue                   controllers.auth.IvController.ivTechnicalIssue
+GET         /identity-verification/timeout                           controllers.auth.IvController.ivTimeout
+GET         /identity-verification/error                             controllers.auth.IvController.ivError
 
 # Initial section
 

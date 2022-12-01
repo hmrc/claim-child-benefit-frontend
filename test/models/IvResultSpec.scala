@@ -68,7 +68,7 @@ class IvResultSpec extends AnyFreeSpec with Matchers {
     }
 
     "must read PreconditionFailed from an Iv Result" in {
-      json("PreconditionFailed").as[IvResult] mustEqual IvResult.PreconditionFailed
+      json("PreconditionFailed").as[IvResult] mustEqual IvResult.IvPreconditionFailed
     }
   }
 }
