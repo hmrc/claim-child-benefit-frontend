@@ -23,6 +23,7 @@ GET         /unauthorised                               controllers.Unauthorised
 GET         /agent-unsupported                          controllers.auth.AuthController.unsupportedAffinityGroupAgent
 GET         /organisation-unsupported                   controllers.auth.AuthController.unsupportedAffinityGroupOrganisation(continueUrl: String)
 GET         /register                                   controllers.auth.AuthController.redirectToRegister(continueUrl: String)
+GET         /sign-in                                    controllers.auth.AuthController.redirectToLogin(continueUrl: String)
 
 GET         /identity-verification/complete                          controllers.auth.IvController.handleIvFailure(continueUrl: String, journeyId: Option[String])
 GET         /identity-verification/incomplete                        controllers.auth.IvController.ivIncomplete

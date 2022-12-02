@@ -95,7 +95,7 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
 
   "redirectToRegister" - {
 
-    "must Redirect to bas-gateway login" in {
+    "must Redirect to bas-gateway register" in {
 
       val application = applicationBuilder(None).build()
 
@@ -106,6 +106,23 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual "http://localhost:9553/bas-gateway/register?origin=CHB&continueUrl=continueUrl&accountType=Individual"
+      }
+    }
+  }
+
+  "redirectToRegister" - {
+
+    "must Redirect to bas-gateway login" in {
+
+      val application = applicationBuilder(None).build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.AuthController.redirectToLogin("continueUrl").url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual "http://localhost:9553/bas-gateway/sign-in?origin=CHB&continue=continueUrl"
       }
     }
   }

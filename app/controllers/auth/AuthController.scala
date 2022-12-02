@@ -47,6 +47,16 @@ class AuthController @Inject()(
     )
   }
 
+  def redirectToLogin(continueUrl: String): Action[AnyContent] = Action { _ =>
+    Redirect(
+      config.loginUrl,
+      Map(
+        "origin" -> Seq(config.origin),
+        "continue" -> Seq(continueUrl)
+      )
+    )
+  }
+
   def signOut(): Action[AnyContent] = identify.async {
     implicit request =>
       userDataService
