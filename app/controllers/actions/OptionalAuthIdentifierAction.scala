@@ -29,13 +29,14 @@ import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class OptionalAuthIdentifierAction(
-                                    val authConnector: AuthConnector,
-                                    val parser: BodyParsers.Default,
-                                    config: FrontendAppConfig
-                                  )(implicit val executionContext: ExecutionContext) extends IdentifierAction with AuthorisedFunctions {
+class OptionalAuthIdentifierAction @Inject()(
+                                              val authConnector: AuthConnector,
+                                              val parser: BodyParsers.Default,
+                                              config: FrontendAppConfig
+                                            )(implicit val executionContext: ExecutionContext) extends IdentifierAction with AuthorisedFunctions {
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
@@ -93,8 +94,8 @@ class OptionalAuthIdentifierAction(
       Map(
         "origin" -> Seq(config.origin),
         "confidenceLevel" -> Seq(ConfidenceLevel.L250.toString),
-        "completionUrl" -> Seq(config.loginContinueUrl + request.path),
-        "failureUrl" -> Seq(config.loginContinueUrl + authRoutes.IvController.handleIvFailure(request.path, None).url)
+        "completionURL" -> Seq(config.loginContinueUrl + request.path),
+        "failureURL" -> Seq(config.loginContinueUrl + authRoutes.IvController.handleIvFailure(request.path, None).url)
       )
     ))
 }
