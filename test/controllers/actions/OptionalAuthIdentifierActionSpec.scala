@@ -49,19 +49,22 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
 
     "when the user is authenticated" - {
 
-      "with weak credentials" in {
+      "with weak credentials" - {
 
-        val authAction = new OptionalAuthIdentifierAction(
-          new FakeAuthConnector(Some(Individual) ~ Some(CredentialStrength.weak) ~ Some(ConfidenceLevel.L250) ~ Some(userId) ~ Some(nino)),
-          bodyParsers,
-          config
-        )
-        val request = FakeRequest().withSession(SessionKeys.sessionId -> sessionId)
+        "they must be redirected to uplift MFA" in {
 
-        val result = authAction(a => Ok(a.userId))(request)
+          val authAction = new OptionalAuthIdentifierAction(
+            new FakeAuthConnector(Some(Individual) ~ Some(CredentialStrength.weak) ~ Some(ConfidenceLevel.L250) ~ Some(userId) ~ Some(nino)),
+            bodyParsers,
+            config
+          )
+          val request = FakeRequest().withSession(SessionKeys.sessionId -> sessionId)
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual "http://localhost:9553/bas-gateway/uplift-mfa?origin=CHB&continueUrl=http%3A%2F%2Flocalhost%3A11303%2F"
+          val result = authAction(a => Ok(a.userId))(request)
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual "http://localhost:9553/bas-gateway/uplift-mfa?origin=CHB&continueUrl=http%3A%2F%2Flocalhost%3A11303%2F"
+        }
       }
 
       "with strong credentials" - {
