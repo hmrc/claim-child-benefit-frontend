@@ -14,30 +14,30 @@
  * limitations under the License.
  */
 
-package controllers.partner
+package controllers.payments
 
 import base.SpecBase
 import pages.EmptyWaypoints
-import pages.partner.CheckPartnerDetailsPage
+import pages.payments.CheckPaymentDetailsPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import viewmodels.govuk.SummaryListFluency
-import views.html.partner.CheckPartnerDetailsView
+import views.html.payments.CheckPaymentDetailsView
 
-class CheckPartnerDetailsControllerSpec extends SpecBase with SummaryListFluency {
+class CheckPaymentDetailsControllerSpec extends SpecBase with SummaryListFluency {
 
-  "Check Partner Details" - {
+  "Check Payment Details" - {
 
     "must return OK and the correct view for a GET" in {
 
       val app = applicationBuilder(Some(emptyUserAnswers)).build()
 
       running(app) {
-        val request = FakeRequest(GET, routes.CheckPartnerDetailsController.onPageLoad.url)
+        val request = FakeRequest(GET, routes.CheckPaymentDetailsController.onPageLoad.url)
 
         val result = route(app, request).value
 
-        val view = app.injector.instanceOf[CheckPartnerDetailsView]
+        val view = app.injector.instanceOf[CheckPaymentDetailsView]
         val emptyList = SummaryListViewModel(Nil)
 
         status(result) mustEqual OK
@@ -50,12 +50,12 @@ class CheckPartnerDetailsControllerSpec extends SpecBase with SummaryListFluency
       val app = applicationBuilder(Some(emptyUserAnswers)).build()
 
       running(app) {
-        val request = FakeRequest(POST, routes.CheckPartnerDetailsController.onSubmit.url)
+        val request = FakeRequest(POST, routes.CheckPaymentDetailsController.onSubmit.url)
 
         val result = route(app, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual CheckPartnerDetailsPage.navigate(EmptyWaypoints, emptyUserAnswers, emptyUserAnswers).route.url
+        redirectLocation(result).value mustEqual CheckPaymentDetailsPage.navigate(EmptyWaypoints, emptyUserAnswers, emptyUserAnswers).route.url
       }
     }
   }

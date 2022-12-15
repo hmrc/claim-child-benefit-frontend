@@ -1369,3 +1369,7 @@ checkApplicantDetails.yourDetails = Your details
 checkPartnerDetails.title = Check your answers
 checkPartnerDetails.heading = Check your answers
 checkPartnerDetails.yourDetails = Partner details
+
+checkPaymentDetails.title = Check your answers
+checkPaymentDetails.heading = Check your answers
+checkPaymentDetails.yourDetails = Payment details
