@@ -1373,3 +1373,7 @@ checkPartnerDetails.yourDetails = Partner details
 checkPaymentDetails.title = Check your answers
 checkPaymentDetails.heading = Check your answers
 checkPaymentDetails.yourDetails = Payment details
+
+checkRelationshipDetails.title = Check your answers
+checkRelationshipDetails.heading = Check your answers
+checkRelationshipDetails.yourDetails = Relationship details

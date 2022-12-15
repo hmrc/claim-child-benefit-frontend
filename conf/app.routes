@@ -15,6 +15,8 @@ GET         /refresh-session                             controllers.KeepAliveCo
 GET         /there-is-a-problem                          controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
 GET         /check-your-answers                          controllers.CheckYourAnswersController.onPageLoad
+GET         /check-relationship-details                              controllers.CheckRelationshipDetailsController.onPageLoad
+POST        /check-relationship-details                              controllers.CheckRelationshipDetailsController.onSubmit
 
 GET         /reset-application-form                      controllers.auth.AuthController.signOut
 GET         /application-form-has-been-reset             controllers.auth.SignedOutController.onPageLoad
