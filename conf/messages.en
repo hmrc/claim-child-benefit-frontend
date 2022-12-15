@@ -1365,3 +1365,7 @@ ivError.p1 = Try again later.
 checkApplicantDetails.title = Check your answers
 checkApplicantDetails.heading = Check your answers
 checkApplicantDetails.yourDetails = Your details
+
+checkPartnerDetails.title = Check your answers
+checkPartnerDetails.heading = Check your answers
+checkPartnerDetails.yourDetails = Partner details
