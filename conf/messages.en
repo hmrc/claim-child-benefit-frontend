@@ -1361,3 +1361,7 @@ ivTimeout.p1 = Try again later.
 ivError.title = Sorry, there is a problem with the service
 ivError.heading = Sorry, there is a problem with the service
 ivError.p1 = Try again later.
+
+checkApplicantDetails.title = Check your answers
+checkApplicantDetails.heading = Check your answers
+checkApplicantDetails.yourDetails = Your details
