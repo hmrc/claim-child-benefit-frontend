@@ -17,10 +17,11 @@
 package services
 
 import controllers.applicant.{routes => applicantRoutes}
+import controllers.routes
 import models.UserAnswers
 import models.tasklist.Section
 import models.tasklist.SectionStatus._
-import pages.EmptyWaypoints
+import pages.{CheckRelationshipDetailsPage, EmptyWaypoints, RecentlyClaimedPage}
 import pages.applicant.{ApplicantNinoKnownPage, CheckApplicantDetailsPage}
 
 import javax.inject.Inject
@@ -35,6 +36,17 @@ class TaskListService @Inject()(journeyProgress: JourneyProgressService) {
       Section("taskList.paymentDetails", None, CannotStart),
       Section("taskList.furtherDetails", None, CannotStart)
     )
+
+  private[services] def relationshipSection(answers: UserAnswers): Section = {
+    val page = journeyProgress.continue(RecentlyClaimedPage, answers)
+    val status = page match {
+      case RecentlyClaimedPage => NotStarted
+      case CheckRelationshipDetailsPage => Completed
+      case _ => InProgress
+    }
+
+    Section("taskList.relationshipDetails", Some(page.route(EmptyWaypoints)), status)
+  }
 
   private[services] def applicantSection(answers: UserAnswers): Section = {
     val page = journeyProgress.continue(ApplicantNinoKnownPage, answers)
