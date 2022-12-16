@@ -84,31 +84,31 @@ class TaskListServiceSpec extends AnyFreeSpec with Matchers with ScalaFutures wi
 
       result mustEqual Section("taskList.yourDetails", Some(applicantRoutes.ApplicantNinoKnownController.onPageLoad(EmptyWaypoints)), InProgress)
     }
-
-    "must return a link and a status of Complete when the Journey Model provider can return an Applicant" in {
-
-      val applicant = Applicant(
-        name = AdultName("first", None, "last"),
-        previousFamilyNames = Nil,
-        dateOfBirth = LocalDate.now,
-        nationalInsuranceNumber = None,
-        currentAddress = UkAddress("first", None, "town", None, "AA11 1AA"),
-        previousAddress = None,
-        telephoneNumber = "0777 777777",
-        nationality = "British",
-        alwaysLivedInUk = true,
-        memberOfHMForcesOrCivilServantAbroad = Some(false),
-        currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
-      )
-
-      when(mockJourneyModelProvider.)
-
-      val answers = UserAnswers("id")
-      val service = new TaskListService()
-
-      val result = service.applicantSection(answers).futureValue
-
-      result mustEqual Section("taskList.yourDetails", Some(applicantRoutes.ApplicantNinoKnownController.onPageLoad(EmptyWaypoints)), Complete)
-    }
+//
+//    "must return a link and a status of Complete when the Journey Model provider can return an Applicant" in {
+//
+//      val applicant = Applicant(
+//        name = AdultName("first", None, "last"),
+//        previousFamilyNames = Nil,
+//        dateOfBirth = LocalDate.now,
+//        nationalInsuranceNumber = None,
+//        currentAddress = UkAddress("first", None, "town", None, "AA11 1AA"),
+//        previousAddress = None,
+//        telephoneNumber = "0777 777777",
+//        nationality = "British",
+//        alwaysLivedInUk = true,
+//        memberOfHMForcesOrCivilServantAbroad = Some(false),
+//        currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
+//      )
+//
+//      when(mockJourneyModelProvider.)
+//
+//      val answers = UserAnswers("id")
+//      val service = new TaskListService()
+//
+//      val result = service.applicantSection(answers).futureValue
+//
+//      result mustEqual Section("taskList.yourDetails", Some(applicantRoutes.ApplicantNinoKnownController.onPageLoad(EmptyWaypoints)), Complete)
+//    }
   }
 }

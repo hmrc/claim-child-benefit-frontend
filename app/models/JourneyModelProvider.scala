@@ -42,7 +42,7 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
       (
         IorT.fromIor[Future](getApplicant(answers)),
         IorT.fromIor[Future](getRelationship(answers)),
-        getChildren(answers),
+        IorT(getChildren(answers)),
         IorT.fromIor[Future](getBenefits(answers)),
         IorT.fromIor[Future](getPaymentPreference(answers)),
         IorT.fromIor[Future](answers.getIor(AdditionalInformationPage))
@@ -61,7 +61,7 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
     }
   }
 
-  private def getChildren(answers: UserAnswers)(implicit hc: HeaderCarrier): IorT[Future, NonEmptyChain[Query], NonEmptyList[Child]] = {
+  private def getChildren(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[IorNec[Query, NonEmptyList[Child]]] = {
 
     def getChild(index: Index): IorT[Future, NonEmptyChain[Query], Child] = {
 
@@ -271,8 +271,8 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
     answers.getIor(AllChildSummaries).getOrElse(Nil).indices.toList.parTraverse { i =>
       getChild(Index(i))
     }.flatMap { children =>
-      IorT.fromIor[Future](NonEmptyList.fromList(children).toRightIor(NonEmptyChain.one(AllChildSummaries)))
-    }
+      IorT.fromIor[Future](NonEmptyList.fromList(children).toRightIor(NonEmptyChain.one[Query](AllChildSummaries)))
+    }.value
   }
 
   private def getApplicant(answers: UserAnswers): IorNec[Query, Applicant] = {
