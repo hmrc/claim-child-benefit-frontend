@@ -27,7 +27,6 @@ import pages.child._
 import pages.income._
 import pages.partner._
 import pages.payments._
-import play.api.mvc.Call
 import queries.{AllChildPreviousNames, AllChildSummaries, AllPreviousFamilyNames, Query}
 import services.BrmsService
 import uk.gov.hmrc.http.HeaderCarrier
@@ -42,7 +41,7 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
       (
         IorT.fromIor[Future](getApplicant(answers)),
         IorT.fromIor[Future](getRelationship(answers)),
-        IorT(getChildren(answers)),
+        getChildren(answers),
         IorT.fromIor[Future](getBenefits(answers)),
         IorT.fromIor[Future](getPaymentPreference(answers)),
         IorT.fromIor[Future](answers.getIor(AdditionalInformationPage))
@@ -61,7 +60,7 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
     }
   }
 
-  private def getChildren(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[IorNec[Query, NonEmptyList[Child]]] = {
+  private def getChildren(answers: UserAnswers)(implicit hc: HeaderCarrier): IorT[Future, NonEmptyChain[Query], NonEmptyList[Child]] = {
 
     def getChild(index: Index): IorT[Future, NonEmptyChain[Query], Child] = {
 
@@ -271,11 +270,11 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
     answers.getIor(AllChildSummaries).getOrElse(Nil).indices.toList.parTraverse { i =>
       getChild(Index(i))
     }.flatMap { children =>
-      IorT.fromIor[Future](NonEmptyList.fromList(children).toRightIor(NonEmptyChain.one[Query](AllChildSummaries)))
-    }.value
+      IorT.fromIor[Future](NonEmptyList.fromList(children).toRightIor(NonEmptyChain.one(AllChildSummaries)))
+    }
   }
 
-  def getApplicant(answers: UserAnswers): IorNec[Query, Applicant] = {
+  private def getApplicant(answers: UserAnswers): IorNec[Query, Applicant] = {
 
     def getNino: IorNec[Query, Option[String]] =
       answers.getIor(ApplicantNinoKnownPage).flatMap {

@@ -16,33 +16,27 @@
 
 package services
 
-import cats.data._
 import controllers.applicant.{routes => applicantRoutes}
-import models.JourneyModel.Applicant
-import models.{AdultName, CurrentlyReceivingChildBenefit, JourneyModelProvider, UkAddress, UserAnswers}
+import models.UserAnswers
 import models.tasklist.Section
 import models.tasklist.SectionStatus.{CannotStart, Completed, InProgress, NotStarted}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.when
-import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.EmptyWaypoints
-import pages.applicant.ApplicantNinoKnownPage
-import uk.gov.hmrc.http.HeaderCarrier
-
-import java.time.LocalDate
+import pages.applicant.{ApplicantNinoKnownPage, ApplicantNinoPage, CheckApplicantDetailsPage}
 
 class TaskListServiceSpec extends AnyFreeSpec with Matchers with ScalaFutures with MockitoSugar with TryValues with OptionValues with BeforeAndAfterEach {
 
-  private implicit val hc: HeaderCarrier = HeaderCarrier()
-  private val mockJourneyModelProvider = mock[JourneyModelProvider]
+  private val mockJourneyProgressService = mock[JourneyProgressService]
 
   override def beforeEach(): Unit = {
-    Mockito.reset(mockJourneyModelProvider)
+    Mockito.reset(mockJourneyProgressService)
     super.beforeEach()
   }
 
@@ -51,9 +45,9 @@ class TaskListServiceSpec extends AnyFreeSpec with Matchers with ScalaFutures wi
     "must return Your Details as `Not Started` and the other sections as `Cannot Start` when no answers have been provided" in {
 
       val answers = UserAnswers("id")
-      val service = new TaskListService()
+      val service = new TaskListService(mockJourneyProgressService)
 
-      val result = service.sections(answers).futureValue
+      val result = service.sections(answers)
 
       result mustEqual Seq(
         Section("taskList.yourDetails", Some(applicantRoutes.ApplicantNinoKnownController.onPageLoad(EmptyWaypoints)), NotStarted),
@@ -67,50 +61,40 @@ class TaskListServiceSpec extends AnyFreeSpec with Matchers with ScalaFutures wi
 
   ".applicantSection" - {
 
-    "must return a link and a status of Not Started when no answers have been provided" in {
+    "must return a link and a status of Not Started when the Journey Progress service tells us to continue from the first page of the section" in {
+
+      when(mockJourneyProgressService.continue(any(), any())).thenReturn(ApplicantNinoKnownPage)
 
       val answers = UserAnswers("id")
-      val service = new TaskListService()
+      val service = new TaskListService(mockJourneyProgressService)
 
-      val result = service.applicantSection(answers).futureValue
+      val result = service.applicantSection(answers)
 
       result mustEqual Section("taskList.yourDetails", Some(applicantRoutes.ApplicantNinoKnownController.onPageLoad(EmptyWaypoints)), NotStarted)
     }
 
-    "must return a link and a status of In Progress when one question has been answered" in {
+    "must return a link and a status of Complete when the Journey Progress service tells us to continue from the Check Applicant Details page" in {
 
-      val answers = UserAnswers("id").set(ApplicantNinoKnownPage, true).success.value
-      val service = new TaskListService()
-
-      val result = service.applicantSection(answers).futureValue
-
-      result mustEqual Section("taskList.yourDetails", Some(applicantRoutes.ApplicantNinoKnownController.onPageLoad(EmptyWaypoints)), InProgress)
-    }
-
-    "must return a link and a status of Complete when the Journey Model provider can return an Applicant" in {
-
-      val applicant = Applicant(
-        name = AdultName("first", None, "last"),
-        previousFamilyNames = Nil,
-        dateOfBirth = LocalDate.now,
-        nationalInsuranceNumber = None,
-        currentAddress = UkAddress("first", None, "town", None, "AA11 1AA"),
-        previousAddress = None,
-        telephoneNumber = "0777 777777",
-        nationality = "British",
-        alwaysLivedInUk = true,
-        memberOfHMForcesOrCivilServantAbroad = Some(false),
-        currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
-      )
-
-      when(mockJourneyModelProvider.getApplicant(any())).thenReturn(Ior.Right(applicant))
+      when(mockJourneyProgressService.continue(any(), any())).thenReturn(CheckApplicantDetailsPage)
 
       val answers = UserAnswers("id")
-      val service = new TaskListService()
+      val service = new TaskListService(mockJourneyProgressService)
 
-      val result = service.applicantSection(answers).futureValue
+      val result = service.applicantSection(answers)
 
       result mustEqual Section("taskList.yourDetails", Some(applicantRoutes.CheckApplicantDetailsController.onPageLoad), Completed)
+    }
+
+    "must return a link and a status of In Progress when the Journey Progress service tells us to continue from any other page" in {
+
+      when(mockJourneyProgressService.continue(any(), any())).thenReturn(ApplicantNinoPage)
+
+      val answers = UserAnswers("id")
+      val service = new TaskListService(mockJourneyProgressService)
+
+      val result = service.applicantSection(answers)
+
+      result mustEqual Section("taskList.yourDetails", Some(applicantRoutes.ApplicantNinoController.onPageLoad(EmptyWaypoints)), InProgress)
     }
   }
 }

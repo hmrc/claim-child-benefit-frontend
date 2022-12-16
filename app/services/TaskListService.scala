@@ -17,32 +17,33 @@
 package services
 
 import controllers.applicant.{routes => applicantRoutes}
-import models.{JourneyModelProvider, UserAnswers}
+import models.UserAnswers
 import models.tasklist.Section
 import models.tasklist.SectionStatus._
 import pages.EmptyWaypoints
-import pages.applicant.ApplicantNinoKnownPage
-import uk.gov.hmrc.http.HeaderCarrier
+import pages.applicant.{ApplicantNinoKnownPage, CheckApplicantDetailsPage}
 
 import javax.inject.Inject
-import scala.concurrent.Future
 
-class TaskListService @Inject()(journeyModelProvider: JourneyModelProvider) {
+class TaskListService @Inject()(journeyProgress: JourneyProgressService) {
 
-  def sections(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[Seq[Section]] =
-    Future.successful(Seq(
+  def sections(answers: UserAnswers): Seq[Section] =
+    Seq(
       Section("taskList.yourDetails", Some(applicantRoutes.ApplicantNinoKnownController.onPageLoad(EmptyWaypoints)), NotStarted),
       Section("taskList.maritalDetails", None, CannotStart),
       Section("taskList.childDetails", None, CannotStart),
       Section("taskList.paymentDetails", None, CannotStart),
       Section("taskList.furtherDetails", None, CannotStart)
-    ))
-
-  private[services] def applicantSection(answers: UserAnswers): Future[Section] = {
-    val applicant = journeyModelProvider.getApplicant(answers)
-    val status = if(answers.isDefined(ApplicantNinoKnownPage)) InProgress else NotStarted
-    Future.successful(
-      Section("taskList.yourDetails", Some(applicantRoutes.ApplicantNinoKnownController.onPageLoad(EmptyWaypoints)), status)
     )
+
+  private[services] def applicantSection(answers: UserAnswers): Section = {
+    val page = journeyProgress.continue(ApplicantNinoKnownPage, answers)
+    val status = page match {
+      case ApplicantNinoKnownPage => NotStarted
+      case CheckApplicantDetailsPage => Completed
+      case _ => InProgress
+    }
+
+    Section("taskList.yourDetails", Some(page.route(EmptyWaypoints)), status)
   }
 }
