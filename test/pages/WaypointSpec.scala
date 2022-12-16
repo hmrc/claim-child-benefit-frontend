@@ -20,8 +20,10 @@ import models.{CheckMode, Index, NormalMode}
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import pages.applicant.AddApplicantPreviousFamilyNamePage
+import pages.applicant.{AddApplicantPreviousFamilyNamePage, CheckApplicantDetailsPage}
 import pages.child.{AddChildPage, AddChildPreviousNamePage, CheckChildDetailsPage}
+import pages.partner.CheckPartnerDetailsPage
+import pages.payments.CheckPaymentDetailsPage
 
 class WaypointSpec extends AnyFreeSpec with Matchers with OptionValues {
 
@@ -68,6 +70,26 @@ class WaypointSpec extends AnyFreeSpec with Matchers with OptionValues {
 
       Waypoint.fromString("change-child-name-1").value mustEqual AddChildPreviousNamePage(Index(0)).waypoint(CheckMode)
       Waypoint.fromString("change-child-name-2").value mustEqual AddChildPreviousNamePage(Index(1)).waypoint(CheckMode)
+    }
+
+    "must return Check Applicant Details when given its waypoint" in {
+
+      Waypoint.fromString("check-your-details").value mustEqual CheckApplicantDetailsPage.waypoint
+    }
+
+    "must return Check Partner Details when given its waypoint" in {
+
+      Waypoint.fromString("check-partners-details").value mustEqual CheckPartnerDetailsPage.waypoint
+    }
+
+    "must return Check Payment Details when given its waypoint" in {
+
+      Waypoint.fromString("check-payment-details").value mustEqual CheckPaymentDetailsPage.waypoint
+    }
+
+    "must return Check Relationship Details when given its waypoint" in {
+
+      Waypoint.fromString("check-relationship-details").value mustEqual CheckRelationshipDetailsPage.waypoint
     }
   }
 }

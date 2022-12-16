@@ -17,8 +17,10 @@
 package pages
 
 import models.{CheckMode, Mode, NormalMode}
-import pages.applicant.AddApplicantPreviousFamilyNamePage
+import pages.applicant.{AddApplicantPreviousFamilyNamePage, CheckApplicantDetailsPage}
 import pages.child.{AddChildPage, AddChildPreviousNamePage, CheckChildDetailsPage}
+import pages.partner.CheckPartnerDetailsPage
+import pages.payments.CheckPaymentDetailsPage
 
 case class Waypoint (
                       page: WaypointPage,
@@ -34,7 +36,11 @@ object Waypoint {
       AddApplicantPreviousFamilyNamePage.normalModeUrlFragment -> AddApplicantPreviousFamilyNamePage.waypoint(NormalMode),
       AddApplicantPreviousFamilyNamePage.checkModeUrlFragment  -> AddApplicantPreviousFamilyNamePage.waypoint(CheckMode),
       AddChildPage.normalModeUrlFragment                       -> AddChildPage.waypoint(NormalMode),
-      AddChildPage.checkModeUrlFragment                        -> AddChildPage.waypoint(CheckMode)
+      AddChildPage.checkModeUrlFragment                        -> AddChildPage.waypoint(CheckMode),
+      CheckApplicantDetailsPage.urlFragment                    -> CheckApplicantDetailsPage.waypoint,
+      CheckPartnerDetailsPage.urlFragment                      -> CheckPartnerDetailsPage.waypoint,
+      CheckPaymentDetailsPage.urlFragment                      -> CheckPaymentDetailsPage.waypoint,
+      CheckRelationshipDetailsPage.urlFragment                 -> CheckRelationshipDetailsPage.waypoint
     )
 
   def fromString(s: String): Option[Waypoint] =
