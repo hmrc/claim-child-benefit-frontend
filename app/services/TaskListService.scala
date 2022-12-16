@@ -17,16 +17,17 @@
 package services
 
 import controllers.applicant.{routes => applicantRoutes}
-import models.UserAnswers
+import models.{JourneyModelProvider, UserAnswers}
 import models.tasklist.Section
 import models.tasklist.SectionStatus._
 import pages.EmptyWaypoints
 import pages.applicant.ApplicantNinoKnownPage
 import uk.gov.hmrc.http.HeaderCarrier
 
+import javax.inject.Inject
 import scala.concurrent.Future
 
-class TaskListService {
+class TaskListService @Inject()(journeyModelProvider: JourneyModelProvider) {
 
   def sections(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[Seq[Section]] =
     Future.successful(Seq(
@@ -38,6 +39,7 @@ class TaskListService {
     ))
 
   private[services] def applicantSection(answers: UserAnswers): Future[Section] = {
+    val applicant = journeyModelProvider.getApplicant(answers)
     val status = if(answers.isDefined(ApplicantNinoKnownPage)) InProgress else NotStarted
     Future.successful(
       Section("taskList.yourDetails", Some(applicantRoutes.ApplicantNinoKnownController.onPageLoad(EmptyWaypoints)), status)

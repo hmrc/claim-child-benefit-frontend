@@ -275,7 +275,7 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
     }.value
   }
 
-  private def getApplicant(answers: UserAnswers): IorNec[Query, Applicant] = {
+  def getApplicant(answers: UserAnswers): IorNec[Query, Applicant] = {
 
     def getNino: IorNec[Query, Option[String]] =
       answers.getIor(ApplicantNinoKnownPage).flatMap {

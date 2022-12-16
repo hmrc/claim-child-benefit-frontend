@@ -16,11 +16,13 @@
 
 package services
 
+import cats.data._
 import controllers.applicant.{routes => applicantRoutes}
 import models.JourneyModel.Applicant
 import models.{AdultName, CurrentlyReceivingChildBenefit, JourneyModelProvider, UkAddress, UserAnswers}
 import models.tasklist.Section
-import models.tasklist.SectionStatus.{CannotStart, InProgress, NotStarted}
+import models.tasklist.SectionStatus.{CannotStart, Completed, InProgress, NotStarted}
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.when
 import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
@@ -84,31 +86,31 @@ class TaskListServiceSpec extends AnyFreeSpec with Matchers with ScalaFutures wi
 
       result mustEqual Section("taskList.yourDetails", Some(applicantRoutes.ApplicantNinoKnownController.onPageLoad(EmptyWaypoints)), InProgress)
     }
-//
-//    "must return a link and a status of Complete when the Journey Model provider can return an Applicant" in {
-//
-//      val applicant = Applicant(
-//        name = AdultName("first", None, "last"),
-//        previousFamilyNames = Nil,
-//        dateOfBirth = LocalDate.now,
-//        nationalInsuranceNumber = None,
-//        currentAddress = UkAddress("first", None, "town", None, "AA11 1AA"),
-//        previousAddress = None,
-//        telephoneNumber = "0777 777777",
-//        nationality = "British",
-//        alwaysLivedInUk = true,
-//        memberOfHMForcesOrCivilServantAbroad = Some(false),
-//        currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
-//      )
-//
-//      when(mockJourneyModelProvider.)
-//
-//      val answers = UserAnswers("id")
-//      val service = new TaskListService()
-//
-//      val result = service.applicantSection(answers).futureValue
-//
-//      result mustEqual Section("taskList.yourDetails", Some(applicantRoutes.ApplicantNinoKnownController.onPageLoad(EmptyWaypoints)), Complete)
-//    }
+
+    "must return a link and a status of Complete when the Journey Model provider can return an Applicant" in {
+
+      val applicant = Applicant(
+        name = AdultName("first", None, "last"),
+        previousFamilyNames = Nil,
+        dateOfBirth = LocalDate.now,
+        nationalInsuranceNumber = None,
+        currentAddress = UkAddress("first", None, "town", None, "AA11 1AA"),
+        previousAddress = None,
+        telephoneNumber = "0777 777777",
+        nationality = "British",
+        alwaysLivedInUk = true,
+        memberOfHMForcesOrCivilServantAbroad = Some(false),
+        currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
+      )
+
+      when(mockJourneyModelProvider.getApplicant(any())).thenReturn(Ior.Right(applicant))
+
+      val answers = UserAnswers("id")
+      val service = new TaskListService()
+
+      val result = service.applicantSection(answers).futureValue
+
+      result mustEqual Section("taskList.yourDetails", Some(applicantRoutes.CheckApplicantDetailsController.onPageLoad), Completed)
+    }
   }
 }
