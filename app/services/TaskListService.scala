@@ -19,7 +19,7 @@ package services
 import controllers.applicant.{routes => applicantRoutes}
 import controllers.routes
 import models.UserAnswers
-import models.tasklist.Section
+import models.tasklist.SectionViewModel
 import models.tasklist.SectionStatus._
 import pages.{CheckRelationshipDetailsPage, EmptyWaypoints, RecentlyClaimedPage}
 import pages.applicant.{ApplicantNinoKnownPage, CheckApplicantDetailsPage}
@@ -28,16 +28,16 @@ import javax.inject.Inject
 
 class TaskListService @Inject()(journeyProgress: JourneyProgressService) {
 
-  def sections(answers: UserAnswers): Seq[Section] =
+  def sections(answers: UserAnswers): Seq[SectionViewModel] =
     Seq(
-      Section("taskList.yourDetails", Some(applicantRoutes.ApplicantNinoKnownController.onPageLoad(EmptyWaypoints)), NotStarted),
-      Section("taskList.maritalDetails", None, CannotStart),
-      Section("taskList.childDetails", None, CannotStart),
-      Section("taskList.paymentDetails", None, CannotStart),
-      Section("taskList.furtherDetails", None, CannotStart)
+      SectionViewModel("taskList.yourDetails", Some(applicantRoutes.ApplicantNinoKnownController.onPageLoad(EmptyWaypoints)), NotStarted),
+      SectionViewModel("taskList.maritalDetails", None, CannotStart),
+      SectionViewModel("taskList.childDetails", None, CannotStart),
+      SectionViewModel("taskList.paymentDetails", None, CannotStart),
+      SectionViewModel("taskList.furtherDetails", None, CannotStart)
     )
 
-  private[services] def relationshipSection(answers: UserAnswers): Section = {
+  private[services] def relationshipSection(answers: UserAnswers): SectionViewModel = {
     val page = journeyProgress.continue(RecentlyClaimedPage, answers)
     val status = page match {
       case RecentlyClaimedPage => NotStarted
@@ -45,10 +45,10 @@ class TaskListService @Inject()(journeyProgress: JourneyProgressService) {
       case _ => InProgress
     }
 
-    Section("taskList.relationshipDetails", Some(page.route(EmptyWaypoints)), status)
+    SectionViewModel("taskList.relationshipDetails", Some(page.route(EmptyWaypoints)), status)
   }
 
-  private[services] def applicantSection(answers: UserAnswers): Section = {
+  private[services] def applicantSection(answers: UserAnswers): SectionViewModel = {
     val page = journeyProgress.continue(ApplicantNinoKnownPage, answers)
     val status = page match {
       case ApplicantNinoKnownPage => NotStarted
@@ -56,6 +56,6 @@ class TaskListService @Inject()(journeyProgress: JourneyProgressService) {
       case _ => InProgress
     }
 
-    Section("taskList.yourDetails", Some(page.route(EmptyWaypoints)), status)
+    SectionViewModel("taskList.yourDetails", Some(page.route(EmptyWaypoints)), status)
   }
 }

@@ -16,17 +16,6 @@
 
 package models.tasklist
 
-import models.UserAnswers
-import pages.Page
+import play.api.mvc.Call
 
-trait Section {
-
-  def progress(answers: UserAnswers): SectionStatus
-
-  def continue(answers: UserAnswers): Page
-
-  def prerequisiteSections(answers: UserAnswers): Set[Section] =
-    Set.empty
-
-  def status(answers: UserAnswers): SectionStatus = ???
-}
+final case class SectionViewModel(name: String, call: Option[Call], status: SectionStatus)

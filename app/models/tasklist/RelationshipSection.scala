@@ -17,16 +17,21 @@
 package models.tasklist
 
 import models.UserAnswers
-import pages.Page
+import models.tasklist.SectionStatus.{Completed, InProgress, NotStarted}
+import pages.{CheckRelationshipDetailsPage, Page, RecentlyClaimedPage}
+import services.JourneyProgressService
 
-trait Section {
+import javax.inject.Inject
 
-  def progress(answers: UserAnswers): SectionStatus
+class RelationshipSection @Inject()(journeyProgress: JourneyProgressService) extends Section {
 
-  def continue(answers: UserAnswers): Page
+  override def continue(answers: UserAnswers): Page =
+    journeyProgress.continue(RecentlyClaimedPage, answers)
 
-  def prerequisiteSections(answers: UserAnswers): Set[Section] =
-    Set.empty
-
-  def status(answers: UserAnswers): SectionStatus = ???
+  override def progress(answers: UserAnswers): SectionStatus =
+    continue(answers) match {
+      case RecentlyClaimedPage => NotStarted
+      case CheckRelationshipDetailsPage => Completed
+      case _ => InProgress
+    }
 }

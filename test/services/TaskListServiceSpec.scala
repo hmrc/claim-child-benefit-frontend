@@ -19,7 +19,7 @@ package services
 import controllers.applicant.{routes => applicantRoutes}
 import controllers.routes
 import models.UserAnswers
-import models.tasklist.Section
+import models.tasklist.SectionViewModel
 import models.tasklist.SectionStatus.{CannotStart, Completed, InProgress, NotStarted}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
@@ -51,11 +51,11 @@ class TaskListServiceSpec extends AnyFreeSpec with Matchers with ScalaFutures wi
       val result = service.sections(answers)
 
       result mustEqual Seq(
-        Section("taskList.yourDetails", Some(applicantRoutes.ApplicantNinoKnownController.onPageLoad(EmptyWaypoints)), NotStarted),
-        Section("taskList.maritalDetails", None, CannotStart),
-        Section("taskList.childDetails", None, CannotStart),
-        Section("taskList.paymentDetails", None, CannotStart),
-        Section("taskList.furtherDetails", None, CannotStart)
+        SectionViewModel("taskList.yourDetails", Some(applicantRoutes.ApplicantNinoKnownController.onPageLoad(EmptyWaypoints)), NotStarted),
+        SectionViewModel("taskList.maritalDetails", None, CannotStart),
+        SectionViewModel("taskList.childDetails", None, CannotStart),
+        SectionViewModel("taskList.paymentDetails", None, CannotStart),
+        SectionViewModel("taskList.furtherDetails", None, CannotStart)
       )
     }
   }
@@ -71,7 +71,7 @@ class TaskListServiceSpec extends AnyFreeSpec with Matchers with ScalaFutures wi
 
       val result = service.relationshipSection(answers)
 
-      result mustEqual Section("taskList.relationshipDetails", Some(routes.RecentlyClaimedController.onPageLoad(EmptyWaypoints)), NotStarted)
+      result mustEqual SectionViewModel("taskList.relationshipDetails", Some(routes.RecentlyClaimedController.onPageLoad(EmptyWaypoints)), NotStarted)
       verify(mockJourneyProgressService, times(1)).continue(RecentlyClaimedPage, answers)
     }
 
@@ -84,7 +84,7 @@ class TaskListServiceSpec extends AnyFreeSpec with Matchers with ScalaFutures wi
 
       val result = service.relationshipSection(answers)
 
-      result mustEqual Section("taskList.relationshipDetails", Some(routes.CheckRelationshipDetailsController.onPageLoad), Completed)
+      result mustEqual SectionViewModel("taskList.relationshipDetails", Some(routes.CheckRelationshipDetailsController.onPageLoad), Completed)
       verify(mockJourneyProgressService, times(1)).continue(RecentlyClaimedPage, answers)
     }
 
@@ -97,7 +97,7 @@ class TaskListServiceSpec extends AnyFreeSpec with Matchers with ScalaFutures wi
 
       val result = service.relationshipSection(answers)
 
-      result mustEqual Section("taskList.relationshipDetails", Some(routes.AlwaysLivedInUkController.onPageLoad(EmptyWaypoints)), InProgress)
+      result mustEqual SectionViewModel("taskList.relationshipDetails", Some(routes.AlwaysLivedInUkController.onPageLoad(EmptyWaypoints)), InProgress)
       verify(mockJourneyProgressService, times(1)).continue(RecentlyClaimedPage, answers)
     }
   }
@@ -113,7 +113,7 @@ class TaskListServiceSpec extends AnyFreeSpec with Matchers with ScalaFutures wi
 
       val result = service.applicantSection(answers)
 
-      result mustEqual Section("taskList.yourDetails", Some(applicantRoutes.ApplicantNinoKnownController.onPageLoad(EmptyWaypoints)), NotStarted)
+      result mustEqual SectionViewModel("taskList.yourDetails", Some(applicantRoutes.ApplicantNinoKnownController.onPageLoad(EmptyWaypoints)), NotStarted)
       verify(mockJourneyProgressService, times(1)).continue(ApplicantNinoKnownPage, answers)
     }
 
@@ -126,7 +126,7 @@ class TaskListServiceSpec extends AnyFreeSpec with Matchers with ScalaFutures wi
 
       val result = service.applicantSection(answers)
 
-      result mustEqual Section("taskList.yourDetails", Some(applicantRoutes.CheckApplicantDetailsController.onPageLoad), Completed)
+      result mustEqual SectionViewModel("taskList.yourDetails", Some(applicantRoutes.CheckApplicantDetailsController.onPageLoad), Completed)
       verify(mockJourneyProgressService, times(1)).continue(ApplicantNinoKnownPage, answers)
     }
 
@@ -139,7 +139,7 @@ class TaskListServiceSpec extends AnyFreeSpec with Matchers with ScalaFutures wi
 
       val result = service.applicantSection(answers)
 
-      result mustEqual Section("taskList.yourDetails", Some(applicantRoutes.ApplicantNinoController.onPageLoad(EmptyWaypoints)), InProgress)
+      result mustEqual SectionViewModel("taskList.yourDetails", Some(applicantRoutes.ApplicantNinoController.onPageLoad(EmptyWaypoints)), InProgress)
       verify(mockJourneyProgressService, times(1)).continue(ApplicantNinoKnownPage, answers)
     }
   }
