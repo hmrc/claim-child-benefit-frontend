@@ -58,7 +58,7 @@ class JourneyModelProviderSpec
     with ScalaFutures {
 
   private val now = LocalDate.now
-  private val applicantName = AdultName("first", None, "last")
+  private val applicantName = AdultName(None, "first", None, "last")
   private val applicantNino = arbitrary[Nino].sample.value
   private val currentUkAddress = UkAddress("line 1", None, "town", None, "AA11 1AA")
   private val country = arbitrary[Country].sample.value
@@ -75,7 +75,7 @@ class JourneyModelProviderSpec
   private val bankAccountHolder = BankAccountHolder.Applicant
   private val eldestChildName = ChildName("first", None, "last")
 
-  private val partnerName = AdultName("partner first", None, "partner last")
+  private val partnerName = AdultName(None, "partner first", None, "partner last")
   private val partnerNationality = "partner nationality"
   private val partnerNino = arbitrary[Nino].sample.value
   private val partnerClaiming = PartnerClaimingChildBenefit.GettingPayments
@@ -88,7 +88,7 @@ class JourneyModelProviderSpec
   private val scottishBirthCertificateDetails = arbitrary[ScottishBirthCertificateDetails].sample.value
   private val childPreviousName1 = ChildName("first 1", None, "last 1")
   private val childPreviousName2 = ChildName("first 2", None, "last 2")
-  private val adultName = AdultName("pc first", None, "pc last")
+  private val adultName = AdultName(None, "pc first", None, "pc last")
   private val ukAddress = arbitrary[UkAddress].sample.value
   private val internationalAddress = arbitrary[InternationalAddress].sample.value
 

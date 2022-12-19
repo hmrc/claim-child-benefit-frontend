@@ -29,7 +29,7 @@ import java.time.LocalDate
 
 class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
   
-  private val applicantName = AdultName("first", None, "last")
+  private val applicantName = AdultName(None, "first", None, "last")
 
   "eligible Married users must continue to the income section" in {
 

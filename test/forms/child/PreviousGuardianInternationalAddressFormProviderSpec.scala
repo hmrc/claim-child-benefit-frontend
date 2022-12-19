@@ -24,7 +24,7 @@ import play.api.data.FormError
 
 class PreviousGuardianInternationalAddressFormProviderSpec extends StringFieldBehaviours {
 
-  private val name = AdultName("first", None, "last")
+  private val name = AdultName(None, "first", None, "last")
   val form = new PreviousGuardianInternationalAddressFormProvider()(name)
 
   ".line1" - {

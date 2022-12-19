@@ -25,7 +25,7 @@ class GuardianAddressInUkFormProviderSpec extends BooleanFieldBehaviours {
   val requiredKey = "guardianAddressInUk.error.required"
   val invalidKey = "error.boolean"
 
-  private val guardian = AdultName("first", None, "last")
+  private val guardian = AdultName(None, "first", None, "last")
   val form = new GuardianAddressInUkFormProvider()(guardian)
 
   ".value" - {

@@ -158,6 +158,7 @@ object DownloadAuditEvent {
 
   private def convertAdultName(name: models.AdultName): AdultName =
     AdultName(
+      title       = name.title,
       firstName   = name.firstName,
       middleNames = name.middleNames,
       lastName    = name.lastName
@@ -176,7 +177,7 @@ object DownloadAuditEvent {
       dateOfBirth = eldestChild.dateOfBirth
     )
 
-  private[audit] final case class AdultName(firstName: String, middleNames: Option[String], lastName: String)
+  private[audit] final case class AdultName(title: Option[String], firstName: String, middleNames: Option[String], lastName: String)
   object AdultName {
     implicit lazy val writes: Writes[AdultName] = Json.writes
   }

@@ -41,7 +41,7 @@ class PartnerNinoControllerSpec extends SpecBase with MockitoSugar with Generato
   val nino = arbitrary[Nino].sample.value
 
   private val waypoints = EmptyWaypoints
-  private val name = AdultName("first", None, "last")
+  private val name = AdultName(None, "first", None, "last")
   private val baseAnswers = emptyUserAnswers.set(PartnerNamePage, name).success.value
 
   val formProvider = new PartnerNinoFormProvider()

@@ -56,7 +56,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
 
       val model = JourneyModel(
         applicant = JourneyModel.Applicant(
-          name = models.AdultName(firstName = "applicant first", middleNames = Some("applicant middle"), lastName = "applicant last"),
+          name = models.AdultName(title = Some("title"), firstName = "applicant first", middleNames = Some("applicant middle"), lastName = "applicant last"),
           previousFamilyNames = List("previous family name"),
           dateOfBirth = now,
           nationalInsuranceNumber = Some(applicantNino),
@@ -72,7 +72,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           status = models.RelationshipStatus.Cohabiting,
           since = Some(now),
           partner = Some(models.JourneyModel.Partner(
-            name = models.AdultName(firstName = "partner first", middleNames = Some("partner middle"), lastName = "partner last"),
+            name = models.AdultName(title = Some("title"), firstName = "partner first", middleNames = Some("partner middle"), lastName = "partner last"),
             dateOfBirth = now,
             nationality = "partner nationality",
             nationalInsuranceNumber = Some(partnerNino),
@@ -97,16 +97,16 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             relationshipToApplicant = models.ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = true,
             previousClaimant = Some(JourneyModel.PreviousClaimant(
-              name    = models.AdultName("previous claimant first", Some("previous claimant middle"), "previous claimant last"),
+              name    = models.AdultName(title = Some("title"), "previous claimant first", Some("previous claimant middle"), "previous claimant last"),
               address = models.UkAddress("previous claimant line 1", Some("previous claimant line 2"), "previous claimant town", Some("previous claimant county"), "previous claimant postcode")
             ),
               ),
             guardian = Some(JourneyModel.Guardian(
-              name    = models.AdultName("guardian first", Some("guardian middle"), "guardian last"),
+              name    = models.AdultName(title = Some("title"), "guardian first", Some("guardian middle"), "guardian last"),
               address = models.UkAddress("guardian line 1", Some("guardian line 2"), "guardian town", Some("guardian county"), "guardian postcode")
             )),
             previousGuardian = Some(JourneyModel.PreviousGuardian(
-              name = models.AdultName("previous guardian first", Some("previous guardian middle"), "previous guardian last"),
+              name = models.AdultName(title = Some("title"), "previous guardian first", Some("previous guardian middle"), "previous guardian last"),
               address = models.UkAddress("previous guardian line 1", Some("previous guardian line 2"), "previous guardian town", Some("previous guardian county"), "previous guardian postcode"),
               phoneNumber = "previous guardian phone"
             )),
@@ -129,7 +129,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
 
       val expectedAuditEvent: DownloadAuditEvent = DownloadAuditEvent(
         applicant = Applicant(
-          name = AdultName(firstName = "applicant first", middleNames = Some("applicant middle"), lastName = "applicant last"),
+          name = AdultName(title = Some("title"), firstName = "applicant first", middleNames = Some("applicant middle"), lastName = "applicant last"),
           previousFamilyNames = List("previous family name"),
           dateOfBirth = now,
           nationalInsuranceNumber = Some(applicantNino),
@@ -145,7 +145,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           status = "cohabiting",
           since = Some(now),
           partner = Some(Partner(
-            name = AdultName(firstName = "partner first", middleNames = Some("partner middle"), lastName = "partner last"),
+            name = AdultName(title = Some("title"), firstName = "partner first", middleNames = Some("partner middle"), lastName = "partner last"),
             dateOfBirth = now,
             nationality = "partner nationality",
             nationalInsuranceNumber = Some(partnerNino),
@@ -170,15 +170,15 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             relationshipToApplicant = "birthChild",
             adoptingThroughLocalAuthority = true,
             previousClaimant = Some(PreviousClaimant(
-              name    = AdultName( "previous claimant first", Some("previous claimant middle"), "previous claimant last"),
+              name    = AdultName(title = Some("title"), "previous claimant first", Some("previous claimant middle"), "previous claimant last"),
               address = UkAddress("previous claimant line 1", Some("previous claimant line 2"), "previous claimant town", Some("previous claimant county"), "previous claimant postcode")
             )),
             guardian = Some(Guardian(
-              name = AdultName("guardian first", Some("guardian middle"), "guardian last"),
+              name = AdultName(title = Some("title"), "guardian first", Some("guardian middle"), "guardian last"),
               address = UkAddress("guardian line 1", Some("guardian line 2"), "guardian town", Some("guardian county"), "guardian postcode")
             )),
             previousGuardian = Some(PreviousGuardian(
-              name = AdultName("previous guardian first", Some("previous guardian middle"), "previous guardian last"),
+              name = AdultName(title = Some("title"), "previous guardian first", Some("previous guardian middle"), "previous guardian last"),
               address = UkAddress("previous guardian line 1", Some("previous guardian line 2"), "previous guardian town", Some("previous guardian county"), "previous guardian postcode"),
               phoneNumber = "previous guardian phone"
             )),

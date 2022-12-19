@@ -39,7 +39,7 @@ class ApplicantNameControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val applicantNameRoute = routes.ApplicantNameController.onPageLoad(waypoints).url
 
-  private val validAnswer = AdultName("first", None, "last")
+  private val validAnswer = AdultName(None, "first", None, "last")
   private val userAnswers = emptyUserAnswers.set(ApplicantNamePage, validAnswer).success.value
 
   "ApplicantName Controller" - {

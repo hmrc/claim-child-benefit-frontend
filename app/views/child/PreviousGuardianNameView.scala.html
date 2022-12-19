@@ -39,8 +39,17 @@
 
         @govukInput(
             InputViewModel(
+                field = form("title"),
+                label = LabelViewModel(messages("previousGuardianName.field.title"))
+            )
+            .withWidth(Fixed10)
+        )
+
+
+        @govukInput(
+            InputViewModel(
                 field = form("firstName"),
-                label = LabelViewModel(messages("previousGuardianName.firstName"))
+                label = LabelViewModel(messages("previousGuardianName.field.firstName"))
             )
                     .withWidth(Full)
         )
@@ -48,7 +57,7 @@
         @govukInput(
             InputViewModel(
                 field = form("middleNames"),
-                label = LabelViewModel(messages("previousGuardianName.middleNames"))
+                label = LabelViewModel(messages("previousGuardianName.field.middleNames"))
             )
                     .withWidth(Full)
         )
@@ -56,7 +65,7 @@
         @govukInput(
             InputViewModel(
                 field = form("lastName"),
-                label = LabelViewModel(messages("previousGuardianName.lastName"))
+                label = LabelViewModel(messages("previousGuardianName.field.lastName"))
             )
                     .withWidth(Full)
         )

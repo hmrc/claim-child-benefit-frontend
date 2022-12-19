@@ -29,7 +29,7 @@ import java.time.LocalDate
 
 class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
-  private val adultName = AdultName("first", None, "last")
+  private val adultName = AdultName(None, "first", None, "last")
   private val internationalAddress = InternationalAddress("line 1", None, "town", None, Some("postcode"), Country.internationalCountries.head)
   private val ukAddress = UkAddress("line 1", None, "town", None, "postcode")
 

@@ -23,7 +23,7 @@ import play.api.data.FormError
 
 class PreviousGuardianPhoneNumberFormProviderSpec extends StringFieldBehaviours {
 
-  private val name = AdultName("first", None, "last")
+  private val name = AdultName(None, "first", None, "last")
 
   val requiredKey = "previousGuardianPhoneNumber.error.required"
   val invalidKey = "previousGuardianPhoneNumber.error.invalid"

@@ -25,7 +25,7 @@ class PreviousClaimantAddressInUkFormProviderSpec extends BooleanFieldBehaviours
   val requiredKey = "previousClaimantAddressInUk.error.required"
   val invalidKey = "error.boolean"
 
-  private val previousClaimant = AdultName("first", None, "last")
+  private val previousClaimant = AdultName(None, "first", None, "last")
   val form = new PreviousClaimantAddressInUkFormProvider()(previousClaimant)
 
   ".value" - {

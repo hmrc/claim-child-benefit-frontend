@@ -95,10 +95,11 @@ trait ModelGenerators {
   implicit lazy val arbitraryApplicantName: Arbitrary[AdultName] =
     Arbitrary {
       for {
+        title       <- Gen.option(arbitrary[String])
         firstName   <- arbitrary[String]
         middleNames <- Gen.option(arbitrary[String])
         lastName    <- arbitrary[String]
-      } yield AdultName(firstName, middleNames, lastName)
+      } yield AdultName(title, firstName, middleNames, lastName)
     }
 
   implicit lazy val arbitraryUkAddress: Arbitrary[UkAddress] =

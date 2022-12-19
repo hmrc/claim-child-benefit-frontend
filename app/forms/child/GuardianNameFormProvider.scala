@@ -27,6 +27,8 @@ class GuardianNameFormProvider @Inject() extends Mappings {
 
   def apply(childName: ChildName): Form[AdultName] = Form(
     mapping(
+      "title" -> optional(text("guardianName.error.title.required", args = Seq(childName.firstName))
+        .verifying(maxLength(100, "guardianName.error.title.length", childName.firstName))),
       "firstName" -> text("guardianName.error.firstName.required", args = Seq(childName.firstName))
         .verifying(maxLength(100, "guardianName.error.firstName.length", childName.firstName)),
       "middleNames" -> optional(text("guardianName.error.middleNames.required", args = Seq(childName.firstName))

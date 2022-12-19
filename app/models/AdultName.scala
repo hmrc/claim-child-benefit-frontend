@@ -20,12 +20,14 @@ import play.api.libs.json._
 import play.twirl.api.HtmlFormat
 
 case class AdultName(
-                           firstName: String,
-                           middleNames: Option[String],
-                           lastName: String
-                         ) {
+                      title: Option[String],
+                      firstName: String,
+                      middleNames: Option[String],
+                      lastName: String
+                    ) {
 
   val display: String = Seq(
+    title,
     Some(firstName),
     middleNames,
     Some(lastName)

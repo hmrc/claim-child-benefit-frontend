@@ -38,6 +38,15 @@
 
         @govukInput(
             InputViewModel(
+                field = form("title"),
+                label = LabelViewModel(messages("applicantName.field.title"))
+            )
+            .withWidth(Fixed10)
+            .withAutocomplete("honorific-prefix")
+        )
+
+        @govukInput(
+            InputViewModel(
                 field = form("firstName"),
                 label = LabelViewModel(messages("applicantName.field.firstName"))
             )

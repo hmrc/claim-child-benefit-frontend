@@ -38,7 +38,7 @@ import scala.concurrent.Future
 class DateChildStartedLivingWithApplicantControllerSpec extends SpecBase with MockitoSugar {
 
   private val childName = ChildName("first", None, "last")
-  private val adultName = AdultName("first", None, "last")
+  private val adultName = AdultName(None, "first", None, "last")
   private val baseAnswers =
     emptyUserAnswers
       .set(ChildNamePage(index), childName).success.value
