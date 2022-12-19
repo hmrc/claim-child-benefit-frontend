@@ -20,8 +20,8 @@ sealed trait SectionStatus
 
 object SectionStatus {
 
-  object NotStarted extends SectionStatus
-  object InProgress extends SectionStatus
-  object Completed extends SectionStatus
-  object CannotStart extends SectionStatus
+  case object NotStarted extends SectionStatus
+  case object InProgress extends SectionStatus
+  case object Completed extends SectionStatus
+  case object CannotStart extends SectionStatus
 }

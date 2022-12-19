@@ -17,6 +17,7 @@
 package models.tasklist
 
 import models.UserAnswers
+import models.tasklist.SectionStatus.{CannotStart, Completed, InProgress, NotStarted}
 import pages.Page
 
 trait Section {
@@ -28,5 +29,14 @@ trait Section {
   def prerequisiteSections(answers: UserAnswers): Set[Section] =
     Set.empty
 
-  def status(answers: UserAnswers): SectionStatus = ???
+  def status(answers: UserAnswers): SectionStatus =
+    progress(answers) match {
+      case Completed => Completed
+      case InProgress => InProgress
+      case NotStarted if anyIncompletePrerequisites(answers) => CannotStart
+      case _ => NotStarted
+    }
+
+  private def anyIncompletePrerequisites(answers: UserAnswers): Boolean =
+    prerequisiteSections(answers).exists(_.progress(answers) != Completed)
 }
