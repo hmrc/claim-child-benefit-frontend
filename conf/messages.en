@@ -1044,6 +1044,12 @@ previousGuardianUkAddress.error.county.length = County of {1}’s address must b
 previousGuardianUkAddress.error.postcode.length = Postcode of {1}’s address must be 100 characters or less
 previousGuardianUkAddress.change.hidden = the person this child lived with’s address
 
+previousGuardianPhoneNumberKnown.title = Do you know the person this child lived with’s telephone number?
+previousGuardianPhoneNumberKnown.heading = Do you know {0}’s telephone number?
+previousGuardianPhoneNumberKnown.checkYourAnswersLabel = Do you know the person this child lived with’s telephone number?
+previousGuardianPhoneNumberKnown.error.required = Select yes if you know {0}’s telephone number
+previousGuardianPhoneNumberKnown.change.hidden = if you know the person this child lived with’s telephone number
+
 previousGuardianPhoneNumber.title = What is the person this child lived with’s telephone number?
 previousGuardianPhoneNumber.heading = What is {0}’s telephone number?
 previousGuardianPhoneNumber.hint = For example, 01632 960 001, 07700 900 982 or +44 808 157 0192.
