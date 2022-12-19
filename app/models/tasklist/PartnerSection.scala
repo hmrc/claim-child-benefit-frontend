@@ -30,6 +30,8 @@ class PartnerSection @Inject()(
                                 applicantSection: ApplicantSection
                               ) extends Section {
 
+  override val name: String = "taskList.partnerDetails"
+
   override def continue(answers: UserAnswers): Option[Page] =
     Some(journeyProgress.continue(PartnerNamePage, answers))
 

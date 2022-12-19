@@ -30,6 +30,9 @@ class AdditionalInfoSection @Inject()(
                                        childSection: ChildSection,
                                        paymentSection: PaymentSection
                                      ) extends Section {
+
+  override val name: String = "taskList.additionalInfo"
+
   override def continue(answers: UserAnswers): Option[Page] =
     Some(AdditionalInformationPage)
 

@@ -34,6 +34,8 @@ class PaymentSection @Inject()(
                                 childSection: ChildSection
                               ) extends Section {
 
+  override val name: String = "taskList.paymentDetails"
+
   override def continue(answers: UserAnswers): Option[Page] =
     answers.get(RelationshipStatusPage).map {
       case Married | Cohabiting => journeyProgress.continue(ApplicantOrPartnerIncomePage, answers)

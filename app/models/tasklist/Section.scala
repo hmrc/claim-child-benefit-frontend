@@ -18,9 +18,11 @@ package models.tasklist
 
 import models.UserAnswers
 import models.tasklist.SectionStatus.{CannotStart, Completed, InProgress, NotStarted}
-import pages.Page
+import pages.{EmptyWaypoints, Page}
 
 trait Section {
+
+  val name: String
 
   def continue(answers: UserAnswers): Option[Page]
 
@@ -31,12 +33,13 @@ trait Section {
 
   def status(answers: UserAnswers): SectionStatus =
     progress(answers) match {
-      case Completed => Completed
-      case InProgress => InProgress
       case NotStarted if anyIncompletePrerequisites(answers) => CannotStart
-      case _ => NotStarted
+      case status => status
     }
 
   private def anyIncompletePrerequisites(answers: UserAnswers): Boolean =
     prerequisiteSections(answers).exists(_.progress(answers) != Completed)
+
+  def asViewModel(answers: UserAnswers): SectionViewModel =
+    SectionViewModel(name, continue(answers).map(_.route(EmptyWaypoints)), status(answers))
 }

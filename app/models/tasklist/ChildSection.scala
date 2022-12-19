@@ -31,6 +31,9 @@ class ChildSection @Inject()(
                               applicantSection: ApplicantSection,
                               partnerSection: PartnerSection
                             ) extends Section {
+
+  override val name: String = "taskList.childDetails"
+
   override def continue(answers: UserAnswers): Option[Page] =
     Some(journeyProgress.continue(ChildNamePage(Index(0)), answers))
 

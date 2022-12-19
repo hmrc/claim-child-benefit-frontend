@@ -26,6 +26,8 @@ import javax.inject.Inject
 
 class ApplicantSection @Inject()(journeyProgress: JourneyProgressService, relationshipSection: RelationshipSection) extends Section {
 
+  override val name: String = "taskList.applicantDetails"
+
   override def continue(answers: UserAnswers): Option[Page] =
     Some(journeyProgress.continue(ApplicantNinoKnownPage, answers))
 
