@@ -21,9 +21,9 @@ import pages.Page
 
 trait Section {
 
-  def progress(answers: UserAnswers): SectionStatus
-
   def continue(answers: UserAnswers): Page
+
+  def progress(answers: UserAnswers): SectionStatus
 
   def prerequisiteSections(answers: UserAnswers): Set[Section] =
     Set.empty

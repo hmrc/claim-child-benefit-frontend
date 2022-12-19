@@ -25,12 +25,14 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{AlwaysLivedInUkPage, CheckRelationshipDetailsPage, RecentlyClaimedPage}
+import pages.RecentlyClaimedPage
+import pages.applicant.{ApplicantDateOfBirthPage, ApplicantNinoKnownPage, ApplicantNinoPage, CheckApplicantDetailsPage}
 import services.JourneyProgressService
 
-class RelationshipStatusSpec extends AnyFreeSpec with Matchers with MockitoSugar with BeforeAndAfterEach {
+class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar with BeforeAndAfterEach  {
 
   private val mockJourneyProgressService = mock[JourneyProgressService]
+  private val relationshipSection = new RelationshipSection(mockJourneyProgressService)
 
   override def beforeEach(): Unit = {
     Mockito.reset(mockJourneyProgressService)
@@ -41,60 +43,61 @@ class RelationshipStatusSpec extends AnyFreeSpec with Matchers with MockitoSugar
 
     "must be whatever the Journey Progress service reports" in {
 
-      when(mockJourneyProgressService.continue(any(), any())).thenReturn(RecentlyClaimedPage)
+      when(mockJourneyProgressService.continue(any(), any())).thenReturn(ApplicantDateOfBirthPage)
 
       val answers = UserAnswers("id")
-      val section = new RelationshipSection(mockJourneyProgressService)
+      val section = new ApplicantSection(mockJourneyProgressService, relationshipSection)
       val result = section.continue(answers)
 
-      result mustEqual RecentlyClaimedPage
-      verify(mockJourneyProgressService, times(1)).continue(RecentlyClaimedPage, answers)
+      result mustEqual ApplicantDateOfBirthPage
+      verify(mockJourneyProgressService, times(1)).continue(ApplicantNinoKnownPage, answers)
     }
   }
 
   ".progress" - {
 
-    "must be Not Started when the Journey Progress service returns Recently Claimed" in {
+    "must be Not Started when the Journey Progress service returns Applicant Nino Known" in {
 
-      when(mockJourneyProgressService.continue(any(), any())).thenReturn(RecentlyClaimedPage)
+      when(mockJourneyProgressService.continue(any(), any())).thenReturn(ApplicantNinoKnownPage)
 
       val answers = UserAnswers("id")
-      val section = new RelationshipSection(mockJourneyProgressService)
+      val section = new ApplicantSection(mockJourneyProgressService, relationshipSection)
       val result = section.progress(answers)
 
       result mustEqual NotStarted
-      verify(mockJourneyProgressService, times(1)).continue(RecentlyClaimedPage, answers)
+      verify(mockJourneyProgressService, times(1)).continue(ApplicantNinoKnownPage, answers)
     }
 
-    "must be Completed when the Journey Progress service returns Check Relationship Details" in {
+    "must be Completed when the Journey Progress service returns Check Applicant Details" in {
 
-      when(mockJourneyProgressService.continue(any(), any())).thenReturn(CheckRelationshipDetailsPage)
+      when(mockJourneyProgressService.continue(any(), any())).thenReturn(CheckApplicantDetailsPage)
 
       val answers = UserAnswers("id")
-      val section = new RelationshipSection(mockJourneyProgressService)
+      val section = new ApplicantSection(mockJourneyProgressService, relationshipSection)
       val result = section.progress(answers)
 
       result mustEqual Completed
-      verify(mockJourneyProgressService, times(1)).continue(RecentlyClaimedPage, answers)
+      verify(mockJourneyProgressService, times(1)).continue(ApplicantNinoKnownPage, answers)
     }
 
     "must be In Progress when the Journey Progress service returns any other page" in {
 
-      when(mockJourneyProgressService.continue(any(), any())).thenReturn(AlwaysLivedInUkPage)
+      when(mockJourneyProgressService.continue(any(), any())).thenReturn(ApplicantNinoPage)
 
       val answers = UserAnswers("id")
-      val section = new RelationshipSection(mockJourneyProgressService)
+      val section = new ApplicantSection(mockJourneyProgressService, relationshipSection)
       val result = section.progress(answers)
 
       result mustEqual InProgress
-      verify(mockJourneyProgressService, times(1)).continue(RecentlyClaimedPage, answers)
+      verify(mockJourneyProgressService, times(1)).continue(ApplicantNinoKnownPage, answers)
     }
   }
 
-  "there must not be any prerequisite sections" in {
+  "the only prerequisite section must be Relationship" in {
 
     val answers = UserAnswers("id")
-    val section = new RelationshipSection(mockJourneyProgressService)
-    section.prerequisiteSections(answers) mustBe empty
+    val section = new ApplicantSection(mockJourneyProgressService, relationshipSection)
+
+    section.prerequisiteSections(answers) must contain only relationshipSection
   }
 }
