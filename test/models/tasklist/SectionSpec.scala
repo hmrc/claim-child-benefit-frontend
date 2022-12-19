@@ -20,21 +20,23 @@ import models.UserAnswers
 import models.tasklist.SectionStatus.{CannotStart, Completed, InProgress, NotStarted}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.{Arbitrary, Gen, Shrink}
+import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.{Page, Waypoints}
 import play.api.mvc.Call
 
-class SectionSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks {
+class SectionSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
 
   implicit def dontShrink[A]: Shrink[A] = Shrink.shrinkAny
 
-  case class TestSection(progress: SectionStatus, prerequisites: Seq[Section], continue: Option[Page] = None) extends Section {
+  case class TestSection(progress: SectionStatus, prerequisites: Seq[Section], continue: Option[Page] = None, isShown: Boolean = true) extends Section {
     override val name: String = "foo"
     override def continue(answers: UserAnswers): Option[Page] = continue
     override def progress(answers: UserAnswers): SectionStatus = progress
     override def prerequisiteSections(answers: UserAnswers): Set[Section] = prerequisites.toSet
+    override def isShown(answers: UserAnswers): Boolean = isShown
   }
 
   private implicit val arbitraryProgress: Arbitrary[SectionStatus] = Arbitrary {
@@ -110,7 +112,7 @@ class SectionSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyCheck
 
   "asViewModel" - {
 
-    "must return a view model with this section's continue URL and status" in {
+    "must return a view model with this section's continue URL and status when the section should be shown" in {
 
       object TestPage extends Page {
         override def route(waypoints: Waypoints): Call = Call("", "")
@@ -120,20 +122,29 @@ class SectionSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyCheck
       val section = TestSection(Completed, Nil, Some(TestPage))
       val result = section.asViewModel(answers)
 
-      result mustEqual SectionViewModel("foo", Some(Call("", "")), Completed)
+      result.value mustEqual SectionViewModel("foo", Some(Call("", "")), Completed)
     }
 
-    "must return a view model with this section's status and no URL" in {
+    "must return a view model with this section's status and no URL  when the section should be shown" in {
+
+      val answers = UserAnswers("id")
+      val section = TestSection(CannotStart, Nil, None)
+      val result = section.asViewModel(answers)
+
+      result.value mustEqual SectionViewModel("foo", None, CannotStart)
+    }
+
+    "must return None when the section should not shown" in {
 
       object TestPage extends Page {
         override def route(waypoints: Waypoints): Call = Call("", "")
       }
 
       val answers = UserAnswers("id")
-      val section = TestSection(CannotStart, Nil, None)
+      val section = TestSection(Completed, Nil, Some(TestPage), isShown = false)
       val result = section.asViewModel(answers)
 
-      result mustEqual SectionViewModel("foo", None, CannotStart)
+      result must not be defined
     }
   }
 }

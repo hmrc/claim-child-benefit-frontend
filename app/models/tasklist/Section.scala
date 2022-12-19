@@ -42,6 +42,11 @@ trait Section {
   private def anyIncompletePrerequisites(answers: UserAnswers): Boolean =
     prerequisiteSections(answers).exists(_.progress(answers) != Completed)
 
-  def asViewModel(answers: UserAnswers): SectionViewModel =
-    SectionViewModel(name, continue(answers).map(_.route(EmptyWaypoints)), status(answers))
+  def asViewModel(answers: UserAnswers): Option[SectionViewModel] = {
+    if (isShown(answers)) {
+      Some(SectionViewModel(name, continue(answers).map(_.route(EmptyWaypoints)), status(answers)))
+    } else {
+      None
+    }
+  }
 }
