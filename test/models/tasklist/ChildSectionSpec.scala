@@ -61,7 +61,7 @@ class ChildSectionSpec
       val section = new ChildSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection)
       val result = section.continue(answers)
 
-      result mustEqual ChildDateOfBirthPage(Index(0))
+      result.value mustEqual ChildDateOfBirthPage(Index(0))
       verify(mockJourneyProgressService, times(1)).continue(ChildNamePage(Index(0)), answers)
     }
   }

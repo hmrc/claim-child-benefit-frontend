@@ -17,7 +17,7 @@
 package models.tasklist
 
 import models.UserAnswers
-import models.tasklist.SectionStatus.{Completed, InProgress, NotStarted}
+import models.tasklist.SectionStatus.{CannotStart, Completed, InProgress, NotStarted}
 import pages.Page
 import pages.partner.{CheckPartnerDetailsPage, PartnerNamePage}
 import services.JourneyProgressService
@@ -29,15 +29,16 @@ class PartnerSection @Inject()(
                                 relationshipSection: RelationshipSection,
                                 applicantSection: ApplicantSection
                               ) extends Section {
-  override def continue(answers: UserAnswers): Page =
-    journeyProgress.continue(PartnerNamePage, answers)
+
+  override def continue(answers: UserAnswers): Option[Page] =
+    Some(journeyProgress.continue(PartnerNamePage, answers))
 
   override def progress(answers: UserAnswers): SectionStatus =
-    continue(answers) match {
+    continue(answers).map {
       case PartnerNamePage => NotStarted
       case CheckPartnerDetailsPage => Completed
       case _ => InProgress
-    }
+    }.getOrElse(CannotStart)
 
   override def prerequisiteSections(answers: UserAnswers): Set[Section] = Set(
     relationshipSection, applicantSection

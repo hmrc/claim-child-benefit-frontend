@@ -21,15 +21,14 @@ import models.tasklist.SectionStatus.{Completed, InProgress, NotStarted}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.{times, verify, when}
-import org.scalatest.BeforeAndAfterEach
+import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.mockito.MockitoSugar
-import pages.RecentlyClaimedPage
 import pages.applicant.{ApplicantDateOfBirthPage, ApplicantNinoKnownPage, ApplicantNinoPage, CheckApplicantDetailsPage}
 import services.JourneyProgressService
 
-class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar with BeforeAndAfterEach {
+class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar with BeforeAndAfterEach with OptionValues {
 
   private val mockJourneyProgressService = mock[JourneyProgressService]
   private val relationshipSection = new RelationshipSection(mockJourneyProgressService)
@@ -49,7 +48,7 @@ class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar w
       val section = new ApplicantSection(mockJourneyProgressService, relationshipSection)
       val result = section.continue(answers)
 
-      result mustEqual ApplicantDateOfBirthPage
+      result.value mustEqual ApplicantDateOfBirthPage
       verify(mockJourneyProgressService, times(1)).continue(ApplicantNinoKnownPage, answers)
     }
   }

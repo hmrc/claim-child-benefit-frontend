@@ -17,7 +17,7 @@
 package models.tasklist
 
 import models.RelationshipStatus.{Cohabiting, Married}
-import models.tasklist.SectionStatus.{Completed, InProgress, NotStarted}
+import models.tasklist.SectionStatus.{CannotStart, Completed, InProgress, NotStarted}
 import models.{Index, UserAnswers}
 import pages.{Page, RelationshipStatusPage}
 import pages.child.{AddChildPage, ChildNamePage}
@@ -31,15 +31,15 @@ class ChildSection @Inject()(
                               applicantSection: ApplicantSection,
                               partnerSection: PartnerSection
                             ) extends Section {
-  override def continue(answers: UserAnswers): Page =
-    journeyProgress.continue(ChildNamePage(Index(0)), answers)
+  override def continue(answers: UserAnswers): Option[Page] =
+    Some(journeyProgress.continue(ChildNamePage(Index(0)), answers))
 
   override def progress(answers: UserAnswers): SectionStatus =
-    continue(answers) match {
+    continue(answers).map {
       case ChildNamePage(Index(0)) => NotStarted
       case AddChildPage => Completed
       case _ => InProgress
-    }
+    }.getOrElse(CannotStart)
 
   override def prerequisiteSections(answers: UserAnswers): Set[Section] =
     answers.get(RelationshipStatusPage).map {

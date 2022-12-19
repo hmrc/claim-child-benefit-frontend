@@ -30,7 +30,7 @@ class SectionSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyCheck
   implicit def dontShrink[A]: Shrink[A] = Shrink.shrinkAny
 
   case class TestSection(progress: SectionStatus, prerequisites: Seq[Section]) extends Section {
-    override def continue(answers: UserAnswers): Page = ???
+    override def continue(answers: UserAnswers): Option[Page] = ???
     override def progress(answers: UserAnswers): SectionStatus = progress
     override def prerequisiteSections(answers: UserAnswers): Set[Section] = prerequisites.toSet
   }

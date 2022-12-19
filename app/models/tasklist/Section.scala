@@ -22,7 +22,7 @@ import pages.Page
 
 trait Section {
 
-  def continue(answers: UserAnswers): Page
+  def continue(answers: UserAnswers): Option[Page]
 
   def progress(answers: UserAnswers): SectionStatus
 
