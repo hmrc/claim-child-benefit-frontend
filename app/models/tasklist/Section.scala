@@ -24,6 +24,8 @@ trait Section {
 
   val name: String
 
+  def isShown(answers: UserAnswers): Boolean = true
+
   def continue(answers: UserAnswers): Option[Page]
 
   def progress(answers: UserAnswers): SectionStatus

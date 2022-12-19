@@ -37,6 +37,17 @@ class RelationshipSectionSpec extends AnyFreeSpec with Matchers with MockitoSuga
     super.beforeEach()
   }
 
+  ".isShown" - {
+
+    "must be true" in {
+
+      val answers = UserAnswers("id")
+      val section = new RelationshipSection(mockJourneyProgressService)
+
+      section.isShown(answers) mustEqual true
+    }
+  }
+
   ".continue" - {
 
     "must be whatever the Journey Progress service reports" in {

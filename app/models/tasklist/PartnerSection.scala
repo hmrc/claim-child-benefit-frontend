@@ -16,9 +16,10 @@
 
 package models.tasklist
 
+import models.RelationshipStatus.{Cohabiting, Married}
 import models.UserAnswers
 import models.tasklist.SectionStatus.{CannotStart, Completed, InProgress, NotStarted}
-import pages.Page
+import pages.{Page, RelationshipStatusPage}
 import pages.partner.{CheckPartnerDetailsPage, PartnerNamePage}
 import services.JourneyProgressService
 
@@ -45,4 +46,10 @@ class PartnerSection @Inject()(
   override def prerequisiteSections(answers: UserAnswers): Set[Section] = Set(
     relationshipSection, applicantSection
   )
+
+  override def isShown(answers: UserAnswers): Boolean =
+    answers.get(RelationshipStatusPage).exists {
+      case Married | Cohabiting => true
+      case _ => false
+    }
 }

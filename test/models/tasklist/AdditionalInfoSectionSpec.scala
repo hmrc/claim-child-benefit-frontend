@@ -51,6 +51,17 @@ class AdditionalInfoSectionSpec
     super.beforeEach()
   }
 
+  ".isShown" - {
+
+    "must be true" in {
+
+      val answers = UserAnswers("id")
+      val section = new AdditionalInfoSection(relationshipSection, applicantSection, partnerSection, childSection, paymentSection)
+
+      section.isShown(answers) mustEqual true
+    }
+  }
+
   ".continue" - {
 
     "must be Additional Information" in {

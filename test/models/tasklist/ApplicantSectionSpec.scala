@@ -38,6 +38,17 @@ class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar w
     super.beforeEach()
   }
 
+  ".isShown" - {
+
+    "must be true" in {
+
+      val answers = UserAnswers("id")
+      val section = new ApplicantSection(mockJourneyProgressService, relationshipSection)
+
+      section.isShown(answers) mustEqual true
+    }
+  }
+
   ".continue" - {
 
     "must be whatever the Journey Progress service reports" in {

@@ -55,6 +55,17 @@ class PaymentSectionSpec
     super.beforeEach()
   }
 
+  ".isShown" - {
+
+    "must be true" in {
+
+      val answers = UserAnswers("id")
+      val section = new PaymentSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection, childSection)
+
+      section.isShown(answers) mustEqual true
+    }
+  }
+
   ".continue" - {
 
     "must be whatever the Journey Progress service reports when the applicant is single, separated, divorced or widowed" in {

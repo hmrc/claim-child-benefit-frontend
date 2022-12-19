@@ -51,6 +51,17 @@ class ChildSectionSpec
     super.beforeEach()
   }
 
+  ".isShown" - {
+
+    "must be true" in {
+
+      val answers = UserAnswers("id")
+      val section = new ChildSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection)
+
+      section.isShown(answers) mustEqual true
+    }
+  }
+
   ".continue" - {
 
     "must be whatever the Journey Progress service reports" in {
