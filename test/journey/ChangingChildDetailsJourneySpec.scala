@@ -806,6 +806,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             setUserAnswerTo(PreviousGuardianAddressInUkPage(Index(0)), true),
             setUserAnswerTo(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
             setUserAnswerTo(PreviousGuardianInternationalAddressPage(Index(0)), internationalAddress),
+            setUserAnswerTo(PreviousGuardianPhoneNumberKnownPage(Index(0)), true),
             setUserAnswerTo(PreviousGuardianPhoneNumberPage(Index(0)),  "0777777777"),
             setUserAnswerTo(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
             goToChangeAnswer(ChildLivesWithApplicantPage(Index(0))),
@@ -819,6 +820,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             answersMustNotContain(PreviousGuardianAddressInUkPage(Index(0))),
             answersMustNotContain(PreviousGuardianUkAddressPage(Index(0))),
             answersMustNotContain(PreviousGuardianInternationalAddressPage(Index(0))),
+            answersMustNotContain(PreviousGuardianPhoneNumberKnownPage(Index(0))),
             answersMustNotContain(PreviousGuardianPhoneNumberPage(Index(0))),
             answersMustNotContain(DateChildStartedLivingWithApplicantPage(Index(0)))
           )
@@ -843,6 +845,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             submitAnswer(PreviousGuardianNamePage(Index(0)), adultName),
             submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), true),
             submitAnswer(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
+            submitAnswer(PreviousGuardianPhoneNumberKnownPage(Index(0)), true),
             submitAnswer(PreviousGuardianPhoneNumberPage(Index(0)), "077777777"),
             submitAnswer(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
             pageMustBe(CheckChildDetailsPage(Index(0))),
@@ -906,6 +909,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             setUserAnswerTo(PreviousGuardianNamePage(Index(0)), adultName),
             setUserAnswerTo(PreviousGuardianAddressInUkPage(Index(0)), true),
             setUserAnswerTo(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
+            setUserAnswerTo(PreviousGuardianPhoneNumberKnownPage(Index(0)), true),
             setUserAnswerTo(PreviousGuardianPhoneNumberPage(Index(0)), "077777777"),
             setUserAnswerTo(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
             goToChangeAnswer(PreviousGuardianAddressInUkPage(Index(0))),
@@ -928,6 +932,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             setUserAnswerTo(PreviousGuardianNamePage(Index(0)), adultName),
             setUserAnswerTo(PreviousGuardianAddressInUkPage(Index(0)), false),
             setUserAnswerTo(PreviousGuardianInternationalAddressPage(Index(0)), internationalAddress),
+            setUserAnswerTo(PreviousGuardianPhoneNumberKnownPage(Index(0)), true),
             setUserAnswerTo(PreviousGuardianPhoneNumberPage(Index(0)), "077777777"),
             setUserAnswerTo(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
             goToChangeAnswer(PreviousGuardianAddressInUkPage(Index(0))),
@@ -935,6 +940,49 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             submitAnswer(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
             pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(PreviousGuardianInternationalAddressPage(Index(0)))
+          )
+      }
+    }
+
+    "that the user said lived with someone whose phone number they know" - {
+
+      "changing to say they do not know the phone number must remove it and go to Check Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            basicChildJourney,
+            setUserAnswerTo(ChildLivedWithAnyoneElsePage(Index(0)), true),
+            setUserAnswerTo(PreviousGuardianNamePage(Index(0)), adultName),
+            setUserAnswerTo(PreviousGuardianAddressInUkPage(Index(0)), false),
+            setUserAnswerTo(PreviousGuardianInternationalAddressPage(Index(0)), internationalAddress),
+            setUserAnswerTo(PreviousGuardianPhoneNumberKnownPage(Index(0)), true),
+            setUserAnswerTo(PreviousGuardianPhoneNumberPage(Index(0)), "077777777"),
+            setUserAnswerTo(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
+            goToChangeAnswer(PreviousGuardianPhoneNumberKnownPage(Index(0))),
+            submitAnswer(PreviousGuardianPhoneNumberKnownPage(Index(0)), false),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(PreviousGuardianPhoneNumberPage(Index(0)))
+          )
+      }
+    }
+
+    "that the user said lived with someone whose phone number they did now know" - {
+
+      "changing to say they do know the phone number must collect it and go to Check Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            basicChildJourney,
+            setUserAnswerTo(ChildLivedWithAnyoneElsePage(Index(0)), true),
+            setUserAnswerTo(PreviousGuardianNamePage(Index(0)), adultName),
+            setUserAnswerTo(PreviousGuardianAddressInUkPage(Index(0)), false),
+            setUserAnswerTo(PreviousGuardianInternationalAddressPage(Index(0)), internationalAddress),
+            setUserAnswerTo(PreviousGuardianPhoneNumberKnownPage(Index(0)), false),
+            setUserAnswerTo(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
+            goToChangeAnswer(PreviousGuardianPhoneNumberKnownPage(Index(0))),
+            submitAnswer(PreviousGuardianPhoneNumberKnownPage(Index(0)), true),
+            submitAnswer(PreviousGuardianPhoneNumberPage(Index(0)), "077777777"),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }
     }

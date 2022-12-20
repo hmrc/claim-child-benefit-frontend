@@ -32,5 +32,5 @@ final case class PreviousGuardianInternationalAddressPage(index: Index) extends 
     routes.PreviousGuardianInternationalAddressController.onPageLoad(waypoints, index)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    PreviousGuardianPhoneNumberPage(index)
+    PreviousGuardianPhoneNumberKnownPage(index)
 }

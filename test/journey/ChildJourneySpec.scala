@@ -362,6 +362,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
             submitAnswer(PreviousGuardianNamePage(Index(0)), adultName),
             submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), true),
             submitAnswer(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
+            submitAnswer(PreviousGuardianPhoneNumberKnownPage(Index(0)), true),
             submitAnswer(PreviousGuardianPhoneNumberPage(Index(0)), "0777777777"),
             submitAnswer(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
             pageMustBe(CheckChildDetailsPage(Index(0)))
@@ -376,7 +377,22 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
             submitAnswer(PreviousGuardianNamePage(Index(0)), adultName),
             submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), false),
             submitAnswer(PreviousGuardianInternationalAddressPage(Index(0)), internationalAddress),
+            submitAnswer(PreviousGuardianPhoneNumberKnownPage(Index(0)), true),
             submitAnswer(PreviousGuardianPhoneNumberPage(Index(0)), "0777777777"),
+            submitAnswer(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
+          )
+      }
+
+      "when the applicant does not know the person the child lived with's phone number'" in {
+
+        startingFrom(ChildLivedWithAnyoneElsePage(Index(0)))
+          .run(
+            submitAnswer(ChildLivedWithAnyoneElsePage(Index(0)), true),
+            submitAnswer(PreviousGuardianNamePage(Index(0)), adultName),
+            submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), true),
+            submitAnswer(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
+            submitAnswer(PreviousGuardianPhoneNumberKnownPage(Index(0)), false),
             submitAnswer(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )

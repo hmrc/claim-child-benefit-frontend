@@ -33,4 +33,16 @@ final case class PreviousGuardianPhoneNumberKnownPage(index: Index) extends Chil
   override def route(waypoints: Waypoints): Call =
     routes.PreviousGuardianPhoneNumberKnownController.onPageLoad(waypoints, index)
 
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true  => PreviousGuardianPhoneNumberPage(index)
+      case false => DateChildStartedLivingWithApplicantPage(index)
+    }.orRecover
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    if (value.contains(false)) {
+      userAnswers.remove(PreviousGuardianPhoneNumberPage(index))
+    } else {
+      super.cleanup(value, userAnswers)
+    }
 }

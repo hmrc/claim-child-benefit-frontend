@@ -32,5 +32,5 @@ final case class PreviousGuardianUkAddressPage(index: Index) extends ChildQuesti
     routes.PreviousGuardianUkAddressController.onPageLoad(waypoints, index)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    PreviousGuardianPhoneNumberPage(index)
+    PreviousGuardianPhoneNumberKnownPage(index)
 }
