@@ -14,71 +14,69 @@
  * limitations under the License.
  */
 
-package controllers.partner
+package controllers.child
 
 import base.SpecBase
 import controllers.{routes => baseRoutes}
-import forms.partner.PartnerNinoKnownFormProvider
+import forms.child.PreviousGuardianPhoneNumberKnownFormProvider
 import models.AdultName
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.EmptyWaypoints
-import pages.partner.{PartnerNamePage, PartnerNinoKnownPage}
+import pages.child.{PreviousGuardianPhoneNumberKnownPage, PreviousGuardianNamePage}
+import pages.{EmptyWaypoints, child}
 import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserDataService
-import views.html.partner.PartnerNinoKnownView
+import views.html.child.PreviousGuardianPhoneNumberKnownView
 
 import scala.concurrent.Future
 
-class PartnerNinoKnownControllerSpec extends SpecBase with MockitoSugar {
+class PreviousGuardianPhoneNumberKnownControllerSpec extends SpecBase with MockitoSugar {
 
-  def onwardRoute = Call("GET", "/foo")
   private val name = AdultName(None, "first", None, "last")
-  private val baseAnswers = emptyUserAnswers.set(PartnerNamePage, name).success.value
+  private val baseAnswers = emptyUserAnswers.set(PreviousGuardianNamePage(index), name).success.value
 
-  val formProvider = new PartnerNinoKnownFormProvider()
-  val form = formProvider(name.firstName)
+  val formProvider = new PreviousGuardianPhoneNumberKnownFormProvider()
+  val form = formProvider(name)
   private val waypoints = EmptyWaypoints
 
-  lazy val partnerNinoKnownRoute = routes.PartnerNinoKnownController.onPageLoad(waypoints).url
+  lazy val previousGuardianPhoneNumberKnownRoute = routes.PreviousGuardianPhoneNumberKnownController.onPageLoad(waypoints, index).url
 
-  "PartnerNinoKnown Controller" - {
+  "PreviousGuardianPhoneNumberKnown Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, partnerNinoKnownRoute)
+        val request = FakeRequest(GET, previousGuardianPhoneNumberKnownRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[PartnerNinoKnownView]
+        val view = application.injector.instanceOf[PreviousGuardianPhoneNumberKnownView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, name.firstName)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index, name)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = baseAnswers.set(PartnerNinoKnownPage, true).success.value
+      val userAnswers = baseAnswers.set(PreviousGuardianPhoneNumberKnownPage(index), true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, partnerNinoKnownRoute)
+        val request = FakeRequest(GET, previousGuardianPhoneNumberKnownRoute)
 
-        val view = application.injector.instanceOf[PartnerNinoKnownView]
+        val view = application.injector.instanceOf[PreviousGuardianPhoneNumberKnownView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), waypoints, name.firstName)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), waypoints, index, name)(request, messages(application)).toString
       }
     }
 
@@ -97,14 +95,14 @@ class PartnerNinoKnownControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, partnerNinoKnownRoute)
+          FakeRequest(POST, previousGuardianPhoneNumberKnownRoute)
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-        val expectedAnswers = baseAnswers.set(PartnerNinoKnownPage, true).success.value
+        val expectedAnswers = baseAnswers.set(child.PreviousGuardianPhoneNumberKnownPage(index), true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual PartnerNinoKnownPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual child.PreviousGuardianPhoneNumberKnownPage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -115,17 +113,17 @@ class PartnerNinoKnownControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, partnerNinoKnownRoute)
+          FakeRequest(POST, previousGuardianPhoneNumberKnownRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[PartnerNinoKnownView]
+        val view = application.injector.instanceOf[PreviousGuardianPhoneNumberKnownView]
 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, name.firstName)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index, name)(request, messages(application)).toString
       }
     }
 
@@ -134,7 +132,7 @@ class PartnerNinoKnownControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, partnerNinoKnownRoute)
+        val request = FakeRequest(GET, previousGuardianPhoneNumberKnownRoute)
 
         val result = route(application, request).value
 
@@ -149,7 +147,7 @@ class PartnerNinoKnownControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, partnerNinoKnownRoute)
+          FakeRequest(POST, previousGuardianPhoneNumberKnownRoute)
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value

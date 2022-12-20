@@ -35,7 +35,7 @@ import scala.concurrent.Future
 
 class PreviousClaimantAddressInUkControllerSpec extends SpecBase with MockitoSugar {
 
-  private val name = AdultName("first", None, "last")
+  private val name = AdultName(None, "first", None, "last")
   private val baseAnswers = emptyUserAnswers.set(PreviousClaimantNamePage(index), name).success.value
 
   val formProvider = new PreviousClaimantAddressInUkFormProvider()

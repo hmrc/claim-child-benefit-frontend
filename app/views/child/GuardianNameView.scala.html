@@ -39,24 +39,32 @@
 
         @govukInput(
             InputViewModel(
-                field = form("firstName"),
-                label = LabelViewModel(messages("guardianName.firstName"))
+                field = form("title"),
+                label = LabelViewModel(messages("guardianName.field.title"))
             )
-                    .withWidth(Full)
+            .withWidth(Full)
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("firstName"),
+                label = LabelViewModel(messages("guardianName.field.firstName"))
+            )
+            .withWidth(Fixed10)
         )
 
         @govukInput(
             InputViewModel(
                 field = form("middleNames"),
-                label = LabelViewModel(messages("guardianName.middleNames"))
+                label = LabelViewModel(messages("guardianName.field.middleNames"))
             )
-                    .withWidth(Full)
+            .withWidth(Full)
         )
 
         @govukInput(
             InputViewModel(
                 field = form("lastName"),
-                label = LabelViewModel(messages("guardianName.lastName"))
+                label = LabelViewModel(messages("guardianName.field.lastName"))
             )
                     .withWidth(Full)
         )

@@ -14,26 +14,18 @@
  * limitations under the License.
  */
 
-package models
+package forms.child
 
-import play.api.libs.json._
-import play.twirl.api.HtmlFormat
+import forms.mappings.Mappings
+import models.AdultName
+import play.api.data.Form
 
-case class AdultName(
-                      title: Option[String],
-                      firstName: String,
-                      middleNames: Option[String],
-                      lastName: String
-                    ) {
+import javax.inject.Inject
 
-  val display: String = Seq(
-    title,
-    Some(firstName),
-    middleNames,
-    Some(lastName)
-  ).flatten.mkString(" ")
-}
+class PreviousGuardianPhoneNumberKnownFormProvider @Inject() extends Mappings {
 
-object AdultName {
-  implicit val format = Json.format[AdultName]
+  def apply(previousGuardian: AdultName): Form[Boolean] =
+    Form(
+      "value" -> boolean("previousGuardianPhoneNumberKnown.error.required", args = Seq(previousGuardian.firstName))
+    )
 }

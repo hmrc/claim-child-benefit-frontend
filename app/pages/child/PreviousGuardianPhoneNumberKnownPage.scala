@@ -17,20 +17,32 @@
 package pages.child
 
 import controllers.child.routes
-import models.{Index, UkAddress, UserAnswers}
+import models.{Index, UserAnswers}
 import pages.{Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-final case class PreviousGuardianUkAddressPage(index: Index) extends ChildQuestionPage[UkAddress] {
+import scala.util.Try
+
+final case class PreviousGuardianPhoneNumberKnownPage(index: Index) extends ChildQuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ "children" \ index.position \ toString
 
-  override def toString: String = "previousGuardianUkAddress"
+  override def toString: String = "previousGuardianPhoneNumberKnown"
 
   override def route(waypoints: Waypoints): Call =
-    routes.PreviousGuardianUkAddressController.onPageLoad(waypoints, index)
+    routes.PreviousGuardianPhoneNumberKnownController.onPageLoad(waypoints, index)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    PreviousGuardianPhoneNumberKnownPage(index)
+    answers.get(this).map {
+      case true  => PreviousGuardianPhoneNumberPage(index)
+      case false => DateChildStartedLivingWithApplicantPage(index)
+    }.orRecover
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    if (value.contains(false)) {
+      userAnswers.remove(PreviousGuardianPhoneNumberPage(index))
+    } else {
+      super.cleanup(value, userAnswers)
+    }
 }

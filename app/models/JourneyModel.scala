@@ -117,6 +117,6 @@ object JourneyModel {
 
   final case class Guardian(name: AdultName, address: Address)
 
-  final case class PreviousGuardian(name: AdultName, address: Address, phoneNumber: String)
+  final case class PreviousGuardian(name: AdultName, address: Address, phoneNumber: Option[String])
 }
 

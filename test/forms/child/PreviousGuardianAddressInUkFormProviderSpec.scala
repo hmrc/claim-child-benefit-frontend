@@ -25,7 +25,7 @@ class PreviousGuardianAddressInUkFormProviderSpec extends BooleanFieldBehaviours
   val requiredKey = "previousGuardianAddressInUk.error.required"
   val invalidKey = "error.boolean"
 
-  private val previousGuardian = AdultName("first", None, "last")
+  private val previousGuardian = AdultName(None, "first", None, "last")
   val form = new PreviousGuardianAddressInUkFormProvider()(previousGuardian)
 
   ".value" - {

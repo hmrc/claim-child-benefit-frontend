@@ -20,13 +20,13 @@ import forms.behaviours.BooleanFieldBehaviours
 import models.AdultName
 import play.api.data.FormError
 
-class GuardianAddressInUkFormProviderSpec extends BooleanFieldBehaviours {
+class PreviousGuardianPhoneNumberKnownFormProviderSpec extends BooleanFieldBehaviours {
 
-  val requiredKey = "guardianAddressInUk.error.required"
+  val requiredKey = "previousGuardianPhoneNumberKnown.error.required"
   val invalidKey = "error.boolean"
 
-  private val guardian = AdultName(None, "first", None, "last")
-  val form = new GuardianAddressInUkFormProvider()(guardian)
+  private val previousGuardian = AdultName(None, "first", None, "last")
+  val form = new PreviousGuardianPhoneNumberKnownFormProvider()(previousGuardian)
 
   ".value" - {
 
@@ -35,13 +35,13 @@ class GuardianAddressInUkFormProviderSpec extends BooleanFieldBehaviours {
     behave like booleanField(
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey, Seq(guardian.firstName))
+      invalidError = FormError(fieldName, invalidKey, Seq(previousGuardian.firstName))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey, Seq(guardian.firstName))
+      requiredError = FormError(fieldName, requiredKey, Seq(previousGuardian.firstName))
     )
   }
 }

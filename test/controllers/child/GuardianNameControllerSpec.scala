@@ -44,7 +44,7 @@ class GuardianNameControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val guardianNameRoute = routes.GuardianNameController.onPageLoad(waypoints, index).url
 
-  private val validAnswer = AdultName("value 1", None, "value 2")
+  private val validAnswer = AdultName(None, "value 1", None, "value 2")
   private val userAnswers = baseAnswers.set(GuardianNamePage(index), validAnswer).success.value
 
   "GuardianName Controller" - {

@@ -47,7 +47,7 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 
   private val now = LocalDate.now
-  private val applicantName = AdultName("first", None, "last")
+  private val applicantName = AdultName(None, "first", None, "last")
   private val currentAddress = UkAddress("line 1", None, "town", None, "AA11 1AA")
   private val phoneNumber = "07777 777777"
   private val applicantBenefits = Set[Benefits](Benefits.NoneOfTheAbove)

@@ -55,6 +55,7 @@ final case class ChildLivesWithApplicantPage(index: Index) extends ChildQuestion
           .flatMap(_.remove(PreviousGuardianAddressInUkPage(index)))
           .flatMap(_.remove(PreviousGuardianUkAddressPage(index)))
           .flatMap(_.remove(PreviousGuardianInternationalAddressPage(index)))
+          .flatMap(_.remove(PreviousGuardianPhoneNumberKnownPage(index)))
           .flatMap(_.remove(PreviousGuardianPhoneNumberPage(index)))
           .flatMap(_.remove(DateChildStartedLivingWithApplicantPage(index)))
     }.getOrElse(super.cleanup(value, userAnswers))

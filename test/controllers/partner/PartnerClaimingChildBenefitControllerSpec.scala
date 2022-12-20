@@ -35,7 +35,7 @@ import scala.concurrent.Future
 
 class PartnerClaimingChildBenefitControllerSpec extends SpecBase with MockitoSugar {
 
-  private val name = AdultName("first", None, "last")
+  private val name = AdultName(None, "first", None, "last")
   private val baseAnswers = emptyUserAnswers.set(PartnerNamePage, name).success.value
   private val validAnswer = PartnerClaimingChildBenefit.values.head
 

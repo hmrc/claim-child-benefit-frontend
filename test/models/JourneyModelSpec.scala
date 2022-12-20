@@ -53,7 +53,7 @@ class JourneyModelSpec
   when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(BirthRegistrationMatchingResult.Matched)
 
   private val now = LocalDate.now
-  private val applicantName = AdultName("first", None, "last")
+  private val applicantName = AdultName(None, "first", None, "last")
   private val currentUkAddress = UkAddress("line 1", None, "town", None, "AA11 1AA")
   private val phoneNumber = "07777 777777"
   private val applicantBenefits = Set[Benefits](Benefits.NoneOfTheAbove)

@@ -27,6 +27,8 @@ class PartnerNameFormProvider @Inject() extends Mappings {
 
   def apply(): Form[AdultName] = Form(
     mapping(
+      "title" -> optional(text("partnerName.error.title.required")
+        .verifying(maxLength(100, "partnerName.error.title.length"))),
       "firstName" -> text("partnerName.error.firstName.required")
         .verifying(maxLength(100, "partnerName.error.firstName.length")),
       "middleNames" -> optional(text("partnerName.error.middleNames.required")
