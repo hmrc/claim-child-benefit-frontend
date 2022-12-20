@@ -27,6 +27,10 @@
 
                     @line("pdf.nino", model.applicant.nationalInsuranceNumber.getOrElse(messages("pdf.notKnown")))
 
+                    @model.applicant.name.title.map { title =>
+                        @line("pdf.name.title", title.toUpperCase)
+                    }
+
                     @line("pdf.name.last", model.applicant.name.lastName.toUpperCase)
 
                     @line("pdf.name.first", model.applicant.name.firstName.toUpperCase)

@@ -1172,6 +1172,7 @@ pdf.notKnown = Not known
 pdf.title = Claim Child Benefit for one or more children (CH2)
 pdf.application = Application
 pdf.personalDetails = Applicant details
+pdf.name.title = Title
 pdf.name.first = First name
 pdf.name.middle = Middle names
 pdf.name.last = Last name
