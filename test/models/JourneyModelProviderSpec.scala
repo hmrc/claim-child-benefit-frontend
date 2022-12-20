@@ -1418,6 +1418,7 @@ class JourneyModelProviderSpec
             .set(PreviousGuardianNamePage(Index(0)), adultName).success.value
             .set(PreviousGuardianAddressInUkPage(Index(0)), true).success.value
             .set(PreviousGuardianUkAddressPage(Index(0)), ukAddress).success.value
+            .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), true).success.value
             .set(PreviousGuardianPhoneNumberPage(Index(0)), phoneNumber).success.value
             .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now).success.value
             .set(AdditionalInformationPage, NoInformation).success.value
@@ -1435,7 +1436,7 @@ class JourneyModelProviderSpec
             adoptingThroughLocalAuthority = false,
             previousClaimant = None,
             guardian = None,
-            previousGuardian = Some(JourneyModel.PreviousGuardian(adultName, ukAddress, phoneNumber)),
+            previousGuardian = Some(JourneyModel.PreviousGuardian(adultName, ukAddress, Some(phoneNumber))),
             dateChildStartedLivingWithApplicant = Some(LocalDate.now)
           )
 
@@ -1459,6 +1460,7 @@ class JourneyModelProviderSpec
             .set(PreviousGuardianNamePage(Index(0)), adultName).success.value
             .set(PreviousGuardianAddressInUkPage(Index(0)), false).success.value
             .set(PreviousGuardianInternationalAddressPage(Index(0)), internationalAddress).success.value
+            .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), true).success.value
             .set(PreviousGuardianPhoneNumberPage(Index(0)), phoneNumber).success.value
             .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now).success.value
             .set(AdditionalInformationPage, NoInformation).success.value
@@ -1476,7 +1478,48 @@ class JourneyModelProviderSpec
             adoptingThroughLocalAuthority = false,
             previousClaimant = None,
             guardian = None,
-            previousGuardian = Some(JourneyModel.PreviousGuardian(adultName, internationalAddress, phoneNumber)),
+            previousGuardian = Some(JourneyModel.PreviousGuardian(adultName, internationalAddress, Some(phoneNumber))),
+            dateChildStartedLivingWithApplicant = Some(LocalDate.now)
+          )
+
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+          errors mustBe empty
+          data.value.children.toList must contain only expectedChildDetails
+        }
+
+        "and their phone number is not known" in {
+
+          when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+          val answers = UserAnswers("id")
+            .withMinimalApplicantDetails
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .withMinimalPaymentDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(ChildLivedWithAnyoneElsePage(Index(0)), true).success.value
+            .set(PreviousGuardianNamePage(Index(0)), adultName).success.value
+            .set(PreviousGuardianAddressInUkPage(Index(0)), true).success.value
+            .set(PreviousGuardianUkAddressPage(Index(0)), ukAddress).success.value
+            .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), false).success.value
+            .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
+
+          val expectedChildDetails = JourneyModel.Child(
+            name = childName,
+            nameChangedByDeedPoll = None,
+            previousNames = Nil,
+            biologicalSex = ChildBiologicalSex.Female,
+            dateOfBirth = now,
+            countryOfRegistration = ChildBirthRegistrationCountry.England,
+            birthCertificateNumber = Some(systemNumber),
+            birthCertificateDetailsMatched = Matched,
+            relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
+            adoptingThroughLocalAuthority = false,
+            previousClaimant = None,
+            guardian = None,
+            previousGuardian = Some(JourneyModel.PreviousGuardian(adultName, ukAddress, None)),
             dateChildStartedLivingWithApplicant = Some(LocalDate.now)
           )
 
@@ -2181,7 +2224,7 @@ class JourneyModelProviderSpec
         errors.value.toChain.toList must contain theSameElementsAs Seq(
           PreviousGuardianNamePage(Index(0)),
           PreviousGuardianAddressInUkPage(Index(0)),
-          PreviousGuardianPhoneNumberPage(Index(0)),
+          PreviousGuardianPhoneNumberKnownPage(Index(0)),
           DateChildStartedLivingWithApplicantPage(Index(0))
         )
 
@@ -2201,6 +2244,7 @@ class JourneyModelProviderSpec
           .set(ChildLivedWithAnyoneElsePage(Index(0)), true).success.value
           .set(PreviousGuardianNamePage(Index(0)), adultName).success.value
           .set(PreviousGuardianAddressInUkPage(Index(0)), true).success.value
+          .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), true).success.value
           .set(PreviousGuardianPhoneNumberPage(Index(0)), phoneNumber).success.value
           .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
@@ -2225,6 +2269,7 @@ class JourneyModelProviderSpec
           .set(ChildLivedWithAnyoneElsePage(Index(0)), true).success.value
           .set(PreviousGuardianNamePage(Index(0)), adultName).success.value
           .set(PreviousGuardianAddressInUkPage(Index(0)), false).success.value
+          .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), true).success.value
           .set(PreviousGuardianPhoneNumberPage(Index(0)), phoneNumber).success.value
           .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
@@ -2232,6 +2277,31 @@ class JourneyModelProviderSpec
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors.value.toChain.toList must contain only PreviousGuardianInternationalAddressPage(Index(0))
+
+        data mustBe empty
+      }
+
+      "when the child lived with someone else in the past year and the user said they know their phone number, but the phone number is not present" in {
+
+        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(ChildLivedWithAnyoneElsePage(Index(0)), true).success.value
+          .set(PreviousGuardianNamePage(Index(0)), adultName).success.value
+          .set(PreviousGuardianAddressInUkPage(Index(0)), true).success.value
+          .set(PreviousGuardianUkAddressPage(Index(0)), ukAddress).success.value
+          .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), true).success.value
+          .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors.value.toChain.toList must contain only PreviousGuardianPhoneNumberPage(Index(0))
 
         data mustBe empty
       }

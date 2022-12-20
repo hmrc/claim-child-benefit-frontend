@@ -73,6 +73,7 @@ class CheckChildDetailsController @Inject()(
               PreviousGuardianAddressInUkSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               PreviousGuardianUkAddressSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               PreviousGuardianInternationalAddressSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              PreviousGuardianPhoneNumberKnownSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               PreviousGuardianPhoneNumberSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               DateChildStartedLivingWithApplicantSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
           ).flatten

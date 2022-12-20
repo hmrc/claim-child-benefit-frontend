@@ -152,11 +152,16 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
           case true =>
             answers.getIor(ChildLivedWithAnyoneElsePage(index)).flatMap {
               case true =>
+                val phoneNumber = answers.getIor(PreviousGuardianPhoneNumberKnownPage(index)).flatMap {
+                  case true => answers.getIor(PreviousGuardianPhoneNumberPage(index)).map(Some(_))
+                  case false => Ior.Right(None)
+                }
+
                 (
                   answers.getIor(PreviousGuardianNamePage(index)),
                   getPreviousGuardianAddress,
-                  answers.getIor(PreviousGuardianPhoneNumberPage(index))
-                  ).parMapN(PreviousGuardian.apply).map(Some(_))
+                  phoneNumber
+                ).parMapN(PreviousGuardian.apply).map(Some(_))
 
               case false =>
                 Ior.Right(None)

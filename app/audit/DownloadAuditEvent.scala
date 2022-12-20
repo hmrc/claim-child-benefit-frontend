@@ -256,7 +256,7 @@ object DownloadAuditEvent {
     implicit lazy val writes: Writes[Guardian] = Json.writes
   }
 
-  private[audit] final case class PreviousGuardian(name: AdultName, address: Address, phoneNumber: String)
+  private[audit] final case class PreviousGuardian(name: AdultName, address: Address, phoneNumber: Option[String])
   object PreviousGuardian {
     implicit lazy val writes: Writes[PreviousGuardian] = Json.writes
   }

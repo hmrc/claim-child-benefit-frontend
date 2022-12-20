@@ -108,7 +108,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             previousGuardian = Some(JourneyModel.PreviousGuardian(
               name = models.AdultName(title = Some("title"), "previous guardian first", Some("previous guardian middle"), "previous guardian last"),
               address = models.UkAddress("previous guardian line 1", Some("previous guardian line 2"), "previous guardian town", Some("previous guardian county"), "previous guardian postcode"),
-              phoneNumber = "previous guardian phone"
+              phoneNumber = Some("previous guardian phone")
             )),
             dateChildStartedLivingWithApplicant = Some(LocalDate.now)
           ), Nil
@@ -180,7 +180,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             previousGuardian = Some(PreviousGuardian(
               name = AdultName(title = Some("title"), "previous guardian first", Some("previous guardian middle"), "previous guardian last"),
               address = UkAddress("previous guardian line 1", Some("previous guardian line 2"), "previous guardian town", Some("previous guardian county"), "previous guardian postcode"),
-              phoneNumber = "previous guardian phone"
+              phoneNumber = Some("previous guardian phone")
             )),
             dateChildStartedLivingWithApplicant = Some(LocalDate.now)
           )

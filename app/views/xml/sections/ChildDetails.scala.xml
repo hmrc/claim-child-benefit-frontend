@@ -125,7 +125,7 @@
                                 <fo:block width="8cm" wrap-option="wrap">@(x)</fo:block>
                             }
                         </fo:block>
-                        @line("pdf.previousGuardianPhoneNumber", previousGuardian.phoneNumber)
+                        @line("pdf.previousGuardianPhoneNumber", previousGuardian.phoneNumber.getOrElse(messages("pdf.notKnown")))
                     }
 
                     @child.dateChildStartedLivingWithApplicant.map { x =>
