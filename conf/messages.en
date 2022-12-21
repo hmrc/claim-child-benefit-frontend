@@ -986,6 +986,12 @@ childLivedWithAnyoneElse.checkYourAnswersLabel = Has this child lived with anyon
 childLivedWithAnyoneElse.error.required = Select yes if {0} has lived with anyone else that has a different address to you, in the past year
 childLivedWithAnyoneElse.change.hidden = if this child has lived with anyone else that has a different address to you, in the past year
 
+previousGuardianNameKnown.title = Do you know who this child lived with?
+previousGuardianNameKnown.heading = Do you know who this child lived with?
+previousGuardianNameKnown.checkYourAnswersLabel = Do you know who this child lived with?
+previousGuardianNameKnown.error.required = Select yes if you know who this child lived with
+previousGuardianNameKnown.change.hidden = if you know who this child lived with
+
 previousGuardianName.title = What is the name of the person this child lived with?
 previousGuardianName.heading = What is the name of the person {0} lived with?
 previousGuardianName.field.title = Title (optional)
@@ -1000,6 +1006,12 @@ previousGuardianName.error.firstName.length = First name of the person {0} lived
 previousGuardianName.error.middleNames.length = Middle names of the person {0} lived with must be 100 characters or less
 previousGuardianName.error.lastName.length = Last name of the person {0} lived with must be 100 characters or less
 previousGuardianName.change.hidden = the name of the person this child lived with
+
+previousGuardianAddressKnown.title = Do you know the person this child lived with’s address?
+previousGuardianAddressKnown.heading = Do you know {0}’s address?
+previousGuardianAddressKnown.checkYourAnswersLabel = Do you know the person this child lived with’s address?
+previousGuardianAddressKnown.error.required = Select yes if you know {0}’s address
+previousGuardianAddressKnown.change.hidden = if you know the person this child lived with’s address
 
 previousGuardianAddressInUk.title = Is the person this child lived with’s address in the UK?
 previousGuardianAddressInUk.heading = Is {0}’s address in the UK?
