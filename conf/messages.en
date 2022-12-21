@@ -922,6 +922,12 @@ childLivesWithApplicant.checkYourAnswersLabel = Does this child live with you?
 childLivesWithApplicant.error.required = Select yes if {0} lives with you
 childLivesWithApplicant.change.hidden = if this child lives with you
 
+guardianNameKnown.title = Do you know who this child lives with?
+guardianNameKnown.heading = Do you know who {0} lives with?
+guardianNameKnown.checkYourAnswersLabel = Do you know who this child lives with?
+guardianNameKnown.error.required = Select yes if you know who {0} lives with
+guardianNameKnown.change.hidden = if you know who this child lives with
+
 guardianName.title = What is the name of the person this child lives with?
 guardianName.heading = What is the name of the person {0} lives with?
 guardianName.field.title = Title (optional)
@@ -936,6 +942,12 @@ guardianName.error.firstName.length = First name of the person {0} lives with mu
 guardianName.error.middleNames.length = Middle names of the person {0} lives with must be 100 characters or less
 guardianName.error.lastName.length = Last name of the person {0} lives with must be 100 characters or less
 guardianName.change.hidden = the name of the person this child lives with
+
+guardianAddressKnown.title = Do you know who the person this child lives with’s address?
+guardianAddressKnown.heading = Do you know {0}’s address?
+guardianAddressKnown.checkYourAnswersLabel = Do you know the person this child lives with’s address?
+guardianAddressKnown.error.required = Select yes if you know {0}’s address
+guardianAddressKnown.change.hidden = if you know the person this child lives with’s address
 
 guardianAddressInUk.title = Is the person this child lives with’s address in the UK?
 guardianAddressInUk.heading = Is {0}’s address in the UK?
