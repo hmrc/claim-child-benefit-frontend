@@ -858,6 +858,12 @@ childScottishBirthCertificateDetails.entry.error.invalid = Enter the entry numbe
 childScottishBirthCertificateDetails.entry.error.outOfRange = The entry number on {2}’s birth certificate must be up to 3 digits
 childScottishBirthCertificateDetails.change.hidden = the district number, year and entry number on this child’s birth certificate
 
+previousClaimantAddressKnown.title = Do you know the person who claimed Child Benefit for this child’s address?
+previousClaimantAddressKnown.heading = Do you know {0}’s address?
+previousClaimantAddressKnown.checkYourAnswersLabel = Do you know the person who claimed Child Benefit for this child’s address?
+previousClaimantAddressKnown.error.required = Select yes if you know {0}’s address
+previousClaimantAddressKnown.change.hidden = if you know the person who claimed Child Benefit for this child’s address
+
 previousClaimantAddressInUk.title = Is the person who claimed Child Benefit for this child’s address in the UK?
 previousClaimantAddressInUk.heading = Is {0}’s address in the UK?
 previousClaimantAddressInUk.checkYourAnswersLabel = Is the person who claimed Child Benefit for this child’s address in the UK?
@@ -900,6 +906,12 @@ previousClaimantUkAddress.error.town.length = Town or city of {1}’s address mu
 previousClaimantUkAddress.error.county.length = County of {1}’s address must be 100 characters or less
 previousClaimantUkAddress.error.postcode.length = Postcode of {1}’s address must be 100 characters or less
 previousClaimantUkAddress.change.hidden = the person who claimed Child Benefit for this child’s address
+
+previousClaimantNameKnown.title = Do you know who claimed Child Benefit for this child?
+previousClaimantNameKnown.heading = Do you know who claimed Child Benefit for {0}?
+previousClaimantNameKnown.checkYourAnswersLabel = Do you know who claimed Child Benefit for this child?
+previousClaimantNameKnown.error.required = Select yes if you know who claimed Child Benefit for {0}
+previousClaimantNameKnown.change.hidden = if you know who claimed Child Benefit for this child
 
 previousClaimantName.title = What is the name of the person who claimed Child Benefit for this child?
 previousClaimantName.heading = What is the name of the person who claimed Child Benefit for {0}?

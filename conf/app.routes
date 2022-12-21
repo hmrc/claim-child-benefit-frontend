@@ -236,6 +236,9 @@ POST       /child-scottish-birth-certificate-has-details/:index                 
 GET        /child-scottish-birth-certificate-details/:index                        controllers.child.ChildScottishBirthCertificateDetailsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /child-scottish-birth-certificate-details/:index                        controllers.child.ChildScottishBirthCertificateDetailsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
+GET        /know-previous-claimant-address/:index                        controllers.child.PreviousClaimantAddressKnownController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /know-previous-claimant-address/:index                        controllers.child.PreviousClaimantAddressKnownController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+
 GET        /is-previous-claimant-address-in-uk/:index                        controllers.child.PreviousClaimantAddressInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /is-previous-claimant-address-in-uk/:index                        controllers.child.PreviousClaimantAddressInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
@@ -244,6 +247,9 @@ POST       /previous-claimant-international-address/:index                      
 
 GET        /previous-claimant-uk-address/:index                        controllers.child.PreviousClaimantUkAddressController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /previous-claimant-uk-address/:index                        controllers.child.PreviousClaimantUkAddressController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+
+GET        /know-previous-claimant-name/:index                        controllers.child.PreviousClaimantNameKnownController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /know-previous-claimant-name/:index                        controllers.child.PreviousClaimantNameKnownController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
 GET        /previous-claimant-name/:index                        controllers.child.PreviousClaimantNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /previous-claimant-name/:index                        controllers.child.PreviousClaimantNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
