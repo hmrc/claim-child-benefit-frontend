@@ -17,15 +17,15 @@
 package forms.child
 
 import forms.mappings.Mappings
-import models.AdultName
+import models.{AdultName, ChildName}
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class PreviousGuardianNameKnownFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(childName: ChildName): Form[Boolean] =
     Form(
-      "value" -> boolean("previousGuardianNameKnown.error.required")
+      "value" -> boolean("previousGuardianNameKnown.error.required", args = Seq(childName.firstName))
     )
 }

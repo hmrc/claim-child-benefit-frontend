@@ -21,7 +21,7 @@ import controllers.actions._
 import forms.child.PreviousGuardianNameKnownFormProvider
 import models.Index
 import pages.Waypoints
-import pages.child.{PreviousGuardianNameKnownPage, PreviousGuardianNamePage}
+import pages.child.{ChildNamePage, PreviousGuardianNameKnownPage, PreviousGuardianNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserDataService
@@ -47,31 +47,37 @@ class PreviousGuardianNameKnownController @Inject()(
 
   def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
+      getAnswer(ChildNamePage(index)) {
+        childName =>
 
-      val form = formProvider()
+          val form = formProvider(childName)
 
-      val preparedForm = request.userAnswers.get(PreviousGuardianNameKnownPage(index)) match {
-        case None => form
-        case Some(value) => form.fill(value)
+          val preparedForm = request.userAnswers.get(PreviousGuardianNameKnownPage(index)) match {
+            case None => form
+            case Some(value) => form.fill(value)
+          }
+
+          Ok(view(preparedForm, waypoints, index, childName))
       }
-
-      Ok(view(preparedForm, waypoints, index))
   }
 
   def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      getAnswerAsync(ChildNamePage(index)) {
+        childName =>
 
-      val form = formProvider()
+          val form = formProvider(childName)
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints, index))),
+          form.bindFromRequest().fold(
+            formWithErrors =>
+              Future.successful(BadRequest(view(formWithErrors, waypoints, index, childName))),
 
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(PreviousGuardianNameKnownPage(index), value))
-            _ <- userDataService.set(updatedAnswers)
-          } yield Redirect(PreviousGuardianNameKnownPage(index).navigate(waypoints, request.userAnswers, updatedAnswers).route)
-      )
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(PreviousGuardianNameKnownPage(index), value))
+                _ <- userDataService.set(updatedAnswers)
+              } yield Redirect(PreviousGuardianNameKnownPage(index).navigate(waypoints, request.userAnswers, updatedAnswers).route)
+          )
+      }
   }
 }

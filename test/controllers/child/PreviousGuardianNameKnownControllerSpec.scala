@@ -16,13 +16,14 @@
 
 package controllers.child
 
+import models.{ChildName, Index}
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.child.PreviousGuardianNameKnownFormProvider
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.child.PreviousGuardianNameKnownPage
+import pages.child.{ChildNamePage, PreviousGuardianNameKnownPage}
 import pages.{EmptyWaypoints, child}
 import play.api.inject.bind
 import play.api.test.FakeRequest
@@ -34,9 +35,11 @@ import scala.concurrent.Future
 
 class PreviousGuardianNameKnownControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new PreviousGuardianNameKnownFormProvider()
-  val form = formProvider()
+  private val childName = ChildName("first", None, "last")
+  private val formProvider = new PreviousGuardianNameKnownFormProvider()
+  private val form = formProvider(childName)
   private val waypoints = EmptyWaypoints
+  private val baseAnswers = emptyUserAnswers.set(ChildNamePage(Index(0)), childName).success.value
 
   lazy val previousGuardianNameKnownRoute = routes.PreviousGuardianNameKnownController.onPageLoad(waypoints, index).url
 
@@ -44,7 +47,7 @@ class PreviousGuardianNameKnownControllerSpec extends SpecBase with MockitoSugar
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, previousGuardianNameKnownRoute)
@@ -54,13 +57,13 @@ class PreviousGuardianNameKnownControllerSpec extends SpecBase with MockitoSugar
         val view = application.injector.instanceOf[PreviousGuardianNameKnownView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, index)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index, childName)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(PreviousGuardianNameKnownPage(index), true).success.value
+      val userAnswers = baseAnswers.set(PreviousGuardianNameKnownPage(index), true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -72,7 +75,7 @@ class PreviousGuardianNameKnownControllerSpec extends SpecBase with MockitoSugar
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), waypoints, index)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), waypoints, index, childName)(request, messages(application)).toString
       }
     }
 
@@ -83,7 +86,7 @@ class PreviousGuardianNameKnownControllerSpec extends SpecBase with MockitoSugar
       when(mockUserDataService.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
             bind[UserDataService].toInstance(mockUserDataService)
           )
@@ -95,7 +98,7 @@ class PreviousGuardianNameKnownControllerSpec extends SpecBase with MockitoSugar
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(child.PreviousGuardianNameKnownPage(index), true).success.value
+        val expectedAnswers = baseAnswers.set(child.PreviousGuardianNameKnownPage(index), true).success.value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual child.PreviousGuardianNameKnownPage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
@@ -105,7 +108,7 @@ class PreviousGuardianNameKnownControllerSpec extends SpecBase with MockitoSugar
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request =
@@ -119,7 +122,7 @@ class PreviousGuardianNameKnownControllerSpec extends SpecBase with MockitoSugar
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, index)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index, childName)(request, messages(application)).toString
       }
     }
 

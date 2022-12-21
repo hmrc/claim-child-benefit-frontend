@@ -17,15 +17,16 @@
 package forms.child
 
 import forms.behaviours.BooleanFieldBehaviours
-import models.AdultName
+import models.ChildName
 import play.api.data.FormError
 
 class PreviousGuardianNameKnownFormProviderSpec extends BooleanFieldBehaviours {
 
-  val requiredKey = "previousGuardianNameKnown.error.required"
-  val invalidKey = "error.boolean"
+  private val childName = ChildName("first", None, "last")
+  private val requiredKey = "previousGuardianNameKnown.error.required"
+  private val invalidKey = "error.boolean"
 
-  val form = new PreviousGuardianNameKnownFormProvider()()
+  val form = new PreviousGuardianNameKnownFormProvider()(childName)
 
   ".value" - {
 
@@ -34,13 +35,13 @@ class PreviousGuardianNameKnownFormProviderSpec extends BooleanFieldBehaviours {
     behave like booleanField(
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+      invalidError = FormError(fieldName, invalidKey, Seq(childName.firstName))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq(childName.firstName))
     )
   }
 }

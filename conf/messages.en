@@ -999,9 +999,9 @@ childLivedWithAnyoneElse.error.required = Select yes if {0} has lived with anyon
 childLivedWithAnyoneElse.change.hidden = if this child has lived with anyone else that has a different address to you, in the past year
 
 previousGuardianNameKnown.title = Do you know who this child lived with?
-previousGuardianNameKnown.heading = Do you know who this child lived with?
+previousGuardianNameKnown.heading = Do you know who {0} lived with?
 previousGuardianNameKnown.checkYourAnswersLabel = Do you know who this child lived with?
-previousGuardianNameKnown.error.required = Select yes if you know who this child lived with
+previousGuardianNameKnown.error.required = Select yes if you know who {0} lived with
 previousGuardianNameKnown.change.hidden = if you know who this child lived with
 
 previousGuardianName.title = What is the name of the person this child lived with?
