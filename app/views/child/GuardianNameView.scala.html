@@ -42,7 +42,7 @@
                 field = form("title"),
                 label = LabelViewModel(messages("guardianName.field.title"))
             )
-            .withWidth(Full)
+            .withWidth(Fixed10)
         )
 
         @govukInput(
@@ -50,7 +50,7 @@
                 field = form("firstName"),
                 label = LabelViewModel(messages("guardianName.field.firstName"))
             )
-            .withWidth(Fixed10)
+            .withWidth(Full)
         )
 
         @govukInput(
