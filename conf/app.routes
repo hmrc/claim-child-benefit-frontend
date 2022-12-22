@@ -236,6 +236,9 @@ POST       /child-scottish-birth-certificate-has-details/:index                 
 GET        /child-scottish-birth-certificate-details/:index                        controllers.child.ChildScottishBirthCertificateDetailsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /child-scottish-birth-certificate-details/:index                        controllers.child.ChildScottishBirthCertificateDetailsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
+GET        /know-previous-claimant-address/:index                        controllers.child.PreviousClaimantAddressKnownController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /know-previous-claimant-address/:index                        controllers.child.PreviousClaimantAddressKnownController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+
 GET        /is-previous-claimant-address-in-uk/:index                        controllers.child.PreviousClaimantAddressInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /is-previous-claimant-address-in-uk/:index                        controllers.child.PreviousClaimantAddressInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
@@ -244,6 +247,9 @@ POST       /previous-claimant-international-address/:index                      
 
 GET        /previous-claimant-uk-address/:index                        controllers.child.PreviousClaimantUkAddressController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /previous-claimant-uk-address/:index                        controllers.child.PreviousClaimantUkAddressController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+
+GET        /know-previous-claimant-name/:index                        controllers.child.PreviousClaimantNameKnownController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /know-previous-claimant-name/:index                        controllers.child.PreviousClaimantNameKnownController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
 GET        /previous-claimant-name/:index                        controllers.child.PreviousClaimantNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /previous-claimant-name/:index                        controllers.child.PreviousClaimantNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
@@ -260,8 +266,14 @@ POST       /adopting-through-local-authority/:index                        contr
 GET        /child-lives-with-you/:index                      controllers.child.ChildLivesWithApplicantController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /child-lives-with-you/:index                      controllers.child.ChildLivesWithApplicantController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
+GET        /know-name-of-person-child-lives-with/:index          controllers.child.GuardianNameKnownController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /know-name-of-person-child-lives-with/:index          controllers.child.GuardianNameKnownController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+
 GET        /name-of-person-child-lives-with/:index          controllers.child.GuardianNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /name-of-person-child-lives-with/:index          controllers.child.GuardianNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+
+GET        /know-person-child-lives-with-address/:index         controllers.child.GuardianAddressKnownController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /know-person-child-lives-with-address/:index         controllers.child.GuardianAddressKnownController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
 GET        /is-person-child-lives-with-address-in-uk/:index         controllers.child.GuardianAddressInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /is-person-child-lives-with-address-in-uk/:index         controllers.child.GuardianAddressInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
@@ -275,8 +287,14 @@ POST       /person-child-lives-with-uk-address/:index        controllers.child.G
 GET        /child-lived-with-anyone-else/:index             controllers.child.ChildLivedWithAnyoneElseController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /child-lived-with-anyone-else/:index             controllers.child.ChildLivedWithAnyoneElseController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
+GET        /know-person-child-lived-with/:index          controllers.child.PreviousGuardianNameKnownController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /know-person-child-lived-with/:index          controllers.child.PreviousGuardianNameKnownController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+
 GET        /name-of-person-child-lived-with/:index          controllers.child.PreviousGuardianNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /name-of-person-child-lived-with/:index          controllers.child.PreviousGuardianNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+
+GET        /know-person-child-lived-with-address/:index         controllers.child.PreviousGuardianAddressKnownController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /know-person-child-lived-with-address/:index         controllers.child.PreviousGuardianAddressKnownController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
 GET        /is-person-child-lived-with-address-in-uk/:index         controllers.child.PreviousGuardianAddressInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /is-person-child-lived-with-address-in-uk/:index         controllers.child.PreviousGuardianAddressInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)

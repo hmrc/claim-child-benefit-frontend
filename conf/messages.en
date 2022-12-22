@@ -858,6 +858,12 @@ childScottishBirthCertificateDetails.entry.error.invalid = Enter the entry numbe
 childScottishBirthCertificateDetails.entry.error.outOfRange = The entry number on {2}’s birth certificate must be up to 3 digits
 childScottishBirthCertificateDetails.change.hidden = the district number, year and entry number on this child’s birth certificate
 
+previousClaimantAddressKnown.title = Do you know the person who claimed Child Benefit for this child’s address?
+previousClaimantAddressKnown.heading = Do you know {0}’s address?
+previousClaimantAddressKnown.checkYourAnswersLabel = Do you know the person who claimed Child Benefit for this child’s address?
+previousClaimantAddressKnown.error.required = Select yes if you know {0}’s address
+previousClaimantAddressKnown.change.hidden = if you know the person who claimed Child Benefit for this child’s address
+
 previousClaimantAddressInUk.title = Is the person who claimed Child Benefit for this child’s address in the UK?
 previousClaimantAddressInUk.heading = Is {0}’s address in the UK?
 previousClaimantAddressInUk.checkYourAnswersLabel = Is the person who claimed Child Benefit for this child’s address in the UK?
@@ -901,6 +907,12 @@ previousClaimantUkAddress.error.county.length = County of {1}’s address must b
 previousClaimantUkAddress.error.postcode.length = Postcode of {1}’s address must be 100 characters or less
 previousClaimantUkAddress.change.hidden = the person who claimed Child Benefit for this child’s address
 
+previousClaimantNameKnown.title = Do you know who claimed Child Benefit for this child?
+previousClaimantNameKnown.heading = Do you know who claimed Child Benefit for {0}?
+previousClaimantNameKnown.checkYourAnswersLabel = Do you know who claimed Child Benefit for this child?
+previousClaimantNameKnown.error.required = Select yes if you know who claimed Child Benefit for {0}
+previousClaimantNameKnown.change.hidden = if you know who claimed Child Benefit for this child
+
 previousClaimantName.title = What is the name of the person who claimed Child Benefit for this child?
 previousClaimantName.heading = What is the name of the person who claimed Child Benefit for {0}?
 previousClaimantName.field.title = Title (optional)
@@ -922,6 +934,12 @@ childLivesWithApplicant.checkYourAnswersLabel = Does this child live with you?
 childLivesWithApplicant.error.required = Select yes if {0} lives with you
 childLivesWithApplicant.change.hidden = if this child lives with you
 
+guardianNameKnown.title = Do you know who this child lives with?
+guardianNameKnown.heading = Do you know who {0} lives with?
+guardianNameKnown.checkYourAnswersLabel = Do you know who this child lives with?
+guardianNameKnown.error.required = Select yes if you know who {0} lives with
+guardianNameKnown.change.hidden = if you know who this child lives with
+
 guardianName.title = What is the name of the person this child lives with?
 guardianName.heading = What is the name of the person {0} lives with?
 guardianName.field.title = Title (optional)
@@ -936,6 +954,12 @@ guardianName.error.firstName.length = First name of the person {0} lives with mu
 guardianName.error.middleNames.length = Middle names of the person {0} lives with must be 100 characters or less
 guardianName.error.lastName.length = Last name of the person {0} lives with must be 100 characters or less
 guardianName.change.hidden = the name of the person this child lives with
+
+guardianAddressKnown.title = Do you know who the person this child lives with’s address?
+guardianAddressKnown.heading = Do you know {0}’s address?
+guardianAddressKnown.checkYourAnswersLabel = Do you know the person this child lives with’s address?
+guardianAddressKnown.error.required = Select yes if you know {0}’s address
+guardianAddressKnown.change.hidden = if you know the person this child lives with’s address
 
 guardianAddressInUk.title = Is the person this child lives with’s address in the UK?
 guardianAddressInUk.heading = Is {0}’s address in the UK?
@@ -986,6 +1010,12 @@ childLivedWithAnyoneElse.checkYourAnswersLabel = Has this child lived with anyon
 childLivedWithAnyoneElse.error.required = Select yes if {0} has lived with anyone else that has a different address to you, in the past year
 childLivedWithAnyoneElse.change.hidden = if this child has lived with anyone else that has a different address to you, in the past year
 
+previousGuardianNameKnown.title = Do you know who this child lived with?
+previousGuardianNameKnown.heading = Do you know who {0} lived with?
+previousGuardianNameKnown.checkYourAnswersLabel = Do you know who this child lived with?
+previousGuardianNameKnown.error.required = Select yes if you know who {0} lived with
+previousGuardianNameKnown.change.hidden = if you know who this child lived with
+
 previousGuardianName.title = What is the name of the person this child lived with?
 previousGuardianName.heading = What is the name of the person {0} lived with?
 previousGuardianName.field.title = Title (optional)
@@ -1000,6 +1030,12 @@ previousGuardianName.error.firstName.length = First name of the person {0} lived
 previousGuardianName.error.middleNames.length = Middle names of the person {0} lived with must be 100 characters or less
 previousGuardianName.error.lastName.length = Last name of the person {0} lived with must be 100 characters or less
 previousGuardianName.change.hidden = the name of the person this child lived with
+
+previousGuardianAddressKnown.title = Do you know the person this child lived with’s address?
+previousGuardianAddressKnown.heading = Do you know {0}’s address?
+previousGuardianAddressKnown.checkYourAnswersLabel = Do you know the person this child lived with’s address?
+previousGuardianAddressKnown.error.required = Select yes if you know {0}’s address
+previousGuardianAddressKnown.change.hidden = if you know the person this child lived with’s address
 
 previousGuardianAddressInUk.title = Is the person this child lived with’s address in the UK?
 previousGuardianAddressInUk.heading = Is {0}’s address in the UK?
