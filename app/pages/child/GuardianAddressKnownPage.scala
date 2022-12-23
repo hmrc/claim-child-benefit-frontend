@@ -32,4 +32,20 @@ final case class GuardianAddressKnownPage(index: Index) extends ChildQuestionPag
 
   override def route(waypoints: Waypoints): Call =
     routes.GuardianAddressKnownController.onPageLoad(waypoints, index)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true  => GuardianAddressInUkPage(index)
+      case false => CheckChildDetailsPage(index)
+    }.orRecover
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    if (value.contains(false)) {
+      userAnswers
+        .remove(GuardianAddressInUkPage(index))
+        .flatMap(_.remove(GuardianUkAddressPage(index)))
+        .flatMap(_.remove(GuardianInternationalAddressPage(index)))
+    } else {
+      super.cleanup(value, userAnswers)
+    }
 }

@@ -32,4 +32,20 @@ final case class PreviousClaimantAddressKnownPage(index: Index) extends ChildQue
 
   override def route(waypoints: Waypoints): Call =
     routes.PreviousClaimantAddressKnownController.onPageLoad(waypoints, index)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true  => PreviousClaimantAddressInUkPage(index)
+      case false => ChildLivesWithApplicantPage(index)
+    }.orRecover
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    if (value.contains(false)) {
+      userAnswers
+        .remove(PreviousClaimantAddressInUkPage(index))
+        .flatMap(_.remove(PreviousClaimantUkAddressPage(index)))
+        .flatMap(_.remove(PreviousClaimantInternationalAddressPage(index)))
+    } else {
+      super.cleanup(value, userAnswers)
+    }
 }
