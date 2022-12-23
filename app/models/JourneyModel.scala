@@ -113,10 +113,10 @@ object JourneyModel {
       Seq(birthCertificate, travelDocument, adoptionCertificate).flatten
   }
 
-  final case class PreviousClaimant(name: AdultName, address: Address)
+  final case class PreviousClaimant(name: Option[AdultName], address: Option[Address])
 
-  final case class Guardian(name: AdultName, address: Address)
+  final case class Guardian(name: Option[AdultName], address: Option[Address])
 
-  final case class PreviousGuardian(name: AdultName, address: Address, phoneNumber: Option[String])
+  final case class PreviousGuardian(name: Option[AdultName], address: Option[Address], phoneNumber: Option[String])
 }
 
