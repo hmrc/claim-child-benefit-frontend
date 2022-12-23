@@ -27,14 +27,12 @@ class PreviousGuardianNameFormProvider @Inject() extends Mappings {
 
   def apply(childName: ChildName): Form[AdultName] = Form(
     mapping(
-      "title" -> optional(text("previousGuardianName.error.title.required", args = Seq(childName.firstName))
-        .verifying(maxLength(100, "previousGuardianName.error.title.length", childName.firstName))),
       "firstName" -> text("previousGuardianName.error.firstName.required", args = Seq(childName.firstName))
         .verifying(maxLength(100, "previousGuardianName.error.firstName.length", childName.firstName)),
       "middleNames" -> optional(text("previousGuardianName.error.middleNames.required", args = Seq(childName.firstName))
         .verifying(maxLength(100, "previousGuardianName.error.middleNames.length", childName.firstName))),
       "lastName" -> text("previousGuardianName.error.lastName.required", args = Seq(childName.firstName))
         .verifying(maxLength(100, "previousGuardianName.error.lastName.length", childName.firstName))
-    )(AdultName.apply)(AdultName.unapply)
+    )(AdultName.apply(None, _, _, _))(name => Some(name.firstName, name.middleNames, name.lastName))
   )
 }
