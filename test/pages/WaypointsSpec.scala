@@ -226,6 +226,8 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
       override val checkModeUrlFragment: String = "change-page-1"
 
       override def route(waypoints: Waypoints): Call = Call("", "")
+
+      override def path: JsPath = JsPath \ "addItemPage1"
     }
 
     object AddItemPage2 extends AddItemPage {
@@ -233,6 +235,8 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
       override val checkModeUrlFragment: String = "change-page-2"
 
       override def route(waypoints: Waypoints): Call = Call("", "")
+
+      override def path: JsPath = JsPath \ "addItemPage2"
     }
 
     trait AddToListSection1Page extends QuestionPage[Nothing] with AddToListQuestionPage {

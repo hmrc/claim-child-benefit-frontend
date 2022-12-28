@@ -17,6 +17,8 @@
 package pages
 
 import models.{CheckMode, Mode, NormalMode}
+import play.api.libs.json.JsObject
+import queries.Derivable
 
 trait WaypointPage extends Page
 
@@ -27,7 +29,7 @@ trait CheckAnswersPage extends WaypointPage {
     Waypoint(this, CheckMode, urlFragment)
 }
 
-trait AddItemPage extends WaypointPage {
+trait AddItemPage extends WaypointPage with QuestionPage[Boolean] {
   def waypoint(mode: Mode): Waypoint = {
     Waypoint(this, mode, urlFragment(mode))
   }
