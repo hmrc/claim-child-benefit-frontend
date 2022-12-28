@@ -19,9 +19,8 @@ package pages.applicant
 import controllers.applicant.routes
 import models.RelationshipStatus._
 import models.UserAnswers
-import pages.income.{ApplicantIncomePage, ApplicantOrPartnerIncomePage}
 import pages.partner.PartnerIsHmfOrCivilServantPage
-import pages.{Page, QuestionPage, RelationshipStatusPage, UsePrintAndPostFormPage, Waypoints}
+import pages.{CheckRelationshipDetailsPage, Page, QuestionPage, RelationshipStatusPage, UsePrintAndPostFormPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -37,10 +36,7 @@ case object ApplicantIsHmfOrCivilServantPage extends QuestionPage[Boolean] {
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page = {
     answers.get(this).map {
       case true =>
-        answers.get(RelationshipStatusPage).map {
-          case Married | Cohabiting                    => ApplicantOrPartnerIncomePage
-          case Single | Divorced | Separated | Widowed => ApplicantIncomePage
-        }.orRecover
+        CheckRelationshipDetailsPage
 
       case false =>
         answers.get(RelationshipStatusPage).map {

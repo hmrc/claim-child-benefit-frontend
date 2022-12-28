@@ -18,11 +18,15 @@ package pages
 
 
 import controllers.routes
+import models.UserAnswers
 import play.api.mvc.Call
 
-object CheckRelationshipDetailsPage extends CheckAnswersPage {
+object CheckRelationshipDetailsPage extends CheckAnswersPage with Terminus {
 
   override val urlFragment: String = "check-relationship-details"
 
   override def route(waypoints: Waypoints): Call = routes.CheckRelationshipDetailsController.onPageLoad
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    TaskListPage
 }

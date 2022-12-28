@@ -16,8 +16,9 @@
 
 package pages
 
+import controllers.routes
 import play.api.mvc.Call
 
 object TaskListPage extends Page {
-  override def route(waypoints: Waypoints): Call = ???
+  override def route(waypoints: Waypoints): Call = routes.TaskListController.onPageLoad
 }
