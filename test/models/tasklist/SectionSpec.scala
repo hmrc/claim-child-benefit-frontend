@@ -112,26 +112,52 @@ class SectionSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyCheck
 
   "asViewModel" - {
 
-    "must return a view model with this section's continue URL and status when the section should be shown" in {
+    "must return a view model" - {
 
-      object TestPage extends Page {
-        override def route(waypoints: Waypoints): Call = Call("", "")
+      "with a continue URL" - {
+
+        "when the section should be shown, it has a continue page, and it's status is anything except Not Started" in {
+
+          object TestPage extends Page {
+            override def route(waypoints: Waypoints): Call = Call("", "")
+          }
+
+          val status = Gen.oneOf(NotStarted, InProgress, Completed).sample.value
+
+          val answers = UserAnswers("id")
+          val section = TestSection(status, Nil, Some(TestPage))
+          val result = section.asViewModel(answers)
+
+          result.value mustEqual SectionViewModel("foo", Some(Call("", "")), status)
+        }
       }
 
-      val answers = UserAnswers("id")
-      val section = TestSection(Completed, Nil, Some(TestPage))
-      val result = section.asViewModel(answers)
+      "with no continue URL" - {
 
-      result.value mustEqual SectionViewModel("foo", Some(Call("", "")), Completed)
-    }
+        "when this section should be shown but it does not have a continue page" in {
+          
+          val status = Gen.oneOf(NotStarted, InProgress, Completed).sample.value
 
-    "must return a view model with this section's status and no URL  when the section should be shown" in {
+          val answers = UserAnswers("id")
+          val section = TestSection(status, Nil, None)
+          val result = section.asViewModel(answers)
 
-      val answers = UserAnswers("id")
-      val section = TestSection(CannotStart, Nil, None)
-      val result = section.asViewModel(answers)
+          result.value mustEqual SectionViewModel("foo", None, status)
+        }
 
-      result.value mustEqual SectionViewModel("foo", None, CannotStart)
+        "when this section should be shown, it has a continue page, but its status is Cannot Start" in {
+
+          object TestPage extends Page {
+            override def route(waypoints: Waypoints): Call = Call("", "")
+          }
+
+          val answers = UserAnswers("id")
+          val section = TestSection(CannotStart, Nil, Some(TestPage))
+          val result = section.asViewModel(answers)
+
+          result.value mustEqual SectionViewModel("foo", None, CannotStart)
+        }
+      }
     }
 
     "must return None when the section should not shown" in {

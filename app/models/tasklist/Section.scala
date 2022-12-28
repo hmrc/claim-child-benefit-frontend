@@ -17,7 +17,7 @@
 package models.tasklist
 
 import models.UserAnswers
-import models.tasklist.SectionStatus.{CannotStart, Completed, InProgress, NotStarted}
+import models.tasklist.SectionStatus.{CannotStart, Completed, NotStarted}
 import pages.{EmptyWaypoints, Page}
 
 trait Section {
@@ -43,8 +43,13 @@ trait Section {
     prerequisiteSections(answers).exists(_.progress(answers) != Completed)
 
   def asViewModel(answers: UserAnswers): Option[SectionViewModel] = {
+    val url = status(answers) match {
+      case CannotStart => None
+      case _           => continue(answers).map(_.route(EmptyWaypoints))
+    }
+
     if (isShown(answers)) {
-      Some(SectionViewModel(name, continue(answers).map(_.route(EmptyWaypoints)), status(answers)))
+      Some(SectionViewModel(name, url, status(answers)))
     } else {
       None
     }
