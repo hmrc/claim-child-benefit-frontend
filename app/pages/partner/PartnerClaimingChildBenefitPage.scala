@@ -18,8 +18,7 @@ package pages.partner
 
 import controllers.partner.routes
 import models.PartnerClaimingChildBenefit._
-import models.{Index, PartnerClaimingChildBenefit, UserAnswers}
-import pages.child.ChildNamePage
+import models.{PartnerClaimingChildBenefit, UserAnswers}
 import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
@@ -38,7 +37,7 @@ case object PartnerClaimingChildBenefitPage extends QuestionPage[PartnerClaiming
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case GettingPayments | NotGettingPayments | WaitingToHear => PartnerEldestChildNamePage
-      case NotClaiming                                          => ChildNamePage(Index(0))
+      case NotClaiming                                          => CheckPartnerDetailsPage
     }.orRecover
 
   override def cleanup(value: Option[PartnerClaimingChildBenefit], userAnswers: UserAnswers): Try[UserAnswers] =

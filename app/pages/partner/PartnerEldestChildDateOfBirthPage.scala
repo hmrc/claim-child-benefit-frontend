@@ -17,8 +17,7 @@
 package pages.partner
 
 import controllers.partner.routes
-import models.{Index, UserAnswers}
-import pages.child.ChildNamePage
+import models.UserAnswers
 import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
@@ -35,5 +34,5 @@ case object PartnerEldestChildDateOfBirthPage extends QuestionPage[LocalDate] {
     routes.PartnerEldestChildDateOfBirthController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ChildNamePage(Index(0))
+    CheckPartnerDetailsPage
 }
