@@ -36,8 +36,8 @@ case object ApplicantHasPreviousFamilyNamePage extends QuestionPage[Boolean] {
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
-      case true => ApplicantPreviousFamilyNamePage(Index(0))
-      case false => ApplicantNinoKnownPage
+      case true  => ApplicantPreviousFamilyNamePage(Index(0))
+      case false => ApplicantDateOfBirthPage
     }.orRecover
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =

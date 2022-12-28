@@ -37,22 +37,5 @@ case object ApplicantDateOfBirthPage extends QuestionPage[LocalDate] {
     routes.ApplicantDateOfBirthController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    answers.get(AlwaysLivedInUkPage).map {
-      case true =>
-        ApplicantCurrentUkAddressPage
-
-      case false =>
-        val partnerRelationships = Seq(Married, Cohabiting)
-
-        val canContinue =
-          answers.get(ApplicantIsHmfOrCivilServantPage) ||
-            (answers.get(RelationshipStatusPage).map(partnerRelationships.contains)
-              && answers.get(PartnerIsHmfOrCivilServantPage)
-            )
-
-        canContinue.map {
-          case true  => ApplicantCurrentAddressInUkPage
-          case false => UsePrintAndPostFormPage
-        }.orRecover
-    }.orRecover
+    ApplicantPhoneNumberPage
 }

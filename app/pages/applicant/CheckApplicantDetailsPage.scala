@@ -17,12 +17,16 @@
 package pages.applicant
 
 import controllers.applicant.routes
-import pages.{CheckAnswersPage, Waypoints}
+import models.UserAnswers
+import pages.{CheckAnswersPage, Page, TaskListPage, Terminus, Waypoints}
 import play.api.mvc.Call
 
-object CheckApplicantDetailsPage extends CheckAnswersPage {
+object CheckApplicantDetailsPage extends CheckAnswersPage with Terminus {
 
   override val urlFragment: String = "check-your-details"
 
   override def route(waypoints: Waypoints): Call = routes.CheckApplicantDetailsController.onPageLoad
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    TaskListPage
 }

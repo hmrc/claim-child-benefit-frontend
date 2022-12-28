@@ -18,7 +18,7 @@ package pages.applicant
 
 import controllers.applicant.routes
 import models.UserAnswers
-import pages.{Page, QuestionPage, Waypoints}
+import pages.{ApplicantNamePage, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 import uk.gov.hmrc.domain.Nino
@@ -33,5 +33,5 @@ case object ApplicantNinoPage extends QuestionPage[Nino] {
     routes.ApplicantNinoController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantDateOfBirthPage
+    ApplicantNamePage
 }

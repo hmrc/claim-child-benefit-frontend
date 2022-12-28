@@ -18,12 +18,12 @@ package pages.applicant
 
 import controllers.applicant.routes
 import models.RelationshipStatus._
-import models.{Index, UserAnswers}
-import pages.child.ChildNamePage
-import pages.partner.PartnerNamePage
-import pages.{Page, QuestionPage, RelationshipStatusPage, Waypoints}
+import models.UserAnswers
+import pages.partner.PartnerIsHmfOrCivilServantPage
+import pages.{AlwaysLivedInUkPage, Page, QuestionPage, RelationshipStatusPage, UsePrintAndPostFormPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+import utils.MonadOps._
 
 case object ApplicantNationalityPage extends QuestionPage[String] {
 
@@ -35,11 +35,22 @@ case object ApplicantNationalityPage extends QuestionPage[String] {
     routes.ApplicantNationalityController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    answers.get(RelationshipStatusPage).map {
-      case Married | Cohabiting =>
-        PartnerNamePage
+    answers.get(AlwaysLivedInUkPage).map {
+      case true =>
+        ApplicantCurrentUkAddressPage
 
-      case Single | Divorced | Separated | Widowed =>
-        ChildNamePage(Index(0))
+      case false =>
+        val partnerRelationships = Seq(Married, Cohabiting)
+
+        val canContinue =
+          answers.get(ApplicantIsHmfOrCivilServantPage) ||
+            (answers.get(RelationshipStatusPage).map(partnerRelationships.contains)
+              && answers.get(PartnerIsHmfOrCivilServantPage)
+              )
+
+        canContinue.map {
+          case true  => ApplicantCurrentAddressInUkPage
+          case false => UsePrintAndPostFormPage
+        }.orRecover
     }.orRecover
 }

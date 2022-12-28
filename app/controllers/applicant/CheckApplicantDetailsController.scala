@@ -23,9 +23,10 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.ApplicantNameSummary
-import views.html.applicant.CheckApplicantDetailsView
 import viewmodels.checkAnswers.applicant._
+import viewmodels.checkAnswers.payments.{CurrentlyReceivingChildBenefitSummary, EldestChildDateOfBirthSummary, EldestChildNameSummary}
 import viewmodels.govuk.summarylist._
+import views.html.applicant.CheckApplicantDetailsView
 
 import javax.inject.Inject
 
@@ -60,7 +61,10 @@ class CheckApplicantDetailsController  @Inject()(
           ApplicantLivedAtCurrentAddressOneYearSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantPreviousAddressInUkSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantPreviousUkAddressSummary.row(request.userAnswers, waypoints, thisPage),
-          ApplicantPreviousInternationalAddressSummary.row(request.userAnswers, waypoints, thisPage)
+          ApplicantPreviousInternationalAddressSummary.row(request.userAnswers, waypoints, thisPage),
+          CurrentlyReceivingChildBenefitSummary.row(request.userAnswers, waypoints, thisPage),
+          EldestChildNameSummary.row(request.userAnswers, waypoints, thisPage),
+          EldestChildDateOfBirthSummary.row(request.userAnswers, waypoints, thisPage)
         ).flatten
       )
       Ok(view(applicantDetails))

@@ -19,6 +19,7 @@ package pages.payments
 import controllers.payments.routes
 import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments}
 import models.{CurrentlyReceivingChildBenefit, UserAnswers}
+import pages.applicant.CheckApplicantDetailsPage
 import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
@@ -37,61 +38,61 @@ case object CurrentlyReceivingChildBenefitPage extends QuestionPage[CurrentlyRec
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case GettingPayments | NotGettingPayments => EldestChildNamePage
-      case NotClaiming                          => WantToBePaidPage
+      case NotClaiming                          => CheckApplicantDetailsPage
     }.orRecover
 
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case GettingPayments =>
-        answers.get(EldestChildNamePage).map { _ =>
-          answers.get(WantToBePaidPage).map {
-            case true =>
-              answers.get(WantToBePaidToExistingAccountPage)
-                .map(_ => waypoints.next.page)
-                .getOrElse(WantToBePaidToExistingAccountPage)
+//  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+//    answers.get(this).map {
+//      case GettingPayments =>
+//        answers.get(EldestChildNamePage).map { _ =>
+//          answers.get(WantToBePaidPage).map {
+//            case true =>
+//              answers.get(WantToBePaidToExistingAccountPage)
+//                .map(_ => waypoints.next.page)
+//                .getOrElse(WantToBePaidToExistingAccountPage)
+//
+//            case false =>
+//              waypoints.next.page
+//          }.orRecover
+//        }.getOrElse(EldestChildNamePage)
+//
+//      case NotGettingPayments =>
+//        answers.get(EldestChildNamePage).map { _ =>
+//          answers.get(WantToBePaidPage).map {
+//            case true =>
+//              answers.get(ApplicantHasSuitableAccountPage)
+//                .map(_ => waypoints.next.page)
+//                .getOrElse(ApplicantHasSuitableAccountPage)
+//
+//            case false =>
+//              waypoints.next.page
+//          }.orRecover
+//        }.getOrElse(EldestChildNamePage)
+//
+//      case NotClaiming =>
+//        answers.get(WantToBePaidPage).map {
+//          case true =>
+//            answers.get(ApplicantHasSuitableAccountPage)
+//              .map(_ => waypoints.next.page)
+//              .getOrElse(ApplicantHasSuitableAccountPage)
+//
+//          case false =>
+//            waypoints.next.page
+//        }.orRecover
+//    }.orRecover
 
-            case false =>
-              waypoints.next.page
-          }.orRecover
-        }.getOrElse(EldestChildNamePage)
-
-      case NotGettingPayments =>
-        answers.get(EldestChildNamePage).map { _ =>
-          answers.get(WantToBePaidPage).map {
-            case true =>
-              answers.get(ApplicantHasSuitableAccountPage)
-                .map(_ => waypoints.next.page)
-                .getOrElse(ApplicantHasSuitableAccountPage)
-
-            case false =>
-              waypoints.next.page
-          }.orRecover
-        }.getOrElse(EldestChildNamePage)
-
-      case NotClaiming =>
-        answers.get(WantToBePaidPage).map {
-          case true =>
-            answers.get(ApplicantHasSuitableAccountPage)
-              .map(_ => waypoints.next.page)
-              .getOrElse(ApplicantHasSuitableAccountPage)
-
-          case false =>
-            waypoints.next.page
-        }.orRecover
-    }.orRecover
-
-  override def cleanup(value: Option[CurrentlyReceivingChildBenefit], userAnswers: UserAnswers): Try[UserAnswers] =
-    value.map {
-      case GettingPayments =>
-        super.cleanup(value, userAnswers)
-
-      case NotGettingPayments =>
-        userAnswers.remove(WantToBePaidToExistingAccountPage)
-
-      case NotClaiming =>
-        userAnswers.remove(EldestChildNamePage)
-          .flatMap(_.remove(EldestChildDateOfBirthPage))
-          .flatMap(_.remove(WantToBePaidToExistingAccountPage))
-
-    }.getOrElse(super.cleanup(value, userAnswers))
+//  override def cleanup(value: Option[CurrentlyReceivingChildBenefit], userAnswers: UserAnswers): Try[UserAnswers] =
+//    value.map {
+//      case GettingPayments =>
+//        super.cleanup(value, userAnswers)
+//
+//      case NotGettingPayments =>
+//        userAnswers.remove(WantToBePaidToExistingAccountPage)
+//
+//      case NotClaiming =>
+//        userAnswers.remove(EldestChildNamePage)
+//          .flatMap(_.remove(EldestChildDateOfBirthPage))
+//          .flatMap(_.remove(WantToBePaidToExistingAccountPage))
+//
+//    }.getOrElse(super.cleanup(value, userAnswers))
 }

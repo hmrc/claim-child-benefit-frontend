@@ -44,6 +44,6 @@ case object AddApplicantPreviousFamilyNamePage extends QuestionPage[Boolean] wit
           .orRecover
 
       case false =>
-        ApplicantNinoKnownPage
+        ApplicantDateOfBirthPage
     }.orRecover
 }
