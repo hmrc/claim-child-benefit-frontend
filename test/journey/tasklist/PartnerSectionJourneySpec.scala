@@ -31,6 +31,8 @@ import java.time.LocalDate
 class PartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
   private val partnerName = AdultName(None, "first", None, "last")
+  private val childName = ChildName("first", None, "last")
+  private val nino = arbitrary[Nino].sample.value
 
   "users who don't know their partner's NINO, and the partner is not entitled to CB, must proceed to the task list" in {
 
@@ -49,8 +51,6 @@ class PartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
 
   "users who know their partner's NINO must be asked for it" in {
 
-    val nino = arbitrary[Nino].sample.value
-
     startingFrom(PartnerNinoKnownPage)
       .run(
         submitAnswer(PartnerNinoKnownPage, true),
@@ -63,7 +63,6 @@ class PartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
 
     import PartnerClaimingChildBenefit._
 
-    val childName = ChildName("first", None, "last")
     val partnerClaiming = Gen.oneOf(GettingPayments, NotGettingPayments, WaitingToHear).sample.value
 
     startingFrom(PartnerClaimingChildBenefitPage)
