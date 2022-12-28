@@ -16,12 +16,44 @@
 
 package models.tasklist
 
-sealed trait SectionStatus
+import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.tag.Tag
+
+sealed trait SectionStatus {
+  def tag(implicit messages: Messages): Tag
+}
 
 object SectionStatus {
 
-  case object NotStarted extends SectionStatus
-  case object InProgress extends SectionStatus
-  case object Completed extends SectionStatus
-  case object CannotStart extends SectionStatus
+  case object NotStarted extends SectionStatus {
+    override def tag(implicit messages: Messages): Tag =
+      Tag(
+        content = Text(messages("taskList.status.notStarted")),
+        classes = "govuk-tag--grey"
+      )
+  }
+
+  case object InProgress extends SectionStatus {
+    override def tag(implicit messages: Messages): Tag =
+      Tag(
+        content = Text(messages("taskList.status.inProgress")),
+        classes = "govuk-tag--blue"
+      )
+  }
+
+  case object Completed extends SectionStatus {
+    override def tag(implicit messages: Messages): Tag =
+      Tag(
+        content = Text(messages("taskList.status.completed"))
+      )
+  }
+
+  case object CannotStart extends SectionStatus {
+    override def tag(implicit messages: Messages): Tag =
+      Tag(
+        content = Text(messages("taskList.status.cannotStart")),
+        classes = "govuk-tag--grey"
+      )
+  }
 }

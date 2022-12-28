@@ -1425,3 +1425,17 @@ checkPaymentDetails.yourDetails = Payment details
 checkRelationshipDetails.title = Check your answers
 checkRelationshipDetails.heading = Check your answers
 checkRelationshipDetails.yourDetails = Relationship details
+
+taskList.title = Claim Child Benefit
+taskList.heading = Claim Child Benefit
+taskList.status.notStarted = Not started
+taskList.status.inProgress = In progress
+taskList.status.completed = Completed
+taskList.status.cannotStart = Cannot start yet
+taskList.relationshipDetails = Check eligibility
+taskList.applicantDetails = Your details
+taskList.partnerDetails = Partner details
+taskList.childDetails = Child details
+taskList.paymentDetails = Payment details
+taskList.additionalInfo = Further details to share
+taskList.completedSections = You’ve completed {0} of {1} sections.

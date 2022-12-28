@@ -39,6 +39,9 @@ GET         /identity-verification/technical-issue                   controllers
 GET         /identity-verification/timeout                           controllers.auth.IvController.ivTimeout
 GET         /identity-verification/error                             controllers.auth.IvController.ivError
 
+GET         /task-list                                      controllers.TaskListController.onPageLoad
+POST        /task-list                                      controllers.TaskListController.onSubmit
+
 # Initial section
 
 GET        /always-lived-in-uk                        controllers.AlwaysLivedInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
