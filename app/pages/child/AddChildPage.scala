@@ -18,7 +18,7 @@ package pages.child
 
 import controllers.child.routes
 import models.{Index, UserAnswers}
-import pages.{AddItemPage, AdditionalInformationPage, CheckYourAnswersPage, NonEmptyWaypoints, Page, QuestionPage, Waypoints}
+import pages.{AddItemPage, AdditionalInformationPage, CheckYourAnswersPage, NonEmptyWaypoints, Page, QuestionPage, TaskListPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 import queries.DeriveNumberOfChildren
@@ -43,17 +43,17 @@ case object AddChildPage extends QuestionPage[Boolean] with AddItemPage {
           .orRecover
 
       case false =>
-        AdditionalInformationPage
+        TaskListPage
     }.orRecover
-
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case true =>
-        answers.get(DeriveNumberOfChildren)
-          .map(n => ChildNamePage(Index(n)))
-          .orRecover
-
-      case false =>
-        CheckYourAnswersPage
-    }.orRecover
+//
+//  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+//    answers.get(this).map {
+//      case true =>
+//        answers.get(DeriveNumberOfChildren)
+//          .map(n => ChildNamePage(Index(n)))
+//          .orRecover
+//
+//      case false =>
+//        CheckYourAnswersPage
+//    }.orRecover
 }
