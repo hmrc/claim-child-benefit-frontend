@@ -18,7 +18,6 @@ package pages.payments
 
 import controllers.payments.routes
 import models.{BankAccountDetails, UserAnswers}
-import pages.applicant.ApplicantHasPreviousFamilyNamePage
 import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
@@ -33,5 +32,5 @@ case object BankAccountDetailsPage extends QuestionPage[BankAccountDetails] {
     routes.BankAccountDetailsController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantHasPreviousFamilyNamePage
+    CheckPaymentDetailsPage
 }

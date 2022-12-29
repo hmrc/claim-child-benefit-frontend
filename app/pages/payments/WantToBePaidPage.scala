@@ -21,7 +21,7 @@ import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming, NotG
 import models.RelationshipStatus._
 import models.{Benefits, PaymentFrequency, UserAnswers}
 import pages.applicant.ApplicantHasPreviousFamilyNamePage
-import pages.income.ApplicantOrPartnerBenefitsPage
+import pages.income.{ApplicantBenefitsPage, ApplicantOrPartnerBenefitsPage}
 import pages.partner.PartnerNamePage
 import pages.{CannotBePaidWeeklyPage, NonEmptyWaypoints, Page, QuestionPage, RelationshipStatusPage, Waypoints}
 import play.api.libs.json.JsPath
@@ -42,93 +42,86 @@ case object WantToBePaidPage extends QuestionPage[Boolean] {
   override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case true =>
-        answers.get(WeeklyPaymentEligibilityQuery).map {
-          case x if x.eligible =>
-            PaymentFrequencyPage
-
-          case _ =>
-            answers.get(CurrentlyReceivingChildBenefitPage).map {
-              case GettingPayments                  => WantToBePaidToExistingAccountPage
-              case NotGettingPayments | NotClaiming => ApplicantHasSuitableAccountPage
-            }.orRecover
-
+        answers.get(RelationshipStatusPage).map {
+          case Married | Cohabiting => ApplicantOrPartnerBenefitsPage
+          case _                    => ApplicantBenefitsPage
         }.orRecover
 
       case false =>
-        ApplicantHasPreviousFamilyNamePage
+        CheckPaymentDetailsPage
     }.orRecover
 
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page = {
-
-    val getPartnerDetailsIfMissing =
-      answers.get(PartnerNamePage)
-        .map(_ => waypoints.next.page)
-        .getOrElse(PartnerNamePage)
-
-    answers.get(RelationshipStatusPage).map {
-      case Married | Cohabiting =>
-        answers.get(this).map {
-          case true =>
-            answers.get(PaymentFrequencyPage).map {
-              case PaymentFrequency.Weekly =>
-                answers.get(ApplicantOrPartnerBenefitsPage).map {
-                  benefits =>
-                    if (benefits.intersect(Benefits.qualifyingBenefits).isEmpty) {
-                      CannotBePaidWeeklyPage
-                    } else {
-                      getPartnerDetailsIfMissing
-                    }
-                }.orRecover
-
-              case PaymentFrequency.EveryFourWeeks =>
-                getPartnerDetailsIfMissing
-            }.getOrElse {
-                answers.get(ApplicantOrPartnerBenefitsPage).map {
-                  benefits =>
-                    if (benefits.intersect(Benefits.qualifyingBenefits).isEmpty) {
-                      answers.get(CurrentlyReceivingChildBenefitPage).map {
-                        case GettingPayments =>
-                          answers.get(WantToBePaidToExistingAccountPage)
-                            .map(_ => getPartnerDetailsIfMissing)
-                            .getOrElse(WantToBePaidToExistingAccountPage)
-
-                        case NotGettingPayments | NotClaiming =>
-                          answers.get(ApplicantHasSuitableAccountPage)
-                            .map(_ => getPartnerDetailsIfMissing)
-                            .getOrElse(ApplicantHasSuitableAccountPage)
-                      }.orRecover
-                    } else {
-                      PaymentFrequencyPage
-                    }
-                }.orRecover
-              }
-
-          case false =>
-            getPartnerDetailsIfMissing
-        }.orRecover
-
-
-      case Single | Divorced | Separated | Widowed =>
-        answers.get(this).map {
-          case true =>
-            answers.get(PaymentFrequencyPage)
-              .map(_ => waypoints.next.page)
-              .getOrElse(PaymentFrequencyPage)
-
-          case false =>
-            waypoints.next.page
-        }.orRecover
-    }.orRecover
-  }
-
-  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
-    if (value.contains(false)) {
-      userAnswers.remove(PaymentFrequencyPage)
-        .flatMap(_.remove(WantToBePaidToExistingAccountPage))
-        .flatMap(_.remove(ApplicantHasSuitableAccountPage))
-        .flatMap(_.remove(BankAccountHolderPage))
-        .flatMap(_.remove(BankAccountDetailsPage))
-    } else {
-      super.cleanup(value, userAnswers)
-    }
+//  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page = {
+//
+//    val getPartnerDetailsIfMissing =
+//      answers.get(PartnerNamePage)
+//        .map(_ => waypoints.next.page)
+//        .getOrElse(PartnerNamePage)
+//
+//    answers.get(RelationshipStatusPage).map {
+//      case Married | Cohabiting =>
+//        answers.get(this).map {
+//          case true =>
+//            answers.get(PaymentFrequencyPage).map {
+//              case PaymentFrequency.Weekly =>
+//                answers.get(ApplicantOrPartnerBenefitsPage).map {
+//                  benefits =>
+//                    if (benefits.intersect(Benefits.qualifyingBenefits).isEmpty) {
+//                      CannotBePaidWeeklyPage
+//                    } else {
+//                      getPartnerDetailsIfMissing
+//                    }
+//                }.orRecover
+//
+//              case PaymentFrequency.EveryFourWeeks =>
+//                getPartnerDetailsIfMissing
+//            }.getOrElse {
+//                answers.get(ApplicantOrPartnerBenefitsPage).map {
+//                  benefits =>
+//                    if (benefits.intersect(Benefits.qualifyingBenefits).isEmpty) {
+//                      answers.get(CurrentlyReceivingChildBenefitPage).map {
+//                        case GettingPayments =>
+//                          answers.get(WantToBePaidToExistingAccountPage)
+//                            .map(_ => getPartnerDetailsIfMissing)
+//                            .getOrElse(WantToBePaidToExistingAccountPage)
+//
+//                        case NotGettingPayments | NotClaiming =>
+//                          answers.get(ApplicantHasSuitableAccountPage)
+//                            .map(_ => getPartnerDetailsIfMissing)
+//                            .getOrElse(ApplicantHasSuitableAccountPage)
+//                      }.orRecover
+//                    } else {
+//                      PaymentFrequencyPage
+//                    }
+//                }.orRecover
+//              }
+//
+//          case false =>
+//            getPartnerDetailsIfMissing
+//        }.orRecover
+//
+//
+//      case Single | Divorced | Separated | Widowed =>
+//        answers.get(this).map {
+//          case true =>
+//            answers.get(PaymentFrequencyPage)
+//              .map(_ => waypoints.next.page)
+//              .getOrElse(PaymentFrequencyPage)
+//
+//          case false =>
+//            waypoints.next.page
+//        }.orRecover
+//    }.orRecover
+//  }
+//
+//  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+//    if (value.contains(false)) {
+//      userAnswers.remove(PaymentFrequencyPage)
+//        .flatMap(_.remove(WantToBePaidToExistingAccountPage))
+//        .flatMap(_.remove(ApplicantHasSuitableAccountPage))
+//        .flatMap(_.remove(BankAccountHolderPage))
+//        .flatMap(_.remove(BankAccountDetailsPage))
+//    } else {
+//      super.cleanup(value, userAnswers)
+//    }
 }

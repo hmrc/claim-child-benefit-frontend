@@ -18,10 +18,10 @@ package pages.payments
 
 
 import controllers.payments.routes
-import pages.{CheckAnswersPage, Waypoints}
+import pages.{CheckAnswersPage, Terminus, Waypoints}
 import play.api.mvc.Call
 
-object CheckPaymentDetailsPage extends CheckAnswersPage {
+object CheckPaymentDetailsPage extends CheckAnswersPage with Terminus {
 
   override val urlFragment: String = "check-payment-details"
 
