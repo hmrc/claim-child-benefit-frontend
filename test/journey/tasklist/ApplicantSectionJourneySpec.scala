@@ -18,16 +18,16 @@ package journey.tasklist
 
 import generators.ModelGenerators
 import journey.JourneyHelpers
-import models.CurrentlyReceivingChildBenefit.NotClaiming
+import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments}
 import models.RelationshipStatus.{Cohabiting, Married}
-import models.{AdultName, Country, Index, InternationalAddress, UkAddress}
+import models.{AdultName, ChildName, Country, Index, InternationalAddress, UkAddress}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import pages.{AlwaysLivedInUkPage, ApplicantNamePage, RelationshipStatusPage, TaskListPage}
 import pages.applicant._
 import pages.partner.PartnerIsHmfOrCivilServantPage
-import pages.payments.CurrentlyReceivingChildBenefitPage
+import pages.payments.{CurrentlyReceivingChildBenefitPage, EldestChildDateOfBirthPage, EldestChildNamePage}
 import uk.gov.hmrc.domain.Nino
 
 import java.time.LocalDate
@@ -36,6 +36,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
 
   private val ukAddress = UkAddress("line 1", None, "town", None, "postcode")
   private val adultName = AdultName(None, "first", None, "last")
+  private val childName = ChildName("first", None, "list")
   private val phoneNumber = "07777 777777"
   private val nationality = "nationality"
   private val nino = arbitrary[Nino].sample.value
@@ -258,5 +259,27 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
         }
       }
     }
+  }
+
+  "users claiming Child Benefit must be asked for their eldest child's details" in {
+
+    val currentlyReceiving = Gen.oneOf(GettingPayments, NotGettingPayments).sample.value
+
+    startingFrom(CurrentlyReceivingChildBenefitPage)
+      .run(
+        submitAnswer(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
+        submitAnswer(EldestChildNamePage, childName),
+        submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
+        pageMustBe(CheckApplicantDetailsPage)
+      )
+  }
+
+  "users not claiming Child Benefit must not be asked for details of their eldest child" in {
+
+    startingFrom(CurrentlyReceivingChildBenefitPage)
+      .run(
+        submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
+        pageMustBe(CheckApplicantDetailsPage)
+      )
   }
 }
