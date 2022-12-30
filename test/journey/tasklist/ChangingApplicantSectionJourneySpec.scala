@@ -30,7 +30,7 @@ import uk.gov.hmrc.domain.Nino
 
 import java.time.LocalDate
 
-class ChangingApplicantSectionSpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
+class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
   private val ukAddress = UkAddress("line 1", None, "town", None, "postcode")
   private val adultName = AdultName(None, "first", None, "last")
