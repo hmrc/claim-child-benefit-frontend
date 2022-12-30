@@ -20,8 +20,7 @@ import controllers.income.routes
 import models.CurrentlyReceivingChildBenefit.NotClaiming
 import models.PaymentFrequency.{EveryFourWeeks, Weekly}
 import models.{Benefits, UserAnswers}
-import pages.partner.PartnerNamePage
-import pages.payments.{ApplicantHasSuitableAccountPage, CurrentlyReceivingChildBenefitPage, PaymentFrequencyPage, WantToBePaidPage, WantToBePaidToExistingAccountPage}
+import pages.payments._
 import pages.{CannotBePaidWeeklyPage, NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
@@ -49,50 +48,46 @@ case object ApplicantOrPartnerBenefitsPage extends QuestionPage[Set[Benefits]] {
         }.orRecover
     }.orRecover
 
-//  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, originalAnswers: UserAnswers, updatedAnswers: UserAnswers): Page = {
-//    originalAnswers.get(PaymentFrequencyPage).map {
-//      case Weekly =>
-//        updatedAnswers.get(this).map {
-//          benefits =>
-//            if (benefits.intersect(Benefits.qualifyingBenefits).isEmpty) {
-//              CannotBePaidWeeklyPage
-//            } else {
-//              WantToBePaidPage
-//            }
-//        }.orRecover
-//
-//      case EveryFourWeeks =>
-//        WantToBePaidPage
-//
-//    }.getOrElse {
-//      updatedAnswers.get(this).map {
-//        benefits =>
-//          if (benefits.intersect(Benefits.qualifyingBenefits).isEmpty) {
-//            updatedAnswers.get(PartnerNamePage)
-//              .map(_ => waypoints.next.page)
-//              .getOrElse(PartnerNamePage)
-//          } else {
-//            updatedAnswers.get(WantToBePaidPage).map {
-//              case true =>
-//                PaymentFrequencyPage
-//
-//              case false =>
-//                updatedAnswers.get(PartnerNamePage)
-//                  .map(_ => waypoints.next.page)
-//                  .getOrElse(PartnerNamePage)
-//            }.orRecover
-//          }
-//      }.orRecover
-//    }
-//  }
-//
-//  override def cleanup(value: Option[Set[Benefits]], userAnswers: UserAnswers): Try[UserAnswers] =
-//    value.map {
-//      benefits =>
-//        if (benefits.intersect(Benefits.qualifyingBenefits).isEmpty) {
-//          userAnswers.remove(PaymentFrequencyPage)
-//        } else {
-//          super.cleanup(value, userAnswers)
-//        }
-//    }.getOrElse(super.cleanup(value, userAnswers))
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, originalAnswers: UserAnswers, updatedAnswers: UserAnswers): Page = {
+    originalAnswers.get(PaymentFrequencyPage).map {
+      case Weekly =>
+        updatedAnswers.get(this).map {
+          benefits =>
+            if (benefits.intersect(Benefits.qualifyingBenefits).isEmpty) {
+              CannotBePaidWeeklyPage
+            } else {
+              waypoints.next.page
+            }
+        }.orRecover
+
+      case EveryFourWeeks =>
+        waypoints.next.page
+
+    }.getOrElse {
+      updatedAnswers.get(this).map {
+        benefits =>
+          if (benefits.intersect(Benefits.qualifyingBenefits).isEmpty) {
+            waypoints.next.page
+          } else {
+            updatedAnswers.get(WantToBePaidPage).map {
+              case true =>
+                PaymentFrequencyPage
+
+              case false =>
+                waypoints.next.page
+            }.orRecover
+          }
+      }.orRecover
+    }
+  }
+
+  override def cleanup(value: Option[Set[Benefits]], userAnswers: UserAnswers): Try[UserAnswers] =
+    value.map {
+      benefits =>
+        if (benefits.intersect(Benefits.qualifyingBenefits).isEmpty) {
+          userAnswers.remove(PaymentFrequencyPage)
+        } else {
+          super.cleanup(value, userAnswers)
+        }
+    }.getOrElse(super.cleanup(value, userAnswers))
 }

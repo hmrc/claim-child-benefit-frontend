@@ -27,5 +27,5 @@ case object CannotBePaidWeeklyPage extends Page {
     routes.CannotBePaidWeeklyController.onPageLoad(waypoints)
 
   override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    WantToBePaidPage
+    waypoints.next.page
 }

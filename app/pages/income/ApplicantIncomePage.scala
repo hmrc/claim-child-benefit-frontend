@@ -34,4 +34,10 @@ case object ApplicantIncomePage extends QuestionPage[Income] {
 
   override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     WantToBePaidPage
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, originalAnswers: UserAnswers, updatedAnswers: UserAnswers): Page =
+    (originalAnswers.get(this), updatedAnswers.get(this)) match {
+      case (Some(x), Some(y)) if x != y => WantToBePaidPage
+      case _                            => waypoints.next.page
+    }
 }
