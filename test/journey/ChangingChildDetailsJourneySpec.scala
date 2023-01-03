@@ -62,111 +62,222 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
 
       "changing `Anyone claimed before` to `true` must gather previous claimant details then return the user to the Check page" - {
 
-        "when the previous claimant's address is in the UK" in {
+        "when the previous claimant is known" - {
+
+          "and their address is in the UK" in {
+
+            startingFrom(ChildNamePage(Index(0)))
+              .run(
+                basicChildJourney,
+                goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
+                submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
+                submitAnswer(PreviousClaimantNameKnownPage(Index(0)), true),
+                submitAnswer(PreviousClaimantNamePage(Index(0)), adultName),
+                submitAnswer(PreviousClaimantAddressKnownPage(Index(0)), true),
+                submitAnswer(PreviousClaimantAddressInUkPage(Index(0)), true),
+                submitAnswer(PreviousClaimantUkAddressPage(Index(0)), ukAddress),
+                pageMustBe(CheckChildDetailsPage(Index(0)))
+              )
+          }
+
+          "and their address is not in the UK" in {
+
+            startingFrom(ChildNamePage(Index(0)))
+              .run(
+                basicChildJourney,
+                goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
+                submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
+                submitAnswer(PreviousClaimantNameKnownPage(Index(0)), true),
+                submitAnswer(PreviousClaimantNamePage(Index(0)), adultName),
+                submitAnswer(PreviousClaimantAddressKnownPage(Index(0)), true),
+                submitAnswer(PreviousClaimantAddressInUkPage(Index(0)), false),
+                submitAnswer(PreviousClaimantInternationalAddressPage(Index(0)), internationalAddress),
+                pageMustBe(CheckChildDetailsPage(Index(0)))
+              )
+          }
+
+          "and their address is not known" in {
+
+            startingFrom(ChildNamePage(Index(0)))
+              .run(
+                basicChildJourney,
+                goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
+                submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
+                submitAnswer(PreviousClaimantNameKnownPage(Index(0)), true),
+                submitAnswer(PreviousClaimantNamePage(Index(0)), adultName),
+                submitAnswer(PreviousClaimantAddressKnownPage(Index(0)), false),
+                pageMustBe(CheckChildDetailsPage(Index(0)))
+              )
+          }
+        }
+
+        "when the previous claimant is not known" in {
 
           startingFrom(ChildNamePage(Index(0)))
             .run(
               basicChildJourney,
               goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
               submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
-              submitAnswer(PreviousClaimantNamePage(Index(0)), adultName),
+              submitAnswer(PreviousClaimantNameKnownPage(Index(0)), false),
+              pageMustBe(CheckChildDetailsPage(Index(0)))
+            )
+        }
+      }
+    }
+
+    "that someone has claimed Child Benefit for previously" - {
+
+      val initialState =
+        journeyOf(
+          basicChildJourney,
+          setUserAnswerTo(AnyoneClaimedForChildBeforePage(Index(0)), true),
+          setUserAnswerTo(PreviousClaimantNameKnownPage(Index(0)), true),
+          setUserAnswerTo(PreviousClaimantNamePage(Index(0)), adultName),
+          setUserAnswerTo(PreviousClaimantAddressKnownPage(Index(0)), true),
+          setUserAnswerTo(PreviousClaimantAddressInUkPage(Index(0)), true),
+          setUserAnswerTo(PreviousClaimantUkAddressPage(Index(0)), ukAddress),
+          setUserAnswerTo(PreviousClaimantInternationalAddressPage(Index(0)), internationalAddress)
+        )
+
+      "changing `Anyone claimed before` to `false` must remove the previous claimant details and return the user to the Check Details page" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
+            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(PreviousClaimantNameKnownPage(Index(0))),
+            answersMustNotContain(PreviousClaimantNamePage(Index(0))),
+            answersMustNotContain(PreviousClaimantAddressKnownPage(Index(0))),
+            answersMustNotContain(PreviousClaimantAddressInUkPage(Index(0))),
+            answersMustNotContain(PreviousClaimantUkAddressPage(Index(0))),
+            answersMustNotContain(PreviousClaimantInternationalAddressPage(Index(0)))
+          )
+      }
+
+      "and the user knew the person who previously claimed and their details" - {
+
+        "changing to say they do not know the previous claimant must remove previous claimant details and return to Check Details" in {
+
+          startingFrom(ChildNamePage(Index(0)))
+            .run(
+              initialState,
+              goToChangeAnswer(PreviousClaimantNameKnownPage(Index(0))),
+              submitAnswer(PreviousClaimantNameKnownPage(Index(0)), false),
+              pageMustBe(CheckChildDetailsPage(Index(0))),
+              answersMustNotContain(PreviousClaimantNamePage(Index(0))),
+              answersMustNotContain(PreviousClaimantAddressKnownPage(Index(0))),
+              answersMustNotContain(PreviousClaimantAddressInUkPage(Index(0))),
+              answersMustNotContain(PreviousClaimantUkAddressPage(Index(0))),
+              answersMustNotContain(PreviousClaimantInternationalAddressPage(Index(0)))
+            )
+        }
+
+        "changing to say they do not know the address of the previous claimant must remove the address and return to Check Details" in {
+
+          startingFrom(ChildNamePage(Index(0)))
+            .run(
+              initialState,
+              goToChangeAnswer(PreviousClaimantAddressKnownPage(Index(0))),
+              submitAnswer(PreviousClaimantAddressKnownPage(Index(0)), false),
+              pageMustBe(CheckChildDetailsPage(Index(0))),
+              answersMustNotContain(PreviousClaimantAddressInUkPage(Index(0))),
+              answersMustNotContain(PreviousClaimantUkAddressPage(Index(0))),
+              answersMustNotContain(PreviousClaimantInternationalAddressPage(Index(0)))
+            )
+        }
+
+        "and originally said their address was in the UK" - {
+
+          "changing to say the address is not in the UK must collect the international address, remove the UK address and return to Check Details" in {
+
+            startingFrom(ChildNamePage(Index(0)))
+              .run(
+                initialState,
+                remove(PreviousClaimantInternationalAddressPage(Index(0))),
+                goToChangeAnswer(PreviousClaimantAddressInUkPage(Index(0))),
+                submitAnswer(PreviousClaimantAddressInUkPage(Index(0)), false),
+                submitAnswer(PreviousClaimantInternationalAddressPage(Index(0)), internationalAddress),
+                pageMustBe(CheckChildDetailsPage(Index(0))),
+                answersMustNotContain(PreviousClaimantUkAddressPage(Index(0)))
+              )
+          }
+        }
+
+        "and originally said their address was not in the UK" - {
+
+          "changing to say the address is in the UK must collect the UK address, remove the UK address and return to Check Details" in {
+
+            startingFrom(ChildNamePage(Index(0)))
+              .run(
+                initialState,
+                setUserAnswerTo(PreviousClaimantAddressInUkPage(Index(0)), false),
+                goToChangeAnswer(PreviousClaimantAddressInUkPage(Index(0))),
+                submitAnswer(PreviousClaimantAddressInUkPage(Index(0)), true),
+                submitAnswer(PreviousClaimantUkAddressPage(Index(0)), ukAddress),
+                pageMustBe(CheckChildDetailsPage(Index(0))),
+                answersMustNotContain(PreviousClaimantInternationalAddressPage(Index(0)))
+              )
+          }
+        }
+      }
+
+      "and the user knew the person who previously claimed, but not their address" - {
+
+        val initialState =
+          journeyOf(
+            basicChildJourney,
+            setUserAnswerTo(AnyoneClaimedForChildBeforePage(Index(0)), true),
+            setUserAnswerTo(PreviousClaimantNameKnownPage(Index(0)), true),
+            setUserAnswerTo(PreviousClaimantNamePage(Index(0)), adultName),
+            setUserAnswerTo(PreviousClaimantAddressKnownPage(Index(0)), false)
+          )
+
+        "changing to say they know the UK address must collect the address and go to Check Details" in {
+
+          startingFrom(ChildNamePage(Index(0)))
+            .run(
+              initialState,
+              setUserAnswerTo(PreviousClaimantAddressKnownPage(Index(0)), false),
+              goToChangeAnswer(PreviousClaimantAddressKnownPage(Index(0))),
+              submitAnswer(PreviousClaimantAddressKnownPage(Index(0)), true),
               submitAnswer(PreviousClaimantAddressInUkPage(Index(0)), true),
               submitAnswer(PreviousClaimantUkAddressPage(Index(0)), ukAddress),
               pageMustBe(CheckChildDetailsPage(Index(0)))
             )
         }
 
-        "when the previous claimant's address is not in the UK" in {
+        "changing to say they know the international address must collect the address and go to Check Details" in {
 
           startingFrom(ChildNamePage(Index(0)))
             .run(
-              basicChildJourney,
-              goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
-              submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
-              submitAnswer(PreviousClaimantNamePage(Index(0)), adultName),
+              initialState,
+              setUserAnswerTo(PreviousClaimantAddressKnownPage(Index(0)), false),
+              goToChangeAnswer(PreviousClaimantAddressKnownPage(Index(0))),
+              submitAnswer(PreviousClaimantAddressKnownPage(Index(0)), true),
               submitAnswer(PreviousClaimantAddressInUkPage(Index(0)), false),
               submitAnswer(PreviousClaimantInternationalAddressPage(Index(0)), internationalAddress),
               pageMustBe(CheckChildDetailsPage(Index(0)))
             )
         }
       }
-    }
 
-    "that someone has claimed Child Benefit for previously with a UK address" - {
+      "and the user did not know the person who previously claimed" - {
 
-      val initialState =
-        journeyOf(
-          basicChildJourney,
-          setUserAnswerTo(AnyoneClaimedForChildBeforePage(Index(0)), true),
-          setUserAnswerTo(PreviousClaimantNamePage(Index(0)), adultName),
-          setUserAnswerTo(PreviousClaimantAddressInUkPage(Index(0)), true),
-          setUserAnswerTo(PreviousClaimantUkAddressPage(Index(0)), ukAddress)
-        )
+        "changing to say they do know the person who previously claimed must collect that person's details then return to Check Details" in {
 
-      "changing `Anyone claimed before` to `false` must remove the previous claimant details and return the user to the Check page" in {
-
-        startingFrom(ChildNamePage(Index(0)))
-          .run(
-            initialState,
-            goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
-            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
-            pageMustBe(CheckChildDetailsPage(Index(0))),
-            answersMustNotContain(PreviousClaimantNamePage(Index(0))),
-            answersMustNotContain(PreviousClaimantAddressInUkPage(Index(0))),
-            answersMustNotContain(PreviousClaimantUkAddressPage(Index(0)))
-          )
-      }
-
-      "changing to say they had an international address must collect the address and remove the UK address" in {
-
-        startingFrom(ChildNamePage(Index(0)))
-          .run(
-            initialState,
-            goToChangeAnswer(PreviousClaimantAddressInUkPage(Index(0))),
-            submitAnswer(PreviousClaimantAddressInUkPage(Index(0)), false),
-            submitAnswer(PreviousClaimantInternationalAddressPage(Index(0)), internationalAddress),
-            pageMustBe(CheckChildDetailsPage(Index(0))),
-            answersMustNotContain(PreviousClaimantUkAddressPage(Index(0)))
-          )
-      }
-    }
-
-    "that someone has claimed Child Benefit for previously with an international address" - {
-
-      val initialState =
-        journeyOf(
-          basicChildJourney,
-          setUserAnswerTo(AnyoneClaimedForChildBeforePage(Index(0)), true),
-          setUserAnswerTo(PreviousClaimantNamePage(Index(0)), adultName),
-          setUserAnswerTo(PreviousClaimantAddressInUkPage(Index(0)), false),
-          setUserAnswerTo(PreviousClaimantInternationalAddressPage(Index(0)), internationalAddress)
-        )
-
-      "changing `Anyone claimed before` to `false` must remove the previous claimant details and return the user to the Check page" in {
-
-        startingFrom(ChildNamePage(Index(0)))
-          .run(
-            initialState,
-            goToChangeAnswer(AnyoneClaimedForChildBeforePage(Index(0))),
-            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
-            pageMustBe(CheckChildDetailsPage(Index(0))),
-            answersMustNotContain(PreviousClaimantNamePage(Index(0))),
-            answersMustNotContain(PreviousClaimantAddressInUkPage(Index(0))),
-            answersMustNotContain(PreviousClaimantInternationalAddressPage(Index(0)))
-          )
-      }
-
-      "changing to say they had a UK address must collect the address and remove the international address" in {
-
-        startingFrom(ChildNamePage(Index(0)))
-          .run(
-            initialState,
-            goToChangeAnswer(PreviousClaimantAddressInUkPage(Index(0))),
-            submitAnswer(PreviousClaimantAddressInUkPage(Index(0)), true),
-            submitAnswer(PreviousClaimantUkAddressPage(Index(0)), ukAddress),
-            pageMustBe(CheckChildDetailsPage(Index(0))),
-            answersMustNotContain(PreviousClaimantInternationalAddressPage(Index(0)))
-          )
+          startingFrom(ChildNamePage(Index(0)))
+            .run(
+              initialState,
+              setUserAnswerTo(PreviousClaimantNameKnownPage(Index(0)), false),
+              goToChangeAnswer(PreviousClaimantNameKnownPage(Index(0))),
+              submitAnswer(PreviousClaimantNameKnownPage(Index(0)), true),
+              submitAnswer(PreviousClaimantNamePage(Index(0)), adultName),
+              submitAnswer(PreviousClaimantAddressKnownPage(Index(0)), false),
+              pageMustBe(CheckChildDetailsPage(Index(0)))
+            )
+        }
       }
     }
 
@@ -802,7 +913,9 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           .run(
             basicChildJourney,
             setUserAnswerTo(ChildLivedWithAnyoneElsePage(Index(0)), true),
+            setUserAnswerTo(PreviousGuardianNameKnownPage(Index(0)), true),
             setUserAnswerTo(PreviousGuardianNamePage(Index(0)), adultName),
+            setUserAnswerTo(PreviousGuardianAddressKnownPage(Index(0)), true),
             setUserAnswerTo(PreviousGuardianAddressInUkPage(Index(0)), true),
             setUserAnswerTo(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
             setUserAnswerTo(PreviousGuardianInternationalAddressPage(Index(0)), internationalAddress),
@@ -811,12 +924,16 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             setUserAnswerTo(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
             goToChangeAnswer(ChildLivesWithApplicantPage(Index(0))),
             submitAnswer(ChildLivesWithApplicantPage(Index(0)), false),
+            submitAnswer(GuardianNameKnownPage(Index(0)), true),
             submitAnswer(GuardianNamePage(Index(0)), adultName),
+            submitAnswer(GuardianAddressKnownPage(Index(0)), true),
             submitAnswer(GuardianAddressInUkPage(Index(0)), true),
             submitAnswer(GuardianUkAddressPage(Index(0)), ukAddress),
             pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(ChildLivedWithAnyoneElsePage(Index(0))),
+            answersMustNotContain(PreviousGuardianNameKnownPage(Index(0))),
             answersMustNotContain(PreviousGuardianNamePage(Index(0))),
+            answersMustNotContain(PreviousGuardianAddressKnownPage(Index(0))),
             answersMustNotContain(PreviousGuardianAddressInUkPage(Index(0))),
             answersMustNotContain(PreviousGuardianUkAddressPage(Index(0))),
             answersMustNotContain(PreviousGuardianInternationalAddressPage(Index(0))),
@@ -827,7 +944,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
       }
     }
 
-    "that the user said did not live with them" - {
+    "that the user said does not live with them" - {
 
       "changing that answer must ask if the child lived with someone else in the past year, remove details of the person the child lives with, and go to Check Details" in {
 
@@ -835,155 +952,308 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           .run(
             basicChildJourney,
             setUserAnswerTo(ChildLivesWithApplicantPage(Index(0)), false),
+            setUserAnswerTo(GuardianNameKnownPage(Index(0)), true),
             setUserAnswerTo(GuardianNamePage(Index(0)), adultName),
+            setUserAnswerTo(GuardianAddressKnownPage(Index(0)), true),
             setUserAnswerTo(GuardianAddressInUkPage(Index(0)), true),
             setUserAnswerTo(GuardianUkAddressPage(Index(0)), ukAddress),
             setUserAnswerTo(GuardianInternationalAddressPage(Index(0)), internationalAddress),
             goToChangeAnswer(ChildLivesWithApplicantPage(Index(0))),
             submitAnswer(ChildLivesWithApplicantPage(Index(0)), true),
             submitAnswer(ChildLivedWithAnyoneElsePage(Index(0)), true),
+            submitAnswer(PreviousGuardianNameKnownPage(Index(0)), true),
             submitAnswer(PreviousGuardianNamePage(Index(0)), adultName),
+            submitAnswer(PreviousGuardianAddressKnownPage(Index(0)), true),
             submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), true),
             submitAnswer(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
             submitAnswer(PreviousGuardianPhoneNumberKnownPage(Index(0)), true),
             submitAnswer(PreviousGuardianPhoneNumberPage(Index(0)), "077777777"),
             submitAnswer(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
             pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(GuardianNameKnownPage(Index(0))),
             answersMustNotContain(GuardianNamePage(Index(0))),
+            answersMustNotContain(GuardianAddressKnownPage(Index(0))),
             answersMustNotContain(GuardianAddressInUkPage(Index(0))),
             answersMustNotContain(GuardianUkAddressPage(Index(0))),
             answersMustNotContain(GuardianInternationalAddressPage(Index(0)))
           )
       }
-    }
 
-    "that the user said lives with someone with a UK address" - {
+      "that they knew the details for" - {
 
-      "changing to say the address is international must collect the international address, remove the UK address, and go to Check Details" in {
-
-        startingFrom(ChildNamePage(Index(0)))
-          .run(
+        val initialState =
+          journeyOf(
             basicChildJourney,
             setUserAnswerTo(ChildLivesWithApplicantPage(Index(0)), false),
+            setUserAnswerTo(GuardianNameKnownPage(Index(0)), true),
             setUserAnswerTo(GuardianNamePage(Index(0)), adultName),
+            setUserAnswerTo(GuardianAddressKnownPage(Index(0)), true),
             setUserAnswerTo(GuardianAddressInUkPage(Index(0)), true),
             setUserAnswerTo(GuardianUkAddressPage(Index(0)), ukAddress),
-            goToChangeAnswer(GuardianAddressInUkPage(Index(0))),
-            submitAnswer(GuardianAddressInUkPage(Index(0)), false),
-            submitAnswer(GuardianInternationalAddressPage(Index(0)), internationalAddress),
-            pageMustBe(CheckChildDetailsPage(Index(0))),
-            answersMustNotContain(GuardianUkAddressPage(Index(0)))
+            setUserAnswerTo(GuardianInternationalAddressPage(Index(0)), internationalAddress)
           )
+
+        "changing to say they do not know the person they live with must remove that person's details and return to Check Details" in {
+
+          startingFrom(ChildNamePage(Index(0)))
+            .run(
+              initialState,
+              goToChangeAnswer(GuardianNameKnownPage(Index(0))),
+              submitAnswer(GuardianNameKnownPage(Index(0)), false),
+              pageMustBe(CheckChildDetailsPage(Index(0))),
+              answersMustNotContain(GuardianNamePage(Index(0))),
+              answersMustNotContain(GuardianAddressKnownPage(Index(0))),
+              answersMustNotContain(GuardianAddressInUkPage(Index(0))),
+              answersMustNotContain(GuardianUkAddressPage(Index(0))),
+              answersMustNotContain(GuardianInternationalAddressPage(Index(0)))
+            )
+        }
+
+        "changing to say they do not know the person's address must remove the address and return to Check Details" in {
+
+          startingFrom(ChildNamePage(Index(0)))
+            .run(
+              initialState,
+              goToChangeAnswer(GuardianAddressKnownPage(Index(0))),
+              submitAnswer(GuardianAddressKnownPage(Index(0)), false),
+              pageMustBe(CheckChildDetailsPage(Index(0))),
+              answersMustNotContain(GuardianAddressInUkPage(Index(0))),
+              answersMustNotContain(GuardianUkAddressPage(Index(0))),
+              answersMustNotContain(GuardianInternationalAddressPage(Index(0)))
+            )
+        }
+
+        "and originally said their address was in the UK" - {
+
+          "changing to say their address is not in the UK must collect the international address, remove the UK address and return to Check Details" in {
+
+            startingFrom(ChildNamePage(Index(0)))
+              .run(
+                initialState,
+                remove(GuardianInternationalAddressPage(Index(0))),
+                goToChangeAnswer(GuardianAddressInUkPage(Index(0))),
+                submitAnswer(GuardianAddressInUkPage(Index(0)), false),
+                submitAnswer(GuardianInternationalAddressPage(Index(0)), internationalAddress),
+                pageMustBe(CheckChildDetailsPage(Index(0))),
+                answersMustNotContain(GuardianUkAddressPage(Index(0)))
+              )
+          }
+        }
+
+        "and originally said their address was not in the UK" - {
+
+          "changing to say their address is in the UK must collect the UK address, remove the international address and return to Check Details" in {
+
+            startingFrom(ChildNamePage(Index(0)))
+              .run(
+                initialState,
+                remove(GuardianUkAddressPage(Index(0))),
+                setUserAnswerTo(GuardianAddressInUkPage(Index(0)), false),
+                goToChangeAnswer(GuardianAddressInUkPage(Index(0))),
+                submitAnswer(GuardianAddressInUkPage(Index(0)), true),
+                submitAnswer(GuardianUkAddressPage(Index(0)), ukAddress),
+                pageMustBe(CheckChildDetailsPage(Index(0))),
+                answersMustNotContain(GuardianInternationalAddressPage(Index(0)))
+              )
+          }
+        }
+      }
+
+      "that the user said they did not know the details for" - {
+
+        "changing to say they do know the details must collect them then return to Check Details" in {
+
+          startingFrom(ChildNamePage(Index(0)))
+            .run(
+              basicChildJourney,
+              setUserAnswerTo(ChildLivesWithApplicantPage(Index(0)), false),
+              setUserAnswerTo(GuardianNameKnownPage(Index(0)), false),
+              goToChangeAnswer(GuardianNameKnownPage(Index(0))),
+              submitAnswer(GuardianNameKnownPage(Index(0)), true),
+              submitAnswer(GuardianNamePage(Index(0)), adultName),
+              submitAnswer(GuardianAddressKnownPage(Index(0)), true),
+              submitAnswer(GuardianAddressInUkPage(Index(0)), true),
+              submitAnswer(GuardianUkAddressPage(Index(0)), ukAddress),
+              pageMustBe(CheckChildDetailsPage(Index(0)))
+            )
+        }
       }
     }
 
-    "that the user said lives with someone with an international address" - {
+    "that the user said lived with someone in the past year" - {
 
-      "changing to say the address is UK must collect the UK address, remove the international address, and go to Check Details" in {
+      "who they knew the details for" - {
 
-        startingFrom(ChildNamePage(Index(0)))
-          .run(
-            basicChildJourney,
-            setUserAnswerTo(ChildLivesWithApplicantPage(Index(0)), false),
-            setUserAnswerTo(GuardianNamePage(Index(0)), adultName),
-            setUserAnswerTo(GuardianAddressInUkPage(Index(0)), false),
-            setUserAnswerTo(GuardianInternationalAddressPage(Index(0)), internationalAddress),
-            goToChangeAnswer(GuardianAddressInUkPage(Index(0))),
-            submitAnswer(GuardianAddressInUkPage(Index(0)), true),
-            submitAnswer(GuardianUkAddressPage(Index(0)), ukAddress),
-            pageMustBe(CheckChildDetailsPage(Index(0))),
-            answersMustNotContain(GuardianInternationalAddressPage(Index(0)))
-          )
-      }
-    }
-
-
-    "that the user said lived with someone in the past year with a UK address" - {
-
-      "changing to say the address is international must collect the international address, remove the UK address, and go to Check Details" in {
-
-        startingFrom(ChildNamePage(Index(0)))
-          .run(
+        val initialState =
+          journeyOf(
             basicChildJourney,
             setUserAnswerTo(ChildLivedWithAnyoneElsePage(Index(0)), true),
+            setUserAnswerTo(PreviousGuardianNameKnownPage(Index(0)), true),
             setUserAnswerTo(PreviousGuardianNamePage(Index(0)), adultName),
+            setUserAnswerTo(PreviousGuardianAddressKnownPage(Index(0)), true),
             setUserAnswerTo(PreviousGuardianAddressInUkPage(Index(0)), true),
             setUserAnswerTo(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
-            setUserAnswerTo(PreviousGuardianPhoneNumberKnownPage(Index(0)), true),
-            setUserAnswerTo(PreviousGuardianPhoneNumberPage(Index(0)), "077777777"),
-            setUserAnswerTo(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
-            goToChangeAnswer(PreviousGuardianAddressInUkPage(Index(0))),
-            submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), false),
-            submitAnswer(PreviousGuardianInternationalAddressPage(Index(0)), internationalAddress),
-            pageMustBe(CheckChildDetailsPage(Index(0))),
-            answersMustNotContain(PreviousGuardianUkAddressPage(Index(0)))
-          )
-      }
-    }
-
-    "that the user said lived with someone in the past year with an international address" - {
-
-      "changing to say the address is UK must collect the UK address, remove the international address, and go to Check Details" in {
-
-        startingFrom(ChildNamePage(Index(0)))
-          .run(
-            basicChildJourney,
-            setUserAnswerTo(ChildLivedWithAnyoneElsePage(Index(0)), true),
-            setUserAnswerTo(PreviousGuardianNamePage(Index(0)), adultName),
-            setUserAnswerTo(PreviousGuardianAddressInUkPage(Index(0)), false),
             setUserAnswerTo(PreviousGuardianInternationalAddressPage(Index(0)), internationalAddress),
             setUserAnswerTo(PreviousGuardianPhoneNumberKnownPage(Index(0)), true),
-            setUserAnswerTo(PreviousGuardianPhoneNumberPage(Index(0)), "077777777"),
-            setUserAnswerTo(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
-            goToChangeAnswer(PreviousGuardianAddressInUkPage(Index(0))),
-            submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), true),
-            submitAnswer(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
-            pageMustBe(CheckChildDetailsPage(Index(0))),
-            answersMustNotContain(PreviousGuardianInternationalAddressPage(Index(0)))
+            setUserAnswerTo(PreviousGuardianPhoneNumberPage(Index(0)), "07777 777777"),
+            setUserAnswerTo(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now)
           )
+
+        "changing to say they don't know the details should remove them and return to Check Details" in {
+
+          startingFrom(ChildNamePage(Index(0)))
+            .run(
+              initialState,
+              goToChangeAnswer(PreviousGuardianNameKnownPage(Index(0))),
+              submitAnswer(PreviousGuardianNameKnownPage(Index(0)), false),
+              pageMustBe(CheckChildDetailsPage(Index(0))),
+              answersMustNotContain(PreviousGuardianNamePage(Index(0))),
+              answersMustNotContain(PreviousGuardianAddressKnownPage(Index(0))),
+              answersMustNotContain(PreviousGuardianAddressInUkPage(Index(0))),
+              answersMustNotContain(PreviousGuardianUkAddressPage(Index(0))),
+              answersMustNotContain(PreviousGuardianInternationalAddressPage(Index(0))),
+              answersMustNotContain(PreviousGuardianPhoneNumberKnownPage(Index(0))),
+              answersMustNotContain(PreviousGuardianPhoneNumberPage(Index(0)))
+            )
+        }
+
+        "changing to say they don't know the person's address must remove the address and return to Check Details" in {
+
+          startingFrom(ChildNamePage(Index(0)))
+            .run(
+              initialState,
+              goToChangeAnswer(PreviousGuardianAddressKnownPage(Index(0))),
+              submitAnswer(PreviousGuardianAddressKnownPage(Index(0)), false),
+              pageMustBe(CheckChildDetailsPage(Index(0))),
+              answersMustNotContain(PreviousGuardianAddressInUkPage(Index(0))),
+              answersMustNotContain(PreviousGuardianUkAddressPage(Index(0))),
+              answersMustNotContain(PreviousGuardianInternationalAddressPage(Index(0)))
+            )
+        }
+
+        "and who lives in the UK" - {
+
+          "changing to say they do not live in the UK must remove the UK address, collect the international address and return to Check Details" in {
+
+            startingFrom(ChildNamePage(Index(0)))
+              .run(
+                initialState,
+                remove(PreviousGuardianInternationalAddressPage(Index(0))),
+                goToChangeAnswer(PreviousGuardianAddressInUkPage(Index(0))),
+                submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), false),
+                submitAnswer(PreviousGuardianInternationalAddressPage(Index(0)), internationalAddress),
+                pageMustBe(CheckChildDetailsPage(Index(0))),
+                answersMustNotContain(PreviousGuardianUkAddressPage(Index(0))),
+              )
+          }
+        }
+
+        "and who does not lives in the UK" - {
+
+          "changing to say they live in the UK must remove the international address, collect the UK address and return to Check Details" in {
+
+            startingFrom(ChildNamePage(Index(0)))
+              .run(
+                initialState,
+                remove(PreviousGuardianUkAddressPage(Index(0))),
+                setUserAnswerTo(PreviousGuardianAddressInUkPage(Index(0)), false),
+                goToChangeAnswer(PreviousGuardianAddressInUkPage(Index(0))),
+                submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), true),
+                submitAnswer(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
+                pageMustBe(CheckChildDetailsPage(Index(0))),
+                answersMustNotContain(PreviousGuardianInternationalAddressPage(Index(0))),
+              )
+          }
+        }
       }
-    }
 
-    "that the user said lived with someone whose phone number they know" - {
+      "who they knew details for, but not the address" - {
 
-      "changing to say they do not know the phone number must remove it and go to Check Details" in {
-
-        startingFrom(ChildNamePage(Index(0)))
-          .run(
+        val initialState =
+          journeyOf(
             basicChildJourney,
             setUserAnswerTo(ChildLivedWithAnyoneElsePage(Index(0)), true),
+            setUserAnswerTo(PreviousGuardianNameKnownPage(Index(0)), true),
             setUserAnswerTo(PreviousGuardianNamePage(Index(0)), adultName),
-            setUserAnswerTo(PreviousGuardianAddressInUkPage(Index(0)), false),
-            setUserAnswerTo(PreviousGuardianInternationalAddressPage(Index(0)), internationalAddress),
+            setUserAnswerTo(PreviousGuardianAddressKnownPage(Index(0)), false),
             setUserAnswerTo(PreviousGuardianPhoneNumberKnownPage(Index(0)), true),
-            setUserAnswerTo(PreviousGuardianPhoneNumberPage(Index(0)), "077777777"),
-            setUserAnswerTo(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
-            goToChangeAnswer(PreviousGuardianPhoneNumberKnownPage(Index(0))),
-            submitAnswer(PreviousGuardianPhoneNumberKnownPage(Index(0)), false),
-            pageMustBe(CheckChildDetailsPage(Index(0))),
-            answersMustNotContain(PreviousGuardianPhoneNumberPage(Index(0)))
+            setUserAnswerTo(PreviousGuardianPhoneNumberPage(Index(0)), "07777 777777")
           )
+
+        "changing to say they know the UK address must collect it then return to Check Details" in {
+
+          startingFrom(ChildNamePage(Index(0)))
+            .run(
+              initialState,
+              goToChangeAnswer(PreviousGuardianAddressKnownPage(Index(0))),
+              submitAnswer(PreviousGuardianAddressKnownPage(Index(0)), true),
+              submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), true),
+              submitAnswer(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
+              pageMustBe(CheckChildDetailsPage(Index(0)))
+            )
+        }
+
+        "changing to say they know the international address must collect it then return to Check Details" in {
+
+          startingFrom(ChildNamePage(Index(0)))
+            .run(
+              initialState,
+              goToChangeAnswer(PreviousGuardianAddressKnownPage(Index(0))),
+              submitAnswer(PreviousGuardianAddressKnownPage(Index(0)), true),
+              submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), false),
+              submitAnswer(PreviousGuardianInternationalAddressPage(Index(0)), internationalAddress),
+              pageMustBe(CheckChildDetailsPage(Index(0)))
+            )
+        }
       }
-    }
 
-    "that the user said lived with someone whose phone number they did now know" - {
+      "who they knew details for, but not the phone number" - {
 
-      "changing to say they do know the phone number must collect it and go to Check Details" in {
-
-        startingFrom(ChildNamePage(Index(0)))
-          .run(
+        val initialState =
+          journeyOf(
             basicChildJourney,
             setUserAnswerTo(ChildLivedWithAnyoneElsePage(Index(0)), true),
+            setUserAnswerTo(PreviousGuardianNameKnownPage(Index(0)), true),
             setUserAnswerTo(PreviousGuardianNamePage(Index(0)), adultName),
-            setUserAnswerTo(PreviousGuardianAddressInUkPage(Index(0)), false),
-            setUserAnswerTo(PreviousGuardianInternationalAddressPage(Index(0)), internationalAddress),
+            setUserAnswerTo(PreviousGuardianAddressKnownPage(Index(0)), false),
             setUserAnswerTo(PreviousGuardianPhoneNumberKnownPage(Index(0)), false),
-            setUserAnswerTo(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
-            goToChangeAnswer(PreviousGuardianPhoneNumberKnownPage(Index(0))),
-            submitAnswer(PreviousGuardianPhoneNumberKnownPage(Index(0)), true),
-            submitAnswer(PreviousGuardianPhoneNumberPage(Index(0)), "077777777"),
-            pageMustBe(CheckChildDetailsPage(Index(0)))
+            setUserAnswerTo(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now)
           )
+
+        "changing to say they know the phone number must collect it then return to Check Details" in {
+
+          startingFrom(ChildNamePage(Index(0)))
+            .run(
+              initialState,
+              goToChangeAnswer(PreviousGuardianPhoneNumberKnownPage(Index(0))),
+              submitAnswer(PreviousGuardianPhoneNumberKnownPage(Index(0)), true),
+              submitAnswer(PreviousGuardianPhoneNumberPage(Index(0)), "07777 777777"),
+              pageMustBe(CheckChildDetailsPage(Index(0)))
+            )
+        }
+      }
+
+      "who they did not know the details for" - {
+
+        "changing to say they do know the details must collect them then return to Check Details" in {
+
+          startingFrom(ChildNamePage(Index(0)))
+            .run(
+              basicChildJourney,
+              setUserAnswerTo(ChildLivedWithAnyoneElsePage(Index(0)), true),
+              setUserAnswerTo(PreviousGuardianNameKnownPage(Index(0)), false),
+              setUserAnswerTo(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
+              goToChangeAnswer(PreviousGuardianNameKnownPage(Index(0))),
+              submitAnswer(PreviousGuardianNameKnownPage(Index(0)), true),
+              submitAnswer(PreviousGuardianNamePage(Index(0)), adultName),
+              submitAnswer(PreviousGuardianAddressKnownPage(Index(0)), true),
+              submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), true),
+              submitAnswer(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
+              submitAnswer(PreviousGuardianPhoneNumberKnownPage(Index(0)), true),
+              submitAnswer(PreviousGuardianPhoneNumberPage(Index(0)), "07777 777777"),
+              pageMustBe(CheckChildDetailsPage(Index(0)))
+            )
+        }
       }
     }
   }

@@ -251,28 +251,83 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
   "users whose child has been claimed for before" - {
 
-    "must be asked for details of the previous claimant" - {
+    "who know the person who claimed for the child before" - {
 
-      "when their address is in the UK" in {
+      "and know that person's UK address" - {
 
-        val country = arbitrary[ChildBirthRegistrationCountry].sample.value
+        "must be asked for the person's name and address and proceed to be asked if the child lives with them" in {
 
-        val initialise = journeyOf(
-          setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), country)
-        )
+          val country = arbitrary[ChildBirthRegistrationCountry].sample.value
 
-        startingFrom(AnyoneClaimedForChildBeforePage(Index(0)))
-          .run(
-            initialise,
-            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
-            submitAnswer(PreviousClaimantNamePage(Index(0)), adultName),
-            submitAnswer(PreviousClaimantAddressInUkPage(Index(0)), true),
-            submitAnswer(PreviousClaimantUkAddressPage(Index(0)), ukAddress),
-            pageMustBe(ChildLivesWithApplicantPage(Index(0)))
+          val initialise = journeyOf(
+            setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), country)
           )
+
+          startingFrom(AnyoneClaimedForChildBeforePage(Index(0)))
+            .run(
+              initialise,
+              submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
+              submitAnswer(PreviousClaimantNameKnownPage(Index(0)), true),
+              submitAnswer(PreviousClaimantNamePage(Index(0)), adultName),
+              submitAnswer(PreviousClaimantAddressKnownPage(Index(0)), true),
+              submitAnswer(PreviousClaimantAddressInUkPage(Index(0)), true),
+              submitAnswer(PreviousClaimantUkAddressPage(Index(0)), ukAddress),
+              pageMustBe(ChildLivesWithApplicantPage(Index(0)))
+            )
+        }
       }
 
-      "when their address is not in the UK" in {
+      "and know that person's international address" - {
+
+        "must be asked for the person's name address and proceed to be asked if the child lives with them" in {
+
+          val country = arbitrary[ChildBirthRegistrationCountry].sample.value
+
+          val initialise = journeyOf(
+            setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), country)
+          )
+
+          startingFrom(AnyoneClaimedForChildBeforePage(Index(0)))
+            .run(
+              initialise,
+              submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
+              submitAnswer(PreviousClaimantNameKnownPage(Index(0)), true),
+              submitAnswer(PreviousClaimantNamePage(Index(0)), adultName),
+              submitAnswer(PreviousClaimantAddressKnownPage(Index(0)), true),
+              submitAnswer(PreviousClaimantAddressInUkPage(Index(0)), false),
+              submitAnswer(PreviousClaimantInternationalAddressPage(Index(0)), internationalAddress),
+              pageMustBe(ChildLivesWithApplicantPage(Index(0)))
+            )
+        }
+      }
+
+      "and do not know that person's address" - {
+
+        "must be asked for the person's name and proceed to be asked if the child lives with them" in {
+
+          val country = arbitrary[ChildBirthRegistrationCountry].sample.value
+
+          val initialise = journeyOf(
+            setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), country)
+          )
+
+          startingFrom(AnyoneClaimedForChildBeforePage(Index(0)))
+            .run(
+              initialise,
+              submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
+              submitAnswer(PreviousClaimantNameKnownPage(Index(0)), true),
+              submitAnswer(PreviousClaimantNamePage(Index(0)), adultName),
+              submitAnswer(PreviousClaimantAddressKnownPage(Index(0)), false),
+              pageMustBe(ChildLivesWithApplicantPage(Index(0)))
+            )
+        }
+      }
+
+    }
+
+    "who do not know the person who claimed for the child before" - {
+
+      "must proceed to be asked if the child lives with them" in {
 
         val country = arbitrary[ChildBirthRegistrationCountry].sample.value
 
@@ -284,9 +339,7 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
           .run(
             initialise,
             submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), true),
-            submitAnswer(PreviousClaimantNamePage(Index(0)), adultName),
-            submitAnswer(PreviousClaimantAddressInUkPage(Index(0)), false),
-            submitAnswer(PreviousClaimantInternationalAddressPage(Index(0)), internationalAddress),
+            submitAnswer(PreviousClaimantNameKnownPage(Index(0)), false),
             pageMustBe(ChildLivesWithApplicantPage(Index(0)))
           )
       }
@@ -308,30 +361,70 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
   "users whose child does not live with them" - {
 
-    "must be asked for details of the person the child lives with, then go to Check Child Details" - {
+    "who know the person the child lives with" - {
 
-      "when the person the child lives with has a UK address" in {
+      "and know that person's UK address" - {
 
-        startingFrom(AnyoneClaimedForChildBeforePage(Index(0)))
-          .run(
-            submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
-            submitAnswer(ChildLivesWithApplicantPage(Index(0)), false),
-            submitAnswer(GuardianNamePage(Index(0)), adultName),
-            submitAnswer(GuardianAddressInUkPage(Index(0)), true),
-            submitAnswer(GuardianUkAddressPage(Index(0)), ukAddress),
-            pageMustBe(CheckChildDetailsPage(Index(0)))
-          )
+        "must be asked for that person's name and address, then proceed to Check Child Details" in {
+
+          startingFrom(AnyoneClaimedForChildBeforePage(Index(0)))
+            .run(
+              submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
+              submitAnswer(ChildLivesWithApplicantPage(Index(0)), false),
+              submitAnswer(GuardianNameKnownPage(Index(0)), true),
+              submitAnswer(GuardianNamePage(Index(0)), adultName),
+              submitAnswer(GuardianAddressKnownPage(Index(0)), true),
+              submitAnswer(GuardianAddressInUkPage(Index(0)), true),
+              submitAnswer(GuardianUkAddressPage(Index(0)), ukAddress),
+              pageMustBe(CheckChildDetailsPage(Index(0)))
+            )
+        }
       }
 
-      "when the person the child lives with has an international address" in {
+      "and know that person's international address" - {
+
+        "must be asked for that person's name and address, then proceed to Check Child Details" in {
+
+          startingFrom(AnyoneClaimedForChildBeforePage(Index(0)))
+            .run(
+              submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
+              submitAnswer(ChildLivesWithApplicantPage(Index(0)), false),
+              submitAnswer(GuardianNameKnownPage(Index(0)), true),
+              submitAnswer(GuardianNamePage(Index(0)), adultName),
+              submitAnswer(GuardianAddressKnownPage(Index(0)), true),
+              submitAnswer(GuardianAddressInUkPage(Index(0)), false),
+              submitAnswer(GuardianInternationalAddressPage(Index(0)), internationalAddress),
+              pageMustBe(CheckChildDetailsPage(Index(0)))
+            )
+        }
+      }
+
+      "and do not know that person's address" - {
+
+        "must be asked for that person's name, then proceed to Check Child Details" in {
+
+          startingFrom(AnyoneClaimedForChildBeforePage(Index(0)))
+            .run(
+              submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
+              submitAnswer(ChildLivesWithApplicantPage(Index(0)), false),
+              submitAnswer(GuardianNameKnownPage(Index(0)), true),
+              submitAnswer(GuardianNamePage(Index(0)), adultName),
+              submitAnswer(GuardianAddressKnownPage(Index(0)), false),
+              pageMustBe(CheckChildDetailsPage(Index(0)))
+            )
+        }
+      }
+    }
+
+    "who do not know the person the child lives with" - {
+
+      "must proceed to Check Child Details" in {
 
         startingFrom(AnyoneClaimedForChildBeforePage(Index(0)))
           .run(
             submitAnswer(AnyoneClaimedForChildBeforePage(Index(0)), false),
             submitAnswer(ChildLivesWithApplicantPage(Index(0)), false),
-            submitAnswer(GuardianNamePage(Index(0)), adultName),
-            submitAnswer(GuardianAddressInUkPage(Index(0)), false),
-            submitAnswer(GuardianInternationalAddressPage(Index(0)), internationalAddress),
+            submitAnswer(GuardianNameKnownPage(Index(0)), false),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }
@@ -352,47 +445,91 @@ class ChildJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerat
 
   "users whose child lived with someone else in the past year" - {
 
-    "must be asked for details of the person the child lived with and when the child came to live with them" - {
+    "who know who the child lived with" - {
 
-      "when the person the child lived with had a UK address" in {
+      "and know their UK address" - {
 
-        startingFrom(ChildLivedWithAnyoneElsePage(Index(0)))
-          .run(
-            submitAnswer(ChildLivedWithAnyoneElsePage(Index(0)), true),
-            submitAnswer(PreviousGuardianNamePage(Index(0)), adultName),
-            submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), true),
-            submitAnswer(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
-            submitAnswer(PreviousGuardianPhoneNumberKnownPage(Index(0)), true),
-            submitAnswer(PreviousGuardianPhoneNumberPage(Index(0)), "0777777777"),
-            submitAnswer(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
-            pageMustBe(CheckChildDetailsPage(Index(0)))
-          )
+        "must be asked for the persons name and address, and whether they know their phone number" in {
+
+          startingFrom(ChildLivedWithAnyoneElsePage(Index(0)))
+            .run(
+              submitAnswer(ChildLivedWithAnyoneElsePage(Index(0)), true),
+              submitAnswer(PreviousGuardianNameKnownPage(Index(0)), true),
+              submitAnswer(PreviousGuardianNamePage(Index(0)), adultName),
+              submitAnswer(PreviousGuardianAddressKnownPage(Index(0)), true),
+              submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), true),
+              submitAnswer(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
+              pageMustBe(PreviousGuardianPhoneNumberKnownPage(Index(0)))
+            )
+        }
       }
 
-      "when the person the child lived with had an international address" in {
+      "and know their international address" - {
 
-        startingFrom(ChildLivedWithAnyoneElsePage(Index(0)))
-          .run(
-            submitAnswer(ChildLivedWithAnyoneElsePage(Index(0)), true),
-            submitAnswer(PreviousGuardianNamePage(Index(0)), adultName),
-            submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), false),
-            submitAnswer(PreviousGuardianInternationalAddressPage(Index(0)), internationalAddress),
-            submitAnswer(PreviousGuardianPhoneNumberKnownPage(Index(0)), true),
-            submitAnswer(PreviousGuardianPhoneNumberPage(Index(0)), "0777777777"),
-            submitAnswer(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
-            pageMustBe(CheckChildDetailsPage(Index(0)))
-          )
+        "must be asked for the persons name and address, and whether they know their phone number" in {
+
+          startingFrom(ChildLivedWithAnyoneElsePage(Index(0)))
+            .run(
+              submitAnswer(ChildLivedWithAnyoneElsePage(Index(0)), true),
+              submitAnswer(PreviousGuardianNameKnownPage(Index(0)), true),
+              submitAnswer(PreviousGuardianNamePage(Index(0)), adultName),
+              submitAnswer(PreviousGuardianAddressKnownPage(Index(0)), true),
+              submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), false),
+              submitAnswer(PreviousGuardianInternationalAddressPage(Index(0)), internationalAddress),
+              pageMustBe(PreviousGuardianPhoneNumberKnownPage(Index(0)))
+            )
+        }
       }
 
-      "when the applicant does not know the person the child lived with's phone number'" in {
+      "and do not know their address" - {
+
+        "must be asked whether they know their phone number" in {
+
+          startingFrom(ChildLivedWithAnyoneElsePage(Index(0)))
+            .run(
+              submitAnswer(ChildLivedWithAnyoneElsePage(Index(0)), true),
+              submitAnswer(PreviousGuardianNameKnownPage(Index(0)), true),
+              submitAnswer(PreviousGuardianNamePage(Index(0)), adultName),
+              submitAnswer(PreviousGuardianAddressKnownPage(Index(0)), false),
+              pageMustBe(PreviousGuardianPhoneNumberKnownPage(Index(0)))
+            )
+        }
+      }
+
+      "and know their phone number" - {
+
+        "must be asked for the phone number" in {
+
+          startingFrom(PreviousGuardianPhoneNumberKnownPage(Index(0)))
+            .run(
+              submitAnswer(PreviousGuardianPhoneNumberKnownPage(Index(0)), true),
+              submitAnswer(PreviousGuardianPhoneNumberPage(Index(0)), "0777777777"),
+              pageMustBe(DateChildStartedLivingWithApplicantPage(Index(0)))
+            )
+        }
+      }
+
+      "and do not know their phone number" - {
+
+        "must proceed to Date Child Started Living with Applicant" in {
+
+          startingFrom(PreviousGuardianPhoneNumberKnownPage(Index(0)))
+            .run(
+              submitAnswer(PreviousGuardianPhoneNumberKnownPage(Index(0)), false),
+              pageMustBe(DateChildStartedLivingWithApplicantPage(Index(0)))
+            )
+        }
+      }
+    }
+
+    "who do not know who the child lived with" - {
+
+      "must be asked when the child came to live with them" in {
 
         startingFrom(ChildLivedWithAnyoneElsePage(Index(0)))
           .run(
             submitAnswer(ChildLivedWithAnyoneElsePage(Index(0)), true),
-            submitAnswer(PreviousGuardianNamePage(Index(0)), adultName),
-            submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), true),
-            submitAnswer(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
-            submitAnswer(PreviousGuardianPhoneNumberKnownPage(Index(0)), false),
+            submitAnswer(PreviousGuardianNameKnownPage(Index(0)), false),
             submitAnswer(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )

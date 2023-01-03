@@ -36,14 +36,16 @@ final case class ChildLivesWithApplicantPage(index: Index) extends ChildQuestion
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case true  => ChildLivedWithAnyoneElsePage(index)
-      case false => GuardianNamePage(index)
+      case false => GuardianNameKnownPage(index)
     }.orRecover
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
     value.map {
       case true =>
         userAnswers
-          .remove(GuardianNamePage(index))
+          .remove(GuardianNameKnownPage(index))
+          .flatMap(_.remove(GuardianNamePage(index)))
+          .flatMap(_.remove(GuardianAddressKnownPage(index)))
           .flatMap(_.remove(GuardianAddressInUkPage(index)))
           .flatMap(_.remove(GuardianUkAddressPage(index)))
           .flatMap(_.remove(GuardianInternationalAddressPage(index)))
@@ -51,7 +53,9 @@ final case class ChildLivesWithApplicantPage(index: Index) extends ChildQuestion
       case false =>
         userAnswers
           .remove(ChildLivedWithAnyoneElsePage(index))
+          .flatMap(_.remove(PreviousGuardianNameKnownPage(index)))
           .flatMap(_.remove(PreviousGuardianNamePage(index)))
+          .flatMap(_.remove(PreviousGuardianAddressKnownPage(index)))
           .flatMap(_.remove(PreviousGuardianAddressInUkPage(index)))
           .flatMap(_.remove(PreviousGuardianUkAddressPage(index)))
           .flatMap(_.remove(PreviousGuardianInternationalAddressPage(index)))

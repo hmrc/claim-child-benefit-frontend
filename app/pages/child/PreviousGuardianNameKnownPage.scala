@@ -32,4 +32,24 @@ final case class PreviousGuardianNameKnownPage(index: Index) extends ChildQuesti
 
   override def route(waypoints: Waypoints): Call =
     routes.PreviousGuardianNameKnownController.onPageLoad(waypoints, index)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true  => PreviousGuardianNamePage(index)
+      case false => DateChildStartedLivingWithApplicantPage(index)
+    }.orRecover
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    if (value.contains(false)) {
+      userAnswers
+        .remove(PreviousGuardianNamePage(index))
+        .flatMap(_.remove(PreviousGuardianAddressKnownPage(index)))
+        .flatMap(_.remove(PreviousGuardianAddressInUkPage(index)))
+        .flatMap(_.remove(PreviousGuardianUkAddressPage(index)))
+        .flatMap(_.remove(PreviousGuardianInternationalAddressPage(index)))
+        .flatMap(_.remove(PreviousGuardianPhoneNumberKnownPage(index)))
+        .flatMap(_.remove(PreviousGuardianPhoneNumberPage(index)))
+    } else {
+      super.cleanup(value, userAnswers)
+    }
 }

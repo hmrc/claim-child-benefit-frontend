@@ -59,24 +59,30 @@ class CheckChildDetailsController @Inject()(
               AdoptingThroughLocalAuthoritySummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               ApplicantRelationshipToChildSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               AnyoneClaimedForChildBeforeSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              PreviousClaimantNameKnownSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               PreviousClaimantNameSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              PreviousClaimantAddressKnownSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               PreviousClaimantAddressInUkSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               PreviousClaimantUkAddressSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               PreviousClaimantInternationalAddressSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               ChildLivesWithApplicantSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              GuardianNameKnownSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               GuardianNameSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              GuardianAddressKnownSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               GuardianAddressInUkSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               GuardianUkAddressSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               GuardianInternationalAddressSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               ChildLivedWithAnyoneElseSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              PreviousGuardianNameKnownSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               PreviousGuardianNameSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              PreviousGuardianAddressKnownSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               PreviousGuardianAddressInUkSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               PreviousGuardianUkAddressSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               PreviousGuardianInternationalAddressSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               PreviousGuardianPhoneNumberKnownSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               PreviousGuardianPhoneNumberSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               DateChildStartedLivingWithApplicantSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
-          ).flatten
+            ).flatten
           )
 
           Ok(view(list, waypoints, index, childName))

@@ -71,12 +71,12 @@
                     @line("pdf.claimedBefore", booleanToYesNo(child.previousClaimant.nonEmpty))
 
                     @child.previousClaimant.map { previousClaimant =>
-                        @line("pdf.previousClaimantName", previousClaimant.name.display)
+                        @line("pdf.previousClaimantName", previousClaimant.name.map(_.display).getOrElse(messages("pdf.notKnown")))
                         <fo:block margin-bottom="3mm">
                             <fo:block font-weight="bold">@messages("pdf.previousClaimantUkAddress")</fo:block>
-                                @previousClaimant.address.lines.map { x =>
-                            <fo:block width="8cm" wrap-option="wrap">@(x)</fo:block>
-                            }
+                                @previousClaimant.address.map(_.lines.map { x =>
+                                    <fo:block width="8cm" wrap-option="wrap">@(x)</fo:block>
+                            }).getOrElse(messages("pdf.notKnown"))
                         </fo:block>
                     }
 
@@ -100,12 +100,12 @@
                     }
 
                     @child.guardian.map { guardian =>
-                        @line("pdf.guardianName", guardian.name.display)
+                        @line("pdf.guardianName", guardian.name.map(_.display).getOrElse(messages("pdf.notKnown")))
                         <fo:block margin-bottom="3mm" keep-together="always">
                             <fo:block font-weight="bold">@messages("pdf.guardianAddress")</fo:block>
-                            @guardian.address.lines.map { x =>
+                            @guardian.address.map(_.lines.map { x =>
                                 <fo:block width="8cm" wrap-option="wrap">@(x)</fo:block>
-                            }
+                            }).getOrElse(messages("pdf.notKnown"))
                         </fo:block>
                     }
 
@@ -118,12 +118,12 @@
                     }
 
                     @child.previousGuardian.map { previousGuardian =>
-                        @line("pdf.previousGuardianName", previousGuardian.name.display)
+                        @line("pdf.previousGuardianName", previousGuardian.name.map(_.display).getOrElse(messages("pdf.notKnown")))
                         <fo:block margin-bottom="3mm" keep-together="always">
                             <fo:block font-weight="bold">@messages("pdf.previousGuardianAddress")</fo:block>
-                            @previousGuardian.address.lines.map { x =>
+                            @previousGuardian.address.map(_.lines.map { x =>
                                 <fo:block width="8cm" wrap-option="wrap">@(x)</fo:block>
-                            }
+                            }).getOrElse(messages("pdf.notKnown"))
                         </fo:block>
                         @line("pdf.previousGuardianPhoneNumber", previousGuardian.phoneNumber.getOrElse(messages("pdf.notKnown")))
                     }

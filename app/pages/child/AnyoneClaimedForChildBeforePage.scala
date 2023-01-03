@@ -36,7 +36,7 @@ final case class AnyoneClaimedForChildBeforePage(index: Index) extends ChildQues
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
-      case true  => PreviousClaimantNamePage(index)
+      case true  => PreviousClaimantNameKnownPage(index)
       case false => ChildLivesWithApplicantPage(index)
     }.orRecover
 
@@ -47,7 +47,9 @@ final case class AnyoneClaimedForChildBeforePage(index: Index) extends ChildQues
 
       case false =>
         userAnswers
-          .remove(PreviousClaimantNamePage(index))
+          .remove(PreviousClaimantNameKnownPage(index))
+          .flatMap(_.remove(PreviousClaimantNamePage(index)))
+          .flatMap(_.remove(PreviousClaimantAddressKnownPage(index)))
           .flatMap(_.remove(PreviousClaimantAddressInUkPage(index)))
           .flatMap(_.remove(PreviousClaimantUkAddressPage(index)))
         .flatMap(_.remove(PreviousClaimantInternationalAddressPage(index)))

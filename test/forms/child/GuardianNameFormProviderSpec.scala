@@ -25,26 +25,6 @@ class GuardianNameFormProviderSpec extends StringFieldBehaviours {
   private val name = ChildName("first", None, "last")
   private val form = new GuardianNameFormProvider()(name)
 
-  ".title" - {
-
-    val fieldName = "title"
-    val lengthKey = "guardianName.error.title.length"
-    val maxLength = 100
-
-    behave like fieldThatBindsValidData(
-      form,
-      fieldName,
-      stringsWithMaxLength(maxLength)
-    )
-
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength, "first"))
-    )
-  }
-
   ".firstName" - {
 
     val fieldName = "firstName"

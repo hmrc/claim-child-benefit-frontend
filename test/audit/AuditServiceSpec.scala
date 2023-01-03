@@ -97,17 +97,17 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             relationshipToApplicant = models.ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = true,
             previousClaimant = Some(JourneyModel.PreviousClaimant(
-              name    = models.AdultName(title = Some("title"), "previous claimant first", Some("previous claimant middle"), "previous claimant last"),
-              address = models.UkAddress("previous claimant line 1", Some("previous claimant line 2"), "previous claimant town", Some("previous claimant county"), "previous claimant postcode")
+              name    = Some(models.AdultName(title = Some("title"), "previous claimant first", Some("previous claimant middle"), "previous claimant last")),
+              address = Some(models.UkAddress("previous claimant line 1", Some("previous claimant line 2"), "previous claimant town", Some("previous claimant county"), "previous claimant postcode"))
             ),
               ),
             guardian = Some(JourneyModel.Guardian(
-              name    = models.AdultName(title = Some("title"), "guardian first", Some("guardian middle"), "guardian last"),
-              address = models.UkAddress("guardian line 1", Some("guardian line 2"), "guardian town", Some("guardian county"), "guardian postcode")
+              name    = Some(models.AdultName(title = Some("title"), "guardian first", Some("guardian middle"), "guardian last")),
+              address = Some(models.UkAddress("guardian line 1", Some("guardian line 2"), "guardian town", Some("guardian county"), "guardian postcode"))
             )),
             previousGuardian = Some(JourneyModel.PreviousGuardian(
-              name = models.AdultName(title = Some("title"), "previous guardian first", Some("previous guardian middle"), "previous guardian last"),
-              address = models.UkAddress("previous guardian line 1", Some("previous guardian line 2"), "previous guardian town", Some("previous guardian county"), "previous guardian postcode"),
+              name        = Some(models.AdultName(title = Some("title"), "previous guardian first", Some("previous guardian middle"), "previous guardian last")),
+              address     = Some(models.UkAddress("previous guardian line 1", Some("previous guardian line 2"), "previous guardian town", Some("previous guardian county"), "previous guardian postcode")),
               phoneNumber = Some("previous guardian phone")
             )),
             dateChildStartedLivingWithApplicant = Some(LocalDate.now)
@@ -170,16 +170,16 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             relationshipToApplicant = "birthChild",
             adoptingThroughLocalAuthority = true,
             previousClaimant = Some(PreviousClaimant(
-              name    = AdultName(title = Some("title"), "previous claimant first", Some("previous claimant middle"), "previous claimant last"),
-              address = UkAddress("previous claimant line 1", Some("previous claimant line 2"), "previous claimant town", Some("previous claimant county"), "previous claimant postcode")
+              name    = Some(AdultName(title = Some("title"), "previous claimant first", Some("previous claimant middle"), "previous claimant last")),
+              address = Some(UkAddress("previous claimant line 1", Some("previous claimant line 2"), "previous claimant town", Some("previous claimant county"), "previous claimant postcode"))
             )),
             guardian = Some(Guardian(
-              name = AdultName(title = Some("title"), "guardian first", Some("guardian middle"), "guardian last"),
-              address = UkAddress("guardian line 1", Some("guardian line 2"), "guardian town", Some("guardian county"), "guardian postcode")
+              name    = Some(AdultName(title = Some("title"), "guardian first", Some("guardian middle"), "guardian last")),
+              address = Some(UkAddress("guardian line 1", Some("guardian line 2"), "guardian town", Some("guardian county"), "guardian postcode"))
             )),
             previousGuardian = Some(PreviousGuardian(
-              name = AdultName(title = Some("title"), "previous guardian first", Some("previous guardian middle"), "previous guardian last"),
-              address = UkAddress("previous guardian line 1", Some("previous guardian line 2"), "previous guardian town", Some("previous guardian county"), "previous guardian postcode"),
+              name        = Some(AdultName(title = Some("title"), "previous guardian first", Some("previous guardian middle"), "previous guardian last")),
+              address     = Some(UkAddress("previous guardian line 1", Some("previous guardian line 2"), "previous guardian town", Some("previous guardian county"), "previous guardian postcode")),
               phoneNumber = Some("previous guardian phone")
             )),
             dateChildStartedLivingWithApplicant = Some(LocalDate.now)

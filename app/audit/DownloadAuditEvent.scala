@@ -77,20 +77,20 @@ object DownloadAuditEvent {
           adoptingThroughLocalAuthority   = child.adoptingThroughLocalAuthority,
           previousClaimant                = child.previousClaimant.map { claimant =>
             PreviousClaimant(
-              name    = convertAdultName(claimant.name),
-              address = convertAddress(claimant.address)
+              name    = claimant.name.map(convertAdultName),
+              address = claimant.address.map(convertAddress)
             )
           },
           guardian = child.guardian.map { guardian =>
             Guardian(
-              name    = convertAdultName(guardian.name),
-              address = convertAddress(guardian.address)
+              name    = guardian.name.map(convertAdultName),
+              address = guardian.address.map(convertAddress)
             )
           },
           previousGuardian = child.previousGuardian.map { previousGuardian =>
             PreviousGuardian(
-              name        = convertAdultName(previousGuardian.name),
-              address     = convertAddress(previousGuardian.address),
+              name        = previousGuardian.name.map(convertAdultName),
+              address     = previousGuardian.address.map(convertAddress),
               phoneNumber = previousGuardian.phoneNumber
             )
           },
@@ -245,18 +245,18 @@ object DownloadAuditEvent {
     implicit lazy val writes: Writes[Relationship] = Json.writes
   }
 
-  private[audit] final case class PreviousClaimant(name: AdultName, address: Address)
+  private[audit] final case class PreviousClaimant(name: Option[AdultName], address: Option[Address])
 
   object PreviousClaimant {
     implicit lazy val writes: Writes[PreviousClaimant] = Json.writes
   }
 
-  private[audit] final case class Guardian(name: AdultName, address: Address)
+  private[audit] final case class Guardian(name: Option[AdultName], address: Option[Address])
   object Guardian {
     implicit lazy val writes: Writes[Guardian] = Json.writes
   }
 
-  private[audit] final case class PreviousGuardian(name: AdultName, address: Address, phoneNumber: Option[String])
+  private[audit] final case class PreviousGuardian(name: Option[AdultName], address: Option[Address], phoneNumber: Option[String])
   object PreviousGuardian {
     implicit lazy val writes: Writes[PreviousGuardian] = Json.writes
   }
