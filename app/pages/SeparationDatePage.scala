@@ -18,7 +18,6 @@ package pages
 
 import controllers.routes
 import models.UserAnswers
-import pages.income.ApplicantIncomePage
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -35,9 +34,4 @@ case object SeparationDatePage extends QuestionPage[LocalDate] {
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     AlwaysLivedInUkPage
-
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(ApplicantIncomePage)
-      .map(_ => waypoints.next.page)
-      .getOrElse(ApplicantIncomePage)
 }

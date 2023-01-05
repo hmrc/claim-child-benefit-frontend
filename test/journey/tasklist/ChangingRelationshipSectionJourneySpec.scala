@@ -18,13 +18,16 @@ package journey.tasklist
 
 import generators.ModelGenerators
 import journey.JourneyHelpers
-import models._
 import models.RelationshipStatus._
+import models.TaskListSectionChange.{PartnerDetailsRemoved, PartnerDetailsRequired, PaymentDetailsRemoved}
+import models._
 import org.scalacheck.Arbitrary.arbitrary
+import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
-import pages.partner._
 import pages._
+import pages.applicant.ApplicantIsHmfOrCivilServantPage
 import pages.income._
+import pages.partner._
 import pages.payments._
 import uk.gov.hmrc.domain.Nino
 
@@ -38,6 +41,13 @@ class ChangingRelationshipSectionJourneySpec extends AnyFreeSpec with JourneyHel
   private val nationality = "British"
   private val bankDetails = arbitrary[BankAccountDetails].sample.value
 
+  private val setAlwaysLivedInUk = journeyOf(submitAnswer(AlwaysLivedInUkPage, true))
+  private val setHmForces = journeyOf(
+    submitAnswer(AlwaysLivedInUkPage, false),
+    submitAnswer(ApplicantIsHmfOrCivilServantPage, true)
+  )
+  private def setAlwaysLivedInUkOrHmForces = Gen.oneOf(setAlwaysLivedInUk, setHmForces).sample.value
+
   private val setFullPartnerDetails: JourneyStep[Unit] = journeyOf(
     setUserAnswerTo(PartnerNamePage, adultName),
     setUserAnswerTo(PartnerNinoKnownPage, true),
@@ -49,11 +59,20 @@ class ChangingRelationshipSectionJourneySpec extends AnyFreeSpec with JourneyHel
     setUserAnswerTo(PartnerEldestChildDateOfBirthPage, LocalDate.now)
   )
 
-  private val setFullPaymentDetails: JourneyStep[Unit] = journeyOf(
+  private val setFullPaymentDetailsSingle: JourneyStep[Unit] = journeyOf(
     setUserAnswerTo(ApplicantIncomePage, Income.BetweenThresholds),
-    setUserAnswerTo(ApplicantOrPartnerIncomePage, Income.BetweenThresholds),
     setUserAnswerTo(WantToBePaidPage, true),
     setUserAnswerTo(ApplicantBenefitsPage, Benefits.qualifyingBenefits),
+    setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
+    setUserAnswerTo(WantToBePaidToExistingAccountPage, false),
+    setUserAnswerTo(ApplicantHasSuitableAccountPage, true),
+    setUserAnswerTo(BankAccountHolderPage, BankAccountHolder.Applicant),
+    setUserAnswerTo(BankAccountDetailsPage, bankDetails)
+  )
+
+  private val setFullPaymentDetailsPartner: JourneyStep[Unit] = journeyOf(
+    setUserAnswerTo(ApplicantOrPartnerIncomePage, Income.BetweenThresholds),
+    setUserAnswerTo(WantToBePaidPage, true),
     setUserAnswerTo(ApplicantOrPartnerBenefitsPage, Benefits.qualifyingBenefits),
     setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
     setUserAnswerTo(WantToBePaidToExistingAccountPage, false),
@@ -73,6 +92,17 @@ class ChangingRelationshipSectionJourneySpec extends AnyFreeSpec with JourneyHel
     answersMustNotContain(PartnerEldestChildDateOfBirthPage)
   )
 
+  private val partnerDetailsMustRemain: JourneyStep[Unit] = journeyOf(
+    answersMustContain(PartnerNamePage),
+    answersMustContain(PartnerNinoKnownPage),
+    answersMustContain(PartnerNinoPage),
+    answersMustContain(PartnerDateOfBirthPage),
+    answersMustContain(PartnerNationalityPage),
+    answersMustContain(PartnerClaimingChildBenefitPage),
+    answersMustContain(PartnerEldestChildNamePage),
+    answersMustContain(PartnerEldestChildDateOfBirthPage)
+  )
+
   private val paymentDetailsMustHaveBeenRemoved: JourneyStep[Unit] = journeyOf(
     answersMustNotContain(ApplicantIncomePage),
     answersMustNotContain(ApplicantOrPartnerIncomePage),
@@ -86,6 +116,29 @@ class ChangingRelationshipSectionJourneySpec extends AnyFreeSpec with JourneyHel
     answersMustNotContain(BankAccountDetailsPage)
   )
 
+  private val paymentDetailsMustRemainSingle: JourneyStep[Unit] = journeyOf(
+    answersMustContain(ApplicantIncomePage),
+    answersMustContain(WantToBePaidPage),
+    answersMustContain(ApplicantBenefitsPage),
+    answersMustContain(PaymentFrequencyPage),
+    answersMustContain(WantToBePaidToExistingAccountPage),
+    answersMustContain(ApplicantHasSuitableAccountPage),
+    answersMustContain(BankAccountHolderPage),
+    answersMustContain(BankAccountDetailsPage)
+  )
+
+  private val paymentDetailsMustRemainPartner: JourneyStep[Unit] = journeyOf(
+    answersMustContain(ApplicantOrPartnerIncomePage),
+    answersMustContain(WantToBePaidPage),
+    answersMustContain(ApplicantOrPartnerBenefitsPage),
+    answersMustContain(PaymentFrequencyPage),
+    answersMustContain(WantToBePaidToExistingAccountPage),
+    answersMustContain(ApplicantHasSuitableAccountPage),
+    answersMustContain(BankAccountHolderPage),
+    answersMustContain(BankAccountDetailsPage),
+    answersMustNotContain(PartnerIsHmfOrCivilServantPage)
+  )
+
   "when the user originally said they were married" - {
 
     "changing to say they are cohabiting must collect the cohabitation date then go to Check Relationship" in {
@@ -93,6 +146,8 @@ class ChangingRelationshipSectionJourneySpec extends AnyFreeSpec with JourneyHel
       val initialise = journeyOf(
         submitAnswer(RelationshipStatusPage, Married),
         submitAnswer(AlwaysLivedInUkPage, true),
+        setFullPaymentDetailsPartner,
+        setFullPartnerDetails,
         pageMustBe(CheckRelationshipDetailsPage)
       )
 
@@ -102,23 +157,49 @@ class ChangingRelationshipSectionJourneySpec extends AnyFreeSpec with JourneyHel
           goToChangeAnswer(RelationshipStatusPage),
           submitAnswer(RelationshipStatusPage, Cohabiting),
           submitAnswer(CohabitationDatePage, LocalDate.now),
-          pageMustBe(CheckRelationshipDetailsPage)
+          pageMustBe(CheckRelationshipDetailsPage),
+          partnerDetailsMustRemain,
+          paymentDetailsMustRemainPartner,
+          answerMustEqual(TaskListSectionsChangedPage, Set.empty[TaskListSectionChange])
         )
     }
 
     "changing to say they are separated" - {
 
-      "when the user has always lived in the UK" - {
+      "when the user said they had not always lived in the UK and wasn't HM Forces or a civil servant abroad, but there partner was" - {
 
-        "and had already given some partner and payment details" - {
+        "must be told they need to use the Print and Post form" in {
 
-          "must remove partner and payment details, tell the user their task list sections have changed, collect the separation date then go to Check Relationship" in {
+          val initialise = journeyOf(
+            submitAnswer(RelationshipStatusPage, Married),
+            submitAnswer(AlwaysLivedInUkPage, false),
+            submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
+            submitAnswer(PartnerIsHmfOrCivilServantPage, true),
+            pageMustBe(CheckRelationshipDetailsPage)
+          )
+
+          startingFrom(RelationshipStatusPage)
+            .run(
+              initialise,
+              goToChangeAnswer(RelationshipStatusPage),
+              submitAnswer(RelationshipStatusPage, Separated),
+              pageMustBe(UsePrintAndPostFormPage),
+              answersMustNotContain(PartnerIsHmfOrCivilServantPage)
+            )
+        }
+      }
+
+      "when the user has always lived in the UK, or is HM Forces or a civil servant abroad" - {
+
+        "when the user had already given some partner and payment details" - {
+
+          "must remove partner and payment details, tell the user those task list sections have changed, collect the separation date then go to Check Relationship" in {
 
             val initialise = journeyOf(
               submitAnswer(RelationshipStatusPage, Married),
-              submitAnswer(AlwaysLivedInUkPage, true),
+              setAlwaysLivedInUkOrHmForces,
               setFullPartnerDetails,
-              setFullPaymentDetails,
+              setFullPaymentDetailsPartner,
               pageMustBe(CheckRelationshipDetailsPage)
             )
 
@@ -132,55 +213,794 @@ class ChangingRelationshipSectionJourneySpec extends AnyFreeSpec with JourneyHel
                 submitAnswer(SeparationDatePage, LocalDate.now),
                 pageMustBe(CheckRelationshipDetailsPage),
                 partnerDetailsMustHaveBeenRemoved,
-                paymentDetailsMustHaveBeenRemoved
+                paymentDetailsMustHaveBeenRemoved,
+                answerMustEqual(TaskListSectionsChangedPage, Set[TaskListSectionChange](PartnerDetailsRemoved, PaymentDetailsRemoved))
               )
           }
         }
 
         "and had already given some partner details but not payment details" - {
 
-          "must remove partner details, tell the user their task list sections have changed collect the separation date then go to Check Relationship" in {
+          "must remove partner details, tell the user those task list sections have changed, collect the separation date then go to Check Relationship" in {
 
+            val initialise = journeyOf(
+              submitAnswer(RelationshipStatusPage, Married),
+              setAlwaysLivedInUkOrHmForces,
+              setFullPartnerDetails,
+              pageMustBe(CheckRelationshipDetailsPage)
+            )
+
+            startingFrom(RelationshipStatusPage)
+              .run(
+                initialise,
+                goToChangeAnswer(RelationshipStatusPage),
+                submitAnswer(RelationshipStatusPage, Separated),
+                pageMustBe(TaskListSectionsChangedPage),
+                next,
+                submitAnswer(SeparationDatePage, LocalDate.now),
+                pageMustBe(CheckRelationshipDetailsPage),
+                partnerDetailsMustHaveBeenRemoved,
+                answerMustEqual(TaskListSectionsChangedPage, Set[TaskListSectionChange](PartnerDetailsRemoved))
+              )
           }
         }
 
         "and had already given some payment details but not partner details" - {
 
-          "must remove payment details, tell the user their task list sections have changed, collect the separation date then go to Check Relationship" in {
+          "must remove payment details, tell the user those task list sections have changed, collect the separation date then go to Check Relationship" in {
 
+            val initialise = journeyOf(
+              submitAnswer(RelationshipStatusPage, Married),
+              setAlwaysLivedInUkOrHmForces,
+              setFullPaymentDetailsPartner,
+              pageMustBe(CheckRelationshipDetailsPage)
+            )
+
+            startingFrom(RelationshipStatusPage)
+              .run(
+                initialise,
+                goToChangeAnswer(RelationshipStatusPage),
+                submitAnswer(RelationshipStatusPage, Separated),
+                pageMustBe(TaskListSectionsChangedPage),
+                next,
+                submitAnswer(SeparationDatePage, LocalDate.now),
+                pageMustBe(CheckRelationshipDetailsPage),
+                paymentDetailsMustHaveBeenRemoved,
+                answerMustEqual(TaskListSectionsChangedPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+              )
+          }
+        }
+
+        "and had not given any partner or payment details" - {
+
+          "must collect the separation date then go to Check Relationship" in {
+
+            val initialise = journeyOf(
+              submitAnswer(RelationshipStatusPage, Married),
+              setAlwaysLivedInUkOrHmForces,
+              pageMustBe(CheckRelationshipDetailsPage)
+            )
+
+            startingFrom(RelationshipStatusPage)
+              .run(
+                initialise,
+                goToChangeAnswer(RelationshipStatusPage),
+                submitAnswer(RelationshipStatusPage, Separated),
+                submitAnswer(SeparationDatePage, LocalDate.now),
+                pageMustBe(CheckRelationshipDetailsPage),
+                answerMustEqual(TaskListSectionsChangedPage, Set.empty[TaskListSectionChange])
+              )
           }
         }
       }
+    }
 
-      "when the user is HM Forces or a civil servant abroad" - {
+    "changing to say they are single, divorced or widowed" - {
+
+      def relationship: RelationshipStatus = Gen.oneOf(Single, Divorced, Widowed).sample.value
+
+      "when the user said they had not always lived in the UK and wasn't HM Forces or a civil servant abroad, but there partner was" - {
+
+        "must be told they need to use the Print and Post form" in {
+
+          val initialise = journeyOf(
+            submitAnswer(RelationshipStatusPage, Married),
+            submitAnswer(AlwaysLivedInUkPage, false),
+            submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
+            submitAnswer(PartnerIsHmfOrCivilServantPage, true),
+            pageMustBe(CheckRelationshipDetailsPage)
+          )
+
+          startingFrom(RelationshipStatusPage)
+            .run(
+              initialise,
+              goToChangeAnswer(RelationshipStatusPage),
+              submitAnswer(RelationshipStatusPage, relationship),
+              pageMustBe(UsePrintAndPostFormPage),
+              answersMustNotContain(PartnerIsHmfOrCivilServantPage)
+            )
+        }
+      }
+
+      "when the user has always lived in the UK, or is HM Forces or a civil servant abroad" - {
 
         "and had already given some partner and payment details" - {
 
-          "must remove partner and payment details, tell the user their task list sections have changed, collect the separation date, then go to Check Relationship" in {
+          "must remove partner and payment details, tell the user those task list sections have changed, then go to Check Relationship" in {
 
+            val initialise = journeyOf(
+              submitAnswer(RelationshipStatusPage, Married),
+              setAlwaysLivedInUkOrHmForces,
+              setFullPartnerDetails,
+              setFullPaymentDetailsPartner,
+              pageMustBe(CheckRelationshipDetailsPage)
+            )
+
+            startingFrom(RelationshipStatusPage)
+              .run(
+                initialise,
+                goToChangeAnswer(RelationshipStatusPage),
+                submitAnswer(RelationshipStatusPage, relationship),
+                pageMustBe(TaskListSectionsChangedPage),
+                next,
+                pageMustBe(CheckRelationshipDetailsPage),
+                partnerDetailsMustHaveBeenRemoved,
+                paymentDetailsMustHaveBeenRemoved,
+                answerMustEqual(TaskListSectionsChangedPage, Set[TaskListSectionChange](PartnerDetailsRemoved, PaymentDetailsRemoved))
+              )
           }
         }
 
         "and had already given some partner details but not payment details" - {
 
-          "must remove partner details, tell the user their task list sections have changed, collect the separation date then go to Check Relationship" in {
+          "must remove partner details, tell the user those task list sections have changed, then go to Check Relationship" in {
 
+            val initialise = journeyOf(
+              submitAnswer(RelationshipStatusPage, Married),
+              setAlwaysLivedInUkOrHmForces,
+              setFullPartnerDetails,
+              pageMustBe(CheckRelationshipDetailsPage)
+            )
+
+            startingFrom(RelationshipStatusPage)
+              .run(
+                initialise,
+                goToChangeAnswer(RelationshipStatusPage),
+                submitAnswer(RelationshipStatusPage, relationship),
+                pageMustBe(TaskListSectionsChangedPage),
+                next,
+                pageMustBe(CheckRelationshipDetailsPage),
+                partnerDetailsMustHaveBeenRemoved,
+                answerMustEqual(TaskListSectionsChangedPage, Set[TaskListSectionChange](PartnerDetailsRemoved))
+              )
           }
         }
 
         "and had already given some payment details but not partner details" - {
 
-          "must  remove payment details, tell the user their task list sections have changed, collect the separation date then go to Check Relationship" in {
+          "must remove payment details, tell the user those task list sections have changed, then go to Check Relationship" in {
 
+            val initialise = journeyOf(
+              submitAnswer(RelationshipStatusPage, Married),
+              setAlwaysLivedInUkOrHmForces,
+              setFullPaymentDetailsPartner,
+              pageMustBe(CheckRelationshipDetailsPage)
+            )
+
+            startingFrom(RelationshipStatusPage)
+              .run(
+                initialise,
+                goToChangeAnswer(RelationshipStatusPage),
+                submitAnswer(RelationshipStatusPage, relationship),
+                next,
+                pageMustBe(CheckRelationshipDetailsPage),
+                paymentDetailsMustHaveBeenRemoved,
+                answerMustEqual(TaskListSectionsChangedPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+              )
+          }
+        }
+
+        "and has not given any partner or payment details" - {
+
+          "must go to Check Relationship" in {
+
+            val initialise = journeyOf(
+              submitAnswer(RelationshipStatusPage, Married),
+              setAlwaysLivedInUkOrHmForces,
+              pageMustBe(CheckRelationshipDetailsPage)
+            )
+
+            startingFrom(RelationshipStatusPage)
+              .run(
+                initialise,
+                goToChangeAnswer(RelationshipStatusPage),
+                submitAnswer(RelationshipStatusPage, relationship),
+                pageMustBe(CheckRelationshipDetailsPage),
+                answerMustEqual(TaskListSectionsChangedPage, Set.empty[TaskListSectionChange])
+              )
           }
         }
       }
+    }
+  }
 
-      "when the user has not always lived in the UK and is not HM Forces or a civil servant abroad, but their partner was" - {
+  "when the user originally said they were cohabiting" - {
 
-        "must be told to use the Print and Post form" in {
+    "changing to say they are married must remove the cohabitation date then go to Check Relationship" in {
 
+      val initialise = journeyOf(
+        submitAnswer(RelationshipStatusPage, Cohabiting),
+        submitAnswer(CohabitationDatePage, LocalDate.now),
+        submitAnswer(AlwaysLivedInUkPage, true),
+        pageMustBe(CheckRelationshipDetailsPage),
+        setFullPartnerDetails,
+        setFullPaymentDetailsPartner
+      )
+
+      startingFrom(RelationshipStatusPage)
+        .run(
+          initialise,
+          goToChangeAnswer(RelationshipStatusPage),
+          submitAnswer(RelationshipStatusPage, Married),
+          pageMustBe(CheckRelationshipDetailsPage),
+          answersMustNotContain(CohabitationDatePage),
+          partnerDetailsMustRemain,
+          paymentDetailsMustRemainPartner,
+          answerMustEqual(TaskListSectionsChangedPage, Set.empty[TaskListSectionChange])
+        )
+    }
+
+    "changing to say they are separated" - {
+
+      "when the user said they had not always lived in the UK and wasn't HM Forces or a civil servant abroad, but there partner was" - {
+
+        "must be told they need to use the Print and Post form" in {
+
+          val initialise = journeyOf(
+            submitAnswer(RelationshipStatusPage, Cohabiting),
+            submitAnswer(CohabitationDatePage, LocalDate.now),
+            submitAnswer(AlwaysLivedInUkPage, false),
+            submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
+            submitAnswer(PartnerIsHmfOrCivilServantPage, true),
+            pageMustBe(CheckRelationshipDetailsPage)
+          )
+
+          startingFrom(RelationshipStatusPage)
+            .run(
+              initialise,
+              goToChangeAnswer(RelationshipStatusPage),
+              submitAnswer(RelationshipStatusPage, Separated),
+              pageMustBe(UsePrintAndPostFormPage),
+              answersMustNotContain(PartnerIsHmfOrCivilServantPage)
+            )
         }
+      }
+
+      "when the user has always lived in the UK, or is HM Forces or a civil servant abroad" - {
+
+        "and had already given some partner and payment details" - {
+
+          "must remove partner and payment details, tell the user those task list sections have changed, collect the separation date then go to Check Relationship" in {
+
+            val initialise = journeyOf(
+              submitAnswer(RelationshipStatusPage, Cohabiting),
+              submitAnswer(CohabitationDatePage, LocalDate.now),
+              setAlwaysLivedInUkOrHmForces,
+              setFullPartnerDetails,
+              setFullPaymentDetailsPartner,
+              pageMustBe(CheckRelationshipDetailsPage)
+            )
+
+            startingFrom(RelationshipStatusPage)
+              .run(
+                initialise,
+                goToChangeAnswer(RelationshipStatusPage),
+                submitAnswer(RelationshipStatusPage, Separated),
+                pageMustBe(TaskListSectionsChangedPage),
+                next,
+                submitAnswer(SeparationDatePage, LocalDate.now),
+                pageMustBe(CheckRelationshipDetailsPage),
+                partnerDetailsMustHaveBeenRemoved,
+                paymentDetailsMustHaveBeenRemoved,
+                answersMustNotContain(CohabitationDatePage),
+                answerMustEqual(TaskListSectionsChangedPage, Set[TaskListSectionChange](PartnerDetailsRemoved, PaymentDetailsRemoved))
+              )
+          }
+        }
+
+        "and had already given some partner details but not payment details" - {
+
+          "must remove partner details, tell the user those task list sections have changed, collect the separation date then go to Check Relationship" in {
+
+            val initialise = journeyOf(
+              submitAnswer(RelationshipStatusPage, Cohabiting),
+              submitAnswer(CohabitationDatePage, LocalDate.now),
+              setAlwaysLivedInUkOrHmForces,
+              setFullPartnerDetails,
+              pageMustBe(CheckRelationshipDetailsPage)
+            )
+
+            startingFrom(RelationshipStatusPage)
+              .run(
+                initialise,
+                goToChangeAnswer(RelationshipStatusPage),
+                submitAnswer(RelationshipStatusPage, Separated),
+                pageMustBe(TaskListSectionsChangedPage),
+                next,
+                submitAnswer(SeparationDatePage, LocalDate.now),
+                pageMustBe(CheckRelationshipDetailsPage),
+                partnerDetailsMustHaveBeenRemoved,
+                answersMustNotContain(CohabitationDatePage),
+                answerMustEqual(TaskListSectionsChangedPage, Set[TaskListSectionChange](PartnerDetailsRemoved))
+              )
+          }
+        }
+
+        "and had already given some payment details but not partner details" - {
+
+          "must remove payment details, tell the user those task list sections have changed, collect the separation date then go to Check Relationship" in {
+
+            val initialise = journeyOf(
+              submitAnswer(RelationshipStatusPage, Cohabiting),
+              submitAnswer(CohabitationDatePage, LocalDate.now),
+              setAlwaysLivedInUkOrHmForces,
+              setFullPaymentDetailsPartner,
+              pageMustBe(CheckRelationshipDetailsPage)
+            )
+
+            startingFrom(RelationshipStatusPage)
+              .run(
+                initialise,
+                goToChangeAnswer(RelationshipStatusPage),
+                submitAnswer(RelationshipStatusPage, Separated),
+                pageMustBe(TaskListSectionsChangedPage),
+                next,
+                submitAnswer(SeparationDatePage, LocalDate.now),
+                pageMustBe(CheckRelationshipDetailsPage),
+                paymentDetailsMustHaveBeenRemoved,
+                answersMustNotContain(CohabitationDatePage),
+                answerMustEqual(TaskListSectionsChangedPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+              )
+          }
+        }
+
+        "and had not given any partner or payment details" - {
+
+          "must collect the separation date then go to Check Relationship" in {
+
+            val initialise = journeyOf(
+              submitAnswer(RelationshipStatusPage, Cohabiting),
+              submitAnswer(CohabitationDatePage, LocalDate.now),
+              setAlwaysLivedInUkOrHmForces,
+              pageMustBe(CheckRelationshipDetailsPage)
+            )
+
+            startingFrom(RelationshipStatusPage)
+              .run(
+                initialise,
+                goToChangeAnswer(RelationshipStatusPage),
+                submitAnswer(RelationshipStatusPage, Separated),
+                submitAnswer(SeparationDatePage, LocalDate.now),
+                pageMustBe(CheckRelationshipDetailsPage),
+                answersMustNotContain(CohabitationDatePage),
+                answerMustEqual(TaskListSectionsChangedPage, Set.empty[TaskListSectionChange])
+              )
+          }
+        }
+      }
+    }
+
+    "changing to say they are single, divorced or widowed" - {
+
+      def relationship: RelationshipStatus = Gen.oneOf(Single, Divorced, Widowed).sample.value
+
+      "when the user said they had not always lived in the UK and wasn't HM Forces or a civil servant abroad, but there partner was" - {
+
+        "must be told they need to use the Print and Post form" in {
+
+          val initialise = journeyOf(
+            submitAnswer(RelationshipStatusPage, Cohabiting),
+            submitAnswer(CohabitationDatePage, LocalDate.now),
+            submitAnswer(AlwaysLivedInUkPage, false),
+            submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
+            submitAnswer(PartnerIsHmfOrCivilServantPage, true),
+            pageMustBe(CheckRelationshipDetailsPage)
+          )
+
+          startingFrom(RelationshipStatusPage)
+            .run(
+              initialise,
+              goToChangeAnswer(RelationshipStatusPage),
+              submitAnswer(RelationshipStatusPage, relationship),
+              pageMustBe(UsePrintAndPostFormPage),
+              answersMustNotContain(PartnerIsHmfOrCivilServantPage)
+            )
+        }
+      }
+
+      "when the user has always lived in the UK, or is HM Forces or a civil servant abroad" - {
+
+        "and had already given some partner and payment details" - {
+
+          "must remove cohabitation date, partner and payment details, tell the user those task list sections have changed, then go to Check Relationship" in {
+
+            val initialise = journeyOf(
+              submitAnswer(RelationshipStatusPage, Cohabiting),
+              submitAnswer(CohabitationDatePage, LocalDate.now),
+              setAlwaysLivedInUkOrHmForces,
+              setFullPartnerDetails,
+              setFullPaymentDetailsPartner,
+              pageMustBe(CheckRelationshipDetailsPage)
+            )
+
+            startingFrom(RelationshipStatusPage)
+              .run(
+                initialise,
+                goToChangeAnswer(RelationshipStatusPage),
+                submitAnswer(RelationshipStatusPage, relationship),
+                pageMustBe(TaskListSectionsChangedPage),
+                next,
+                pageMustBe(CheckRelationshipDetailsPage),
+                partnerDetailsMustHaveBeenRemoved,
+                paymentDetailsMustHaveBeenRemoved,
+                answersMustNotContain(CohabitationDatePage),
+                answerMustEqual(TaskListSectionsChangedPage, Set[TaskListSectionChange](PartnerDetailsRemoved, PaymentDetailsRemoved))
+              )
+          }
+        }
+
+        "and had already given some partner details but not payment details" - {
+
+          "must remove partner details, tell the user those task list sections have changed, then go to Check Relationship" in {
+
+            val initialise = journeyOf(
+              submitAnswer(RelationshipStatusPage, Cohabiting),
+              submitAnswer(CohabitationDatePage, LocalDate.now),
+              setAlwaysLivedInUkOrHmForces,
+              setFullPartnerDetails,
+              pageMustBe(CheckRelationshipDetailsPage)
+            )
+
+            startingFrom(RelationshipStatusPage)
+              .run(
+                initialise,
+                goToChangeAnswer(RelationshipStatusPage),
+                submitAnswer(RelationshipStatusPage, relationship),
+                pageMustBe(TaskListSectionsChangedPage),
+                next,
+                pageMustBe(CheckRelationshipDetailsPage),
+                partnerDetailsMustHaveBeenRemoved,
+                answersMustNotContain(CohabitationDatePage),
+                answerMustEqual(TaskListSectionsChangedPage, Set[TaskListSectionChange](PartnerDetailsRemoved))
+              )
+          }
+        }
+
+        "and had already given some payment details but not partner details" - {
+
+          "must remove payment details, tell the user those task list sections have changed, then go to Check Relationship" in {
+
+            val initialise = journeyOf(
+              submitAnswer(RelationshipStatusPage, Cohabiting),
+              submitAnswer(CohabitationDatePage, LocalDate.now),
+              setAlwaysLivedInUkOrHmForces,
+              setFullPaymentDetailsPartner,
+              pageMustBe(CheckRelationshipDetailsPage)
+            )
+
+            startingFrom(RelationshipStatusPage)
+              .run(
+                initialise,
+                goToChangeAnswer(RelationshipStatusPage),
+                submitAnswer(RelationshipStatusPage, relationship),
+                next,
+                pageMustBe(CheckRelationshipDetailsPage),
+                paymentDetailsMustHaveBeenRemoved,
+                answersMustNotContain(CohabitationDatePage),
+                answerMustEqual(TaskListSectionsChangedPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+              )
+          }
+        }
+
+        "and had not given any partner or payment details" - {
+
+          "must remove cohabitation date then go to Check Relationship" in {
+
+            val initialise = journeyOf(
+              submitAnswer(RelationshipStatusPage, Cohabiting),
+              submitAnswer(CohabitationDatePage, LocalDate.now),
+              setAlwaysLivedInUkOrHmForces,
+              pageMustBe(CheckRelationshipDetailsPage)
+            )
+
+            startingFrom(RelationshipStatusPage)
+              .run(
+                initialise,
+                goToChangeAnswer(RelationshipStatusPage),
+                submitAnswer(RelationshipStatusPage, relationship),
+                pageMustBe(CheckRelationshipDetailsPage),
+                answersMustNotContain(CohabitationDatePage),
+                answerMustEqual(TaskListSectionsChangedPage, Set.empty[TaskListSectionChange])
+              )
+          }
+        }
+      }
+    }
+  }
+
+  "when the user originally said they were separated" - {
+
+    "changing to say they are married" - {
+
+      "when the user had already given payment details" - {
+
+        "must remove separation date and payment details, tell the user partner details are needed and payment details removed, then go to Check Relationship" in {
+
+          val initialise = journeyOf(
+            submitAnswer(RelationshipStatusPage, Separated),
+            submitAnswer(SeparationDatePage, LocalDate.now),
+            submitAnswer(AlwaysLivedInUkPage, true),
+            setFullPaymentDetailsSingle,
+            pageMustBe(CheckRelationshipDetailsPage)
+          )
+
+          startingFrom(RelationshipStatusPage)
+            .run(
+              initialise,
+              goToChangeAnswer(RelationshipStatusPage),
+              submitAnswer(RelationshipStatusPage, Married),
+              pageMustBe(TaskListSectionsChangedPage),
+              next,
+              pageMustBe(CheckRelationshipDetailsPage),
+              paymentDetailsMustHaveBeenRemoved,
+              answersMustNotContain(SeparationDatePage),
+              answerMustEqual(TaskListSectionsChangedPage, Set[TaskListSectionChange](PartnerDetailsRequired, PaymentDetailsRemoved))
+            )
+        }
+      }
+
+      "when the user had not already given payment details" - {
+
+        "must remove separation date, tell the user partner details are needed, then go to Check Relationship" in {
+
+          val initialise = journeyOf(
+            submitAnswer(RelationshipStatusPage, Separated),
+            submitAnswer(SeparationDatePage, LocalDate.now),
+            submitAnswer(AlwaysLivedInUkPage, true),
+            pageMustBe(CheckRelationshipDetailsPage)
+          )
+
+          startingFrom(RelationshipStatusPage)
+            .run(
+              initialise,
+              goToChangeAnswer(RelationshipStatusPage),
+              submitAnswer(RelationshipStatusPage, Married),
+              pageMustBe(TaskListSectionsChangedPage),
+              next,
+              pageMustBe(CheckRelationshipDetailsPage),
+              answerMustEqual(TaskListSectionsChangedPage, Set[TaskListSectionChange](PartnerDetailsRequired)),
+              answersMustNotContain(SeparationDatePage)
+            )
+        }
+      }
+    }
+
+    "changing to say they are cohabiting" - {
+
+      "when the user had already given payment details" - {
+
+        "must remove separation date and payment details, tell the user partner details are needed and payment details removed, collect cohabitation date, then go to Check Relationship" in {
+
+          val initialise = journeyOf(
+            submitAnswer(RelationshipStatusPage, Separated),
+            submitAnswer(SeparationDatePage, LocalDate.now),
+            submitAnswer(AlwaysLivedInUkPage, true),
+            setFullPaymentDetailsSingle,
+            pageMustBe(CheckRelationshipDetailsPage)
+          )
+
+          startingFrom(RelationshipStatusPage)
+            .run(
+              initialise,
+              goToChangeAnswer(RelationshipStatusPage),
+              submitAnswer(RelationshipStatusPage, Cohabiting),
+              pageMustBe(TaskListSectionsChangedPage),
+              next,
+              submitAnswer(CohabitationDatePage, LocalDate.now),
+              pageMustBe(CheckRelationshipDetailsPage),
+              paymentDetailsMustHaveBeenRemoved,
+              answersMustNotContain(SeparationDatePage),
+              answerMustEqual(TaskListSectionsChangedPage, Set[TaskListSectionChange](PartnerDetailsRequired, PaymentDetailsRemoved))
+            )
+        }
+      }
+
+      "when the user had not already given payment details" - {
+
+        "must remove separation date, tell the user partner details are needed, collect cohabitation date, then go to Check Relationship" in {
+
+          val initialise = journeyOf(
+            submitAnswer(RelationshipStatusPage, Separated),
+            submitAnswer(SeparationDatePage, LocalDate.now),
+            submitAnswer(AlwaysLivedInUkPage, true),
+            pageMustBe(CheckRelationshipDetailsPage)
+          )
+
+          startingFrom(RelationshipStatusPage)
+            .run(
+              initialise,
+              goToChangeAnswer(RelationshipStatusPage),
+              submitAnswer(RelationshipStatusPage, Cohabiting),
+              pageMustBe(TaskListSectionsChangedPage),
+              next,
+              submitAnswer(CohabitationDatePage, LocalDate.now),
+              pageMustBe(CheckRelationshipDetailsPage),
+              answersMustNotContain(SeparationDatePage),
+              answerMustEqual(TaskListSectionsChangedPage, Set[TaskListSectionChange](PartnerDetailsRequired))
+            )
+        }
+      }
+    }
+
+    "changing to say they are single, divorced or widowed" - {
+
+      def relationship: RelationshipStatus = Gen.oneOf(Single, Divorced, Widowed).sample.value
+
+      "must remove separation date then go to Check Relationship" in {
+
+        val initialise = journeyOf(
+          submitAnswer(RelationshipStatusPage, Separated),
+          submitAnswer(SeparationDatePage, LocalDate.now),
+          submitAnswer(AlwaysLivedInUkPage, true),
+          setFullPaymentDetailsSingle,
+          pageMustBe(CheckRelationshipDetailsPage)
+        )
+
+        startingFrom(RelationshipStatusPage)
+          .run(
+            initialise,
+            goToChangeAnswer(RelationshipStatusPage),
+            submitAnswer(RelationshipStatusPage, relationship),
+            pageMustBe(CheckRelationshipDetailsPage),
+            paymentDetailsMustRemainSingle,
+            answerMustEqual(TaskListSectionsChangedPage, Set.empty[TaskListSectionChange]),
+            answersMustNotContain(SeparationDatePage)
+          )
+      }
+    }
+  }
+
+  "when the user originally said they were single, divorced or widowed" - {
+
+    def relationship = Gen.oneOf(Single, Divorced, Widowed).sample.value
+
+    "changing to say they are married" - {
+
+      "when the user had already given payment details" - {
+
+        "must remove payment details, tell the user partner details are needed and payment details removed, then go to Check Relationship" in {
+
+          val initialise = journeyOf(
+            submitAnswer(RelationshipStatusPage, relationship),
+            submitAnswer(AlwaysLivedInUkPage, true),
+            setFullPaymentDetailsSingle,
+            pageMustBe(CheckRelationshipDetailsPage)
+          )
+
+          startingFrom(RelationshipStatusPage)
+            .run(
+              initialise,
+              goToChangeAnswer(RelationshipStatusPage),
+              submitAnswer(RelationshipStatusPage, Married),
+              pageMustBe(TaskListSectionsChangedPage),
+              next,
+              pageMustBe(CheckRelationshipDetailsPage),
+              paymentDetailsMustHaveBeenRemoved,
+              answerMustEqual(TaskListSectionsChangedPage, Set[TaskListSectionChange](PartnerDetailsRequired, PaymentDetailsRemoved))
+            )
+        }
+      }
+
+      "when the user had not already given payment details" - {
+
+        "must tell the user partner details are needed, then go to Check Relationship" in {
+
+          val initialise = journeyOf(
+            submitAnswer(RelationshipStatusPage, relationship),
+            submitAnswer(AlwaysLivedInUkPage, true),
+            pageMustBe(CheckRelationshipDetailsPage)
+          )
+
+          startingFrom(RelationshipStatusPage)
+            .run(
+              initialise,
+              goToChangeAnswer(RelationshipStatusPage),
+              submitAnswer(RelationshipStatusPage, Married),
+              pageMustBe(TaskListSectionsChangedPage),
+              next,
+              pageMustBe(CheckRelationshipDetailsPage),
+              answerMustEqual(TaskListSectionsChangedPage, Set[TaskListSectionChange](PartnerDetailsRequired))
+            )
+        }
+      }
+    }
+
+    "changing to say they are cohabiting" - {
+
+      "when the user had already given payment details" - {
+
+        "must remove payment details, tell the user partner details are needed and payment details removed, collect cohabitation date, then go to Check Relationship" in {
+
+          val initialise = journeyOf(
+            submitAnswer(RelationshipStatusPage, relationship),
+            submitAnswer(AlwaysLivedInUkPage, true),
+            setFullPaymentDetailsSingle,
+            pageMustBe(CheckRelationshipDetailsPage)
+          )
+
+          startingFrom(RelationshipStatusPage)
+            .run(
+              initialise,
+              goToChangeAnswer(RelationshipStatusPage),
+              submitAnswer(RelationshipStatusPage, Cohabiting),
+              pageMustBe(TaskListSectionsChangedPage),
+              next,
+              submitAnswer(CohabitationDatePage, LocalDate.now),
+              pageMustBe(CheckRelationshipDetailsPage),
+              paymentDetailsMustHaveBeenRemoved,
+              answerMustEqual(TaskListSectionsChangedPage, Set[TaskListSectionChange](PartnerDetailsRequired, PaymentDetailsRemoved))
+            )
+        }
+      }
+
+      "when the user had not already given payment details" - {
+
+        "must tell the user partner details are needed, collect cohabitation date, then go to Check Relationship" in {
+
+          val initialise = journeyOf(
+            submitAnswer(RelationshipStatusPage, relationship),
+            submitAnswer(AlwaysLivedInUkPage, true),
+            pageMustBe(CheckRelationshipDetailsPage)
+          )
+
+          startingFrom(RelationshipStatusPage)
+            .run(
+              initialise,
+              goToChangeAnswer(RelationshipStatusPage),
+              submitAnswer(RelationshipStatusPage, Cohabiting),
+              pageMustBe(TaskListSectionsChangedPage),
+              next,
+              submitAnswer(CohabitationDatePage, LocalDate.now),
+              pageMustBe(CheckRelationshipDetailsPage),
+              answerMustEqual(TaskListSectionsChangedPage, Set[TaskListSectionChange](PartnerDetailsRequired))
+            )
+        }
+      }
+    }
+
+    "changing to say they are separated" - {
+
+      def relationship: RelationshipStatus = Gen.oneOf(Single, Divorced, Widowed).sample.value
+
+      "must collect separation date then go to Check Relationship" in {
+
+        val initialise = journeyOf(
+          submitAnswer(RelationshipStatusPage, relationship),
+          submitAnswer(AlwaysLivedInUkPage, true),
+          setFullPaymentDetailsSingle,
+          pageMustBe(CheckRelationshipDetailsPage)
+        )
+
+        startingFrom(RelationshipStatusPage)
+          .run(
+            initialise,
+            goToChangeAnswer(RelationshipStatusPage),
+            submitAnswer(RelationshipStatusPage, Separated),
+            submitAnswer(SeparationDatePage, LocalDate.now),
+            pageMustBe(CheckRelationshipDetailsPage),
+            paymentDetailsMustRemainSingle,
+            answerMustEqual(TaskListSectionsChangedPage, Set.empty[TaskListSectionChange])
+          )
       }
     }
   }

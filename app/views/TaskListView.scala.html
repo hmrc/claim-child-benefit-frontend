@@ -43,7 +43,7 @@
                       @if(section.call.isDefined) {
                           <a href="@section.call.get.url" class="govuk-link">@messages(section.name)</a>
                       } else {
-                          <p class="govuk-body">@messages(section.name)</p>
+                          @messages(section.name)
                       }
                   </span>
                   <span class="hmrc-status-tag">

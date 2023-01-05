@@ -17,14 +17,34 @@
 package pages
 
 import controllers.routes
-import models.UserAnswers
+import models.RelationshipStatus.{Cohabiting, Separated}
+import models.{TaskListSectionChange, UserAnswers}
+import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object TaskListSectionsChangedPage extends Page {
+case object TaskListSectionsChangedPage extends QuestionPage[Set[TaskListSectionChange]] {
+
+  override def path: JsPath = JsPath \ "taskListSectionsChanged"
 
   override def route(waypoints: Waypoints): Call =
     routes.TaskListSectionsChangedController.onPageLoad(waypoints)
 
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    waypoints.next.page
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page = {
+    answers.get(RelationshipStatusPage).map {
+      case Separated =>
+        answers
+          .get(SeparationDatePage)
+          .map(_ => waypoints.next.page)
+          .getOrElse(SeparationDatePage)
+
+      case Cohabiting =>
+        answers
+          .get(CohabitationDatePage)
+          .map(_ => waypoints.next.page)
+          .getOrElse(CohabitationDatePage)
+
+      case _ =>
+        waypoints.next.page
+    }.orRecover
+  }
 }
