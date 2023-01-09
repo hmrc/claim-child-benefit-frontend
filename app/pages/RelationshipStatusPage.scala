@@ -97,7 +97,7 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
         if (mustUsePrintAndPost(status)) {
           UsePrintAndPostFormPage
         } else if (taskListSectionsChanging(status)) {
-          TaskListSectionsChangedPage
+          RelationshipStatusChangesTaskListPage
         } else {
           nextPage(status)
         }
@@ -177,7 +177,7 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
           pagesToAlwaysRemove(status) ++ sectionChanges.flatMap(pagesToRemove)
 
         updatedAnswers
-          .set(TaskListSectionsChangedPage, sectionChanges.toSet)
+          .set(RelationshipStatusChangesTaskListPage, sectionChanges.toSet)
           .flatMap(x => removePages(x, pages))
     }.getOrElse(super.cleanup(value, updatedAnswers))
   }

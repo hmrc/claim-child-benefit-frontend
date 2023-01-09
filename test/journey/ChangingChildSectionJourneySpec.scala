@@ -1080,7 +1080,40 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
       }
     }
 
-    "that the user said lived with someone in the past year" - {
+    "that the user said lived with someone else in the past year" - {
+
+      "changing to say the child had not lived with someone in the past year must remove details of that person and return to Check Details" in {
+
+        val initialState =
+          journeyOf(
+            basicChildJourney,
+            setUserAnswerTo(ChildLivedWithAnyoneElsePage(Index(0)), true),
+            setUserAnswerTo(PreviousGuardianNameKnownPage(Index(0)), true),
+            setUserAnswerTo(PreviousGuardianNamePage(Index(0)), adultName),
+            setUserAnswerTo(PreviousGuardianAddressKnownPage(Index(0)), true),
+            setUserAnswerTo(PreviousGuardianAddressInUkPage(Index(0)), true),
+            setUserAnswerTo(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
+            setUserAnswerTo(PreviousGuardianInternationalAddressPage(Index(0)), internationalAddress),
+            setUserAnswerTo(PreviousGuardianPhoneNumberKnownPage(Index(0)), true),
+            setUserAnswerTo(PreviousGuardianPhoneNumberPage(Index(0)), "07777 777777"),
+            setUserAnswerTo(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now)
+          )
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(ChildLivedWithAnyoneElsePage(Index(0))),
+            submitAnswer(ChildLivedWithAnyoneElsePage(Index(0)), false),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(PreviousGuardianNamePage(Index(0))),
+            answersMustNotContain(PreviousGuardianAddressKnownPage(Index(0))),
+            answersMustNotContain(PreviousGuardianAddressInUkPage(Index(0))),
+            answersMustNotContain(PreviousGuardianUkAddressPage(Index(0))),
+            answersMustNotContain(PreviousGuardianInternationalAddressPage(Index(0))),
+            answersMustNotContain(PreviousGuardianPhoneNumberKnownPage(Index(0))),
+            answersMustNotContain(PreviousGuardianPhoneNumberPage(Index(0)))
+          )
+      }
 
       "who they knew the details for" - {
 
@@ -1254,6 +1287,28 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
               pageMustBe(CheckChildDetailsPage(Index(0)))
             )
         }
+      }
+    }
+
+    "that the user said had not lived with someone else in the past year" - {
+
+      "changing to say they have lived with someone else must collect their details then go to Check Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            basicChildJourney,
+            goToChangeAnswer(ChildLivedWithAnyoneElsePage(Index(0))),
+            submitAnswer(ChildLivedWithAnyoneElsePage(Index(0)), true),
+            submitAnswer(PreviousGuardianNameKnownPage(Index(0)), true),
+            submitAnswer(PreviousGuardianNamePage(Index(0)), adultName),
+            submitAnswer(PreviousGuardianAddressKnownPage(Index(0)), true),
+            submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), true),
+            submitAnswer(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
+            submitAnswer(PreviousGuardianPhoneNumberKnownPage(Index(0)), true),
+            submitAnswer(PreviousGuardianPhoneNumberPage(Index(0)), "07777777777"),
+            submitAnswer(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
+          )
       }
     }
   }

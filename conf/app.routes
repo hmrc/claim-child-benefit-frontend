@@ -42,8 +42,8 @@ GET         /identity-verification/error                             controllers
 GET         /task-list                                      controllers.TaskListController.onPageLoad
 POST        /task-list                                      controllers.TaskListController.onSubmit
 
-GET         /task-list-changed                                  controllers.TaskListSectionsChangedController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST        /task-list-changed                                  controllers.TaskListSectionsChangedController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET         /relationship-change-affects-tasks              controllers.RelationshipStatusChangesTaskListController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST        /relationship-change-affects-tasks              controllers.RelationshipStatusChangesTaskListController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 # Initial section
 

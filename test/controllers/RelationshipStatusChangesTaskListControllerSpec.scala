@@ -17,12 +17,12 @@
 package controllers
 
 import base.SpecBase
-import pages.{TaskListSectionsChangedPage, EmptyWaypoints}
+import pages.{EmptyWaypoints, RelationshipStatusChangesTaskListPage}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.TaskListSectionsChangedView
+import views.html.RelationshipStatusChangesTaskListView
 
-class TaskListSectionsChangedControllerSpec extends SpecBase {
+class RelationshipStatusChangesTaskListControllerSpec extends SpecBase {
 
   private val waypoints = EmptyWaypoints
 
@@ -33,11 +33,11 @@ class TaskListSectionsChangedControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.TaskListSectionsChangedController.onPageLoad().url)
+        val request = FakeRequest(GET, routes.RelationshipStatusChangesTaskListController.onPageLoad().url)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[TaskListSectionsChangedView]
+        val view = application.injector.instanceOf[RelationshipStatusChangesTaskListView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(waypoints)(request, messages(application)).toString
@@ -49,12 +49,12 @@ class TaskListSectionsChangedControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(POST, routes.TaskListSectionsChangedController.onSubmit().url)
+        val request = FakeRequest(POST, routes.RelationshipStatusChangesTaskListController.onSubmit().url)
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual TaskListSectionsChangedPage.navigate(waypoints, emptyUserAnswers, emptyUserAnswers).route.url
+        redirectLocation(result).value mustEqual RelationshipStatusChangesTaskListPage.navigate(waypoints, emptyUserAnswers, emptyUserAnswers).route.url
       }
     }
   }

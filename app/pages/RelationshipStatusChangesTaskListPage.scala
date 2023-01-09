@@ -22,12 +22,12 @@ import models.{TaskListSectionChange, UserAnswers}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object TaskListSectionsChangedPage extends QuestionPage[Set[TaskListSectionChange]] {
+case object RelationshipStatusChangesTaskListPage extends QuestionPage[Set[TaskListSectionChange]] {
 
   override def path: JsPath = JsPath \ "taskListSectionsChanged"
 
   override def route(waypoints: Waypoints): Call =
-    routes.TaskListSectionsChangedController.onPageLoad(waypoints)
+    routes.RelationshipStatusChangesTaskListController.onPageLoad(waypoints)
 
   override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page = {
     answers.get(RelationshipStatusPage).map {

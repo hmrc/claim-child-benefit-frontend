@@ -18,21 +18,21 @@ package controllers
 
 import controllers.actions._
 import pages.Waypoints
-import pages.TaskListSectionsChangedPage
+import pages.RelationshipStatusChangesTaskListPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.TaskListSectionsChangedView
+import views.html.RelationshipStatusChangesTaskListView
 
 import javax.inject.Inject
 
-class TaskListSectionsChangedController @Inject()(
+class RelationshipStatusChangesTaskListController @Inject()(
                                               override val messagesApi: MessagesApi,
                                               identify: IdentifierAction,
                                               getData: DataRetrievalAction,
                                               requireData: DataRequiredAction,
                                               val controllerComponents: MessagesControllerComponents,
-                                              view: TaskListSectionsChangedView
+                                              view: RelationshipStatusChangesTaskListView
                                             ) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
@@ -42,6 +42,6 @@ class TaskListSectionsChangedController @Inject()(
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      Redirect(TaskListSectionsChangedPage.navigate(waypoints, request.userAnswers, request.userAnswers).route)
+      Redirect(RelationshipStatusChangesTaskListPage.navigate(waypoints, request.userAnswers, request.userAnswers).route)
   }
 }

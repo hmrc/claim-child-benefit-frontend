@@ -20,7 +20,7 @@ import controllers.payments.routes
 import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments}
 import models.{CurrentlyReceivingChildBenefit, UserAnswers}
 import pages.applicant.CheckApplicantDetailsPage
-import pages.{NonEmptyWaypoints, Page, QuestionPage, RecoveryOps, TaskListSectionsChangedPage, Waypoints}
+import pages.{NonEmptyWaypoints, Page, QuestionPage, RecoveryOps, RelationshipStatusChangesTaskListPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -50,7 +50,7 @@ case object CurrentlyReceivingChildBenefitPage extends QuestionPage[CurrentlyRec
             case _ => true
           }
 
-        if (significantChange) TaskListSectionsChangedPage else waypoints.next.page
+        if (significantChange) RelationshipStatusChangesTaskListPage else waypoints.next.page
 
       case _ =>
         ???

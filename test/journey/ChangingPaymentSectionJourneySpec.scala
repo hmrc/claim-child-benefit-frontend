@@ -14,462 +14,155 @@
  * limitations under the License.
  */
 
-package journey
+package journey.tasklist
 
 import generators.ModelGenerators
-import models.CurrentlyReceivingChildBenefit._
+import journey.JourneyHelpers
+import models.CurrentlyReceivingChildBenefit.{NotClaiming, NotGettingPayments}
 import models.RelationshipStatus._
-import models.{AdultName, BankAccountDetails, BankAccountHolder, Benefits, ChildName, PaymentFrequency}
+import models.{BankAccountDetails, BankAccountHolder, Benefits, Income, PaymentFrequency}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
-import pages.applicant.ApplicantHasPreviousFamilyNamePage
-import pages.income.ApplicantOrPartnerBenefitsPage
-import pages.partner.PartnerNamePage
+import pages.income._
 import pages.payments._
-import pages.{CheckYourAnswersPage, RelationshipStatusPage}
-
-import java.time.LocalDate
+import pages.{CannotBePaidWeeklyPage, RelationshipStatusPage}
 
 class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
-  private val childName               = arbitrary[ChildName].sample.value
-  private val adultName               = arbitrary[AdultName].sample.value
-  private val bankAccountHolder       = arbitrary[BankAccountHolder].sample.value
-  private val bankDetails             = arbitrary[BankAccountDetails].sample.value
-  private val benefits: Set[Benefits] = Set(Gen.oneOf(Benefits.qualifyingBenefits).sample.value)
+  private val bankDetails = arbitrary[BankAccountDetails].sample.value
 
-  "when the user initially said they were getting Child Benefit payments" - {
+  "when the user is married or cohabiting" - {
 
-    "and wanted to be paid to their existing account" - {
+    val relationship = Gen.oneOf(Married, Cohabiting).sample.value
+
+    "changing their (or their partner's) income must show the tax charge explanation" in {
+
+      val originalIncome = Gen.oneOf(Income.values).sample.value
+      val newIncome = Gen.oneOf(Income.values.toSet - originalIncome).sample.value
 
       val initialise = journeyOf(
-        setUserAnswerTo(RelationshipStatusPage, Married),
-        setUserAnswerTo(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
-        submitAnswer(CurrentlyReceivingChildBenefitPage, GettingPayments),
-        submitAnswer(EldestChildNamePage, childName),
-        submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
+        setUserAnswerTo(RelationshipStatusPage, relationship),
+        submitAnswer(ApplicantOrPartnerIncomePage, originalIncome),
         submitAnswer(WantToBePaidPage, true),
-        submitAnswer(WantToBePaidToExistingAccountPage, true),
-        goTo(CheckYourAnswersPage)
+        goTo(CheckPaymentDetailsPage)
       )
 
-      "changing to say they are claiming Child Benefit but not getting payments must collect bank account details" in {
-
-        startingFrom(CurrentlyReceivingChildBenefitPage)
-          .run(
-            initialise,
-            goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
-            submitAnswer(CurrentlyReceivingChildBenefitPage, NotGettingPayments),
-            pageMustBe(ApplicantHasSuitableAccountPage),
-            answersMustNotContain(WantToBePaidToExistingAccountPage)
-          )
-      }
-
-      "changing to say they are not claiming Child Benefit must remove oldest child details and collect bank account details" in {
-
-        startingFrom(CurrentlyReceivingChildBenefitPage)
-          .run(
-            initialise,
-            goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
-            submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
-            pageMustBe(ApplicantHasSuitableAccountPage),
-            answersMustNotContain(EldestChildNamePage),
-            answersMustNotContain(EldestChildDateOfBirthPage),
-            answersMustNotContain(WantToBePaidToExistingAccountPage)
-          )
-      }
-    }
-
-    "and wanted to be paid to a different account" - {
-
-      val initialise = journeyOf(
-        setUserAnswerTo(RelationshipStatusPage, Married),
-        setUserAnswerTo(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
-        submitAnswer(CurrentlyReceivingChildBenefitPage, GettingPayments),
-        submitAnswer(EldestChildNamePage, childName),
-        submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
-        submitAnswer(WantToBePaidPage, true),
-        submitAnswer(WantToBePaidToExistingAccountPage, false),
-        submitAnswer(ApplicantHasSuitableAccountPage, true),
-        submitAnswer(BankAccountHolderPage, bankAccountHolder),
-        submitAnswer(BankAccountDetailsPage, bankDetails),
-        goTo(CheckYourAnswersPage)
-      )
-
-      "changing to say they are claiming Child Benefit but not getting payments must return to Check Answers" in {
-
-        startingFrom(CurrentlyReceivingChildBenefitPage)
-          .run(
-            initialise,
-            goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
-            submitAnswer(CurrentlyReceivingChildBenefitPage, NotGettingPayments),
-            pageMustBe(CheckYourAnswersPage),
-            answersMustNotContain(WantToBePaidToExistingAccountPage)
-          )
-      }
-
-      "changing to say they are not claiming Child Benefit must remove oldest child details and return to Check Answers" in {
-
-        startingFrom(CurrentlyReceivingChildBenefitPage)
-          .run(
-            initialise,
-            goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
-            submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
-            pageMustBe(CheckYourAnswersPage),
-            answersMustNotContain(EldestChildNamePage),
-            answersMustNotContain(EldestChildDateOfBirthPage),
-            answersMustNotContain(WantToBePaidToExistingAccountPage)
-          )
-      }
-    }
-
-    "and did not want to be paid" - {
-
-      val initialise = journeyOf(
-        setUserAnswerTo(RelationshipStatusPage, Single),
-        submitAnswer(CurrentlyReceivingChildBenefitPage, GettingPayments),
-        submitAnswer(EldestChildNamePage, childName),
-        submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
-        submitAnswer(WantToBePaidPage, false),
-        goTo(CheckYourAnswersPage)
-      )
-
-      "changing to say they are claiming Child Benefit but not getting payments must return the user to Check Answers" in {
-
-        startingFrom(CurrentlyReceivingChildBenefitPage)
-          .run(
-            initialise,
-            goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
-            submitAnswer(CurrentlyReceivingChildBenefitPage, NotGettingPayments),
-            pageMustBe(CheckYourAnswersPage)
-          )
-      }
-
-      "changing to say they are not claiming Child Benefit must remove oldest child details then return to Check Answers" in {
-
-        startingFrom(CurrentlyReceivingChildBenefitPage)
-          .run(
-            initialise,
-            goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
-            submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
-            pageMustBe(CheckYourAnswersPage),
-            answersMustNotContain(EldestChildNamePage),
-            answersMustNotContain(EldestChildDateOfBirthPage)
-          )
-      }
-    }
-  }
-
-  "when the user initially said they were claiming Child Benefit but not getting payments" - {
-
-    "and wanted to be paid" - {
-
-      val initialise = journeyOf(
-        setUserAnswerTo(RelationshipStatusPage, Married),
-        setUserAnswerTo(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
-        submitAnswer(CurrentlyReceivingChildBenefitPage, NotGettingPayments),
-        submitAnswer(EldestChildNamePage, childName),
-        submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
-        submitAnswer(WantToBePaidPage, true),
-        submitAnswer(ApplicantHasSuitableAccountPage, true),
-        submitAnswer(BankAccountHolderPage, bankAccountHolder),
-        submitAnswer(BankAccountDetailsPage, bankDetails),
-        submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
-        goTo(CheckYourAnswersPage)
-      )
-
-      "changing to say they are getting Child Benefit payments" - {
-
-        "and that they want to be paid to their existing account" - {
-
-          "must remove bank details and return to Check Answers" in {
-
-            startingFrom(CurrentlyReceivingChildBenefitPage)
-              .run(
-                initialise,
-                goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
-                submitAnswer(CurrentlyReceivingChildBenefitPage, GettingPayments),
-                submitAnswer(WantToBePaidToExistingAccountPage, true),
-                pageMustBe(CheckYourAnswersPage),
-                answersMustNotContain(ApplicantHasSuitableAccountPage),
-                answersMustNotContain(BankAccountHolderPage),
-                answersMustNotContain(BankAccountDetailsPage)
-              )
-          }
-        }
-
-        "and that they do not want to be paid to their existing account" - {
-
-          "must return to Check Answers" in {
-
-            startingFrom(CurrentlyReceivingChildBenefitPage)
-              .run(
-                initialise,
-                goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
-                submitAnswer(CurrentlyReceivingChildBenefitPage, GettingPayments),
-                submitAnswer(WantToBePaidToExistingAccountPage, false),
-                pageMustBe(CheckYourAnswersPage),
-                answersMustContain(ApplicantHasSuitableAccountPage),
-                answersMustContain(BankAccountHolderPage),
-                answersMustContain(BankAccountDetailsPage)
-              )
-          }
-        }
-      }
-
-      "changing to say they are not claiming Child Benefit must remove oldest child details then return to Check Answers" in {
-
-        startingFrom(CurrentlyReceivingChildBenefitPage)
-          .run(
-            initialise,
-            goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
-            submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
-            pageMustBe(CheckYourAnswersPage),
-            answersMustContain(ApplicantHasSuitableAccountPage),
-            answersMustContain(BankAccountHolderPage),
-            answersMustContain(BankAccountDetailsPage),
-            answersMustNotContain(EldestChildNamePage),
-            answersMustNotContain(EldestChildDateOfBirthPage)
-          )
-      }
-    }
-
-    "and did not want to be paid" - {
-
-        val initialise = journeyOf(
-          setUserAnswerTo(RelationshipStatusPage, Single),
-          submitAnswer(CurrentlyReceivingChildBenefitPage, NotGettingPayments),
-          submitAnswer(EldestChildNamePage, childName),
-          submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
-          submitAnswer(WantToBePaidPage, false),
-          goTo(CheckYourAnswersPage)
-        )
-
-      "changing to say they are getting Child Benefit payments must return the user to Check Answers" in {
-
-        startingFrom(CurrentlyReceivingChildBenefitPage)
-          .run(
-            initialise,
-            goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
-            submitAnswer(CurrentlyReceivingChildBenefitPage, GettingPayments),
-            pageMustBe(CheckYourAnswersPage)
-          )
-      }
-
-      "changing to say they are not claiming Child Benefit must remove oldest child details then return to Check Answers" in {
-
-        startingFrom(CurrentlyReceivingChildBenefitPage)
-          .run(
-            initialise,
-            goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
-            submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
-            pageMustBe(CheckYourAnswersPage),
-            answersMustNotContain(EldestChildNamePage),
-            answersMustNotContain(EldestChildDateOfBirthPage)
-          )
-      }
-    }
-  }
-
-  "when the user initially said they were not claiming Child Benefit" - {
-
-    "and wanted to be paid" - {
-
-      val initialise = journeyOf(
-        setUserAnswerTo(RelationshipStatusPage, Married),
-        setUserAnswerTo(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
-        submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
-        submitAnswer(WantToBePaidPage, true),
-        submitAnswer(ApplicantHasSuitableAccountPage, true),
-        submitAnswer(BankAccountHolderPage, bankAccountHolder),
-        submitAnswer(BankAccountDetailsPage, bankDetails),
-        submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
-        goTo(CheckYourAnswersPage)
-      )
-
-      "changing to say they are getting Child Benefit payments" - {
-
-        "and that they want to be paid to their existing account" - {
-
-          "must collect oldest child details, remove bank details and return to Check Answers" in {
-
-            startingFrom(CurrentlyReceivingChildBenefitPage)
-              .run(
-                initialise,
-                goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
-                submitAnswer(CurrentlyReceivingChildBenefitPage, GettingPayments),
-                submitAnswer(EldestChildNamePage, childName),
-                submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
-                submitAnswer(WantToBePaidToExistingAccountPage, true),
-                pageMustBe(CheckYourAnswersPage),
-                answersMustNotContain(ApplicantHasSuitableAccountPage),
-                answersMustNotContain(BankAccountHolderPage),
-                answersMustNotContain(BankAccountDetailsPage)
-              )
-          }
-        }
-
-        "and that they do not want to be paid to their existing account" - {
-
-          "must collect oldest child details and return to Check Answers" in {
-
-            startingFrom(CurrentlyReceivingChildBenefitPage)
-              .run(
-                initialise,
-                goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
-                submitAnswer(CurrentlyReceivingChildBenefitPage, GettingPayments),
-                submitAnswer(EldestChildNamePage, childName),
-                submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
-                submitAnswer(WantToBePaidToExistingAccountPage, false),
-                pageMustBe(CheckYourAnswersPage),
-                answersMustContain(ApplicantHasSuitableAccountPage),
-                answersMustContain(BankAccountHolderPage),
-                answersMustContain(BankAccountDetailsPage)
-              )
-          }
-        }
-      }
-
-      "changing to say they are claiming Child Benefit but not getting payments" - {
-
-        "must collect oldest child details and return to Check Answers" in {
-
-          startingFrom(CurrentlyReceivingChildBenefitPage)
-            .run(
-              initialise,
-              goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
-              submitAnswer(CurrentlyReceivingChildBenefitPage, NotGettingPayments),
-              submitAnswer(EldestChildNamePage, childName),
-              submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
-              pageMustBe(CheckYourAnswersPage),
-              answersMustContain(ApplicantHasSuitableAccountPage),
-              answersMustContain(BankAccountHolderPage),
-              answersMustContain(BankAccountDetailsPage)
-            )
-        }
-      }
-    }
-
-    "and did not want to be paid" - {
-
-      val initialise = journeyOf(
-        setUserAnswerTo(RelationshipStatusPage, Married),
-        setUserAnswerTo(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
-        submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
-        submitAnswer(WantToBePaidPage, false),
-        goTo(CheckYourAnswersPage)
-      )
-
-      "changing to say they are getting Child Benefit payments" - {
-
-        "must collect oldest child details then return to Check Answers" in {
-
-          startingFrom(CurrentlyReceivingChildBenefitPage)
-            .run(
-              initialise,
-              goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
-              submitAnswer(CurrentlyReceivingChildBenefitPage, GettingPayments),
-              submitAnswer(EldestChildNamePage, childName),
-              submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
-              pageMustBe(CheckYourAnswersPage)
-            )
-        }
-      }
-
-      "changing to say they are claiming Child Benefit but not getting payments" - {
-
-        "must collect oldest child details then return to Check Answers" in {
-
-          startingFrom(CurrentlyReceivingChildBenefitPage)
-            .run(
-              initialise,
-              goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
-              submitAnswer(CurrentlyReceivingChildBenefitPage, NotGettingPayments),
-              submitAnswer(EldestChildNamePage, childName),
-              submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
-              pageMustBe(CheckYourAnswersPage)
-            )
-        }
-      }
-    }
-  }
-
-  "when the user initially said they want to be paid" - {
-
-    "changing that answer to `no` must remove all bank details" in {
-
-      val initialise = journeyOf(
-        setUserAnswerTo(RelationshipStatusPage, Married),
-        setUserAnswerTo(WantToBePaidPage, true),
-        setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
-        setUserAnswerTo(WantToBePaidToExistingAccountPage, false),
-        setUserAnswerTo(ApplicantHasSuitableAccountPage, true),
-        setUserAnswerTo(BankAccountHolderPage, bankAccountHolder),
-        setUserAnswerTo(BankAccountDetailsPage, bankDetails),
-        setUserAnswerTo(ApplicantHasPreviousFamilyNamePage, false),
-        setUserAnswerTo(PartnerNamePage, adultName),
-        goTo(CheckYourAnswersPage)
-      )
-
-      startingFrom(CheckYourAnswersPage)
+      startingFrom(ApplicantOrPartnerIncomePage)
         .run(
           initialise,
-          goToChangeAnswer(WantToBePaidPage),
-          submitAnswer(WantToBePaidPage, false),
-          pageMustBe(CheckYourAnswersPage),
-          answersMustNotContain(WantToBePaidToExistingAccountPage),
-          answersMustNotContain(ApplicantHasSuitableAccountPage),
-          answersMustNotContain(BankAccountHolderPage),
-          answersMustNotContain(BankAccountDetailsPage)
+          goToChangeAnswer(ApplicantOrPartnerIncomePage),
+          submitAnswer(ApplicantOrPartnerIncomePage, newIncome),
+          pageMustBe(WantToBePaidPage)
         )
     }
 
-    "to their existing account" - {
+    "and originally said they were not receiving benefits" - {
 
-      "changing that answer to `no` must collect bank details then go to Check Answers" in {
+      "changing to say they're receiving qualifying benefits must ask if they want to be paid weekly then go to Check Payments" in {
 
         val initialise = journeyOf(
-          setUserAnswerTo(WantToBePaidPage, true),
-          setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
-          setUserAnswerTo(WantToBePaidToExistingAccountPage, true),
-          setUserAnswerTo(ApplicantHasPreviousFamilyNamePage, false),
-          goTo(CheckYourAnswersPage)
+          setUserAnswerTo(RelationshipStatusPage, relationship),
+          setUserAnswerTo(CurrentlyReceivingChildBenefitPage, NotClaiming),
+          submitAnswer(WantToBePaidPage, true),
+          submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
+          submitAnswer(ApplicantHasSuitableAccountPage, true),
+          goTo(CheckPaymentDetailsPage)
         )
 
-        startingFrom(CheckYourAnswersPage)
+        startingFrom(WantToBePaidPage)
           .run(
             initialise,
-            goToChangeAnswer(WantToBePaidToExistingAccountPage),
-            submitAnswer(WantToBePaidToExistingAccountPage, false),
-            submitAnswer(ApplicantHasSuitableAccountPage, true),
-            submitAnswer(BankAccountHolderPage, bankAccountHolder),
-            submitAnswer(BankAccountDetailsPage, bankDetails),
-            pageMustBe(CheckYourAnswersPage)
+            goToChangeAnswer(ApplicantOrPartnerBenefitsPage),
+            submitAnswer(ApplicantOrPartnerBenefitsPage, Benefits.qualifyingBenefits),
+            submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
+            pageMustBe(CheckPaymentDetailsPage)
           )
       }
     }
 
-    "not to their existing account" - {
+    "and originally said they were receiving qualifying benefits" - {
 
-      "changing that answer to `yes` must remove bank details and go to Check Answers" in {
+      "and wanted to be paid weekly" - {
+
+        "changing to say they're not receiving qualifying benefits must remove Payment Frequency, tell them they cannot be paid weekly then go to Check Payments" in {
+
+          val initialise = journeyOf(
+            setUserAnswerTo(RelationshipStatusPage, relationship),
+            setUserAnswerTo(CurrentlyReceivingChildBenefitPage, NotClaiming),
+            submitAnswer(WantToBePaidPage, true),
+            submitAnswer(ApplicantOrPartnerBenefitsPage, Benefits.qualifyingBenefits),
+            submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
+            submitAnswer(ApplicantHasSuitableAccountPage, true),
+            goTo(CheckPaymentDetailsPage)
+          )
+
+          startingFrom(WantToBePaidPage)
+            .run(
+              initialise,
+              goToChangeAnswer(ApplicantOrPartnerBenefitsPage),
+              submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
+              pageMustBe(CannotBePaidWeeklyPage),
+              next,
+              pageMustBe(CheckPaymentDetailsPage),
+              answersMustNotContain(PaymentFrequencyPage)
+            )
+        }
+      }
+
+      "and wanted to be paid every four weeks" - {
+
+        "changing to say they're not receiving qualifying benefits must remove Payment Frequency then go to Check Payments" in {
+
+
+          val initialise = journeyOf(
+            setUserAnswerTo(RelationshipStatusPage, relationship),
+            setUserAnswerTo(CurrentlyReceivingChildBenefitPage, NotClaiming),
+            submitAnswer(WantToBePaidPage, true),
+            submitAnswer(ApplicantOrPartnerBenefitsPage, Benefits.qualifyingBenefits),
+            submitAnswer(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
+            submitAnswer(ApplicantHasSuitableAccountPage, true),
+            goTo(CheckPaymentDetailsPage)
+          )
+
+          startingFrom(WantToBePaidPage)
+            .run(
+              initialise,
+              goToChangeAnswer(ApplicantOrPartnerBenefitsPage),
+              submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
+              pageMustBe(CheckPaymentDetailsPage),
+              answersMustNotContain(PaymentFrequencyPage)
+            )
+        }
+      }
+    }
+
+    "and originally said they want to be paid" - {
+
+      "changing to say they don't want to be paid must remove all other payment details, then go to Check Payment" in {
+
         val initialise = journeyOf(
+          setUserAnswerTo(RelationshipStatusPage, relationship),
+          setUserAnswerTo(CurrentlyReceivingChildBenefitPage, NotGettingPayments),
           setUserAnswerTo(WantToBePaidPage, true),
+          setUserAnswerTo(ApplicantOrPartnerBenefitsPage, Benefits.values.toSet),
           setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
           setUserAnswerTo(WantToBePaidToExistingAccountPage, false),
           setUserAnswerTo(ApplicantHasSuitableAccountPage, true),
-          setUserAnswerTo(BankAccountHolderPage, bankAccountHolder),
+          setUserAnswerTo(BankAccountHolderPage, BankAccountHolder.Applicant),
           setUserAnswerTo(BankAccountDetailsPage, bankDetails),
-          setUserAnswerTo(ApplicantHasPreviousFamilyNamePage, false),
-          goTo(CheckYourAnswersPage)
+          goTo(CheckPaymentDetailsPage)
         )
 
-        startingFrom(CheckYourAnswersPage)
+        startingFrom(CheckPaymentDetailsPage)
           .run(
             initialise,
-            goToChangeAnswer(WantToBePaidToExistingAccountPage),
-            submitAnswer(WantToBePaidToExistingAccountPage, true),
-            pageMustBe(CheckYourAnswersPage),
+            goToChangeAnswer(WantToBePaidPage),
+            submitAnswer(WantToBePaidPage, false),
+            pageMustBe(CheckPaymentDetailsPage),
+            answersMustNotContain(ApplicantOrPartnerBenefitsPage),
+            answersMustNotContain(PaymentFrequencyPage),
+            answersMustNotContain(WantToBePaidToExistingAccountPage),
             answersMustNotContain(ApplicantHasSuitableAccountPage),
             answersMustNotContain(BankAccountHolderPage),
             answersMustNotContain(BankAccountDetailsPage)
@@ -477,284 +170,210 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
       }
     }
 
-    "and had a suitable account" - {
+    "and originally said they didn't want to be paid" - {
 
-      "changing that answer to `no` must remove bank details and go to Check Answers" in {
+      "changing to say they want to be paid must collect payment details then go to Check Payments" in {
 
         val initialise = journeyOf(
-          submitAnswer(ApplicantHasSuitableAccountPage, true),
-          submitAnswer(BankAccountHolderPage, bankAccountHolder),
-          submitAnswer(BankAccountDetailsPage, bankDetails),
-          setUserAnswerTo(ApplicantHasPreviousFamilyNamePage, false),
-          goTo(CheckYourAnswersPage)
+          setUserAnswerTo(RelationshipStatusPage, relationship),
+          setUserAnswerTo(CurrentlyReceivingChildBenefitPage, NotClaiming),
+          setUserAnswerTo(WantToBePaidPage, false),
+          goTo(CheckPaymentDetailsPage)
         )
 
-        startingFrom(ApplicantHasSuitableAccountPage)
+        startingFrom(CheckPaymentDetailsPage)
           .run(
             initialise,
-            goToChangeAnswer(ApplicantHasSuitableAccountPage),
-            submitAnswer(ApplicantHasSuitableAccountPage, false),
-            pageMustBe(CheckYourAnswersPage),
+            goToChangeAnswer(WantToBePaidPage),
+            submitAnswer(WantToBePaidPage, true),
+            submitAnswer(ApplicantOrPartnerBenefitsPage, Benefits.values.toSet),
+            submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
+            submitAnswer(ApplicantHasSuitableAccountPage, true),
+            submitAnswer(BankAccountHolderPage, BankAccountHolder.Applicant),
+            submitAnswer(BankAccountDetailsPage, bankDetails),
+            pageMustBe(CheckPaymentDetailsPage)
+          )
+      }
+    }
+  }
+
+  "when the user is single, separated, divorced or widowed" - {
+
+    val relationship = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
+
+    "changing their income must show the tax charge explanation" in {
+
+      val originalIncome = Gen.oneOf(Income.values).sample.value
+      val newIncome = Gen.oneOf(Income.values.toSet - originalIncome).sample.value
+
+      val initialise = journeyOf(
+        setUserAnswerTo(RelationshipStatusPage, relationship),
+        submitAnswer(ApplicantIncomePage, originalIncome),
+        submitAnswer(WantToBePaidPage, true),
+        goTo(CheckPaymentDetailsPage)
+      )
+
+      startingFrom(ApplicantIncomePage)
+        .run(
+          initialise,
+          goToChangeAnswer(ApplicantIncomePage),
+          submitAnswer(ApplicantIncomePage, newIncome),
+          pageMustBe(WantToBePaidPage)
+        )
+    }
+
+    "and originally said they want to be paid" - {
+
+      "changing to say they don't want to be paid must remove all other payment details, then go to Check Payment" in {
+
+        val initialise = journeyOf(
+          setUserAnswerTo(RelationshipStatusPage, relationship),
+          setUserAnswerTo(CurrentlyReceivingChildBenefitPage, NotGettingPayments),
+          setUserAnswerTo(WantToBePaidPage, true),
+          setUserAnswerTo(ApplicantBenefitsPage, Benefits.values.toSet),
+          setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
+          setUserAnswerTo(WantToBePaidToExistingAccountPage, false),
+          setUserAnswerTo(ApplicantHasSuitableAccountPage, true),
+          setUserAnswerTo(BankAccountHolderPage, BankAccountHolder.Applicant),
+          setUserAnswerTo(BankAccountDetailsPage, bankDetails),
+          goTo(CheckPaymentDetailsPage)
+        )
+
+        startingFrom(CheckPaymentDetailsPage)
+          .run(
+            initialise,
+            goToChangeAnswer(WantToBePaidPage),
+            submitAnswer(WantToBePaidPage, false),
+            pageMustBe(CheckPaymentDetailsPage),
+            answersMustNotContain(ApplicantBenefitsPage),
+            answersMustNotContain(PaymentFrequencyPage),
+            answersMustNotContain(WantToBePaidToExistingAccountPage),
+            answersMustNotContain(ApplicantHasSuitableAccountPage),
             answersMustNotContain(BankAccountHolderPage),
             answersMustNotContain(BankAccountDetailsPage)
           )
       }
     }
 
-    "and did not have a suitable account " - {
+    "and originally said they didn't want to be paid" - {
 
-      val initialise = journeyOf(
-        submitAnswer(ApplicantHasSuitableAccountPage, false),
-        setUserAnswerTo(ApplicantHasPreviousFamilyNamePage, false),
-        goTo(CheckYourAnswersPage)
-      )
+      "changing to say they want to be paid must collect bank details then go to Check Payment" in {
 
-      "changing that answer to 'yes' must collect bank details then go to Check Answers" in {
+        val initialise = journeyOf(
+          setUserAnswerTo(RelationshipStatusPage, relationship),
+          setUserAnswerTo(CurrentlyReceivingChildBenefitPage, NotClaiming),
+          setUserAnswerTo(WantToBePaidPage, false),
+          goTo(CheckPaymentDetailsPage)
+        )
 
-        startingFrom(ApplicantHasSuitableAccountPage)
+        startingFrom(CheckPaymentDetailsPage)
           .run(
             initialise,
-            goToChangeAnswer(ApplicantHasSuitableAccountPage),
+            goToChangeAnswer(WantToBePaidPage),
+            submitAnswer(WantToBePaidPage, true),
+            submitAnswer(ApplicantBenefitsPage, Benefits.values.toSet),
+            submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
             submitAnswer(ApplicantHasSuitableAccountPage, true),
-            submitAnswer(BankAccountHolderPage, bankAccountHolder),
+            submitAnswer(BankAccountHolderPage, BankAccountHolder.Applicant),
             submitAnswer(BankAccountDetailsPage, bankDetails),
-            pageMustBe(CheckYourAnswersPage)
+            pageMustBe(CheckPaymentDetailsPage)
           )
       }
     }
   }
 
-  "when the user initially said they did not want to be paid" - {
+  "when the user originally said they want to be paid" - {
 
-    "and are Married or Cohabiting" - {
+    "to their existing account" - {
 
-      val relationship = Gen.oneOf(Married, Cohabiting).sample.value
+      "changing to say they want to be paid to a different account must collect bank details then go to Check Payment" in {
 
-      "and they or their partner receive qualifying benefits" - {
+        val initialise = journeyOf(
+          setUserAnswerTo(WantToBePaidPage, true),
+          setUserAnswerTo(WantToBePaidToExistingAccountPage, true),
+          goTo(CheckPaymentDetailsPage)
+        )
 
-        "and they are currently getting Child Benefit payments" - {
-
-          "changing to say they want to be paid must collect bank details" in {
-
-            val initialise = journeyOf(
-              setUserAnswerTo(RelationshipStatusPage, relationship),
-              setUserAnswerTo(ApplicantOrPartnerBenefitsPage, benefits),
-              submitAnswer(CurrentlyReceivingChildBenefitPage, GettingPayments),
-              submitAnswer(EldestChildNamePage, childName),
-              submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
-              submitAnswer(WantToBePaidPage, false),
-              goTo(CheckYourAnswersPage)
-            )
-
-            startingFrom(CurrentlyReceivingChildBenefitPage)
-              .run(
-                initialise,
-                goToChangeAnswer(WantToBePaidPage),
-                submitAnswer(WantToBePaidPage, true),
-                submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
-                submitAnswer(WantToBePaidToExistingAccountPage, false),
-                submitAnswer(ApplicantHasSuitableAccountPage, false)
-              )
-          }
-        }
-
-        "and they are currently not getting Child Benefit payments" - {
-
-          "changing to say they want to be paid must collect bank details" in {
-
-            val initialise = journeyOf(
-              setUserAnswerTo(RelationshipStatusPage, relationship),
-              setUserAnswerTo(ApplicantOrPartnerBenefitsPage, benefits),
-              submitAnswer(CurrentlyReceivingChildBenefitPage, NotGettingPayments),
-              submitAnswer(EldestChildNamePage, childName),
-              submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
-              submitAnswer(WantToBePaidPage, false),
-              goTo(CheckYourAnswersPage)
-            )
-
-            startingFrom(CurrentlyReceivingChildBenefitPage)
-              .run(
-                initialise,
-                goToChangeAnswer(WantToBePaidPage),
-                submitAnswer(WantToBePaidPage, true),
-                submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
-                submitAnswer(ApplicantHasSuitableAccountPage, false)
-              )
-          }
-        }
-
-        "and they are currently not claiming Child Benefit" - {
-
-          "changing to say they want to be paid must collect bank details" in {
-
-            val initialise = journeyOf(
-              setUserAnswerTo(RelationshipStatusPage, relationship),
-              setUserAnswerTo(ApplicantOrPartnerBenefitsPage, benefits),
-              submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
-              submitAnswer(WantToBePaidPage, false),
-              goTo(CheckYourAnswersPage)
-            )
-
-            startingFrom(CurrentlyReceivingChildBenefitPage)
-              .run(
-                initialise,
-                goToChangeAnswer(WantToBePaidPage),
-                submitAnswer(WantToBePaidPage, true),
-                submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
-                submitAnswer(ApplicantHasSuitableAccountPage, false)
-              )
-          }
-        }
-      }
-
-      "and they and their partner do not receive qualifying benefits" - {
-
-        "and they are currently getting Child Benefit payments" - {
-
-          "changing to say they want to be paid must collect bank details" in {
-
-            val initialise = journeyOf(
-              setUserAnswerTo(RelationshipStatusPage, relationship),
-              setUserAnswerTo(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
-              submitAnswer(CurrentlyReceivingChildBenefitPage, GettingPayments),
-              submitAnswer(EldestChildNamePage, childName),
-              submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
-              submitAnswer(WantToBePaidPage, false),
-              goTo(CheckYourAnswersPage)
-            )
-
-            startingFrom(CurrentlyReceivingChildBenefitPage)
-              .run(
-                initialise,
-                goToChangeAnswer(WantToBePaidPage),
-                submitAnswer(WantToBePaidPage, true),
-                submitAnswer(WantToBePaidToExistingAccountPage, false),
-                submitAnswer(ApplicantHasSuitableAccountPage, false)
-              )
-          }
-        }
-
-        "and they are currently not getting Child Benefit payments" - {
-
-          "changing to say they want to be paid must collect bank details" in {
-
-            val initialise = journeyOf(
-              setUserAnswerTo(RelationshipStatusPage, relationship),
-              setUserAnswerTo(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
-              submitAnswer(CurrentlyReceivingChildBenefitPage, NotGettingPayments),
-              submitAnswer(EldestChildNamePage, childName),
-              submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
-              submitAnswer(WantToBePaidPage, false),
-              goTo(CheckYourAnswersPage)
-            )
-
-            startingFrom(CurrentlyReceivingChildBenefitPage)
-              .run(
-                initialise,
-                goToChangeAnswer(WantToBePaidPage),
-                submitAnswer(WantToBePaidPage, true),
-                submitAnswer(ApplicantHasSuitableAccountPage, false)
-              )
-          }
-        }
-
-        "and they are currently not claiming Child Benefit" - {
-
-          "changing to say they want to be paid must collect bank details" in {
-
-            val initialise = journeyOf(
-              setUserAnswerTo(RelationshipStatusPage, relationship),
-              setUserAnswerTo(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
-              submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
-              submitAnswer(WantToBePaidPage, false),
-              goTo(CheckYourAnswersPage)
-            )
-
-            startingFrom(CurrentlyReceivingChildBenefitPage)
-              .run(
-                initialise,
-                goToChangeAnswer(WantToBePaidPage),
-                submitAnswer(WantToBePaidPage, true),
-                submitAnswer(ApplicantHasSuitableAccountPage, false)
-              )
-          }
-        }
+        startingFrom(CheckPaymentDetailsPage)
+          .run(
+            initialise,
+            goToChangeAnswer(WantToBePaidToExistingAccountPage),
+            submitAnswer(WantToBePaidToExistingAccountPage, false),
+            submitAnswer(ApplicantHasSuitableAccountPage, true),
+            submitAnswer(BankAccountHolderPage, BankAccountHolder.Applicant),
+            submitAnswer(BankAccountDetailsPage, bankDetails),
+            pageMustBe(CheckPaymentDetailsPage)
+          )
       }
     }
 
-    "and are Single, Separated, Divorced or Widowed" - {
+    "not to their existing account" - {
 
-      val relationship = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
+      "changing to say they want to be paid to their existing account must remove bank details then go to Check Payment" in {
 
-      "and they are currently getting Child Benefit payments" - {
+        val initialise = journeyOf(
+          setUserAnswerTo(WantToBePaidPage, true),
+          setUserAnswerTo(WantToBePaidToExistingAccountPage, false),
+          setUserAnswerTo(ApplicantHasSuitableAccountPage, true),
+          setUserAnswerTo(BankAccountHolderPage, BankAccountHolder.Applicant),
+          setUserAnswerTo(BankAccountDetailsPage, bankDetails),
+          goTo(CheckPaymentDetailsPage)
+        )
 
-        "changing to say they want to be paid must collect bank details" in {
-
-          val initialise = journeyOf(
-            setUserAnswerTo(RelationshipStatusPage, relationship),
-            submitAnswer(CurrentlyReceivingChildBenefitPage, GettingPayments),
-            submitAnswer(EldestChildNamePage, childName),
-            submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
-            submitAnswer(WantToBePaidPage, false),
-            goTo(CheckYourAnswersPage)
+        startingFrom(CheckPaymentDetailsPage)
+          .run(
+            initialise,
+            goToChangeAnswer(WantToBePaidToExistingAccountPage),
+            submitAnswer(WantToBePaidToExistingAccountPage, true),
+            pageMustBe(CheckPaymentDetailsPage),
+            answersMustNotContain(ApplicantHasSuitableAccountPage),
+            answersMustNotContain(BankAccountHolderPage),
+            answersMustNotContain(BankAccountDetailsPage)
           )
-
-          startingFrom(CurrentlyReceivingChildBenefitPage)
-            .run(
-              initialise,
-              goToChangeAnswer(WantToBePaidPage),
-              submitAnswer(WantToBePaidPage, true),
-              submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
-              submitAnswer(WantToBePaidToExistingAccountPage, false),
-              submitAnswer(ApplicantHasSuitableAccountPage, false)
-            )
-        }
       }
+    }
 
-      "and they are currently not getting Child Benefit payments" - {
+    "and has a suitable account" - {
 
-        "changing to say they want to be paid must collect bank details" in {
+      "changing to say they don't have a suitable account must remove bank details and go to Check Payment" in {
 
-          val initialise = journeyOf(
-            setUserAnswerTo(RelationshipStatusPage, relationship),
-            submitAnswer(CurrentlyReceivingChildBenefitPage, NotGettingPayments),
-            submitAnswer(EldestChildNamePage, childName),
-            submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
-            submitAnswer(WantToBePaidPage, false),
-            goTo(CheckYourAnswersPage)
+        val initialise = journeyOf(
+          setUserAnswerTo(ApplicantHasSuitableAccountPage, true),
+          setUserAnswerTo(BankAccountHolderPage, BankAccountHolder.Applicant),
+          setUserAnswerTo(BankAccountDetailsPage, bankDetails),
+          goTo(CheckPaymentDetailsPage)
+        )
+
+        startingFrom(CheckPaymentDetailsPage)
+          .run(
+            initialise,
+            goToChangeAnswer(ApplicantHasSuitableAccountPage),
+            submitAnswer(ApplicantHasSuitableAccountPage, false),
+            pageMustBe(CheckPaymentDetailsPage),
+            answersMustNotContain(BankAccountHolderPage),
+            answersMustNotContain(BankAccountDetailsPage)
           )
-
-          startingFrom(CurrentlyReceivingChildBenefitPage)
-            .run(
-              initialise,
-              goToChangeAnswer(WantToBePaidPage),
-              submitAnswer(WantToBePaidPage, true),
-              submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
-              submitAnswer(ApplicantHasSuitableAccountPage, false)
-            )
-        }
       }
+    }
 
-      "and they are currently not claiming Child Benefit" - {
+    "and does not have a suitable account" - {
 
-        "changing to say they want to be paid must collect bank details" in {
+      "changing to say the have a suitable account must collect bank details and go to Check Payment" in {
 
-          val initialise = journeyOf(
-            setUserAnswerTo(RelationshipStatusPage, relationship),
-            submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
-            submitAnswer(WantToBePaidPage, false),
-            goTo(CheckYourAnswersPage)
+        val initialise = journeyOf(
+          setUserAnswerTo(ApplicantHasSuitableAccountPage, false),
+          goTo(CheckPaymentDetailsPage)
+        )
+
+        startingFrom(CheckPaymentDetailsPage)
+          .run(
+            initialise,
+            goToChangeAnswer(ApplicantHasSuitableAccountPage),
+            submitAnswer(ApplicantHasSuitableAccountPage, true),
+            submitAnswer(BankAccountHolderPage, BankAccountHolder.Applicant),
+            submitAnswer(BankAccountDetailsPage, bankDetails),
+            pageMustBe(CheckPaymentDetailsPage)
           )
-
-          startingFrom(CurrentlyReceivingChildBenefitPage)
-            .run(
-              initialise,
-              goToChangeAnswer(WantToBePaidPage),
-              submitAnswer(WantToBePaidPage, true),
-              submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
-              submitAnswer(ApplicantHasSuitableAccountPage, false)
-            )
-        }
       }
     }
   }

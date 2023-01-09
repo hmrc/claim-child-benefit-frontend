@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package journey
+package journey.tasklist
 
 import generators.ModelGenerators
-import models.{ChildName, Index, PartnerClaimingChildBenefit}
+import journey.JourneyHelpers
+import models.{ChildName, PartnerClaimingChildBenefit}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
-import pages.CheckYourAnswersPage
-import pages.child.ChildNamePage
 import pages.partner._
 import uk.gov.hmrc.domain.Nino
 
@@ -30,19 +29,19 @@ import java.time.LocalDate
 
 class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
-  private def nino            = arbitrary[Nino].sample.value
+  private def nino = arbitrary[Nino].sample.value
   private def eldestChildName = arbitrary[ChildName].sample.value
-  private def childName       = arbitrary[ChildName].sample.value
+  private def childName = arbitrary[ChildName].sample.value
 
   "when a user initially said they knew their partner's NINO" - {
 
-    "changing that answer to say they don't know it must remove the NINO, then return to Check Answers" in {
+    "changing that answer to say they don't know it must remove the NINO, then return to Check Partner Details" in {
 
       val initialise = journeyOf(
         submitAnswer(PartnerNinoKnownPage, true),
         submitAnswer(PartnerNinoPage, nino),
         submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-        goTo(CheckYourAnswersPage)
+        goTo(CheckPartnerDetailsPage)
       )
 
       startingFrom(PartnerNinoKnownPage)
@@ -50,7 +49,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
           initialise,
           goToChangeAnswer(PartnerNinoKnownPage),
           submitAnswer(PartnerNinoKnownPage, false),
-          pageMustBe(CheckYourAnswersPage),
+          pageMustBe(CheckPartnerDetailsPage),
           answersMustNotContain(PartnerNinoPage)
         )
     }
@@ -58,12 +57,12 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
 
   "when a user initially said they did not know their partner's NINO" - {
 
-    "changing that answer to say they do know it must collect the NINO, then return to Check Answers" in {
+    "changing that answer to say they do know it must collect the NINO, then return to Check Partner Details" in {
 
       val initialise = journeyOf(
         submitAnswer(PartnerNinoKnownPage, false),
         submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-        goTo(CheckYourAnswersPage)
+        goTo(CheckPartnerDetailsPage)
       )
 
       startingFrom(PartnerNinoKnownPage)
@@ -72,7 +71,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
           goToChangeAnswer(PartnerNinoKnownPage),
           submitAnswer(PartnerNinoKnownPage, true),
           submitAnswer(PartnerNinoPage, nino),
-          pageMustBe(CheckYourAnswersPage)
+          pageMustBe(CheckPartnerDetailsPage)
         )
     }
   }
@@ -89,7 +88,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
         submitAnswer(PartnerClaimingChildBenefitPage, partnerClaiming),
         submitAnswer(PartnerEldestChildNamePage, eldestChildName),
         submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
-        goTo(CheckYourAnswersPage)
+        goTo(CheckPartnerDetailsPage)
       )
 
       startingFrom(PartnerClaimingChildBenefitPage)
@@ -97,7 +96,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
           initialise,
           goToChangeAnswer(PartnerClaimingChildBenefitPage),
           submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
-          pageMustBe(ChildNamePage(Index(0))),
+          pageMustBe(CheckPartnerDetailsPage),
           answersMustNotContain(PartnerEldestChildNamePage),
           answersMustNotContain(PartnerEldestChildDateOfBirthPage)
         )
@@ -114,7 +113,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
 
       val initialise = journeyOf(
         submitAnswer(PartnerClaimingChildBenefitPage, NotClaiming),
-        goTo(CheckYourAnswersPage)
+        goTo(CheckPartnerDetailsPage)
       )
 
       startingFrom(PartnerClaimingChildBenefitPage)
@@ -124,7 +123,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
           submitAnswer(PartnerClaimingChildBenefitPage, partnerClaiming),
           submitAnswer(PartnerEldestChildNamePage, childName),
           submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
-          pageMustBe(ChildNamePage(Index(0)))
+          pageMustBe(CheckPartnerDetailsPage)
         )
     }
   }
