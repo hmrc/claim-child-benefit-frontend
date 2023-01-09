@@ -19,13 +19,16 @@ package journey.tasklist
 import generators.ModelGenerators
 import journey.JourneyHelpers
 import models.CurrentlyReceivingChildBenefit._
+import models.RelationshipStatus._
+import models.TaskListSectionChange.PaymentDetailsRemoved
 import models._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import pages._
 import pages.applicant._
-import pages.payments.{CurrentlyReceivingChildBenefitPage, EldestChildDateOfBirthPage, EldestChildNamePage}
+import pages.income._
+import pages.payments._
 import uk.gov.hmrc.domain.Nino
 
 import java.time.LocalDate
@@ -39,6 +42,42 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
   private val nino = arbitrary[Nino].sample.value
   private val country = Gen.oneOf(Country.internationalCountries).sample.value
   private val internationalAddress = InternationalAddress("line1", None, "town", None, None, country)
+  private val bankDetails = arbitrary[BankAccountDetails].sample.value
+
+  private val setFullPaymentDetailsSingle: JourneyStep[Unit] = journeyOf(
+    setUserAnswerTo(ApplicantIncomePage, Income.BetweenThresholds),
+    setUserAnswerTo(WantToBePaidPage, true),
+    setUserAnswerTo(ApplicantBenefitsPage, Benefits.qualifyingBenefits),
+    setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
+    setUserAnswerTo(WantToBePaidToExistingAccountPage, false),
+    setUserAnswerTo(ApplicantHasSuitableAccountPage, true),
+    setUserAnswerTo(BankAccountHolderPage, BankAccountHolder.Applicant),
+    setUserAnswerTo(BankAccountDetailsPage, bankDetails)
+  )
+
+  private val setFullPaymentDetailsPartner: JourneyStep[Unit] = journeyOf(
+    setUserAnswerTo(ApplicantOrPartnerIncomePage, Income.BetweenThresholds),
+    setUserAnswerTo(WantToBePaidPage, true),
+    setUserAnswerTo(ApplicantOrPartnerBenefitsPage, Benefits.qualifyingBenefits),
+    setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
+    setUserAnswerTo(WantToBePaidToExistingAccountPage, false),
+    setUserAnswerTo(ApplicantHasSuitableAccountPage, true),
+    setUserAnswerTo(BankAccountHolderPage, BankAccountHolder.Applicant),
+    setUserAnswerTo(BankAccountDetailsPage, bankDetails)
+  )
+
+  private val paymentDetailsMustHaveBeenRemoved: JourneyStep[Unit] = journeyOf(
+    answersMustNotContain(ApplicantIncomePage),
+    answersMustNotContain(ApplicantOrPartnerIncomePage),
+    answersMustNotContain(WantToBePaidPage),
+    answersMustNotContain(ApplicantBenefitsPage),
+    answersMustNotContain(ApplicantOrPartnerBenefitsPage),
+    answersMustNotContain(PaymentFrequencyPage),
+    answersMustNotContain(WantToBePaidToExistingAccountPage),
+    answersMustNotContain(ApplicantHasSuitableAccountPage),
+    answersMustNotContain(BankAccountHolderPage),
+    answersMustNotContain(BankAccountDetailsPage)
+  )
 
   "when the user originally said they knew their NINO" - {
 
@@ -423,50 +462,185 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
 
   "when the user originally said they were claiming for Child Benefit" - {
 
-    "changing to say they are not claiming must remove details of their oldest child and return to Check Applicant" in {
+    "and they had not already given payment details" - {
 
-      val currentlyReceiving = Gen.oneOf(GettingPayments, NotGettingPayments).sample.value
+      "changing to say they are not claiming must remove details of their oldest child and return to Check Applicant" in {
 
-      val initialise = journeyOf(
-        submitAnswer(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
-        submitAnswer(EldestChildNamePage, childName),
-        submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
-        goTo(CheckApplicantDetailsPage)
-      )
+        val currentlyReceiving = Gen.oneOf(GettingPayments, NotGettingPayments).sample.value
 
-      startingFrom(CurrentlyReceivingChildBenefitPage)
-        .run(
-          initialise,
-          goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
-          submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
-          pageMustBe(CheckApplicantDetailsPage),
-          answersMustNotContain(EldestChildNamePage),
-          answersMustNotContain(EldestChildDateOfBirthPage)
+        val initialise = journeyOf(
+          submitAnswer(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
+          submitAnswer(EldestChildNamePage, childName),
+          submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
+          goTo(CheckApplicantDetailsPage)
         )
 
+        startingFrom(CurrentlyReceivingChildBenefitPage)
+          .run(
+            initialise,
+            goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
+            submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
+            pageMustBe(CheckApplicantDetailsPage),
+            answersMustNotContain(EldestChildNamePage),
+            answersMustNotContain(EldestChildDateOfBirthPage)
+          )
+      }
+    }
+
+    "and they had already given payment details" - {
+
+      "and are married or cohabiting" - {
+
+        "changing to say they are not claiming must remove details of their oldest child and their payment details, tell them payment details have been removed, then return to Check Applicant" in {
+
+          val currentlyReceiving = Gen.oneOf(GettingPayments, NotGettingPayments).sample.value
+          val relationship = Gen.oneOf(Married, Cohabiting).sample.value
+
+          val initialise = journeyOf(
+            setUserAnswerTo(RelationshipStatusPage, relationship),
+            submitAnswer(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
+            submitAnswer(EldestChildNamePage, childName),
+            submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
+            setFullPaymentDetailsPartner,
+            goTo(CheckApplicantDetailsPage)
+          )
+
+          startingFrom(CurrentlyReceivingChildBenefitPage)
+            .run(
+              initialise,
+              goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
+              submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
+              pageMustBe(TaskListSectionsChangedPage),
+              next,
+              pageMustBe(CheckApplicantDetailsPage),
+              answersMustNotContain(EldestChildNamePage),
+              answersMustNotContain(EldestChildDateOfBirthPage),
+              paymentDetailsMustHaveBeenRemoved,
+              answerMustEqual(TaskListSectionsChangedPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+            )
+        }
+      }
+
+      "and are single, separated, divorced or widowed" - {
+
+        "changing to say they are not claiming must remove details of their oldest child and their payment details, tell them payment details have been removed, then return to Check Applicant" in {
+
+          val currentlyReceiving = Gen.oneOf(GettingPayments, NotGettingPayments).sample.value
+          val relationship = Gen.oneOf(Single, Separated, Widowed, Divorced).sample.value
+
+          val initialise = journeyOf(
+            setUserAnswerTo(RelationshipStatusPage, relationship),
+            submitAnswer(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
+            submitAnswer(EldestChildNamePage, childName),
+            submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
+            setFullPaymentDetailsSingle,
+            goTo(CheckApplicantDetailsPage)
+          )
+
+          startingFrom(CurrentlyReceivingChildBenefitPage)
+            .run(
+              initialise,
+              goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
+              submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
+              pageMustBe(TaskListSectionsChangedPage),
+              next,
+              pageMustBe(CheckApplicantDetailsPage),
+              answersMustNotContain(EldestChildNamePage),
+              answersMustNotContain(EldestChildDateOfBirthPage),
+              paymentDetailsMustHaveBeenRemoved,
+              answerMustEqual(TaskListSectionsChangedPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+            )
+        }
+      }
     }
   }
 
   "when the user originally said they were not claiming for Child Benefit" - {
 
-    "changing to say they are claiming must collect details of their oldest child and return to Check Applicant" in {
+    "and had not already given payment details" - {
 
-      val currentlyReceiving = Gen.oneOf(GettingPayments, NotGettingPayments).sample.value
+      "changing to say they are claiming must collect details of their oldest child and return to Check Applicant" in {
 
-      val initialise = journeyOf(
-        submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
-        goTo(CheckApplicantDetailsPage)
-      )
+        val currentlyReceiving = Gen.oneOf(GettingPayments, NotGettingPayments).sample.value
 
-      startingFrom(CurrentlyReceivingChildBenefitPage)
-        .run(
-          initialise,
-          goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
-          submitAnswer(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
-          submitAnswer(EldestChildNamePage, childName),
-          submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
-          pageMustBe(CheckApplicantDetailsPage)
+        val initialise = journeyOf(
+          submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
+          goTo(CheckApplicantDetailsPage)
         )
+
+        startingFrom(CurrentlyReceivingChildBenefitPage)
+          .run(
+            initialise,
+            goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
+            submitAnswer(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
+            submitAnswer(EldestChildNamePage, childName),
+            submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
+            pageMustBe(CheckApplicantDetailsPage)
+          )
+      }
+    }
+
+    "and had already given payment details" - {
+
+      "and the user is married or cohabiting" - {
+
+        "changing to say they are claiming must collect details of their oldest child, remove payment details, tell the user they've been removed then return to Check Applicant" in {
+
+          val currentlyReceiving = Gen.oneOf(GettingPayments, NotGettingPayments).sample.value
+          val relationship = Gen.oneOf(Married, Cohabiting).sample.value
+
+          val initialise = journeyOf(
+            setUserAnswerTo(RelationshipStatusPage, relationship),
+            submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
+            setFullPaymentDetailsPartner,
+            goTo(CheckApplicantDetailsPage)
+          )
+
+          startingFrom(CurrentlyReceivingChildBenefitPage)
+            .run(
+              initialise,
+              goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
+              submitAnswer(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
+              pageMustBe(TaskListSectionsChangedPage),
+              next,
+              submitAnswer(EldestChildNamePage, childName),
+              submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
+              pageMustBe(CheckApplicantDetailsPage),
+              paymentDetailsMustHaveBeenRemoved,
+              answerMustEqual(TaskListSectionsChangedPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+            )
+        }
+      }
+
+      "and the user is single, separated, divorced or widowed" - {
+
+        "changing to say they are claiming must collect details of their oldest child, remove payment details, tell the user they've been removed then return to Check Applicant" in {
+
+          val currentlyReceiving = Gen.oneOf(GettingPayments, NotGettingPayments).sample.value
+          val relationship = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
+
+          val initialise = journeyOf(
+            setUserAnswerTo(RelationshipStatusPage, relationship),
+            submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
+            setFullPaymentDetailsSingle,
+            goTo(CheckApplicantDetailsPage)
+          )
+
+          startingFrom(CurrentlyReceivingChildBenefitPage)
+            .run(
+              initialise,
+              goToChangeAnswer(CurrentlyReceivingChildBenefitPage),
+              submitAnswer(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
+              pageMustBe(TaskListSectionsChangedPage),
+              next,
+              submitAnswer(EldestChildNamePage, childName),
+              submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
+              pageMustBe(CheckApplicantDetailsPage),
+              paymentDetailsMustHaveBeenRemoved,
+              answerMustEqual(TaskListSectionsChangedPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+            )
+        }
+      }
     }
   }
 }

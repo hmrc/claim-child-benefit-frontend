@@ -89,7 +89,8 @@ class ChangingRelationshipSectionJourneySpec extends AnyFreeSpec with JourneyHel
     answersMustNotContain(PartnerNationalityPage),
     answersMustNotContain(PartnerClaimingChildBenefitPage),
     answersMustNotContain(PartnerEldestChildNamePage),
-    answersMustNotContain(PartnerEldestChildDateOfBirthPage)
+    answersMustNotContain(PartnerEldestChildDateOfBirthPage),
+    answersMustNotContain(PartnerIsHmfOrCivilServantPage)
   )
 
   private val partnerDetailsMustRemain: JourneyStep[Unit] = journeyOf(
@@ -135,8 +136,7 @@ class ChangingRelationshipSectionJourneySpec extends AnyFreeSpec with JourneyHel
     answersMustContain(WantToBePaidToExistingAccountPage),
     answersMustContain(ApplicantHasSuitableAccountPage),
     answersMustContain(BankAccountHolderPage),
-    answersMustContain(BankAccountDetailsPage),
-    answersMustNotContain(PartnerIsHmfOrCivilServantPage)
+    answersMustContain(BankAccountDetailsPage)
   )
 
   "when the user originally said they were married" - {

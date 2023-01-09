@@ -20,7 +20,7 @@ import controllers.payments.routes
 import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments}
 import models.{CurrentlyReceivingChildBenefit, UserAnswers}
 import pages.applicant.CheckApplicantDetailsPage
-import pages.{Page, QuestionPage, Waypoints}
+import pages.{NonEmptyWaypoints, Page, QuestionPage, RecoveryOps, TaskListSectionsChangedPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -39,6 +39,21 @@ case object CurrentlyReceivingChildBenefitPage extends QuestionPage[CurrentlyRec
     answers.get(this).map {
       case GettingPayments | NotGettingPayments => EldestChildNamePage
       case NotClaiming                          => CheckApplicantDetailsPage
+    }.orRecover
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, originalAnswers: UserAnswers, updatedAnswers: UserAnswers): Page =
+    updatedAnswers.get(this).map {
+      case NotClaiming =>
+        val significantChange =
+          originalAnswers.get(this).exists {
+            case NotClaiming => false
+            case _ => true
+          }
+
+        if (significantChange) TaskListSectionsChangedPage else waypoints.next.page
+
+      case _ =>
+        ???
     }.orRecover
 
   override def cleanup(value: Option[CurrentlyReceivingChildBenefit], userAnswers: UserAnswers): Try[UserAnswers] =
