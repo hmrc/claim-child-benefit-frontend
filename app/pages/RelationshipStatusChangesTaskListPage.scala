@@ -24,7 +24,7 @@ import play.api.mvc.Call
 
 case object RelationshipStatusChangesTaskListPage extends QuestionPage[Set[TaskListSectionChange]] {
 
-  override def path: JsPath = JsPath \ "taskListSectionsChanged"
+  override def path: JsPath = JsPath \ "relationshipStatusChangesTaskList"
 
   override def route(waypoints: Waypoints): Call =
     routes.RelationshipStatusChangesTaskListController.onPageLoad(waypoints)

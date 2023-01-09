@@ -45,6 +45,9 @@ POST        /task-list                                      controllers.TaskList
 GET         /relationship-change-affects-tasks              controllers.RelationshipStatusChangesTaskListController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST        /relationship-change-affects-tasks              controllers.RelationshipStatusChangesTaskListController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
+GET         /currently-receiving-affects-tasks              controllers.CurrentlyReceivingChangesTaskListController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST        /currently-receiving-affects-tasks              controllers.CurrentlyReceivingChangesTaskListController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 # Initial section
 
 GET        /always-lived-in-uk                        controllers.AlwaysLivedInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)

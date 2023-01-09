@@ -1440,5 +1440,8 @@ taskList.paymentDetails = Payment details
 taskList.additionalInfo = Further details to share
 taskList.completedSections = You’ve completed {0} of {1} sections.
 
-taskListSectionsChanged.title = Some details have changed (placeholder content)
-taskListSectionsChanged.heading = Some details have changed (placeholder content)
+relationshipStatusChangesTaskList.title = Some details have changed (placeholder content)
+relationshipStatusChangesTaskList.heading = Some details have changed (placeholder content)
+
+currentlyReceivingChangesTaskList.title = Some details have changed (placeholder content)
+currentlyReceivingChangesTaskList.heading = Some details have changed (placeholder content)

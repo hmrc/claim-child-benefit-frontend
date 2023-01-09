@@ -17,27 +17,27 @@
 package controllers
 
 import base.SpecBase
-import pages.{EmptyWaypoints, RelationshipStatusChangesTaskListPage}
+import pages.{EmptyWaypoints, CurrentlyReceivingChangesTaskListPage}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.RelationshipStatusChangesTaskListView
+import views.html.CurrentlyReceivingChangesTaskListView
 
-class RelationshipStatusChangesTaskListControllerSpec extends SpecBase {
+class CurrentlyReceivingChangesTaskListControllerSpec extends SpecBase {
 
   private val waypoints = EmptyWaypoints
 
-  "RelationshipStatusChangesTaskList Controller" - {
+  "CurrentlyReceivingChangesTaskList Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.RelationshipStatusChangesTaskListController.onPageLoad().url)
+        val request = FakeRequest(GET, routes.CurrentlyReceivingChangesTaskListController.onPageLoad().url)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[RelationshipStatusChangesTaskListView]
+        val view = application.injector.instanceOf[CurrentlyReceivingChangesTaskListView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(waypoints)(request, messages(application)).toString
@@ -49,12 +49,12 @@ class RelationshipStatusChangesTaskListControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(POST, routes.RelationshipStatusChangesTaskListController.onSubmit().url)
+        val request = FakeRequest(POST, routes.CurrentlyReceivingChangesTaskListController.onSubmit().url)
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual RelationshipStatusChangesTaskListPage.navigate(waypoints, emptyUserAnswers, emptyUserAnswers).route.url
+        redirectLocation(result).value mustEqual CurrentlyReceivingChangesTaskListPage.navigate(waypoints, emptyUserAnswers, emptyUserAnswers).route.url
       }
     }
   }
