@@ -19,8 +19,11 @@ package pages
 import controllers.routes
 import models.UserAnswers
 import pages.applicant.ApplicantIsHmfOrCivilServantPage
+import pages.partner.PartnerIsHmfOrCivilServantPage
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+
+import scala.util.Try
 
 case object AlwaysLivedInUkPage extends QuestionPage[Boolean] {
 
@@ -36,4 +39,13 @@ case object AlwaysLivedInUkPage extends QuestionPage[Boolean] {
       case true  => CheckRelationshipDetailsPage
       case false => ApplicantIsHmfOrCivilServantPage
     }.orRecover
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    if (value.contains(true)) {
+      userAnswers
+        .remove(ApplicantIsHmfOrCivilServantPage)
+        .flatMap(_.remove(PartnerIsHmfOrCivilServantPage))
+    } else {
+      super.cleanup(value, userAnswers)
+    }
 }

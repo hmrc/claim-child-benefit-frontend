@@ -46,7 +46,7 @@ class ChangingRelationshipSectionJourneySpec extends AnyFreeSpec with JourneyHel
     submitAnswer(AlwaysLivedInUkPage, false),
     submitAnswer(ApplicantIsHmfOrCivilServantPage, true)
   )
-  private def setAlwaysLivedInUkOrHmForces = Gen.oneOf(setAlwaysLivedInUk, setHmForces).sample.value
+  private def setAlwaysLivedInUkOrHmForces: JourneyStep[Unit] = Gen.oneOf(setAlwaysLivedInUk, setHmForces).sample.value
 
   private val setFullPartnerDetails: JourneyStep[Unit] = journeyOf(
     setUserAnswerTo(PartnerNamePage, adultName),
@@ -1001,6 +1001,93 @@ class ChangingRelationshipSectionJourneySpec extends AnyFreeSpec with JourneyHel
             paymentDetailsMustRemainSingle,
             answerMustEqual(TaskListSectionsChangedPage, Set.empty[TaskListSectionChange])
           )
+      }
+    }
+  }
+
+  "when the user originally said they had always lived in the UK" - {
+
+    "changing to say they haven't must ask if they are HM Forces or a civil servant abroad" in {
+
+      val initialise = journeyOf(
+        submitAnswer(AlwaysLivedInUkPage, true),
+        pageMustBe(CheckRelationshipDetailsPage)
+      )
+
+      startingFrom(AlwaysLivedInUkPage)
+        .run(
+          initialise,
+          goToChangeAnswer(AlwaysLivedInUkPage),
+          submitAnswer(AlwaysLivedInUkPage, false),
+          submitAnswer(ApplicantIsHmfOrCivilServantPage, true),
+          pageMustBe(CheckRelationshipDetailsPage)
+        )
+    }
+  }
+
+  "when the user said they hadn't always lived in the UK" - {
+
+    "changing to say they have always lived in the UK must remove whether they or their partner are HM Forces and go to Check Relationship" in {
+
+      val initialise = journeyOf(
+        submitAnswer(RelationshipStatusPage, Married),
+        submitAnswer(AlwaysLivedInUkPage, false),
+        submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
+        submitAnswer(PartnerIsHmfOrCivilServantPage, true),
+        pageMustBe(CheckRelationshipDetailsPage)
+      )
+
+      startingFrom(RelationshipStatusPage)
+        .run(
+          initialise,
+          goToChangeAnswer(AlwaysLivedInUkPage),
+          submitAnswer(AlwaysLivedInUkPage, true),
+          pageMustBe(CheckRelationshipDetailsPage),
+          answersMustNotContain(ApplicantIsHmfOrCivilServantPage),
+          answersMustNotContain(PartnerIsHmfOrCivilServantPage)
+        )
+    }
+
+    "and they were HM Forces or a civil servant abroad" - {
+
+      "changing to say they aren't HM Forces or a civil servant abroad" - {
+
+        "must ask if their partner is HM Forces or a civil servant abroad when the user has a partner" in {
+
+          val relationship = Gen.oneOf(Married, Cohabiting).sample.value
+          val initialise = journeyOf(
+            setUserAnswerTo(RelationshipStatusPage, relationship),
+            submitAnswer(AlwaysLivedInUkPage, false),
+            submitAnswer(ApplicantIsHmfOrCivilServantPage, true)
+          )
+
+          startingFrom(AlwaysLivedInUkPage)
+            .run(
+              initialise,
+              goToChangeAnswer(ApplicantIsHmfOrCivilServantPage),
+              submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
+              submitAnswer(PartnerIsHmfOrCivilServantPage, true),
+              pageMustBe(CheckRelationshipDetailsPage)
+            )
+        }
+
+        "must tell the user to use the Print and Post form when the user does not have a partner" in {
+
+          val relationship = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
+          val initialise = journeyOf(
+            setUserAnswerTo(RelationshipStatusPage, relationship),
+            submitAnswer(AlwaysLivedInUkPage, false),
+            submitAnswer(ApplicantIsHmfOrCivilServantPage, true)
+          )
+
+          startingFrom(AlwaysLivedInUkPage)
+            .run(
+              initialise,
+              goToChangeAnswer(ApplicantIsHmfOrCivilServantPage),
+              submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
+              pageMustBe(UsePrintAndPostFormPage)
+            )
+        }
       }
     }
   }
