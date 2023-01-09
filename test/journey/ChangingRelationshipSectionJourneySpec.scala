@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package journey.tasklist
+package journey
 
 import generators.ModelGenerators
-import journey.JourneyHelpers
 import models.RelationshipStatus._
 import models.TaskListSectionChange.{PartnerDetailsRemoved, PartnerDetailsRequired, PaymentDetailsRemoved}
 import models._

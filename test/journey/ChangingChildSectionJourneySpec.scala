@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package journey.tasklist
+package journey
 
 import generators.ModelGenerators
-import journey.JourneyHelpers
 import models.ChildBirthRegistrationCountry._
 import models.{ApplicantRelationshipToChild => Relationship, _}
 import org.scalacheck.Arbitrary.arbitrary

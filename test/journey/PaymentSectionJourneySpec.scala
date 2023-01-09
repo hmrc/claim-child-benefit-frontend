@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package journey.tasklist
+package journey
 
 import generators.ModelGenerators
-import journey.JourneyHelpers
 import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments}
-import models.{BankAccountDetails, BankAccountHolder, Benefits, Income, PaymentFrequency}
 import models.RelationshipStatus._
+import models.{BankAccountDetails, BankAccountHolder, Benefits, Income, PaymentFrequency}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec

@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package journey.tasklist
+package journey
 
 import generators.ModelGenerators
-import journey.JourneyHelpers
 import models.RelationshipStatus._
 import org.scalatest.freespec.AnyFreeSpec
 import pages._

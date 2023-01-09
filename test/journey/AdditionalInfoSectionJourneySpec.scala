@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package journey.tasklist
+package journey
 
-import journey.JourneyHelpers
 import models.AdditionalInformation.Information
 import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers
 import pages.{AdditionalInformationPage, TaskListPage}
 
 class AdditionalInfoSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
