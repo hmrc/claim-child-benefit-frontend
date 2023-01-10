@@ -1445,3 +1445,6 @@ relationshipStatusChangesTaskList.heading = Some details have changed (placehold
 
 currentlyReceivingChangesTaskList.title = Some details have changed (placeholder content)
 currentlyReceivingChangesTaskList.heading = Some details have changed (placeholder content)
+
+alwaysLivedInUkChangesTaskList.title = Some details have changed (placeholder content)
+alwaysLivedInUkChangesTaskList.heading = Some details have changed (placeholder content)
