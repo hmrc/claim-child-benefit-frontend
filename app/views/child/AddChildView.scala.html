@@ -55,10 +55,14 @@
 
         @addToList(children, Long, "addChild.change.hidden", "addChild.remove.hidden")
 
+        <h2 class="govuk-heading-m">@messages("addChild.addAnother")</h2>
+
+        <p class="govuk-body">@messages("addChild.addAnother.guidance")</p>
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("addChild.addAnother")).withSize(LegendSize.Medium)
+                legend = LegendViewModel(messages("addChild.addAnother")).visuallyHidden()
             )
         )
 
