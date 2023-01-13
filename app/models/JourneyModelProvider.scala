@@ -47,16 +47,22 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
         IorT.fromIor[Future](answers.getIor(AdditionalInformationPage))
       ).parMapN(JourneyModel.apply).value
 
-  private def getBenefits(answers: UserAnswers): IorNec[Query, Set[Benefits]] = {
+  private def getBenefits(answers: UserAnswers): IorNec[Query, Option[Set[Benefits]]] = {
 
     import models.RelationshipStatus._
 
     answers.getIor(RelationshipStatusPage).flatMap {
       case Married | Cohabiting =>
-        answers.getIor(ApplicantOrPartnerBenefitsPage)
+        answers.getIor(WantToBePaidPage).flatMap {
+          case true => answers.getIor(ApplicantOrPartnerBenefitsPage).map(Some(_))
+          case false => Ior.Right(None)
+        }
 
       case Single | Separated | Divorced | Widowed =>
-        answers.getIor(ApplicantBenefitsPage)
+        answers.getIor(WantToBePaidPage).flatMap {
+          case true => answers.getIor(ApplicantBenefitsPage).map(Some(_))
+          case false => Ior.Right(None)
+        }
     }
   }
 

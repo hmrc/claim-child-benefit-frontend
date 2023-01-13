@@ -69,12 +69,14 @@
                         @line(s"pdf.relationshipStatusDate.${model.relationship.status.toString}", date(since))
                     }
 
-                    <fo:block margin-bottom="3mm">
-                        <fo:block font-weight="bold">@messages("pdf.benefits")</fo:block>
-                        @model.benefits.map { x =>
-                            <fo:block width="8cm" wrap-option="wrap">@messages(s"benefits.${x.toString}")</fo:block>
-                        }
-                    </fo:block>
+                    @model.benefits.map { benefits =>
+                        <fo:block margin-bottom="3mm">
+                            <fo:block font-weight="bold">@messages("pdf.benefits")</fo:block>
+                            @benefits.map { x =>
+                                <fo:block width="8cm" wrap-option="wrap">@messages(s"benefits.${x.toString}")</fo:block>
+                            }
+                        </fo:block>
+                    }
 
                     @model.applicant.previousAddress.map { address =>
                         @line("pdf.livedAtAddressOneYear", messages("site.no"))

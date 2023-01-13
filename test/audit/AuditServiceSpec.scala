@@ -113,7 +113,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             dateChildStartedLivingWithApplicant = Some(LocalDate.now)
           ), Nil
         ),
-        benefits = Set(models.Benefits.IncomeSupport, models.Benefits.JobseekersAllowance),
+        benefits = Some(Set(models.Benefits.IncomeSupport, models.Benefits.JobseekersAllowance)),
         paymentPreference = JourneyModel.PaymentPreference.Weekly(
           bankAccount = Some(JourneyModel.BankAccount(
             holder = models.BankAccountHolder.Applicant,
@@ -185,7 +185,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             dateChildStartedLivingWithApplicant = Some(LocalDate.now)
           )
         ),
-        benefits = Set("incomeSupport", "jobseekersAllowance"),
+        benefits = Some(Set("incomeSupport", "jobseekersAllowance")),
         paymentPreference = Weekly(
           bankAccount = Some(BankAccount("applicant", "name on account", "bank name", "000000", "00000000", Some("roll number"))),
           eldestChild = Some(EldestChild(

@@ -26,7 +26,7 @@ final case class DownloadAuditEvent(
                                      applicant: Applicant,
                                      relationship: Relationship,
                                      children: List[Child],
-                                     benefits: Set[String],
+                                     benefits: Option[Set[String]],
                                      paymentPreference: PaymentPreference,
                                      additionalInformation: String
                                    )
@@ -97,7 +97,7 @@ object DownloadAuditEvent {
           dateChildStartedLivingWithApplicant = child.dateChildStartedLivingWithApplicant
         )
       },
-      benefits          = model.benefits.map(_.toString),
+      benefits          = model.benefits.map(_.map(_.toString)),
       paymentPreference = model.paymentPreference match {
         case JourneyModel.PaymentPreference.Weekly(bankAccount, eldestChild) =>
           Weekly(

@@ -28,7 +28,7 @@ final case class JourneyModel(
                                applicant: Applicant,
                                relationship: Relationship,
                                children: NonEmptyList[Child],
-                               benefits: Set[Benefits],
+                               benefits: Option[Set[Benefits]],
                                paymentPreference: PaymentPreference,
                                additionalInformation: AdditionalInformation
                              ) {
