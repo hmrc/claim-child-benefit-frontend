@@ -17,13 +17,15 @@
 package pages
 
 import controllers.routes
-import models.UserAnswers
-import pages.applicant.ApplicantIsHmfOrCivilServantPage
+import models.TaskListSectionChange.AddressDetailsRemoved
+import models.{TaskListSectionChange, UserAnswers}
+import pages.applicant._
 import pages.partner.PartnerIsHmfOrCivilServantPage
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+import queries.Settable
 
-import scala.util.Try
+import scala.util.{Success, Try}
 
 case object AlwaysLivedInUkPage extends QuestionPage[Boolean] {
 
@@ -40,12 +42,61 @@ case object AlwaysLivedInUkPage extends QuestionPage[Boolean] {
       case false => ApplicantIsHmfOrCivilServantPage
     }.orRecover
 
-  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
-    if (value.contains(true)) {
-      userAnswers
-        .remove(ApplicantIsHmfOrCivilServantPage)
-        .flatMap(_.remove(PartnerIsHmfOrCivilServantPage))
-    } else {
-      super.cleanup(value, userAnswers)
-    }
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, originalAnswers: UserAnswers, updatedAnswers: UserAnswers): Page =
+    updatedAnswers.get(this).map {
+      case true =>
+        originalAnswers.get(ApplicantCurrentAddressInUkPage)
+          .map(_ => AlwaysLivedInUkChangesTaskListPage)
+          .getOrElse(waypoints.next.page)
+
+      case false =>
+        originalAnswers.get(ApplicantIsHmfOrCivilServantPage)
+          .map(_ => waypoints.next.page)
+          .getOrElse(ApplicantIsHmfOrCivilServantPage)
+    }.orRecover
+
+  override def cleanup(value: Option[Boolean], previousAnswers: UserAnswers, currentAnswers: UserAnswers): Try[UserAnswers] =
+    value.map {
+      case true =>
+        val maybeSectionChange: Option[TaskListSectionChange] =
+          previousAnswers.get(ApplicantCurrentAddressInUkPage).map(_ => AddressDetailsRemoved)
+
+        val pagesToAlwaysRemove = Seq(
+          ApplicantIsHmfOrCivilServantPage,
+          PartnerIsHmfOrCivilServantPage
+        )
+
+        val pagesToRemove = if(maybeSectionChange.isEmpty) pagesToAlwaysRemove else pagesToAlwaysRemove ++ addressPages
+
+        currentAnswers
+          .set(AlwaysLivedInUkChangesTaskListPage, maybeSectionChange.toSet)
+          .flatMap(x => removePages(x, pagesToRemove))
+
+      case false =>
+        val pagesToSet: Seq[Settable[Boolean]] = Seq(
+          previousAnswers.get(ApplicantCurrentUkAddressPage).map(_ => ApplicantCurrentAddressInUkPage),
+          previousAnswers.get(ApplicantPreviousUkAddressPage).map(_ => ApplicantPreviousAddressInUkPage)
+        ).flatten
+
+        currentAnswers
+          .set(AlwaysLivedInUkChangesTaskListPage, Set.empty[TaskListSectionChange])
+          .flatMap(x => setPagesToTrue(x, pagesToSet))
+    }.getOrElse(super.cleanup(value, previousAnswers, currentAnswers))
+
+
+  private val addressPages: Seq[Settable[_]] = Seq(
+    ApplicantCurrentAddressInUkPage,
+    ApplicantCurrentUkAddressPage,
+    ApplicantCurrentInternationalAddressPage,
+    ApplicantLivedAtCurrentAddressOneYearPage,
+    ApplicantPreviousAddressInUkPage,
+    ApplicantPreviousUkAddressPage,
+    ApplicantPreviousInternationalAddressPage
+  )
+
+  private def removePages(answers: UserAnswers, pages: Seq[Settable[_]]): Try[UserAnswers] =
+    pages.foldLeft[Try[UserAnswers]](Success(answers))((acc, page) => acc.flatMap(_.remove(page)))
+
+  private def setPagesToTrue(answers: UserAnswers, pages: Seq[Settable[Boolean]]): Try[UserAnswers] =
+    pages.foldLeft[Try[UserAnswers]](Success(answers))((acc, page) => acc.flatMap(_.set(page, true)))
 }

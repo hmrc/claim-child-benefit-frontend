@@ -23,9 +23,10 @@ object TaskListSectionChange extends Enumerable.Implicits {
   case object PartnerDetailsRemoved extends WithName("partnerDetailsRemoved") with TaskListSectionChange
   case object PartnerDetailsRequired extends WithName("partnerDetailsRequired") with TaskListSectionChange
   case object PaymentDetailsRemoved extends WithName("paymentDetailsRemoved") with TaskListSectionChange
+  case object AddressDetailsRemoved extends WithName("addressDetailsRemoved") with TaskListSectionChange
 
   val values: Seq[TaskListSectionChange] = Seq(
-    PartnerDetailsRemoved, PartnerDetailsRequired, PaymentDetailsRemoved
+    PartnerDetailsRemoved, PartnerDetailsRequired, PaymentDetailsRemoved, AddressDetailsRemoved
   )
 
   implicit val enumerable: Enumerable[TaskListSectionChange] =

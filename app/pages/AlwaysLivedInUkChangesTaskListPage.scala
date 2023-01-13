@@ -27,4 +27,7 @@ case object AlwaysLivedInUkChangesTaskListPage extends QuestionPage[Set[TaskList
 
   override def route(waypoints: Waypoints): Call =
     routes.AlwaysLivedInUkChangesTaskListController.onPageLoad(waypoints)
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    waypoints.next.page
 }

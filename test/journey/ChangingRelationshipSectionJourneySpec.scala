@@ -18,13 +18,13 @@ package journey
 
 import generators.ModelGenerators
 import models.RelationshipStatus._
-import models.TaskListSectionChange.{PartnerDetailsRemoved, PartnerDetailsRequired, PaymentDetailsRemoved}
+import models.TaskListSectionChange.{AddressDetailsRemoved, PartnerDetailsRemoved, PartnerDetailsRequired, PaymentDetailsRemoved}
 import models._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import pages._
-import pages.applicant.ApplicantIsHmfOrCivilServantPage
+import pages.applicant._
 import pages.income._
 import pages.partner._
 import pages.payments._
@@ -39,6 +39,8 @@ class ChangingRelationshipSectionJourneySpec extends AnyFreeSpec with JourneyHel
   private val nino = arbitrary[Nino].sample.value
   private val nationality = "British"
   private val bankDetails = arbitrary[BankAccountDetails].sample.value
+  private val ukAddress = UkAddress("line 1", None, "town", None, "postcode")
+  private val internationalAddress = InternationalAddress("line 1", None, "town", None, None, Country.internationalCountries.head)
 
   private val setAlwaysLivedInUk = journeyOf(submitAnswer(AlwaysLivedInUkPage, true))
   private val setHmForces = journeyOf(
@@ -1006,45 +1008,145 @@ class ChangingRelationshipSectionJourneySpec extends AnyFreeSpec with JourneyHel
 
   "when the user originally said they had always lived in the UK" - {
 
-    "changing to say they haven't must ask if they are HM Forces or a civil servant abroad" in {
+    "when they hadn't answered any address questions" - {
 
-      val initialise = journeyOf(
-        submitAnswer(AlwaysLivedInUkPage, true),
-        pageMustBe(CheckRelationshipDetailsPage)
-      )
+      "changing to say they haven't must ask if they are HM Forces or a civil servant abroad" in {
 
-      startingFrom(AlwaysLivedInUkPage)
-        .run(
-          initialise,
-          goToChangeAnswer(AlwaysLivedInUkPage),
-          submitAnswer(AlwaysLivedInUkPage, false),
-          submitAnswer(ApplicantIsHmfOrCivilServantPage, true),
+        val initialise = journeyOf(
+          submitAnswer(AlwaysLivedInUkPage, true),
           pageMustBe(CheckRelationshipDetailsPage)
         )
+
+        startingFrom(AlwaysLivedInUkPage)
+          .run(
+            initialise,
+            goToChangeAnswer(AlwaysLivedInUkPage),
+            submitAnswer(AlwaysLivedInUkPage, false),
+            submitAnswer(ApplicantIsHmfOrCivilServantPage, true),
+            pageMustBe(CheckRelationshipDetailsPage)
+          )
+      }
+    }
+
+    "when they had given a current UK address" - {
+
+      "changing to say they haven't always lived in the UK must set the fact their address is in the UK then ask if they are HM Forces or a civil servant abroad" in {
+
+        val initialise = journeyOf(
+          submitAnswer(AlwaysLivedInUkPage, true),
+          pageMustBe(CheckRelationshipDetailsPage),
+          setUserAnswerTo(ApplicantCurrentUkAddressPage, ukAddress)
+        )
+
+        startingFrom(AlwaysLivedInUkPage)
+          .run(
+            initialise,
+            goToChangeAnswer(AlwaysLivedInUkPage),
+            submitAnswer(AlwaysLivedInUkPage, false),
+            submitAnswer(ApplicantIsHmfOrCivilServantPage, true),
+            pageMustBe(CheckRelationshipDetailsPage),
+            answerMustEqual(ApplicantCurrentAddressInUkPage, true),
+            answersMustContain(ApplicantCurrentUkAddressPage)
+          )
+      }
+    }
+
+    "when they had given current and previous UK addresses" - {
+
+      "changing to say they haven't always lived in the UK must set the fact their addresses are in the UK then ask if they are HM Forces or a civil servant abroad" in {
+
+        val initialise = journeyOf(
+          submitAnswer(AlwaysLivedInUkPage, true),
+          pageMustBe(CheckRelationshipDetailsPage),
+          setUserAnswerTo(ApplicantCurrentUkAddressPage, ukAddress),
+          setUserAnswerTo(ApplicantLivedAtCurrentAddressOneYearPage, false),
+          setUserAnswerTo(ApplicantPreviousUkAddressPage, ukAddress)
+        )
+
+        startingFrom(AlwaysLivedInUkPage)
+          .run(
+            initialise,
+            goToChangeAnswer(AlwaysLivedInUkPage),
+            submitAnswer(AlwaysLivedInUkPage, false),
+            submitAnswer(ApplicantIsHmfOrCivilServantPage, true),
+            pageMustBe(CheckRelationshipDetailsPage),
+            answerMustEqual(ApplicantCurrentAddressInUkPage, true),
+            answerMustEqual(ApplicantPreviousAddressInUkPage, true),
+            answersMustContain(ApplicantCurrentUkAddressPage),
+            answersMustContain(ApplicantLivedAtCurrentAddressOneYearPage),
+            answersMustContain(ApplicantPreviousUkAddressPage)
+          )
+      }
     }
   }
 
   "when the user said they hadn't always lived in the UK" - {
 
-    "changing to say they have always lived in the UK must remove whether they or their partner are HM Forces and go to Check Relationship" in {
+    "changing to say they have always lived in the UK" - {
 
-      val initialise = journeyOf(
-        submitAnswer(RelationshipStatusPage, Married),
-        submitAnswer(AlwaysLivedInUkPage, false),
-        submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
-        submitAnswer(PartnerIsHmfOrCivilServantPage, true),
-        pageMustBe(CheckRelationshipDetailsPage)
-      )
+      "when the had not answered whether they live in the UK" - {
 
-      startingFrom(RelationshipStatusPage)
-        .run(
-          initialise,
-          goToChangeAnswer(AlwaysLivedInUkPage),
-          submitAnswer(AlwaysLivedInUkPage, true),
-          pageMustBe(CheckRelationshipDetailsPage),
-          answersMustNotContain(ApplicantIsHmfOrCivilServantPage),
-          answersMustNotContain(PartnerIsHmfOrCivilServantPage)
-        )
+        "must remove whether they or their partner are HM Forces and go to Check Relationship" in {
+
+          val initialise = journeyOf(
+            submitAnswer(RelationshipStatusPage, Married),
+            submitAnswer(AlwaysLivedInUkPage, false),
+            submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
+            submitAnswer(PartnerIsHmfOrCivilServantPage, true),
+            pageMustBe(CheckRelationshipDetailsPage)
+          )
+
+          startingFrom(RelationshipStatusPage)
+            .run(
+              initialise,
+              goToChangeAnswer(AlwaysLivedInUkPage),
+              submitAnswer(AlwaysLivedInUkPage, true),
+              pageMustBe(CheckRelationshipDetailsPage),
+              answersMustNotContain(ApplicantIsHmfOrCivilServantPage),
+              answersMustNotContain(PartnerIsHmfOrCivilServantPage)
+            )
+        }
+      }
+
+      "when they had answered whether they live in the UK" - {
+
+        "must remove whether they or their partner are HM Forces and their address information, tell the user their address has been removed, then go to Check Relationship" in {
+
+          val initialise = journeyOf(
+            submitAnswer(RelationshipStatusPage, Married),
+            submitAnswer(AlwaysLivedInUkPage, false),
+            submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
+            submitAnswer(PartnerIsHmfOrCivilServantPage, true),
+            pageMustBe(CheckRelationshipDetailsPage),
+            setUserAnswerTo(ApplicantCurrentAddressInUkPage, true),
+            setUserAnswerTo(ApplicantCurrentUkAddressPage, ukAddress),
+            setUserAnswerTo(ApplicantCurrentInternationalAddressPage, internationalAddress),
+            setUserAnswerTo(ApplicantLivedAtCurrentAddressOneYearPage, false),
+            setUserAnswerTo(ApplicantPreviousAddressInUkPage, true),
+            setUserAnswerTo(ApplicantPreviousUkAddressPage, ukAddress),
+            setUserAnswerTo(ApplicantPreviousInternationalAddressPage, internationalAddress)
+          )
+
+          startingFrom(RelationshipStatusPage)
+            .run(
+              initialise,
+              goToChangeAnswer(AlwaysLivedInUkPage),
+              submitAnswer(AlwaysLivedInUkPage, true),
+              pageMustBe(AlwaysLivedInUkChangesTaskListPage),
+              next,
+              pageMustBe(CheckRelationshipDetailsPage),
+              answersMustNotContain(ApplicantIsHmfOrCivilServantPage),
+              answersMustNotContain(PartnerIsHmfOrCivilServantPage),
+              answersMustNotContain(ApplicantCurrentAddressInUkPage),
+              answersMustNotContain(ApplicantCurrentUkAddressPage),
+              answersMustNotContain(ApplicantLivedAtCurrentAddressOneYearPage),
+              answersMustNotContain(ApplicantPreviousAddressInUkPage),
+              answersMustNotContain(ApplicantPreviousUkAddressPage),
+              answersMustNotContain(ApplicantPreviousInternationalAddressPage),
+              answerMustEqual(AlwaysLivedInUkChangesTaskListPage, Set[TaskListSectionChange](AddressDetailsRemoved))
+            )
+        }
+      }
     }
 
     "and they were HM Forces or a civil servant abroad" - {
