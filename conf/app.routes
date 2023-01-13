@@ -42,14 +42,14 @@ GET         /identity-verification/error                             controllers
 GET         /task-list                                      controllers.TaskListController.onPageLoad
 POST        /task-list                                      controllers.TaskListController.onSubmit
 
-GET         /relationship-change-affects-tasks              controllers.RelationshipStatusChangesTaskListController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST        /relationship-change-affects-tasks              controllers.RelationshipStatusChangesTaskListController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET         /relationship-status-change              controllers.RelationshipStatusChangesTaskListController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST        /relationship-status-change              controllers.RelationshipStatusChangesTaskListController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET         /currently-receiving-affects-tasks              controllers.CurrentlyReceivingChangesTaskListController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST        /currently-receiving-affects-tasks              controllers.CurrentlyReceivingChangesTaskListController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET         /receiving-child-benefit-change              controllers.CurrentlyReceivingChangesTaskListController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST        /receiving-child-benefit-change              controllers.CurrentlyReceivingChangesTaskListController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET         /always-lived-in-uk-affects-tasks               controllers.AlwaysLivedInUkChangesTaskListController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST        /always-lived-in-uk-affects-tasks               controllers.AlwaysLivedInUkChangesTaskListController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET         /always-lived-in-uk-change               controllers.AlwaysLivedInUkChangesTaskListController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST        /always-lived-in-uk-change               controllers.AlwaysLivedInUkChangesTaskListController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 # Initial section
 
