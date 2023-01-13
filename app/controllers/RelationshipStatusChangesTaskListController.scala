@@ -17,12 +17,13 @@
 package controllers
 
 import controllers.actions._
+import models.TaskListSectionChange._
 import pages.Waypoints
 import pages.RelationshipStatusChangesTaskListPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.RelationshipStatusChangesTaskListView
+import views.html._
 
 import javax.inject.Inject
 
@@ -32,12 +33,36 @@ class RelationshipStatusChangesTaskListController @Inject()(
                                               getData: DataRetrievalAction,
                                               requireData: DataRequiredAction,
                                               val controllerComponents: MessagesControllerComponents,
-                                              view: RelationshipStatusChangesTaskListView
-                                            ) extends FrontendBaseController with I18nSupport {
+                                              paymentRemovedView: RelationshipStatusChangesTaskListPaymentRemovedView,
+                                              partnerRemovedView: RelationshipStatusChangesTaskListPartnerRemovedView,
+                                              partnerRequiredView: RelationshipStatusChangesTaskListPartnerRequiredView,
+                                              paymentRemovedPartnerRemovedView: RelationshipStatusChangesTaskListPaymentRemovedPartnerRemovedView,
+                                              paymentRemovedPartnerRequiredView: RelationshipStatusChangesTaskListPaymentRemovedPartnerRequiredView
+                                            )
+  extends FrontendBaseController
+    with I18nSupport
+    with AnswerExtractor {
 
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      Ok(view(waypoints))
+      getAnswer(RelationshipStatusChangesTaskListPage) {
+        sections =>
+
+          val paymentRemoved = Set(PaymentDetailsRemoved)
+          val partnerRemoved = Set(PartnerDetailsRemoved)
+          val partnerRequired = Set(PartnerDetailsRequired)
+          val paymentRemovedPartnerRemoved = Set(PaymentDetailsRemoved, PartnerDetailsRemoved)
+          val paymentRemovedPartnerRequired = Set(PaymentDetailsRemoved, PartnerDetailsRequired)
+
+          sections match {
+            case x if x == paymentRemoved => Ok(paymentRemovedView(waypoints))
+            case x if x == partnerRemoved => Ok(partnerRemovedView(waypoints))
+            case x if x == partnerRequired => Ok(partnerRequiredView(waypoints))
+            case x if x == paymentRemovedPartnerRemoved => Ok(paymentRemovedPartnerRemovedView(waypoints))
+            case x if x == paymentRemovedPartnerRequired => Ok(paymentRemovedPartnerRequiredView(waypoints))
+            case _ => Redirect(routes.JourneyRecoveryController.onPageLoad())
+          }
+      }
   }
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {

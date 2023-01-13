@@ -22,11 +22,23 @@
 
 @(waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("relationshipStatusChangesTaskList.title"))) {
+@layout(pageTitle = titleNoForm(messages("relationshipStatusChangesTaskListPaymentRemovedPartnerRequired.title"))) {
 
     @formHelper(action = routes.RelationshipStatusChangesTaskListController.onSubmit(waypoints)) {
 
-        <h1 class="govuk-heading-xl">@messages("relationshipStatusChangesTaskList.heading")</h1>
+        <h1 class="govuk-heading-xl">@messages("relationshipStatusChangesTaskListPaymentRemovedPartnerRequired.heading")</h1>
+
+        <div class="govuk-warning-text">
+            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+            <strong class="govuk-warning-text__text">
+                <span class="govuk-warning-text__assistive">@messages("site.warning")</span>
+                @messages("relationshipStatusChangesTaskListPaymentRemovedPartnerRequired.p1")
+            </strong>
+        </div>
+
+        <p class="govuk-body">@messages("relationshipStatusChangesTaskListPaymentRemovedPartnerRequired.p2")</p>
+
+        <p class="govuk-body">@messages("relationshipStatusChangesTaskListPaymentRemovedPartnerRequired.p3")</p>
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))

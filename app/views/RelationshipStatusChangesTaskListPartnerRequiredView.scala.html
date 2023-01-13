@@ -22,23 +22,23 @@
 
 @(waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("alwaysLivedInUkChangesTaskList.title"))) {
+@layout(pageTitle = titleNoForm(messages("relationshipStatusChangesTaskListPartnerRequired.title"))) {
 
-    @formHelper(action = routes.AlwaysLivedInUkChangesTaskListController.onSubmit(waypoints)) {
+    @formHelper(action = routes.RelationshipStatusChangesTaskListController.onSubmit(waypoints)) {
 
-        <h1 class="govuk-heading-xl">@messages("alwaysLivedInUkChangesTaskList.heading")</h1>
+        <h1 class="govuk-heading-xl">@messages("relationshipStatusChangesTaskListPartnerRequired.heading")</h1>
 
         <div class="govuk-warning-text">
             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
             <strong class="govuk-warning-text__text">
                 <span class="govuk-warning-text__assistive">@messages("site.warning")</span>
-                @messages("alwaysLivedInUkChangesTaskList.p1")
+                @messages("relationshipStatusChangesTaskListPartnerRequired.p1")
             </strong>
         </div>
 
-        <p class="govuk-body">@messages("alwaysLivedInUkChangesTaskList.p2")</p>
+        <p class="govuk-body">@messages("relationshipStatusChangesTaskListPartnerRequired.p2")</p>
 
-        <p class="govuk-body">@messages("alwaysLivedInUkChangesTaskList.p3")</p>
+        <p class="govuk-body">@messages("relationshipStatusChangesTaskListPartnerRequired.p3")</p>
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))
