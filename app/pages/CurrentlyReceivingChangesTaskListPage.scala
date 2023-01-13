@@ -17,8 +17,11 @@
 package pages
 
 import controllers.routes
+import models.CurrentlyReceivingChildBenefit.NotClaiming
 import models.{TaskListSectionChange, UserAnswers}
-import play.api.libs.json.JsPath
+import pages.applicant.CheckApplicantDetailsPage
+import pages.payments.{CurrentlyReceivingChildBenefitPage, EldestChildNamePage}
+import play.api.libs.json.{JsPath, Json}
 import play.api.mvc.Call
 
 case object CurrentlyReceivingChangesTaskListPage extends QuestionPage[Set[TaskListSectionChange]] {
@@ -28,4 +31,14 @@ case object CurrentlyReceivingChangesTaskListPage extends QuestionPage[Set[TaskL
   override def route(waypoints: Waypoints): Call =
     routes.CurrentlyReceivingChangesTaskListController.onPageLoad(waypoints)
 
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    answers.get(CurrentlyReceivingChildBenefitPage).map {
+      case NotClaiming =>
+        CheckApplicantDetailsPage
+
+      case _ =>
+        answers.get(EldestChildNamePage)
+          .map(_ => waypoints.next.page)
+          .getOrElse(EldestChildNamePage)
+    }.orRecover
 }

@@ -18,13 +18,16 @@ package pages.payments
 
 import controllers.payments.routes
 import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments}
-import models.{CurrentlyReceivingChildBenefit, UserAnswers}
+import models.TaskListSectionChange.PaymentDetailsRemoved
+import models.{CurrentlyReceivingChildBenefit, TaskListSectionChange, UserAnswers}
 import pages.applicant.CheckApplicantDetailsPage
-import pages.{NonEmptyWaypoints, Page, QuestionPage, RecoveryOps, RelationshipStatusChangesTaskListPage, Waypoints}
+import pages.income.{ApplicantBenefitsPage, ApplicantIncomePage, ApplicantOrPartnerBenefitsPage, ApplicantOrPartnerIncomePage}
+import pages.{CurrentlyReceivingChangesTaskListPage, NonEmptyWaypoints, Page, QuestionPage, RecoveryOps, RelationshipStatusChangesTaskListPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+import queries.Settable
 
-import scala.util.Try
+import scala.util.{Success, Try}
 
 case object CurrentlyReceivingChildBenefitPage extends QuestionPage[CurrentlyReceivingChildBenefit] {
 
@@ -44,25 +47,72 @@ case object CurrentlyReceivingChildBenefitPage extends QuestionPage[CurrentlyRec
   override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, originalAnswers: UserAnswers, updatedAnswers: UserAnswers): Page =
     updatedAnswers.get(this).map {
       case NotClaiming =>
-        val significantChange =
+        val answerAffectsTaskList =
           originalAnswers.get(this).exists {
             case NotClaiming => false
-            case _ => true
+            case _ => originalAnswers.isDefined(ApplicantIncomePage) || originalAnswers.isDefined(ApplicantOrPartnerIncomePage)
           }
 
-        if (significantChange) RelationshipStatusChangesTaskListPage else waypoints.next.page
+        if (answerAffectsTaskList) CurrentlyReceivingChangesTaskListPage else waypoints.next.page
 
-      case _ =>
-        ???
+      case other =>
+        val answerAffectsTaskList =
+          originalAnswers.get(this).exists {
+            case x if x == other => false
+            case _ => originalAnswers.isDefined(ApplicantIncomePage) || originalAnswers.isDefined(ApplicantOrPartnerIncomePage)
+          }
+
+        if (answerAffectsTaskList) {
+          CurrentlyReceivingChangesTaskListPage
+        } else {
+          updatedAnswers.get(EldestChildNamePage)
+            .map(_ => waypoints.next.page)
+            .getOrElse(EldestChildNamePage)
+        }
     }.orRecover
 
-  override def cleanup(value: Option[CurrentlyReceivingChildBenefit], userAnswers: UserAnswers): Try[UserAnswers] =
-    value.map {
-      case NotClaiming =>
-        userAnswers.remove(EldestChildNamePage)
-          .flatMap(_.remove(EldestChildDateOfBirthPage))
+  override def cleanup(value: Option[CurrentlyReceivingChildBenefit], previousAnswers: UserAnswers, currentAnswers: UserAnswers): Try[UserAnswers] = {
 
-      case _ =>
-        super.cleanup(value, userAnswers)
-    }.getOrElse(super.cleanup(value, userAnswers))
+    def maybeRemovePayment(receiving: CurrentlyReceivingChildBenefit): Option[TaskListSectionChange] =
+      if (previousAnswers.get(CurrentlyReceivingChildBenefitPage).contains(receiving)) {
+        None
+      } else if (previousAnswers.isDefined(ApplicantIncomePage) || previousAnswers.isDefined(ApplicantOrPartnerIncomePage)) {
+        Some(PaymentDetailsRemoved)
+      } else {
+        None
+      }
+
+    def pagesToAlwaysRemove(receiving: CurrentlyReceivingChildBenefit): Seq[Settable[_]] = {
+      receiving match {
+        case NotClaiming => Seq(EldestChildNamePage, EldestChildDateOfBirthPage)
+        case _ => Nil
+      }
+    }
+
+    value.map {
+      receiving =>
+        val sectionChange = maybeRemovePayment(receiving)
+        val pages = pagesToAlwaysRemove(receiving) ++ sectionChange.map(_ => paymentPages).getOrElse(Nil)
+
+        currentAnswers
+          .set(CurrentlyReceivingChangesTaskListPage, sectionChange.toSet)
+          .flatMap(x => removePages(x, pages))
+    }.getOrElse(super.cleanup(value, currentAnswers))
+  }
+
+  private val paymentPages: Seq[Settable[_]] = Seq(
+    ApplicantOrPartnerIncomePage,
+    ApplicantIncomePage,
+    WantToBePaidPage,
+    ApplicantBenefitsPage,
+    ApplicantOrPartnerBenefitsPage,
+    PaymentFrequencyPage,
+    WantToBePaidToExistingAccountPage,
+    ApplicantHasSuitableAccountPage,
+    BankAccountHolderPage,
+    BankAccountDetailsPage
+  )
+
+  private def removePages(answers: UserAnswers, pages: Seq[Settable[_]]): Try[UserAnswers] =
+    pages.foldLeft[Try[UserAnswers]](Success(answers))((acc, page) => acc.flatMap(_.remove(page)))
 }
