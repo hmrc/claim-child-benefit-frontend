@@ -93,7 +93,7 @@ class ChildSectionSpec
 
     "must be Completed when the Journey Progress service returns Add Child" in {
 
-      when(mockJourneyProgressService.continue(any(), any())).thenReturn(AddChildPage)
+      when(mockJourneyProgressService.continue(any(), any())).thenReturn(AddChildPage())
 
       val answers = UserAnswers("id")
       val section = new ChildSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection)

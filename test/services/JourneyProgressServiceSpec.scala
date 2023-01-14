@@ -81,7 +81,12 @@ class JourneyProgressServiceSpec extends AnyFreeSpec with Matchers with OptionVa
   final case class CheckAddToListAnswersPage9(index: Index) extends CheckAnswersPage {
     override val urlFragment: String = "foo"
     override def route(waypoints: Waypoints): Call = ???
-    override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page = AddAnotherPage10
+    override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page = AddAnotherPage10(Some(index))
+
+    override def isTheSamePage(other: Page): Boolean = other match {
+      case p: CheckAddToListAnswersPage9 => p.index == this.index
+      case _ => false
+    }
   }
 
   case object DeriveNumberOfItems extends Derivable[List[JsObject], Int] {
@@ -89,7 +94,7 @@ class JourneyProgressServiceSpec extends AnyFreeSpec with Matchers with OptionVa
     override def path: JsPath = JsPath \ "addToList"
   }
 
-  case object AddAnotherPage10 extends QuestionPage[Boolean] with AddItemPage {
+  final case class AddAnotherPage10(index: Option[Index] = None) extends AddItemPage(index) with QuestionPage[Boolean] {
     override val normalModeUrlFragment: String = "bar"
     override val checkModeUrlFragment: String = "baz"
     override def route(waypoints: Waypoints): Call = ???
@@ -108,6 +113,11 @@ class JourneyProgressServiceSpec extends AnyFreeSpec with Matchers with OptionVa
     }
 
     override def path: JsPath = JsPath \ "addItem"
+
+    override def isTheSamePage(other: Page): Boolean = other match {
+      case _: AddAnotherPage10 => true
+      case _ => false
+    }
   }
 
   case object QuestionPage11 extends QuestionPage[String] {
@@ -120,6 +130,11 @@ class JourneyProgressServiceSpec extends AnyFreeSpec with Matchers with OptionVa
   case object CheckAnswersPage12 extends CheckAnswersPage with Terminus {
     override val urlFragment: String = "bax"
     override def route(waypoints: Waypoints): Call = ???
+
+    override def isTheSamePage(other: Page): Boolean = other match {
+      case CheckAnswersPage12 => true
+      case _ => false
+    }
   }
 
   private val emptyAnswers = UserAnswers("id")

@@ -42,7 +42,7 @@ final case class ChildPreviousNamePage(
     routes.ChildPreviousNameController.onPageLoad(waypoints, childIndex, nameIndex)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    AddChildPreviousNamePage(childIndex)
+    AddChildPreviousNamePage(childIndex, Some(nameIndex))
 
   override def cleanup(value: Option[ChildName], userAnswers: UserAnswers): Try[UserAnswers] =
     userAnswers.get(DeriveNumberOfChildPreviousNames(childIndex)).map {

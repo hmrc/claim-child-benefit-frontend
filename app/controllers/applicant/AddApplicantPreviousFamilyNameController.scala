@@ -46,7 +46,7 @@ class AddApplicantPreviousFamilyNameController @Inject()(
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val otherNames = AddApplicantPreviousFamilyNameSummary.rows(request.userAnswers, waypoints, AddApplicantPreviousFamilyNamePage)
+      val otherNames = AddApplicantPreviousFamilyNameSummary.rows(request.userAnswers, waypoints, AddApplicantPreviousFamilyNamePage())
 
       Ok(view(form, waypoints, otherNames))
   }
@@ -56,16 +56,16 @@ class AddApplicantPreviousFamilyNameController @Inject()(
 
       form.bindFromRequest().fold(
         formWithErrors => {
-          val otherNames = AddApplicantPreviousFamilyNameSummary.rows(request.userAnswers, waypoints, AddApplicantPreviousFamilyNamePage)
+          val otherNames = AddApplicantPreviousFamilyNameSummary.rows(request.userAnswers, waypoints, AddApplicantPreviousFamilyNamePage())
 
           Future.successful(BadRequest(view(formWithErrors, waypoints, otherNames)))
         },
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(AddApplicantPreviousFamilyNamePage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(AddApplicantPreviousFamilyNamePage(), value))
             _              <- userDataService.set(updatedAnswers)
-          } yield Redirect(AddApplicantPreviousFamilyNamePage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+          } yield Redirect(AddApplicantPreviousFamilyNamePage().navigate(waypoints, request.userAnswers, updatedAnswers).route)
       )
   }
 }

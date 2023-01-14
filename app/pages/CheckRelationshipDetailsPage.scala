@@ -23,6 +23,11 @@ import play.api.mvc.Call
 
 object CheckRelationshipDetailsPage extends CheckAnswersPage with Terminus {
 
+  override def isTheSamePage(other: Page): Boolean = other match {
+    case CheckRelationshipDetailsPage => true
+    case _ => false
+  }
+
   override val urlFragment: String = "check-relationship-details"
 
   override def route(waypoints: Waypoints): Call = routes.CheckRelationshipDetailsController.onPageLoad

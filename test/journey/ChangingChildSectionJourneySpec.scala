@@ -814,7 +814,7 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             submitAnswer(ChildHasPreviousNamePage(Index(0)), true),
             submitAnswer(ChildNameChangedByDeedPollPage(Index(0)), true),
             submitAnswer(ChildPreviousNamePage(Index(0), Index(0)), childName),
-            submitAnswer(AddChildPreviousNamePage(Index(0)), false),
+            submitAnswer(AddChildPreviousNamePage(Index(0), Some(Index(0))), false),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }
@@ -885,7 +885,7 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(AddChildPreviousNamePage(Index(0))),
             submitAnswer(AddChildPreviousNamePage(Index(0)), true),
             submitAnswer(ChildPreviousNamePage(Index(0), Index(2)), childName),
-            submitAnswer(AddChildPreviousNamePage(Index(0)), false),
+            submitAnswer(AddChildPreviousNamePage(Index(0), Some(Index(2))), false),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }
@@ -898,7 +898,7 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             goToChangeAnswer(AddChildPreviousNamePage(Index(0))),
             goToChangeAnswer(ChildPreviousNamePage(Index(0), Index(0))),
             submitAnswer(ChildPreviousNamePage(Index(0), Index(0)), childName),
-            submitAnswer(AddChildPreviousNamePage(Index(0)), false),
+            submitAnswer(AddChildPreviousNamePage(Index(0), Some(Index(0))), false),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }
@@ -1329,7 +1329,7 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
         submitAnswer(ChildLivesWithApplicantPage(Index(0)), true),
         submitAnswer(ChildLivedWithAnyoneElsePage(Index(0)), false),
         next,
-        submitAnswer(AddChildPage, true),
+        submitAnswer(AddChildPage(Some(Index(0))), true),
         submitAnswer(ChildNamePage(Index(1)), childName),
         submitAnswer(ChildHasPreviousNamePage(Index(1)), false),
         submitAnswer(ChildBiologicalSexPage(Index(1)), sex),
@@ -1343,7 +1343,7 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
         submitAnswer(ChildLivesWithApplicantPage(Index(1)), true),
         submitAnswer(ChildLivedWithAnyoneElsePage(Index(1)), false),
         next,
-        submitAnswer(AddChildPage, false),
+        submitAnswer(AddChildPage(Some(Index(1))), false),
         pageMustBe(TaskListPage)
       )
 
@@ -1352,12 +1352,12 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
       startingFrom(ChildNamePage(Index(0)))
         .run(
           initialise,
-          goTo(AddChildPage),
-          goToChangeAnswer(AddChildPage),
+          goTo(AddChildPage()),
+          goToChangeAnswer(AddChildPage()),
           goTo(RemoveChildPage(Index(1))),
           removeAddToListItem(ChildQuery(Index(1))),
-          pageMustBe(AddChildPage),
-          submitAnswer(AddChildPage, false),
+          pageMustBe(AddChildPage()),
+          submitAnswer(AddChildPage(), false),
           pageMustBe(TaskListPage)
         )
     }
@@ -1367,8 +1367,8 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
       startingFrom(ChildNamePage(Index(0)))
         .run(
           initialise,
-          goTo(AddChildPage),
-          goToChangeAnswer(AddChildPage),
+          goTo(AddChildPage()),
+          goToChangeAnswer(AddChildPage()),
           goTo(RemoveChildPage(Index(1))),
           removeAddToListItem(ChildQuery(Index(1))),
           goTo(RemoveChildPage(Index(0))),
@@ -1386,7 +1386,7 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           submitAnswer(ChildLivesWithApplicantPage(Index(0)), true),
           submitAnswer(ChildLivedWithAnyoneElsePage(Index(0)), false),
           next,
-          submitAnswer(AddChildPage, false),
+          submitAnswer(AddChildPage(Some(Index(0))), false),
           pageMustBe(TaskListPage)
         )
     }

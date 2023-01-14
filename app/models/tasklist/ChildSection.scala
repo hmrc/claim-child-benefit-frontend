@@ -40,7 +40,7 @@ class ChildSection @Inject()(
   override def progress(answers: UserAnswers): SectionStatus =
     continue(answers).map {
       case ChildNamePage(Index(0)) => NotStarted
-      case AddChildPage => Completed
+      case AddChildPage(_) => Completed
       case _ => InProgress
     }.getOrElse(CannotStart)
 

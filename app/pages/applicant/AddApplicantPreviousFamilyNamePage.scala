@@ -23,7 +23,12 @@ import play.api.libs.json.JsPath
 import play.api.mvc.Call
 import queries.DeriveNumberOfPreviousFamilyNames
 
-case object AddApplicantPreviousFamilyNamePage extends QuestionPage[Boolean] with AddItemPage {
+final case class AddApplicantPreviousFamilyNamePage(index: Option[Index] = None) extends AddItemPage(index) with QuestionPage[Boolean] {
+
+  override def isTheSamePage(other: Page): Boolean = other match {
+    case _: AddApplicantPreviousFamilyNamePage => true
+    case _ => false
+  }
 
   override val normalModeUrlFragment: String = "add-other-name"
   override val checkModeUrlFragment: String = "change-other-name"

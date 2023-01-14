@@ -170,9 +170,9 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
     val initialise = journeyOf(
       submitAnswer(ApplicantHasPreviousFamilyNamePage, true),
       submitAnswer(ApplicantPreviousFamilyNamePage(Index(0)), previousName),
-      submitAnswer(AddApplicantPreviousFamilyNamePage, true),
+      submitAnswer(AddApplicantPreviousFamilyNamePage(Some(Index(0))), true),
       submitAnswer(ApplicantPreviousFamilyNamePage(Index(1)), previousName),
-      submitAnswer(AddApplicantPreviousFamilyNamePage, false),
+      submitAnswer(AddApplicantPreviousFamilyNamePage(Some(Index(1))), false),
       submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
       goTo(CheckApplicantDetailsPage)
     )
@@ -195,10 +195,10 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
       startingFrom(ApplicantHasPreviousFamilyNamePage)
         .run(
           initialise,
-          goToChangeAnswer(AddApplicantPreviousFamilyNamePage),
-          submitAnswer(AddApplicantPreviousFamilyNamePage, true),
+          goToChangeAnswer(AddApplicantPreviousFamilyNamePage()),
+          submitAnswer(AddApplicantPreviousFamilyNamePage(), true),
           submitAnswer(ApplicantPreviousFamilyNamePage(Index(2)), previousName),
-          submitAnswer(AddApplicantPreviousFamilyNamePage, false),
+          submitAnswer(AddApplicantPreviousFamilyNamePage(Some(Index(2))), false),
           pageMustBe(CheckApplicantDetailsPage)
         )
     }
@@ -208,10 +208,10 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
       startingFrom(ApplicantHasPreviousFamilyNamePage)
         .run(
           initialise,
-          goToChangeAnswer(AddApplicantPreviousFamilyNamePage),
+          goToChangeAnswer(AddApplicantPreviousFamilyNamePage()),
           goToChangeAnswer(ApplicantPreviousFamilyNamePage(Index(1))),
           submitAnswer(ApplicantPreviousFamilyNamePage(Index(1)), previousName),
-          submitAnswer(AddApplicantPreviousFamilyNamePage, false),
+          submitAnswer(AddApplicantPreviousFamilyNamePage(), false),
           pageMustBe(CheckApplicantDetailsPage)
         )
     }
@@ -221,10 +221,10 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
       startingFrom(ApplicantHasPreviousFamilyNamePage)
         .run(
           initialise,
-          goToChangeAnswer(AddApplicantPreviousFamilyNamePage),
+          goToChangeAnswer(AddApplicantPreviousFamilyNamePage()),
           goTo(RemoveApplicantPreviousFamilyNamePage(Index(1))),
           removeAddToListItem(ApplicantPreviousFamilyNamePage(Index(1))),
-          submitAnswer(AddApplicantPreviousFamilyNamePage, false),
+          submitAnswer(AddApplicantPreviousFamilyNamePage(), false),
           pageMustBe(CheckApplicantDetailsPage),
           answersMustNotContain(ApplicantPreviousFamilyNamePage(Index(1))),
           answersMustContain(ApplicantPreviousFamilyNamePage(Index(0)))
@@ -236,10 +236,10 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
       startingFrom(ApplicantHasPreviousFamilyNamePage)
         .run(
           initialise,
-          goToChangeAnswer(AddApplicantPreviousFamilyNamePage),
+          goToChangeAnswer(AddApplicantPreviousFamilyNamePage()),
           goTo(RemoveApplicantPreviousFamilyNamePage(Index(1))),
           removeAddToListItem(ApplicantPreviousFamilyNamePage(Index(1))),
-          pageMustBe(AddApplicantPreviousFamilyNamePage),
+          pageMustBe(AddApplicantPreviousFamilyNamePage()),
           goTo(RemoveApplicantPreviousFamilyNamePage(Index(0))),
           removeAddToListItem(ApplicantPreviousFamilyNamePage(Index(0))),
           pageMustBe(ApplicantHasPreviousFamilyNamePage)
@@ -263,7 +263,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
           goToChangeAnswer(ApplicantHasPreviousFamilyNamePage),
           submitAnswer(ApplicantHasPreviousFamilyNamePage, true),
           submitAnswer(ApplicantPreviousFamilyNamePage(Index(0)), previousName),
-          submitAnswer(AddApplicantPreviousFamilyNamePage, false),
+          submitAnswer(AddApplicantPreviousFamilyNamePage(Some(Index(0))), false),
           pageMustBe(CheckApplicantDetailsPage)
         )
     }

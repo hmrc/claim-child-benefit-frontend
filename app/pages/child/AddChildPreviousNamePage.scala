@@ -23,29 +23,35 @@ import play.api.libs.json.JsPath
 import play.api.mvc.Call
 import queries.DeriveNumberOfChildPreviousNames
 
-final case class AddChildPreviousNamePage(index: Index) extends QuestionPage[Boolean] with AddItemPage {
+final case class AddChildPreviousNamePage(childIndex: Index, nameIndex: Option[Index] = None) extends AddItemPage(nameIndex) with QuestionPage[Boolean] {
 
-  override val checkModeUrlFragment: String = s"change-child-name-${index.display}"
-  override val normalModeUrlFragment: String = s"add-child-name-${index.display}"
+  override def isTheSamePage(other: Page): Boolean = other match {
+    case p: AddChildPreviousNamePage => p.childIndex == this.childIndex
+    case _ => false
+  }
 
-  override def path: JsPath = JsPath \ "children" \ index.position \ toString
+  override val checkModeUrlFragment: String = s"change-child-name-${childIndex.display}"
+  override val normalModeUrlFragment: String = s"add-child-name-${childIndex.display}"
+
+  override def path: JsPath = JsPath \ "children" \ childIndex.position \ toString
 
   override def toString: String = "addChildPreviousName"
 
   override def route(waypoints: Waypoints): Call =
-    routes.AddChildPreviousNameController.onPageLoad(waypoints, index)
+    routes.AddChildPreviousNameController.onPageLoad(waypoints, childIndex)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case true =>
         answers
-          .get(DeriveNumberOfChildPreviousNames(index))
-          .map(n => ChildPreviousNamePage(index, Index(n)))
+          .get(DeriveNumberOfChildPreviousNames(childIndex))
+          .map(n => ChildPreviousNamePage(childIndex, Index(n)))
           .orRecover
 
       case false =>
-        ChildBiologicalSexPage(index)
+        ChildBiologicalSexPage(childIndex)
     }.orRecover
+
 }
 
 object AddChildPreviousNamePage {
@@ -57,10 +63,10 @@ object AddChildPreviousNamePage {
 
     s match {
       case normalModePattern(indexDisplay) =>
-        Some(AddChildPreviousNamePage(Index(indexDisplay.toInt - 1)).waypoint(NormalMode))
+        Some(AddChildPreviousNamePage(Index(indexDisplay.toInt - 1), None).waypoint(NormalMode))
 
       case checkModePattern(indexDisplay) =>
-        Some(AddChildPreviousNamePage(Index(indexDisplay.toInt - 1)).waypoint(CheckMode))
+        Some(AddChildPreviousNamePage(Index(indexDisplay.toInt - 1), None).waypoint(CheckMode))
 
       case _ =>
         None

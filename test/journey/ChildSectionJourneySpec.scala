@@ -56,9 +56,9 @@ class ChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Model
           submitAnswer(ChildHasPreviousNamePage(Index(0)), true),
           submitAnswer(ChildNameChangedByDeedPollPage(Index(0)), true),
           submitAnswer(ChildPreviousNamePage(Index(0), Index(0)), childName),
-          submitAnswer(AddChildPreviousNamePage(Index(0)), true),
+          submitAnswer(AddChildPreviousNamePage(Index(0), Some(Index(0))), true),
           submitAnswer(ChildPreviousNamePage(Index(0), Index(1)), childName),
-          submitAnswer(AddChildPreviousNamePage(Index(0)), false),
+          submitAnswer(AddChildPreviousNamePage(Index(0), Some(Index(1))), false),
           pageMustBe(ChildBiologicalSexPage(Index(0)))
         )
     }
@@ -71,7 +71,7 @@ class ChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Model
           submitAnswer(ChildHasPreviousNamePage(Index(0)), true),
           submitAnswer(ChildNameChangedByDeedPollPage(Index(0)), true),
           submitAnswer(ChildPreviousNamePage(Index(0), Index(0)), childName),
-          submitAnswer(AddChildPreviousNamePage(Index(0)), true),
+          submitAnswer(AddChildPreviousNamePage(Index(0), Some(Index(0))), true),
           submitAnswer(ChildPreviousNamePage(Index(0), Index(1)), childName),
           goTo(RemoveChildPreviousNamePage(Index(0), Index(1))),
           removeAddToListItem(ChildPreviousNamePage(Index(0), Index(1))),
@@ -538,10 +538,10 @@ class ChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Model
 
   "users must be able to add more children" in {
 
-    startingFrom(AddChildPage)
+    startingFrom(AddChildPage())
       .run(
         setUserAnswerTo(ChildNamePage(Index(0)), childName),
-        submitAnswer(AddChildPage, true),
+        submitAnswer(AddChildPage(), true),
         pageMustBe(ChildNamePage(Index(1)))
       )
   }
@@ -550,9 +550,9 @@ class ChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Model
 
     "they must go to the task list" in {
 
-      startingFrom(AddChildPage)
+      startingFrom(AddChildPage())
         .run(
-          submitAnswer(AddChildPage, false),
+          submitAnswer(AddChildPage(), false),
           pageMustBe(TaskListPage)
         )
     }

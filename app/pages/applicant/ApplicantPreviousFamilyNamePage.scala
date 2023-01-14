@@ -24,7 +24,7 @@ import play.api.mvc.Call
 
 case class ApplicantPreviousFamilyNamePage(index: Index) extends QuestionPage[String] with AddToListQuestionPage {
 
-  override val addItemWaypoint: Waypoint = AddApplicantPreviousFamilyNamePage.waypoint(NormalMode)
+  override val addItemWaypoint: Waypoint = AddApplicantPreviousFamilyNamePage().waypoint(NormalMode)
   override val section: AddToListSection = PreviousFamilyNamesSection
 
   override def path: JsPath = JsPath \ toString \ index.position
@@ -35,5 +35,5 @@ case class ApplicantPreviousFamilyNamePage(index: Index) extends QuestionPage[St
     routes.ApplicantPreviousFamilyNameController.onPageLoad(waypoints, index)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    AddApplicantPreviousFamilyNamePage
+    AddApplicantPreviousFamilyNamePage(Some(index))
 }

@@ -123,9 +123,9 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
         .run(
           submitAnswer(ApplicantHasPreviousFamilyNamePage, true),
           submitAnswer(ApplicantPreviousFamilyNamePage(Index(0)), "name"),
-          submitAnswer(AddApplicantPreviousFamilyNamePage, true),
+          submitAnswer(AddApplicantPreviousFamilyNamePage(Some(Index(0))), true),
           submitAnswer(ApplicantPreviousFamilyNamePage(Index(1)), "name"),
-          submitAnswer(AddApplicantPreviousFamilyNamePage, false),
+          submitAnswer(AddApplicantPreviousFamilyNamePage(Some(Index(1))), false),
           pageMustBe(ApplicantDateOfBirthPage)
         )
     }
@@ -136,11 +136,11 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
         .run(
           submitAnswer(ApplicantHasPreviousFamilyNamePage, true),
           submitAnswer(ApplicantPreviousFamilyNamePage(Index(0)), "name"),
-          submitAnswer(AddApplicantPreviousFamilyNamePage, true),
+          submitAnswer(AddApplicantPreviousFamilyNamePage(Some(Index(0))), true),
           submitAnswer(ApplicantPreviousFamilyNamePage(Index(1)), "name"),
           goTo(RemoveApplicantPreviousFamilyNamePage(Index(1))),
           removeAddToListItem(ApplicantPreviousFamilyNamePage(Index(1))),
-          pageMustBe(AddApplicantPreviousFamilyNamePage),
+          pageMustBe(AddApplicantPreviousFamilyNamePage()),
           goTo(RemoveApplicantPreviousFamilyNamePage(Index(0))),
           removeAddToListItem(ApplicantPreviousFamilyNamePage(Index(0))),
           pageMustBe(ApplicantHasPreviousFamilyNamePage)

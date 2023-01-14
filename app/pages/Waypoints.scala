@@ -50,7 +50,7 @@ case class NonEmptyWaypoints(waypoints: NonEmptyList[Waypoint]) extends Waypoint
         setNextWaypoint(targetPage.addItemWaypoint)
 
       case _ =>
-        if (next.page == targetPage) remove else this
+        if (next.page.isTheSamePage(targetPage)) remove else this
     }
 
   override def toString: String = waypoints.toList.map(_.urlFragment).mkString(",")

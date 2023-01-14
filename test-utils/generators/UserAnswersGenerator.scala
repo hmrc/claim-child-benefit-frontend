@@ -48,8 +48,6 @@ trait UserAnswersGenerator extends TryValues {
     arbitrary[(ChildBiologicalSexPage, JsValue)] ::
     arbitrary[(ApplicantRelationshipToChildPage, JsValue)] ::
     arbitrary[(AnyoneClaimedForChildBeforePage, JsValue)] ::
-    arbitrary[(AddChildPreviousNamePage, JsValue)] ::
-    arbitrary[(AddChildPage.type, JsValue)] ::
     arbitrary[(PartnerNinoKnownPage.type, JsValue)] ::
     arbitrary[(PartnerNinoPage.type, JsValue)] ::
     arbitrary[(PartnerNationalityPage.type, JsValue)] ::
@@ -69,7 +67,6 @@ trait UserAnswersGenerator extends TryValues {
     arbitrary[(ApplicantHasPreviousFamilyNamePage.type, JsValue)] ::
     arbitrary[(ApplicantDateOfBirthPage.type, JsValue)] ::
     arbitrary[(ApplicantCurrentUkAddressPage.type, JsValue)] ::
-    arbitrary[(AddApplicantPreviousFamilyNamePage.type, JsValue)] ::
     arbitrary[(PaymentFrequencyPage.type, JsValue)] ::
     arbitrary[(WantToBePaidToExistingAccountPage.type, JsValue)] ::
     arbitrary[(WantToBePaidPage.type, JsValue)] ::

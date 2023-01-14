@@ -21,7 +21,7 @@ import pages.{AddToListQuestionPage, AddToListSection, ChildSection, QuestionPag
 
 trait ChildQuestionPage[A] extends QuestionPage[A] with AddToListQuestionPage {
 
-  override val addItemWaypoint: Waypoint = AddChildPage.waypoint(NormalMode)
+  override val addItemWaypoint: Waypoint = AddChildPage().waypoint(NormalMode)
 
   override val section: AddToListSection = ChildSection
 }
