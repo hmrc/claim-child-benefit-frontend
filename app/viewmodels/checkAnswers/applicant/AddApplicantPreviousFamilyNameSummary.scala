@@ -36,7 +36,7 @@ object AddApplicantPreviousFamilyNameSummary {
       case (name, index) =>
 
         ListItem(
-          name = name,
+          name = name.lastName,
           changeUrl = ApplicantPreviousFamilyNamePage(Index(index)).changeLink(waypoints, sourcePage).url,
           removeUrl = routes.RemoveApplicantPreviousFamilyNameController.onPageLoad(waypoints, Index(index)).url
         )
@@ -48,7 +48,7 @@ object AddApplicantPreviousFamilyNameSummary {
     answers.get(AllPreviousFamilyNames).map {
       names =>
 
-        val value = names.map(HtmlFormat.escape).mkString("<br>")
+        val value = names.map(n => HtmlFormat.escape(n.lastName)).mkString("<br>")
 
         SummaryListRowViewModel(
           key = "addApplicantPreviousFamilyName.checkYourAnswersLabel",

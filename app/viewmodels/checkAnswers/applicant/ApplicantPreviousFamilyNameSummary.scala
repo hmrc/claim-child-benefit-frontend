@@ -33,7 +33,7 @@ object ApplicantPreviousFamilyNameSummary {
 
         SummaryListRowViewModel(
           key = "applicantPreviousFamilyName.checkYourAnswersLabel",
-          value = ValueViewModel(answer),
+          value = ValueViewModel(answer.lastName),
           actions = Seq(
             ActionItemViewModel("site.change", applicant.ApplicantPreviousFamilyNamePage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("applicantPreviousFamilyName.change.hidden"))

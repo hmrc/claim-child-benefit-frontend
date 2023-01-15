@@ -18,9 +18,9 @@ package queries
 
 import play.api.libs.json.{JsObject, JsPath}
 
-case object DeriveNumberOfChildren extends Derivable[List[JsObject], Int] {
+case object DeriveNumberOfChildren extends Derivable[Seq[JsObject], Int] {
 
-  override val derive: List[JsObject] => Int = _.size
+  override val derive: Seq[JsObject] => Int = _.size
 
   override def path: JsPath = JsPath \ "children"
 }

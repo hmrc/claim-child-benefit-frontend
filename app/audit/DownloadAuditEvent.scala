@@ -37,7 +37,7 @@ object DownloadAuditEvent {
     DownloadAuditEvent(
       applicant = Applicant(
         name                                 = convertAdultName(model.applicant.name),
-        previousFamilyNames                  = model.applicant.previousFamilyNames,
+        previousFamilyNames                  = model.applicant.previousFamilyNames.map(_.lastName),
         dateOfBirth                          = model.applicant.dateOfBirth,
         nationalInsuranceNumber              = model.applicant.nationalInsuranceNumber,
         currentAddress                       = convertAddress(model.applicant.currentAddress),

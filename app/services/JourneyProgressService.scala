@@ -27,30 +27,35 @@ class JourneyProgressService {
 
   def continue(startFrom: Page, answers: UserAnswers): Page = {
 
-    @tailrec
     def nextPage(currentPage: Page): Page = currentPage match {
+      case a: AddItemPage with Terminus =>
+        val answersWithYes     = answers.set(a, true).getOrElse(throw new Exception(s"Unable to set ${a.path} to true"))
+        val totalNumberOfItems = answers.get(a.deriveNumberOfItems).getOrElse(0)
+
+        a.index.map {
+          x =>
+            if (x.display >= totalNumberOfItems) a else a.navigate(EmptyWaypoints, answersWithYes, answersWithYes).page
+        }.getOrElse(throw new Exception(s"Expected index to be set on $a, but it wasn't"))
+
       case t: Terminus =>
         t
 
+      case a: AddItemPage =>
+        val answersWithYes     = answers.set(a, true).getOrElse(throw new Exception(s"Unable to set ${a.path} to true"))
+        val answersWithNo      = answers.set(a, false).getOrElse(throw new Exception(s"Unable to set ${a.path} to false"))
+        val totalNumberOfItems = answers.get(a.deriveNumberOfItems).getOrElse(0)
+
+        a.index.map {
+          x =>
+            if (x.display >= totalNumberOfItems) {
+              nextPage(a.navigate(EmptyWaypoints, answersWithNo, answersWithNo).page)
+            } else {
+              nextPage(a.navigate(EmptyWaypoints, answersWithYes, answersWithYes).page)
+            }
+        }.getOrElse(throw new Exception(s"Expected index to be set on $a, but it wasn't"))
+
       case c: CheckAnswersPage =>
         nextPage(c.navigate(EmptyWaypoints, answers, answers).page)
-
-      case a: AddItemPage =>
-        val answersWithYes = answers.set(a, true).getOrElse(throw new Exception(s"Unable to set ${a.path} to true"))
-        val answersWithNo = answers.set(a, false).getOrElse(throw new Exception(s"Unable to set ${a.path} to false"))
-
-        a.navigate(EmptyWaypoints, answersWithYes, answersWithYes).page match {
-          case q: QuestionPage[_] =>
-            if (answers.isDefined(q)) {
-              nextPage(q)
-            }
-            else {
-              nextPage(a.navigate(EmptyWaypoints, answersWithNo, answersWithNo).page)
-            }
-
-          case p: Page =>
-            nextPage(p)
-        }
 
       case q: QuestionPage[_] =>
         if (answers.isDefined(q)) {

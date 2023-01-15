@@ -19,9 +19,9 @@ package pages.child
 import controllers.child.routes
 import models.{CheckMode, Index, NormalMode, UserAnswers}
 import pages.{AddItemPage, Page, QuestionPage, Waypoint, Waypoints}
-import play.api.libs.json.JsPath
+import play.api.libs.json.{JsObject, JsPath}
 import play.api.mvc.Call
-import queries.DeriveNumberOfChildPreviousNames
+import queries.{Derivable, DeriveNumberOfChildPreviousNames}
 
 final case class AddChildPreviousNamePage(childIndex: Index, nameIndex: Option[Index] = None) extends AddItemPage(nameIndex) with QuestionPage[Boolean] {
 
@@ -43,15 +43,20 @@ final case class AddChildPreviousNamePage(childIndex: Index, nameIndex: Option[I
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case true =>
-        answers
-          .get(DeriveNumberOfChildPreviousNames(childIndex))
-          .map(n => ChildPreviousNamePage(childIndex, Index(n)))
-          .orRecover
+        nameIndex
+          .map(i => ChildPreviousNamePage(childIndex, Index(i.position + 1)))
+          .getOrElse {
+            answers
+              .get(deriveNumberOfItems)
+              .map(n => ChildPreviousNamePage(childIndex, Index(n)))
+              .orRecover
+          }
 
       case false =>
         ChildBiologicalSexPage(childIndex)
     }.orRecover
 
+  override def deriveNumberOfItems: Derivable[Seq[JsObject], Int] = DeriveNumberOfChildPreviousNames(childIndex)
 }
 
 object AddChildPreviousNamePage {

@@ -60,7 +60,7 @@ object JourneyModel {
 
   final case class Applicant(
                               name: AdultName,
-                              previousFamilyNames: List[String],
+                              previousFamilyNames: List[ApplicantPreviousName],
                               dateOfBirth: LocalDate,
                               nationalInsuranceNumber: Option[String],
                               currentAddress: Address,

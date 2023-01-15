@@ -319,7 +319,7 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
         answers.getIor(ApplicantCurrentInternationalAddressPage)
       }
 
-    def getPreviousFamilyNames: IorNec[Query, List[String]] =
+    def getPreviousFamilyNames: IorNec[Query, List[ApplicantPreviousName]] =
       answers.getIor(ApplicantHasPreviousFamilyNamePage).flatMap {
         case true => answers.getIor(AllPreviousFamilyNames)
         case false => Ior.Right(Nil)

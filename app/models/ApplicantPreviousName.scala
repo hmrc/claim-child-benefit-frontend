@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package queries
-import play.api.libs.json.{JsObject, JsPath}
+package models
 
-case object DeriveNumberOfPreviousFamilyNames extends Derivable[Seq[JsObject], Int] {
+import play.api.libs.json.{Json, OFormat}
 
-  override val derive: Seq[JsObject] => Int = _.size
+final case class ApplicantPreviousName(lastName: String)
 
-  override def path: JsPath = JsPath \ "applicantPreviousFamilyNames"
+object ApplicantPreviousName {
+  implicit lazy val format: OFormat[ApplicantPreviousName] = Json.format
 }

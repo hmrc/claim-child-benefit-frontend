@@ -20,8 +20,9 @@ import models.{Index, NormalMode}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{EitherValues, OptionValues}
-import play.api.libs.json.JsPath
+import play.api.libs.json.{JsObject, JsPath}
 import play.api.mvc.{Call, QueryStringBindable}
+import queries.Derivable
 
 class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with EitherValues {
 
@@ -231,7 +232,7 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
     object Section1 extends AddToListSection
     object Section2 extends AddToListSection
 
-    final case class AddItemPage1(index: Option[Index] = None) extends AddItemPage(index) {
+    final case class AddItemPage1(override val index: Option[Index] = None) extends AddItemPage(index) {
       override val normalModeUrlFragment: String = "add-page-1"
       override val checkModeUrlFragment: String = "change-page-1"
 
@@ -243,9 +244,17 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
         case _: AddItemPage1 => true
         case _ => false
       }
+
+      override def deriveNumberOfItems: Derivable[Seq[JsObject], Int] = ???
+
+      object Derive2 extends Derivable[Seq[JsObject], Int] {
+        override val derive: Seq[JsObject] => Int = _.size
+
+        override def path: JsPath = JsPath \ "addItemPage1"
+      }
     }
 
-    final case class AddItemPage2(index: Option[Index] = None) extends AddItemPage(index) {
+    final case class AddItemPage2(override val index: Option[Index] = None) extends AddItemPage(index) {
       override val normalModeUrlFragment: String = "add-page-2"
       override val checkModeUrlFragment: String = "change-page-2"
 
@@ -256,6 +265,13 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
       override def isTheSamePage(other: Page): Boolean = other match {
         case _: AddItemPage2 => true
         case _ => false
+      }
+
+      override def deriveNumberOfItems: Derivable[Seq[JsObject], Int] = Derive2
+
+      object Derive2 extends Derivable[Seq[JsObject], Int] {
+        override val derive: Seq[JsObject] => Int = _.size
+        override def path: JsPath = JsPath \ "addItemPage2"
       }
     }
 

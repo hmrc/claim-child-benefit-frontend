@@ -51,7 +51,7 @@ class RemoveApplicantPreviousFamilyNameController @Inject()(
       getAnswer(ApplicantPreviousFamilyNamePage(index)) {
         otherName =>
 
-          val safeName = HtmlFormat.escape(otherName).toString
+          val safeName = HtmlFormat.escape(otherName.lastName).toString
           val form = formProvider(safeName)
 
           Ok(view(form, waypoints, index, safeName))
@@ -63,7 +63,7 @@ class RemoveApplicantPreviousFamilyNameController @Inject()(
       getAnswerAsync(applicant.ApplicantPreviousFamilyNamePage(index)) {
         otherName =>
 
-          val safeName = HtmlFormat.escape(otherName).toString
+          val safeName = HtmlFormat.escape(otherName.lastName).toString
           val form = formProvider(safeName)
 
           form.bindFromRequest().fold(

@@ -68,8 +68,8 @@ class JourneyModelProviderSpec
   private val phoneNumber = "07777 777777"
   private val applicantBenefits = Set[Benefits](Benefits.NoneOfTheAbove)
   private val applicantNationality = "British"
-  private val previousName1 = "previous name 1"
-  private val previousName2 = "previous name 2"
+  private val previousName1 = ApplicantPreviousName("previous name 1")
+  private val previousName2 = ApplicantPreviousName("previous name 2")
 
   private val bankAccountDetails = BankAccountDetails("name on account", "bank name", "00000000", "000000", None)
   private val bankAccountHolder = BankAccountHolder.Applicant

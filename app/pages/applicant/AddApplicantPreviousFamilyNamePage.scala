@@ -19,11 +19,11 @@ package pages.applicant
 import controllers.applicant.routes
 import models.{Index, UserAnswers}
 import pages.{AddItemPage, Page, QuestionPage, Waypoints}
-import play.api.libs.json.JsPath
+import play.api.libs.json.{JsObject, JsPath}
 import play.api.mvc.Call
-import queries.DeriveNumberOfPreviousFamilyNames
+import queries.{Derivable, DeriveNumberOfPreviousFamilyNames}
 
-final case class AddApplicantPreviousFamilyNamePage(index: Option[Index] = None) extends AddItemPage(index) with QuestionPage[Boolean] {
+final case class AddApplicantPreviousFamilyNamePage(override val index: Option[Index] = None) extends AddItemPage(index) with QuestionPage[Boolean] {
 
   override def isTheSamePage(other: Page): Boolean = other match {
     case _: AddApplicantPreviousFamilyNamePage => true
@@ -43,12 +43,18 @@ final case class AddApplicantPreviousFamilyNamePage(index: Option[Index] = None)
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case true =>
-        answers
-          .get(DeriveNumberOfPreviousFamilyNames)
-          .map(n => ApplicantPreviousFamilyNamePage(Index(n)))
-          .orRecover
+        index
+          .map(i => ApplicantPreviousFamilyNamePage(Index(i.position + 1)))
+          .getOrElse {
+            answers
+              .get(deriveNumberOfItems)
+              .map(n => ApplicantPreviousFamilyNamePage(Index(n)))
+              .orRecover
+          }
 
       case false =>
         ApplicantDateOfBirthPage
     }.orRecover
+
+  override def deriveNumberOfItems: Derivable[Seq[JsObject], Int] = DeriveNumberOfPreviousFamilyNames
 }

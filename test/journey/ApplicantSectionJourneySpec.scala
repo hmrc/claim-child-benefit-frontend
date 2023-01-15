@@ -19,7 +19,7 @@ package journey
 import generators.ModelGenerators
 import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments}
 import models.RelationshipStatus.{Cohabiting, Married}
-import models.{AdultName, ChildName, Country, Index, InternationalAddress, UkAddress}
+import models.{AdultName, ApplicantPreviousName, ChildName, Country, Index, InternationalAddress, UkAddress}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
@@ -42,6 +42,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
   private val country = Gen.oneOf(Country.internationalCountries).sample.value
   private val internationalAddress = InternationalAddress("line1", None, "town", None, None, country)
   private val partneredRelationship = Gen.oneOf(Married, Cohabiting).sample.value
+  private val previousName = ApplicantPreviousName("name")
 
   "users who don't know their NINO, with no previous names or addresses, who have always lived in the UK and are not claiming right now must proceed to the task list" in {
 
@@ -122,9 +123,9 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
       startingFrom(ApplicantHasPreviousFamilyNamePage)
         .run(
           submitAnswer(ApplicantHasPreviousFamilyNamePage, true),
-          submitAnswer(ApplicantPreviousFamilyNamePage(Index(0)), "name"),
+          submitAnswer(ApplicantPreviousFamilyNamePage(Index(0)), previousName),
           submitAnswer(AddApplicantPreviousFamilyNamePage(Some(Index(0))), true),
-          submitAnswer(ApplicantPreviousFamilyNamePage(Index(1)), "name"),
+          submitAnswer(ApplicantPreviousFamilyNamePage(Index(1)), previousName),
           submitAnswer(AddApplicantPreviousFamilyNamePage(Some(Index(1))), false),
           pageMustBe(ApplicantDateOfBirthPage)
         )
@@ -135,9 +136,9 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
       startingFrom(ApplicantHasPreviousFamilyNamePage)
         .run(
           submitAnswer(ApplicantHasPreviousFamilyNamePage, true),
-          submitAnswer(ApplicantPreviousFamilyNamePage(Index(0)), "name"),
+          submitAnswer(ApplicantPreviousFamilyNamePage(Index(0)), previousName),
           submitAnswer(AddApplicantPreviousFamilyNamePage(Some(Index(0))), true),
-          submitAnswer(ApplicantPreviousFamilyNamePage(Index(1)), "name"),
+          submitAnswer(ApplicantPreviousFamilyNamePage(Index(1)), previousName),
           goTo(RemoveApplicantPreviousFamilyNamePage(Index(1))),
           removeAddToListItem(ApplicantPreviousFamilyNamePage(Index(1))),
           pageMustBe(AddApplicantPreviousFamilyNamePage()),

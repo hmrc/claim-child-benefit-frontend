@@ -84,17 +84,17 @@ class JourneyProgressServiceSpec extends AnyFreeSpec with Matchers with OptionVa
     override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page = AddAnotherPage10(Some(index))
 
     override def isTheSamePage(other: Page): Boolean = other match {
-      case p: CheckAddToListAnswersPage9 => p.index == this.index
+      case p: CheckAddToListAnswersPage9 => true
       case _ => false
     }
   }
 
-  case object DeriveNumberOfItems extends Derivable[List[JsObject], Int] {
-    override val derive: List[JsObject] => Int = _.size
+  case object DeriveNumberOfItems extends Derivable[Seq[JsObject], Int] {
+    override val derive: Seq[JsObject] => Int = _.size
     override def path: JsPath = JsPath \ "addToList"
   }
 
-  final case class AddAnotherPage10(index: Option[Index] = None) extends AddItemPage(index) with QuestionPage[Boolean] {
+  final case class AddAnotherPage10(override val index: Option[Index] = None) extends AddItemPage(index) with QuestionPage[Boolean] {
     override val normalModeUrlFragment: String = "bar"
     override val checkModeUrlFragment: String = "baz"
     override def route(waypoints: Waypoints): Call = ???
@@ -102,10 +102,15 @@ class JourneyProgressServiceSpec extends AnyFreeSpec with Matchers with OptionVa
     override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page = {
       answers.get(this).map {
         case true =>
-          answers
-            .get(DeriveNumberOfItems)
-            .map(x => AddToListQuestionPage7(Index(x)))
-            .getOrElse(AddToListQuestionPage7(Index(0)))
+          index.map {
+            x =>
+              AddToListQuestionPage7(Index(x.position + 1))
+          }.getOrElse {
+            answers
+              .get(DeriveNumberOfItems)
+              .map(x => AddToListQuestionPage7(Index(x)))
+              .getOrElse(AddToListQuestionPage7(Index(0)))
+          }
 
         case false =>
           QuestionPage11
@@ -118,6 +123,8 @@ class JourneyProgressServiceSpec extends AnyFreeSpec with Matchers with OptionVa
       case _: AddAnotherPage10 => true
       case _ => false
     }
+
+    override def deriveNumberOfItems: Derivable[Seq[JsObject], Int] = DeriveNumberOfItems
   }
 
   case object QuestionPage11 extends QuestionPage[String] {
@@ -174,17 +181,7 @@ class JourneyProgressServiceSpec extends AnyFreeSpec with Matchers with OptionVa
       result mustEqual AddToListQuestionPage7(Index(0))
     }
 
-    // TODO: This test fails, because the current implementation is wrong.  It tries to answer "yes" to
-    //       the "add another" question, then check if the first question in the section is answered.
-    //       If it is, it walks through that section and stops where it finds a missing answer (which
-    //       is the behaviour we want).
-    //
-    //       However, the logic in the "AddItem" pages doesn't distinguish between partially complete and
-    //       fully complete items.  So if you have item 0 complete and item 1 partially complete, when
-    //       you answer "yes" to "add another", it sees both items and sends you to the first question
-    //       of item 2.  This of course isn't answered, so the journey progress service thinks all items
-    //       are complete and proceeds as if you answered "no" to the "add another" question.
-    "must stop at the first unanswered question in a partially-completed add-to-list item" ignore {
+    "must stop at the first unanswered question in a partially-completed add-to-list item" in {
 
       val answers =
         emptyAnswers

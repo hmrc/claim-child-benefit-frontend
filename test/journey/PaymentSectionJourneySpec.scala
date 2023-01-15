@@ -23,7 +23,7 @@ import models.{BankAccountDetails, BankAccountHolder, Benefits, Income, PaymentF
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
-import pages.RelationshipStatusPage
+import pages.{RelationshipStatusPage, TaskListPage}
 import pages.income._
 import pages.payments._
 
@@ -83,7 +83,10 @@ class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
                 submitAnswer(WantToBePaidPage, true),
                 submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
                 submitAnswer(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
-                pageMustBe(ApplicantHasSuitableAccountPage)
+                submitAnswer(ApplicantHasSuitableAccountPage, false),
+                pageMustBe(CheckPaymentDetailsPage),
+                next,
+                pageMustBe(TaskListPage)
               )
           }
         }
@@ -104,7 +107,11 @@ class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
                 submitAnswer(ApplicantOrPartnerIncomePage, income),
                 submitAnswer(WantToBePaidPage, true),
                 submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
-                pageMustBe(WantToBePaidToExistingAccountPage)
+                submitAnswer(WantToBePaidToExistingAccountPage, false),
+                submitAnswer(ApplicantHasSuitableAccountPage, false),
+                pageMustBe(CheckPaymentDetailsPage),
+                next,
+                pageMustBe(TaskListPage)
               )
           }
         }

@@ -21,7 +21,7 @@ import cats.data.NonEmptyList
 import generators.ModelGenerators
 import models.AdditionalInformation.Information
 import models.BirthRegistrationMatchingResult.NotAttempted
-import models.{BirthCertificateSystemNumber, CurrentlyReceivingChildBenefit, JourneyModel, PartnerClaimingChildBenefit}
+import models.{ApplicantPreviousName, BirthCertificateSystemNumber, CurrentlyReceivingChildBenefit, JourneyModel, PartnerClaimingChildBenefit}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
 import org.scalacheck.Arbitrary.arbitrary
@@ -57,7 +57,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
       val model = JourneyModel(
         applicant = JourneyModel.Applicant(
           name = models.AdultName(title = Some("title"), firstName = "applicant first", middleNames = Some("applicant middle"), lastName = "applicant last"),
-          previousFamilyNames = List("previous family name"),
+          previousFamilyNames = List(ApplicantPreviousName("previous family name")),
           dateOfBirth = now,
           nationalInsuranceNumber = Some(applicantNino),
           currentAddress = models.UkAddress("current line 1", Some("current line 2"), "current town", Some("current county"), "current postcode"),

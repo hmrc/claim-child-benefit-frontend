@@ -58,7 +58,7 @@
                         <fo:block margin-bottom="3mm">
                             <fo:block font-weight="bold">@messages("pdf.previousNames")</fo:block>
                             @model.applicant.previousFamilyNames.map { name =>
-                                <fo:block width="8cm" wrap-option="wrap">@(name)</fo:block>
+                                <fo:block width="8cm" wrap-option="wrap">@(name.lastName)</fo:block>
                             }
                         </fo:block>
                     }

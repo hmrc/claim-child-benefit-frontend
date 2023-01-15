@@ -37,11 +37,11 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
   private val ukAddress = UkAddress("line 1", None, "town", None, "postcode")
   private val adultName = AdultName(None, "first", None, "last")
   private val childName = ChildName("first", None, "last")
-  private val previousName = "Previous"
   private val nino = arbitrary[Nino].sample.value
   private val country = Gen.oneOf(Country.internationalCountries).sample.value
   private val internationalAddress = InternationalAddress("line1", None, "town", None, None, country)
   private val bankDetails = arbitrary[BankAccountDetails].sample.value
+  private val previousName = ApplicantPreviousName("name")
 
   private val setFullPaymentDetailsSingle: JourneyStep[Unit] = journeyOf(
     setUserAnswerTo(ApplicantIncomePage, Income.BetweenThresholds),
