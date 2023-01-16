@@ -517,6 +517,17 @@ applicantDateOfBirth.error.beforeMinimum = The date must be on or after {0}
 applicantDateOfBirth.error.afterMaximum = The date must be on or before {0}
 applicantDateOfBirth.change.hidden = your date of birth
 
+applicantArrivedInUk.title = What date did you arrive in the UK?
+applicantArrivedInUk.heading = What date did you arrive in the UK?
+applicantArrivedInUk.hint = For example, 20 3 2007.
+applicantArrivedInUk.checkYourAnswersLabel = Date you arrived in the UK
+applicantArrivedInUk.error.required.all = Enter the date you arrived in the UK
+applicantArrivedInUk.error.required.two = The date you arrived in the UK must include {0} and {1}
+applicantArrivedInUk.error.required = The date you arrived in the UK must include {0}
+applicantArrivedInUk.error.invalid = Enter a real date
+applicantArrivedInUk.error.afterMaximum = The date you arrived in the UK must be on or before {0}
+applicantArrivedInUk.change.hidden = the date you arrived in the UK
+
 applicantHasPreviousFamilyName.title = Have you been known by any other last names or family names?
 applicantHasPreviousFamilyName.heading = Have you been known by any other last names or family names?
 applicantHasPreviousFamilyName.checkYourAnswersLabel = Have you been known by any other last names or family names?

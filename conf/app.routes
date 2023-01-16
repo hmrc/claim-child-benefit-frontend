@@ -142,6 +142,9 @@ POST       /your-current-uk-address                        controllers.applicant
 GET        /your-current-international-address                        controllers.applicant.ApplicantCurrentInternationalAddressController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-current-international-address                        controllers.applicant.ApplicantCurrentInternationalAddressController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
+GET        /arrived-in-uk                     controllers.applicant.ApplicantArrivedInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /arrived-in-uk                     controllers.applicant.ApplicantArrivedInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 GET        /your-date-of-birth                  controllers.applicant.ApplicantDateOfBirthController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-date-of-birth                  controllers.applicant.ApplicantDateOfBirthController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
