@@ -127,6 +127,9 @@ POST       /always-lived-in-uk                        controllers.AlwaysLivedInU
 GET        /usually-lived-in-uk                        controllers.applicant.ApplicantUsuallyLivesInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /usually-lived-in-uk                        controllers.applicant.ApplicantUsuallyLivesInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
+GET        /usual-country-of-residence                        controllers.applicant.ApplicantUsualCountryOfResidenceController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /usual-country-of-residence                        controllers.applicant.ApplicantUsualCountryOfResidenceController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 GET        /add-previous-family-name                        controllers.applicant.AddApplicantPreviousFamilyNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /add-previous-family-name                        controllers.applicant.AddApplicantPreviousFamilyNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 

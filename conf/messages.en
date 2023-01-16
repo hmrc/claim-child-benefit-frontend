@@ -114,11 +114,19 @@ alwaysLivedInUk.single.checkYourAnswersLabel = Have you always lived in the UK?
 alwaysLivedInUk.single.error.required = Select yes if you have always lived in the UK
 alwaysLivedInUk.single.change.hidden = if you have always lived in the UK
 
-applicantUsuallyLivesInUk.single.title = Do you usually live in the UK?
-applicantUsuallyLivesInUk.single.heading = Do you usually live in the UK?
-applicantUsuallyLivesInUk.single.checkYourAnswersLabel = Do you usually live in the UK?
-applicantUsuallyLivesInUk.single.error.required = Select yes if you usually live in the UK
-applicantUsuallyLivesInUk.single.change.hidden = if you usually live in the UK
+applicantUsuallyLivesInUk.title = Do you usually live in the UK?
+applicantUsuallyLivesInUk.heading = Do you usually live in the UK?
+applicantUsuallyLivesInUk.checkYourAnswersLabel = Do you usually live in the UK?
+applicantUsuallyLivesInUk.error.required = Select yes if you usually live in the UK
+applicantUsuallyLivesInUk.change.hidden = if you usually live in the UK
+
+applicantUsualCountryOfResidence.title = What country do you usually live in?
+applicantUsualCountryOfResidence.heading = What country do you usually live in?
+applicantUsualCountryOfResidence.guidance = You may have multiple homes in different countries, so choose the country that you spend most of your time living in.
+applicantUsualCountryOfResidence.hint = For example, Poland.
+applicantUsualCountryOfResidence.checkYourAnswersLabel = Country you usually live in
+applicantUsualCountryOfResidence.error.required = Enter the country you usually live in
+applicantUsualCountryOfResidence.change.hidden = the country you usually live in
 
 recentlyClaimed.title = Have you recently made a Child Benefit claim and are waiting to hear if you are eligible?
 recentlyClaimed.heading = Have you recently made a Child Benefit claim and are waiting to hear if you are eligible?
