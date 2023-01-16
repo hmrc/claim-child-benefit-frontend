@@ -16,32 +16,24 @@
 
 package services
 
-import controllers.applicant.{routes => applicantRoutes}
-import controllers.routes
 import models.RelationshipStatus._
-import models.{Index, UserAnswers}
+import models.UserAnswers
+import models.tasklist.SectionStatus.{CannotStart, Completed, InProgress}
 import models.tasklist._
-import models.tasklist.SectionStatus.{CannotStart, Completed, InProgress, NotStarted}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
-import org.mockito.Mockito.{times, verify, when}
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
+import org.mockito.Mockito.when
+import org.scalacheck.Gen
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{AlwaysLivedInUkPage, ApplicantNamePage, CheckRelationshipDetailsPage, EmptyWaypoints, RecentlyClaimedPage, RelationshipStatusPage}
-import pages.applicant.{ApplicantNinoKnownPage, ApplicantNinoPage, CheckApplicantDetailsPage}
-import pages.child.ChildNamePage
-import pages.income.ApplicantIncomePage
-import pages.partner.PartnerNamePage
+import pages.RelationshipStatusPage
 import play.api.mvc.Call
 
 class TaskListServiceSpec extends AnyFreeSpec with Matchers with ScalaFutures with MockitoSugar with TryValues with OptionValues with BeforeAndAfterEach {
 
-  private val mockRelationshipSection = mock[RelationshipSection]
   private val mockApplicantSection = mock[ApplicantSection]
   private val mockChildSection = mock[ChildSection]
   private val mockPartnerSection = mock[PartnerSection]
@@ -50,7 +42,6 @@ class TaskListServiceSpec extends AnyFreeSpec with Matchers with ScalaFutures wi
 
   override def beforeEach(): Unit = {
     Mockito.reset(
-      mockRelationshipSection,
       mockApplicantSection,
       mockChildSection,
       mockPartnerSection,
@@ -60,16 +51,11 @@ class TaskListServiceSpec extends AnyFreeSpec with Matchers with ScalaFutures wi
     super.beforeEach()
   }
 
-  private implicit val arbitraryProgress: Arbitrary[SectionStatus] = Arbitrary {
-    Gen.oneOf(Completed, InProgress, NotStarted)
-  }
-
   ".sections" - {
 
     "must return all sections that should be shown in the correct order" in {
 
       val service = new TaskListService(
-        mockRelationshipSection,
         mockApplicantSection,
         mockPartnerSection,
         mockChildSection,
@@ -77,12 +63,11 @@ class TaskListServiceSpec extends AnyFreeSpec with Matchers with ScalaFutures wi
         mockAdditionalInfoSection
       )
 
-      when(mockRelationshipSection.asViewModel(any())).thenReturn(Some(SectionViewModel("relationship", Some(Call("", "rel")), Completed)))
-      when(mockApplicantSection.asViewModel(any())).thenReturn(Some(SectionViewModel("applicant", Some(Call("", "app")), Completed)))
-      when(mockPartnerSection.asViewModel(any())).thenReturn(None)
-      when(mockChildSection.asViewModel(any())).thenReturn(Some(SectionViewModel("child", Some(Call("", "child")), InProgress)))
-      when(mockPaymentSection.asViewModel(any())).thenReturn(Some(SectionViewModel("payment", None, CannotStart)))
-      when(mockAdditionalInfoSection.asViewModel(any())).thenReturn(Some(SectionViewModel("additional info", None, CannotStart)))
+      when(mockApplicantSection.asViewModel(any())).thenReturn(SectionViewModel("applicant", Some(Call("", "app")), Completed))
+      when(mockPartnerSection.asViewModel(any())).thenReturn(SectionViewModel("partner", Some(Call("", "p")), Completed))
+      when(mockChildSection.asViewModel(any())).thenReturn(SectionViewModel("child", Some(Call("", "child")), InProgress))
+      when(mockPaymentSection.asViewModel(any())).thenReturn(SectionViewModel("payment", None, CannotStart))
+      when(mockAdditionalInfoSection.asViewModel(any())).thenReturn(SectionViewModel("additional info", None, CannotStart))
 
       val relationshipStatus = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
 
@@ -91,8 +76,8 @@ class TaskListServiceSpec extends AnyFreeSpec with Matchers with ScalaFutures wi
       val result = service.sections(answers)
 
       result mustEqual Seq(
-        SectionViewModel("relationship", Some(Call("", "rel")), Completed),
         SectionViewModel("applicant", Some(Call("", "app")), Completed),
+        SectionViewModel("partner", Some(Call("", "p")), Completed),
         SectionViewModel("child", Some(Call("", "child")), InProgress),
         SectionViewModel("payment", None, CannotStart),
         SectionViewModel("additional info", None, CannotStart)

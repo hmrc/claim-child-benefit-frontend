@@ -21,9 +21,9 @@ import models.tasklist.SectionStatus.{Completed, InProgress, NotStarted}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.{times, verify, when}
-import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.applicant.{ApplicantDateOfBirthPage, ApplicantNinoKnownPage, ApplicantNinoPage, CheckApplicantDetailsPage}
 import services.JourneyProgressService
@@ -31,22 +31,10 @@ import services.JourneyProgressService
 class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar with BeforeAndAfterEach with OptionValues {
 
   private val mockJourneyProgressService = mock[JourneyProgressService]
-  private val relationshipSection = new RelationshipSection(mockJourneyProgressService)
 
   override def beforeEach(): Unit = {
     Mockito.reset(mockJourneyProgressService)
     super.beforeEach()
-  }
-
-  ".isShown" - {
-
-    "must be true" in {
-
-      val answers = UserAnswers("id")
-      val section = new ApplicantSection(mockJourneyProgressService, relationshipSection)
-
-      section.isShown(answers) mustEqual true
-    }
   }
 
   ".continue" - {
@@ -56,7 +44,7 @@ class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar w
       when(mockJourneyProgressService.continue(any(), any())).thenReturn(ApplicantDateOfBirthPage)
 
       val answers = UserAnswers("id")
-      val section = new ApplicantSection(mockJourneyProgressService, relationshipSection)
+      val section = new ApplicantSection(mockJourneyProgressService)
       val result = section.continue(answers)
 
       result.value mustEqual ApplicantDateOfBirthPage
@@ -71,7 +59,7 @@ class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar w
       when(mockJourneyProgressService.continue(any(), any())).thenReturn(ApplicantNinoKnownPage)
 
       val answers = UserAnswers("id")
-      val section = new ApplicantSection(mockJourneyProgressService, relationshipSection)
+      val section = new ApplicantSection(mockJourneyProgressService)
       val result = section.progress(answers)
 
       result mustEqual NotStarted
@@ -83,7 +71,7 @@ class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar w
       when(mockJourneyProgressService.continue(any(), any())).thenReturn(CheckApplicantDetailsPage)
 
       val answers = UserAnswers("id")
-      val section = new ApplicantSection(mockJourneyProgressService, relationshipSection)
+      val section = new ApplicantSection(mockJourneyProgressService)
       val result = section.progress(answers)
 
       result mustEqual Completed
@@ -95,7 +83,7 @@ class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar w
       when(mockJourneyProgressService.continue(any(), any())).thenReturn(ApplicantNinoPage)
 
       val answers = UserAnswers("id")
-      val section = new ApplicantSection(mockJourneyProgressService, relationshipSection)
+      val section = new ApplicantSection(mockJourneyProgressService)
       val result = section.progress(answers)
 
       result mustEqual InProgress
@@ -103,11 +91,11 @@ class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar w
     }
   }
 
-  "the only prerequisite section must be Relationship" in {
+  "the only prerequisite section must be empty" in {
 
     val answers = UserAnswers("id")
-    val section = new ApplicantSection(mockJourneyProgressService, relationshipSection)
+    val section = new ApplicantSection(mockJourneyProgressService)
 
-    section.prerequisiteSections(answers) must contain only relationshipSection
+    section.prerequisiteSections(answers) mustBe empty
   }
 }

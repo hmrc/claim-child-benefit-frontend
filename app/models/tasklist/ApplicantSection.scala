@@ -24,7 +24,7 @@ import services.JourneyProgressService
 
 import javax.inject.Inject
 
-class ApplicantSection @Inject()(journeyProgress: JourneyProgressService, relationshipSection: RelationshipSection) extends Section {
+class ApplicantSection @Inject()(journeyProgress: JourneyProgressService) extends Section {
 
   override val name: String = "taskList.applicantDetails"
 
@@ -39,5 +39,5 @@ class ApplicantSection @Inject()(journeyProgress: JourneyProgressService, relati
     }.getOrElse(CannotStart)
 
   override def prerequisiteSections(answers: UserAnswers): Set[Section] =
-    Set(relationshipSection)
+    Set.empty
 }

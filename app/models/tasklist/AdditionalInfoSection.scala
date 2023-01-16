@@ -24,7 +24,6 @@ import pages.{AdditionalInformationPage, Page, RelationshipStatusPage}
 import javax.inject.Inject
 
 class AdditionalInfoSection @Inject()(
-                                       relationshipSection: RelationshipSection,
                                        applicantSection: ApplicantSection,
                                        partnerSection: PartnerSection,
                                        childSection: ChildSection,
@@ -43,8 +42,5 @@ class AdditionalInfoSection @Inject()(
       .getOrElse(NotStarted)
 
   override def prerequisiteSections(answers: UserAnswers): Set[Section] =
-    answers.get(RelationshipStatusPage).map {
-      case Married | Cohabiting => Set(relationshipSection, applicantSection, partnerSection, childSection, paymentSection)
-      case _ => Set(relationshipSection, applicantSection, childSection, paymentSection)
-    }.getOrElse(Set(relationshipSection, applicantSection, childSection, paymentSection))
+    Set(applicantSection, partnerSection, childSection, paymentSection)
 }

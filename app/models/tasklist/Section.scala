@@ -24,8 +24,6 @@ trait Section {
 
   val name: String
 
-  def isShown(answers: UserAnswers): Boolean = true
-
   def continue(answers: UserAnswers): Option[Page]
 
   def progress(answers: UserAnswers): SectionStatus
@@ -42,16 +40,12 @@ trait Section {
   private def anyIncompletePrerequisites(answers: UserAnswers): Boolean =
     prerequisiteSections(answers).exists(_.progress(answers) != Completed)
 
-  def asViewModel(answers: UserAnswers): Option[SectionViewModel] = {
+  def asViewModel(answers: UserAnswers): SectionViewModel = {
     val url = status(answers) match {
       case CannotStart => None
       case _           => continue(answers).map(_.route(EmptyWaypoints))
     }
 
-    if (isShown(answers)) {
-      Some(SectionViewModel(name, url, status(answers)))
-    } else {
-      None
-    }
+    SectionViewModel(name, url, status(answers))
   }
 }

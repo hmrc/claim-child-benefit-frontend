@@ -34,39 +34,11 @@ import services.JourneyProgressService
 class PartnerSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar with BeforeAndAfterEach with OptionValues with TryValues {
 
   private val mockJourneyProgressService = mock[JourneyProgressService]
-  private val relationshipSection = new RelationshipSection(mockJourneyProgressService)
-  private val applicantSection = new ApplicantSection(mockJourneyProgressService, relationshipSection)
+  private val applicantSection = new ApplicantSection(mockJourneyProgressService)
 
   override def beforeEach(): Unit = {
     Mockito.reset(mockJourneyProgressService)
     super.beforeEach()
-  }
-
-  ".isShown" - {
-
-    "must be true if the applicant is married or cohabiting" in {
-
-      val answers = UserAnswers("id").set(RelationshipStatusPage, Gen.oneOf(Married, Cohabiting).sample.value).success.value
-      val section = new PartnerSection(mockJourneyProgressService, relationshipSection, applicantSection)
-
-      section.isShown(answers) mustEqual true
-    }
-
-    "must be false if the applicant is single, separated, divorced or widowed" in {
-
-      val answers = UserAnswers("id").set(RelationshipStatusPage, Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value).success.value
-      val section = new PartnerSection(mockJourneyProgressService, relationshipSection, applicantSection)
-
-      section.isShown(answers) mustEqual false
-    }
-
-    "must be false when relationship status has not been answered" in {
-
-      val answers = UserAnswers("id")
-      val section = new PartnerSection(mockJourneyProgressService, relationshipSection, applicantSection)
-
-      section.isShown(answers) mustEqual false
-    }
   }
 
   ".continue" - {
@@ -76,7 +48,7 @@ class PartnerSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar wit
       when(mockJourneyProgressService.continue(any(), any())).thenReturn(PartnerNinoPage)
 
       val answers = UserAnswers("id")
-      val section = new PartnerSection(mockJourneyProgressService, relationshipSection, applicantSection)
+      val section = new PartnerSection(mockJourneyProgressService, applicantSection)
       val result = section.continue(answers)
 
       result.value mustEqual PartnerNinoPage
@@ -92,7 +64,7 @@ class PartnerSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar wit
       when(mockJourneyProgressService.continue(any(), any())).thenReturn(PartnerNamePage)
 
       val answers = UserAnswers("id")
-      val section = new PartnerSection(mockJourneyProgressService, relationshipSection, applicantSection)
+      val section = new PartnerSection(mockJourneyProgressService, applicantSection)
       val result = section.progress(answers)
 
       result mustEqual NotStarted
@@ -104,7 +76,7 @@ class PartnerSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar wit
       when(mockJourneyProgressService.continue(any(), any())).thenReturn(CheckPartnerDetailsPage)
 
       val answers = UserAnswers("id")
-      val section = new PartnerSection(mockJourneyProgressService, relationshipSection, applicantSection)
+      val section = new PartnerSection(mockJourneyProgressService, applicantSection)
       val result = section.progress(answers)
 
       result mustEqual Completed
@@ -116,7 +88,7 @@ class PartnerSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar wit
       when(mockJourneyProgressService.continue(any(), any())).thenReturn(PartnerNinoPage)
 
       val answers = UserAnswers("id")
-      val section = new PartnerSection(mockJourneyProgressService, relationshipSection, applicantSection)
+      val section = new PartnerSection(mockJourneyProgressService, applicantSection)
       val result = section.progress(answers)
 
       result mustEqual InProgress
@@ -127,8 +99,8 @@ class PartnerSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar wit
   "the prerequisite sections must be Relationship and Applicant" in {
 
     val answers = UserAnswers("id")
-    val section = new PartnerSection(mockJourneyProgressService, relationshipSection, applicantSection)
+    val section = new PartnerSection(mockJourneyProgressService, applicantSection)
 
-    section.prerequisiteSections(answers) must contain theSameElementsAs Seq(relationshipSection, applicantSection)
+    section.prerequisiteSections(answers) must contain theSameElementsAs Seq(applicantSection)
   }
 }

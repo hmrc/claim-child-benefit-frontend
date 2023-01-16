@@ -22,7 +22,6 @@ import models.tasklist._
 import javax.inject.Inject
 
 class TaskListService @Inject()(
-                                 relationshipSection: RelationshipSection,
                                  applicantSection: ApplicantSection,
                                  partnerSection: PartnerSection,
                                  childSection: ChildSection,
@@ -32,11 +31,10 @@ class TaskListService @Inject()(
 
   def sections(answers: UserAnswers): Seq[SectionViewModel] =
     Seq(
-      relationshipSection.asViewModel(answers),
       applicantSection.asViewModel(answers),
       partnerSection.asViewModel(answers),
       childSection.asViewModel(answers),
       paymentSection.asViewModel(answers),
       additionalInfoSection.asViewModel(answers)
-    ).flatten
+    )
 }

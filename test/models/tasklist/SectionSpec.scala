@@ -36,7 +36,6 @@ class SectionSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyCheck
     override def continue(answers: UserAnswers): Option[Page] = continue
     override def progress(answers: UserAnswers): SectionStatus = progress
     override def prerequisiteSections(answers: UserAnswers): Set[Section] = prerequisites.toSet
-    override def isShown(answers: UserAnswers): Boolean = isShown
   }
 
   private implicit val arbitraryProgress: Arbitrary[SectionStatus] = Arbitrary {
@@ -128,7 +127,7 @@ class SectionSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyCheck
           val section = TestSection(status, Nil, Some(TestPage))
           val result = section.asViewModel(answers)
 
-          result.value mustEqual SectionViewModel("foo", Some(Call("", "")), status)
+          result mustEqual SectionViewModel("foo", Some(Call("", "")), status)
         }
       }
 
@@ -142,7 +141,7 @@ class SectionSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyCheck
           val section = TestSection(status, Nil, None)
           val result = section.asViewModel(answers)
 
-          result.value mustEqual SectionViewModel("foo", None, status)
+          result mustEqual SectionViewModel("foo", None, status)
         }
 
         "when this section should be shown, it has a continue page, but its status is Cannot Start" in {
@@ -155,22 +154,9 @@ class SectionSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyCheck
           val section = TestSection(CannotStart, Nil, Some(TestPage))
           val result = section.asViewModel(answers)
 
-          result.value mustEqual SectionViewModel("foo", None, CannotStart)
+          result mustEqual SectionViewModel("foo", None, CannotStart)
         }
       }
-    }
-
-    "must return None when the section should not shown" in {
-
-      object TestPage extends Page {
-        override def route(waypoints: Waypoints): Call = Call("", "")
-      }
-
-      val answers = UserAnswers("id")
-      val section = TestSection(Completed, Nil, Some(TestPage), isShown = false)
-      val result = section.asViewModel(answers)
-
-      result must not be defined
     }
   }
 }

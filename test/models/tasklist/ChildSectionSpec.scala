@@ -42,24 +42,12 @@ class ChildSectionSpec
     with TryValues {
 
   private val mockJourneyProgressService = mock[JourneyProgressService]
-  private val relationshipSection = new RelationshipSection(mockJourneyProgressService)
-  private val applicantSection = new ApplicantSection(mockJourneyProgressService, relationshipSection)
-  private val partnerSection = new PartnerSection(mockJourneyProgressService, relationshipSection, applicantSection)
+  private val applicantSection = new ApplicantSection(mockJourneyProgressService)
+  private val partnerSection = new PartnerSection(mockJourneyProgressService, applicantSection)
 
   override def beforeEach(): Unit = {
     Mockito.reset(mockJourneyProgressService)
     super.beforeEach()
-  }
-
-  ".isShown" - {
-
-    "must be true" in {
-
-      val answers = UserAnswers("id")
-      val section = new ChildSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection)
-
-      section.isShown(answers) mustEqual true
-    }
   }
 
   ".continue" - {
@@ -69,7 +57,7 @@ class ChildSectionSpec
       when(mockJourneyProgressService.continue(any(), any())).thenReturn(ChildDateOfBirthPage(Index(0)))
 
       val answers = UserAnswers("id")
-      val section = new ChildSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection)
+      val section = new ChildSection(mockJourneyProgressService, applicantSection, partnerSection)
       val result = section.continue(answers)
 
       result.value mustEqual ChildDateOfBirthPage(Index(0))
@@ -84,7 +72,7 @@ class ChildSectionSpec
       when(mockJourneyProgressService.continue(any(), any())).thenReturn(ChildNamePage(Index(0)))
 
       val answers = UserAnswers("id")
-      val section = new ChildSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection)
+      val section = new ChildSection(mockJourneyProgressService, applicantSection, partnerSection)
       val result = section.progress(answers)
 
       result mustEqual NotStarted
@@ -96,7 +84,7 @@ class ChildSectionSpec
       when(mockJourneyProgressService.continue(any(), any())).thenReturn(AddChildPage())
 
       val answers = UserAnswers("id")
-      val section = new ChildSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection)
+      val section = new ChildSection(mockJourneyProgressService, applicantSection, partnerSection)
       val result = section.progress(answers)
 
       result mustEqual Completed
@@ -108,7 +96,7 @@ class ChildSectionSpec
       when(mockJourneyProgressService.continue(any(), any())).thenReturn(ChildDateOfBirthPage(Index(1)))
 
       val answers = UserAnswers("id")
-      val section = new ChildSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection)
+      val section = new ChildSection(mockJourneyProgressService, applicantSection, partnerSection)
       val result = section.progress(answers)
 
       result mustEqual InProgress
@@ -118,34 +106,12 @@ class ChildSectionSpec
 
   ".prerequisiteSections" - {
 
-    "must contain Relationship and Applicant when the applicant is Single, Divorced, Widowed or Separated" in {
-
-      forAll(Gen.oneOf(Single, Separated, Widowed, Divorced)) {
-        relationshipStatus =>
-          val answers = UserAnswers("id").set(RelationshipStatusPage, relationshipStatus).success.value
-          val section = new ChildSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection)
-
-          section.prerequisiteSections(answers) must contain theSameElementsAs Seq(relationshipSection, applicantSection)
-      }
-    }
-
-    "must contain Relationship, Applicant and Partner when the applicant is Married or Cohabiting" in {
-
-      forAll(Gen.oneOf(Married, Cohabiting)) {
-        relationshipStatus =>
-          val answers = UserAnswers("id").set(RelationshipStatusPage, relationshipStatus).success.value
-          val section = new ChildSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection)
-
-          section.prerequisiteSections(answers) must contain theSameElementsAs Seq(relationshipSection, applicantSection, partnerSection)
-      }
-    }
-
-    "must contain Relationship and Applicant when the applicant's relationship status is unknown'" in {
+    "must contain Applicant and Partner" in {
 
       val answers = UserAnswers("id")
-      val section = new ChildSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection)
+      val section = new ChildSection(mockJourneyProgressService, applicantSection, partnerSection)
 
-      section.prerequisiteSections(answers) must contain theSameElementsAs Seq(relationshipSection, applicantSection)
+      section.prerequisiteSections(answers) must contain theSameElementsAs Seq(applicantSection, partnerSection)
     }
   }
 }

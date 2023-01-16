@@ -28,7 +28,6 @@ import javax.inject.Inject
 
 class PaymentSection @Inject()(
                                 journeyProgress: JourneyProgressService,
-                                relationshipSection: RelationshipSection,
                                 applicantSection: ApplicantSection,
                                 partnerSection: PartnerSection,
                                 childSection: ChildSection
@@ -50,8 +49,5 @@ class PaymentSection @Inject()(
     }.getOrElse(CannotStart)
 
   override def prerequisiteSections(answers: UserAnswers): Set[Section] =
-    answers.get(RelationshipStatusPage).map {
-      case Married | Cohabiting => Set(relationshipSection, applicantSection, partnerSection, childSection)
-      case _ => Set(relationshipSection, applicantSection, childSection)
-    }.getOrElse(Set(relationshipSection, applicantSection, childSection))
+    Set(applicantSection, partnerSection, childSection)
 }

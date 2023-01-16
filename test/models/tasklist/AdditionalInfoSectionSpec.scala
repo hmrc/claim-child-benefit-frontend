@@ -17,17 +17,14 @@
 package models.tasklist
 
 import models.AdditionalInformation.NoInformation
-import models.RelationshipStatus._
 import models.UserAnswers
 import models.tasklist.SectionStatus.{Completed, NotStarted}
 import org.mockito.Mockito
-import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import pages.{AdditionalInformationPage, RelationshipStatusPage}
+import pages.AdditionalInformationPage
 import services.JourneyProgressService
 
 class AdditionalInfoSectionSpec
@@ -35,31 +32,18 @@ class AdditionalInfoSectionSpec
     with Matchers
     with MockitoSugar
     with BeforeAndAfterEach
-    with ScalaCheckPropertyChecks
     with OptionValues
     with TryValues {
 
   private val mockJourneyProgressService = mock[JourneyProgressService]
-  private val relationshipSection = new RelationshipSection(mockJourneyProgressService)
-  private val applicantSection = new ApplicantSection(mockJourneyProgressService, relationshipSection)
-  private val partnerSection = new PartnerSection(mockJourneyProgressService, relationshipSection, applicantSection)
-  private val childSection = new ChildSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection)
-  private val paymentSection = new PaymentSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection, childSection)
+  private val applicantSection = new ApplicantSection(mockJourneyProgressService)
+  private val partnerSection = new PartnerSection(mockJourneyProgressService, applicantSection)
+  private val childSection = new ChildSection(mockJourneyProgressService, applicantSection, partnerSection)
+  private val paymentSection = new PaymentSection(mockJourneyProgressService, applicantSection, partnerSection, childSection)
 
   override def beforeEach(): Unit = {
     Mockito.reset(mockJourneyProgressService)
     super.beforeEach()
-  }
-
-  ".isShown" - {
-
-    "must be true" in {
-
-      val answers = UserAnswers("id")
-      val section = new AdditionalInfoSection(relationshipSection, applicantSection, partnerSection, childSection, paymentSection)
-
-      section.isShown(answers) mustEqual true
-    }
   }
 
   ".continue" - {
@@ -67,7 +51,7 @@ class AdditionalInfoSectionSpec
     "must be Additional Information" in {
 
       val answers = UserAnswers("id")
-      val section = new AdditionalInfoSection(relationshipSection, applicantSection, partnerSection, childSection, paymentSection)
+      val section = new AdditionalInfoSection(applicantSection, partnerSection, childSection, paymentSection)
 
       section.continue(answers).value mustEqual AdditionalInformationPage
     }
@@ -78,7 +62,7 @@ class AdditionalInfoSectionSpec
     "must be Not Started if Additional Information has not been answered" in {
 
       val answers = UserAnswers("id")
-      val section = new AdditionalInfoSection(relationshipSection, applicantSection, partnerSection, childSection, paymentSection)
+      val section = new AdditionalInfoSection(applicantSection, partnerSection, childSection, paymentSection)
 
       section.progress(answers) mustEqual NotStarted
     }
@@ -86,7 +70,7 @@ class AdditionalInfoSectionSpec
     "must be Completed if Additional Information has been answered" in {
 
       val answers = UserAnswers("id").set(AdditionalInformationPage, NoInformation).success.value
-      val section = new AdditionalInfoSection(relationshipSection, applicantSection, partnerSection, childSection, paymentSection)
+      val section = new AdditionalInfoSection(applicantSection, partnerSection, childSection, paymentSection)
 
       section.progress(answers) mustEqual Completed
     }
@@ -94,34 +78,12 @@ class AdditionalInfoSectionSpec
 
   ".prerequisiteSections" - {
 
-    "must contain Relationship, Applicant, Child and Payment when the applicant is Single, Divorced, Widowed or Separated" in {
-
-      forAll(Gen.oneOf(Single, Separated, Widowed, Divorced)) {
-        relationshipStatus =>
-          val answers = UserAnswers("id").set(RelationshipStatusPage, relationshipStatus).success.value
-          val section = new AdditionalInfoSection(relationshipSection, applicantSection, partnerSection, childSection, paymentSection)
-
-          section.prerequisiteSections(answers) must contain theSameElementsAs Seq(relationshipSection, applicantSection, childSection, paymentSection)
-      }
-    }
-
-    "must contain Relationship, Applicant, Partner, Child and Payment when the applicant is Married or Cohabiting" in {
-
-      forAll(Gen.oneOf(Married, Cohabiting)) {
-        relationshipStatus =>
-          val answers = UserAnswers("id").set(RelationshipStatusPage, relationshipStatus).success.value
-          val section = new AdditionalInfoSection(relationshipSection, applicantSection, partnerSection, childSection, paymentSection)
-
-          section.prerequisiteSections(answers) must contain theSameElementsAs Seq(relationshipSection, applicantSection, partnerSection, childSection, paymentSection)
-      }
-    }
-
-    "must contain Relationship, Applicant, Child and Payment when the applicant's relationship status is unknown'" in {
+    "must contain Applicant, Child and Payment" in {
 
       val answers = UserAnswers("id")
-      val section = new AdditionalInfoSection(relationshipSection, applicantSection, partnerSection, childSection, paymentSection)
+      val section = new AdditionalInfoSection(applicantSection, partnerSection, childSection, paymentSection)
 
-      section.prerequisiteSections(answers) must contain theSameElementsAs Seq(relationshipSection, applicantSection, childSection, paymentSection)
+      section.prerequisiteSections(answers) must contain theSameElementsAs Seq(applicantSection, partnerSection, childSection, paymentSection)
     }
   }
 }

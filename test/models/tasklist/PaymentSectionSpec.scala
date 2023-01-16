@@ -45,25 +45,13 @@ class PaymentSectionSpec
     with TryValues {
 
   private val mockJourneyProgressService = mock[JourneyProgressService]
-  private val relationshipSection = new RelationshipSection(mockJourneyProgressService)
-  private val applicantSection = new ApplicantSection(mockJourneyProgressService, relationshipSection)
-  private val partnerSection = new PartnerSection(mockJourneyProgressService, relationshipSection, applicantSection)
-  private val childSection = new ChildSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection)
+  private val applicantSection = new ApplicantSection(mockJourneyProgressService)
+  private val partnerSection = new PartnerSection(mockJourneyProgressService, applicantSection)
+  private val childSection = new ChildSection(mockJourneyProgressService, applicantSection, partnerSection)
 
   override def beforeEach(): Unit = {
     Mockito.reset(mockJourneyProgressService)
     super.beforeEach()
-  }
-
-  ".isShown" - {
-
-    "must be true" in {
-
-      val answers = UserAnswers("id")
-      val section = new PaymentSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection, childSection)
-
-      section.isShown(answers) mustEqual true
-    }
   }
 
   ".continue" - {
@@ -75,7 +63,7 @@ class PaymentSectionSpec
           when(mockJourneyProgressService.continue(any(), any())).thenReturn(PaymentFrequencyPage)
 
           val answers = UserAnswers("id").set(RelationshipStatusPage, relationshipStatus).success.value
-          val section = new PaymentSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection, childSection)
+          val section = new PaymentSection(mockJourneyProgressService, applicantSection, partnerSection, childSection)
           val result = section.continue(answers)
 
           result.value mustEqual PaymentFrequencyPage
@@ -90,7 +78,7 @@ class PaymentSectionSpec
           when(mockJourneyProgressService.continue(any(), any())).thenReturn(PaymentFrequencyPage)
 
           val answers = UserAnswers("id").set(RelationshipStatusPage, relationshipStatus).success.value
-          val section = new PaymentSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection, childSection)
+          val section = new PaymentSection(mockJourneyProgressService, applicantSection, partnerSection, childSection)
           val result = section.continue(answers)
 
           result.value mustEqual PaymentFrequencyPage
@@ -101,7 +89,7 @@ class PaymentSectionSpec
     "must be None when relationship status has not been answered" in {
 
       val answers = UserAnswers("id")
-      val section = new PaymentSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection, childSection)
+      val section = new PaymentSection(mockJourneyProgressService, applicantSection, partnerSection, childSection)
       val result = section.continue(answers)
 
       result must not be defined
@@ -115,7 +103,7 @@ class PaymentSectionSpec
       when(mockJourneyProgressService.continue(any(), any())).thenReturn(ApplicantIncomePage)
 
       val answers = UserAnswers("id").set(RelationshipStatusPage, Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value).success.value
-      val section = new PaymentSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection, childSection)
+      val section = new PaymentSection(mockJourneyProgressService, applicantSection, partnerSection, childSection)
       val result = section.progress(answers)
 
       result mustEqual NotStarted
@@ -127,7 +115,7 @@ class PaymentSectionSpec
       when(mockJourneyProgressService.continue(any(), any())).thenReturn(ApplicantOrPartnerIncomePage)
 
       val answers = UserAnswers("id").set(RelationshipStatusPage, Gen.oneOf(Married, Cohabiting).sample.value).success.value
-      val section = new PaymentSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection, childSection)
+      val section = new PaymentSection(mockJourneyProgressService, applicantSection, partnerSection, childSection)
       val result = section.progress(answers)
 
       result mustEqual NotStarted
@@ -139,7 +127,7 @@ class PaymentSectionSpec
       when(mockJourneyProgressService.continue(any(), any())).thenReturn(CheckPaymentDetailsPage)
 
       val answers = UserAnswers("id").set(RelationshipStatusPage, Single).success.value
-      val section = new PaymentSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection, childSection)
+      val section = new PaymentSection(mockJourneyProgressService, applicantSection, partnerSection, childSection)
       val result = section.progress(answers)
 
       result mustEqual Completed
@@ -151,7 +139,7 @@ class PaymentSectionSpec
       when(mockJourneyProgressService.continue(any(), any())).thenReturn(PaymentFrequencyPage)
 
       val answers = UserAnswers("id").set(RelationshipStatusPage, Single).success.value
-      val section = new PaymentSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection, childSection)
+      val section = new PaymentSection(mockJourneyProgressService, applicantSection, partnerSection, childSection)
       val result = section.progress(answers)
 
       result mustEqual InProgress
@@ -163,7 +151,7 @@ class PaymentSectionSpec
       when(mockJourneyProgressService.continue(any(), any())).thenReturn(PaymentFrequencyPage)
 
       val answers = UserAnswers("id")
-      val section = new PaymentSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection, childSection)
+      val section = new PaymentSection(mockJourneyProgressService, applicantSection, partnerSection, childSection)
       val result = section.progress(answers)
 
       result mustEqual CannotStart
@@ -172,34 +160,15 @@ class PaymentSectionSpec
 
   ".prerequisiteSections" - {
 
-    "must contain Relationship, Applicant and Child when the applicant is Single, Divorced, Widowed or Separated" in {
+    "must contain Applicant, Partner and Child" in {
 
       forAll(Gen.oneOf(Single, Separated, Widowed, Divorced)) {
         relationshipStatus =>
           val answers = UserAnswers("id").set(RelationshipStatusPage, relationshipStatus).success.value
-          val section = new PaymentSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection, childSection)
+          val section = new PaymentSection(mockJourneyProgressService, applicantSection, partnerSection, childSection)
 
-          section.prerequisiteSections(answers) must contain theSameElementsAs Seq(relationshipSection, applicantSection, childSection)
+          section.prerequisiteSections(answers) must contain theSameElementsAs Seq(applicantSection, partnerSection, childSection)
       }
-    }
-
-    "must contain Relationship, Applicant, Partner and Child when the applicant is Married or Cohabiting" in {
-
-      forAll(Gen.oneOf(Married, Cohabiting)) {
-        relationshipStatus =>
-          val answers = UserAnswers("id").set(RelationshipStatusPage, relationshipStatus).success.value
-          val section = new PaymentSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection, childSection)
-
-          section.prerequisiteSections(answers) must contain theSameElementsAs Seq(relationshipSection, applicantSection, partnerSection, childSection)
-      }
-    }
-
-    "must contain Relationship, Applicant and Child when the applicant's relationship status is unknown'" in {
-
-      val answers = UserAnswers("id")
-      val section = new PaymentSection(mockJourneyProgressService, relationshipSection, applicantSection, partnerSection, childSection)
-
-      section.prerequisiteSections(answers) must contain theSameElementsAs Seq(relationshipSection, applicantSection, childSection)
     }
   }
 }
