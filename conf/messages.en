@@ -111,8 +111,14 @@ alwaysLivedInUk.couple.change.hidden = if you or your partner have always lived 
 alwaysLivedInUk.single.title = Have you always lived in the UK?
 alwaysLivedInUk.single.heading = Have you always lived in the UK?
 alwaysLivedInUk.single.checkYourAnswersLabel = Have you always lived in the UK?
-alwaysLivedInUk.single.error.required = Select yes if you have  always lived in the UK
-alwaysLivedInUk.single.change.hidden = if you have  always lived in the UK
+alwaysLivedInUk.single.error.required = Select yes if you have always lived in the UK
+alwaysLivedInUk.single.change.hidden = if you have always lived in the UK
+
+applicantUsuallyLivesInUk.single.title = Do you usually live in the UK?
+applicantUsuallyLivesInUk.single.heading = Do you usually live in the UK?
+applicantUsuallyLivesInUk.single.checkYourAnswersLabel = Do you usually live in the UK?
+applicantUsuallyLivesInUk.single.error.required = Select yes if you usually live in the UK
+applicantUsuallyLivesInUk.single.change.hidden = if you usually live in the UK
 
 recentlyClaimed.title = Have you recently made a Child Benefit claim and are waiting to hear if you are eligible?
 recentlyClaimed.heading = Have you recently made a Child Benefit claim and are waiting to hear if you are eligible?
