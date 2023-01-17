@@ -18,7 +18,6 @@ package pages.applicant
 
 import controllers.applicant.routes
 import models.{InternationalAddress, UserAnswers}
-import pages.payments.CurrentlyReceivingChildBenefitPage
 import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
@@ -33,5 +32,5 @@ case object ApplicantPreviousInternationalAddressPage extends QuestionPage[Inter
     routes.ApplicantPreviousInternationalAddressController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    CurrentlyReceivingChildBenefitPage
+    ApplicantIsHmfOrCivilServantPage
 }

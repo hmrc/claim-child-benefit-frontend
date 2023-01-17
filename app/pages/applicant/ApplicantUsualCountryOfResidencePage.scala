@@ -33,4 +33,7 @@ case object ApplicantUsualCountryOfResidencePage extends QuestionPage[Country] {
 
   override def route(waypoints: Waypoints): Call =
     routes.ApplicantUsualCountryOfResidenceController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    ApplicantArrivedInUkPage
 }

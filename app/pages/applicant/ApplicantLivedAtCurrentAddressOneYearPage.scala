@@ -37,7 +37,7 @@ case object ApplicantLivedAtCurrentAddressOneYearPage extends QuestionPage[Boole
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case true =>
-        CurrentlyReceivingChildBenefitPage
+        ApplicantIsHmfOrCivilServantPage
 
       case false =>
         answers.get(AlwaysLivedInUkPage).map {

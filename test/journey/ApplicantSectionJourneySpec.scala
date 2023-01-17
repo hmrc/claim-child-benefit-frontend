@@ -18,15 +18,13 @@ package journey
 
 import generators.ModelGenerators
 import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments}
-import models.RelationshipStatus.{Cohabiting, Married}
 import models.{AdultName, ApplicantPreviousName, ChildName, Country, Index, InternationalAddress, UkAddress}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import pages.applicant._
-import pages.partner.PartnerIsHmfOrCivilServantPage
 import pages.payments.{CurrentlyReceivingChildBenefitPage, EldestChildDateOfBirthPage, EldestChildNamePage}
-import pages.{AlwaysLivedInUkPage, ApplicantNamePage, RelationshipStatusPage, TaskListPage}
+import pages.{AlwaysLivedInUkPage, ApplicantNamePage, TaskListPage}
 import uk.gov.hmrc.domain.Nino
 
 import java.time.LocalDate
@@ -41,22 +39,22 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
   private val nino = arbitrary[Nino].sample.value
   private val country = Gen.oneOf(Country.internationalCountries).sample.value
   private val internationalAddress = InternationalAddress("line1", None, "town", None, None, country)
-  private val partneredRelationship = Gen.oneOf(Married, Cohabiting).sample.value
   private val previousName = ApplicantPreviousName("name")
 
   "users who don't know their NINO, with no previous names or addresses, who have always lived in the UK and are not claiming right now must proceed to the task list" in {
 
     startingFrom(ApplicantNinoKnownPage)
       .run(
-        setUserAnswerTo(AlwaysLivedInUkPage, true),
         submitAnswer(ApplicantNinoKnownPage, false),
         submitAnswer(ApplicantNamePage, adultName),
         submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
         submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
         submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
         submitAnswer(ApplicantNationalityPage, nationality),
+        submitAnswer(AlwaysLivedInUkPage, true),
         submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
         submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+        submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
         submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
         pageMustBe(CheckApplicantDetailsPage),
         next,
@@ -82,7 +80,6 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
 
         startingFrom(ApplicantNinoKnownPage)
           .run(
-            setUserAnswerTo(AlwaysLivedInUkPage, true),
             submitAnswer(ApplicantNinoKnownPage, true),
             submitAnswer(ApplicantNinoPage, nino),
             submitAnswer(ApplicantNamePage, adultName),
@@ -90,8 +87,9 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
             submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
             submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
             submitAnswer(ApplicantNationalityPage, nationality),
+            submitAnswer(AlwaysLivedInUkPage, true),
             submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
-            pageMustBe(CurrentlyReceivingChildBenefitPage)
+            pageMustBe(ApplicantIsHmfOrCivilServantPage)
           )
       }
 
@@ -99,8 +97,6 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
 
         startingFrom(ApplicantNinoKnownPage)
           .run(
-            setUserAnswerTo(AlwaysLivedInUkPage, false),
-            setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, true),
             submitAnswer(ApplicantNinoKnownPage, true),
             submitAnswer(ApplicantNinoPage, nino),
             submitAnswer(ApplicantNamePage, adultName),
@@ -108,8 +104,12 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
             submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
             submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
             submitAnswer(ApplicantNationalityPage, nationality),
+            submitAnswer(AlwaysLivedInUkPage, false),
+            submitAnswer(ApplicantUsuallyLivesInUkPage, true),
+            submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
             submitAnswer(ApplicantCurrentAddressInUkPage, false),
             submitAnswer(ApplicantCurrentInternationalAddressPage, internationalAddress),
+            submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
             pageMustBe(CurrentlyReceivingChildBenefitPage)
           )
       }
@@ -149,68 +149,6 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
     }
   }
 
-  "users who are HM Forces or a civil servant abroad must be asked if their address is in the UK" - {
-
-    "and proceed if they say yes" in {
-
-      startingFrom(ApplicantNationalityPage)
-        .run(
-          setUserAnswerTo(AlwaysLivedInUkPage, false),
-          setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, true),
-          submitAnswer(ApplicantNationalityPage, nationality),
-          submitAnswer(ApplicantCurrentAddressInUkPage, true),
-          submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
-          pageMustBe(ApplicantLivedAtCurrentAddressOneYearPage)
-        )
-    }
-
-    "and proceed if they say no" in {
-
-      startingFrom(ApplicantNationalityPage)
-        .run(
-          setUserAnswerTo(AlwaysLivedInUkPage, false),
-          setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, true),
-          submitAnswer(ApplicantNationalityPage, nationality),
-          submitAnswer(ApplicantCurrentAddressInUkPage, false),
-          submitAnswer(ApplicantCurrentInternationalAddressPage, internationalAddress),
-          pageMustBe(ApplicantLivedAtCurrentAddressOneYearPage)
-        )
-    }
-  }
-
-  "users whose partner is HM Forces or a civil servant abroad must be asked if their address is in the UK" - {
-
-    "and proceed if they say yes" in {
-
-      startingFrom(ApplicantNationalityPage)
-        .run(
-          setUserAnswerTo(RelationshipStatusPage, partneredRelationship),
-          setUserAnswerTo(AlwaysLivedInUkPage, false),
-          setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, false),
-          setUserAnswerTo(PartnerIsHmfOrCivilServantPage, true),
-          submitAnswer(ApplicantNationalityPage, nationality),
-          submitAnswer(ApplicantCurrentAddressInUkPage, true),
-          submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
-          pageMustBe(ApplicantLivedAtCurrentAddressOneYearPage)
-        )
-    }
-
-    "and proceed if they say no" in {
-
-      startingFrom(ApplicantNationalityPage)
-        .run(
-          setUserAnswerTo(RelationshipStatusPage, partneredRelationship),
-          setUserAnswerTo(AlwaysLivedInUkPage, false),
-          setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, false),
-          setUserAnswerTo(PartnerIsHmfOrCivilServantPage, true),
-          submitAnswer(ApplicantNationalityPage, nationality),
-          submitAnswer(ApplicantCurrentAddressInUkPage, false),
-          submitAnswer(ApplicantCurrentInternationalAddressPage, internationalAddress),
-          pageMustBe(ApplicantLivedAtCurrentAddressOneYearPage)
-        )
-    }
-  }
-
   "users who did not give a NINO" - {
 
     "who have not lived at their current address a year" - {
@@ -224,7 +162,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
               setUserAnswerTo(AlwaysLivedInUkPage, true),
               submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
               submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
-              pageMustBe(CurrentlyReceivingChildBenefitPage)
+              pageMustBe(ApplicantIsHmfOrCivilServantPage)
             )
         }
       }
@@ -241,7 +179,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
                 submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
                 submitAnswer(ApplicantPreviousAddressInUkPage, true),
                 submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
-                pageMustBe(CurrentlyReceivingChildBenefitPage)
+                pageMustBe(ApplicantIsHmfOrCivilServantPage)
               )
           }
 
@@ -253,10 +191,42 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
                 submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
                 submitAnswer(ApplicantPreviousAddressInUkPage, false),
                 submitAnswer(ApplicantPreviousInternationalAddressPage, internationalAddress),
-                pageMustBe(CurrentlyReceivingChildBenefitPage)
+                pageMustBe(ApplicantIsHmfOrCivilServantPage)
               )
           }
         }
+      }
+    }
+  }
+
+  "users who have not always lived in the UK" - {
+
+    "who usually live in the UK" - {
+
+      "must be asked when they arrived in the UK" in {
+
+        startingFrom(AlwaysLivedInUkPage)
+          .run(
+            submitAnswer(AlwaysLivedInUkPage, false),
+            submitAnswer(ApplicantUsuallyLivesInUkPage, true),
+            submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
+            pageMustBe(ApplicantCurrentAddressInUkPage)
+          )
+      }
+    }
+
+    "who do not usually live in the UK" - {
+
+      "must be asked which country they usually live in and when they arrived in the UK" in {
+
+        startingFrom(AlwaysLivedInUkPage)
+          .run(
+            submitAnswer(AlwaysLivedInUkPage, false),
+            submitAnswer(ApplicantUsuallyLivesInUkPage, false),
+            submitAnswer(ApplicantUsualCountryOfResidencePage, country),
+            submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
+            pageMustBe(ApplicantCurrentAddressInUkPage)
+          )
       }
     }
   }

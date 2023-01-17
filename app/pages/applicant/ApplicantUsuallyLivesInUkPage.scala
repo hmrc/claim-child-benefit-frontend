@@ -17,7 +17,8 @@
 package pages.applicant
 
 import controllers.applicant.routes
-import pages.{QuestionPage, Waypoints}
+import models.UserAnswers
+import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -29,4 +30,10 @@ case object ApplicantUsuallyLivesInUkPage extends QuestionPage[Boolean] {
 
   override def route(waypoints: Waypoints): Call =
     routes.ApplicantUsuallyLivesInUkController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true  => ApplicantArrivedInUkPage
+      case false => ApplicantUsualCountryOfResidencePage
+    }.orRecover
 }

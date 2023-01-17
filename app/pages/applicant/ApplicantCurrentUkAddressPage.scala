@@ -34,7 +34,7 @@ case object ApplicantCurrentUkAddressPage extends QuestionPage[UkAddress] {
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page = {
     answers.get(ApplicantNinoPage)
-      .map(_ => CurrentlyReceivingChildBenefitPage)
+      .map(_ => ApplicantIsHmfOrCivilServantPage)
       .getOrElse(ApplicantLivedAtCurrentAddressOneYearPage)
   }
 }
