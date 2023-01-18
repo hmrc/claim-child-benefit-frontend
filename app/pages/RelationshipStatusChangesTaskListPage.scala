@@ -17,8 +17,9 @@
 package pages
 
 import controllers.routes
-import models.RelationshipStatus.{Cohabiting, Separated}
+import models.RelationshipStatus._
 import models.{TaskListSectionChange, UserAnswers}
+import pages.partner.PartnerNamePage
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -43,6 +44,11 @@ case object RelationshipStatusChangesTaskListPage extends QuestionPage[Set[TaskL
           .map(_ => waypoints.next.page)
           .getOrElse(CohabitationDatePage)
 
+      case Married =>
+        answers
+          .get(PartnerNamePage)
+          .map(_ => waypoints.next.page)
+          .getOrElse(PartnerNamePage)
       case _ =>
         waypoints.next.page
     }.orRecover

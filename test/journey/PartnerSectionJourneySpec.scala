@@ -17,11 +17,12 @@
 package journey
 
 import generators.ModelGenerators
+import models.RelationshipStatus.{Cohabiting, Divorced, Married, Separated, Single, Widowed}
 import models.{AdultName, ChildName, PartnerClaimingChildBenefit}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
-import pages.TaskListPage
+import pages.{CohabitationDatePage, RelationshipStatusPage, SeparationDatePage, TaskListPage}
 import pages.partner._
 import uk.gov.hmrc.domain.Nino
 
@@ -32,6 +33,71 @@ class PartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
   private val partnerName = AdultName(None, "first", None, "last")
   private val childName = ChildName("first", None, "last")
   private val nino = arbitrary[Nino].sample.value
+  private val nationality = "nationality"
+
+  "users who say they are Married" - {
+
+    "must be asked for details about their partner" in {
+
+      startingFrom(RelationshipStatusPage)
+        .run(
+          submitAnswer(RelationshipStatusPage, Married),
+          submitAnswer(PartnerNamePage, partnerName),
+          submitAnswer(PartnerNinoKnownPage, false),
+          submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
+          submitAnswer(PartnerNationalityPage, nationality),
+          submitAnswer(PartnerIsHmfOrCivilServantPage, false),
+          submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
+          pageMustBe(CheckPartnerDetailsPage)
+        )
+    }
+  }
+
+  "users who say they are Cohabiting" - {
+
+    "must be asked when they started living together, then for details about their partner" in {
+
+      startingFrom(RelationshipStatusPage)
+        .run(
+          submitAnswer(RelationshipStatusPage, Cohabiting),
+          submitAnswer(CohabitationDatePage, LocalDate.now),
+          submitAnswer(PartnerNamePage, partnerName),
+          submitAnswer(PartnerNinoKnownPage, false),
+          submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
+          submitAnswer(PartnerNationalityPage, nationality),
+          submitAnswer(PartnerIsHmfOrCivilServantPage, false),
+          submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
+          pageMustBe(CheckPartnerDetailsPage)
+        )
+    }
+  }
+
+  "users who say they are Separated" - {
+
+    "must be asked for the date they separated, then go to Check Partner Details" in {
+
+      startingFrom(RelationshipStatusPage)
+        .run(
+          submitAnswer(RelationshipStatusPage, Separated),
+          submitAnswer(SeparationDatePage, LocalDate.now),
+          pageMustBe(CheckPartnerDetailsPage)
+        )
+    }
+  }
+
+  "users who say they are single, divorced or widowed" - {
+
+    "must go to Check Partner Details" in {
+
+      val relationship = Gen.oneOf(Single, Divorced, Widowed).sample.value
+
+      startingFrom(RelationshipStatusPage)
+        .run(
+          submitAnswer(RelationshipStatusPage, relationship),
+          pageMustBe(CheckPartnerDetailsPage)
+        )
+    }
+  }
 
   "users who don't know their partner's NINO, and the partner is not entitled to CB, must proceed to the task list" in {
 
@@ -41,6 +107,7 @@ class PartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
         submitAnswer(PartnerNinoKnownPage, false),
         submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
         submitAnswer(PartnerNationalityPage, "nationality"),
+        submitAnswer(PartnerIsHmfOrCivilServantPage, false),
         submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
         pageMustBe(CheckPartnerDetailsPage),
         next,

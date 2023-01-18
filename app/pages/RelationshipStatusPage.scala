@@ -18,9 +18,8 @@ package pages
 
 import controllers.routes
 import models.RelationshipStatus._
-import models.TaskListSectionChange.{PartnerDetailsRemoved, PartnerDetailsRequired, PaymentDetailsRemoved}
+import models.TaskListSectionChange.PaymentDetailsRemoved
 import models.{RelationshipStatus, TaskListSectionChange, UserAnswers}
-import pages.applicant.ApplicantIsHmfOrCivilServantPage
 import pages.income._
 import pages.partner._
 import pages.payments._
@@ -41,9 +40,10 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
-      case Cohabiting                            => CohabitationDatePage
-      case Separated                             => SeparationDatePage
-      case Married | Single | Divorced | Widowed => AlwaysLivedInUkPage
+      case Married                     => PartnerNamePage
+      case Cohabiting                  => CohabitationDatePage
+      case Separated                   => SeparationDatePage
+      case Single | Divorced | Widowed => CheckPartnerDetailsPage
     }.orRecover
 
   override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, originalAnswers: UserAnswers, updatedAnswers: UserAnswers): Page = {
@@ -51,28 +51,11 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
     def taskListSectionsChanging(newStatus: RelationshipStatus): Boolean =
       newStatus match {
         case Married | Cohabiting =>
-          val paymentDetailsInvalid = originalAnswers.isDefined(ApplicantIncomePage)
-          val partnerSectionNewlyRequired = originalAnswers.get(RelationshipStatusPage).exists {
-            case Married | Cohabiting => false
-            case Single | Separated | Divorced | Widowed => true
-          }
-
-          paymentDetailsInvalid || partnerSectionNewlyRequired
+          originalAnswers.isDefined(ApplicantIncomePage)
 
         case Single | Separated | Divorced | Widowed =>
-          originalAnswers.isDefined(PartnerNamePage) || originalAnswers.isDefined(ApplicantOrPartnerIncomePage)
+          originalAnswers.isDefined(ApplicantOrPartnerIncomePage)
       }
-
-    def mustUsePrintAndPost(newStatus: RelationshipStatus): Boolean = {
-      newStatus match {
-        case Married | Cohabiting =>
-          false
-
-        case _ =>
-          updatedAnswers.get(AlwaysLivedInUkPage).contains(false) &&
-            updatedAnswers.get(ApplicantIsHmfOrCivilServantPage).contains(false)
-      }
-    }
 
     def nextPage(newStatus: RelationshipStatus) =
       newStatus match {
@@ -88,15 +71,19 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
             .map(_ => waypoints.next.page)
             .getOrElse(SeparationDatePage)
 
+        case Married =>
+          updatedAnswers
+            .get(PartnerNamePage)
+            .map(_ => waypoints.next.page)
+            .getOrElse(PartnerNamePage)
+
         case _ =>
           waypoints.next.page
       }
 
     updatedAnswers.get(this).map {
       status =>
-        if (mustUsePrintAndPost(status)) {
-          UsePrintAndPostFormPage
-        } else if (taskListSectionsChanging(status)) {
+        if (taskListSectionsChanging(status)) {
           RelationshipStatusChangesTaskListPage
         } else {
           nextPage(status)
@@ -105,19 +92,6 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
   }
 
   override def cleanup(value: Option[RelationshipStatus], originalAnswers: UserAnswers, updatedAnswers: UserAnswers): Try[UserAnswers] = {
-
-    def maybeRequirePartner(newStatus: RelationshipStatus): Option[TaskListSectionChange] = {
-      newStatus match {
-        case Married | Cohabiting =>
-          originalAnswers.get(RelationshipStatusPage).flatMap {
-            case Cohabiting | Married => None
-            case Single | Separated | Divorced | Widowed => Some(PartnerDetailsRequired)
-          }
-
-        case Single | Separated | Divorced | Widowed =>
-          None
-      }
-    }
 
     def maybeRemovePayment(newStatus: RelationshipStatus): Option[TaskListSectionChange] =
       newStatus match {
@@ -140,16 +114,6 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
           }
       }
 
-    def maybeRemovePartner(newStatus: RelationshipStatus): Option[TaskListSectionChange] = {
-      newStatus match {
-        case Married | Cohabiting =>
-          None
-
-        case Single | Separated | Divorced | Widowed =>
-          originalAnswers.get(PartnerNamePage).map(_ => PartnerDetailsRemoved)
-      }
-    }
-
     def pagesToAlwaysRemove(newStatus: RelationshipStatus): Seq[Settable[_]] =
       newStatus match {
         case Married =>
@@ -159,30 +123,26 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
           Seq(SeparationDatePage)
 
         case Separated =>
-          Seq(CohabitationDatePage, PartnerIsHmfOrCivilServantPage)
+          partnerPages :+ CohabitationDatePage
 
         case Single | Divorced | Widowed =>
-          Seq(CohabitationDatePage, SeparationDatePage, PartnerIsHmfOrCivilServantPage)
+          partnerPages ++ Seq(CohabitationDatePage, SeparationDatePage)
       }
 
     value.map {
       status =>
-        val sectionChanges = Seq(
-          maybeRequirePartner(status),
-          maybeRemovePartner(status),
-          maybeRemovePayment(status)
-        ).flatten
+        val removePayment = maybeRemovePayment(status)
 
         val pages =
-          pagesToAlwaysRemove(status) ++ sectionChanges.flatMap(pagesToRemove)
+          pagesToAlwaysRemove(status) ++ removePayment.map(_ => paymentPages).getOrElse(Nil)
 
         updatedAnswers
-          .set(RelationshipStatusChangesTaskListPage, sectionChanges.toSet)
+          .set(RelationshipStatusChangesTaskListPage, removePayment.toSet)
           .flatMap(x => removePages(x, pages))
     }.getOrElse(super.cleanup(value, updatedAnswers))
   }
 
-  private def partnerPages: Seq[Settable[_]] = Seq(
+  private val partnerPages: Seq[Settable[_]] = Seq(
     PartnerNamePage,
     PartnerNinoKnownPage,
     PartnerNinoPage,
@@ -194,7 +154,7 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
     PartnerEldestChildDateOfBirthPage
   )
 
-  private def paymentPages: Seq[Settable[_]] = Seq(
+  private val paymentPages: Seq[Settable[_]] = Seq(
     ApplicantOrPartnerIncomePage,
     ApplicantIncomePage,
     WantToBePaidPage,
@@ -206,12 +166,6 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
     BankAccountHolderPage,
     BankAccountDetailsPage
   )
-
-  private def pagesToRemove(sectionChange: TaskListSectionChange): Seq[Settable[_]] = sectionChange match {
-    case PartnerDetailsRemoved => partnerPages
-    case PaymentDetailsRemoved => paymentPages
-    case _                     => Nil
-  }
 
   private def removePages(answers: UserAnswers, pages: Seq[Settable[_]]): Try[UserAnswers] =
     pages.foldLeft[Try[UserAnswers]](Success(answers))((acc, page) => acc.flatMap(_.remove(page)))
