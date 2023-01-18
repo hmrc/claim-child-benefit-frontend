@@ -33,19 +33,17 @@ import scala.concurrent.Future
 
 class AlwaysLivedInUkControllerSpec extends SpecBase with MockitoSugar {
 
-  private val relationshipStatus = Single
   private val formProvider = new AlwaysLivedInUkFormProvider()
-  private val form = formProvider("single")
+  private val form = formProvider()
   private val waypoints = EmptyWaypoints
 
   private lazy val alwaysLivedInUkRoute = routes.AlwaysLivedInUkController.onPageLoad(waypoints).url
-  private val baseAnswers = emptyUserAnswers.set(RelationshipStatusPage, relationshipStatus).success.value
 
   "AlwaysLivedInUk Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, alwaysLivedInUkRoute)
@@ -55,13 +53,13 @@ class AlwaysLivedInUkControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[AlwaysLivedInUkView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, "single")(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = baseAnswers.set(AlwaysLivedInUkPage, true).success.value
+      val userAnswers = emptyUserAnswers.set(AlwaysLivedInUkPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -73,7 +71,7 @@ class AlwaysLivedInUkControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), waypoints, "single")(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
       }
     }
 
@@ -84,7 +82,7 @@ class AlwaysLivedInUkControllerSpec extends SpecBase with MockitoSugar {
       when(mockUserDataService.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(baseAnswers))
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[UserDataService].toInstance(mockUserDataService)
           )
@@ -96,17 +94,17 @@ class AlwaysLivedInUkControllerSpec extends SpecBase with MockitoSugar {
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-        val expectedAnswers = baseAnswers.set(AlwaysLivedInUkPage, true).success.value
+        val expectedAnswers = emptyUserAnswers.set(AlwaysLivedInUkPage, true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual AlwaysLivedInUkPage.navigate(waypoints, baseAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual AlwaysLivedInUkPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
       }
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
         val request =
@@ -120,7 +118,7 @@ class AlwaysLivedInUkControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, "single")(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
       }
     }
 

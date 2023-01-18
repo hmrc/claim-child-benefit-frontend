@@ -21,10 +21,10 @@ import play.api.data.FormError
 
 class AlwaysLivedInUkFormProviderSpec extends BooleanFieldBehaviours {
 
-  val requiredKey = "alwaysLivedInUk.single.error.required"
+  val requiredKey = "alwaysLivedInUk.error.required"
   val invalidKey = "error.boolean"
 
-  val form = new AlwaysLivedInUkFormProvider()("single")
+  val form = new AlwaysLivedInUkFormProvider()()
 
   ".value" - {
 

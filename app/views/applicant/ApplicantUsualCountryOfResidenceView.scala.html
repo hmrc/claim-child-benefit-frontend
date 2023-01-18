@@ -44,7 +44,7 @@
             SelectViewModel(
                 field = form("value"),
                 items = selectItems(internationalCountries),
-                label = LabelViewModel(messages("applicantUsualCountryOfResidence.country"))
+                label = LabelViewModel(messages("applicantUsualCountryOfResidence.heading")).visuallyHidden()
             )
             .withCssClass(Fixed20.toString)
             .withCssClass("autocomplete")

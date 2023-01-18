@@ -18,16 +18,14 @@ package controllers
 
 import controllers.actions._
 import forms.AlwaysLivedInUkFormProvider
-import models.RelationshipStatus._
-
-import javax.inject.Inject
-import pages.{AlwaysLivedInUkPage, RelationshipStatusPage, Waypoints}
+import pages.{AlwaysLivedInUkPage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.AlwaysLivedInUkView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class AlwaysLivedInUkController @Inject()(
@@ -41,52 +39,33 @@ class AlwaysLivedInUkController @Inject()(
                                            view: AlwaysLivedInUkView
                                  )(implicit ec: ExecutionContext)
   extends FrontendBaseController
-    with I18nSupport
-    with AnswerExtractor {
+    with I18nSupport {
+
+  private val form = formProvider()
 
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      getAnswer(RelationshipStatusPage) {
-        relationshipStatus =>
 
-          val singleOrCouple = relationshipStatus match {
-            case Married | Cohabiting                    => "couple"
-            case Single | Separated | Widowed | Divorced => "single"
-          }
-
-          val form = formProvider(singleOrCouple)
-
-          val preparedForm = request.userAnswers.get(AlwaysLivedInUkPage) match {
-            case None => form
-            case Some(value) => form.fill(value)
-          }
-
-          Ok(view(preparedForm, waypoints, singleOrCouple))
+      val preparedForm = request.userAnswers.get(AlwaysLivedInUkPage) match {
+        case None => form
+        case Some(value) => form.fill(value)
       }
+
+      Ok(view(preparedForm, waypoints))
   }
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      getAnswerAsync(RelationshipStatusPage) {
-        relationshipStatus =>
 
-          val singleOrCouple = relationshipStatus match {
-            case Married | Cohabiting                    => "couple"
-            case Single | Separated | Widowed | Divorced => "single"
-          }
+      form.bindFromRequest().fold(
+        formWithErrors =>
+          Future.successful(BadRequest(view(formWithErrors, waypoints))),
 
-          val form = formProvider(singleOrCouple)
-          form.bindFromRequest().fold(
-            formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, waypoints, singleOrCouple))),
-
-            value =>
-              for {
-                updatedAnswers <- Future.fromTry(request.userAnswers.set(AlwaysLivedInUkPage, value))
-                _ <- userDataService.set(updatedAnswers)
-              } yield Redirect(AlwaysLivedInUkPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
-
-          )
-      }
+        value =>
+          for {
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(AlwaysLivedInUkPage, value))
+            _ <- userDataService.set(updatedAnswers)
+          } yield Redirect(AlwaysLivedInUkPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+      )
   }
 }
