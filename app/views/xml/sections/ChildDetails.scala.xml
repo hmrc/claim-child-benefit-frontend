@@ -75,7 +75,7 @@
                         <fo:block margin-bottom="3mm">
                             <fo:block font-weight="bold">@messages("pdf.previousClaimantUkAddress")</fo:block>
                                 @previousClaimant.address.map(_.lines.map { x =>
-                                    <fo:block width="8cm" wrap-option="wrap">@(x)</fo:block>
+                                    <fo:block width="8cm" wrap-option="wrap">{x.toUpperCase}</fo:block>
                             }).getOrElse(messages("pdf.notKnown"))
                         </fo:block>
                     }
@@ -104,7 +104,7 @@
                         <fo:block margin-bottom="3mm" keep-together="always">
                             <fo:block font-weight="bold">@messages("pdf.guardianAddress")</fo:block>
                             @guardian.address.map(_.lines.map { x =>
-                                <fo:block width="8cm" wrap-option="wrap">@(x)</fo:block>
+                                <fo:block width="8cm" wrap-option="wrap">{x.toUpperCase}</fo:block>
                             }).getOrElse(messages("pdf.notKnown"))
                         </fo:block>
                     }
@@ -122,7 +122,7 @@
                         <fo:block margin-bottom="3mm" keep-together="always">
                             <fo:block font-weight="bold">@messages("pdf.previousGuardianAddress")</fo:block>
                             @previousGuardian.address.map(_.lines.map { x =>
-                                <fo:block width="8cm" wrap-option="wrap">@(x)</fo:block>
+                                <fo:block width="8cm" wrap-option="wrap">{x.toUpperCase}</fo:block>
                             }).getOrElse(messages("pdf.notKnown"))
                         </fo:block>
                         @line("pdf.previousGuardianPhoneNumber", previousGuardian.phoneNumber.getOrElse(messages("pdf.notKnown")))
