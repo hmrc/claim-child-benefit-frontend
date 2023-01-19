@@ -22,7 +22,7 @@ import pages.applicant.CheckApplicantDetailsPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.ApplicantNameSummary
+import viewmodels.checkAnswers.{AlwaysLivedInUkSummary, ApplicantNameSummary}
 import viewmodels.checkAnswers.applicant._
 import viewmodels.checkAnswers.payments.{CurrentlyReceivingChildBenefitSummary, EldestChildDateOfBirthSummary, EldestChildNameSummary}
 import viewmodels.govuk.summarylist._
@@ -55,6 +55,10 @@ class CheckApplicantDetailsController  @Inject()(
           ApplicantDateOfBirthSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantPhoneNumberSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantNationalitySummary.row(request.userAnswers, waypoints, thisPage),
+          AlwaysLivedInUkSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantUsuallyLivesInUkSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantUsualCountryOfResidenceSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantArrivedInUkSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantCurrentAddressInUkSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantCurrentUkAddressSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantCurrentInternationalAddressSummary.row(request.userAnswers, waypoints, thisPage),
