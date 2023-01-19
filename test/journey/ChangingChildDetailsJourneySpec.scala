@@ -1080,7 +1080,7 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
       }
     }
 
-    "that the user said lived with someone in the past year" - {
+    "that the user said lived with someone else in the past year" - {
 
       "changing to say the child had not lived with someone in the past year must remove details of that person and return to Check Details" in {
 
@@ -1287,6 +1287,28 @@ class ChangingChildDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers wi
               pageMustBe(CheckChildDetailsPage(Index(0)))
             )
         }
+      }
+    }
+
+    "that the user said had not lived with someone else in the past year" - {
+
+      "changing to say they have lived with someone else must collect their details then go to Check Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            basicChildJourney,
+            goToChangeAnswer(ChildLivedWithAnyoneElsePage(Index(0))),
+            submitAnswer(ChildLivedWithAnyoneElsePage(Index(0)), true),
+            submitAnswer(PreviousGuardianNameKnownPage(Index(0)), true),
+            submitAnswer(PreviousGuardianNamePage(Index(0)), adultName),
+            submitAnswer(PreviousGuardianAddressKnownPage(Index(0)), true),
+            submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), true),
+            submitAnswer(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
+            submitAnswer(PreviousGuardianPhoneNumberKnownPage(Index(0)), true),
+            submitAnswer(PreviousGuardianPhoneNumberPage(Index(0)), "07777777777"),
+            submitAnswer(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
+            pageMustBe(CheckChildDetailsPage(Index(0)))
+          )
       }
     }
   }
