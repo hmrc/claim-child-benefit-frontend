@@ -178,22 +178,6 @@ relationshipStatus.checkYourAnswersLabel = Marital or civil partnership status
 relationshipStatus.error.required = Select your marital or civil partnership status
 relationshipStatus.change.hidden = your marital or civil partnership status
 
-usePrintAndPostForm.title = You must use a different form to claim Child Benefit
-usePrintAndPostForm.heading = You must use a different form to claim Child Benefit
-usePrintAndPostForm.p1 = Based on your answers you must use a different form to claim Child Benefit.
-usePrintAndPostForm.p2.1 = You must use the
-usePrintAndPostForm.p2.link1.text = print and then fill in the CH2 form
-usePrintAndPostForm.p2.link1.href = https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1064678/CH2_Child_Benefit_Claim_Form_English.pdf
-usePrintAndPostForm.p2.2 = which can be used to claim for up to 2 children. For additional children, you will also need to
-usePrintAndPostForm.p2.link2.text = print and then fill in the CH2 (CS) form
-usePrintAndPostForm.p2.link2.href = https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1064679/CH2_CS.pdf
-usePrintAndPostForm.p2.3 = for each extra child.
-usePrintAndPostForm.p3 = You can find out
-usePrintAndPostForm.p3.link.text = more about claiming Child Benefit
-usePrintAndPostForm.p3.link.href = https://www.gov.uk/child-benefit
-usePrintAndPostForm.p4 = If you think that you’ve made a mistake you can
-usePrintAndPostForm.p4.link.text = start your application again
-
 benefits.incomeSupport = Income Support
 benefits.jobseekersAllowance = Income-based Jobseeker’s Allowance (JSA)
 benefits.pensionCredit = Pension Credit
@@ -1442,10 +1426,6 @@ checkPaymentDetails.title = Check your answers
 checkPaymentDetails.heading = Check your answers
 checkPaymentDetails.yourDetails = Payment details
 
-checkRelationshipDetails.title = Check your answers
-checkRelationshipDetails.heading = Check your answers
-checkRelationshipDetails.yourDetails = Relationship details
-
 taskList.title = Claim Child Benefit
 taskList.heading = Claim Child Benefit
 taskList.status.notStarted = Not started
@@ -1495,9 +1475,3 @@ currentlyReceivingChangesTaskList.heading = Answers on your payment details have
 currentlyReceivingChangesTaskList.p1 = The ”Payment details“ section will now show as ”not started“.
 currentlyReceivingChangesTaskList.p2 = Sorry, you have changed answers on if you receive Child Benefit right now, so you will have to answer questions on your payment details again.
 currentlyReceivingChangesTaskList.p3 = Check over all your answers before submitting your claim, in case you need to update any information you have provided.
-
-alwaysLivedInUkChangesTaskList.title = Answers on your address have been reset
-alwaysLivedInUkChangesTaskList.heading = Answers on your address have been reset
-alwaysLivedInUkChangesTaskList.p1 = The ”Your details” section will now show as ”in progress“.
-alwaysLivedInUkChangesTaskList.p2 = Sorry, you have changed information about where you have lived, so you will have to answer questions on your address again.
-alwaysLivedInUkChangesTaskList.p3 = Check over all your answers before submitting your claim, in case you need to update any information you have provided.

@@ -39,8 +39,7 @@ object Waypoint {
       AddChildPage().checkModeUrlFragment                        -> AddChildPage().waypoint(CheckMode),
       CheckApplicantDetailsPage.urlFragment                      -> CheckApplicantDetailsPage.waypoint,
       CheckPartnerDetailsPage.urlFragment                        -> CheckPartnerDetailsPage.waypoint,
-      CheckPaymentDetailsPage.urlFragment                        -> CheckPaymentDetailsPage.waypoint,
-      CheckRelationshipDetailsPage.urlFragment                   -> CheckRelationshipDetailsPage.waypoint
+      CheckPaymentDetailsPage.urlFragment                        -> CheckPaymentDetailsPage.waypoint
     )
 
   def fromString(s: String): Option[Waypoint] =

@@ -17,11 +17,9 @@
 package pages.applicant
 
 import controllers.applicant.routes
-import models.RelationshipStatus._
 import models.UserAnswers
-import pages.partner.PartnerIsHmfOrCivilServantPage
 import pages.payments.CurrentlyReceivingChildBenefitPage
-import pages.{CheckRelationshipDetailsPage, Page, QuestionPage, RelationshipStatusPage, UsePrintAndPostFormPage, Waypoints}
+import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 

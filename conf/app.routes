@@ -15,8 +15,6 @@ GET         /refresh-session                             controllers.KeepAliveCo
 GET         /there-is-a-problem                          controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
 GET         /check-your-answers                          controllers.CheckYourAnswersController.onPageLoad
-GET         /check-relationship-details                              controllers.CheckRelationshipDetailsController.onPageLoad
-POST        /check-relationship-details                              controllers.CheckRelationshipDetailsController.onSubmit
 
 GET         /reset-application-form                      controllers.auth.AuthController.signOut
 GET         /application-form-has-been-reset             controllers.auth.SignedOutController.onPageLoad
@@ -48,9 +46,6 @@ POST        /relationship-status-change              controllers.RelationshipSta
 GET         /receiving-child-benefit-change              controllers.CurrentlyReceivingChangesTaskListController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST        /receiving-child-benefit-change              controllers.CurrentlyReceivingChangesTaskListController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET         /always-lived-in-uk-change               controllers.AlwaysLivedInUkChangesTaskListController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST        /always-lived-in-uk-change               controllers.AlwaysLivedInUkChangesTaskListController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
 # Initial section
 
 
@@ -70,8 +65,6 @@ POST       /not-eligible-for-weekly-payments                       controllers.C
 
 GET        /relationship-status                        controllers.RelationshipStatusController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /relationship-status                        controllers.RelationshipStatusController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /use-other-form                       controllers.UsePrintAndPostFormController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /your-name                        controllers.ApplicantNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-name                        controllers.ApplicantNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

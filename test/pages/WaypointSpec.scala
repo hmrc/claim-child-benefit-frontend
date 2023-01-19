@@ -86,10 +86,5 @@ class WaypointSpec extends AnyFreeSpec with Matchers with OptionValues {
 
       Waypoint.fromString("check-payment-details").value mustEqual CheckPaymentDetailsPage.waypoint
     }
-
-    "must return Check Relationship Details when given its waypoint" in {
-
-      Waypoint.fromString("check-relationship-details").value mustEqual CheckRelationshipDetailsPage.waypoint
-    }
   }
 }
