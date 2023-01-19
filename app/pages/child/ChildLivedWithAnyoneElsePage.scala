@@ -45,6 +45,7 @@ final case class ChildLivedWithAnyoneElsePage(index: Index) extends ChildQuestio
         .remove(PreviousGuardianNameKnownPage(index))
         .flatMap(_.remove(PreviousGuardianNamePage(index)))
         .flatMap(_.remove(PreviousGuardianAddressKnownPage(index)))
+        .flatMap(_.remove(PreviousGuardianAddressInUkPage(index)))
         .flatMap(_.remove(PreviousGuardianUkAddressPage(index)))
         .flatMap(_.remove(PreviousGuardianInternationalAddressPage(index)))
         .flatMap(_.remove(PreviousGuardianPhoneNumberKnownPage(index)))
