@@ -18,13 +18,13 @@ package pages
 
 import controllers.routes
 import models.CurrentlyReceivingChildBenefit.NotClaiming
-import models.{TaskListSectionChange, UserAnswers}
+import models.UserAnswers
 import pages.applicant.CheckApplicantDetailsPage
 import pages.payments.{CurrentlyReceivingChildBenefitPage, EldestChildNamePage}
-import play.api.libs.json.{JsPath, Json}
+import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object CurrentlyReceivingChangesTaskListPage extends QuestionPage[Set[TaskListSectionChange]] {
+case object CurrentlyReceivingChangesTaskListPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ "currentlyReceivingChangesTaskList"
 

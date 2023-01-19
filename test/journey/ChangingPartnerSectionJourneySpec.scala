@@ -18,7 +18,6 @@ package journey
 
 import generators.ModelGenerators
 import models.RelationshipStatus._
-import models.TaskListSectionChange.PaymentDetailsRemoved
 import models._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
@@ -166,7 +165,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               pageMustBe(CheckPartnerDetailsPage),
               paymentDetailsMustHaveBeenRemoved,
               partnerDetailsMustHaveBeenRemoved,
-              answerMustEqual(RelationshipStatusChangesTaskListPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+              answerMustEqual(RelationshipStatusChangesTaskListPage, true)
             )
         }
       }
@@ -183,7 +182,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(SeparationDatePage, LocalDate.now),
               pageMustBe(CheckPartnerDetailsPage),
               partnerDetailsMustHaveBeenRemoved,
-              answerMustEqual(RelationshipStatusChangesTaskListPage, Set.empty[TaskListSectionChange])
+              answerMustEqual(RelationshipStatusChangesTaskListPage,false)
             )
         }
       }
@@ -208,7 +207,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               pageMustBe(CheckPartnerDetailsPage),
               paymentDetailsMustHaveBeenRemoved,
               partnerDetailsMustHaveBeenRemoved,
-              answerMustEqual(RelationshipStatusChangesTaskListPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+              answerMustEqual(RelationshipStatusChangesTaskListPage, true)
             )
         }
       }
@@ -224,7 +223,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(RelationshipStatusPage, relationship),
               pageMustBe(CheckPartnerDetailsPage),
               partnerDetailsMustHaveBeenRemoved,
-              answerMustEqual(RelationshipStatusChangesTaskListPage, Set.empty[TaskListSectionChange])
+              answerMustEqual(RelationshipStatusChangesTaskListPage,false)
             )
         }
       }
@@ -290,7 +289,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               paymentDetailsMustHaveBeenRemoved,
               partnerDetailsMustHaveBeenRemoved,
               answersMustNotContain(CohabitationDatePage),
-              answerMustEqual(RelationshipStatusChangesTaskListPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+              answerMustEqual(RelationshipStatusChangesTaskListPage, true)
             )
         }
       }
@@ -308,7 +307,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               pageMustBe(CheckPartnerDetailsPage),
               partnerDetailsMustHaveBeenRemoved,
               answersMustNotContain(CohabitationDatePage),
-              answerMustEqual(RelationshipStatusChangesTaskListPage, Set.empty[TaskListSectionChange])
+              answerMustEqual(RelationshipStatusChangesTaskListPage,false)
             )
         }
       }
@@ -334,7 +333,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               paymentDetailsMustHaveBeenRemoved,
               partnerDetailsMustHaveBeenRemoved,
               answersMustNotContain(CohabitationDatePage),
-              answerMustEqual(RelationshipStatusChangesTaskListPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+              answerMustEqual(RelationshipStatusChangesTaskListPage, true)
             )
         }
       }
@@ -351,7 +350,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               pageMustBe(CheckPartnerDetailsPage),
               partnerDetailsMustHaveBeenRemoved,
               answersMustNotContain(CohabitationDatePage),
-              answerMustEqual(RelationshipStatusChangesTaskListPage, Set.empty[TaskListSectionChange])
+              answerMustEqual(RelationshipStatusChangesTaskListPage,false)
             )
         }
       }
@@ -392,7 +391,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               pageMustBe(CheckPartnerDetailsPage),
               paymentDetailsMustHaveBeenRemoved,
               answersMustNotContain(SeparationDatePage),
-              answerMustEqual(RelationshipStatusChangesTaskListPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+              answerMustEqual(RelationshipStatusChangesTaskListPage, true)
             )
         }
       }
@@ -417,7 +416,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
               pageMustBe(CheckPartnerDetailsPage),
               answersMustNotContain(SeparationDatePage),
-              answerMustEqual(RelationshipStatusChangesTaskListPage, Set.empty[TaskListSectionChange])
+              answerMustEqual(RelationshipStatusChangesTaskListPage,false)
             )
         }
       }
@@ -450,7 +449,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               pageMustBe(CheckPartnerDetailsPage),
               paymentDetailsMustHaveBeenRemoved,
               answersMustNotContain(SeparationDatePage),
-              answerMustEqual(RelationshipStatusChangesTaskListPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+              answerMustEqual(RelationshipStatusChangesTaskListPage, true)
             )
         }
       }
@@ -476,7 +475,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
               pageMustBe(CheckPartnerDetailsPage),
               answersMustNotContain(SeparationDatePage),
-              answerMustEqual(RelationshipStatusChangesTaskListPage, Set.empty[TaskListSectionChange])
+              answerMustEqual(RelationshipStatusChangesTaskListPage,false)
             )
         }
       }
@@ -497,7 +496,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             pageMustBe(CheckPartnerDetailsPage),
             answersMustNotContain(SeparationDatePage),
             paymentDetailsMustRemainSingle,
-            answerMustEqual(RelationshipStatusChangesTaskListPage, Set.empty[TaskListSectionChange])
+            answerMustEqual(RelationshipStatusChangesTaskListPage,false)
           )
       }
     }
@@ -537,7 +536,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
               pageMustBe(CheckPartnerDetailsPage),
               paymentDetailsMustHaveBeenRemoved,
-              answerMustEqual(RelationshipStatusChangesTaskListPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+              answerMustEqual(RelationshipStatusChangesTaskListPage, true)
             )
         }
       }
@@ -561,7 +560,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerEldestChildNamePage, childName),
               submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
               pageMustBe(CheckPartnerDetailsPage),
-              answerMustEqual(RelationshipStatusChangesTaskListPage, Set.empty[TaskListSectionChange])
+              answerMustEqual(RelationshipStatusChangesTaskListPage,false)
             )
         }
       }
@@ -593,7 +592,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
               pageMustBe(CheckPartnerDetailsPage),
               paymentDetailsMustHaveBeenRemoved,
-              answerMustEqual(RelationshipStatusChangesTaskListPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+              answerMustEqual(RelationshipStatusChangesTaskListPage, true)
             )
         }
       }
@@ -618,7 +617,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerEldestChildNamePage, childName),
               submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
               pageMustBe(CheckPartnerDetailsPage),
-              answerMustEqual(RelationshipStatusChangesTaskListPage, Set.empty[TaskListSectionChange])
+              answerMustEqual(RelationshipStatusChangesTaskListPage,false)
             )
         }
       }
@@ -637,7 +636,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             submitAnswer(SeparationDatePage, LocalDate.now),
             pageMustBe(CheckPartnerDetailsPage),
             paymentDetailsMustRemainSingle,
-            answerMustEqual(RelationshipStatusChangesTaskListPage, Set.empty[TaskListSectionChange])
+            answerMustEqual(RelationshipStatusChangesTaskListPage,false)
           )
       }
     }
@@ -657,7 +656,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             submitAnswer(RelationshipStatusPage, newRelationship),
             pageMustBe(CheckPartnerDetailsPage),
             paymentDetailsMustRemainSingle,
-            answerMustEqual(RelationshipStatusChangesTaskListPage, Set.empty[TaskListSectionChange])
+            answerMustEqual(RelationshipStatusChangesTaskListPage,false)
           )
       }
     }

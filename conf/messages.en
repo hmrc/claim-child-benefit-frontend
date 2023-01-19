@@ -1440,35 +1440,11 @@ taskList.paymentDetails = Payment details
 taskList.additionalInfo = Further details to share
 taskList.completedSections = You’ve completed {0} of {1} sections.
 
-relationshipStatusChangesTaskListPaymentRemoved.title = Answers on your payment details have been reset
-relationshipStatusChangesTaskListPaymentRemoved.heading = Answers on your payment details have been reset
-relationshipStatusChangesTaskListPaymentRemoved.p1 = The ”Payment details“ section will now show as ”not started“.
-relationshipStatusChangesTaskListPaymentRemoved.p2 = Sorry, you have changed your marital or civil partnership status, so you will have to answer questions on your payment details again.
-relationshipStatusChangesTaskListPaymentRemoved.p3 = Check over all your answers before submitting your claim, in case you need to update any information you have provided.
-
-relationshipStatusChangesTaskListPartnerRemoved.title = Answers on your partner details have been removed
-relationshipStatusChangesTaskListPartnerRemoved.heading = Answers on your partner details have been removed
-relationshipStatusChangesTaskListPartnerRemoved.p1 = The partner details section has been removed because you changed your marital or civil partnership status. You don’t have to do anything else for this section.
-relationshipStatusChangesTaskListPartnerRemoved.p2 = Check over all your answers before submitting your claim, in case you need to update any information you have provided.
-
-relationshipStatusChangesTaskListPartnerRequired.title = Answers on your partner details are needed
-relationshipStatusChangesTaskListPartnerRequired.heading = Answers on your partner details are needed
-relationshipStatusChangesTaskListPartnerRequired.p1 = The ”Partner details“ section will now show as ”not started“.
-relationshipStatusChangesTaskListPartnerRequired.p2 = Sorry, you have changed your marital or civil partnership status, so you will have to answer questions on your partner details.
-relationshipStatusChangesTaskListPartnerRequired.p3 = Check over all your answers before submitting your claim, in case you need to update any information you have provided.
-
-relationshipStatusChangesTaskListPaymentRemovedPartnerRemoved.title = Answers on your payment details have been reset
-relationshipStatusChangesTaskListPaymentRemovedPartnerRemoved.heading = Answers on your payment details have been reset
-relationshipStatusChangesTaskListPaymentRemovedPartnerRemoved.p1 = The ”Payment details“ section will now show as ”not started“.
-relationshipStatusChangesTaskListPaymentRemovedPartnerRemoved.p2 = Sorry, you have changed your marital or civil partnership status, so you will have to answer questions on your payment details again.
-relationshipStatusChangesTaskListPaymentRemovedPartnerRemoved.p3 = The partner details section has been removed. You don’t have to do anything else for this section.
-relationshipStatusChangesTaskListPaymentRemovedPartnerRemoved.p4 = Check over all your answers before submitting your claim, in case you need to update any information you have provided.
-
-relationshipStatusChangesTaskListPaymentRemovedPartnerRequired.title = Answers on your payment details have been reset
-relationshipStatusChangesTaskListPaymentRemovedPartnerRequired.heading = Answers on your payment details have been reset
-relationshipStatusChangesTaskListPaymentRemovedPartnerRequired.p1 = The ”Payment details“ section will now show as ”not started“. The ”Partner details“ section will show as ”not started“.
-relationshipStatusChangesTaskListPaymentRemovedPartnerRequired.p2 = Sorry, you have changed your marital or civil partnership status, so you will have to answer questions on your payment details again. You will also have to answer questions on your partner.
-relationshipStatusChangesTaskListPaymentRemovedPartnerRequired.p3 = Check over all your answers before submitting your claim, in case you need to update any information you have provided.
+relationshipStatusChangesTaskList.title = Answers on your payment details have been reset
+relationshipStatusChangesTaskList.heading = Answers on your payment details have been reset
+relationshipStatusChangesTaskList.p1 = The ”Payment details“ section will now show as ”not started“.
+relationshipStatusChangesTaskList.p2 = Sorry, you have changed your marital or civil partnership status, so you will have to answer questions on your payment details again.
+relationshipStatusChangesTaskList.p3 = Check over all your answers before submitting your claim, in case you need to update any information you have provided.
 
 currentlyReceivingChangesTaskList.title = Answers on your payment details have been reset
 currentlyReceivingChangesTaskList.heading = Answers on your payment details have been reset

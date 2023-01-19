@@ -19,7 +19,6 @@ package journey
 import generators.ModelGenerators
 import models.CurrentlyReceivingChildBenefit._
 import models.RelationshipStatus._
-import models.TaskListSectionChange.PaymentDetailsRemoved
 import models._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
@@ -858,7 +857,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
               answersMustNotContain(EldestChildNamePage),
               answersMustNotContain(EldestChildDateOfBirthPage),
               paymentDetailsMustHaveBeenRemoved,
-              answerMustEqual(CurrentlyReceivingChangesTaskListPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+              answerMustEqual(CurrentlyReceivingChangesTaskListPage, true)
             )
         }
 
@@ -886,7 +885,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
               answersMustContain(EldestChildNamePage),
               answersMustContain(EldestChildDateOfBirthPage),
               paymentDetailsMustHaveBeenRemoved,
-              answerMustEqual(CurrentlyReceivingChangesTaskListPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+              answerMustEqual(CurrentlyReceivingChangesTaskListPage, true)
             )
         }
       }
@@ -917,7 +916,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
               answersMustNotContain(EldestChildNamePage),
               answersMustNotContain(EldestChildDateOfBirthPage),
               paymentDetailsMustHaveBeenRemoved,
-              answerMustEqual(CurrentlyReceivingChangesTaskListPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+              answerMustEqual(CurrentlyReceivingChangesTaskListPage, true)
             )
         }
 
@@ -945,7 +944,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
               answersMustContain(EldestChildNamePage),
               answersMustContain(EldestChildDateOfBirthPage),
               paymentDetailsMustHaveBeenRemoved,
-              answerMustEqual(CurrentlyReceivingChangesTaskListPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+              answerMustEqual(CurrentlyReceivingChangesTaskListPage, true)
             )
         }
       }
@@ -1025,7 +1024,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
               answersMustNotContain(EldestChildNamePage),
               answersMustNotContain(EldestChildDateOfBirthPage),
               paymentDetailsMustHaveBeenRemoved,
-              answerMustEqual(CurrentlyReceivingChangesTaskListPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+              answerMustEqual(CurrentlyReceivingChangesTaskListPage, true)
             )
         }
 
@@ -1053,7 +1052,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
               answersMustContain(EldestChildNamePage),
               answersMustContain(EldestChildDateOfBirthPage),
               paymentDetailsMustHaveBeenRemoved,
-              answerMustEqual(CurrentlyReceivingChangesTaskListPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+              answerMustEqual(CurrentlyReceivingChangesTaskListPage, true)
             )
         }
       }
@@ -1084,7 +1083,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
               answersMustNotContain(EldestChildNamePage),
               answersMustNotContain(EldestChildDateOfBirthPage),
               paymentDetailsMustHaveBeenRemoved,
-              answerMustEqual(CurrentlyReceivingChangesTaskListPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+              answerMustEqual(CurrentlyReceivingChangesTaskListPage, true)
             )
         }
 
@@ -1112,7 +1111,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
               answersMustContain(EldestChildNamePage),
               answersMustContain(EldestChildDateOfBirthPage),
               paymentDetailsMustHaveBeenRemoved,
-              answerMustEqual(CurrentlyReceivingChangesTaskListPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+              answerMustEqual(CurrentlyReceivingChangesTaskListPage, true)
             )
         }
       }
@@ -1171,7 +1170,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
               submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
               pageMustBe(CheckApplicantDetailsPage),
               paymentDetailsMustHaveBeenRemoved,
-              answerMustEqual(CurrentlyReceivingChangesTaskListPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+              answerMustEqual(CurrentlyReceivingChangesTaskListPage, true)
             )
         }
       }
@@ -1201,7 +1200,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
               submitAnswer(EldestChildDateOfBirthPage, LocalDate.now),
               pageMustBe(CheckApplicantDetailsPage),
               paymentDetailsMustHaveBeenRemoved,
-              answerMustEqual(CurrentlyReceivingChangesTaskListPage, Set[TaskListSectionChange](PaymentDetailsRemoved))
+              answerMustEqual(CurrentlyReceivingChangesTaskListPage, true)
             )
         }
       }

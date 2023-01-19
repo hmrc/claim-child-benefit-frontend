@@ -18,8 +18,7 @@ package pages
 
 import controllers.routes
 import models.RelationshipStatus._
-import models.TaskListSectionChange.PaymentDetailsRemoved
-import models.{RelationshipStatus, TaskListSectionChange, UserAnswers}
+import models.{RelationshipStatus, UserAnswers}
 import pages.income._
 import pages.partner._
 import pages.payments._
@@ -93,24 +92,24 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
 
   override def cleanup(value: Option[RelationshipStatus], originalAnswers: UserAnswers, updatedAnswers: UserAnswers): Try[UserAnswers] = {
 
-    def maybeRemovePayment(newStatus: RelationshipStatus): Option[TaskListSectionChange] =
+    def needToRemovePaymentPages(newStatus: RelationshipStatus): Boolean =
       newStatus match {
         case Married | Cohabiting =>
-          originalAnswers.get(RelationshipStatusPage).flatMap {
+          originalAnswers.get(RelationshipStatusPage).exists {
             case Cohabiting | Married =>
-              None
+              false
 
             case Single | Separated | Divorced | Widowed =>
-              originalAnswers.get(ApplicantIncomePage).map(_ => PaymentDetailsRemoved)
+              originalAnswers.isDefined(ApplicantIncomePage)
           }
 
         case Single | Separated | Divorced | Widowed =>
-          originalAnswers.get(RelationshipStatusPage).flatMap {
+          originalAnswers.get(RelationshipStatusPage).exists {
             case Cohabiting | Married =>
-              originalAnswers.get(ApplicantOrPartnerIncomePage).map(_ => PaymentDetailsRemoved)
+              originalAnswers.isDefined(ApplicantOrPartnerIncomePage)
 
             case Single | Separated | Divorced | Widowed =>
-              None
+              false
           }
       }
 
@@ -131,13 +130,13 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
 
     value.map {
       status =>
-        val removePayment = maybeRemovePayment(status)
+        val paymentPagesToRemove = if(needToRemovePaymentPages(status)) paymentPages else Nil
 
         val pages =
-          pagesToAlwaysRemove(status) ++ removePayment.map(_ => paymentPages).getOrElse(Nil)
+          pagesToAlwaysRemove(status) ++ paymentPagesToRemove
 
         updatedAnswers
-          .set(RelationshipStatusChangesTaskListPage, removePayment.toSet)
+          .set(RelationshipStatusChangesTaskListPage, needToRemovePaymentPages(status))
           .flatMap(x => removePages(x, pages))
     }.getOrElse(super.cleanup(value, updatedAnswers))
   }

@@ -18,11 +18,10 @@ package pages.payments
 
 import controllers.payments.routes
 import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments}
-import models.TaskListSectionChange.PaymentDetailsRemoved
-import models.{CurrentlyReceivingChildBenefit, TaskListSectionChange, UserAnswers}
+import models.{CurrentlyReceivingChildBenefit, UserAnswers}
 import pages.applicant.CheckApplicantDetailsPage
 import pages.income.{ApplicantBenefitsPage, ApplicantIncomePage, ApplicantOrPartnerBenefitsPage, ApplicantOrPartnerIncomePage}
-import pages.{CurrentlyReceivingChangesTaskListPage, NonEmptyWaypoints, Page, QuestionPage, RecoveryOps, RelationshipStatusChangesTaskListPage, Waypoints}
+import pages.{CurrentlyReceivingChangesTaskListPage, NonEmptyWaypoints, Page, QuestionPage, RecoveryOps, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 import queries.Settable
@@ -73,13 +72,11 @@ case object CurrentlyReceivingChildBenefitPage extends QuestionPage[CurrentlyRec
 
   override def cleanup(value: Option[CurrentlyReceivingChildBenefit], previousAnswers: UserAnswers, currentAnswers: UserAnswers): Try[UserAnswers] = {
 
-    def maybeRemovePayment(receiving: CurrentlyReceivingChildBenefit): Option[TaskListSectionChange] =
+    def needToRemovePaymentPages(receiving: CurrentlyReceivingChildBenefit): Boolean =
       if (previousAnswers.get(CurrentlyReceivingChildBenefitPage).contains(receiving)) {
-        None
-      } else if (previousAnswers.isDefined(ApplicantIncomePage) || previousAnswers.isDefined(ApplicantOrPartnerIncomePage)) {
-        Some(PaymentDetailsRemoved)
+        false
       } else {
-        None
+        previousAnswers.isDefined(ApplicantIncomePage) || previousAnswers.isDefined(ApplicantOrPartnerIncomePage)
       }
 
     def pagesToAlwaysRemove(receiving: CurrentlyReceivingChildBenefit): Seq[Settable[_]] = {
@@ -91,11 +88,11 @@ case object CurrentlyReceivingChildBenefitPage extends QuestionPage[CurrentlyRec
 
     value.map {
       receiving =>
-        val sectionChange = maybeRemovePayment(receiving)
-        val pages = pagesToAlwaysRemove(receiving) ++ sectionChange.map(_ => paymentPages).getOrElse(Nil)
+        val paymentPagesToRemove = if(needToRemovePaymentPages(receiving)) paymentPages else Nil
+        val pages = pagesToAlwaysRemove(receiving) ++ paymentPagesToRemove
 
         currentAnswers
-          .set(CurrentlyReceivingChangesTaskListPage, sectionChange.toSet)
+          .set(CurrentlyReceivingChangesTaskListPage, needToRemovePaymentPages(receiving))
           .flatMap(x => removePages(x, pages))
     }.getOrElse(super.cleanup(value, currentAnswers))
   }

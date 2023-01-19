@@ -18,12 +18,12 @@ package pages
 
 import controllers.routes
 import models.RelationshipStatus._
-import models.{TaskListSectionChange, UserAnswers}
+import models.UserAnswers
 import pages.partner.PartnerNamePage
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object RelationshipStatusChangesTaskListPage extends QuestionPage[Set[TaskListSectionChange]] {
+case object RelationshipStatusChangesTaskListPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ "relationshipStatusChangesTaskList"
 
