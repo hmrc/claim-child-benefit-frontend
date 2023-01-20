@@ -5,7 +5,10 @@
     mainHeader: MainHeader,
     mainFooter: MainFooter,
     line: Line,
-    eldestChildSection: EldestChildSection
+    eldestChildSection: EldestChildSection,
+    alwaysLivedInUk: AlwaysLivedInUk,
+    usuallyLivesInUk: UsuallyLivesInUk,
+    usuallyLivesAbroad: UsuallyLivesAbroad
 )
 
 @(model: JourneyModel)(implicit messages: Messages)
@@ -50,7 +53,16 @@
 
                     @line("pdf.nationality", model.applicant.nationality)
 
-                    @line("pdf.alwaysLivedInUk", booleanToYesNo(model.applicant.alwaysLivedInUk))
+                    @{model.applicant.residency match {
+                        case JourneyModel.Residency.AlwaysLivedInUk =>
+                            alwaysLivedInUk()
+
+                        case JourneyModel.Residency.UsuallyLivesInUk(arrivalDate) =>
+                            usuallyLivesInUk(arrivalDate)
+
+                        case JourneyModel.Residency.UsuallyLivesAbroad(country, arrivalDate) =>
+                            usuallyLivesAbroad(country.name, arrivalDate)
+                    }}
 
                     @line("pdf.hmfOrCivilServant", booleanToYesNo(model.applicant.memberOfHMForcesOrCivilServantAbroad.getOrElse(false)))
 

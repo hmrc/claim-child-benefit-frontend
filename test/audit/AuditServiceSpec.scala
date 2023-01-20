@@ -21,7 +21,7 @@ import cats.data.NonEmptyList
 import generators.ModelGenerators
 import models.AdditionalInformation.Information
 import models.BirthRegistrationMatchingResult.NotAttempted
-import models.{ApplicantPreviousName, BirthCertificateSystemNumber, CurrentlyReceivingChildBenefit, JourneyModel, PartnerClaimingChildBenefit}
+import models.{ApplicantPreviousName, BirthCertificateSystemNumber, Country, CurrentlyReceivingChildBenefit, JourneyModel, PartnerClaimingChildBenefit}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
 import org.scalacheck.Arbitrary.arbitrary
@@ -64,7 +64,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           previousAddress = Some(models.UkAddress("previous line 1", Some("previous line 2"), "previous town", Some("previous county"), "previous postcode")),
           telephoneNumber = "07777 777777",
           nationality = "British",
-          alwaysLivedInUk = false,
+          residency = JourneyModel.Residency.UsuallyLivesAbroad(Country.internationalCountries.head, LocalDate.now),
           memberOfHMForcesOrCivilServantAbroad = Some(false),
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
         ),
@@ -137,7 +137,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           previousAddress = Some(UkAddress("previous line 1", Some("previous line 2"), "previous town", Some("previous county"), "previous postcode")),
           telephoneNumber = "07777 777777",
           nationality = "British",
-          alwaysLivedInUk = false,
+          residency = Residency.UsuallyLivesAbroad(Country.internationalCountries.head.name, LocalDate.now),
           memberOfHMForcesOrCivilServantAbroad = Some(false),
           currentlyClaimingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming.toString
         ),

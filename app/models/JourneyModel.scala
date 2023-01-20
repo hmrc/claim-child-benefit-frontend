@@ -58,6 +58,14 @@ object JourneyModel {
     final case class DoNotPay(eldestChild: Option[EldestChild]) extends PaymentPreference
   }
 
+  sealed trait Residency
+
+  object Residency {
+    case object AlwaysLivedInUk extends Residency
+    final case class UsuallyLivesInUk(arrivalDate: LocalDate) extends Residency
+    final case class UsuallyLivesAbroad(country: Country, arrivalDate: LocalDate) extends Residency
+  }
+
   final case class Applicant(
                               name: AdultName,
                               previousFamilyNames: List[ApplicantPreviousName],
@@ -67,7 +75,7 @@ object JourneyModel {
                               previousAddress: Option[Address],
                               telephoneNumber: String,
                               nationality: String,
-                              alwaysLivedInUk: Boolean,
+                              residency: Residency,
                               memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
                               currentlyReceivingChildBenefit: CurrentlyReceivingChildBenefit
                             )

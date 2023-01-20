@@ -44,7 +44,7 @@ object DownloadAuditEvent {
         previousAddress                      = model.applicant.previousAddress.map(convertAddress),
         telephoneNumber                      = model.applicant.telephoneNumber,
         nationality                          = model.applicant.nationality,
-        alwaysLivedInUk                      = model.applicant.alwaysLivedInUk,
+        residency                            = convertResidency(model.applicant.residency),
         memberOfHMForcesOrCivilServantAbroad = model.applicant.memberOfHMForcesOrCivilServantAbroad,
         currentlyClaimingChildBenefit        = model.applicant.currentlyReceivingChildBenefit.toString
       ),
@@ -168,7 +168,7 @@ object DownloadAuditEvent {
     ChildName(
       firstName   = name.firstName,
       middleNames = name.middleNames,
-      lastName    =name.lastName
+      lastName    = name.lastName
     )
 
   private def convertEldestChild(eldestChild: models.JourneyModel.EldestChild): EldestChild =
@@ -176,6 +176,13 @@ object DownloadAuditEvent {
       name        = convertChildName(eldestChild.name),
       dateOfBirth = eldestChild.dateOfBirth
     )
+
+  private def convertResidency(residency: models.JourneyModel.Residency): Residency =
+    residency match {
+      case models.JourneyModel.Residency.AlwaysLivedInUk => Residency.AlwaysLivedInUk
+      case x: models.JourneyModel.Residency.UsuallyLivesInUk => Residency.UsuallyLivesInUk(x.arrivalDate)
+      case x: models.JourneyModel.Residency.UsuallyLivesAbroad => Residency.UsuallyLivesAbroad(x.country.name, x.arrivalDate)
+    }
 
   private[audit] final case class AdultName(title: Option[String], firstName: String, middleNames: Option[String], lastName: String)
   object AdultName {
@@ -210,6 +217,41 @@ object DownloadAuditEvent {
     implicit lazy val writes: Writes[InternationalAddress] = Json.writes
   }
 
+  private[audit] trait Residency
+  private[audit] object Residency {
+
+    case object AlwaysLivedInUk extends Residency
+
+    final case class UsuallyLivesInUk(arrivalDate: LocalDate) extends Residency
+    object UsuallyLivesInUk {
+      implicit lazy val writes: Writes[UsuallyLivesInUk] = Writes { a =>
+        Json.obj(
+          "alwaysLivedInUk" -> false,
+          "usuallyLivesInUk" -> true,
+          "arrivalDate" -> a.arrivalDate
+        )
+      }
+    }
+
+    final case class UsuallyLivesAbroad(country: String, arrivalDate: LocalDate) extends Residency
+    object UsuallyLivesAbroad {
+      implicit lazy val writes: Writes[UsuallyLivesAbroad] = Writes { a =>
+        Json.obj(
+          "alwaysLivedInUk" -> false,
+          "usuallyLivesInUk" -> false,
+          "usualCountryOfResidence" -> a.country,
+          "arrivalDate" -> a.arrivalDate
+        )
+      }
+    }
+
+    implicit lazy val writes: Writes[Residency] = Writes {
+      case AlwaysLivedInUk       => Json.obj("alwaysLivedInUk" -> true)
+      case a: UsuallyLivesInUk   => Json.toJson(a)(UsuallyLivesInUk.writes)
+      case a: UsuallyLivesAbroad => Json.toJson(a)(UsuallyLivesAbroad.writes)
+    }
+  }
+
   private[audit] final case class Applicant(
                                              name: AdultName,
                                              previousFamilyNames: List[String],
@@ -219,7 +261,7 @@ object DownloadAuditEvent {
                                              previousAddress: Option[Address],
                                              telephoneNumber: String,
                                              nationality: String,
-                                             alwaysLivedInUk: Boolean,
+                                             residency: Residency,
                                              memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
                                              currentlyClaimingChildBenefit: String
                                            )

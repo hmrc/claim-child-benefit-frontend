@@ -56,7 +56,6 @@ class JourneyModelSpec
   private val applicantName = AdultName(None, "first", None, "last")
   private val currentUkAddress = UkAddress("line 1", None, "town", None, "AA11 1AA")
   private val phoneNumber = "07777 777777"
-  private val applicantBenefits = Set[Benefits](Benefits.NoneOfTheAbove)
   private val applicantNationality = "British"
 
   private val childName = ChildName("first", None, "last")
@@ -72,17 +71,17 @@ class JourneyModelSpec
 
       val answers = UserAnswers("id")
         .set(RecentlyClaimedPage, false).success.value
-        .set(RelationshipStatusPage, Single).success.value
-        .set(AlwaysLivedInUkPage, true).success.value
         .set(ApplicantNinoKnownPage, false).success.value
         .set(ApplicantNamePage, applicantName).success.value
         .set(ApplicantHasPreviousFamilyNamePage, false).success.value
         .set(ApplicantDateOfBirthPage, now).success.value
         .set(ApplicantPhoneNumberPage, phoneNumber).success.value
         .set(ApplicantNationalityPage, applicantNationality).success.value
+        .set(AlwaysLivedInUkPage, true).success.value
         .set(ApplicantCurrentUkAddressPage, currentUkAddress).success.value
         .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
         .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
+        .set(RelationshipStatusPage, Single).success.value
         .set(ChildNamePage(Index(0)), childName).success.value
         .set(ChildHasPreviousNamePage(Index(0)), false).success.value
         .set(ChildBiologicalSexPage(Index(0)), biologicalSex).success.value
