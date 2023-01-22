@@ -1431,6 +1431,9 @@ checkPaymentDetails.yourDetails = Payment details
 
 taskList.title = Claim Child Benefit
 taskList.heading = Claim Child Benefit
+taskList.incomplete = Application incomplete
+taskList.section.prepare = Prepare your claim
+taskList.section.submit = Submit claim
 taskList.status.notStarted = Not started
 taskList.status.inProgress = In progress
 taskList.status.completed = Completed
@@ -1441,6 +1444,7 @@ taskList.partnerDetails = Partner details
 taskList.childDetails = Child details
 taskList.paymentDetails = Payment details
 taskList.additionalInfo = Further details to share
+taskList.submit = Submit claim
 taskList.completedSections = You’ve completed {0} of {1} sections.
 
 relationshipStatusChangesTaskList.title = Answers on your payment details have been reset

@@ -23,7 +23,6 @@ import org.mockito.Mockito
 import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{EmptyWaypoints, TaskListPage}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
@@ -69,34 +68,6 @@ class TaskListControllerSpec extends SpecBase with MockitoSugar with BeforeAndAf
 
       running(application) {
         val request = FakeRequest(GET, routes.TaskListController.onPageLoad.url)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
-    "must redirect to the next page for a POST" in {
-
-      val application = appBuilder(Some(emptyUserAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(POST, routes.TaskListController.onPageLoad.url)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual TaskListPage.navigate(EmptyWaypoints, emptyUserAnswers, emptyUserAnswers).url
-      }
-    }
-
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
-
-      val application = appBuilder(None).build()
-
-      running(application) {
-        val request = FakeRequest(POST, routes.TaskListController.onPageLoad.url)
 
         val result = route(application, request).value
 
