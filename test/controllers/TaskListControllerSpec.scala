@@ -32,7 +32,7 @@ import views.html.TaskListView
 
 class TaskListControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
 
-  private def mockTaskListService = mock[TaskListService]
+  private val mockTaskListService = mock[TaskListService]
 
   override def beforeEach(): Unit = {
     Mockito.reset(mockTaskListService)
