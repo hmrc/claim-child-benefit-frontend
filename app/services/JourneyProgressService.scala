@@ -29,20 +29,20 @@ class JourneyProgressService {
 
     def nextPage(currentPage: Page): Page = currentPage match {
       case a: AddItemPage with Terminus =>
-        val answersWithYes     = answers.set(a, true).getOrElse(throw new Exception(s"Unable to set ${a.path} to true"))
+        val answersWithYes = answers.set(a, true).getOrElse(throw new Exception(s"Unable to set ${a.path} to true"))
         val totalNumberOfItems = answers.get(a.deriveNumberOfItems).getOrElse(0)
 
         a.index.map {
           x =>
-            if (x.display >= totalNumberOfItems) a else a.navigate(EmptyWaypoints, answersWithYes, answersWithYes).page
+            if (x.display >= totalNumberOfItems) a else nextPage(a.navigate(EmptyWaypoints, answersWithYes, answersWithYes).page)
         }.getOrElse(throw new Exception(s"Expected index to be set on $a, but it wasn't"))
 
       case t: Terminus =>
         t
 
       case a: AddItemPage =>
-        val answersWithYes     = answers.set(a, true).getOrElse(throw new Exception(s"Unable to set ${a.path} to true"))
-        val answersWithNo      = answers.set(a, false).getOrElse(throw new Exception(s"Unable to set ${a.path} to false"))
+        val answersWithYes = answers.set(a, true).getOrElse(throw new Exception(s"Unable to set ${a.path} to true"))
+        val answersWithNo = answers.set(a, false).getOrElse(throw new Exception(s"Unable to set ${a.path} to false"))
         val totalNumberOfItems = answers.get(a.deriveNumberOfItems).getOrElse(0)
 
         a.index.map {

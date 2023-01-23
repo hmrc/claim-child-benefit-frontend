@@ -144,6 +144,75 @@ class JourneyProgressServiceSpec extends AnyFreeSpec with Matchers with OptionVa
     }
   }
 
+  final case class AddToListQuestionPage13(index: Index) extends QuestionPage[String] {
+    override def route(waypoints: Waypoints): Call = ???
+
+    override def path: JsPath = JsPath \ "addToList2" \ index.position \ "page13"
+
+    override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page = AddToListQuestionPage14(index)
+  }
+
+  final case class AddToListQuestionPage14(index: Index) extends QuestionPage[String] {
+    override def route(waypoints: Waypoints): Call = ???
+
+    override def path: JsPath = JsPath \ "addToList2" \ index.position \ "page14"
+
+    override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page = CheckAddToListAnswersPage15(index)
+  }
+
+  final case class CheckAddToListAnswersPage15(index: Index) extends CheckAnswersPage {
+    override val urlFragment: String = "foo"
+
+    override def route(waypoints: Waypoints): Call = ???
+
+    override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page = AddAnotherPage16(Some(index))
+
+    override def isTheSamePage(other: Page): Boolean = other match {
+      case p: CheckAddToListAnswersPage15 => true
+      case _ => false
+    }
+  }
+
+  case object DeriveNumberOfItems2 extends Derivable[Seq[JsObject], Int] {
+    override val derive: Seq[JsObject] => Int = _.size
+
+    override def path: JsPath = JsPath \ "addToList2"
+  }
+
+  final case class AddAnotherPage16(override val index: Option[Index] = None) extends AddItemPage(index) with QuestionPage[Boolean] with Terminus {
+    override val normalModeUrlFragment: String = "x"
+    override val checkModeUrlFragment: String = "y"
+
+    override def route(waypoints: Waypoints): Call = ???
+
+    override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page = {
+      answers.get(this).map {
+        case true =>
+          index.map {
+            x =>
+              AddToListQuestionPage13(Index(x.position + 1))
+          }.getOrElse {
+            answers
+              .get(DeriveNumberOfItems2)
+              .map(x => AddToListQuestionPage13(Index(x)))
+              .getOrElse(AddToListQuestionPage13(Index(0)))
+          }
+
+        case false =>
+          QuestionPage11
+      }.orRecover
+    }
+
+    override def path: JsPath = JsPath \ "addItem"
+
+    override def isTheSamePage(other: Page): Boolean = other match {
+      case _: AddAnotherPage16 => true
+      case _ => false
+    }
+
+    override def deriveNumberOfItems: Derivable[Seq[JsObject], Int] = DeriveNumberOfItems2
+  }
+
   private val emptyAnswers = UserAnswers("id")
   private val service = new JourneyProgressService
 
@@ -214,6 +283,33 @@ class JourneyProgressServiceSpec extends AnyFreeSpec with Matchers with OptionVa
 
       val result = service.continue(AddToListQuestionPage7(Index(0)), answers)
       result mustEqual CheckAnswersPage12
+    }
+
+    "must stop at the first unanswered question in a partially-completed add-to-list terminus section" in {
+
+      val answers =
+        emptyAnswers
+          .set(AddToListQuestionPage13(Index(0)), "foo").success.value
+          .set(AddToListQuestionPage14(Index(0)), "foo").success.value
+          .set(AddToListQuestionPage13(Index(1)), "foo").success.value
+
+      val result = service.continue(AddToListQuestionPage13(Index(0)), answers)
+      result mustEqual AddToListQuestionPage14(Index(1))
+    }
+
+    "must stop at an add-to-list terminus after traversing multiple complete items" in {
+
+      val answers =
+        emptyAnswers
+          .set(AddToListQuestionPage13(Index(0)), "foo").success.value
+          .set(AddToListQuestionPage14(Index(0)), "foo").success.value
+          .set(AddToListQuestionPage13(Index(1)), "foo").success.value
+          .set(AddToListQuestionPage14(Index(1)), "foo").success.value
+          .set(AddToListQuestionPage13(Index(2)), "foo").success.value
+          .set(AddToListQuestionPage14(Index(2)), "foo").success.value
+
+      val result = service.continue(AddToListQuestionPage13(Index(0)), answers)
+      result mustEqual AddAnotherPage16(Some(Index(2)))
     }
   }
 }
