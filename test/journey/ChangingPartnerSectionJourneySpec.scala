@@ -151,7 +151,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
 
       "when they have answered some payment details" - {
 
-        "must remove partner and payment details, tell the user partner details were removed, collect separation date, then go to Check Partner" in {
+        "must remove partner and payment details, tell the user payment details were removed, collect separation date, then go to Check Partner" in {
 
           startingFrom(RelationshipStatusPage)
             .run(
@@ -194,7 +194,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
 
       "when they have given answered some payment details" - {
 
-        "must remove partner and payment details, tell the user partner details were removed, then go to Check Partner" in {
+        "must remove partner and payment details, tell the user payment details were removed, then go to Check Partner" in {
 
           startingFrom(RelationshipStatusPage)
             .run(
@@ -274,7 +274,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
 
       "when they have answered some payment details" - {
 
-        "must remove cohabitation date, partner and payment details, tell the user partner details were removed, collect separation date, then go to Check Partner" in {
+        "must remove cohabitation date, partner and payment details, tell the user payment details were removed, collect separation date, then go to Check Partner" in {
 
           startingFrom(RelationshipStatusPage)
             .run(
@@ -319,7 +319,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
 
       "when they have given answered some payment details" - {
 
-        "must remove cohabitation date, partner and payment details, tell the user partner details were removed, then go to Check Partner" in {
+        "must remove cohabitation date, partner and payment details, tell the user payment details were removed, then go to Check Partner" in {
 
           startingFrom(RelationshipStatusPage)
             .run(
