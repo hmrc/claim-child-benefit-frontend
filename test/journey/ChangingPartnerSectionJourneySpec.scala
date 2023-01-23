@@ -504,7 +504,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
 
   "when a user initially said they were single, widowed or divorced" - {
 
-    val originalRelationship = Gen.oneOf(Single, Separated, Divorced).sample.value
+    val originalRelationship = Gen.oneOf(Single, Widowed, Divorced).sample.value
 
     val initialise = journeyOf(
       submitAnswer(RelationshipStatusPage, originalRelationship),
