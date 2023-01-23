@@ -18,8 +18,7 @@ package pages.applicant
 
 import controllers.applicant.routes
 import models.UserAnswers
-import pages.payments.CurrentlyReceivingChildBenefitPage
-import pages.{AlwaysLivedInUkPage, Page, QuestionPage, Waypoints}
+import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 

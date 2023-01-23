@@ -29,7 +29,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import pages._
 import pages.applicant._
 import pages.child._
-import pages.income._
+import pages.partner.RelationshipStatusPage
 import pages.payments._
 import services.BrmsService
 import uk.gov.hmrc.http.HeaderCarrier

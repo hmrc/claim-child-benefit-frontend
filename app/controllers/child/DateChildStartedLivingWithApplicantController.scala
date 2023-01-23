@@ -20,7 +20,8 @@ import controllers.AnswerExtractor
 import controllers.actions._
 import forms.child.DateChildStartedLivingWithApplicantFormProvider
 import models.Index
-import pages.{ApplicantNamePage, Waypoints}
+import pages.Waypoints
+import pages.applicant.ApplicantNamePage
 import pages.child.{ChildNamePage, DateChildStartedLivingWithApplicantPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}

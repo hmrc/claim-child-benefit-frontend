@@ -23,9 +23,8 @@ import models._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
-import pages._
 import pages.applicant._
-import pages.income._
+import pages.partner.RelationshipStatusPage
 import pages.payments._
 import uk.gov.hmrc.domain.Nino
 

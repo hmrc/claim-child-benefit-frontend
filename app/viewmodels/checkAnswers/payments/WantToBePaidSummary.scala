@@ -19,9 +19,9 @@ package viewmodels.checkAnswers.payments
 import models.Income._
 import models.RelationshipStatus._
 import models.UserAnswers
-import pages.income.{ApplicantIncomePage, ApplicantOrPartnerIncomePage}
-import pages.payments.WantToBePaidPage
-import pages.{CheckAnswersPage, RelationshipStatusPage, Waypoints}
+import pages.partner.RelationshipStatusPage
+import pages.payments.{ApplicantIncomePage, ApplicantOrPartnerIncomePage, WantToBePaidPage}
+import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._

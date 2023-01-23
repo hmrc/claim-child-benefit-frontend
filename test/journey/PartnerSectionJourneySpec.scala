@@ -22,7 +22,7 @@ import models.{AdultName, ChildName, PartnerClaimingChildBenefit}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
-import pages.{CohabitationDatePage, RelationshipStatusPage, SeparationDatePage, TaskListPage}
+import pages.TaskListPage
 import pages.partner._
 import uk.gov.hmrc.domain.Nino
 

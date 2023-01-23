@@ -23,9 +23,9 @@ import org.scalacheck.Gen
 import org.scalatest.{OptionValues, TryValues}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import pages.{CheckYourAnswersPage, EmptyWaypoints, RelationshipStatusPage}
-import pages.income.{ApplicantIncomePage, ApplicantOrPartnerIncomePage}
-import pages.payments.WantToBePaidPage
+import pages.partner.RelationshipStatusPage
+import pages.EmptyWaypoints
+import pages.payments.{ApplicantIncomePage, ApplicantOrPartnerIncomePage, CheckPaymentDetailsPage, WantToBePaidPage}
 import play.api.test.Helpers._
 import play.api.i18n.Messages
 
@@ -45,7 +45,7 @@ class WantToBePaidSummarySpec extends AnyFreeSpec with Matchers with OptionValue
           .set(ApplicantIncomePage, BetweenThresholds).success.value
           .set(WantToBePaidPage, true).success.value
 
-      WantToBePaidSummary.row(answers, EmptyWaypoints, CheckYourAnswersPage) mustBe defined
+      WantToBePaidSummary.row(answers, EmptyWaypoints, CheckPaymentDetailsPage) mustBe defined
     }
 
     "must return Some when the applicant's income is above the upper threshold" in {
@@ -58,7 +58,7 @@ class WantToBePaidSummarySpec extends AnyFreeSpec with Matchers with OptionValue
           .set(ApplicantIncomePage, AboveUpperThreshold).success.value
           .set(WantToBePaidPage, true).success.value
 
-      WantToBePaidSummary.row(answers, EmptyWaypoints, CheckYourAnswersPage) mustBe defined
+      WantToBePaidSummary.row(answers, EmptyWaypoints, CheckPaymentDetailsPage) mustBe defined
     }
 
     "must return None when the applicant's income is below the lower threshold" in {
@@ -71,7 +71,7 @@ class WantToBePaidSummarySpec extends AnyFreeSpec with Matchers with OptionValue
           .set(ApplicantIncomePage, BelowLowerThreshold).success.value
           .set(WantToBePaidPage, true).success.value
 
-      WantToBePaidSummary.row(answers, EmptyWaypoints, CheckYourAnswersPage) must not be defined
+      WantToBePaidSummary.row(answers, EmptyWaypoints, CheckPaymentDetailsPage) must not be defined
     }
 
     "must return Some when the applicant or their partner's income is between the thresholds" in {
@@ -84,7 +84,7 @@ class WantToBePaidSummarySpec extends AnyFreeSpec with Matchers with OptionValue
           .set(ApplicantOrPartnerIncomePage, BetweenThresholds).success.value
           .set(WantToBePaidPage, true).success.value
 
-      WantToBePaidSummary.row(answers, EmptyWaypoints, CheckYourAnswersPage) mustBe defined
+      WantToBePaidSummary.row(answers, EmptyWaypoints, CheckPaymentDetailsPage) mustBe defined
     }
 
     "must return Some when the applicant or their partner's income is above the upper threshold" in {
@@ -97,7 +97,7 @@ class WantToBePaidSummarySpec extends AnyFreeSpec with Matchers with OptionValue
           .set(ApplicantOrPartnerIncomePage, AboveUpperThreshold).success.value
           .set(WantToBePaidPage, true).success.value
 
-      WantToBePaidSummary.row(answers, EmptyWaypoints, CheckYourAnswersPage) mustBe defined
+      WantToBePaidSummary.row(answers, EmptyWaypoints, CheckPaymentDetailsPage) mustBe defined
     }
 
     "must return None when the applicant or their partner's income is below the lower threshold" in {
@@ -110,7 +110,7 @@ class WantToBePaidSummarySpec extends AnyFreeSpec with Matchers with OptionValue
           .set(ApplicantOrPartnerIncomePage, BelowLowerThreshold).success.value
           .set(WantToBePaidPage, true).success.value
 
-      WantToBePaidSummary.row(answers, EmptyWaypoints, CheckYourAnswersPage) must not be defined
+      WantToBePaidSummary.row(answers, EmptyWaypoints, CheckPaymentDetailsPage) must not be defined
     }
   }
 }

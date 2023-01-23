@@ -27,8 +27,7 @@ import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.mockito.MockitoSugar
-import pages.RelationshipStatusPage
-import pages.partner.{CheckPartnerDetailsPage, PartnerNamePage, PartnerNinoPage}
+import pages.partner.{CheckPartnerDetailsPage, PartnerNamePage, PartnerNinoPage, RelationshipStatusPage}
 import services.JourneyProgressService
 
 class PartnerSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar with BeforeAndAfterEach with OptionValues with TryValues {

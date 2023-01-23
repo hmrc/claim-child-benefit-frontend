@@ -28,8 +28,8 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import pages.RelationshipStatusPage
 import pages.child.{AddChildPage, ChildDateOfBirthPage, ChildNamePage}
+import pages.partner.RelationshipStatusPage
 import services.JourneyProgressService
 
 class ChildSectionSpec

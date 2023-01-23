@@ -32,7 +32,6 @@ object Waypoint {
 
   private val fragments: Map[String, Waypoint] =
     Map(
-      CheckYourAnswersPage.urlFragment                           -> CheckYourAnswersPage.waypoint,
       AddApplicantPreviousFamilyNamePage().normalModeUrlFragment -> AddApplicantPreviousFamilyNamePage().waypoint(NormalMode),
       AddApplicantPreviousFamilyNamePage().checkModeUrlFragment  -> AddApplicantPreviousFamilyNamePage().waypoint(CheckMode),
       AddChildPage().normalModeUrlFragment                       -> AddChildPage().waypoint(NormalMode),

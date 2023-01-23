@@ -14,8 +14,6 @@ GET         /refresh-session                             controllers.KeepAliveCo
 
 GET         /there-is-a-problem                          controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
-GET         /check-your-answers                          controllers.CheckYourAnswersController.onPageLoad
-
 GET         /reset-application-form                      controllers.auth.AuthController.signOut
 GET         /application-form-has-been-reset             controllers.auth.SignedOutController.onPageLoad
 
@@ -39,11 +37,11 @@ GET         /identity-verification/error                             controllers
 
 GET         /task-list                                      controllers.TaskListController.onPageLoad
 
-GET         /relationship-status-change              controllers.RelationshipStatusChangesTaskListController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST        /relationship-status-change              controllers.RelationshipStatusChangesTaskListController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET         /relationship-status-change              controllers.partner.RelationshipStatusChangesTaskListController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST        /relationship-status-change              controllers.partner.RelationshipStatusChangesTaskListController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET         /receiving-child-benefit-change              controllers.CurrentlyReceivingChangesTaskListController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST        /receiving-child-benefit-change              controllers.CurrentlyReceivingChangesTaskListController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET         /receiving-child-benefit-change              controllers.applicant.CurrentlyReceivingChangesTaskListController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST        /receiving-child-benefit-change              controllers.applicant.CurrentlyReceivingChangesTaskListController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 # Initial section
 
@@ -53,33 +51,33 @@ POST       /recently-claimed-child-benefit                  controllers.Recently
 
 GET        /already-claimed-child-benefit                   controllers.AlreadyClaimedController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /date-started-living-with-partner                  controllers.CohabitationDateController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /date-started-living-with-partner                  controllers.CohabitationDateController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /date-started-living-with-partner                  controllers.partner.CohabitationDateController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /date-started-living-with-partner                  controllers.partner.CohabitationDateController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /date-separated-from-partner                  controllers.SeparationDateController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /date-separated-from-partner                  controllers.SeparationDateController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /date-separated-from-partner                  controllers.partner.SeparationDateController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /date-separated-from-partner                  controllers.partner.SeparationDateController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /not-eligible-for-weekly-payments                       controllers.CannotBePaidWeeklyController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /not-eligible-for-weekly-payments                       controllers.CannotBePaidWeeklyController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /not-eligible-for-weekly-payments                       controllers.payments.CannotBePaidWeeklyController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /not-eligible-for-weekly-payments                       controllers.payments.CannotBePaidWeeklyController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /relationship-status                        controllers.RelationshipStatusController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /relationship-status                        controllers.RelationshipStatusController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /relationship-status                        controllers.partner.RelationshipStatusController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /relationship-status                        controllers.partner.RelationshipStatusController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /your-name                        controllers.ApplicantNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /your-name                        controllers.ApplicantNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /your-name                        controllers.applicant.ApplicantNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /your-name                        controllers.applicant.ApplicantNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 # Income section
-GET        /your-benefits                        controllers.income.ApplicantBenefitsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /your-benefits                        controllers.income.ApplicantBenefitsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /your-benefits                        controllers.payments.ApplicantBenefitsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /your-benefits                        controllers.payments.ApplicantBenefitsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /your-income                                 controllers.income.ApplicantIncomeController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /your-income                                 controllers.income.ApplicantIncomeController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /your-income                                 controllers.payments.ApplicantIncomeController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /your-income                                 controllers.payments.ApplicantIncomeController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /your-or-your-partners-income                                 controllers.income.ApplicantOrPartnerIncomeController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /your-or-your-partners-income                                 controllers.income.ApplicantOrPartnerIncomeController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /your-or-your-partners-income                                 controllers.payments.ApplicantOrPartnerIncomeController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /your-or-your-partners-income                                 controllers.payments.ApplicantOrPartnerIncomeController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /your-or-your-partners-benefits                        controllers.income.ApplicantOrPartnerBenefitsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /your-or-your-partners-benefits                        controllers.income.ApplicantOrPartnerBenefitsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /your-or-your-partners-benefits                        controllers.payments.ApplicantOrPartnerBenefitsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /your-or-your-partners-benefits                        controllers.payments.ApplicantOrPartnerBenefitsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 # Payments section
 GET        /have-suitable-bank-account                        controllers.payments.ApplicantHasSuitableAccountController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
@@ -91,14 +89,14 @@ POST       /bank-account-holder                         controllers.payments.Ban
 GET        /bank-account-details                        controllers.payments.BankAccountDetailsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /bank-account-details                        controllers.payments.BankAccountDetailsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /currently-receiving-child-benefit                        controllers.payments.CurrentlyReceivingChildBenefitController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /currently-receiving-child-benefit                        controllers.payments.CurrentlyReceivingChildBenefitController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /currently-receiving-child-benefit                        controllers.applicant.CurrentlyReceivingChildBenefitController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /currently-receiving-child-benefit                        controllers.applicant.CurrentlyReceivingChildBenefitController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /eldest-child-date-of-birth                  controllers.payments.EldestChildDateOfBirthController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /eldest-child-date-of-birth                  controllers.payments.EldestChildDateOfBirthController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /eldest-child-date-of-birth                  controllers.applicant.EldestChildDateOfBirthController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /eldest-child-date-of-birth                  controllers.applicant.EldestChildDateOfBirthController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /eldest-child-name                        controllers.payments.EldestChildNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /eldest-child-name                        controllers.payments.EldestChildNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /eldest-child-name                        controllers.applicant.EldestChildNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /eldest-child-name                        controllers.applicant.EldestChildNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /want-to-be-paid-child-benefit                        controllers.payments.WantToBePaidController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /want-to-be-paid-child-benefit                        controllers.payments.WantToBePaidController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
@@ -113,8 +111,8 @@ GET        /check-payment-details                              controllers.payme
 POST       /check-payment-details                              controllers.payments.CheckPaymentDetailsController.onSubmit
 
 # Applicant section
-GET        /always-lived-in-uk                        controllers.AlwaysLivedInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /always-lived-in-uk                        controllers.AlwaysLivedInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /always-lived-in-uk                        controllers.applicant.AlwaysLivedInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /always-lived-in-uk                        controllers.applicant.AlwaysLivedInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /usually-lived-in-uk                        controllers.applicant.ApplicantUsuallyLivesInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /usually-lived-in-uk                        controllers.applicant.ApplicantUsuallyLivesInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

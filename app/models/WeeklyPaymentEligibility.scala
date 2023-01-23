@@ -17,8 +17,8 @@
 package models
 
 import models.RelationshipStatus._
-import pages.RelationshipStatusPage
-import pages.income.ApplicantOrPartnerBenefitsPage
+import pages.partner.RelationshipStatusPage
+import pages.payments.ApplicantOrPartnerBenefitsPage
 import play.api.libs.json.Reads
 import play.api.libs.functional.syntax._
 

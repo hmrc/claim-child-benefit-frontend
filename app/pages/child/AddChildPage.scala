@@ -18,7 +18,7 @@ package pages.child
 
 import controllers.child.routes
 import models.{Index, UserAnswers}
-import pages.{AddItemPage, AdditionalInformationPage, CheckYourAnswersPage, NonEmptyWaypoints, Page, QuestionPage, TaskListPage, Terminus, Waypoints}
+import pages.{AddItemPage, Page, QuestionPage, TaskListPage, Terminus, Waypoints}
 import play.api.libs.json.{JsObject, JsPath}
 import play.api.mvc.Call
 import queries.{Derivable, DeriveNumberOfChildren}

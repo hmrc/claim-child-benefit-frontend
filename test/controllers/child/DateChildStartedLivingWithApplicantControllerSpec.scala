@@ -23,8 +23,9 @@ import models.{AdultName, ChildName}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
+import pages.applicant.ApplicantNamePage
 import pages.child.{ChildNamePage, DateChildStartedLivingWithApplicantPage}
-import pages.{ApplicantNamePage, EmptyWaypoints, child}
+import pages.{EmptyWaypoints, child}
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest

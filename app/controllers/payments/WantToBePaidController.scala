@@ -21,9 +21,9 @@ import controllers.actions._
 import forms.payments.WantToBePaidFormProvider
 import models.Income._
 import models.RelationshipStatus._
-import pages.income.{ApplicantIncomePage, ApplicantOrPartnerIncomePage}
 import pages.payments._
-import pages.{RelationshipStatusPage, Waypoints}
+import pages.Waypoints
+import pages.partner.RelationshipStatusPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserDataService

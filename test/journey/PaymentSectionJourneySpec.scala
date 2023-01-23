@@ -23,8 +23,9 @@ import models.{BankAccountDetails, BankAccountHolder, Benefits, Income, PaymentF
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
-import pages.{RelationshipStatusPage, TaskListPage}
-import pages.income._
+import pages.TaskListPage
+import pages.applicant.CurrentlyReceivingChildBenefitPage
+import pages.partner.RelationshipStatusPage
 import pages.payments._
 
 class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
