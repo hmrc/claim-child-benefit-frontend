@@ -17,15 +17,17 @@
 package forms.applicant
 
 import forms.mappings.Mappings
+import models.ApplicantPreviousName
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class ApplicantPreviousFamilyNameFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[String] =
+  def apply(): Form[ApplicantPreviousName] =
     Form(
       "value" -> text("applicantPreviousFamilyName.error.required")
         .verifying(maxLength(100, "applicantPreviousFamilyName.error.length"))
+        .transform[ApplicantPreviousName](ApplicantPreviousName.apply, x => x.lastName)
     )
 }

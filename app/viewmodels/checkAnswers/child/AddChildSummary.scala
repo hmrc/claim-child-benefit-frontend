@@ -53,7 +53,7 @@ object AddChildSummary {
           key = "addChild.checkYourAnswersLabel",
           value = ValueViewModel(HtmlContent(value)),
           actions = Seq(
-            ActionItemViewModel("site.change", AddChildPage.changeLink(waypoints, sourcePage).url)
+            ActionItemViewModel("site.change", AddChildPage(None).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("addChild.checkAnswers.change.hidden"))
           )
         )

@@ -21,6 +21,11 @@ import play.api.mvc.Call
 
 object CheckYourAnswersPage extends CheckAnswersPage {
 
+  override def isTheSamePage(other: Page): Boolean = other match {
+    case CheckYourAnswersPage => true
+    case _ => false
+  }
+
   override val urlFragment: String = "check-answers"
 
   override def route(waypoints: Waypoints): Call = routes.CheckYourAnswersController.onPageLoad

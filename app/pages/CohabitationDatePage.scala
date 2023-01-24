@@ -18,7 +18,7 @@ package pages
 
 import controllers.routes
 import models.UserAnswers
-import pages.income.ApplicantOrPartnerIncomePage
+import pages.partner.PartnerNamePage
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -34,10 +34,5 @@ case object CohabitationDatePage extends QuestionPage[LocalDate] {
     routes.CohabitationDateController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    AlwaysLivedInUkPage
-
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(ApplicantOrPartnerIncomePage)
-      .map(_ => waypoints.next.page)
-      .getOrElse(ApplicantOrPartnerIncomePage)
+    PartnerNamePage
 }

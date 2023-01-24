@@ -32,5 +32,5 @@ case object PartnerNationalityPage extends QuestionPage[String] {
     routes.PartnerNationalityController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    PartnerClaimingChildBenefitPage
+    PartnerIsHmfOrCivilServantPage
 }

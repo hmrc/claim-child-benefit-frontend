@@ -29,13 +29,13 @@ case class RemoveApplicantPreviousFamilyNamePage(index: Index) extends Page {
 
   override def nextPageNormalMode(waypoints: Waypoints, originalAnswers: UserAnswers): Page =
     originalAnswers.get(DeriveNumberOfPreviousFamilyNames).map {
-      case n if n > 0 => AddApplicantPreviousFamilyNamePage
-      case _          => ApplicantHasPreviousFamilyNamePage
+      case n if n > 0 => AddApplicantPreviousFamilyNamePage()
+      case _ => ApplicantHasPreviousFamilyNamePage
     }.getOrElse(ApplicantHasPreviousFamilyNamePage)
 
-  override def nextPageCheckMode(waypoints: NonEmptyWaypoints, originalAnswers: UserAnswers): Page =
-    originalAnswers.get(DeriveNumberOfPreviousFamilyNames).map {
-      case n if n > 0 => AddApplicantPreviousFamilyNamePage
-      case _          => ApplicantHasPreviousFamilyNamePage
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    answers.get(DeriveNumberOfPreviousFamilyNames).map {
+      case n if n > 0 => AddApplicantPreviousFamilyNamePage()
+      case _ => ApplicantHasPreviousFamilyNamePage
     }.getOrElse(ApplicantHasPreviousFamilyNamePage)
 }

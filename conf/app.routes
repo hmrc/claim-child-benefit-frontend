@@ -15,8 +15,6 @@ GET         /refresh-session                             controllers.KeepAliveCo
 GET         /there-is-a-problem                          controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
 GET         /check-your-answers                          controllers.CheckYourAnswersController.onPageLoad
-GET         /check-relationship-details                              controllers.CheckRelationshipDetailsController.onPageLoad
-POST        /check-relationship-details                              controllers.CheckRelationshipDetailsController.onSubmit
 
 GET         /reset-application-form                      controllers.auth.AuthController.signOut
 GET         /application-form-has-been-reset             controllers.auth.SignedOutController.onPageLoad
@@ -39,10 +37,16 @@ GET         /identity-verification/technical-issue                   controllers
 GET         /identity-verification/timeout                           controllers.auth.IvController.ivTimeout
 GET         /identity-verification/error                             controllers.auth.IvController.ivError
 
+GET         /task-list                                      controllers.TaskListController.onPageLoad
+
+GET         /relationship-status-change              controllers.RelationshipStatusChangesTaskListController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST        /relationship-status-change              controllers.RelationshipStatusChangesTaskListController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET         /receiving-child-benefit-change              controllers.CurrentlyReceivingChangesTaskListController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST        /receiving-child-benefit-change              controllers.CurrentlyReceivingChangesTaskListController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 # Initial section
 
-GET        /always-lived-in-uk                        controllers.AlwaysLivedInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /always-lived-in-uk                        controllers.AlwaysLivedInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /recently-claimed-child-benefit                  controllers.RecentlyClaimedController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /recently-claimed-child-benefit                  controllers.RecentlyClaimedController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
@@ -60,8 +64,6 @@ POST       /not-eligible-for-weekly-payments                       controllers.C
 
 GET        /relationship-status                        controllers.RelationshipStatusController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /relationship-status                        controllers.RelationshipStatusController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
-GET        /use-other-form                       controllers.UsePrintAndPostFormController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /your-name                        controllers.ApplicantNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-name                        controllers.ApplicantNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
@@ -111,6 +113,15 @@ GET        /check-payment-details                              controllers.payme
 POST       /check-payment-details                              controllers.payments.CheckPaymentDetailsController.onSubmit
 
 # Applicant section
+GET        /always-lived-in-uk                        controllers.AlwaysLivedInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /always-lived-in-uk                        controllers.AlwaysLivedInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /usually-lived-in-uk                        controllers.applicant.ApplicantUsuallyLivesInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /usually-lived-in-uk                        controllers.applicant.ApplicantUsuallyLivesInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /usual-country-of-residence                        controllers.applicant.ApplicantUsualCountryOfResidenceController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /usual-country-of-residence                        controllers.applicant.ApplicantUsualCountryOfResidenceController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 GET        /add-previous-family-name                        controllers.applicant.AddApplicantPreviousFamilyNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /add-previous-family-name                        controllers.applicant.AddApplicantPreviousFamilyNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
@@ -122,6 +133,9 @@ POST       /your-current-uk-address                        controllers.applicant
 
 GET        /your-current-international-address                        controllers.applicant.ApplicantCurrentInternationalAddressController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-current-international-address                        controllers.applicant.ApplicantCurrentInternationalAddressController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /arrived-in-uk                     controllers.applicant.ApplicantArrivedInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /arrived-in-uk                     controllers.applicant.ApplicantArrivedInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /your-date-of-birth                  controllers.applicant.ApplicantDateOfBirthController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-date-of-birth                  controllers.applicant.ApplicantDateOfBirthController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

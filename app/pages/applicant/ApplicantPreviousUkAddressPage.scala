@@ -32,5 +32,5 @@ case object ApplicantPreviousUkAddressPage extends QuestionPage[UkAddress] {
     routes.ApplicantPreviousUkAddressController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantPhoneNumberPage
+    ApplicantIsHmfOrCivilServantPage
 }

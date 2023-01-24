@@ -32,15 +32,14 @@ object Waypoint {
 
   private val fragments: Map[String, Waypoint] =
     Map(
-      CheckYourAnswersPage.urlFragment                         -> CheckYourAnswersPage.waypoint,
-      AddApplicantPreviousFamilyNamePage.normalModeUrlFragment -> AddApplicantPreviousFamilyNamePage.waypoint(NormalMode),
-      AddApplicantPreviousFamilyNamePage.checkModeUrlFragment  -> AddApplicantPreviousFamilyNamePage.waypoint(CheckMode),
-      AddChildPage.normalModeUrlFragment                       -> AddChildPage.waypoint(NormalMode),
-      AddChildPage.checkModeUrlFragment                        -> AddChildPage.waypoint(CheckMode),
-      CheckApplicantDetailsPage.urlFragment                    -> CheckApplicantDetailsPage.waypoint,
-      CheckPartnerDetailsPage.urlFragment                      -> CheckPartnerDetailsPage.waypoint,
-      CheckPaymentDetailsPage.urlFragment                      -> CheckPaymentDetailsPage.waypoint,
-      CheckRelationshipDetailsPage.urlFragment                 -> CheckRelationshipDetailsPage.waypoint
+      CheckYourAnswersPage.urlFragment                           -> CheckYourAnswersPage.waypoint,
+      AddApplicantPreviousFamilyNamePage().normalModeUrlFragment -> AddApplicantPreviousFamilyNamePage().waypoint(NormalMode),
+      AddApplicantPreviousFamilyNamePage().checkModeUrlFragment  -> AddApplicantPreviousFamilyNamePage().waypoint(CheckMode),
+      AddChildPage().normalModeUrlFragment                       -> AddChildPage().waypoint(NormalMode),
+      AddChildPage().checkModeUrlFragment                        -> AddChildPage().waypoint(CheckMode),
+      CheckApplicantDetailsPage.urlFragment                      -> CheckApplicantDetailsPage.waypoint,
+      CheckPartnerDetailsPage.urlFragment                        -> CheckPartnerDetailsPage.waypoint,
+      CheckPaymentDetailsPage.urlFragment                        -> CheckPaymentDetailsPage.waypoint
     )
 
   def fromString(s: String): Option[Waypoint] =

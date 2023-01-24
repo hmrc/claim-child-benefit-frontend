@@ -17,10 +17,8 @@
 package pages.partner
 
 import controllers.partner.routes
-import models.RelationshipStatus.{Cohabiting, Divorced, Married, Separated, Single, Widowed}
 import models.UserAnswers
-import pages.income.{ApplicantIncomePage, ApplicantOrPartnerIncomePage}
-import pages.{CohabitationDatePage, Page, QuestionPage, RelationshipStatusPage, SeparationDatePage, UsePrintAndPostFormPage, Waypoints}
+import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -34,14 +32,5 @@ case object PartnerIsHmfOrCivilServantPage extends QuestionPage[Boolean] {
     routes.PartnerIsHmfOrCivilServantController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case true =>
-        answers.get(RelationshipStatusPage).map {
-          case Married | Cohabiting                    => ApplicantOrPartnerIncomePage
-          case Single | Divorced | Separated | Widowed => ApplicantIncomePage
-        }.orRecover
-
-      case false =>
-        UsePrintAndPostFormPage
-    }.orRecover
+    PartnerClaimingChildBenefitPage
 }

@@ -5,7 +5,10 @@
     mainHeader: MainHeader,
     mainFooter: MainFooter,
     line: Line,
-    eldestChildSection: EldestChildSection
+    eldestChildSection: EldestChildSection,
+    alwaysLivedInUk: AlwaysLivedInUk,
+    usuallyLivesInUk: UsuallyLivesInUk,
+    usuallyLivesAbroad: UsuallyLivesAbroad
 )
 
 @(model: JourneyModel)(implicit messages: Messages)
@@ -50,7 +53,16 @@
 
                     @line("pdf.nationality", model.applicant.nationality)
 
-                    @line("pdf.alwaysLivedInUk", booleanToYesNo(model.applicant.alwaysLivedInUk))
+                    @{model.applicant.residency match {
+                        case JourneyModel.Residency.AlwaysLivedInUk =>
+                            alwaysLivedInUk()
+
+                        case JourneyModel.Residency.UsuallyLivesInUk(arrivalDate) =>
+                            usuallyLivesInUk(arrivalDate)
+
+                        case JourneyModel.Residency.UsuallyLivesAbroad(country, arrivalDate) =>
+                            usuallyLivesAbroad(country.name, arrivalDate)
+                    }}
 
                     @line("pdf.hmfOrCivilServant", booleanToYesNo(model.applicant.memberOfHMForcesOrCivilServantAbroad.getOrElse(false)))
 
@@ -58,7 +70,7 @@
                         <fo:block margin-bottom="3mm">
                             <fo:block font-weight="bold">@messages("pdf.previousNames")</fo:block>
                             @model.applicant.previousFamilyNames.map { name =>
-                                <fo:block width="8cm" wrap-option="wrap">@(name)</fo:block>
+                                <fo:block width="8cm" wrap-option="wrap">@(name.lastName)</fo:block>
                             }
                         </fo:block>
                     }
@@ -69,12 +81,14 @@
                         @line(s"pdf.relationshipStatusDate.${model.relationship.status.toString}", date(since))
                     }
 
-                    <fo:block margin-bottom="3mm">
-                        <fo:block font-weight="bold">@messages("pdf.benefits")</fo:block>
-                        @model.benefits.map { x =>
-                            <fo:block width="8cm" wrap-option="wrap">@messages(s"benefits.${x.toString}")</fo:block>
-                        }
-                    </fo:block>
+                    @model.benefits.map { benefits =>
+                        <fo:block margin-bottom="3mm">
+                            <fo:block font-weight="bold">@messages("pdf.benefits")</fo:block>
+                            @benefits.map { x =>
+                                <fo:block width="8cm" wrap-option="wrap">@messages(s"benefits.${x.toString}")</fo:block>
+                            }
+                        </fo:block>
+                    }
 
                     @model.applicant.previousAddress.map { address =>
                         @line("pdf.livedAtAddressOneYear", messages("site.no"))

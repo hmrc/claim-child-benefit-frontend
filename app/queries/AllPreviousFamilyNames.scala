@@ -15,9 +15,10 @@
  */
 
 package queries
+import models.ApplicantPreviousName
 import play.api.libs.json.JsPath
 
-case object AllPreviousFamilyNames extends Settable[List[String]] with Gettable[List[String]] {
+case object AllPreviousFamilyNames extends Settable[List[ApplicantPreviousName]] with Gettable[List[ApplicantPreviousName]] {
 
   override def path: JsPath = JsPath \ "applicantPreviousFamilyNames"
 }

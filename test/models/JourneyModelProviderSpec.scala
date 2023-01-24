@@ -20,6 +20,7 @@ import cats.data.NonEmptyList
 import generators.ModelGenerators
 import models.AdditionalInformation.{Information, NoInformation}
 import models.BirthRegistrationMatchingResult.{Matched, NotAttempted, NotMatched}
+import models.JourneyModel.Residency._
 import models.RelationshipStatus._
 import models.{ChildBirthRegistrationCountry => BirthCountry}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
@@ -68,8 +69,8 @@ class JourneyModelProviderSpec
   private val phoneNumber = "07777 777777"
   private val applicantBenefits = Set[Benefits](Benefits.NoneOfTheAbove)
   private val applicantNationality = "British"
-  private val previousName1 = "previous name 1"
-  private val previousName2 = "previous name 2"
+  private val previousName1 = ApplicantPreviousName("previous name 1")
+  private val previousName2 = ApplicantPreviousName("previous name 2")
 
   private val bankAccountDetails = BankAccountDetails("name on account", "bank name", "00000000", "000000", None)
   private val bankAccountHolder = BankAccountHolder.Applicant
@@ -112,10 +113,8 @@ class JourneyModelProviderSpec
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
           .withOneChild
+          .withMinimalSingleIncomeDetails
           .set(RelationshipStatusPage, Single).success.value
-          .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
-          .set(ApplicantBenefitsPage, applicantBenefits).success.value
-          .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
           .set(WantToBePaidPage, false).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
@@ -129,7 +128,7 @@ class JourneyModelProviderSpec
             previousAddress = None,
             telephoneNumber = phoneNumber,
             nationality = applicantNationality,
-            alwaysLivedInUk = true,
+            residency = AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
           ),
@@ -152,7 +151,7 @@ class JourneyModelProviderSpec
               dateChildStartedLivingWithApplicant = None
             ), Nil
           ),
-          benefits = applicantBenefits,
+          benefits = None,
           paymentPreference = JourneyModel.PaymentPreference.DoNotPay(None),
           additionalInformation = NoInformation
         )
@@ -192,7 +191,7 @@ class JourneyModelProviderSpec
             previousAddress = None,
             telephoneNumber = phoneNumber,
             nationality = applicantNationality,
-            alwaysLivedInUk = true,
+            residency = AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
           ),
@@ -227,7 +226,7 @@ class JourneyModelProviderSpec
               dateChildStartedLivingWithApplicant = None
             ), Nil
           ),
-          benefits = applicantBenefits,
+          benefits = None,
           paymentPreference = JourneyModel.PaymentPreference.DoNotPay(None),
           additionalInformation = Information("info")
         )
@@ -275,7 +274,7 @@ class JourneyModelProviderSpec
             previousAddress = None,
             telephoneNumber = phoneNumber,
             nationality = applicantNationality,
-            alwaysLivedInUk = true,
+            residency = AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
           ),
@@ -327,7 +326,7 @@ class JourneyModelProviderSpec
               )
             )
           ),
-          benefits = applicantBenefits,
+          benefits = None,
           paymentPreference = JourneyModel.PaymentPreference.DoNotPay(None),
           additionalInformation = NoInformation
         )
@@ -354,6 +353,7 @@ class JourneyModelProviderSpec
             .set(EldestChildNamePage, eldestChildName).success.value
             .set(EldestChildDateOfBirthPage, now).success.value
             .set(WantToBePaidPage, true).success.value
+            .set(ApplicantBenefitsPage, applicantBenefits).success.value
             .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
             .set(WantToBePaidToExistingAccountPage, true).success.value
             .set(AdditionalInformationPage, NoInformation).success.value
@@ -384,6 +384,7 @@ class JourneyModelProviderSpec
               .set(EldestChildNamePage, eldestChildName).success.value
               .set(EldestChildDateOfBirthPage, now).success.value
               .set(WantToBePaidPage, true).success.value
+              .set(ApplicantBenefitsPage, applicantBenefits).success.value
               .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks).success.value
               .set(WantToBePaidToExistingAccountPage, false).success.value
               .set(ApplicantHasSuitableAccountPage, true).success.value
@@ -400,6 +401,7 @@ class JourneyModelProviderSpec
 
             errors mustBe empty
             data.value.paymentPreference mustEqual expectedPaymentPreference
+            data.value.benefits.value mustEqual applicantBenefits
           }
 
           "and does not have a suitable account" in {
@@ -416,6 +418,7 @@ class JourneyModelProviderSpec
               .set(EldestChildNamePage, eldestChildName).success.value
               .set(EldestChildDateOfBirthPage, now).success.value
               .set(WantToBePaidPage, true).success.value
+              .set(ApplicantBenefitsPage, applicantBenefits).success.value
               .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
               .set(WantToBePaidToExistingAccountPage, false).success.value
               .set(ApplicantHasSuitableAccountPage, false).success.value
@@ -467,7 +470,6 @@ class JourneyModelProviderSpec
           .withOneChild
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
-          .set(ApplicantBenefitsPage, applicantBenefits).success.value
           .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
           .set(EldestChildNamePage, eldestChildName).success.value
@@ -481,6 +483,7 @@ class JourneyModelProviderSpec
 
             val answers = baseAnswers
               .set(WantToBePaidPage, true).success.value
+              .set(ApplicantBenefitsPage, applicantBenefits).success.value
               .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks).success.value
               .set(ApplicantHasSuitableAccountPage, true).success.value
               .set(BankAccountHolderPage, bankAccountHolder).success.value
@@ -503,8 +506,8 @@ class JourneyModelProviderSpec
 
             val answers = baseAnswers
               .set(WantToBePaidPage, true).success.value
+              .set(ApplicantBenefitsPage, applicantBenefits).success.value
               .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks).success.value
-              .set(BankAccountHolderPage, bankAccountHolder).success.value
               .set(ApplicantHasSuitableAccountPage, false).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(
@@ -527,6 +530,7 @@ class JourneyModelProviderSpec
 
             val answers = baseAnswers
               .set(WantToBePaidPage, true).success.value
+              .set(ApplicantBenefitsPage, applicantBenefits).success.value
               .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
               .set(ApplicantHasSuitableAccountPage, true).success.value
               .set(BankAccountHolderPage, bankAccountHolder).success.value
@@ -549,6 +553,7 @@ class JourneyModelProviderSpec
 
             val answers = baseAnswers
               .set(WantToBePaidPage, true).success.value
+              .set(ApplicantBenefitsPage, applicantBenefits).success.value
               .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
               .set(ApplicantHasSuitableAccountPage, false).success.value
 
@@ -723,7 +728,7 @@ class JourneyModelProviderSpec
           previousAddress = None,
           telephoneNumber = phoneNumber,
           nationality = applicantNationality,
-          alwaysLivedInUk = true,
+          residency = AlwaysLivedInUk,
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
         )
@@ -758,7 +763,7 @@ class JourneyModelProviderSpec
           previousAddress = None,
           telephoneNumber = phoneNumber,
           nationality = applicantNationality,
-          alwaysLivedInUk = true,
+          residency = AlwaysLivedInUk,
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
         )
@@ -779,6 +784,10 @@ class JourneyModelProviderSpec
           .withMinimalSingleIncomeDetails
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
+          .set(AlwaysLivedInUkPage, false).success.value
+          .set(ApplicantUsuallyLivesInUkPage, false).success.value
+          .set(ApplicantUsualCountryOfResidencePage, country).success.value
+          .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
           .set(ApplicantCurrentAddressInUkPage, false).success.value
           .set(ApplicantCurrentInternationalAddressPage, currentInternationalAddress).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
@@ -792,7 +801,7 @@ class JourneyModelProviderSpec
           previousAddress = None,
           telephoneNumber = phoneNumber,
           nationality = applicantNationality,
-          alwaysLivedInUk = true,
+          residency = UsuallyLivesAbroad(country, LocalDate.now),
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
         )
@@ -829,7 +838,7 @@ class JourneyModelProviderSpec
             previousAddress = Some(previousUkAddress),
             telephoneNumber = phoneNumber,
             nationality = applicantNationality,
-            alwaysLivedInUk = true,
+            residency = AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
           )
@@ -850,6 +859,8 @@ class JourneyModelProviderSpec
             .withMinimalSingleIncomeDetails
             .withMinimalPaymentDetails
             .set(AlwaysLivedInUkPage, false).success.value
+            .set(ApplicantUsuallyLivesInUkPage, true).success.value
+            .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
             .set(RelationshipStatusPage, Single).success.value
             .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
             .set(ApplicantPreviousAddressInUkPage, false).success.value
@@ -865,7 +876,7 @@ class JourneyModelProviderSpec
             previousAddress = Some(previousInternationalAddress),
             telephoneNumber = phoneNumber,
             nationality = applicantNationality,
-            alwaysLivedInUk = false,
+            residency = UsuallyLivesInUk(LocalDate.now),
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
           )
@@ -1779,51 +1790,6 @@ class JourneyModelProviderSpec
           data.value.children.toList must contain only expectedChildDetails
         }
       }
-
-      "when the applicant is HM Forces or a civil servant abroad" in {
-
-        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
-
-        val answers = UserAnswers("id")
-          .withMinimalApplicantDetails
-          .withOneChild
-          .withMinimalSingleIncomeDetails
-          .withMinimalPaymentDetails
-          .set(RelationshipStatusPage, Single).success.value
-          .set(AlwaysLivedInUkPage, false).success.value
-          .set(ApplicantIsHmfOrCivilServantPage, true).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
-
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
-
-        errors mustBe empty
-        data.value.applicant.memberOfHMForcesOrCivilServantAbroad.value mustEqual true
-      }
-
-      "when the applicant's partner is HM Forces or a civil servant abroad" in {
-
-        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
-
-        val answers = UserAnswers("id")
-          .withMinimalApplicantDetails
-          .withOneChild
-          .withMinimalCoupleIncomeDetails
-          .withMinimalPaymentDetails
-          .withMinimalPartnerDetails
-          .set(RelationshipStatusPage, Married).success.value
-          .set(ApplicantOrPartnerIncomePage, Income.BelowLowerThreshold).success.value
-          .set(ApplicantOrPartnerBenefitsPage, applicantBenefits).success.value
-          .set(AlwaysLivedInUkPage, false).success.value
-          .set(ApplicantIsHmfOrCivilServantPage, false).success.value
-          .set(PartnerIsHmfOrCivilServantPage, true).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
-
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
-
-        errors mustBe empty
-        data.value.applicant.memberOfHMForcesOrCivilServantAbroad.value mustEqual false
-        data.value.relationship.partner.value.memberOfHMForcesOrCivilServantAbroad.value mustEqual true
-      }
     }
 
     "must fail and report the missing pages" - {
@@ -1954,6 +1920,49 @@ class JourneyModelProviderSpec
           data mustBe empty
         }
 
+        "and they want to be paid but their benefits details are missing" in {
+
+          when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+          val answers = UserAnswers("id")
+            .withMinimalApplicantDetails
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
+            .set(EldestChildNamePage, eldestChildName).success.value
+            .set(EldestChildDateOfBirthPage, now).success.value
+            .set(WantToBePaidPage, true).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
+
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+          errors.value.toChain.toList must contain theSameElementsAs Seq(ApplicantBenefitsPage, WantToBePaidToExistingAccountPage)
+          data mustBe empty
+        }
+
+        "and they want to be paid but their or their partner's benefits details are missing" in {
+
+          when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+          val answers = UserAnswers("id")
+            .withMinimalApplicantDetails
+            .withOneChild
+            .withMinimalCoupleIncomeDetails
+            .withMinimalPartnerDetails
+            .set(RelationshipStatusPage, Married).success.value
+            .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
+            .set(EldestChildNamePage, eldestChildName).success.value
+            .set(EldestChildDateOfBirthPage, now).success.value
+            .set(WantToBePaidPage, true).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
+
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+          errors.value.toChain.toList must contain theSameElementsAs Seq(ApplicantOrPartnerBenefitsPage, WantToBePaidToExistingAccountPage)
+          data mustBe empty
+        }
+
         "and whether they want to be paid to their existing account is missing" in {
 
           when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
@@ -1967,6 +1976,7 @@ class JourneyModelProviderSpec
             .set(EldestChildNamePage, eldestChildName).success.value
             .set(EldestChildDateOfBirthPage, now).success.value
             .set(WantToBePaidPage, true).success.value
+            .set(ApplicantBenefitsPage, applicantBenefits).success.value
             .set(AdditionalInformationPage, NoInformation).success.value
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -1986,6 +1996,7 @@ class JourneyModelProviderSpec
             .set(RelationshipStatusPage, Single).success.value
             .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
             .set(WantToBePaidPage, true).success.value
+            .set(ApplicantBenefitsPage, applicantBenefits).success.value
             .set(WantToBePaidToExistingAccountPage, true).success.value
             .set(AdditionalInformationPage, NoInformation).success.value
 
@@ -2012,6 +2023,7 @@ class JourneyModelProviderSpec
             .set(EldestChildNamePage, eldestChildName).success.value
             .set(EldestChildDateOfBirthPage, now).success.value
             .set(WantToBePaidPage, true).success.value
+            .set(ApplicantBenefitsPage, applicantBenefits).success.value
             .set(WantToBePaidToExistingAccountPage, false).success.value
             .set(AdditionalInformationPage, NoInformation).success.value
 
@@ -2034,6 +2046,7 @@ class JourneyModelProviderSpec
             .set(EldestChildNamePage, eldestChildName).success.value
             .set(EldestChildDateOfBirthPage, now).success.value
             .set(WantToBePaidPage, true).success.value
+            .set(ApplicantBenefitsPage, applicantBenefits).success.value
             .set(WantToBePaidToExistingAccountPage, false).success.value
             .set(ApplicantHasSuitableAccountPage, true).success.value
             .set(AdditionalInformationPage, NoInformation).success.value
@@ -2056,6 +2069,7 @@ class JourneyModelProviderSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
           .set(WantToBePaidPage, true).success.value
+          .set(ApplicantBenefitsPage, applicantBenefits).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -2075,6 +2089,7 @@ class JourneyModelProviderSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
           .set(WantToBePaidPage, true).success.value
+          .set(ApplicantBenefitsPage, applicantBenefits).success.value
           .set(ApplicantHasSuitableAccountPage, true).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
@@ -2141,6 +2156,65 @@ class JourneyModelProviderSpec
         data mustBe empty
       }
 
+      "when the applicant said they haven't always lived in the UK, but whether they usually live in the UK is missing" in {
+
+        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(AlwaysLivedInUkPage, false).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors.value.toChain.toList must contain only ApplicantUsuallyLivesInUkPage
+        data mustBe empty
+      }
+
+      "when the applicant said they usually live in the UK, but the date they arrived in the UK is missing" in {
+
+        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(AlwaysLivedInUkPage, false).success.value
+          .set(ApplicantUsuallyLivesInUkPage, true).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors.value.toChain.toList must contain only ApplicantArrivedInUkPage
+        data mustBe empty
+      }
+
+      "when the applicant said they usually live abroad, but their usual country of residence and date they arrived in the UK are missing" in {
+
+        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(AlwaysLivedInUkPage, false).success.value
+          .set(ApplicantUsuallyLivesInUkPage, false).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors.value.toChain.toList must contain theSameElementsAs Seq(ApplicantUsualCountryOfResidencePage, ApplicantArrivedInUkPage)
+        data mustBe empty
+      }
+
       "when the applicant said they have lived at their current address less than a year but no previous UK address is provided" in {
 
         when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
@@ -2171,6 +2245,8 @@ class JourneyModelProviderSpec
           .withMinimalSingleIncomeDetails
           .withMinimalPaymentDetails
           .set(AlwaysLivedInUkPage, false).success.value
+          .set(ApplicantUsuallyLivesInUkPage, true).success.value
+          .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
           .set(ApplicantPreviousAddressInUkPage, false).success.value
@@ -2731,15 +2807,15 @@ class JourneyModelProviderSpec
 
     def withMinimalApplicantDetails: UserAnswers =
       answers
-        .set(AlwaysLivedInUkPage, true).success.value
+        .set(ApplicantNinoKnownPage, false).success.value
         .set(ApplicantNamePage, applicantName).success.value
         .set(ApplicantHasPreviousFamilyNamePage, false).success.value
-        .set(ApplicantNinoKnownPage, false).success.value
         .set(ApplicantDateOfBirthPage, now).success.value
-        .set(ApplicantCurrentUkAddressPage, currentUkAddress).success.value
         .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
         .set(ApplicantPhoneNumberPage, phoneNumber).success.value
         .set(ApplicantNationalityPage, applicantNationality).success.value
+        .set(AlwaysLivedInUkPage, true).success.value
+        .set(ApplicantCurrentUkAddressPage, currentUkAddress).success.value
         .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
 
     def withMinimalPartnerDetails: UserAnswers =
@@ -2768,16 +2844,13 @@ class JourneyModelProviderSpec
     def withMinimalSingleIncomeDetails: UserAnswers =
       answers
         .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
-        .set(ApplicantBenefitsPage, applicantBenefits).success.value
 
     def withMinimalCoupleIncomeDetails: UserAnswers =
       answers
         .set(ApplicantOrPartnerIncomePage, Income.BelowLowerThreshold).success.value
-        .set(ApplicantOrPartnerBenefitsPage, applicantBenefits).success.value
 
     def withMinimalPaymentDetails: UserAnswers =
       answers
-        .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
         .set(WantToBePaidPage, false).success.value
   }
 }

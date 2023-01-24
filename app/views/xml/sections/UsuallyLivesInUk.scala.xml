@@ -1,0 +1,11 @@
+@import java.time.LocalDate
+
+@this(line: Line)
+
+@(arrivalDate: LocalDate)(implicit messages: Messages)
+
+@line("pdf.alwaysLivedInUk", messages("site.no"))
+
+@line("pdf.usuallyLivesInUk", messages("site.yes"))
+
+@line("pdf.arrivedInUk", date(arrivalDate))

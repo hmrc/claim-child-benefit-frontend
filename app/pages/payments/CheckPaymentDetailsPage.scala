@@ -18,12 +18,21 @@ package pages.payments
 
 
 import controllers.payments.routes
-import pages.{CheckAnswersPage, Waypoints}
+import models.UserAnswers
+import pages.{CheckAnswersPage, Page, TaskListPage, Terminus, Waypoints}
 import play.api.mvc.Call
 
-object CheckPaymentDetailsPage extends CheckAnswersPage {
+object CheckPaymentDetailsPage extends CheckAnswersPage with Terminus {
+
+  override def isTheSamePage(other: Page): Boolean = other match {
+    case CheckPaymentDetailsPage => true
+    case _ => false
+  }
 
   override val urlFragment: String = "check-payment-details"
 
   override def route(waypoints: Waypoints): Call = routes.CheckPaymentDetailsController.onPageLoad
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    TaskListPage
 }

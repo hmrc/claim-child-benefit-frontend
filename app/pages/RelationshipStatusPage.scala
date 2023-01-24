@@ -18,14 +18,15 @@ package pages
 
 import controllers.routes
 import models.RelationshipStatus._
-import models.{Benefits, RelationshipStatus, UserAnswers}
+import models.{RelationshipStatus, UserAnswers}
 import pages.income._
 import pages.partner._
-import pages.payments.PaymentFrequencyPage
+import pages.payments._
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+import queries.Settable
 
-import scala.util.Try
+import scala.util.{Success, Try}
 
 case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
 
@@ -38,109 +39,133 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
-      case Cohabiting                            => CohabitationDatePage
-      case Separated                             => SeparationDatePage
-      case Married | Single | Divorced | Widowed => AlwaysLivedInUkPage
+      case Married                     => PartnerNamePage
+      case Cohabiting                  => CohabitationDatePage
+      case Separated                   => SeparationDatePage
+      case Single | Divorced | Widowed => CheckPartnerDetailsPage
     }.orRecover
 
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case Cohabiting =>
-        answers.get(CohabitationDatePage)
-          .map { _ =>
-            answers.get(ApplicantOrPartnerIncomePage)
-              .map(_ => waypoints.next.page)
-              .getOrElse(ApplicantOrPartnerIncomePage)
-          }
-          .getOrElse(CohabitationDatePage)
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, originalAnswers: UserAnswers, updatedAnswers: UserAnswers): Page = {
 
-      case Separated =>
-        answers.get(SeparationDatePage)
-          .map { _ =>
-            answers.get(ApplicantIncomePage)
-              .map(_ => waypoints.next.page)
-              .getOrElse(ApplicantIncomePage)
-          }
-          .getOrElse(SeparationDatePage)
+    def taskListSectionsChanging(newStatus: RelationshipStatus): Boolean =
+      newStatus match {
+        case Married | Cohabiting =>
+          originalAnswers.isDefined(ApplicantIncomePage)
 
-      case Married =>
-        answers.get(ApplicantOrPartnerIncomePage)
-          .map(_ => waypoints.next.page)
-          .getOrElse(ApplicantOrPartnerIncomePage)
+        case Single | Separated | Divorced | Widowed =>
+          originalAnswers.isDefined(ApplicantOrPartnerIncomePage)
+      }
 
-      case  Single | Divorced | Widowed =>
-        answers.get(ApplicantIncomePage)
-        .map(_ => waypoints.next.page)
-        .getOrElse(ApplicantIncomePage)
+    def nextPage(newStatus: RelationshipStatus) =
+      newStatus match {
+        case Cohabiting =>
+          updatedAnswers
+            .get(CohabitationDatePage)
+            .map(_ => waypoints.next.page)
+            .getOrElse(CohabitationDatePage)
 
+        case Separated =>
+          updatedAnswers
+            .get(SeparationDatePage)
+            .map(_ => waypoints.next.page)
+            .getOrElse(SeparationDatePage)
+
+        case Married =>
+          updatedAnswers
+            .get(PartnerNamePage)
+            .map(_ => waypoints.next.page)
+            .getOrElse(PartnerNamePage)
+
+        case _ =>
+          waypoints.next.page
+      }
+
+    updatedAnswers.get(this).map {
+      status =>
+        if (taskListSectionsChanging(status)) {
+          RelationshipStatusChangesTaskListPage
+        } else {
+          nextPage(status)
+        }
     }.orRecover
+  }
 
-  override def cleanup(value: Option[RelationshipStatus], userAnswers: UserAnswers): Try[UserAnswers] =
+  override def cleanup(value: Option[RelationshipStatus], originalAnswers: UserAnswers, updatedAnswers: UserAnswers): Try[UserAnswers] = {
+
+    def needToRemovePaymentPages(newStatus: RelationshipStatus): Boolean =
+      newStatus match {
+        case Married | Cohabiting =>
+          originalAnswers.get(RelationshipStatusPage).exists {
+            case Cohabiting | Married =>
+              false
+
+            case Single | Separated | Divorced | Widowed =>
+              originalAnswers.isDefined(ApplicantIncomePage)
+          }
+
+        case Single | Separated | Divorced | Widowed =>
+          originalAnswers.get(RelationshipStatusPage).exists {
+            case Cohabiting | Married =>
+              originalAnswers.isDefined(ApplicantOrPartnerIncomePage)
+
+            case Single | Separated | Divorced | Widowed =>
+              false
+          }
+      }
+
+    def pagesToAlwaysRemove(newStatus: RelationshipStatus): Seq[Settable[_]] =
+      newStatus match {
+        case Married =>
+          Seq(CohabitationDatePage, SeparationDatePage)
+
+        case Cohabiting =>
+          Seq(SeparationDatePage)
+
+        case Separated =>
+          partnerPages :+ CohabitationDatePage
+
+        case Single | Divorced | Widowed =>
+          partnerPages ++ Seq(CohabitationDatePage, SeparationDatePage)
+      }
+
     value.map {
-      case Married =>
-        userAnswers.get(ApplicantOrPartnerBenefitsPage).map {
-          benefits =>
-            if (benefits.intersect(Benefits.qualifyingBenefits).isEmpty) {
-              userAnswers.remove(CohabitationDatePage)
-                .flatMap(_.remove(SeparationDatePage))
-                .flatMap(removeApplicantIncomeSection)
-                .flatMap(_.remove(PaymentFrequencyPage))
-            } else {
-              userAnswers.remove(CohabitationDatePage)
-                .flatMap(_.remove(SeparationDatePage))
-                .flatMap(removeApplicantIncomeSection)
-            }
-        }.getOrElse {
-          userAnswers.remove(CohabitationDatePage)
-            .flatMap(_.remove(SeparationDatePage))
-            .flatMap(removeApplicantIncomeSection)
-        }
+      status =>
+        val paymentPagesToRemove = if(needToRemovePaymentPages(status)) paymentPages else Nil
 
-      case Cohabiting =>
-        userAnswers.get(ApplicantOrPartnerBenefitsPage).map {
-          benefits =>
-            if (benefits.intersect(Benefits.qualifyingBenefits).isEmpty) {
-              userAnswers.remove(SeparationDatePage)
-                .flatMap(removeApplicantIncomeSection)
-                .flatMap(_.remove(PaymentFrequencyPage))
-            } else {
-              userAnswers.remove(SeparationDatePage)
-                .flatMap(removeApplicantIncomeSection)
-            }
-        }.getOrElse {
-          userAnswers.remove(SeparationDatePage)
-            .flatMap(removeApplicantIncomeSection)
-        }
+        val pages =
+          pagesToAlwaysRemove(status) ++ paymentPagesToRemove
 
-      case Separated =>
-        userAnswers.remove(CohabitationDatePage)
-          .flatMap(removeApplicantOrPartnerIncomeSection)
-          .flatMap(removePartnerSection)
+        updatedAnswers
+          .set(RelationshipStatusChangesTaskListPage, needToRemovePaymentPages(status))
+          .flatMap(x => removePages(x, pages))
+    }.getOrElse(super.cleanup(value, updatedAnswers))
+  }
 
-      case Single | Divorced | Widowed =>
-        userAnswers.remove(CohabitationDatePage)
-          .flatMap(_.remove(SeparationDatePage))
-          .flatMap(removeApplicantOrPartnerIncomeSection)
-          .flatMap(removePartnerSection)
+  private val partnerPages: Seq[Settable[_]] = Seq(
+    PartnerNamePage,
+    PartnerNinoKnownPage,
+    PartnerNinoPage,
+    PartnerDateOfBirthPage,
+    PartnerNationalityPage,
+    PartnerIsHmfOrCivilServantPage,
+    PartnerClaimingChildBenefitPage,
+    PartnerEldestChildNamePage,
+    PartnerEldestChildDateOfBirthPage
+  )
 
-    }.getOrElse(super.cleanup(value, userAnswers))
+  private val paymentPages: Seq[Settable[_]] = Seq(
+    ApplicantOrPartnerIncomePage,
+    ApplicantIncomePage,
+    WantToBePaidPage,
+    ApplicantBenefitsPage,
+    ApplicantOrPartnerBenefitsPage,
+    PaymentFrequencyPage,
+    WantToBePaidToExistingAccountPage,
+    ApplicantHasSuitableAccountPage,
+    BankAccountHolderPage,
+    BankAccountDetailsPage
+  )
 
-  private def removeApplicantIncomeSection(answers: UserAnswers): Try[UserAnswers] =
-    answers.remove(ApplicantIncomePage)
-      .flatMap(_.remove(ApplicantBenefitsPage))
-
-  private def removeApplicantOrPartnerIncomeSection(answers: UserAnswers): Try[UserAnswers] =
-    answers.remove(ApplicantOrPartnerIncomePage)
-      .flatMap(_.remove(ApplicantOrPartnerBenefitsPage))
-
-  private def removePartnerSection(answers: UserAnswers): Try[UserAnswers] =
-    answers.remove(PartnerNamePage)
-      .flatMap(_.remove(PartnerNinoKnownPage))
-      .flatMap(_.remove(PartnerNinoPage))
-      .flatMap(_.remove(PartnerDateOfBirthPage))
-      .flatMap(_.remove(PartnerNationalityPage))
-      .flatMap(_.remove(PartnerIsHmfOrCivilServantPage))
-      .flatMap(_.remove(PartnerClaimingChildBenefitPage))
-      .flatMap(_.remove(PartnerEldestChildNamePage))
-      .flatMap(_.remove(PartnerEldestChildDateOfBirthPage))
+  private def removePages(answers: UserAnswers, pages: Seq[Settable[_]]): Try[UserAnswers] =
+    pages.foldLeft[Try[UserAnswers]](Success(answers))((acc, page) => acc.flatMap(_.remove(page)))
 }

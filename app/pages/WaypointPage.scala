@@ -16,9 +16,13 @@
 
 package pages
 
-import models.{CheckMode, Mode, NormalMode}
+import models.{CheckMode, Index, Mode, NormalMode}
+import play.api.libs.json.JsObject
+import queries.Derivable
 
-trait WaypointPage extends Page
+trait WaypointPage extends Page {
+  def isTheSamePage(other: Page): Boolean
+}
 
 trait CheckAnswersPage extends WaypointPage {
   val urlFragment: String
@@ -27,7 +31,7 @@ trait CheckAnswersPage extends WaypointPage {
     Waypoint(this, CheckMode, urlFragment)
 }
 
-trait AddItemPage extends WaypointPage {
+abstract class AddItemPage(val index: Option[Index]) extends WaypointPage with QuestionPage[Boolean] {
   def waypoint(mode: Mode): Waypoint = {
     Waypoint(this, mode, urlFragment(mode))
   }
@@ -40,4 +44,6 @@ trait AddItemPage extends WaypointPage {
 
   val normalModeUrlFragment: String
   val checkModeUrlFragment: String
+
+  def deriveNumberOfItems: Derivable[Seq[JsObject], Int]
 }

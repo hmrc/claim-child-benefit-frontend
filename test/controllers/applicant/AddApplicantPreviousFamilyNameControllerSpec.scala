@@ -59,7 +59,7 @@ class AddApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mockito
         val view = application.injector.instanceOf[AddApplicantPreviousFamilyNameView]
 
         implicit val msgs: Messages = messages(application)
-        val otherNames = AddApplicantPreviousFamilyNameSummary.rows(emptyUserAnswers, waypoints, AddApplicantPreviousFamilyNamePage)
+        val otherNames = AddApplicantPreviousFamilyNameSummary.rows(emptyUserAnswers, waypoints, AddApplicantPreviousFamilyNamePage())
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, waypoints, otherNames)(request, implicitly).toString
@@ -85,10 +85,10 @@ class AddApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mockito
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(AddApplicantPreviousFamilyNamePage, true).success.value
+        val expectedAnswers = emptyUserAnswers.set(AddApplicantPreviousFamilyNamePage(), true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual AddApplicantPreviousFamilyNamePage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual AddApplicantPreviousFamilyNamePage().navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -107,7 +107,7 @@ class AddApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mockito
         val view = application.injector.instanceOf[AddApplicantPreviousFamilyNameView]
 
         implicit val msgs: Messages = messages(application)
-        val otherNames = AddApplicantPreviousFamilyNameSummary.rows(emptyUserAnswers, waypoints, AddApplicantPreviousFamilyNamePage)
+        val otherNames = AddApplicantPreviousFamilyNameSummary.rows(emptyUserAnswers, waypoints, AddApplicantPreviousFamilyNamePage())
 
         val result = route(application, request).value
 

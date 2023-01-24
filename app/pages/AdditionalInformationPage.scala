@@ -31,5 +31,5 @@ case object AdditionalInformationPage extends QuestionPage[AdditionalInformation
     routes.AdditionalInformationController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    CheckYourAnswersPage
+    TaskListPage
 }

@@ -22,6 +22,7 @@ import pages.partner.CheckPartnerDetailsPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.checkAnswers.{CohabitationDateSummary, RelationshipStatusSummary, SeparationDateSummary}
 import views.html.partner.CheckPartnerDetailsView
 import viewmodels.checkAnswers.partner._
 import viewmodels.govuk.summarylist._
@@ -45,6 +46,9 @@ class CheckPartnerDetailsController  @Inject()(
 
       val partnerDetails = SummaryListViewModel(
         rows = Seq(
+          RelationshipStatusSummary.row(request.userAnswers, waypoints, thisPage),
+          SeparationDateSummary.row(request.userAnswers, waypoints, thisPage),
+          CohabitationDateSummary.row(request.userAnswers, waypoints, thisPage),
           PartnerNameSummary.row(request.userAnswers, waypoints, thisPage),
           PartnerNinoKnownSummary.row(request.userAnswers, waypoints, thisPage),
           PartnerNinoSummary.row(request.userAnswers, waypoints, thisPage),

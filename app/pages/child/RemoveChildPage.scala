@@ -34,13 +34,13 @@ final case class RemoveChildPage(index: Index) extends QuestionPage[Boolean] {
 
   override protected def nextPageNormalMode(waypoints: Waypoints, originalAnswers: UserAnswers): Page =
     originalAnswers.get(DeriveNumberOfChildren).map {
-      case n if n > 0 => AddChildPage
+      case n if n > 0 => AddChildPage()
       case _ => ChildNamePage(Index(0))
     }.getOrElse(ChildNamePage(Index(0)))
 
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, originalAnswers: UserAnswers): Page =
-    originalAnswers.get(DeriveNumberOfChildren).map {
-      case n if n > 0 => AddChildPage
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
+    answers.get(DeriveNumberOfChildren).map {
+      case n if n > 0 => AddChildPage()
       case _ => ChildNamePage(Index(0))
     }.getOrElse(ChildNamePage(Index(0)))
 }

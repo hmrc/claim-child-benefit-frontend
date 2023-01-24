@@ -60,7 +60,7 @@ class AddChildControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[AddChildView]
 
         implicit val msgs: Messages = messages(application)
-        val children = AddChildSummary.rows(emptyUserAnswers, waypoints, AddChildPage)
+        val children = AddChildSummary.rows(emptyUserAnswers, waypoints, AddChildPage())
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, waypoints, children)(request, implicitly).toString
@@ -69,7 +69,7 @@ class AddChildControllerSpec extends SpecBase with MockitoSugar {
 
     "must not repopulate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(AddChildPage, true).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(AddChildPage(), true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -79,7 +79,7 @@ class AddChildControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[AddChildView]
 
         implicit val msgs: Messages = messages(application)
-        val children = AddChildSummary.rows(emptyUserAnswers, waypoints, AddChildPage)
+        val children = AddChildSummary.rows(emptyUserAnswers, waypoints, AddChildPage())
 
         val result = route(application, request).value
 
@@ -107,10 +107,10 @@ class AddChildControllerSpec extends SpecBase with MockitoSugar {
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(AddChildPage, true).success.value
+        val expectedAnswers = emptyUserAnswers.set(AddChildPage(), true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual AddChildPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual AddChildPage().navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -129,7 +129,7 @@ class AddChildControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[AddChildView]
 
         implicit val msgs: Messages = messages(application)
-        val children = AddChildSummary.rows(emptyUserAnswers, waypoints, AddChildPage)
+        val children = AddChildSummary.rows(emptyUserAnswers, waypoints, AddChildPage())
 
         val result = route(application, request).value
 

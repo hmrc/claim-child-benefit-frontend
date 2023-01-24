@@ -47,16 +47,22 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
         IorT.fromIor[Future](answers.getIor(AdditionalInformationPage))
       ).parMapN(JourneyModel.apply).value
 
-  private def getBenefits(answers: UserAnswers): IorNec[Query, Set[Benefits]] = {
+  private def getBenefits(answers: UserAnswers): IorNec[Query, Option[Set[Benefits]]] = {
 
     import models.RelationshipStatus._
 
     answers.getIor(RelationshipStatusPage).flatMap {
       case Married | Cohabiting =>
-        answers.getIor(ApplicantOrPartnerBenefitsPage)
+        answers.getIor(WantToBePaidPage).flatMap {
+          case true => answers.getIor(ApplicantOrPartnerBenefitsPage).map(Some(_))
+          case false => Ior.Right(None)
+        }
 
       case Single | Separated | Divorced | Widowed =>
-        answers.getIor(ApplicantBenefitsPage)
+        answers.getIor(WantToBePaidPage).flatMap {
+          case true => answers.getIor(ApplicantBenefitsPage).map(Some(_))
+          case false => Ior.Right(None)
+        }
     }
   }
 
@@ -313,7 +319,7 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
         answers.getIor(ApplicantCurrentInternationalAddressPage)
       }
 
-    def getPreviousFamilyNames: IorNec[Query, List[String]] =
+    def getPreviousFamilyNames: IorNec[Query, List[ApplicantPreviousName]] =
       answers.getIor(ApplicantHasPreviousFamilyNamePage).flatMap {
         case true => answers.getIor(AllPreviousFamilyNames)
         case false => Ior.Right(Nil)
@@ -324,6 +330,25 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
         .map(x => Ior.Right(Some(x)))
         .getOrElse(Ior.Right(None))
 
+    def getResidency: IorNec[Query, Residency] = {
+      answers.getIor(AlwaysLivedInUkPage).flatMap {
+        case true =>
+          Ior.Right(Residency.AlwaysLivedInUk)
+
+        case false =>
+          answers.getIor(ApplicantUsuallyLivesInUkPage).flatMap {
+            case true =>
+              answers.getIor(ApplicantArrivedInUkPage).map(Residency.UsuallyLivesInUk)
+
+            case false =>
+              (
+                answers.getIor(ApplicantUsualCountryOfResidencePage),
+                answers.getIor(ApplicantArrivedInUkPage)
+              ).parMapN(Residency.UsuallyLivesAbroad)
+          }
+      }
+    }
+
     (
       answers.getIor(ApplicantNamePage),
       getPreviousFamilyNames,
@@ -333,7 +358,7 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
       getPreviousAddress,
       answers.getIor(ApplicantPhoneNumberPage),
       answers.getIor(ApplicantNationalityPage),
-      answers.getIor(AlwaysLivedInUkPage),
+      getResidency,
       getHmForces,
       answers.getIor(CurrentlyReceivingChildBenefitPage)
       ).parMapN(Applicant.apply)

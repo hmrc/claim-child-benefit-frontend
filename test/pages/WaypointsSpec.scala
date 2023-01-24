@@ -16,12 +16,13 @@
 
 package pages
 
-import models.NormalMode
+import models.{Index, NormalMode}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{EitherValues, OptionValues}
-import play.api.libs.json.JsPath
+import play.api.libs.json.{JsObject, JsPath}
 import play.api.mvc.{Call, QueryStringBindable}
+import queries.Derivable
 
 class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with EitherValues {
 
@@ -41,21 +42,21 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
 
         EmptyWaypoints.recalibrate(RegularPage1, RegularPage2)                     mustEqual EmptyWaypoints
         EmptyWaypoints.recalibrate(RegularPage1, AddToListSection1Page1)           mustEqual EmptyWaypoints
-        EmptyWaypoints.recalibrate(RegularPage1, AddItemPage1)                     mustEqual EmptyWaypoints
+        EmptyWaypoints.recalibrate(RegularPage1, AddItemPage1())                   mustEqual EmptyWaypoints
         EmptyWaypoints.recalibrate(RegularPage1, CheckAnswersPage1)                mustEqual EmptyWaypoints
         EmptyWaypoints.recalibrate(AddToListSection1Page1, RegularPage2)           mustEqual EmptyWaypoints
         EmptyWaypoints.recalibrate(AddToListSection1Page1, AddToListSection1Page1) mustEqual EmptyWaypoints
         EmptyWaypoints.recalibrate(AddToListSection1Page1, AddToListSection2Page1) mustEqual EmptyWaypoints
-        EmptyWaypoints.recalibrate(AddToListSection1Page1, AddItemPage1)           mustEqual EmptyWaypoints
+        EmptyWaypoints.recalibrate(AddToListSection1Page1, AddItemPage1())         mustEqual EmptyWaypoints
         EmptyWaypoints.recalibrate(AddToListSection1Page1, CheckAnswersPage1)      mustEqual EmptyWaypoints
-        EmptyWaypoints.recalibrate(AddItemPage1, RegularPage2)                     mustEqual EmptyWaypoints
-        EmptyWaypoints.recalibrate(AddItemPage1, AddToListSection1Page2)           mustEqual EmptyWaypoints
-        EmptyWaypoints.recalibrate(AddItemPage1, AddToListSection2Page2)           mustEqual EmptyWaypoints
-        EmptyWaypoints.recalibrate(AddItemPage1, AddItemPage2)                     mustEqual EmptyWaypoints
-        EmptyWaypoints.recalibrate(AddItemPage1, CheckAnswersPage1)                mustEqual EmptyWaypoints
+        EmptyWaypoints.recalibrate(AddItemPage1(), RegularPage2)                   mustEqual EmptyWaypoints
+        EmptyWaypoints.recalibrate(AddItemPage1(), AddToListSection1Page2)         mustEqual EmptyWaypoints
+        EmptyWaypoints.recalibrate(AddItemPage1(), AddToListSection2Page2)         mustEqual EmptyWaypoints
+        EmptyWaypoints.recalibrate(AddItemPage1(), AddItemPage2())                 mustEqual EmptyWaypoints
+        EmptyWaypoints.recalibrate(AddItemPage1(), CheckAnswersPage1)              mustEqual EmptyWaypoints
         EmptyWaypoints.recalibrate(CheckAnswersPage1, RegularPage2)                mustEqual EmptyWaypoints
         EmptyWaypoints.recalibrate(CheckAnswersPage1, AddToListSection1Page1)      mustEqual EmptyWaypoints
-        EmptyWaypoints.recalibrate(CheckAnswersPage1, AddItemPage1)                mustEqual EmptyWaypoints
+        EmptyWaypoints.recalibrate(CheckAnswersPage1, AddItemPage1())              mustEqual EmptyWaypoints
         EmptyWaypoints.recalibrate(CheckAnswersPage1, CheckAnswersPage2)           mustEqual EmptyWaypoints
       }
     }
@@ -105,7 +106,7 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
             waypoints.recalibrate(RegularPage1, AddToListSection1Page1) mustEqual waypoints
             waypoints.recalibrate(AddToListSection2Page1, AddToListSection1Page1) mustEqual waypoints
             waypoints.recalibrate(CheckAnswersPage1, AddToListSection1Page1) mustEqual waypoints
-            waypoints.recalibrate(AddItemPage1, AddToListSection1Page1) mustEqual waypoints
+            waypoints.recalibrate(AddItemPage1(), AddToListSection1Page1) mustEqual waypoints
           }
         }
 
@@ -119,7 +120,7 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
             waypoints.recalibrate(RegularPage1, AddToListSection1Page1) mustEqual expectedWaypoints
             waypoints.recalibrate(AddToListSection2Page1, AddToListSection1Page1) mustEqual expectedWaypoints
             waypoints.recalibrate(CheckAnswersPage1, AddToListSection1Page1) mustEqual expectedWaypoints
-            waypoints.recalibrate(AddItemPage1, AddToListSection1Page1) mustEqual expectedWaypoints
+            waypoints.recalibrate(AddItemPage1(), AddToListSection1Page1) mustEqual expectedWaypoints
           }
         }
       }
@@ -135,7 +136,7 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
             waypoints.recalibrate(RegularPage1, CheckAnswersPage1) mustEqual EmptyWaypoints
             waypoints.recalibrate(CheckAnswersPage2, CheckAnswersPage1) mustEqual EmptyWaypoints
             waypoints.recalibrate(AddToListSection1Page1, CheckAnswersPage1) mustEqual EmptyWaypoints
-            waypoints.recalibrate(AddItemPage1, CheckAnswersPage1) mustEqual EmptyWaypoints
+            waypoints.recalibrate(AddItemPage1(), CheckAnswersPage1) mustEqual EmptyWaypoints
           }
         }
 
@@ -149,7 +150,7 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
             waypoints.recalibrate(RegularPage1, CheckAnswersPage1) mustEqual expectedWaypoints
             waypoints.recalibrate(CheckAnswersPage2, CheckAnswersPage1) mustEqual expectedWaypoints
             waypoints.recalibrate(AddToListSection1Page1, CheckAnswersPage1) mustEqual expectedWaypoints
-            waypoints.recalibrate(AddItemPage1, CheckAnswersPage1) mustEqual expectedWaypoints
+            waypoints.recalibrate(AddItemPage1(), CheckAnswersPage1) mustEqual expectedWaypoints
           }
         }
 
@@ -162,7 +163,7 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
             waypoints.recalibrate(RegularPage1, CheckAnswersPage2) mustEqual waypoints
             waypoints.recalibrate(CheckAnswersPage2, CheckAnswersPage2) mustEqual waypoints
             waypoints.recalibrate(AddToListSection1Page1, CheckAnswersPage2) mustEqual waypoints
-            waypoints.recalibrate(AddItemPage1, CheckAnswersPage2) mustEqual waypoints
+            waypoints.recalibrate(AddItemPage1(), CheckAnswersPage2) mustEqual waypoints
           }
         }
       }
@@ -210,41 +211,80 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
       override val urlFragment: String = "check-1"
 
       override def route(waypoints: Waypoints): Call = Call("", "")
+
+      override def isTheSamePage(other: Page): Boolean = other match {
+        case CheckAnswersPage1 => true
+        case _ => false
+      }
     }
 
     object CheckAnswersPage2 extends CheckAnswersPage {
       override val urlFragment: String = "check-2"
 
       override def route(waypoints: Waypoints): Call = Call("", "")
+
+      override def isTheSamePage(other: Page): Boolean = other match {
+        case CheckAnswersPage2 => true
+        case _ => false
+      }
     }
 
     object Section1 extends AddToListSection
     object Section2 extends AddToListSection
 
-    object AddItemPage1 extends AddItemPage {
+    final case class AddItemPage1(override val index: Option[Index] = None) extends AddItemPage(index) {
       override val normalModeUrlFragment: String = "add-page-1"
       override val checkModeUrlFragment: String = "change-page-1"
 
       override def route(waypoints: Waypoints): Call = Call("", "")
+
+      override def path: JsPath = JsPath \ "addItemPage1"
+
+      override def isTheSamePage(other: Page): Boolean = other match {
+        case _: AddItemPage1 => true
+        case _ => false
+      }
+
+      override def deriveNumberOfItems: Derivable[Seq[JsObject], Int] = ???
+
+      object Derive2 extends Derivable[Seq[JsObject], Int] {
+        override val derive: Seq[JsObject] => Int = _.size
+
+        override def path: JsPath = JsPath \ "addItemPage1"
+      }
     }
 
-    object AddItemPage2 extends AddItemPage {
+    final case class AddItemPage2(override val index: Option[Index] = None) extends AddItemPage(index) {
       override val normalModeUrlFragment: String = "add-page-2"
       override val checkModeUrlFragment: String = "change-page-2"
 
       override def route(waypoints: Waypoints): Call = Call("", "")
+
+      override def path: JsPath = JsPath \ "addItemPage2"
+
+      override def isTheSamePage(other: Page): Boolean = other match {
+        case _: AddItemPage2 => true
+        case _ => false
+      }
+
+      override def deriveNumberOfItems: Derivable[Seq[JsObject], Int] = Derive2
+
+      object Derive2 extends Derivable[Seq[JsObject], Int] {
+        override val derive: Seq[JsObject] => Int = _.size
+        override def path: JsPath = JsPath \ "addItemPage2"
+      }
     }
 
     trait AddToListSection1Page extends QuestionPage[Nothing] with AddToListQuestionPage {
       override val section: AddToListSection = Section1
-      override val addItemWaypoint: Waypoint = AddItemPage1.waypoint(NormalMode)
+      override val addItemWaypoint: Waypoint = AddItemPage1().waypoint(NormalMode)
 
       override def path: JsPath = ???
     }
 
     trait AddToListSection2Page extends QuestionPage[Nothing] with AddToListQuestionPage {
       override val section: AddToListSection = Section2
-      override val addItemWaypoint: Waypoint = AddItemPage2.waypoint(NormalMode)
+      override val addItemWaypoint: Waypoint = AddItemPage2().waypoint(NormalMode)
 
       override def path: JsPath = ???
     }

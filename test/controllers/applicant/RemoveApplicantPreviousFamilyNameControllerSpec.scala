@@ -19,6 +19,7 @@ package controllers.applicant
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.applicant.RemoveApplicantPreviousFamilyNameFormProvider
+import models.ApplicantPreviousName
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{never, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -34,10 +35,10 @@ import scala.concurrent.Future
 
 class RemoveApplicantPreviousFamilyNameControllerSpec extends SpecBase with MockitoSugar {
 
-  private val name = "name"
+  private val name = ApplicantPreviousName("name")
 
   val formProvider = new RemoveApplicantPreviousFamilyNameFormProvider()
-  val form = formProvider(name)
+  val form = formProvider(name.lastName)
   private val waypoints = EmptyWaypoints
   private val baseAnswers = emptyUserAnswers.set(ApplicantPreviousFamilyNamePage(index), name).success.value
 
@@ -57,7 +58,7 @@ class RemoveApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mock
         val view = application.injector.instanceOf[RemoveApplicantPreviousFamilyNameView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, index, name)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index, name.lastName)(request, messages(application)).toString
       }
     }
 
@@ -130,7 +131,7 @@ class RemoveApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mock
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, index, name)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index, name.lastName)(request, messages(application)).toString
       }
     }
 

@@ -51,6 +51,8 @@ final case class UserAnswers(
 
   def set[A](page: Settable[A], value: A)(implicit writes: Writes[A]): Try[UserAnswers] = {
 
+    val originalAnswers = this
+
     val updatedData = data.setObject(page.path, Json.toJson(value)) match {
       case JsSuccess(jsValue, _) =>
         Success(jsValue)
@@ -61,11 +63,13 @@ final case class UserAnswers(
     updatedData.flatMap {
       d =>
         val updatedAnswers = copy (data = d)
-        page.cleanup(Some(value), updatedAnswers)
+        page.cleanup(Some(value), originalAnswers, updatedAnswers)
     }
   }
 
   def remove[A](page: Settable[A]): Try[UserAnswers] = {
+
+    val originalAnswers = this
 
     val updatedData = data.removeObject(page.path) match {
       case JsSuccess(jsValue, _) =>
@@ -77,7 +81,7 @@ final case class UserAnswers(
     updatedData.flatMap {
       d =>
         val updatedAnswers = copy (data = d)
-        page.cleanup(None, updatedAnswers)
+        page.cleanup(None, originalAnswers, updatedAnswers)
     }
   }
 }

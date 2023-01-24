@@ -33,10 +33,11 @@ case object ApplicantIncomePage extends QuestionPage[Income] {
     routes.ApplicantIncomeController.onPageLoad(waypoints)
 
   override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantBenefitsPage
+    WantToBePaidPage
 
-  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(ApplicantBenefitsPage)
-      .map(_ => WantToBePaidPage)
-      .getOrElse(ApplicantBenefitsPage)
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, originalAnswers: UserAnswers, updatedAnswers: UserAnswers): Page =
+    (originalAnswers.get(this), updatedAnswers.get(this)) match {
+      case (Some(x), Some(y)) if x != y => WantToBePaidPage
+      case _                            => waypoints.next.page
+    }
 }

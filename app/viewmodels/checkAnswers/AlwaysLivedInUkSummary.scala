@@ -16,9 +16,8 @@
 
 package viewmodels.checkAnswers
 
-import models.RelationshipStatus._
 import models.UserAnswers
-import pages.{CheckAnswersPage, AlwaysLivedInUkPage, RelationshipStatusPage, Waypoints}
+import pages.{AlwaysLivedInUkPage, CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -28,24 +27,17 @@ object AlwaysLivedInUkSummary  {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    for {
-      alwaysLivedInUk <- answers.get(AlwaysLivedInUkPage)
-      relationshipStatus  <- answers.get(RelationshipStatusPage)
-    } yield {
-
-      val singleOrCouple = relationshipStatus match {
-        case Married | Cohabiting                    => "couple"
-        case Single | Separated | Widowed | Divorced => "single"
-      }
+    answers.get(AlwaysLivedInUkPage).map {
+      alwaysLivedInUk =>
 
       val value = if (alwaysLivedInUk) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
-        key     = s"alwaysLivedInUk.$singleOrCouple.checkYourAnswersLabel",
+        key     = s"alwaysLivedInUk.checkYourAnswersLabel",
         value   = ValueViewModel(value),
         actions = Seq(
           ActionItemViewModel("site.change", AlwaysLivedInUkPage.changeLink(waypoints, sourcePage).url)
-            .withVisuallyHiddenText(messages(s"alwaysLivedInUk.$singleOrCouple.change.hidden"))
+            .withVisuallyHiddenText(messages(s"alwaysLivedInUk.change.hidden"))
         )
       )
     }

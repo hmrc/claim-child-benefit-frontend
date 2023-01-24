@@ -1,0 +1,87 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.tasklist.SectionStatus.Completed
+@import models.tasklist.SectionViewModel
+
+@this(
+        layout: templates.Layout,
+        govukTag: GovukTag
+)
+
+@(sections: Seq[SectionViewModel])(implicit request: Request[_], messages: Messages)
+
+@numberOfSections = @{sections.size}
+@completedSections = @{sections.count(_.status == Completed)}
+
+@layout(pageTitle = titleNoForm(messages("taskList.title"))) {
+
+    <h1 class="govuk-heading-xl">@messages("taskList.heading")</h1>
+
+    <h2 class="govuk-heading-m">@messages("taskList.incomplete")</h2>
+
+    <p class="govuk-body">@messages("taskList.completedSections", completedSections, numberOfSections)</p>
+
+    <ol class="app-task-list">
+        <li>
+            <h2 class="app-task-list__section">
+                <span class="app-task-list__section-number">1. </span>
+                @messages("taskList.section.prepare")
+            </h2>
+
+            <ul class="app-task-list__items">
+            @sections.map { section =>
+                <li class="app-task-list__item">
+                    <span class="app-task-list__task-name">
+                        @if(section.call.isDefined) {
+                            <a href="@section.call.get.url" class="govuk-link">@messages(section.name)</a>
+                        } else {
+                            @messages(section.name)
+                        }
+                    </span>
+                    <span class="hmrc-status-tag">
+                        @govukTag(section.status.tag)
+                    </span>
+                </li>
+            }
+            </ul>
+        </li>
+        <li>
+            <h2 class="app-task-list__section">
+                <span class="app-task-list__section-number">2. </span>
+                @messages("taskList.section.submit")
+            </h2>
+            <ul class="app-task-list__items">
+                <li class="app-task-list__item">
+                    <span class="app-task-list__task-name">
+                        @if(completedSections == numberOfSections) {
+                            <a href="@routes.PrintController.onPageLoad" class="govuk-link">@messages("taskList.submit")</a>
+                        } else {
+                            @messages("taskList.submit")
+                        }
+                    </span>
+                    <span class="hmrc-status-tag">
+                        @if(completedSections == numberOfSections) {
+                            @govukTag(TagViewModel(messages("taskList.status.notStarted")).grey())
+                        } else {
+                            @govukTag(TagViewModel(messages("taskList.status.cannotStart")).grey())
+                        }
+                    </span>
+                </li>
+            </ul>
+        </li>
+    </ol>
+}

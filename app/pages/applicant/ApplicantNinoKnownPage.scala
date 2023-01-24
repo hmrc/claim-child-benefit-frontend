@@ -18,7 +18,7 @@ package pages.applicant
 
 import controllers.applicant.routes
 import models.UserAnswers
-import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
+import pages.{ApplicantNamePage, NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -36,7 +36,7 @@ case object ApplicantNinoKnownPage extends QuestionPage[Boolean] {
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case true  => ApplicantNinoPage
-      case false => ApplicantDateOfBirthPage
+      case false => ApplicantNamePage
     }.orRecover
 
   override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =

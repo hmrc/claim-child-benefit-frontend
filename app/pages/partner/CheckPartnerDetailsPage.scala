@@ -18,12 +18,21 @@ package pages.partner
 
 
 import controllers.partner.routes
-import pages.{CheckAnswersPage, Waypoints}
+import models.UserAnswers
+import pages.{CheckAnswersPage, Page, TaskListPage, Terminus, Waypoints}
 import play.api.mvc.Call
 
-object CheckPartnerDetailsPage extends CheckAnswersPage {
+object CheckPartnerDetailsPage extends CheckAnswersPage with Terminus {
+
+  override def isTheSamePage(other: Page): Boolean = other match {
+    case CheckPartnerDetailsPage => true
+    case _ => false
+  }
 
   override val urlFragment: String = "check-partners-details"
 
   override def route(waypoints: Waypoints): Call = routes.CheckPartnerDetailsController.onPageLoad
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    TaskListPage
 }

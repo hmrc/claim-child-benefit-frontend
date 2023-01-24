@@ -46,7 +46,7 @@ class AddChildController @Inject()(
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val children = AddChildSummary.rows(request.userAnswers, waypoints, AddChildPage)
+      val children = AddChildSummary.rows(request.userAnswers, waypoints, AddChildPage())
 
       Ok(view(form, waypoints, children))
   }
@@ -56,16 +56,16 @@ class AddChildController @Inject()(
 
       form.bindFromRequest().fold(
         formWithErrors => {
-          val children = AddChildSummary.rows(request.userAnswers, waypoints, AddChildPage)
+          val children = AddChildSummary.rows(request.userAnswers, waypoints, AddChildPage())
 
           Future.successful(BadRequest(view(formWithErrors, waypoints, children)))
         },
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(AddChildPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(AddChildPage(), value))
             _              <- userDataService.set(updatedAnswers)
-          } yield Redirect(AddChildPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+          } yield Redirect(AddChildPage().navigate(waypoints, request.userAnswers, updatedAnswers).route)
       )
   }
 }

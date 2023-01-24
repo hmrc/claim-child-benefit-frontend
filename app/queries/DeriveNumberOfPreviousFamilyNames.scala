@@ -15,11 +15,11 @@
  */
 
 package queries
-import play.api.libs.json.JsPath
+import play.api.libs.json.{JsObject, JsPath}
 
-case object DeriveNumberOfPreviousFamilyNames extends Derivable[List[String], Int] {
+case object DeriveNumberOfPreviousFamilyNames extends Derivable[Seq[JsObject], Int] {
 
-  override val derive: List[String] => Int = _.size
+  override val derive: Seq[JsObject] => Int = _.size
 
   override def path: JsPath = JsPath \ "applicantPreviousFamilyNames"
 }

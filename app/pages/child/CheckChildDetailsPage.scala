@@ -23,13 +23,17 @@ import play.api.mvc.Call
 
 final case class CheckChildDetailsPage(index: Index) extends CheckAnswersPage {
 
+  override def isTheSamePage(other: Page): Boolean = other match {
+    case p: CheckChildDetailsPage => p.index == this.index
+    case _ => false
+  }
   override val urlFragment: String = s"check-child-${index.display}"
 
   override def route(waypoints: Waypoints): Call =
     routes.CheckChildDetailsController.onPageLoad(waypoints, index)
 
   override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    AddChildPage
+    AddChildPage(Some(index))
 }
 
 object CheckChildDetailsPage {
