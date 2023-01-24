@@ -29,11 +29,6 @@ class WaypointSpec extends AnyFreeSpec with Matchers with OptionValues {
 
   ".fromString" - {
 
-    "must return CheckYourAnswers when given its waypoint" in {
-
-      Waypoint.fromString("check-answers").value mustEqual CheckYourAnswersPage.waypoint
-    }
-
     "must return Add Applicant Previous Family Name when given its Normal mode waypoint" in {
 
       Waypoint.fromString("add-other-name").value mustEqual AddApplicantPreviousFamilyNamePage().waypoint(NormalMode)

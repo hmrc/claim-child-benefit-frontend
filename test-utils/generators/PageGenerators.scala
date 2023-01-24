@@ -21,7 +21,6 @@ import org.scalacheck.Arbitrary
 import pages.{child, _}
 import pages.applicant._
 import pages.child._
-import pages.income._
 import pages.partner._
 import pages.payments._
 

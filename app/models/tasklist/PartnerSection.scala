@@ -18,8 +18,8 @@ package models.tasklist
 
 import models.UserAnswers
 import models.tasklist.SectionStatus.{CannotStart, Completed, InProgress, NotStarted}
-import pages.partner.CheckPartnerDetailsPage
-import pages.{Page, RelationshipStatusPage}
+import pages.partner.{CheckPartnerDetailsPage, RelationshipStatusPage}
+import pages.Page
 import services.JourneyProgressService
 
 import javax.inject.Inject

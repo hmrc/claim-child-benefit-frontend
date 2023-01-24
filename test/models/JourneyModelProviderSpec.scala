@@ -35,7 +35,6 @@ import org.scalatestplus.mockito.MockitoSugar
 import pages._
 import pages.applicant._
 import pages.child._
-import pages.income._
 import pages.partner._
 import pages.payments._
 import queries.{AllChildPreviousNames, AllChildSummaries, AllPreviousFamilyNames}

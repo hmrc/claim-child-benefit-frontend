@@ -29,10 +29,9 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import pages.RelationshipStatusPage
 import pages.child.AddChildPage
-import pages.income.{ApplicantIncomePage, ApplicantOrPartnerIncomePage}
-import pages.payments.{CheckPaymentDetailsPage, PaymentFrequencyPage}
+import pages.partner.RelationshipStatusPage
+import pages.payments.{ApplicantIncomePage, ApplicantOrPartnerIncomePage, CheckPaymentDetailsPage, PaymentFrequencyPage}
 import services.JourneyProgressService
 
 class PaymentSectionSpec

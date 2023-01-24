@@ -19,8 +19,8 @@ package pages.payments
 import controllers.payments.routes
 import models.RelationshipStatus._
 import models.UserAnswers
-import pages.income.{ApplicantBenefitsPage, ApplicantOrPartnerBenefitsPage}
-import pages.{Page, QuestionPage, RelationshipStatusPage, Waypoints}
+import pages.partner.RelationshipStatusPage
+import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 

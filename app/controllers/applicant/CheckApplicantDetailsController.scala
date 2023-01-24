@@ -22,9 +22,7 @@ import pages.applicant.CheckApplicantDetailsPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.{AlwaysLivedInUkSummary, ApplicantNameSummary}
 import viewmodels.checkAnswers.applicant._
-import viewmodels.checkAnswers.payments.{CurrentlyReceivingChildBenefitSummary, EldestChildDateOfBirthSummary, EldestChildNameSummary}
 import viewmodels.govuk.summarylist._
 import views.html.applicant.CheckApplicantDetailsView
 

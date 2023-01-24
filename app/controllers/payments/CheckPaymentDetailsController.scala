@@ -19,12 +19,10 @@ package controllers.payments
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import models.Income
 import pages.EmptyWaypoints
-import pages.income.{ApplicantIncomePage, ApplicantOrPartnerIncomePage}
-import pages.payments.CheckPaymentDetailsPage
+import pages.payments.{ApplicantIncomePage, ApplicantOrPartnerIncomePage, CheckPaymentDetailsPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.income._
 import viewmodels.checkAnswers.payments._
 import viewmodels.govuk.summarylist._
 import views.html.payments.CheckPaymentDetailsView

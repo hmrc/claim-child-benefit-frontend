@@ -22,7 +22,6 @@ import pages.partner.CheckPartnerDetailsPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.checkAnswers.{CohabitationDateSummary, RelationshipStatusSummary, SeparationDateSummary}
 import views.html.partner.CheckPartnerDetailsView
 import viewmodels.checkAnswers.partner._
 import viewmodels.govuk.summarylist._

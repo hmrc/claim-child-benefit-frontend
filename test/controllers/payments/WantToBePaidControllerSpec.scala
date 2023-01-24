@@ -24,8 +24,8 @@ import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalacheck.Gen
 import org.scalatestplus.mockito.MockitoSugar
-import pages.income.{ApplicantIncomePage, ApplicantOrPartnerIncomePage}
-import pages.{EmptyWaypoints, RelationshipStatusPage}
+import pages.EmptyWaypoints
+import pages.partner.RelationshipStatusPage
 import pages.payments._
 import play.api.inject.bind
 import play.api.test.FakeRequest

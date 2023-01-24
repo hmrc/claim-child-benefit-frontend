@@ -19,9 +19,9 @@ package models.tasklist
 import models.RelationshipStatus.{Cohabiting, Married}
 import models.UserAnswers
 import models.tasklist.SectionStatus.{CannotStart, Completed, InProgress, NotStarted}
-import pages.income.{ApplicantIncomePage, ApplicantOrPartnerIncomePage}
-import pages.payments.CheckPaymentDetailsPage
-import pages.{Page, RelationshipStatusPage}
+import pages.payments.{ApplicantIncomePage, ApplicantOrPartnerIncomePage, CheckPaymentDetailsPage}
+import pages.Page
+import pages.partner.RelationshipStatusPage
 import services.JourneyProgressService
 
 import javax.inject.Inject

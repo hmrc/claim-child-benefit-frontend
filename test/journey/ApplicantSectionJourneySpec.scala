@@ -23,8 +23,7 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import pages.applicant._
-import pages.payments.{CurrentlyReceivingChildBenefitPage, EldestChildDateOfBirthPage, EldestChildNamePage}
-import pages.{AlwaysLivedInUkPage, ApplicantNamePage, TaskListPage}
+import pages.TaskListPage
 import uk.gov.hmrc.domain.Nino
 
 import java.time.LocalDate

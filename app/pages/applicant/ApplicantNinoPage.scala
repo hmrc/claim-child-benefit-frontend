@@ -18,7 +18,7 @@ package pages.applicant
 
 import controllers.applicant.routes
 import models.UserAnswers
-import pages.{ApplicantNamePage, Page, QuestionPage, Waypoints}
+import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 import uk.gov.hmrc.domain.Nino
