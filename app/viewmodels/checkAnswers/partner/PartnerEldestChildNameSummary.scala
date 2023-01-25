@@ -35,14 +35,9 @@ object PartnerEldestChildNameSummary {
       childName <- answers.get(PartnerEldestChildNamePage)
     } yield {
 
-      val value =
-        List(Some(childName.firstName), childName.middleNames, Some(childName.lastName))
-          .flatten.map(HtmlFormat.escape(_).toString())
-          .mkString("<br/>")
-
       SummaryListRowViewModel(
         key = messages("partnerEldestChildName.checkYourAnswersLabel", partnerName.firstName),
-        value = ValueViewModel(HtmlContent(value)),
+        value = ValueViewModel(childName.fullName),
         actions = Seq(
           ActionItemViewModel(
             messages("site.change"),
