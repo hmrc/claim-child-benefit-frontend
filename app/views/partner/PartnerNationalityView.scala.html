@@ -21,7 +21,7 @@
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
+    govukSelect: GovukSelect,
     govukButton: GovukButton
 )
 
@@ -39,12 +39,13 @@
 
         <p class="govuk-body">@messages("partnerNationality.guidance")</p>
 
-        @govukInput(
-            InputViewModel(
+        @govukSelect(
+            SelectViewModel(
                 field = form("value"),
+                items = Nationality.selectItems,
                 label = LabelViewModel(messages("partnerNationality.heading")).visuallyHidden()
             )
-            .withWidth(Full)
+            .withCssClass("autocomplete")
             .withHint(HintViewModel(messages("partnerNationality.hint")))
         )
 

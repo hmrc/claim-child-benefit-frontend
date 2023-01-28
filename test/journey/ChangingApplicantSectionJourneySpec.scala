@@ -41,7 +41,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
   private val bankDetails = arbitrary[BankAccountDetails].sample.value
   private val previousName = ApplicantPreviousName("name")
   private val phoneNumber = "07777 777777"
-  private val nationality = "nationality"
+  private def nationality = Gen.oneOf(Nationality.allNationalities).sample.value
 
   private val setFullPaymentDetailsSingle: JourneyStep[Unit] = journeyOf(
     setUserAnswerTo(ApplicantIncomePage, Income.BetweenThresholds),

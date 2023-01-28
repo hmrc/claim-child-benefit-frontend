@@ -17,13 +17,14 @@
 package forms.applicant
 
 import forms.behaviours.StringFieldBehaviours
+import models.Nationality
+import org.scalacheck.Arbitrary.arbitrary
+import org.scalacheck.Gen
 import play.api.data.FormError
 
 class ApplicantNationalityFormProviderSpec extends StringFieldBehaviours {
 
   val requiredKey = "applicantNationality.error.required"
-  val lengthKey = "applicantNationality.error.length"
-  val maxLength = 100
 
   val form = new ApplicantNationalityFormProvider()()
 
@@ -34,14 +35,7 @@ class ApplicantNationalityFormProviderSpec extends StringFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
-    )
-
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      Gen.oneOf(Nationality.allNationalities.map(_.name))
     )
 
     behave like mandatoryField(
@@ -49,5 +43,16 @@ class ApplicantNationalityFormProviderSpec extends StringFieldBehaviours {
       fieldName,
       requiredError = FormError(fieldName, requiredKey)
     )
+
+    "must not bind any values other than valid nationalities" in {
+
+      val invalidAnswers = arbitrary[String].suchThat(x => !Nationality.allNationalities.map(_.name).contains(x))
+
+      forAll(invalidAnswers) {
+        answer =>
+          val result = form.bind(Map("value" -> answer)).apply(fieldName)
+          result.errors must contain only FormError(fieldName, requiredKey)
+      }
+    }
   }
 }

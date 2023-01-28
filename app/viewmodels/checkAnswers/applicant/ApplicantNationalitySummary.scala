@@ -33,7 +33,7 @@ object ApplicantNationalitySummary {
 
         SummaryListRowViewModel(
           key = "applicantNationality.checkYourAnswersLabel",
-          value = ValueViewModel(answer),
+          value = ValueViewModel(answer.name),
           actions = Seq(
             ActionItemViewModel("site.change", ApplicantNationalityPage.changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("applicantNationality.change.hidden"))

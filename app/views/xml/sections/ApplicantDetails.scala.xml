@@ -51,7 +51,7 @@
                         }
                     </fo:block>
 
-                    @line("pdf.nationality", model.applicant.nationality)
+                    @line("pdf.nationality", model.applicant.nationality.name)
 
                     @{model.applicant.residency match {
                         case JourneyModel.Residency.AlwaysLivedInUk =>

@@ -67,7 +67,7 @@ class JourneyModelProviderSpec
   private val previousInternationalAddress = InternationalAddress("line 1", None, "town", None, None, country)
   private val phoneNumber = "07777 777777"
   private val applicantBenefits = Set[Benefits](Benefits.NoneOfTheAbove)
-  private val applicantNationality = "British"
+  private val applicantNationality = Gen.oneOf(Nationality.allNationalities).sample.value
   private val previousName1 = ApplicantPreviousName("previous name 1")
   private val previousName2 = ApplicantPreviousName("previous name 2")
 
@@ -76,7 +76,7 @@ class JourneyModelProviderSpec
   private val eldestChildName = ChildName("first", None, "last")
 
   private val partnerName = AdultName(None, "partner first", None, "partner last")
-  private val partnerNationality = "partner nationality"
+  private val partnerNationality = Gen.oneOf(Nationality.allNationalities).sample.value
   private val partnerNino = arbitrary[Nino].sample.value
   private val partnerClaiming = PartnerClaimingChildBenefit.GettingPayments
   private val partnerEldestChildName = ChildName("partner child first", None, "partner child last")

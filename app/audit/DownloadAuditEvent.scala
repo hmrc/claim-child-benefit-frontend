@@ -43,7 +43,7 @@ object DownloadAuditEvent {
         currentAddress                       = convertAddress(model.applicant.currentAddress),
         previousAddress                      = model.applicant.previousAddress.map(convertAddress),
         telephoneNumber                      = model.applicant.telephoneNumber,
-        nationality                          = model.applicant.nationality,
+        nationality                          = model.applicant.nationality.name,
         residency                            = convertResidency(model.applicant.residency),
         memberOfHMForcesOrCivilServantAbroad = model.applicant.memberOfHMForcesOrCivilServantAbroad,
         currentlyClaimingChildBenefit        = model.applicant.currentlyReceivingChildBenefit.toString
@@ -55,7 +55,7 @@ object DownloadAuditEvent {
           partner => Partner(
             name                                 = convertAdultName(partner.name),
             dateOfBirth                          = partner.dateOfBirth,
-            nationality                          = partner.nationality,
+            nationality                          = partner.nationality.name,
             nationalInsuranceNumber              = partner.nationalInsuranceNumber,
             currentlyClaimingChildBenefit        = partner.currentlyClaimingChildBenefit.toString,
             memberOfHMForcesOrCivilServantAbroad = partner.memberOfHMForcesOrCivilServantAbroad,
