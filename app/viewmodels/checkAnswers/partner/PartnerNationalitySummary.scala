@@ -36,7 +36,7 @@ object PartnerNationalitySummary {
 
       SummaryListRowViewModel(
         key = messages("partnerNationality.checkYourAnswersLabel", partnerName.firstName),
-        value = ValueViewModel(nationality),
+        value = ValueViewModel(nationality.name),
         actions = Seq(
           ActionItemViewModel(
             messages("site.change"),

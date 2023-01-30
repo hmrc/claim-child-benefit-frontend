@@ -22,7 +22,6 @@ import models._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
-import pages._
 import pages.partner._
 import pages.payments._
 import uk.gov.hmrc.domain.Nino
@@ -35,7 +34,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
   private def eldestChildName = arbitrary[ChildName].sample.value
   private def childName = arbitrary[ChildName].sample.value
   private def adultName = arbitrary[AdultName].sample.value
-  private val nationality = "nationality"
+  private def nationality = Gen.oneOf(Nationality.allNationalities).sample.value
   private def bankDetails = arbitrary[BankAccountDetails].sample.value
 
   private val setFullPaymentDetailsSingle: JourneyStep[Unit] = journeyOf(

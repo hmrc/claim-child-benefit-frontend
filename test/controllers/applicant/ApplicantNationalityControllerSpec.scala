@@ -19,7 +19,7 @@ package controllers.applicant
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.applicant.ApplicantNationalityFormProvider
-import models.UserAnswers
+import models.{Nationality, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -39,7 +39,7 @@ class ApplicantNationalityControllerSpec extends SpecBase with MockitoSugar {
 
   private val formProvider = new ApplicantNationalityFormProvider()
   private val form = formProvider()
-  private val validAnswer = "British"
+  private val validAnswer = Nationality.allNationalities.head
 
   lazy val applicantNationalityRoute = routes.ApplicantNationalityController.onPageLoad(waypoints).url
 
@@ -95,7 +95,7 @@ class ApplicantNationalityControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, applicantNationalityRoute)
-            .withFormUrlEncodedBody(("value", validAnswer))
+            .withFormUrlEncodedBody(("value", validAnswer.name))
 
         val result = route(application, request).value
         val expectedAnswers = emptyUserAnswers.set(ApplicantNationalityPage, validAnswer).success.value
@@ -147,7 +147,7 @@ class ApplicantNationalityControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, applicantNationalityRoute)
-            .withFormUrlEncodedBody(("value", validAnswer))
+            .withFormUrlEncodedBody(("value", validAnswer.name))
 
         val result = route(application, request).value
 

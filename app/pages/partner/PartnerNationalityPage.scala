@@ -17,12 +17,12 @@
 package pages.partner
 
 import controllers.partner.routes
-import models.UserAnswers
+import models.{Nationality, UserAnswers}
 import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object PartnerNationalityPage extends QuestionPage[String] {
+case object PartnerNationalityPage extends QuestionPage[Nationality] {
 
   override def path: JsPath = JsPath \ toString
 

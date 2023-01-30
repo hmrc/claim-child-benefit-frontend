@@ -18,7 +18,7 @@ package journey
 
 import generators.ModelGenerators
 import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments}
-import models.{AdultName, ApplicantPreviousName, ChildName, Country, Index, InternationalAddress, UkAddress}
+import models.{AdultName, ApplicantPreviousName, ChildName, Country, Index, InternationalAddress, Nationality, UkAddress}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
@@ -34,7 +34,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
   private val adultName = AdultName(None, "first", None, "last")
   private val childName = ChildName("first", None, "list")
   private val phoneNumber = "07777 777777"
-  private val nationality = "nationality"
+  private def nationality = Gen.oneOf(Nationality.allNationalities).sample.value
   private val nino = arbitrary[Nino].sample.value
   private val country = Gen.oneOf(Country.internationalCountries).sample.value
   private val internationalAddress = InternationalAddress("line1", None, "town", None, None, country)

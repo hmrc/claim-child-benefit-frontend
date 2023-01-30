@@ -47,6 +47,9 @@ section.applicant = About you
 section.partner = About your partner
 section.child = Children you want to claim for
 
+country.selectCountry = Select a country
+nationality.selectNationality = Select a nationality
+
 index.title = Claim Child Benefit
 index.heading = Claim Child Benefit
 index.p1 = Use this form to claim Child Benefit if you or your partner are responsible for a child who is under 16, or under 20 if they are in
@@ -529,8 +532,7 @@ applicantNationality.heading = What is your nationality?
 applicantNationality.guidance = This is shown on your passport if you have one.
 applicantNationality.hint = For example British, Irish, French or Polish.
 applicantNationality.checkYourAnswersLabel = Your nationality
-applicantNationality.error.required = Enter your nationality
-applicantNationality.error.length = Your nationality must be 100 characters or less
+applicantNationality.error.required = Select your nationality
 applicantNationality.change.hidden = your nationality
 
 applicantNino.title = What is your National Insurance number?
@@ -679,8 +681,7 @@ partnerNationality.heading = What is {0}’s nationality?
 partnerNationality.guidance = This is shown on their passport if they have one.
 partnerNationality.hint = For example British, Irish, French or Polish.
 partnerNationality.checkYourAnswersLabel = {0}’s nationality
-partnerNationality.error.required = Enter {0}’s nationality
-partnerNationality.error.length = Nationality must be 100 characters or less
+partnerNationality.error.required = Select {0}’s nationality
 partnerNationality.change.hidden = {0}’s nationality
 
 partnerNino.title = What is your partner’s National Insurance number?
