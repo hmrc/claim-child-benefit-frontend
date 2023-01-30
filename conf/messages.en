@@ -1449,3 +1449,16 @@ currentlyReceivingChangesTaskList.heading = Answers on your payment details have
 currentlyReceivingChangesTaskList.p1 = The ”Payment details“ section will now show as ”not started“.
 currentlyReceivingChangesTaskList.p2 = Sorry, you have changed answers on if you receive Child Benefit right now, so you will have to answer questions on your payment details again.
 currentlyReceivingChangesTaskList.p3 = Check over all your answers before submitting your claim, in case you need to update any information you have provided.
+
+applicantResidence.title = Where have you lived?
+applicantResidence.heading = Where have you lived?
+applicantResidence.checkYourAnswersLabel = Where you have lived
+applicantResidence.p1 = The UK includes England, Wales, Scotland and Northern Ireland, not Isle of Man or the Channel islands.
+applicantResidence.p2 = You have lived abroad if you were outside of the UK for 8 weeks in a row. Do not consider times where you stayed in other countries for holiday or for work.
+applicantResidence.alwaysUk = Always lived in the UK
+applicantResidence.currentlyUk = Lived in the UK and abroad, currently in the UK
+applicantResidence.currentlyAbroad = Lived in the UK and abroad, currently abroad
+applicantResidence.alwaysAbroad = Never lived in the UK
+applicantResidence.error.required = Select where you have lived
+applicantResidence.change.hidden = where you have lived
+

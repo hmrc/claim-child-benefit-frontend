@@ -114,6 +114,9 @@ POST       /check-payment-details                              controllers.payme
 GET        /always-lived-in-uk                        controllers.applicant.AlwaysLivedInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /always-lived-in-uk                        controllers.applicant.AlwaysLivedInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
+GET        /where-have-you-lived                        controllers.applicant.ApplicantResidenceController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /where-have-you-lived                        controllers.applicant.ApplicantResidenceController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 GET        /usually-lived-in-uk                        controllers.applicant.ApplicantUsuallyLivesInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /usually-lived-in-uk                        controllers.applicant.ApplicantUsuallyLivesInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
