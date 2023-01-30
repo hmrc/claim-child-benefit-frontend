@@ -117,11 +117,17 @@ POST       /always-lived-in-uk                        controllers.applicant.Alwa
 GET        /where-have-you-lived                        controllers.applicant.ApplicantResidenceController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /where-have-you-lived                        controllers.applicant.ApplicantResidenceController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /worked-abroad                        controllers.applicant.ApplicantWorkedAbroadController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /worked-abroad                        controllers.applicant.ApplicantWorkedAbroadController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /have-you-worked-abroad                        controllers.applicant.ApplicantWorkedAbroadController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /have-you-worked-abroad                        controllers.applicant.ApplicantWorkedAbroadController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /received-benefits-abroad                        controllers.applicant.ApplicantReceivedBenefitsAbroadController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /received-benefits-abroad                        controllers.applicant.ApplicantReceivedBenefitsAbroadController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /country-you-worked-in                        controllers.applicant.CountryApplicantWorkedController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /country-you-worked-in                        controllers.applicant.CountryApplicantWorkedController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /have-you-received-benefits-abroad                        controllers.applicant.ApplicantReceivedBenefitsAbroadController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /have-you-received-benefits-abroad                        controllers.applicant.ApplicantReceivedBenefitsAbroadController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /country-you-received-benefits-in                        controllers.applicant.CountryApplicantReceivedBenefitsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /country-you-received-benefits-in                        controllers.applicant.CountryApplicantReceivedBenefitsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /usually-lived-in-uk                        controllers.applicant.ApplicantUsuallyLivesInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /usually-lived-in-uk                        controllers.applicant.ApplicantUsuallyLivesInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

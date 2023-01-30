@@ -1476,3 +1476,16 @@ applicantReceivedBenefitsAbroad.checkYourAnswersLabel = Have you received benefi
 applicantReceivedBenefitsAbroad.error.required = Select yes if you have received benefits outside the UK in the past 3 months
 applicantReceivedBenefitsAbroad.change.hidden = if you have received benefits outside the UK in the past 3 months
 
+countryApplicantWorked.title = What country did you work in?
+countryApplicantWorked.heading = What country did you work in?
+countryApplicantWorked.hint = For example, Poland.
+countryApplicantWorked.checkYourAnswersLabel = Country you worked in
+countryApplicantWorked.error.required = Select the country you worked in
+countryApplicantWorked.change.hidden = the country you worked in
+
+countryApplicantReceivedBenefits.title = What country did you receive benefits in?
+countryApplicantReceivedBenefits.heading = What country did you receive benefits in?
+countryApplicantReceivedBenefits.hint = For example, Poland.
+countryApplicantReceivedBenefits.checkYourAnswersLabel = Country you received benefits in
+countryApplicantReceivedBenefits.error.required = Select the country you received benefits in
+countryApplicantReceivedBenefits.change.hidden = the country you received benefits in
