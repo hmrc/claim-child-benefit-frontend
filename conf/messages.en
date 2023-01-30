@@ -1462,3 +1462,17 @@ applicantResidence.alwaysAbroad = Never lived in the UK
 applicantResidence.error.required = Select where you have lived
 applicantResidence.change.hidden = where you have lived
 
+applicantWorkedAbroad.title = Have you worked outside the UK in the past 3 months?
+applicantWorkedAbroad.heading = have you worked outside the UK in the past 3 months?
+applicantWorkedAbroad.p1 = Guidance
+applicantWorkedAbroad.checkYourAnswersLabel = Have you worked outside the UK in the past 3 months
+applicantWorkedAbroad.error.required = Select yes if you have worked outside the UK in the past 3 months
+applicantWorkedAbroad.change.hidden = if you have worked outside the UK in the past 3 months
+
+applicantReceivedBenefitsAbroad.title = Have you received benefits outside the UK in the past 3 months?
+applicantReceivedBenefitsAbroad.heading = have you received benefits outside the UK in the past 3 months?
+applicantReceivedBenefitsAbroad.p1 = Guidance
+applicantReceivedBenefitsAbroad.checkYourAnswersLabel = Have you received benefits outside the UK in the past 3 months
+applicantReceivedBenefitsAbroad.error.required = Select yes if you have received benefits outside the UK in the past 3 months
+applicantReceivedBenefitsAbroad.change.hidden = if you have received benefits outside the UK in the past 3 months
+
