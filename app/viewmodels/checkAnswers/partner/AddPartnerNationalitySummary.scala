@@ -23,6 +23,7 @@ import pages.{AddItemPage, CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import queries.AllPartnerNationalities
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import uk.gov.hmrc.hmrcfrontend.views.viewmodels.addtoalist.ListItem
 import viewmodels.govuk.summarylist._
@@ -52,7 +53,7 @@ object AddPartnerNationalitySummary {
 
         SummaryListRowViewModel(
           key = messages("addPartnerNationality.checkYourAnswersLabel", partnerName.firstName),
-          value = ValueViewModel(value),
+          value = ValueViewModel(HtmlContent(value)),
           actions = Seq(
             ActionItemViewModel(
               "site.change",

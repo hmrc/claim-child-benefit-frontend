@@ -52,7 +52,7 @@ object AddApplicantNationalitySummary {
 
         SummaryListRowViewModel(
           key = "addApplicantNationality.checkYourAnswersLabel",
-          value = ValueViewModel(value),
+          value = ValueViewModel(HtmlContent(value)),
           actions = Seq(
             ActionItemViewModel(
               "site.change",

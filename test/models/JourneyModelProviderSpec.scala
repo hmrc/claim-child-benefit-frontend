@@ -126,7 +126,7 @@ class JourneyModelProviderSpec
             currentAddress = currentUkAddress,
             previousAddress = None,
             telephoneNumber = phoneNumber,
-            nationalities = Seq(applicantNationality),
+            nationalities = NonEmptyList(applicantNationality, Nil),
             residency = AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -189,7 +189,7 @@ class JourneyModelProviderSpec
             currentAddress = currentUkAddress,
             previousAddress = None,
             telephoneNumber = phoneNumber,
-            nationalities = Seq(applicantNationality),
+            nationalities = NonEmptyList(applicantNationality, Nil),
             residency = AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -200,7 +200,7 @@ class JourneyModelProviderSpec
             partner = Some(JourneyModel.Partner(
               name = partnerName,
               dateOfBirth = now,
-              nationalities = Seq(partnerNationality),
+              nationalities = NonEmptyList(partnerNationality, Nil),
               nationalInsuranceNumber = None,
               memberOfHMForcesOrCivilServantAbroad = None,
               currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
@@ -272,7 +272,7 @@ class JourneyModelProviderSpec
             currentAddress = currentUkAddress,
             previousAddress = None,
             telephoneNumber = phoneNumber,
-            nationalities = Seq(applicantNationality),
+            nationalities = NonEmptyList(applicantNationality, Nil),
             residency = AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -283,7 +283,7 @@ class JourneyModelProviderSpec
             partner = Some(JourneyModel.Partner(
               name = partnerName,
               dateOfBirth = now,
-              nationalities = Seq(partnerNationality),
+              nationalities = NonEmptyList(partnerNationality, Nil),
               nationalInsuranceNumber = None,
               memberOfHMForcesOrCivilServantAbroad = None,
               currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
@@ -726,7 +726,7 @@ class JourneyModelProviderSpec
           currentAddress = currentUkAddress,
           previousAddress = None,
           telephoneNumber = phoneNumber,
-          nationalities = Seq(applicantNationality),
+          nationalities = NonEmptyList(applicantNationality, Nil),
           residency = AlwaysLivedInUk,
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -761,7 +761,7 @@ class JourneyModelProviderSpec
           currentAddress = currentUkAddress,
           previousAddress = None,
           telephoneNumber = phoneNumber,
-          nationalities = Seq(applicantNationality),
+          nationalities = NonEmptyList(applicantNationality, Nil),
           residency = AlwaysLivedInUk,
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -799,7 +799,7 @@ class JourneyModelProviderSpec
           currentAddress = currentInternationalAddress,
           previousAddress = None,
           telephoneNumber = phoneNumber,
-          nationalities = Seq(applicantNationality),
+          nationalities = NonEmptyList(applicantNationality, Nil),
           residency = UsuallyLivesAbroad(country, LocalDate.now),
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -836,7 +836,7 @@ class JourneyModelProviderSpec
             currentAddress = currentUkAddress,
             previousAddress = Some(previousUkAddress),
             telephoneNumber = phoneNumber,
-            nationalities = Seq(applicantNationality),
+            nationalities = NonEmptyList(applicantNationality, Nil),
             residency = AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -874,7 +874,7 @@ class JourneyModelProviderSpec
             currentAddress = currentUkAddress,
             previousAddress = Some(previousInternationalAddress),
             telephoneNumber = phoneNumber,
-            nationalities = Seq(applicantNationality),
+            nationalities = NonEmptyList(applicantNationality, Nil),
             residency = UsuallyLivesInUk(LocalDate.now),
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -905,7 +905,7 @@ class JourneyModelProviderSpec
         val expectedPartner = JourneyModel.Partner(
           name = partnerName,
           dateOfBirth = now,
-          nationalities = Seq(partnerNationality),
+          nationalities = NonEmptyList(partnerNationality, Nil),
           nationalInsuranceNumber = Some(partnerNino.value),
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
@@ -937,7 +937,7 @@ class JourneyModelProviderSpec
         val expectedPartner = JourneyModel.Partner(
           name = partnerName,
           dateOfBirth = now,
-          nationalities = Seq(partnerNationality),
+          nationalities = NonEmptyList(partnerNationality, Nil),
           nationalInsuranceNumber = None,
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyClaimingChildBenefit = partnerClaiming,
@@ -969,7 +969,7 @@ class JourneyModelProviderSpec
         val expectedPartner = JourneyModel.Partner(
           name = partnerName,
           dateOfBirth = now,
-          nationalities = Seq(partnerNationality),
+          nationalities = NonEmptyList(partnerNationality, Nil),
           nationalInsuranceNumber = None,
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments,
