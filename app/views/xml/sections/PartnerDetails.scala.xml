@@ -32,7 +32,7 @@
 
                     @line("pdf.dateOfBirth", date(model.dateOfBirth))
 
-                    @line("pdf.nationality", model.nationality.name)
+                    @line("pdf.nationality", model.nationalities.map(_.name).mkString(" - "))
 
                     @model.memberOfHMForcesOrCivilServantAbroad.map { answer =>
                         @line("pdf.hmfOrCivilServant", booleanToYesNo(answer))

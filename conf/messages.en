@@ -678,8 +678,8 @@ partnerName.change.hidden = your partner’s name
 
 partnerNationality.title = What is your partner’s nationality?
 partnerNationality.heading = What is {0}’s nationality?
-partnerNationality.guidance = This is shown on their passport if they have one.
-partnerNationality.hint = For example British, Irish, French or Polish.
+partnerNationality.p1 = This is shown on their passport or travel documents.
+partnerNationality.p2 = If they have more than one nationality, you can add them on the next screen.
 partnerNationality.checkYourAnswersLabel = {0}’s nationality
 partnerNationality.error.required = Select {0}’s nationality
 partnerNationality.change.hidden = {0}’s nationality
@@ -1524,11 +1524,26 @@ addApplicantNationality.title.singular = You have added 1 nationality
 addApplicantNationality.heading.singular = You have added 1 nationality
 addApplicantNationality.checkYourAnswersLabel = Nationalities
 addApplicantNationality.error.required = Select yes if you need to add another nationality
-addApplicantNationality.addAnother = Do you need to add another last name or family name?
-addApplicantNationality.change.hidden = the other last name or family name {0}
-addApplicantNationality.remove.hidden = the other last name or family name {0}
-addApplicantNationality.checkAnswers.change.hidden = your other last names or family names
+addApplicantNationality.addAnother = Do you need to add another nationality?
+addApplicantNationality.change.hidden = the nationality {0}
+addApplicantNationality.remove.hidden = the nationality {0}
+addApplicantNationality.checkAnswers.change.hidden = your nationalities
 
-removeApplicantPreviousFamilyName.title = Are you sure you want to remove this nationality?
-removeApplicantPreviousFamilyName.heading = Are you sure you want to remove {0} as your nationality?
-removeApplicantPreviousFamilyName.error.required = Select yes if you are sure you want to remove {0} as your nationality
+removeApplicantNationality.title = Are you sure you want to remove this nationality?
+removeApplicantNationality.heading = Are you sure you want to remove {0} as your nationality?
+removeApplicantNationality.error.required = Select yes if you are sure you want to remove {0} as your nationality
+
+addPartnerNationality.title.plural = You have added {0} nationalities for your partner
+addPartnerNationality.heading.plural = You have added {0} nationalities for {1}
+addPartnerNationality.title.singular = You have added 1 nationality for your partner
+addPartnerNationality.heading.singular = You have added 1 nationality for {0}
+addPartnerNationality.checkYourAnswersLabel = Nationalities
+addPartnerNationality.error.required = Select yes if you need to add another nationality for {0}
+addPartnerNationality.addAnother = Do you need to add another nationality for {0}?
+addPartnerNationality.change.hidden = the nationality {0}
+addPartnerNationality.remove.hidden = the nationality {0}
+addPartnerNationality.checkAnswers.change.hidden = {0}’s nationalities
+
+removePartnerNationality.title = Are you sure you want to remove this nationality?
+removePartnerNationality.heading = Are you sure you want to remove {1} as {0}’s nationality?
+removePartnerNationality.error.required = Select yes if you are sure you want to remove {1} as {0}’s nationality

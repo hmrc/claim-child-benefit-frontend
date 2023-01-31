@@ -74,7 +74,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           partner = Some(models.JourneyModel.Partner(
             name = models.AdultName(title = Some("title"), firstName = "partner first", middleNames = Some("partner middle"), lastName = "partner last"),
             dateOfBirth = now,
-            nationality = Nationality.allNationalities.head,
+            nationalities = Seq(Nationality.allNationalities.head),
             nationalInsuranceNumber = Some(partnerNino),
             memberOfHMForcesOrCivilServantAbroad = Some(false),
             currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments,
@@ -147,7 +147,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           partner = Some(Partner(
             name = AdultName(title = Some("title"), firstName = "partner first", middleNames = Some("partner middle"), lastName = "partner last"),
             dateOfBirth = now,
-            nationality = Nationality.allNationalities.head.name,
+            nationalities = Seq(Nationality.allNationalities.head.name),
             nationalInsuranceNumber = Some(partnerNino),
             memberOfHMForcesOrCivilServantAbroad = Some(false),
             currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments.toString,

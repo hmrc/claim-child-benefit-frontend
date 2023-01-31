@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package pages
+package queries
+import play.api.libs.json.{JsObject, JsPath}
 
-trait AddToListSection
+case object DeriveNumberOfPartnerNationalities extends Derivable[Seq[JsObject], Int] {
 
-object ChildSection extends AddToListSection
-object ChildPreviousNameSection extends AddToListSection
-object PreviousFamilyNamesSection extends AddToListSection
-object ApplicantNationalitiesSection extends AddToListSection
-object PartnerNationalitiesSection extends AddToListSection
+  override val derive: Seq[JsObject] => Int = _.size
+
+  override def path: JsPath = JsPath \ "partnerNationalities"
+}

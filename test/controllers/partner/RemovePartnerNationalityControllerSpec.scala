@@ -18,70 +18,55 @@ package controllers.partner
 
 import base.SpecBase
 import controllers.{routes => baseRoutes}
-import forms.partner.PartnerNationalityFormProvider
+import forms.partner.RemovePartnerNationalityFormProvider
 import models.{AdultName, Nationality}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.Mockito.{times, verify, when}
+import org.mockito.Mockito.{never, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.EmptyWaypoints
-import pages.partner.{PartnerNamePage, PartnerNationalityPage}
+import pages.partner.{PartnerNamePage, PartnerNationalityPage, RemovePartnerNationalityPage}
+import pages.{EmptyWaypoints, partner}
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserDataService
-import views.html.partner.PartnerNationalityView
+import views.html.partner.RemovePartnerNationalityView
 
 import scala.concurrent.Future
 
-class PartnerNationalityControllerSpec extends SpecBase with MockitoSugar {
+class RemovePartnerNationalityControllerSpec extends SpecBase with MockitoSugar {
 
-  private val waypoints = EmptyWaypoints
+  private val nationality = Nationality.allNationalities.head
   private val name = AdultName(None, "first", None, "last")
-  private val baseAnswers = emptyUserAnswers.set(PartnerNamePage, name).success.value
 
-  val formProvider = new PartnerNationalityFormProvider()
-  val form = formProvider(name.firstName)
-  val validAnswer = Nationality.allNationalities.head
+  val formProvider = new RemovePartnerNationalityFormProvider()
+  val form = formProvider(name.firstName, nationality.name)
+  private val waypoints = EmptyWaypoints
+  private val baseAnswers =
+    emptyUserAnswers
+      .set(PartnerNamePage, name).success.value
+      .set(PartnerNationalityPage(index), nationality).success.value
 
-  lazy val partnerNationalityRoute = routes.PartnerNationalityController.onPageLoad(waypoints, index).url
+  lazy val removePartnerNationalityRoute = routes.RemovePartnerNationalityController.onPageLoad(waypoints, index).url
 
-  "PartnerNationality Controller" - {
+  "RemovePartnerNationality Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, partnerNationalityRoute)
+        val request = FakeRequest(GET, removePartnerNationalityRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[PartnerNationalityView]
+        val view = application.injector.instanceOf[RemovePartnerNationalityView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, index, name.firstName)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index, name.firstName, nationality.name)(request, messages(application)).toString
       }
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers = baseAnswers.set(PartnerNationalityPage(index), validAnswer).success.value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, partnerNationalityRoute)
-
-        val view = application.injector.instanceOf[PartnerNationalityView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints, index, name.firstName)(request, messages(application)).toString
-      }
-    }
-
-    "must save the answer and redirect to the next page when valid data is submitted" in {
+    "must remove the previous name and redirect to the next page when the answer is yes" in {
 
       val mockUserDataService = mock[UserDataService]
 
@@ -96,15 +81,41 @@ class PartnerNationalityControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, partnerNationalityRoute)
-            .withFormUrlEncodedBody(("value", validAnswer.name))
+          FakeRequest(POST, removePartnerNationalityRoute)
+            .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-        val expectedAnswers = baseAnswers.set(PartnerNationalityPage(index), validAnswer).success.value
+        val expectedAnswers = baseAnswers.remove(partner.PartnerNationalityPage(index)).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual PartnerNationalityPage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual RemovePartnerNationalityPage(index).navigate(waypoints, baseAnswers, expectedAnswers).url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+      }
+    }
+
+    "must not remove the previous name and redirect to the next page when the answer is no" in {
+
+      val mockUserDataService = mock[UserDataService]
+
+      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = Some(baseAnswers))
+          .overrides(
+            bind[UserDataService].toInstance(mockUserDataService)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, removePartnerNationalityRoute)
+            .withFormUrlEncodedBody(("value", "false"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual partner.RemovePartnerNationalityPage(index).navigate(waypoints, baseAnswers, baseAnswers).url
+        verify(mockUserDataService, never()).set(any())
       }
     }
 
@@ -114,17 +125,17 @@ class PartnerNationalityControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, partnerNationalityRoute)
+          FakeRequest(POST, removePartnerNationalityRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[PartnerNationalityView]
+        val view = application.injector.instanceOf[RemovePartnerNationalityView]
 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, index, name.firstName)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index, name.firstName, nationality.name)(request, messages(application)).toString
       }
     }
 
@@ -133,7 +144,7 @@ class PartnerNationalityControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, partnerNationalityRoute)
+        val request = FakeRequest(GET, removePartnerNationalityRoute)
 
         val result = route(application, request).value
 
@@ -148,8 +159,8 @@ class PartnerNationalityControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, partnerNationalityRoute)
-            .withFormUrlEncodedBody(("value", validAnswer.name))
+          FakeRequest(POST, removePartnerNationalityRoute)
+            .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 

@@ -47,9 +47,9 @@ class AddApplicantNationalityController @Inject()(
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val otherNames = AddApplicantNationalitySummary.rows(request.userAnswers, waypoints, AddApplicantNationalityPage())
+      val nationalities = AddApplicantNationalitySummary.rows(request.userAnswers, waypoints, AddApplicantNationalityPage())
 
-      Ok(view(form, waypoints, otherNames))
+      Ok(view(form, waypoints, nationalities))
   }
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
@@ -57,9 +57,9 @@ class AddApplicantNationalityController @Inject()(
 
       form.bindFromRequest().fold(
         formWithErrors => {
-          val otherNames = AddApplicantNationalitySummary.rows(request.userAnswers, waypoints, AddApplicantNationalityPage())
+          val nationalities = AddApplicantNationalitySummary.rows(request.userAnswers, waypoints, AddApplicantNationalityPage())
 
-          Future.successful(BadRequest(view(formWithErrors, waypoints, otherNames)))
+          Future.successful(BadRequest(view(formWithErrors, waypoints, nationalities)))
         },
 
         value =>

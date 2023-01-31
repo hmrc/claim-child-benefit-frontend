@@ -211,8 +211,14 @@ POST       /partner-claiming-child-benefit                        controllers.pa
 GET        /partners-name                        controllers.partner.PartnerNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /partners-name                        controllers.partner.PartnerNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /partners-nationality                        controllers.partner.PartnerNationalityController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /partners-nationality                        controllers.partner.PartnerNationalityController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /partners-nationality/:index                        controllers.partner.PartnerNationalityController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /partners-nationality/:index                        controllers.partner.PartnerNationalityController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+
+GET        /add-partners-nationality                        controllers.partner.AddPartnerNationalityController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /add-partners-nationality                        controllers.partner.AddPartnerNationalityController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /remove-partners-nationality/:index                        controllers.partner.RemovePartnerNationalityController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /remove-partners-nationality/:index                        controllers.partner.RemovePartnerNationalityController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
 GET        /partners-national-insurance-number                        controllers.partner.PartnerNinoController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /partners-national-insurance-number                        controllers.partner.PartnerNinoController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

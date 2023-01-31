@@ -17,20 +17,24 @@
 package pages.partner
 
 import controllers.partner.routes
-import models.{Nationality, UserAnswers}
-import pages.{Page, QuestionPage, Waypoints}
+import models.{Index, Nationality, NormalMode, UserAnswers}
+import pages.{AddToListQuestionPage, AddToListSection, Page, PartnerNationalitiesSection, QuestionPage, Waypoint, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object PartnerNationalityPage extends QuestionPage[Nationality] {
+final case class PartnerNationalityPage(index: Index) extends QuestionPage[Nationality] with AddToListQuestionPage {
 
-  override def path: JsPath = JsPath \ toString
+  override val section: AddToListSection = PartnerNationalitiesSection
+  override val addItemWaypoint: Waypoint = AddPartnerNationalityPage().waypoint(NormalMode)
 
-  override def toString: String = "partnerNationality"
+  override def path: JsPath = JsPath \ toString \ index.position
+
+  override def toString: String = "partnerNationalities"
 
   override def route(waypoints: Waypoints): Call =
-    routes.PartnerNationalityController.onPageLoad(waypoints)
+    routes.PartnerNationalityController.onPageLoad(waypoints, index)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    PartnerIsHmfOrCivilServantPage
+    AddPartnerNationalityPage(Some(index))
+
 }

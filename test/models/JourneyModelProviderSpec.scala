@@ -37,7 +37,7 @@ import pages.applicant._
 import pages.child._
 import pages.partner._
 import pages.payments._
-import queries.{AllChildPreviousNames, AllChildSummaries, AllPreviousFamilyNames}
+import queries.{AllChildPreviousNames, AllChildSummaries, AllPartnerNationalities, AllPreviousFamilyNames}
 import services.BrmsService
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
@@ -176,7 +176,7 @@ class JourneyModelProviderSpec
           .set(PartnerNamePage, partnerName).success.value
           .set(PartnerNinoKnownPage, false).success.value
           .set(PartnerDateOfBirthPage, now).success.value
-          .set(PartnerNationalityPage, partnerNationality).success.value
+          .set(PartnerNationalityPage(Index(0)), partnerNationality).success.value
           .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming).success.value
           .set(AdditionalInformationPage, Information("info")).success.value
 
@@ -200,7 +200,7 @@ class JourneyModelProviderSpec
             partner = Some(JourneyModel.Partner(
               name = partnerName,
               dateOfBirth = now,
-              nationality = partnerNationality,
+              nationalities = Seq(partnerNationality),
               nationalInsuranceNumber = None,
               memberOfHMForcesOrCivilServantAbroad = None,
               currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
@@ -283,7 +283,7 @@ class JourneyModelProviderSpec
             partner = Some(JourneyModel.Partner(
               name = partnerName,
               dateOfBirth = now,
-              nationality = partnerNationality,
+              nationalities = Seq(partnerNationality),
               nationalInsuranceNumber = None,
               memberOfHMForcesOrCivilServantAbroad = None,
               currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
@@ -905,7 +905,7 @@ class JourneyModelProviderSpec
         val expectedPartner = JourneyModel.Partner(
           name = partnerName,
           dateOfBirth = now,
-          nationality = partnerNationality,
+          nationalities = Seq(partnerNationality),
           nationalInsuranceNumber = Some(partnerNino.value),
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
@@ -937,7 +937,7 @@ class JourneyModelProviderSpec
         val expectedPartner = JourneyModel.Partner(
           name = partnerName,
           dateOfBirth = now,
-          nationality = partnerNationality,
+          nationalities = Seq(partnerNationality),
           nationalInsuranceNumber = None,
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyClaimingChildBenefit = partnerClaiming,
@@ -969,7 +969,7 @@ class JourneyModelProviderSpec
         val expectedPartner = JourneyModel.Partner(
           name = partnerName,
           dateOfBirth = now,
-          nationality = partnerNationality,
+          nationalities = Seq(partnerNationality),
           nationalInsuranceNumber = None,
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments,
@@ -1828,7 +1828,7 @@ class JourneyModelProviderSpec
         errors.value.toChain.toList must contain only(
           PartnerNamePage,
           PartnerDateOfBirthPage,
-          PartnerNationalityPage,
+          AllPartnerNationalities,
           PartnerNinoKnownPage,
           PartnerClaimingChildBenefitPage
         )
@@ -1872,7 +1872,7 @@ class JourneyModelProviderSpec
         errors.value.toChain.toList must contain only(
           PartnerNamePage,
           PartnerDateOfBirthPage,
-          PartnerNationalityPage,
+          AllPartnerNationalities,
           PartnerNinoKnownPage,
           PartnerClaimingChildBenefitPage
         )
@@ -2822,7 +2822,7 @@ class JourneyModelProviderSpec
         .set(PartnerNamePage, partnerName).success.value
         .set(PartnerNinoKnownPage, false).success.value
         .set(PartnerDateOfBirthPage, now).success.value
-        .set(PartnerNationalityPage, partnerNationality).success.value
+        .set(PartnerNationalityPage(Index(0)), partnerNationality).success.value
         .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming).success.value
 
     def withOneChild: UserAnswers =

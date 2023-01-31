@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import controllers.applicant.routes
+@import controllers.partner.routes
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
@@ -23,11 +23,11 @@
         govukButton: GovukButton
 )
 
-@(form: Form[_], waypoints: Waypoints, index: Index, nationality: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints, index: Index, partnerFirstName: String, nationality: String)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("removeApplicantNationality.title"))) {
+@layout(pageTitle = title(form, messages("removePartnerNationality.title"))) {
 
-    @formHelper(action = routes.RemoveApplicantNationalityController.onSubmit(waypoints, index), 'autoComplete -> "off") {
+    @formHelper(action = routes.RemovePartnerNationalityController.onSubmit(waypoints, index), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -36,7 +36,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("removeApplicantNationality.heading", nationality)).asPageHeading()
+                legend = LegendViewModel(messages("removePartnerNationality.heading", nationality, partnerFirstName)).asPageHeading()
             )
         )
 

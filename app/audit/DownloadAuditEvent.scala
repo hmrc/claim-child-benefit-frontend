@@ -55,7 +55,7 @@ object DownloadAuditEvent {
           partner => Partner(
             name                                 = convertAdultName(partner.name),
             dateOfBirth                          = partner.dateOfBirth,
-            nationality                          = partner.nationality.name,
+            nationalities                        = partner.nationalities.map(_.name),
             nationalInsuranceNumber              = partner.nationalInsuranceNumber,
             currentlyClaimingChildBenefit        = partner.currentlyClaimingChildBenefit.toString,
             memberOfHMForcesOrCivilServantAbroad = partner.memberOfHMForcesOrCivilServantAbroad,
@@ -272,7 +272,7 @@ object DownloadAuditEvent {
   private[audit] final case class Partner(
                                            name: AdultName,
                                            dateOfBirth: LocalDate,
-                                           nationality: String,
+                                           nationalities: Seq[String],
                                            currentlyClaimingChildBenefit: String,
                                            nationalInsuranceNumber: Option[String],
                                            memberOfHMForcesOrCivilServantAbroad: Option[Boolean],

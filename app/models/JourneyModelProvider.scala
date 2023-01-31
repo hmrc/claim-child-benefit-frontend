@@ -26,7 +26,7 @@ import pages.applicant._
 import pages.child._
 import pages.partner._
 import pages.payments._
-import queries.{AllApplicantNationalities, AllChildPreviousNames, AllChildSummaries, AllPreviousFamilyNames, Query}
+import queries.{AllApplicantNationalities, AllChildPreviousNames, AllChildSummaries, AllPartnerNationalities, AllPreviousFamilyNames, Query}
 import services.BrmsService
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -397,7 +397,7 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
     (
       answers.getIor(PartnerNamePage),
       answers.getIor(PartnerDateOfBirthPage),
-      answers.getIor(PartnerNationalityPage),
+      answers.getIor(AllPartnerNationalities),
       getPartnerNino,
       getHmForces,
       answers.getIor(PartnerClaimingChildBenefitPage),

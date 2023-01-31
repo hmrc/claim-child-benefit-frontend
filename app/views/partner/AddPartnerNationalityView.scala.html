@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import controllers.applicant.routes
+@import controllers.partner.routes
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.addtoalist.{ListItem, Long}
 @import viewmodels.LegendSize
 
@@ -27,25 +27,25 @@
         addToList: components.addToList
 )
 
-@(form: Form[_], waypoints: Waypoints, nationalities: Seq[ListItem])(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints, nationalities: Seq[ListItem], partnerFirstName: String)(implicit request: Request[_], messages: Messages)
 
 @titleText = @{
     nationalities.size match {
-        case 1 => messages("addApplicantNationality.title.singular")
-        case i => messages("addApplicantNationality.title.plural", i)
+        case 1 => messages("addPartnerNationality.title.singular")
+        case i => messages("addPartnerNationality.title.plural", i)
     }
 }
 
 @headingText = @{
     nationalities.size match {
-        case 1 => messages("addApplicantNationality.heading.singular")
-        case i => messages("addApplicantNationality.heading.plural", i)
+        case 1 => messages("addPartnerNationality.heading.singular", partnerFirstName)
+        case i => messages("addPartnerNationality.heading.plural", i, partnerFirstName)
     }
 }
 
 @layout(pageTitle = title(form, titleText)) {
 
-    @formHelper(action = routes.AddApplicantNationalityController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.AddPartnerNationalityController.onSubmit(waypoints), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -53,12 +53,12 @@
 
         <h1 class="govuk-heading-xl">@headingText</h1>
 
-        @addToList(nationalities, Long, "addApplicantNationality.change.hidden", "addApplicantNationality.remove.hidden")
+        @addToList(nationalities, Long, "addPartnerNationality.change.hidden", "addPartnerNationality.remove.hidden")
 
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("addApplicantNationality.addAnother")).withSize(LegendSize.Medium)
+                legend = LegendViewModel(messages("addPartnerNationality.addAnother", partnerFirstName)).withSize(LegendSize.Medium)
             )
         )
 
