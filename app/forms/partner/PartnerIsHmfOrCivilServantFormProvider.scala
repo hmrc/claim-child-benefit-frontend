@@ -23,8 +23,8 @@ import javax.inject.Inject
 
 class PartnerIsHmfOrCivilServantFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(partnerFirstName: String): Form[Boolean] =
     Form(
-      "value" -> boolean("partnerIsHmfOrCivilServant.error.required")
+      "value" -> boolean("partnerIsHmfOrCivilServant.error.required", args = Seq(partnerFirstName))
     )
 }
