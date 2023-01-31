@@ -529,8 +529,8 @@ applicantName.change.hidden = your name
 
 applicantNationality.title = What is your nationality?
 applicantNationality.heading = What is your nationality?
-applicantNationality.guidance = This is shown on your passport if you have one.
-applicantNationality.hint = For example British, Irish, French or Polish.
+applicantNationality.p1 = This is shown on your passport or travel document.
+applicantNationality.p2 = if you have more than one nationality, you can add them on the next screen.
 applicantNationality.checkYourAnswersLabel = Your nationality
 applicantNationality.error.required = Select your nationality
 applicantNationality.change.hidden = your nationality
@@ -1517,3 +1517,18 @@ countryPartnerReceivedBenefits.hint = For example, Poland.
 countryPartnerReceivedBenefits.checkYourAnswersLabel = Country {0} received benefits in
 countryPartnerReceivedBenefits.error.required = Select the country {0} received benefits in
 countryPartnerReceivedBenefits.change.hidden = the country {0} received benefits in
+
+addApplicantNationality.title.plural = You have added {0} nationalities
+addApplicantNationality.heading.plural = You have added {0} nationalities
+addApplicantNationality.title.singular = You have added 1 nationality
+addApplicantNationality.heading.singular = You have added 1 nationality
+addApplicantNationality.checkYourAnswersLabel = Nationalities
+addApplicantNationality.error.required = Select yes if you need to add another nationality
+addApplicantNationality.addAnother = Do you need to add another last name or family name?
+addApplicantNationality.change.hidden = the other last name or family name {0}
+addApplicantNationality.remove.hidden = the other last name or family name {0}
+addApplicantNationality.checkAnswers.change.hidden = your other last names or family names
+
+removeApplicantPreviousFamilyName.title = Are you sure you want to remove this nationality?
+removeApplicantPreviousFamilyName.heading = Are you sure you want to remove {0} as your nationality?
+removeApplicantPreviousFamilyName.error.required = Select yes if you are sure you want to remove {0} as your nationality

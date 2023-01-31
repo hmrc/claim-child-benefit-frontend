@@ -60,7 +60,6 @@ trait UserAnswersGenerator extends TryValues {
     arbitrary[(ApplicantPhoneNumberPage.type, JsValue)] ::
     arbitrary[(ApplicantNinoKnownPage.type, JsValue)] ::
     arbitrary[(ApplicantNinoPage.type, JsValue)] ::
-    arbitrary[(ApplicantNationalityPage.type, JsValue)] ::
     arbitrary[(ApplicantNamePage.type, JsValue)] ::
     arbitrary[(ApplicantLivedAtCurrentAddressOneYearPage.type, JsValue)] ::
     arbitrary[(ApplicantHasPreviousFamilyNamePage.type, JsValue)] ::

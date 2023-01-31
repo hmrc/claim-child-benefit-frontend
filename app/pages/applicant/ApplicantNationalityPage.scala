@@ -17,20 +17,23 @@
 package pages.applicant
 
 import controllers.applicant.routes
-import models.{Nationality, UserAnswers}
-import pages.{Page, QuestionPage, Waypoints}
+import models.{Index, Nationality, NormalMode, UserAnswers}
+import pages.{AddToListQuestionPage, AddToListSection, ApplicantNationalitiesSection, Page, QuestionPage, Waypoint, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object ApplicantNationalityPage extends QuestionPage[Nationality] {
+final case class ApplicantNationalityPage(index: Index) extends QuestionPage[Nationality] with AddToListQuestionPage {
 
-  override def path: JsPath = JsPath \ toString
+  override val section: AddToListSection = ApplicantNationalitiesSection
+  override val addItemWaypoint: Waypoint = AddApplicantNationalityPage().waypoint(NormalMode)
 
-  override def toString: String = "applicantNationality"
+  override def path: JsPath = JsPath \ toString \ index.position
+
+  override def toString: String = "applicantNationalities"
 
   override def route(waypoints: Waypoints): Call =
-    routes.ApplicantNationalityController.onPageLoad(waypoints)
+    routes.ApplicantNationalityController.onPageLoad(waypoints, index)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    AlwaysLivedInUkPage
+    AddApplicantNationalityPage(Some(index))
 }

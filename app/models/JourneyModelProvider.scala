@@ -26,7 +26,7 @@ import pages.applicant._
 import pages.child._
 import pages.partner._
 import pages.payments._
-import queries.{AllChildPreviousNames, AllChildSummaries, AllPreviousFamilyNames, Query}
+import queries.{AllApplicantNationalities, AllChildPreviousNames, AllChildSummaries, AllPreviousFamilyNames, Query}
 import services.BrmsService
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -356,7 +356,7 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
       getCurrentAddress,
       getPreviousAddress,
       answers.getIor(ApplicantPhoneNumberPage),
-      answers.getIor(ApplicantNationalityPage),
+      answers.getIor(AllApplicantNationalities),
       getResidency,
       getHmForces,
       answers.getIor(CurrentlyReceivingChildBenefitPage)

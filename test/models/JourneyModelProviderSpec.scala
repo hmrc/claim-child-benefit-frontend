@@ -126,7 +126,7 @@ class JourneyModelProviderSpec
             currentAddress = currentUkAddress,
             previousAddress = None,
             telephoneNumber = phoneNumber,
-            nationality = applicantNationality,
+            nationalities = Seq(applicantNationality),
             residency = AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -189,7 +189,7 @@ class JourneyModelProviderSpec
             currentAddress = currentUkAddress,
             previousAddress = None,
             telephoneNumber = phoneNumber,
-            nationality = applicantNationality,
+            nationalities = Seq(applicantNationality),
             residency = AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -272,7 +272,7 @@ class JourneyModelProviderSpec
             currentAddress = currentUkAddress,
             previousAddress = None,
             telephoneNumber = phoneNumber,
-            nationality = applicantNationality,
+            nationalities = Seq(applicantNationality),
             residency = AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -726,7 +726,7 @@ class JourneyModelProviderSpec
           currentAddress = currentUkAddress,
           previousAddress = None,
           telephoneNumber = phoneNumber,
-          nationality = applicantNationality,
+          nationalities = Seq(applicantNationality),
           residency = AlwaysLivedInUk,
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -761,7 +761,7 @@ class JourneyModelProviderSpec
           currentAddress = currentUkAddress,
           previousAddress = None,
           telephoneNumber = phoneNumber,
-          nationality = applicantNationality,
+          nationalities = Seq(applicantNationality),
           residency = AlwaysLivedInUk,
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -799,7 +799,7 @@ class JourneyModelProviderSpec
           currentAddress = currentInternationalAddress,
           previousAddress = None,
           telephoneNumber = phoneNumber,
-          nationality = applicantNationality,
+          nationalities = Seq(applicantNationality),
           residency = UsuallyLivesAbroad(country, LocalDate.now),
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -836,7 +836,7 @@ class JourneyModelProviderSpec
             currentAddress = currentUkAddress,
             previousAddress = Some(previousUkAddress),
             telephoneNumber = phoneNumber,
-            nationality = applicantNationality,
+            nationalities = Seq(applicantNationality),
             residency = AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -874,7 +874,7 @@ class JourneyModelProviderSpec
             currentAddress = currentUkAddress,
             previousAddress = Some(previousInternationalAddress),
             telephoneNumber = phoneNumber,
-            nationality = applicantNationality,
+            nationalities = Seq(applicantNationality),
             residency = UsuallyLivesInUk(LocalDate.now),
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -2812,7 +2812,7 @@ class JourneyModelProviderSpec
         .set(ApplicantDateOfBirthPage, now).success.value
         .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
         .set(ApplicantPhoneNumberPage, phoneNumber).success.value
-        .set(ApplicantNationalityPage, applicantNationality).success.value
+        .set(ApplicantNationalityPage(Index(0)), applicantNationality).success.value
         .set(AlwaysLivedInUkPage, true).success.value
         .set(ApplicantCurrentUkAddressPage, currentUkAddress).success.value
         .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value

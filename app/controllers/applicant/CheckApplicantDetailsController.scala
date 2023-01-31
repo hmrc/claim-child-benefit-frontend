@@ -52,7 +52,7 @@ class CheckApplicantDetailsController  @Inject()(
           AddApplicantPreviousFamilyNameSummary.checkAnswersRow(request.userAnswers, waypoints, thisPage),
           ApplicantDateOfBirthSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantPhoneNumberSummary.row(request.userAnswers, waypoints, thisPage),
-          ApplicantNationalitySummary.row(request.userAnswers, waypoints, thisPage),
+          AddApplicantNationalitySummary.checkAnswersRow(request.userAnswers, waypoints, thisPage),
           AlwaysLivedInUkSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantUsuallyLivesInUkSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantUsualCountryOfResidenceSummary.row(request.userAnswers, waypoints, thisPage),

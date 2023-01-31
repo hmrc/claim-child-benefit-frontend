@@ -49,7 +49,8 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
         submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
         submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
         submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
-        submitAnswer(ApplicantNationalityPage, nationality),
+        submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
+        submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
         submitAnswer(AlwaysLivedInUkPage, true),
         submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
         submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
@@ -85,7 +86,8 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
             submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
             submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
             submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
-            submitAnswer(ApplicantNationalityPage, nationality),
+            submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
+            submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
             submitAnswer(AlwaysLivedInUkPage, true),
             submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
             pageMustBe(ApplicantIsHmfOrCivilServantPage)
@@ -102,7 +104,8 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
             submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
             submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
             submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
-            submitAnswer(ApplicantNationalityPage, nationality),
+            submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
+            submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
             submitAnswer(AlwaysLivedInUkPage, false),
             submitAnswer(ApplicantUsuallyLivesInUkPage, true),
             submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
@@ -144,6 +147,38 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
           goTo(RemoveApplicantPreviousFamilyNamePage(Index(0))),
           removeAddToListItem(ApplicantPreviousFamilyNamePage(Index(0))),
           pageMustBe(ApplicantHasPreviousFamilyNamePage)
+        )
+    }
+  }
+  
+  "users with more than one nationality" - {
+
+    "must be asked for as many as necessary" in {
+
+      startingFrom(ApplicantNationalityPage(Index(0)))
+        .run(
+          submitAnswer(ApplicantNationalityPage(Index(0)), Nationality.allNationalities.head),
+          submitAnswer(AddApplicantNationalityPage(Some(Index(0))), true),
+          submitAnswer(ApplicantNationalityPage(Index(1)), Nationality.allNationalities.head),
+          submitAnswer(AddApplicantNationalityPage(Some(Index(1))), false),
+          pageMustBe(AlwaysLivedInUkPage)
+        )
+    }
+
+    "must be able to remove them" in {
+
+      startingFrom(ApplicantNationalityPage(Index(0)))
+        .run(
+          submitAnswer(ApplicantNationalityPage(Index(0)), Nationality.allNationalities.head),
+          submitAnswer(AddApplicantNationalityPage(Some(Index(0))), true),
+          submitAnswer(ApplicantNationalityPage(Index(1)), Nationality.allNationalities.head),
+          submitAnswer(AddApplicantNationalityPage(Some(Index(1))), false),
+          goTo(RemoveApplicantNationalityPage(Index(1))),
+          removeAddToListItem(ApplicantNationalityPage(Index(1))),
+          pageMustBe(AddApplicantNationalityPage()),
+          goTo(RemoveApplicantNationalityPage(Index(0))),
+          removeAddToListItem(ApplicantNationalityPage(Index(0))),
+          pageMustBe(ApplicantNationalityPage(Index(0)))
         )
     }
   }

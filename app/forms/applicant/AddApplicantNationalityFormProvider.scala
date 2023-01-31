@@ -14,11 +14,17 @@
  * limitations under the License.
  */
 
-package pages
+package forms.applicant
 
-trait AddToListSection
+import forms.mappings.Mappings
+import play.api.data.Form
 
-object ChildSection extends AddToListSection
-object ChildPreviousNameSection extends AddToListSection
-object PreviousFamilyNamesSection extends AddToListSection
-object ApplicantNationalitiesSection extends AddToListSection
+import javax.inject.Inject
+
+class AddApplicantNationalityFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean("addApplicantNationality.error.required")
+    )
+}

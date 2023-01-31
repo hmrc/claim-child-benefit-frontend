@@ -159,8 +159,14 @@ POST       /have-previous-family-name                        controllers.applica
 GET        /lived-at-current-address-a-year                        controllers.applicant.ApplicantLivedAtCurrentAddressOneYearController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /lived-at-current-address-a-year                        controllers.applicant.ApplicantLivedAtCurrentAddressOneYearController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /your-nationality                        controllers.applicant.ApplicantNationalityController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /your-nationality                        controllers.applicant.ApplicantNationalityController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /your-nationality/:index                        controllers.applicant.ApplicantNationalityController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /your-nationality/:index                        controllers.applicant.ApplicantNationalityController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+
+GET        /add-nationality                        controllers.applicant.AddApplicantNationalityController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /add-nationality                        controllers.applicant.AddApplicantNationalityController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /remove-nationality/:index                        controllers.applicant.RemoveApplicantNationalityController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /remove-nationality/:index                        controllers.applicant.RemoveApplicantNationalityController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
 GET        /your-national-insurance-number                        controllers.applicant.ApplicantNinoController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-national-insurance-number                        controllers.applicant.ApplicantNinoController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

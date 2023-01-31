@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package pages
+package queries
+import models.Nationality
+import play.api.libs.json.JsPath
 
-trait AddToListSection
+case object AllApplicantNationalities extends Settable[List[Nationality]] with Gettable[List[Nationality]] {
 
-object ChildSection extends AddToListSection
-object ChildPreviousNameSection extends AddToListSection
-object PreviousFamilyNamesSection extends AddToListSection
-object ApplicantNationalitiesSection extends AddToListSection
+  override def path: JsPath = JsPath \ "applicantNationalities"
+}
