@@ -64,6 +64,7 @@ class CheckApplicantDetailsController  @Inject()(
           ApplicantPreviousAddressInUkSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantPreviousUkAddressSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantPreviousInternationalAddressSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantIsHmfOrCivilServantSummary.row(request.userAnswers, waypoints, thisPage),
           CurrentlyReceivingChildBenefitSummary.row(request.userAnswers, waypoints, thisPage),
           EldestChildNameSummary.row(request.userAnswers, waypoints, thisPage),
           EldestChildDateOfBirthSummary.row(request.userAnswers, waypoints, thisPage)
