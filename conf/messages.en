@@ -1463,14 +1463,14 @@ applicantResidence.error.required = Select where you have lived
 applicantResidence.change.hidden = where you have lived
 
 applicantWorkedAbroad.title = Have you worked outside the UK in the past 3 months?
-applicantWorkedAbroad.heading = have you worked outside the UK in the past 3 months?
+applicantWorkedAbroad.heading = Have you worked outside the UK in the past 3 months?
 applicantWorkedAbroad.p1 = Guidance
 applicantWorkedAbroad.checkYourAnswersLabel = Have you worked outside the UK in the past 3 months
 applicantWorkedAbroad.error.required = Select yes if you have worked outside the UK in the past 3 months
 applicantWorkedAbroad.change.hidden = if you have worked outside the UK in the past 3 months
 
 applicantReceivedBenefitsAbroad.title = Have you received benefits outside the UK in the past 3 months?
-applicantReceivedBenefitsAbroad.heading = have you received benefits outside the UK in the past 3 months?
+applicantReceivedBenefitsAbroad.heading = Have you received benefits outside the UK in the past 3 months?
 applicantReceivedBenefitsAbroad.p1 = Guidance
 applicantReceivedBenefitsAbroad.checkYourAnswersLabel = Have you received benefits outside the UK in the past 3 months
 applicantReceivedBenefitsAbroad.error.required = Select yes if you have received benefits outside the UK in the past 3 months
@@ -1489,3 +1489,31 @@ countryApplicantReceivedBenefits.hint = For example, Poland.
 countryApplicantReceivedBenefits.checkYourAnswersLabel = Country you received benefits in
 countryApplicantReceivedBenefits.error.required = Select the country you received benefits in
 countryApplicantReceivedBenefits.change.hidden = the country you received benefits in
+
+partnerWorkedAbroad.title = Has your partner worked outside the UK in the past 3 months?
+partnerWorkedAbroad.heading = Has {0} worked outside the UK in the past 3 months?
+partnerWorkedAbroad.p1 = Guidance
+partnerWorkedAbroad.checkYourAnswersLabel = Has {0} worked outside the UK in the past 3 months
+partnerWorkedAbroad.error.required = Select yes if {0} has worked outside the UK in the past 3 months
+partnerWorkedAbroad.change.hidden = if {0} has worked outside the UK in the past 3 months
+
+partnerReceivedBenefitsAbroad.title = Has your partner received benefits outside the UK in the past 3 months?
+partnerReceivedBenefitsAbroad.heading = Has {0} received benefits outside the UK in the past 3 months?
+partnerReceivedBenefitsAbroad.p1 = Guidance
+partnerReceivedBenefitsAbroad.checkYourAnswersLabel = Has {0} received benefits outside the UK in the past 3 months
+partnerReceivedBenefitsAbroad.error.required = Select yes if {0} has received benefits outside the UK in the past 3 months
+partnerReceivedBenefitsAbroad.change.hidden = if {0} has received benefits outside the UK in the past 3 months
+
+countryPartnerWorked.title = What country did your partner work in?
+countryPartnerWorked.heading = What country did {0} work in?
+countryPartnerWorked.hint = For example, Poland.
+countryPartnerWorked.checkYourAnswersLabel = Country {0} worked in
+countryPartnerWorked.error.required = Select the country {0} worked in
+countryPartnerWorked.change.hidden = the country {0} worked in
+
+countryPartnerReceivedBenefits.title = What country did your partner receive benefits in?
+countryPartnerReceivedBenefits.heading = What country did {0} receive benefits in?
+countryPartnerReceivedBenefits.hint = For example, Poland.
+countryPartnerReceivedBenefits.checkYourAnswersLabel = Country {0} received benefits in
+countryPartnerReceivedBenefits.error.required = Select the country {0} received benefits in
+countryPartnerReceivedBenefits.change.hidden = the country {0} received benefits in
