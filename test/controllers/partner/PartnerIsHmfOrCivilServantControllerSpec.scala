@@ -36,11 +36,12 @@ import scala.concurrent.Future
 
 class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSugar {
 
-  def onwardRoute = Call("GET", "/foo")
+  private val name = AdultName(None, "first", None, "last")
 
   private val formProvider = new PartnerIsHmfOrCivilServantFormProvider()
-  private val form = formProvider()
+  private val form = formProvider(name.firstName)
   private val waypoints = EmptyWaypoints
+  private val baseAnswers = emptyUserAnswers.set(PartnerNamePage, name).success.value
 
   lazy val partnerIsHmfOrCivilServantRoute = routes.PartnerIsHmfOrCivilServantController.onPageLoad(waypoints).url
 
@@ -48,7 +49,7 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, partnerIsHmfOrCivilServantRoute)
@@ -58,13 +59,13 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
         val view = application.injector.instanceOf[PartnerIsHmfOrCivilServantView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, name.firstName)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(PartnerIsHmfOrCivilServantPage, true).success.value
+      val userAnswers = baseAnswers.set(PartnerIsHmfOrCivilServantPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -76,7 +77,7 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), waypoints, name.firstName)(request, messages(application)).toString
       }
     }
 
@@ -87,7 +88,7 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
       when(mockUserDataService.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
             bind[UserDataService].toInstance(mockUserDataService)
           )
@@ -99,17 +100,17 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(PartnerIsHmfOrCivilServantPage, true).success.value
+        val expectedAnswers = baseAnswers.set(PartnerIsHmfOrCivilServantPage, true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual PartnerIsHmfOrCivilServantPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual PartnerIsHmfOrCivilServantPage.navigate(waypoints, baseAnswers, expectedAnswers).url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
       }
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request =
@@ -123,7 +124,7 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, name.firstName)(request, messages(application)).toString
       }
     }
 

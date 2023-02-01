@@ -46,29 +46,37 @@ class PartnerIsHmfOrCivilServantController @Inject()(
 
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      val form = formProvider()
+      getAnswer(PartnerNamePage) {
+        partnerName =>
 
-      val preparedForm = request.userAnswers.get(PartnerIsHmfOrCivilServantPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
+          val form = formProvider(partnerName.firstName)
+
+          val preparedForm = request.userAnswers.get(PartnerIsHmfOrCivilServantPage) match {
+            case None => form
+            case Some(value) => form.fill(value)
+          }
+
+          Ok(view(preparedForm, waypoints, partnerName.firstName))
       }
-
-      Ok(view(preparedForm, waypoints))
   }
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      val form = formProvider()
+      getAnswerAsync(PartnerNamePage) {
+        partnerName =>
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints))),
+          val form = formProvider(partnerName.firstName)
 
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerIsHmfOrCivilServantPage, value))
-            _ <- userDataService.set(updatedAnswers)
-          } yield Redirect(PartnerIsHmfOrCivilServantPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
-      )
-    }
+          form.bindFromRequest().fold(
+            formWithErrors =>
+              Future.successful(BadRequest(view(formWithErrors, waypoints, partnerName.firstName))),
+
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerIsHmfOrCivilServantPage, value))
+                _ <- userDataService.set(updatedAnswers)
+              } yield Redirect(PartnerIsHmfOrCivilServantPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+          )
+      }
+  }
 }

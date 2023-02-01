@@ -22,9 +22,9 @@ import pages.partner.CheckPartnerDetailsPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.partner.CheckPartnerDetailsView
 import viewmodels.checkAnswers.partner._
 import viewmodels.govuk.summarylist._
+import views.html.partner.CheckPartnerDetailsView
 
 import javax.inject.Inject
 
@@ -53,6 +53,7 @@ class CheckPartnerDetailsController  @Inject()(
           PartnerNinoSummary.row(request.userAnswers, waypoints, thisPage),
           PartnerDateOfBirthSummary.row(request.userAnswers, waypoints, thisPage),
           AddPartnerNationalitySummary.checkAnswersRow(request.userAnswers, waypoints, thisPage),
+          PartnerIsHmfOrCivilServantSummary.row(request.userAnswers, waypoints, thisPage),
           PartnerClaimingChildBenefitSummary.row(request.userAnswers, waypoints, thisPage),
           PartnerEldestChildNameSummary.row(request.userAnswers, waypoints, thisPage),
           PartnerEldestChildDateOfBirthSummary.row(request.userAnswers, waypoints, thisPage)
