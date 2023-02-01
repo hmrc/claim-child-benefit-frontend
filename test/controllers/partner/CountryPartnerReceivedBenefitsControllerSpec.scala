@@ -43,7 +43,7 @@ class CountryPartnerReceivedBenefitsControllerSpec extends SpecBase with Mockito
   val form = formProvider(name.firstName)
   val validAnswer = Country.internationalCountries.head
 
-  lazy val countryPartnerReceivedBenefitsRoute = routes.CountryPartnerReceivedBenefitsController.onPageLoad(waypoints).url
+  lazy val countryPartnerReceivedBenefitsRoute = routes.CountryPartnerReceivedBenefitsController.onPageLoad(waypoints, index).url
 
   "CountryPartnerReceivedBenefits Controller" - {
 
@@ -59,13 +59,13 @@ class CountryPartnerReceivedBenefitsControllerSpec extends SpecBase with Mockito
         val view = application.injector.instanceOf[CountryPartnerReceivedBenefitsView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, name.firstName)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index, name.firstName)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = baseAnswers.set(CountryPartnerReceivedBenefitsPage, validAnswer).success.value
+      val userAnswers = baseAnswers.set(CountryPartnerReceivedBenefitsPage(index), validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -77,7 +77,7 @@ class CountryPartnerReceivedBenefitsControllerSpec extends SpecBase with Mockito
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints, name.firstName)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints, index, name.firstName)(request, messages(application)).toString
       }
     }
 
@@ -100,10 +100,10 @@ class CountryPartnerReceivedBenefitsControllerSpec extends SpecBase with Mockito
             .withFormUrlEncodedBody(("value", validAnswer.code))
 
         val result = route(application, request).value
-        val expectedAnswers = baseAnswers.set(CountryPartnerReceivedBenefitsPage, validAnswer).success.value
+        val expectedAnswers = baseAnswers.set(CountryPartnerReceivedBenefitsPage(index), validAnswer).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual CountryPartnerReceivedBenefitsPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual CountryPartnerReceivedBenefitsPage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -124,7 +124,7 @@ class CountryPartnerReceivedBenefitsControllerSpec extends SpecBase with Mockito
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, name.firstName)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index, name.firstName)(request, messages(application)).toString
       }
     }
 
