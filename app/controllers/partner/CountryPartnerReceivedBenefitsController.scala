@@ -19,6 +19,7 @@ package controllers.partner
 import controllers.AnswerExtractor
 import controllers.actions._
 import forms.partner.CountryPartnerReceivedBenefitsFormProvider
+import models.Index
 import pages.Waypoints
 import pages.partner.{CountryPartnerReceivedBenefitsPage, PartnerNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -44,23 +45,23 @@ class CountryPartnerReceivedBenefitsController @Inject()(
     with I18nSupport
     with AnswerExtractor {
 
-  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       getAnswer(PartnerNamePage) {
         partnerName =>
 
           val form = formProvider(partnerName.firstName)
 
-          val preparedForm = request.userAnswers.get(CountryPartnerReceivedBenefitsPage) match {
+          val preparedForm = request.userAnswers.get(CountryPartnerReceivedBenefitsPage(index)) match {
             case None => form
             case Some(value) => form.fill(value)
           }
 
-          Ok(view(preparedForm, waypoints, partnerName.firstName))
+          Ok(view(preparedForm, waypoints, index, partnerName.firstName))
       }
   }
 
-  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       getAnswerAsync(PartnerNamePage) {
         partnerName =>
@@ -69,13 +70,13 @@ class CountryPartnerReceivedBenefitsController @Inject()(
 
           form.bindFromRequest().fold(
           formWithErrors =>
-            Future.successful(BadRequest(view(formWithErrors, waypoints, partnerName.firstName))),
+            Future.successful(BadRequest(view(formWithErrors, waypoints, index, partnerName.firstName))),
 
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(CountryPartnerReceivedBenefitsPage, value))
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(CountryPartnerReceivedBenefitsPage(index), value))
               _ <- userDataService.set(updatedAnswers)
-            } yield Redirect(CountryPartnerReceivedBenefitsPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+            } yield Redirect(CountryPartnerReceivedBenefitsPage(index).navigate(waypoints, request.userAnswers, updatedAnswers).route)
         )
       }
   }

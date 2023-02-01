@@ -17,17 +17,17 @@
 package pages.partner
 
 import controllers.partner.routes
-import models.{Country, UserAnswers}
+import models.{Country, Index, UserAnswers}
 import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object CountryPartnerReceivedBenefitsPage extends QuestionPage[Country] {
+final case class CountryPartnerReceivedBenefitsPage(index: Index) extends QuestionPage[Country] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ toString \ index.position
 
-  override def toString: String = "countryPartnerReceivedBenefits"
+  override def toString: String = "countriesPartnerReceivedBenefits"
 
   override def route(waypoints: Waypoints): Call =
-    routes.CountryPartnerReceivedBenefitsController.onPageLoad(waypoints)
+    routes.CountryPartnerReceivedBenefitsController.onPageLoad(waypoints, index)
 }

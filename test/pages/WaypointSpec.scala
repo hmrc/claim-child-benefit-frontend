@@ -20,9 +20,9 @@ import models.{CheckMode, Index, NormalMode}
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import pages.applicant.{AddApplicantNationalityPage, AddApplicantPreviousFamilyNamePage, CheckApplicantDetailsPage}
+import pages.applicant.{AddApplicantNationalityPage, AddApplicantPreviousFamilyNamePage, AddCountryApplicantReceivedBenefitsPage, AddCountryApplicantWorkedPage, CheckApplicantDetailsPage}
 import pages.child.{AddChildPage, AddChildPreviousNamePage, CheckChildDetailsPage}
-import pages.partner.{AddPartnerNationalityPage, CheckPartnerDetailsPage}
+import pages.partner.{AddCountryPartnerReceivedBenefitsPage, AddCountryPartnerWorkedPage, AddPartnerNationalityPage, CheckPartnerDetailsPage}
 import pages.payments.CheckPaymentDetailsPage
 
 class WaypointSpec extends AnyFreeSpec with Matchers with OptionValues {
@@ -49,6 +49,26 @@ class WaypointSpec extends AnyFreeSpec with Matchers with OptionValues {
       Waypoint.fromString("change-nationality").value mustEqual AddApplicantNationalityPage().waypoint(CheckMode)
     }
 
+    "must return Add Country Applicant Worked when given its Normal mode waypoint" in {
+
+      Waypoint.fromString("add-country-you-worked").value mustEqual AddCountryApplicantWorkedPage().waypoint(NormalMode)
+    }
+
+    "must return Add Country Applicant Worked when given its check mode waypoint" in {
+
+      Waypoint.fromString("change-country-you-worked").value mustEqual AddCountryApplicantWorkedPage().waypoint(CheckMode)
+    }
+
+    "must return Add Country Applicant Received Benefits when given its Normal mode waypoint" in {
+
+      Waypoint.fromString("add-country-you-received-benefits").value mustEqual AddCountryApplicantReceivedBenefitsPage().waypoint(NormalMode)
+    }
+
+    "must return Add Country Applicant Received Benefits when given its check mode waypoint" in {
+
+      Waypoint.fromString("change-country-you-received-benefits").value mustEqual AddCountryApplicantReceivedBenefitsPage().waypoint(CheckMode)
+    }
+
     "must return Add Partner Nationality when given its Normal mode waypoint" in {
 
       Waypoint.fromString("add-partners-nationality").value mustEqual AddPartnerNationalityPage().waypoint(NormalMode)
@@ -57,6 +77,26 @@ class WaypointSpec extends AnyFreeSpec with Matchers with OptionValues {
     "must return Add Partner Nationality when given its check mode waypoint" in {
 
       Waypoint.fromString("change-partners-nationality").value mustEqual AddPartnerNationalityPage().waypoint(CheckMode)
+    }
+    
+    "must return Add Country Partner Worked when given its Normal mode waypoint" in {
+
+      Waypoint.fromString("add-country-your-partner-worked").value mustEqual AddCountryPartnerWorkedPage().waypoint(NormalMode)
+    }
+
+    "must return Add Country Partner Worked when given its check mode waypoint" in {
+
+      Waypoint.fromString("change-country-your-partner-worked").value mustEqual AddCountryPartnerWorkedPage().waypoint(CheckMode)
+    }
+
+    "must return Add Country Partner Received Benefits when given its Normal mode waypoint" in {
+
+      Waypoint.fromString("add-country-your-partner-received-benefits").value mustEqual AddCountryPartnerReceivedBenefitsPage().waypoint(NormalMode)
+    }
+
+    "must return Add Country Partner Received Benefits when given its check mode waypoint" in {
+
+      Waypoint.fromString("change-country-your-partner-received-benefits").value mustEqual AddCountryPartnerReceivedBenefitsPage().waypoint(CheckMode)
     }
 
     "must return Add Child when given its normal mode waypoints" in {

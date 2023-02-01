@@ -17,18 +17,18 @@
 package pages.applicant
 
 import controllers.applicant.routes
-import models.{Country, UserAnswers}
+import models.{Country, Index, UserAnswers}
 import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object CountryApplicantWorkedPage extends QuestionPage[Country] {
+final case class CountryApplicantWorkedPage(index: Index) extends QuestionPage[Country] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ toString \ index.position
 
-  override def toString: String = "countryApplicantWorked"
+  override def toString: String = "countriesApplicantWorked"
 
   override def route(waypoints: Waypoints): Call =
-    routes.CountryApplicantWorkedController.onPageLoad(waypoints)
+    routes.CountryApplicantWorkedController.onPageLoad(waypoints, index)
 
 }
