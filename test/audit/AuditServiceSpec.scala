@@ -63,7 +63,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           currentAddress = models.UkAddress("current line 1", Some("current line 2"), "current town", Some("current county"), "current postcode"),
           previousAddress = Some(models.UkAddress("previous line 1", Some("previous line 2"), "previous town", Some("previous county"), "previous postcode")),
           telephoneNumber = "07777 777777",
-          nationality = Nationality.allNationalities.head,
+          nationalities = NonEmptyList(Nationality.allNationalities.head, Nil),
           residency = JourneyModel.Residency.UsuallyLivesAbroad(Country.internationalCountries.head, LocalDate.now),
           memberOfHMForcesOrCivilServantAbroad = Some(false),
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -74,7 +74,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           partner = Some(models.JourneyModel.Partner(
             name = models.AdultName(title = Some("title"), firstName = "partner first", middleNames = Some("partner middle"), lastName = "partner last"),
             dateOfBirth = now,
-            nationality = Nationality.allNationalities.head,
+            nationalities = NonEmptyList(Nationality.allNationalities.head, Nil),
             nationalInsuranceNumber = Some(partnerNino),
             memberOfHMForcesOrCivilServantAbroad = Some(false),
             currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments,
@@ -136,7 +136,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           currentAddress = UkAddress("current line 1", Some("current line 2"), "current town", Some("current county"), "current postcode"),
           previousAddress = Some(UkAddress("previous line 1", Some("previous line 2"), "previous town", Some("previous county"), "previous postcode")),
           telephoneNumber = "07777 777777",
-          nationality = Nationality.allNationalities.head.name,
+          nationalities = Seq(Nationality.allNationalities.head.name),
           residency = Residency.UsuallyLivesAbroad(Country.internationalCountries.head.name, LocalDate.now),
           memberOfHMForcesOrCivilServantAbroad = Some(false),
           currentlyClaimingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming.toString
@@ -147,7 +147,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           partner = Some(Partner(
             name = AdultName(title = Some("title"), firstName = "partner first", middleNames = Some("partner middle"), lastName = "partner last"),
             dateOfBirth = now,
-            nationality = Nationality.allNationalities.head.name,
+            nationalities = Seq(Nationality.allNationalities.head.name),
             nationalInsuranceNumber = Some(partnerNino),
             memberOfHMForcesOrCivilServantAbroad = Some(false),
             currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments.toString,

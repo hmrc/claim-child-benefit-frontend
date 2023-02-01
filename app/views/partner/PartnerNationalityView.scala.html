@@ -25,11 +25,11 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], waypoints: Waypoints, partnerFirstName: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints, index: Index, partnerFirstName: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("partnerNationality.title"))) {
 
-    @formHelper(action = routes.PartnerNationalityController.onSubmit(waypoints)) {
+    @formHelper(action = routes.PartnerNationalityController.onSubmit(waypoints, index)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -37,7 +37,9 @@
 
         <h1 class="govuk-heading-xl">@messages("partnerNationality.heading", partnerFirstName)</h1>
 
-        <p class="govuk-body">@messages("partnerNationality.guidance")</p>
+        <p class="govuk-body">@messages("partnerNationality.p1")</p>
+
+        <p class="govuk-body">@messages("partnerNationality.p2")</p>
 
         @govukSelect(
             SelectViewModel(
@@ -46,7 +48,6 @@
                 label = LabelViewModel(messages("partnerNationality.heading")).visuallyHidden()
             )
             .withCssClass("autocomplete")
-            .withHint(HintViewModel(messages("partnerNationality.hint")))
         )
 
         @govukButton(

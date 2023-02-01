@@ -17,9 +17,9 @@
 package pages
 
 import models.{CheckMode, Mode, NormalMode}
-import pages.applicant.{AddApplicantPreviousFamilyNamePage, CheckApplicantDetailsPage}
+import pages.applicant.{AddApplicantNationalityPage, AddApplicantPreviousFamilyNamePage, CheckApplicantDetailsPage}
 import pages.child.{AddChildPage, AddChildPreviousNamePage, CheckChildDetailsPage}
-import pages.partner.CheckPartnerDetailsPage
+import pages.partner.{AddPartnerNationalityPage, CheckPartnerDetailsPage}
 import pages.payments.CheckPaymentDetailsPage
 
 case class Waypoint (
@@ -34,6 +34,10 @@ object Waypoint {
     Map(
       AddApplicantPreviousFamilyNamePage().normalModeUrlFragment -> AddApplicantPreviousFamilyNamePage().waypoint(NormalMode),
       AddApplicantPreviousFamilyNamePage().checkModeUrlFragment  -> AddApplicantPreviousFamilyNamePage().waypoint(CheckMode),
+      AddApplicantNationalityPage().normalModeUrlFragment        -> AddApplicantNationalityPage().waypoint(NormalMode),
+      AddApplicantNationalityPage().checkModeUrlFragment         -> AddApplicantNationalityPage().waypoint(CheckMode),
+      AddPartnerNationalityPage().normalModeUrlFragment          -> AddPartnerNationalityPage().waypoint(NormalMode),
+      AddPartnerNationalityPage().checkModeUrlFragment           -> AddPartnerNationalityPage().waypoint(CheckMode),
       AddChildPage().normalModeUrlFragment                       -> AddChildPage().waypoint(NormalMode),
       AddChildPage().checkModeUrlFragment                        -> AddChildPage().waypoint(CheckMode),
       CheckApplicantDetailsPage.urlFragment                      -> CheckApplicantDetailsPage.waypoint,

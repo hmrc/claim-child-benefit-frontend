@@ -51,7 +51,6 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
   private val currentAddress = UkAddress("line 1", None, "town", None, "AA11 1AA")
   private val phoneNumber = "07777 777777"
   private val applicantBenefits = Set[Benefits](Benefits.NoneOfTheAbove)
-  private val applicantNationality = "British"
 
   private val childName = ChildName("first", None, "last")
   private val biologicalSex = ChildBiologicalSex.Female
@@ -67,7 +66,7 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
       .set(ApplicantCurrentUkAddressPage, currentAddress).success.value
       .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
       .set(ApplicantPhoneNumberPage, phoneNumber).success.value
-      .set(ApplicantNationalityPage, Nationality.allNationalities.head).success.value
+      .set(ApplicantNationalityPage(Index(0)), Nationality.allNationalities.head).success.value
       .set(ApplicantIsHmfOrCivilServantPage, false).success.value
       .set(ChildNamePage(Index(0)), childName).success.value
       .set(ChildHasPreviousNamePage(Index(0)), false).success.value

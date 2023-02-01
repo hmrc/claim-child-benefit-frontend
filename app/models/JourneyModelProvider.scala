@@ -26,7 +26,7 @@ import pages.applicant._
 import pages.child._
 import pages.partner._
 import pages.payments._
-import queries.{AllChildPreviousNames, AllChildSummaries, AllPreviousFamilyNames, Query}
+import queries.{AllApplicantNationalities, AllChildPreviousNames, AllChildSummaries, AllPartnerNationalities, AllPreviousFamilyNames, Query}
 import services.BrmsService
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -348,6 +348,11 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
       }
     }
 
+    def getNationalities: IorNec[Query, NonEmptyList[Nationality]] = {
+      val nationalities = answers.get(AllApplicantNationalities).getOrElse(Nil)
+      NonEmptyList.fromList(nationalities).toRightIor(NonEmptyChain.one(AllApplicantNationalities))
+    }
+
     (
       answers.getIor(ApplicantNamePage),
       getPreviousFamilyNames,
@@ -356,7 +361,7 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
       getCurrentAddress,
       getPreviousAddress,
       answers.getIor(ApplicantPhoneNumberPage),
-      answers.getIor(ApplicantNationalityPage),
+      getNationalities,
       getResidency,
       getHmForces,
       answers.getIor(CurrentlyReceivingChildBenefitPage)
@@ -394,10 +399,15 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
         .map(x => Ior.Right(Some(x)))
         .getOrElse(Ior.Right(None))
 
+    def getNationalities: IorNec[Query, NonEmptyList[Nationality]] = {
+      val nationalities = answers.get(AllPartnerNationalities).getOrElse(Nil)
+      NonEmptyList.fromList(nationalities).toRightIor(NonEmptyChain.one(AllPartnerNationalities))
+    }
+
     (
       answers.getIor(PartnerNamePage),
       answers.getIor(PartnerDateOfBirthPage),
-      answers.getIor(PartnerNationalityPage),
+      getNationalities,
       getPartnerNino,
       getHmForces,
       answers.getIor(PartnerClaimingChildBenefitPage),

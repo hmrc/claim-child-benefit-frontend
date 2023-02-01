@@ -74,7 +74,7 @@ object JourneyModel {
                               currentAddress: Address,
                               previousAddress: Option[Address],
                               telephoneNumber: String,
-                              nationality: Nationality,
+                              nationalities: NonEmptyList[Nationality],
                               residency: Residency,
                               memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
                               currentlyReceivingChildBenefit: CurrentlyReceivingChildBenefit
@@ -83,7 +83,7 @@ object JourneyModel {
   final case class Partner(
                             name: AdultName,
                             dateOfBirth: LocalDate,
-                            nationality: Nationality,
+                            nationalities: NonEmptyList[Nationality],
                             nationalInsuranceNumber: Option[String],
                             memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
                             currentlyClaimingChildBenefit: PartnerClaimingChildBenefit,

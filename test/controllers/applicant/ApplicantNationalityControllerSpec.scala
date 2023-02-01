@@ -23,8 +23,8 @@ import models.{Nationality, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.EmptyWaypoints
 import pages.applicant.ApplicantNationalityPage
+import pages.{EmptyWaypoints, applicant}
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -37,11 +37,11 @@ class ApplicantNationalityControllerSpec extends SpecBase with MockitoSugar {
 
   private val waypoints = EmptyWaypoints
 
-  private val formProvider = new ApplicantNationalityFormProvider()
-  private val form = formProvider()
-  private val validAnswer = Nationality.allNationalities.head
+  val formProvider = new ApplicantNationalityFormProvider()
+  val form = formProvider()
+  val validAnswer = Nationality.allNationalities.head
 
-  lazy val applicantNationalityRoute = routes.ApplicantNationalityController.onPageLoad(waypoints).url
+  lazy val applicantNationalityRoute = routes.ApplicantNationalityController.onPageLoad(waypoints, index).url
 
   "ApplicantNationality Controller" - {
 
@@ -57,13 +57,13 @@ class ApplicantNationalityControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[ApplicantNationalityView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, index)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ApplicantNationalityPage, validAnswer).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(ApplicantNationalityPage(index), validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -75,7 +75,7 @@ class ApplicantNationalityControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints, index)(request, messages(application)).toString
       }
     }
 
@@ -98,10 +98,10 @@ class ApplicantNationalityControllerSpec extends SpecBase with MockitoSugar {
             .withFormUrlEncodedBody(("value", validAnswer.name))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(ApplicantNationalityPage, validAnswer).success.value
+        val expectedAnswers = emptyUserAnswers.set(applicant.ApplicantNationalityPage(index), validAnswer).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ApplicantNationalityPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual applicant.ApplicantNationalityPage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -122,7 +122,7 @@ class ApplicantNationalityControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, index)(request, messages(application)).toString
       }
     }
 

@@ -18,7 +18,7 @@ package journey
 
 import generators.ModelGenerators
 import models.RelationshipStatus.{Cohabiting, Divorced, Married, Separated, Single, Widowed}
-import models.{AdultName, ChildName, Nationality, PartnerClaimingChildBenefit}
+import models.{AdultName, ChildName, Index, Nationality, PartnerClaimingChildBenefit}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
@@ -45,7 +45,8 @@ class PartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
           submitAnswer(PartnerNamePage, partnerName),
           submitAnswer(PartnerNinoKnownPage, false),
           submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-          submitAnswer(PartnerNationalityPage, nationality),
+          submitAnswer(PartnerNationalityPage(Index(0)), nationality),
+          submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
           submitAnswer(PartnerIsHmfOrCivilServantPage, false),
           submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
           pageMustBe(CheckPartnerDetailsPage)
@@ -64,7 +65,8 @@ class PartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
           submitAnswer(PartnerNamePage, partnerName),
           submitAnswer(PartnerNinoKnownPage, false),
           submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-          submitAnswer(PartnerNationalityPage, nationality),
+          submitAnswer(PartnerNationalityPage(Index(0)), nationality),
+          submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
           submitAnswer(PartnerIsHmfOrCivilServantPage, false),
           submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
           pageMustBe(CheckPartnerDetailsPage)
@@ -106,7 +108,8 @@ class PartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
         submitAnswer(PartnerNamePage, partnerName),
         submitAnswer(PartnerNinoKnownPage, false),
         submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-        submitAnswer(PartnerNationalityPage, nationality),
+        submitAnswer(PartnerNationalityPage(Index(0)), nationality),
+        submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
         submitAnswer(PartnerIsHmfOrCivilServantPage, false),
         submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
         pageMustBe(CheckPartnerDetailsPage),
@@ -123,6 +126,37 @@ class PartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
         submitAnswer(PartnerNinoPage, nino),
         pageMustBe(PartnerDateOfBirthPage)
       )
+  }
+
+  "users whose partner has multiple nationalities" - {
+
+    "must be asked for as many as necessary" in {
+
+      startingFrom(PartnerNationalityPage(Index(0)))
+        .run(
+          submitAnswer(PartnerNationalityPage(Index(0)), Nationality.allNationalities.head),
+          submitAnswer(AddPartnerNationalityPage(Some(Index(0))), true),
+          submitAnswer(PartnerNationalityPage(Index(1)), Nationality.allNationalities.head),
+          submitAnswer(AddPartnerNationalityPage(Some(Index(1))), false),
+          pageMustBe(PartnerIsHmfOrCivilServantPage)
+        )
+    }
+
+    "must be able to remove them" in {
+
+      startingFrom(PartnerNationalityPage(Index(0)))
+        .run(
+          submitAnswer(PartnerNationalityPage(Index(0)), Nationality.allNationalities.head),
+          submitAnswer(AddPartnerNationalityPage(Some(Index(0))), true),
+          submitAnswer(PartnerNationalityPage(Index(1)), Nationality.allNationalities.head),
+          goTo(RemovePartnerNationalityPage(Index(1))),
+          removeAddToListItem(PartnerNationalityPage(Index(1))),
+          pageMustBe(AddPartnerNationalityPage()),
+          goTo(RemovePartnerNationalityPage(Index(0))),
+          removeAddToListItem(PartnerNationalityPage(Index(0))),
+          pageMustBe(PartnerNationalityPage(Index(0)))
+        )
+    }
   }
 
   "users whose partner is entitled to Child Benefit or waiting to hear must be asked for their partner's eldest child's details then go to the task list" in {

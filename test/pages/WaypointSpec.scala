@@ -20,9 +20,9 @@ import models.{CheckMode, Index, NormalMode}
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import pages.applicant.{AddApplicantPreviousFamilyNamePage, CheckApplicantDetailsPage}
+import pages.applicant.{AddApplicantNationalityPage, AddApplicantPreviousFamilyNamePage, CheckApplicantDetailsPage}
 import pages.child.{AddChildPage, AddChildPreviousNamePage, CheckChildDetailsPage}
-import pages.partner.CheckPartnerDetailsPage
+import pages.partner.{AddPartnerNationalityPage, CheckPartnerDetailsPage}
 import pages.payments.CheckPaymentDetailsPage
 
 class WaypointSpec extends AnyFreeSpec with Matchers with OptionValues {
@@ -37,6 +37,26 @@ class WaypointSpec extends AnyFreeSpec with Matchers with OptionValues {
     "must return Add Applicant Previous Family Name when given its check mode waypoint" in {
 
       Waypoint.fromString("change-other-name").value mustEqual AddApplicantPreviousFamilyNamePage().waypoint(CheckMode)
+    }
+
+    "must return Add Applicant Nationality when given its Normal mode waypoint" in {
+
+      Waypoint.fromString("add-nationality").value mustEqual AddApplicantNationalityPage().waypoint(NormalMode)
+    }
+
+    "must return Add Applicant Nationality when given its check mode waypoint" in {
+
+      Waypoint.fromString("change-nationality").value mustEqual AddApplicantNationalityPage().waypoint(CheckMode)
+    }
+
+    "must return Add Partner Nationality when given its Normal mode waypoint" in {
+
+      Waypoint.fromString("add-partners-nationality").value mustEqual AddPartnerNationalityPage().waypoint(NormalMode)
+    }
+
+    "must return Add Partner Nationality when given its check mode waypoint" in {
+
+      Waypoint.fromString("change-partners-nationality").value mustEqual AddPartnerNationalityPage().waypoint(CheckMode)
     }
 
     "must return Add Child when given its normal mode waypoints" in {

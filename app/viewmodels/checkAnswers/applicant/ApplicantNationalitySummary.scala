@@ -16,7 +16,7 @@
 
 package viewmodels.checkAnswers.applicant
 
-import models.UserAnswers
+import models.{Index, UserAnswers}
 import pages.applicant.ApplicantNationalityPage
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
@@ -26,16 +26,16 @@ import viewmodels.implicits._
 
 object ApplicantNationalitySummary {
 
-  def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
+  def row(answers: UserAnswers, index: Index, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ApplicantNationalityPage).map {
+    answers.get(ApplicantNationalityPage(index)).map {
       answer =>
 
         SummaryListRowViewModel(
           key = "applicantNationality.checkYourAnswersLabel",
           value = ValueViewModel(answer.name),
           actions = Seq(
-            ActionItemViewModel("site.change", ApplicantNationalityPage.changeLink(waypoints, sourcePage).url)
+            ActionItemViewModel("site.change", ApplicantNationalityPage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("applicantNationality.change.hidden"))
           )
         )

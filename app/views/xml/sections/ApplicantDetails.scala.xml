@@ -51,7 +51,7 @@
                         }
                     </fo:block>
 
-                    @line("pdf.nationality", model.applicant.nationality.name)
+                    @line("pdf.nationality", model.applicant.nationalities.toList.map(_.name).mkString(" - "))
 
                     @{model.applicant.residency match {
                         case JourneyModel.Residency.AlwaysLivedInUk =>

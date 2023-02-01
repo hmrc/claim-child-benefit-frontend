@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.applicant
 
 import models.{Index, UserAnswers}
 import pages.applicant.ApplicantPreviousFamilyNamePage
-import pages.{CheckAnswersPage, Waypoints, applicant}
+import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -35,7 +35,7 @@ object ApplicantPreviousFamilyNameSummary {
           key = "applicantPreviousFamilyName.checkYourAnswersLabel",
           value = ValueViewModel(answer.lastName),
           actions = Seq(
-            ActionItemViewModel("site.change", applicant.ApplicantPreviousFamilyNamePage(index).changeLink(waypoints, sourcePage).url)
+            ActionItemViewModel("site.change", ApplicantPreviousFamilyNamePage(index).changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("applicantPreviousFamilyName.change.hidden"))
           )
         )

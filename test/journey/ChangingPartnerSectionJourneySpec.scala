@@ -99,7 +99,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
     answersMustNotContain(PartnerNinoKnownPage),
     answersMustNotContain(PartnerNinoPage),
     answersMustNotContain(PartnerDateOfBirthPage),
-    answersMustNotContain(PartnerNationalityPage),
+    answersMustNotContain(PartnerNationalityPage(Index(0))),
     answersMustNotContain(PartnerIsHmfOrCivilServantPage),
     answersMustNotContain(PartnerClaimingChildBenefitPage),
     answersMustNotContain(PartnerEldestChildNamePage),
@@ -114,7 +114,8 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
       submitAnswer(PartnerNinoKnownPage, true),
       submitAnswer(PartnerNinoPage, nino),
       submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-      submitAnswer(PartnerNationalityPage, nationality),
+      submitAnswer(PartnerNationalityPage(Index(0)), nationality),
+      submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
       submitAnswer(PartnerIsHmfOrCivilServantPage, false),
       submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
       submitAnswer(PartnerEldestChildNamePage, childName),
@@ -136,7 +137,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
           answersMustContain(PartnerNinoKnownPage),
           answersMustContain(PartnerNinoPage),
           answersMustContain(PartnerDateOfBirthPage),
-          answersMustContain(PartnerNationalityPage),
+          answersMustContain(PartnerNationalityPage(Index(0))),
           answersMustContain(PartnerIsHmfOrCivilServantPage),
           answersMustContain(PartnerClaimingChildBenefitPage),
           answersMustContain(PartnerEldestChildNamePage),
@@ -237,7 +238,8 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
       submitAnswer(PartnerNinoKnownPage, true),
       submitAnswer(PartnerNinoPage, nino),
       submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-      submitAnswer(PartnerNationalityPage, nationality),
+      submitAnswer(PartnerNationalityPage(Index(0)), nationality),
+      submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
       submitAnswer(PartnerIsHmfOrCivilServantPage, false),
       submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
       submitAnswer(PartnerEldestChildNamePage, childName),
@@ -259,7 +261,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
           answersMustContain(PartnerNinoKnownPage),
           answersMustContain(PartnerNinoPage),
           answersMustContain(PartnerDateOfBirthPage),
-          answersMustContain(PartnerNationalityPage),
+          answersMustContain(PartnerNationalityPage(Index(0))),
           answersMustContain(PartnerIsHmfOrCivilServantPage),
           answersMustContain(PartnerClaimingChildBenefitPage),
           answersMustContain(PartnerEldestChildNamePage),
@@ -381,7 +383,8 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerNinoKnownPage, true),
               submitAnswer(PartnerNinoPage, nino),
               submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-              submitAnswer(PartnerNationalityPage, nationality),
+              submitAnswer(PartnerNationalityPage(Index(0)), nationality),
+              submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
               submitAnswer(PartnerIsHmfOrCivilServantPage, false),
               submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
               submitAnswer(PartnerEldestChildNamePage, childName),
@@ -407,7 +410,8 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerNinoKnownPage, true),
               submitAnswer(PartnerNinoPage, nino),
               submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-              submitAnswer(PartnerNationalityPage, nationality),
+              submitAnswer(PartnerNationalityPage(Index(0)), nationality),
+              submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
               submitAnswer(PartnerIsHmfOrCivilServantPage, false),
               submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
               submitAnswer(PartnerEldestChildNamePage, childName),
@@ -439,7 +443,8 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerNinoKnownPage, true),
               submitAnswer(PartnerNinoPage, nino),
               submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-              submitAnswer(PartnerNationalityPage, nationality),
+              submitAnswer(PartnerNationalityPage(Index(0)), nationality),
+              submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
               submitAnswer(PartnerIsHmfOrCivilServantPage, false),
               submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
               submitAnswer(PartnerEldestChildNamePage, childName),
@@ -466,7 +471,8 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerNinoKnownPage, true),
               submitAnswer(PartnerNinoPage, nino),
               submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-              submitAnswer(PartnerNationalityPage, nationality),
+              submitAnswer(PartnerNationalityPage(Index(0)), nationality),
+              submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
               submitAnswer(PartnerIsHmfOrCivilServantPage, false),
               submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
               submitAnswer(PartnerEldestChildNamePage, childName),
@@ -527,7 +533,8 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerNinoKnownPage, true),
               submitAnswer(PartnerNinoPage, nino),
               submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-              submitAnswer(PartnerNationalityPage, nationality),
+              submitAnswer(PartnerNationalityPage(Index(0)), nationality),
+              submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
               submitAnswer(PartnerIsHmfOrCivilServantPage, false),
               submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
               submitAnswer(PartnerEldestChildNamePage, childName),
@@ -552,7 +559,8 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerNinoKnownPage, true),
               submitAnswer(PartnerNinoPage, nino),
               submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-              submitAnswer(PartnerNationalityPage, nationality),
+              submitAnswer(PartnerNationalityPage(Index(0)), nationality),
+              submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
               submitAnswer(PartnerIsHmfOrCivilServantPage, false),
               submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
               submitAnswer(PartnerEldestChildNamePage, childName),
@@ -583,7 +591,8 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerNinoKnownPage, true),
               submitAnswer(PartnerNinoPage, nino),
               submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-              submitAnswer(PartnerNationalityPage, nationality),
+              submitAnswer(PartnerNationalityPage(Index(0)), nationality),
+              submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
               submitAnswer(PartnerIsHmfOrCivilServantPage, false),
               submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
               submitAnswer(PartnerEldestChildNamePage, childName),
@@ -609,7 +618,8 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerNinoKnownPage, true),
               submitAnswer(PartnerNinoPage, nino),
               submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
-              submitAnswer(PartnerNationalityPage, nationality),
+              submitAnswer(PartnerNationalityPage(Index(0)), nationality),
+              submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
               submitAnswer(PartnerIsHmfOrCivilServantPage, false),
               submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
               submitAnswer(PartnerEldestChildNamePage, childName),
@@ -701,6 +711,67 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
           pageMustBe(CheckPartnerDetailsPage)
         )
     }
+  }
+  
+  "the user must be able to add a nationality for their partner" in {
+
+    val initialise = journeyOf(
+      submitAnswer(PartnerNationalityPage(Index(0)), nationality),
+      submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
+      submitAnswer(PartnerIsHmfOrCivilServantPage, true),
+      goTo(CheckPartnerDetailsPage)
+    )
+
+    startingFrom(PartnerNationalityPage(Index(0)))
+      .run(
+        initialise,
+        goToChangeAnswer(AddPartnerNationalityPage()),
+        submitAnswer(AddPartnerNationalityPage(), true),
+        submitAnswer(PartnerNationalityPage(Index(1)), nationality),
+        submitAnswer(AddPartnerNationalityPage(Some(Index(1))), false),
+        pageMustBe(CheckPartnerDetailsPage)
+      )
+  }
+
+  "the user must be able to remove a nationality from their partner, leaving at least one" in {
+
+    val initialise = journeyOf(
+      submitAnswer(PartnerNationalityPage(Index(0)), nationality),
+      submitAnswer(AddPartnerNationalityPage(Some(Index(0))), true),
+      submitAnswer(PartnerNationalityPage(Index(1)), nationality),
+      submitAnswer(AddPartnerNationalityPage(Some(Index(1))), false),
+      submitAnswer(PartnerIsHmfOrCivilServantPage, true),
+      goTo(CheckPartnerDetailsPage)
+    )
+
+    startingFrom(PartnerNationalityPage(Index(0)))
+      .run(
+        initialise,
+        goToChangeAnswer(AddPartnerNationalityPage()),
+        goTo(RemovePartnerNationalityPage(Index(1))),
+        removeAddToListItem(PartnerNationalityPage(Index(1))),
+        submitAnswer(AddPartnerNationalityPage(), false),
+        pageMustBe(CheckPartnerDetailsPage)
+      )
+  }
+
+  "removing their partner's last nationality must ask the user their nationality" in {
+
+    val initialise = journeyOf(
+      submitAnswer(PartnerNationalityPage(Index(0)), nationality),
+      submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
+      submitAnswer(PartnerIsHmfOrCivilServantPage, true),
+      goTo(CheckPartnerDetailsPage)
+    )
+
+    startingFrom(PartnerNationalityPage(Index(0)))
+      .run(
+        initialise,
+        goToChangeAnswer(AddPartnerNationalityPage()),
+        goTo(RemovePartnerNationalityPage(Index(0))),
+        removeAddToListItem(PartnerNationalityPage(Index(0))),
+        pageMustBe(PartnerNationalityPage(Index(0)))
+      )
   }
 
   "when a user initially said their partner was entitled to claim Child Benefit or waiting to hear" - {

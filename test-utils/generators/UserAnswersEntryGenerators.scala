@@ -188,14 +188,6 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryPartnerNationalityUserAnswersEntry: Arbitrary[(PartnerNationalityPage.type, JsValue)] =
-    Arbitrary {
-      for {
-        page  <- arbitrary[PartnerNationalityPage.type]
-        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
-      } yield (page, value)
-    }
-
   implicit lazy val arbitraryPartnerNameUserAnswersEntry: Arbitrary[(PartnerNamePage.type, JsValue)] =
     Arbitrary {
       for {
@@ -273,14 +265,6 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       for {
         page  <- arbitrary[ApplicantNinoPage.type]
         value <- arbitrary[Nino].map(Json.toJson(_))
-      } yield (page, value)
-    }
-
-  implicit lazy val arbitraryApplicantNationalityUserAnswersEntry: Arbitrary[(ApplicantNationalityPage.type, JsValue)] =
-    Arbitrary {
-      for {
-        page  <- arbitrary[ApplicantNationalityPage.type]
-        value <- arbitrary[String].map(Json.toJson(_))
       } yield (page, value)
     }
 

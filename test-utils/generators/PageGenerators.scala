@@ -92,9 +92,6 @@ trait PageGenerators {
   implicit lazy val arbitraryPartnerNinoPage: Arbitrary[PartnerNinoPage.type] =
     Arbitrary(PartnerNinoPage)
 
-  implicit lazy val arbitraryPartnerNationalityPage: Arbitrary[PartnerNationalityPage.type] =
-    Arbitrary(PartnerNationalityPage)
-
   implicit lazy val arbitraryPartnerNamePage: Arbitrary[PartnerNamePage.type] =
     Arbitrary(PartnerNamePage)
 
@@ -124,9 +121,6 @@ trait PageGenerators {
 
   implicit lazy val arbitraryApplicantNinoPage: Arbitrary[ApplicantNinoPage.type] =
     Arbitrary(ApplicantNinoPage)
-
-  implicit lazy val arbitraryApplicantNationalityPage: Arbitrary[ApplicantNationalityPage.type] =
-    Arbitrary(ApplicantNationalityPage)
 
   implicit lazy val arbitraryApplicantNamePage: Arbitrary[ApplicantNamePage.type] =
     Arbitrary(ApplicantNamePage)

@@ -21,3 +21,5 @@ trait AddToListSection
 object ChildSection extends AddToListSection
 object ChildPreviousNameSection extends AddToListSection
 object PreviousFamilyNamesSection extends AddToListSection
+object ApplicantNationalitiesSection extends AddToListSection
+object PartnerNationalitiesSection extends AddToListSection

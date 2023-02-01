@@ -17,7 +17,7 @@
 package pages.partner
 
 import controllers.partner.routes
-import models.UserAnswers
+import models.{Index, UserAnswers}
 import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
@@ -34,5 +34,5 @@ case object PartnerDateOfBirthPage extends QuestionPage[LocalDate] {
     routes.PartnerDateOfBirthController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    PartnerNationalityPage
+    PartnerNationalityPage(Index(0))
 }

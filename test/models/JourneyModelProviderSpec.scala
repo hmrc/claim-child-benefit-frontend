@@ -37,7 +37,7 @@ import pages.applicant._
 import pages.child._
 import pages.partner._
 import pages.payments._
-import queries.{AllChildPreviousNames, AllChildSummaries, AllPreviousFamilyNames}
+import queries.{AllChildPreviousNames, AllChildSummaries, AllPartnerNationalities, AllPreviousFamilyNames}
 import services.BrmsService
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
@@ -126,7 +126,7 @@ class JourneyModelProviderSpec
             currentAddress = currentUkAddress,
             previousAddress = None,
             telephoneNumber = phoneNumber,
-            nationality = applicantNationality,
+            nationalities = NonEmptyList(applicantNationality, Nil),
             residency = AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -176,7 +176,7 @@ class JourneyModelProviderSpec
           .set(PartnerNamePage, partnerName).success.value
           .set(PartnerNinoKnownPage, false).success.value
           .set(PartnerDateOfBirthPage, now).success.value
-          .set(PartnerNationalityPage, partnerNationality).success.value
+          .set(PartnerNationalityPage(Index(0)), partnerNationality).success.value
           .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming).success.value
           .set(AdditionalInformationPage, Information("info")).success.value
 
@@ -189,7 +189,7 @@ class JourneyModelProviderSpec
             currentAddress = currentUkAddress,
             previousAddress = None,
             telephoneNumber = phoneNumber,
-            nationality = applicantNationality,
+            nationalities = NonEmptyList(applicantNationality, Nil),
             residency = AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -200,7 +200,7 @@ class JourneyModelProviderSpec
             partner = Some(JourneyModel.Partner(
               name = partnerName,
               dateOfBirth = now,
-              nationality = partnerNationality,
+              nationalities = NonEmptyList(partnerNationality, Nil),
               nationalInsuranceNumber = None,
               memberOfHMForcesOrCivilServantAbroad = None,
               currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
@@ -272,7 +272,7 @@ class JourneyModelProviderSpec
             currentAddress = currentUkAddress,
             previousAddress = None,
             telephoneNumber = phoneNumber,
-            nationality = applicantNationality,
+            nationalities = NonEmptyList(applicantNationality, Nil),
             residency = AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -283,7 +283,7 @@ class JourneyModelProviderSpec
             partner = Some(JourneyModel.Partner(
               name = partnerName,
               dateOfBirth = now,
-              nationality = partnerNationality,
+              nationalities = NonEmptyList(partnerNationality, Nil),
               nationalInsuranceNumber = None,
               memberOfHMForcesOrCivilServantAbroad = None,
               currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
@@ -726,7 +726,7 @@ class JourneyModelProviderSpec
           currentAddress = currentUkAddress,
           previousAddress = None,
           telephoneNumber = phoneNumber,
-          nationality = applicantNationality,
+          nationalities = NonEmptyList(applicantNationality, Nil),
           residency = AlwaysLivedInUk,
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -761,7 +761,7 @@ class JourneyModelProviderSpec
           currentAddress = currentUkAddress,
           previousAddress = None,
           telephoneNumber = phoneNumber,
-          nationality = applicantNationality,
+          nationalities = NonEmptyList(applicantNationality, Nil),
           residency = AlwaysLivedInUk,
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -799,7 +799,7 @@ class JourneyModelProviderSpec
           currentAddress = currentInternationalAddress,
           previousAddress = None,
           telephoneNumber = phoneNumber,
-          nationality = applicantNationality,
+          nationalities = NonEmptyList(applicantNationality, Nil),
           residency = UsuallyLivesAbroad(country, LocalDate.now),
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -836,7 +836,7 @@ class JourneyModelProviderSpec
             currentAddress = currentUkAddress,
             previousAddress = Some(previousUkAddress),
             telephoneNumber = phoneNumber,
-            nationality = applicantNationality,
+            nationalities = NonEmptyList(applicantNationality, Nil),
             residency = AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -874,7 +874,7 @@ class JourneyModelProviderSpec
             currentAddress = currentUkAddress,
             previousAddress = Some(previousInternationalAddress),
             telephoneNumber = phoneNumber,
-            nationality = applicantNationality,
+            nationalities = NonEmptyList(applicantNationality, Nil),
             residency = UsuallyLivesInUk(LocalDate.now),
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
@@ -905,7 +905,7 @@ class JourneyModelProviderSpec
         val expectedPartner = JourneyModel.Partner(
           name = partnerName,
           dateOfBirth = now,
-          nationality = partnerNationality,
+          nationalities = NonEmptyList(partnerNationality, Nil),
           nationalInsuranceNumber = Some(partnerNino.value),
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
@@ -937,7 +937,7 @@ class JourneyModelProviderSpec
         val expectedPartner = JourneyModel.Partner(
           name = partnerName,
           dateOfBirth = now,
-          nationality = partnerNationality,
+          nationalities = NonEmptyList(partnerNationality, Nil),
           nationalInsuranceNumber = None,
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyClaimingChildBenefit = partnerClaiming,
@@ -969,7 +969,7 @@ class JourneyModelProviderSpec
         val expectedPartner = JourneyModel.Partner(
           name = partnerName,
           dateOfBirth = now,
-          nationality = partnerNationality,
+          nationalities = NonEmptyList(partnerNationality, Nil),
           nationalInsuranceNumber = None,
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments,
@@ -1828,7 +1828,7 @@ class JourneyModelProviderSpec
         errors.value.toChain.toList must contain only(
           PartnerNamePage,
           PartnerDateOfBirthPage,
-          PartnerNationalityPage,
+          AllPartnerNationalities,
           PartnerNinoKnownPage,
           PartnerClaimingChildBenefitPage
         )
@@ -1872,7 +1872,7 @@ class JourneyModelProviderSpec
         errors.value.toChain.toList must contain only(
           PartnerNamePage,
           PartnerDateOfBirthPage,
-          PartnerNationalityPage,
+          AllPartnerNationalities,
           PartnerNinoKnownPage,
           PartnerClaimingChildBenefitPage
         )
@@ -2812,7 +2812,7 @@ class JourneyModelProviderSpec
         .set(ApplicantDateOfBirthPage, now).success.value
         .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
         .set(ApplicantPhoneNumberPage, phoneNumber).success.value
-        .set(ApplicantNationalityPage, applicantNationality).success.value
+        .set(ApplicantNationalityPage(Index(0)), applicantNationality).success.value
         .set(AlwaysLivedInUkPage, true).success.value
         .set(ApplicantCurrentUkAddressPage, currentUkAddress).success.value
         .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
@@ -2822,7 +2822,7 @@ class JourneyModelProviderSpec
         .set(PartnerNamePage, partnerName).success.value
         .set(PartnerNinoKnownPage, false).success.value
         .set(PartnerDateOfBirthPage, now).success.value
-        .set(PartnerNationalityPage, partnerNationality).success.value
+        .set(PartnerNationalityPage(Index(0)), partnerNationality).success.value
         .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming).success.value
 
     def withOneChild: UserAnswers =

@@ -43,7 +43,7 @@ object DownloadAuditEvent {
         currentAddress                       = convertAddress(model.applicant.currentAddress),
         previousAddress                      = model.applicant.previousAddress.map(convertAddress),
         telephoneNumber                      = model.applicant.telephoneNumber,
-        nationality                          = model.applicant.nationality.name,
+        nationalities                        = model.applicant.nationalities.toList.map(_.name),
         residency                            = convertResidency(model.applicant.residency),
         memberOfHMForcesOrCivilServantAbroad = model.applicant.memberOfHMForcesOrCivilServantAbroad,
         currentlyClaimingChildBenefit        = model.applicant.currentlyReceivingChildBenefit.toString
@@ -55,7 +55,7 @@ object DownloadAuditEvent {
           partner => Partner(
             name                                 = convertAdultName(partner.name),
             dateOfBirth                          = partner.dateOfBirth,
-            nationality                          = partner.nationality.name,
+            nationalities                        = partner.nationalities.toList.map(_.name),
             nationalInsuranceNumber              = partner.nationalInsuranceNumber,
             currentlyClaimingChildBenefit        = partner.currentlyClaimingChildBenefit.toString,
             memberOfHMForcesOrCivilServantAbroad = partner.memberOfHMForcesOrCivilServantAbroad,
@@ -260,7 +260,7 @@ object DownloadAuditEvent {
                                              currentAddress: Address,
                                              previousAddress: Option[Address],
                                              telephoneNumber: String,
-                                             nationality: String,
+                                             nationalities: Seq[String],
                                              residency: Residency,
                                              memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
                                              currentlyClaimingChildBenefit: String
@@ -272,7 +272,7 @@ object DownloadAuditEvent {
   private[audit] final case class Partner(
                                            name: AdultName,
                                            dateOfBirth: LocalDate,
-                                           nationality: String,
+                                           nationalities: Seq[String],
                                            currentlyClaimingChildBenefit: String,
                                            nationalInsuranceNumber: Option[String],
                                            memberOfHMForcesOrCivilServantAbroad: Option[Boolean],

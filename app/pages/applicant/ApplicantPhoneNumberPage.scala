@@ -17,7 +17,7 @@
 package pages.applicant
 
 import controllers.applicant.routes
-import models.UserAnswers
+import models.{Index, UserAnswers}
 import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
@@ -32,5 +32,5 @@ case object ApplicantPhoneNumberPage extends QuestionPage[String] {
     routes.ApplicantPhoneNumberController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantNationalityPage
+    ApplicantNationalityPage(Index(0))
 }

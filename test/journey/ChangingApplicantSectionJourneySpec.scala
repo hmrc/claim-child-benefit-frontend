@@ -19,7 +19,7 @@ package journey
 import generators.ModelGenerators
 import models.CurrentlyReceivingChildBenefit._
 import models.RelationshipStatus._
-import models._
+import models.{Index, _}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
@@ -177,7 +177,8 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
           submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
           submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
           submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
-          submitAnswer(ApplicantNationalityPage, nationality),
+          submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
+          submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
           submitAnswer(AlwaysLivedInUkPage, true),
           submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
           submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
@@ -211,7 +212,8 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
           submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
           submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
           submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
-          submitAnswer(ApplicantNationalityPage, nationality),
+          submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
+          submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
           submitAnswer(AlwaysLivedInUkPage, true),
           submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
           submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
@@ -249,7 +251,8 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
             submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
             submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
             submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
-            submitAnswer(ApplicantNationalityPage, nationality),
+            submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
+            submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
             submitAnswer(AlwaysLivedInUkPage, false),
             submitAnswer(ApplicantUsuallyLivesInUkPage, false),
             submitAnswer(ApplicantUsualCountryOfResidencePage, country),
@@ -286,7 +289,8 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
             submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
             submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
             submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
-            submitAnswer(ApplicantNationalityPage, nationality),
+            submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
+            submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
             submitAnswer(AlwaysLivedInUkPage, false),
             submitAnswer(ApplicantUsuallyLivesInUkPage, false),
             submitAnswer(ApplicantUsualCountryOfResidencePage, country),
@@ -326,7 +330,8 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
             submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
             submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
             submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
-            submitAnswer(ApplicantNationalityPage, nationality),
+            submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
+            submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
             submitAnswer(AlwaysLivedInUkPage, false),
             submitAnswer(ApplicantUsuallyLivesInUkPage, false),
             submitAnswer(ApplicantUsualCountryOfResidencePage, country),
@@ -369,7 +374,8 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
             submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
             submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
             submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
-            submitAnswer(ApplicantNationalityPage, nationality),
+            submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
+            submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
             submitAnswer(AlwaysLivedInUkPage, false),
             submitAnswer(ApplicantUsuallyLivesInUkPage, false),
             submitAnswer(ApplicantUsualCountryOfResidencePage, country),
@@ -408,7 +414,8 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
             submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
             submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
             submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
-            submitAnswer(ApplicantNationalityPage, nationality),
+            submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
+            submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
             submitAnswer(AlwaysLivedInUkPage, false),
             submitAnswer(ApplicantUsuallyLivesInUkPage, false),
             submitAnswer(ApplicantUsualCountryOfResidencePage, country),
@@ -453,7 +460,8 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
             submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
             submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
             submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
-            submitAnswer(ApplicantNationalityPage, nationality),
+            submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
+            submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
             submitAnswer(AlwaysLivedInUkPage, false),
             submitAnswer(ApplicantUsuallyLivesInUkPage, false),
             submitAnswer(ApplicantUsualCountryOfResidencePage, country),
@@ -591,6 +599,67 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
           pageMustBe(CheckApplicantDetailsPage)
         )
     }
+  }
+
+  "the user must be able to add a nationality" in {
+
+    val initialise = journeyOf(
+      submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
+      submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
+      submitAnswer(AlwaysLivedInUkPage, true),
+      goTo(CheckApplicantDetailsPage)
+    )
+
+    startingFrom(ApplicantNationalityPage(Index(0)))
+      .run(
+        initialise,
+        goToChangeAnswer(AddApplicantNationalityPage()),
+        submitAnswer(AddApplicantNationalityPage(), true),
+        submitAnswer(ApplicantNationalityPage(Index(1)), nationality),
+        submitAnswer(AddApplicantNationalityPage(Some(Index(1))), false),
+        pageMustBe(CheckApplicantDetailsPage)
+      )
+  }
+
+  "the user must be able to remove a nationality, leaving at least one" in {
+
+    val initialise = journeyOf(
+      submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
+      submitAnswer(AddApplicantNationalityPage(Some(Index(0))), true),
+      submitAnswer(ApplicantNationalityPage(Index(1)), nationality),
+      submitAnswer(AddApplicantNationalityPage(Some(Index(1))), false),
+      submitAnswer(AlwaysLivedInUkPage, true),
+      goTo(CheckApplicantDetailsPage)
+    )
+
+    startingFrom(ApplicantNationalityPage(Index(0)))
+      .run(
+        initialise,
+        goToChangeAnswer(AddApplicantNationalityPage()),
+        goTo(RemoveApplicantNationalityPage(Index(1))),
+        removeAddToListItem(ApplicantNationalityPage(Index(1))),
+        submitAnswer(AddApplicantNationalityPage(), false),
+        pageMustBe(CheckApplicantDetailsPage)
+      )
+  }
+
+  "removing the last nationality must ask the user their nationality" in {
+
+    val initialise = journeyOf(
+      submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
+      submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
+      submitAnswer(AlwaysLivedInUkPage, true),
+      goTo(CheckApplicantDetailsPage)
+    )
+
+    startingFrom(ApplicantNationalityPage(Index(0)))
+      .run(
+        initialise,
+        goToChangeAnswer(AddApplicantNationalityPage()),
+        goTo(RemoveApplicantNationalityPage(Index(0))),
+        removeAddToListItem(ApplicantNationalityPage(Index(0))),
+        pageMustBe(ApplicantNationalityPage(Index(0)))
+      )
   }
 
   "when the user had the option to give either a UK or an international current address" - {
