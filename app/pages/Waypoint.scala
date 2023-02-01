@@ -19,7 +19,7 @@ package pages
 import models.{CheckMode, Mode, NormalMode}
 import pages.applicant.{AddApplicantNationalityPage, AddApplicantPreviousFamilyNamePage, AddCountryApplicantReceivedBenefitsPage, AddCountryApplicantWorkedPage, CheckApplicantDetailsPage}
 import pages.child.{AddChildPage, AddChildPreviousNamePage, CheckChildDetailsPage}
-import pages.partner.{AddPartnerNationalityPage, CheckPartnerDetailsPage}
+import pages.partner.{AddCountryPartnerReceivedBenefitsPage, AddCountryPartnerWorkedPage, AddPartnerNationalityPage, CheckPartnerDetailsPage}
 import pages.payments.CheckPaymentDetailsPage
 
 case class Waypoint (
@@ -42,6 +42,10 @@ object Waypoint {
       AddCountryApplicantReceivedBenefitsPage().checkModeUrlFragment  -> AddCountryApplicantReceivedBenefitsPage().waypoint(CheckMode),
       AddPartnerNationalityPage().normalModeUrlFragment               -> AddPartnerNationalityPage().waypoint(NormalMode),
       AddPartnerNationalityPage().checkModeUrlFragment                -> AddPartnerNationalityPage().waypoint(CheckMode),
+      AddCountryPartnerWorkedPage().normalModeUrlFragment             -> AddCountryPartnerWorkedPage().waypoint(NormalMode),
+      AddCountryPartnerWorkedPage().checkModeUrlFragment              -> AddCountryPartnerWorkedPage().waypoint(CheckMode),
+      AddCountryPartnerReceivedBenefitsPage().normalModeUrlFragment   -> AddCountryPartnerReceivedBenefitsPage().waypoint(NormalMode),
+      AddCountryPartnerReceivedBenefitsPage().checkModeUrlFragment    -> AddCountryPartnerReceivedBenefitsPage().waypoint(CheckMode),
       AddChildPage().normalModeUrlFragment                            -> AddChildPage().waypoint(NormalMode),
       AddChildPage().checkModeUrlFragment                             -> AddChildPage().waypoint(CheckMode),
       CheckApplicantDetailsPage.urlFragment                           -> CheckApplicantDetailsPage.waypoint,
