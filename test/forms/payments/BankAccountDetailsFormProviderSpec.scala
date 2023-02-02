@@ -25,12 +25,12 @@ class BankAccountDetailsFormProviderSpec extends StringFieldBehaviours {
 
   val form = new BankAccountDetailsFormProvider()()
 
-  ".accountName" - {
+  ".firstName" - {
 
-    val fieldName = "accountName"
-    val requiredKey = "bankAccountDetails.error.accountName.required"
-    val lengthKey = "bankAccountDetails.error.accountName.length"
-    val maxLength = 100
+    val fieldName = "firstName"
+    val requiredKey = "bankAccountDetails.error.firstName.required"
+    val lengthKey = "bankAccountDetails.error.firstName.length"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
@@ -51,7 +51,34 @@ class BankAccountDetailsFormProviderSpec extends StringFieldBehaviours {
       requiredError = FormError(fieldName, requiredKey)
     )
   }
-  
+
+  ".lastName" - {
+
+    val fieldName = "lastName"
+    val requiredKey = "bankAccountDetails.error.lastName.required"
+    val lengthKey = "bankAccountDetails.error.lastName.length"
+    val maxLength = 35
+
+    behave like fieldThatBindsValidData(
+      form,
+      fieldName,
+      stringsWithMaxLength(maxLength)
+    )
+
+    behave like fieldWithMaxLength(
+      form,
+      fieldName,
+      maxLength = maxLength,
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+    )
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
+  }
+
   ".bankName" - {
 
     val fieldName = "bankName"

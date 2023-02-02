@@ -33,7 +33,7 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
     "when bank account details and eldest child are present" in {
 
       val preference = Weekly(
-        Some(BankAccount("applicant", "name on account", "bank name", "000000", "00000000", None)),
+        Some(BankAccount("applicant", "first", "last", "bank name", "000000", "00000000", None)),
         Some(EldestChild(ChildName("first", None, "last"), dateOfBirth))
       )
       val json = Json.toJson(preference)
@@ -43,7 +43,8 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
         "frequency" -> PaymentFrequency.Weekly.toString,
         "account"   -> Json.obj(
           "holder"        -> "applicant",
-          "accountName"   -> "name on account",
+          "firstName"     -> "first",
+          "lastName"      -> "last",
           "bankName"      -> "bank name",
           "sortCode"      -> "000000",
           "accountNumber" -> "00000000"
@@ -76,7 +77,7 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
     "when bank account details and eldest child are present" in {
 
       val preference = EveryFourWeeks(
-        Some(BankAccount("applicant", "name on account", "bank name", "000000", "00000000", None)),
+        Some(BankAccount("applicant", "first", "last", "bank name", "000000", "00000000", None)),
         Some(EldestChild(ChildName("first", None, "last"), dateOfBirth))
       )
       val json = Json.toJson(preference)
@@ -86,7 +87,8 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
         "frequency" -> PaymentFrequency.EveryFourWeeks.toString,
         "account"   -> Json.obj(
           "holder"        -> "applicant",
-          "accountName"   -> "name on account",
+          "firstName"     -> "first",
+          "lastName"      -> "last",
           "bankName"      -> "bank name",
           "sortCode"      -> "000000",
           "accountNumber" -> "00000000"

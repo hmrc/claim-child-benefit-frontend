@@ -150,7 +150,8 @@ object DownloadAuditEvent {
     BankAccount(
       holder        = bankAccount.holder.toString,
       bankName      = bankAccount.details.bankName,
-      accountName   = bankAccount.details.accountName,
+      firstName     = bankAccount.details.firstName,
+      lastName      = bankAccount.details.lastName,
       sortCode      = bankAccount.details.sortCode,
       accountNumber = bankAccount.details.accountNumber,
       rollNumber    = bankAccount.details.rollNumber
@@ -323,7 +324,7 @@ object DownloadAuditEvent {
     implicit lazy val writes: Writes[Child] = Json.writes
   }
 
-  private[audit] final case class BankAccount(holder: String, accountName: String, bankName: String, sortCode: String, accountNumber: String, rollNumber: Option[String])
+  private[audit] final case class BankAccount(holder: String, firstName: String, lastName: String, bankName: String, sortCode: String, accountNumber: String, rollNumber: Option[String])
   object BankAccount {
     implicit lazy val writes: Writes[BankAccount] = Json.writes
   }

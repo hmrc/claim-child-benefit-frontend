@@ -16,4 +16,4 @@
     line("pdf.rollNumber", rollNumber)
 }
 
-@line("pdf.accountName", bankAccount.details.accountName)
+@line("pdf.accountName", s"${bankAccount.details.firstName} ${bankAccount.details.lastName}")

@@ -66,7 +66,7 @@ class BarsServiceSpec
 
         val service = app.injector.instanceOf[BarsService]
 
-        val bankDetails = BankAccountDetails("name on account", "bank name", "123456", "00123456", None)
+        val bankDetails = BankAccountDetails("first", "last", "bank name", "123456", "00123456", None)
 
         val result = service.validateBankDetails(bankDetails).futureValue
 
@@ -89,7 +89,7 @@ class BarsServiceSpec
 
         val service = app.injector.instanceOf[BarsService]
 
-        val bankDetails = BankAccountDetails("name on account", "bank name", "123456", "00123456", None)
+        val bankDetails = BankAccountDetails("first", "last", "bank name", "123456", "00123456", None)
 
         val result = service.validateBankDetails(bankDetails).futureValue
 

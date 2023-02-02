@@ -19,7 +19,8 @@ package models
 import play.api.libs.json._
 
 case class BankAccountDetails (
-                                accountName: String,
+                                firstName: String,
+                                lastName: String,
                                 bankName: String,
                                 sortCode: String,
                                 accountNumber: String,

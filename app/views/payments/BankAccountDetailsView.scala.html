@@ -39,8 +39,15 @@
 
         @govukInput(
             InputViewModel(
-                field = form("accountName"),
-                label = LabelViewModel(messages("bankAccountDetails.accountName"))
+                field = form("firstName"),
+                label = LabelViewModel(messages("bankAccountDetails.firstName"))
+            )
+            .withWidth(Full)
+        )
+        @govukInput(
+            InputViewModel(
+                field = form("lastName"),
+                label = LabelViewModel(messages("bankAccountDetails.lastName"))
             )
             .withWidth(Full)
         )
