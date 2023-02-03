@@ -347,7 +347,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("accountName", "name"), ("bankName", "bank name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("bankName", "bank name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
 
         val result = route(application, request).value
 
@@ -378,7 +378,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("accountName", "name"), ("bankName", "bank name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("bankName", "bank name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
 
         val result = route(application, request).value
 
@@ -409,7 +409,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("accountName", "name"), ("bankName", "bank name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("bankName", "bank name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
 
         val result = route(application, request).value
 
@@ -438,7 +438,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("accountName", "name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"))
 
         val result = route(application, request).value
 

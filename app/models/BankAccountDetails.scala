@@ -18,14 +18,14 @@ package models
 
 import play.api.libs.json._
 
-case class BankAccountDetails (
-                                firstName: String,
-                                lastName: String,
-                                bankName: String,
-                                sortCode: String,
-                                accountNumber: String,
-                                rollNumber: Option[String]
-                              ) {
+final case class BankAccountDetails (
+                                      firstName: String,
+                                      lastName: String,
+                                      bankName: String,
+                                      sortCode: String,
+                                      accountNumber: String,
+                                      rollNumber: Option[String]
+                                    ) {
 
   lazy val sortCodeTrimmed: String =
     sortCode
@@ -43,4 +43,16 @@ case class BankAccountDetails (
 
 object BankAccountDetails {
   implicit val format = Json.format[BankAccountDetails]
+}
+
+final case class BuildingSocietyDetails(
+                                         firstName: String,
+                                         lastName: String,
+                                         buildingSociety: BuildingSociety,
+                                         rollNumber: String
+                                       )
+
+object BuildingSocietyDetails {
+
+  implicit lazy val format: OFormat[BuildingSocietyDetails] = Json.format
 }

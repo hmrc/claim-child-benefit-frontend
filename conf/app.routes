@@ -89,6 +89,9 @@ POST       /bank-account-holder                         controllers.payments.Ban
 GET        /bank-account-details                        controllers.payments.BankAccountDetailsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /bank-account-details                        controllers.payments.BankAccountDetailsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
+GET        /building-society-details                        controllers.payments.BuildingSocietyDetailsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /building-society-details                        controllers.payments.BuildingSocietyDetailsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 GET        /currently-receiving-child-benefit                        controllers.applicant.CurrentlyReceivingChildBenefitController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /currently-receiving-child-benefit                        controllers.applicant.CurrentlyReceivingChildBenefitController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
