@@ -19,7 +19,7 @@ package journey
 import generators.ModelGenerators
 import models.CurrentlyReceivingChildBenefit.{NotClaiming, NotGettingPayments}
 import models.RelationshipStatus._
-import models.{BankAccountDetails, BankAccountHolder, Benefits, Income, PaymentFrequency}
+import models.{AccountType, BankAccountDetails, BankAccountHolder, Benefits, BuildingSocietyDetails, Income, PaymentFrequency}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
@@ -30,6 +30,7 @@ import pages.partner.RelationshipStatusPage
 class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
   private val bankDetails = arbitrary[BankAccountDetails].sample.value
+  private val buildingSocietyDetails = arbitrary[BuildingSocietyDetails].sample.value
 
   "when the user is married or cohabiting" - {
 
@@ -149,6 +150,8 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
           setUserAnswerTo(WantToBePaidToExistingAccountPage, false),
           setUserAnswerTo(ApplicantHasSuitableAccountPage, true),
           setUserAnswerTo(BankAccountHolderPage, BankAccountHolder.Applicant),
+          setUserAnswerTo(AccountTypePage, AccountType.SortCodeAccountNumber),
+          setUserAnswerTo(BuildingSocietyDetailsPage, buildingSocietyDetails),
           setUserAnswerTo(BankAccountDetailsPage, bankDetails),
           goTo(CheckPaymentDetailsPage)
         )
@@ -164,7 +167,9 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             answersMustNotContain(WantToBePaidToExistingAccountPage),
             answersMustNotContain(ApplicantHasSuitableAccountPage),
             answersMustNotContain(BankAccountHolderPage),
-            answersMustNotContain(BankAccountDetailsPage)
+            answersMustNotContain(BankAccountDetailsPage),
+            answersMustNotContain(AccountTypePage),
+            answersMustNotContain(BuildingSocietyDetailsPage)
           )
       }
     }
@@ -189,6 +194,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
             submitAnswer(ApplicantHasSuitableAccountPage, true),
             submitAnswer(BankAccountHolderPage, BankAccountHolder.Applicant),
+            submitAnswer(AccountTypePage, AccountType.SortCodeAccountNumber),
             submitAnswer(BankAccountDetailsPage, bankDetails),
             pageMustBe(CheckPaymentDetailsPage)
           )
@@ -234,6 +240,8 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
           setUserAnswerTo(WantToBePaidToExistingAccountPage, false),
           setUserAnswerTo(ApplicantHasSuitableAccountPage, true),
           setUserAnswerTo(BankAccountHolderPage, BankAccountHolder.Applicant),
+          setUserAnswerTo(AccountTypePage, AccountType.SortCodeAccountNumber),
+          setUserAnswerTo(BuildingSocietyDetailsPage, buildingSocietyDetails),
           setUserAnswerTo(BankAccountDetailsPage, bankDetails),
           goTo(CheckPaymentDetailsPage)
         )
@@ -249,7 +257,9 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             answersMustNotContain(WantToBePaidToExistingAccountPage),
             answersMustNotContain(ApplicantHasSuitableAccountPage),
             answersMustNotContain(BankAccountHolderPage),
-            answersMustNotContain(BankAccountDetailsPage)
+            answersMustNotContain(AccountTypePage),
+            answersMustNotContain(BankAccountDetailsPage),
+            answersMustNotContain(BuildingSocietyDetailsPage)
           )
       }
     }
@@ -274,7 +284,8 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
             submitAnswer(ApplicantHasSuitableAccountPage, true),
             submitAnswer(BankAccountHolderPage, BankAccountHolder.Applicant),
-            submitAnswer(BankAccountDetailsPage, bankDetails),
+            submitAnswer(AccountTypePage, AccountType.BuildingSocietyRollNumber),
+            submitAnswer(BuildingSocietyDetailsPage, buildingSocietyDetails),
             pageMustBe(CheckPaymentDetailsPage)
           )
       }
@@ -300,6 +311,7 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             submitAnswer(WantToBePaidToExistingAccountPage, false),
             submitAnswer(ApplicantHasSuitableAccountPage, true),
             submitAnswer(BankAccountHolderPage, BankAccountHolder.Applicant),
+            submitAnswer(AccountTypePage, AccountType.SortCodeAccountNumber),
             submitAnswer(BankAccountDetailsPage, bankDetails),
             pageMustBe(CheckPaymentDetailsPage)
           )
@@ -315,7 +327,9 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
           setUserAnswerTo(WantToBePaidToExistingAccountPage, false),
           setUserAnswerTo(ApplicantHasSuitableAccountPage, true),
           setUserAnswerTo(BankAccountHolderPage, BankAccountHolder.Applicant),
+          setUserAnswerTo(AccountTypePage, AccountType.SortCodeAccountNumber),
           setUserAnswerTo(BankAccountDetailsPage, bankDetails),
+          setUserAnswerTo(BuildingSocietyDetailsPage, buildingSocietyDetails),
           goTo(CheckPaymentDetailsPage)
         )
 
@@ -327,7 +341,9 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             pageMustBe(CheckPaymentDetailsPage),
             answersMustNotContain(ApplicantHasSuitableAccountPage),
             answersMustNotContain(BankAccountHolderPage),
-            answersMustNotContain(BankAccountDetailsPage)
+            answersMustNotContain(AccountTypePage),
+            answersMustNotContain(BankAccountDetailsPage),
+            answersMustNotContain(BuildingSocietyDetailsPage)
           )
       }
     }
@@ -339,7 +355,9 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
         val initialise = journeyOf(
           setUserAnswerTo(ApplicantHasSuitableAccountPage, true),
           setUserAnswerTo(BankAccountHolderPage, BankAccountHolder.Applicant),
+          setUserAnswerTo(AccountTypePage, AccountType.SortCodeAccountNumber),
           setUserAnswerTo(BankAccountDetailsPage, bankDetails),
+          setUserAnswerTo(BuildingSocietyDetailsPage, buildingSocietyDetails),
           goTo(CheckPaymentDetailsPage)
         )
 
@@ -350,7 +368,9 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             submitAnswer(ApplicantHasSuitableAccountPage, false),
             pageMustBe(CheckPaymentDetailsPage),
             answersMustNotContain(BankAccountHolderPage),
-            answersMustNotContain(BankAccountDetailsPage)
+            answersMustNotContain(AccountTypePage),
+            answersMustNotContain(BankAccountDetailsPage),
+            answersMustNotContain(BuildingSocietyDetailsPage)
           )
       }
     }
@@ -370,8 +390,52 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             goToChangeAnswer(ApplicantHasSuitableAccountPage),
             submitAnswer(ApplicantHasSuitableAccountPage, true),
             submitAnswer(BankAccountHolderPage, BankAccountHolder.Applicant),
+            submitAnswer(AccountTypePage, AccountType.SortCodeAccountNumber),
             submitAnswer(BankAccountDetailsPage, bankDetails),
             pageMustBe(CheckPaymentDetailsPage)
+          )
+      }
+    }
+
+    "and knew their sort code and account number" - {
+
+      "changing to say they know a building society roll number must collect the building society details, remove bank details and go to Check Payment" in {
+
+        val initialise = journeyOf(
+          setUserAnswerTo(AccountTypePage, AccountType.SortCodeAccountNumber),
+          setUserAnswerTo(BankAccountDetailsPage, bankDetails),
+          goTo(CheckPaymentDetailsPage)
+        )
+
+        startingFrom(CheckPaymentDetailsPage)
+          .run(
+            initialise,
+            goToChangeAnswer(AccountTypePage),
+            submitAnswer(AccountTypePage, AccountType.BuildingSocietyRollNumber),
+            submitAnswer(BuildingSocietyDetailsPage, buildingSocietyDetails),
+            pageMustBe(CheckPaymentDetailsPage),
+            answersMustNotContain(BankAccountDetailsPage)
+          )
+      }
+    }
+    "and knew their building society roll number" - {
+
+      "changing to say they know a sort code and account number must collect the bank details, remove building society details and go to Check Payment" in {
+
+        val initialise = journeyOf(
+          setUserAnswerTo(AccountTypePage, AccountType.BuildingSocietyRollNumber),
+          setUserAnswerTo(BuildingSocietyDetailsPage, buildingSocietyDetails),
+          goTo(CheckPaymentDetailsPage)
+        )
+
+        startingFrom(CheckPaymentDetailsPage)
+          .run(
+            initialise,
+            goToChangeAnswer(AccountTypePage),
+            submitAnswer(AccountTypePage, AccountType.SortCodeAccountNumber),
+            submitAnswer(BankAccountDetailsPage, bankDetails),
+            pageMustBe(CheckPaymentDetailsPage),
+            answersMustNotContain(BuildingSocietyDetailsPage)
           )
       }
     }

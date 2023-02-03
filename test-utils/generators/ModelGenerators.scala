@@ -137,6 +137,16 @@ trait ModelGenerators {
       } yield BankAccountDetails(firstName, lastName, bankName, accountNumber, sortCode, rollNumber)
     }
 
+  implicit lazy val arbitraryBuildingSocietyDetails: Arbitrary[BuildingSocietyDetails] =
+    Arbitrary {
+      for {
+        firstName <- arbitrary[String]
+        lastName <- arbitrary[String]
+        buildingSociety <- Gen.oneOf(BuildingSociety.allBuildingSocieties)
+        rollNumber <- arbitrary[String]
+      } yield BuildingSocietyDetails(firstName, lastName, buildingSociety, rollNumber)
+    }
+
   implicit lazy val arbitraryBenefits: Arbitrary[Benefits] =
     Arbitrary {
       Gen.oneOf(Benefits.values)

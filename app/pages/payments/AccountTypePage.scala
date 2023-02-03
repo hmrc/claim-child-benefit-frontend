@@ -32,4 +32,16 @@ case object AccountTypePage extends QuestionPage[AccountType] {
 
   override def route(waypoints: Waypoints): Call =
     routes.AccountTypeController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case AccountType.SortCodeAccountNumber => BankAccountDetailsPage
+      case AccountType.BuildingSocietyRollNumber => BuildingSocietyDetailsPage
+    }.orRecover
+
+  override def cleanup(value: Option[AccountType], userAnswers: UserAnswers): Try[UserAnswers] =
+    value.map {
+      case AccountType.SortCodeAccountNumber => userAnswers.remove(BuildingSocietyDetailsPage)
+      case AccountType.BuildingSocietyRollNumber => userAnswers.remove(BankAccountDetailsPage)
+    }.getOrElse(super.cleanup(value, userAnswers))
 }

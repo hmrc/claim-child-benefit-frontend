@@ -55,7 +55,9 @@ case object WantToBePaidPage extends QuestionPage[Boolean] {
         .flatMap(_.remove(WantToBePaidToExistingAccountPage))
         .flatMap(_.remove(ApplicantHasSuitableAccountPage))
         .flatMap(_.remove(BankAccountHolderPage))
+        .flatMap(_.remove(AccountTypePage))
         .flatMap(_.remove(BankAccountDetailsPage))
+        .flatMap(_.remove(BuildingSocietyDetailsPage))
     } else {
       super.cleanup(value, userAnswers)
     }

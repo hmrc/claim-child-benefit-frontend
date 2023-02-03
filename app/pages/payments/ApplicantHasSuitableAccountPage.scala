@@ -43,7 +43,9 @@ case object ApplicantHasSuitableAccountPage extends QuestionPage[Boolean] {
     if (value.contains(false)) {
       userAnswers
         .remove(BankAccountHolderPage)
+        .flatMap(_.remove(AccountTypePage))
         .flatMap(_.remove(BankAccountDetailsPage))
+        .flatMap(_.remove(BuildingSocietyDetailsPage))
     } else {
       super.cleanup(value, userAnswers)
     }
