@@ -86,6 +86,9 @@ POST       /have-suitable-bank-account                        controllers.paymen
 GET        /bank-account-holder                         controllers.payments.BankAccountHolderController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /bank-account-holder                         controllers.payments.BankAccountHolderController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
+GET        /account-type                        controllers.payments.AccountTypeController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /account-type                        controllers.payments.AccountTypeController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 GET        /bank-account-details                        controllers.payments.BankAccountDetailsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /bank-account-details                        controllers.payments.BankAccountDetailsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 

@@ -237,6 +237,16 @@ bankAccountHolder.someoneElse = The account is in someone else’s name
 bankAccountHolder.error.required = Select who the account holder is
 bankAccountHolder.change.hidden = who the account holder is
 
+accountType.title = What bank account or building society details do you know?
+accountType.heading = What bank account or building society details do you know?
+accountType.checkYourAnswersLabel = Account details you know
+accountType.sortCodeAndAccountNumber = Sort code and account number
+accountType.sortCodeAndAccountNumber.hint = Sort code will be a 6 digit number on your card. Account number will be between 6 and 8 digits long.
+accountType.buildingSocietyRollNumber = Building society roll number
+accountType.buildingSocietyRollNumber.hint = You can find it on your card, statement or passbook.
+accountType.error.required = Select what bank account or building society details you know
+accountType.change.hidden = what bank account or building society details you know
+
 bankAccountDetails.title = What are the bank or building society account details that Child Benefit can be paid to?
 bankAccountDetails.heading = What are the bank or building society account details that Child Benefit can be paid to?
 bankAccountDetails.error.sortCode.failedModulusCheck = Enter a recognised sort code and account number
