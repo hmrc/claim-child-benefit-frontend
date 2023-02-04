@@ -71,7 +71,7 @@ class JourneyModelProviderSpec
   private val previousName1 = ApplicantPreviousName("previous name 1")
   private val previousName2 = ApplicantPreviousName("previous name 2")
 
-  private val bankAccountDetails = BankAccountDetails("first", "last", "bank name", "00000000", "000000", None)
+  private val bankAccountDetails = BankAccountDetails("first", "last", "00000000", "000000")
   private val bankAccountHolder = BankAccountHolder.Applicant
   private val buildingSocietyDetails = arbitrary[BuildingSocietyDetails].sample.value
   private val eldestChildName = ChildName("first", None, "last")

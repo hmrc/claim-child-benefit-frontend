@@ -34,12 +34,10 @@ object BankAccountDetailsSummary {
       answer =>
 
         val value = Seq(
-          Some(HtmlFormat.escape(s"${answer.firstName} ${answer.lastName}").toString),
-          Some(HtmlFormat.escape(answer.bankName).toString),
-          Some(HtmlFormat.escape(answer.sortCode).toString),
-          Some(HtmlFormat.escape(answer.accountNumber).toString),
-          answer.rollNumber.map(HtmlFormat.escape)
-        ).flatten.mkString("<br/>")
+          HtmlFormat.escape(s"${answer.firstName} ${answer.lastName}").toString,
+          HtmlFormat.escape(answer.sortCode).toString,
+          HtmlFormat.escape(answer.accountNumber).toString,
+        ).mkString("<br/>")
 
         SummaryListRowViewModel(
           key = "bankAccountDetails.checkYourAnswersLabel",

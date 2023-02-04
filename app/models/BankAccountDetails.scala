@@ -36,10 +36,8 @@ object AccountDetails {
 final case class BankAccountDetails (
                                       firstName: String,
                                       lastName: String,
-                                      bankName: String,
                                       sortCode: String,
-                                      accountNumber: String,
-                                      rollNumber: Option[String]
+                                      accountNumber: String
                                     ) extends AccountDetails {
 
   lazy val sortCodeTrimmed: String =

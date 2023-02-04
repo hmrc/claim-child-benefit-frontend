@@ -43,7 +43,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val bankAccountDetailsRoute = routes.BankAccountDetailsController.onPageLoad(waypoints).url
 
-  private val validAnswer = BankAccountDetails("first", "last", "bank name", "123456", "00123456", None)
+  private val validAnswer = BankAccountDetails("first", "last", "123456", "00123456")
   private val userAnswers = emptyUserAnswers.set(BankAccountDetailsPage, validAnswer).success.value
 
   "BankAccountDetails Controller" - {
@@ -111,51 +111,10 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
         running(application) {
           val request =
             FakeRequest(POST, bankAccountDetailsRoute)
-              .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("bankName", "bank name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+              .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"))
 
           val result = route(application, request).value
           val expectedAnswers = emptyUserAnswers.set(BankAccountDetailsPage, validAnswer).success.value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
-          verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
-        }
-      }
-
-      "must save the answer and redirect to the next page when valid data is submitted for an account needing a roll number and the BARS response is successful" in {
-
-        val happyBarsResponse = ValidateBankDetailsResponseModel(
-          accountNumberIsWellFormatted = ReputationResponseEnum.Yes,
-          nonStandardAccountDetailsRequiredForBacs = ReputationResponseEnum.Yes,
-          sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes,
-          sortCodeSupportsDirectCredit = Some(ReputationResponseEnum.Yes)
-        )
-
-        val mockBarsService = mock[BarsService]
-        val mockUserDataService = mock[UserDataService]
-        val mockFeatureFlags = mock[FeatureFlags]
-
-        when(mockBarsService.validateBankDetails(any())(any(), any())) thenReturn Future.successful(Some(happyBarsResponse))
-        when(mockUserDataService.set(any())) thenReturn Future.successful(true)
-        when(mockFeatureFlags.validateBankDetails) thenReturn true
-
-        val application =
-          applicationBuilder(userAnswers = Some(emptyUserAnswers))
-            .overrides(
-              bind[UserDataService].toInstance(mockUserDataService),
-              bind[BarsService].toInstance(mockBarsService),
-              bind[FeatureFlags].toInstance(mockFeatureFlags)
-            )
-            .build()
-
-        running(application) {
-          val request =
-            FakeRequest(POST, bankAccountDetailsRoute)
-              .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("bankName", "bank name"), ("accountNumber", "00123456"), ("sortCode", "123456"), ("rollNumber", "abc/123"))
-
-          val answerWithRollNumber = validAnswer.copy(rollNumber = Some("abc/123"))
-          val result = route(application, request).value
-          val expectedAnswers = emptyUserAnswers.set(BankAccountDetailsPage, answerWithRollNumber).success.value
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
@@ -192,7 +151,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
         running(application) {
           val request =
             FakeRequest(POST, bankAccountDetailsRoute)
-              .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("bankName", "bank name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+              .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"))
 
           val result = route(application, request).value
           val expectedAnswers = emptyUserAnswers.set(BankAccountDetailsPage, validAnswer).success.value
@@ -225,7 +184,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
         running(application) {
           val request =
             FakeRequest(POST, bankAccountDetailsRoute)
-              .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("bankName", "bank name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+              .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"))
 
           val result = route(application, request).value
           val expectedAnswers = emptyUserAnswers.set(BankAccountDetailsPage, validAnswer).success.value
@@ -260,7 +219,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
         running(application) {
           val request =
             FakeRequest(POST, bankAccountDetailsRoute)
-              .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("bankName", "bank name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+              .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"))
 
           val result = route(application, request).value
           val expectedAnswers = emptyUserAnswers.set(BankAccountDetailsPage, validAnswer).success.value
@@ -316,7 +275,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("bankName", "bank name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"))
 
         val result = route(application, request).value
 
@@ -347,7 +306,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("bankName", "bank name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"))
 
         val result = route(application, request).value
 
@@ -355,7 +314,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
-    "must return a Bad Request when the BARS response indicates a roll number is required and none was provided" in {
+    "must return a Bad Request when the BARS response indicates special details are required" in {
 
       val invalidDetailsResponse = ValidateBankDetailsResponseModel(
         accountNumberIsWellFormatted = ReputationResponseEnum.Yes,
@@ -378,7 +337,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("bankName", "bank name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"))
 
         val result = route(application, request).value
 
@@ -409,7 +368,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("bankName", "bank name"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"))
 
         val result = route(application, request).value
 

@@ -130,11 +130,9 @@ trait ModelGenerators {
       for {
         firstName <- arbitrary[String]
         lastName <- arbitrary[String]
-        bankName <- arbitrary[String]
         accountNumber <- arbitrary[String]
         sortCode <- arbitrary[String]
-        rollNumber <- Gen.option(arbitrary[String])
-      } yield BankAccountDetails(firstName, lastName, bankName, accountNumber, sortCode, rollNumber)
+      } yield BankAccountDetails(firstName, lastName, accountNumber, sortCode)
     }
 
   implicit lazy val arbitraryBuildingSocietyDetails: Arbitrary[BuildingSocietyDetails] =

@@ -151,12 +151,10 @@ object DownloadAuditEvent {
       case bankAccount: JourneyModel.BankAccountWithHolder =>
         BankAccount(
           holder = bankAccount.holder.toString,
-          bankName = bankAccount.details.bankName,
           firstName = bankAccount.details.firstName,
           lastName = bankAccount.details.lastName,
           sortCode = bankAccount.details.sortCode,
-          accountNumber = bankAccount.details.accountNumber,
-          rollNumber = bankAccount.details.rollNumber
+          accountNumber = bankAccount.details.accountNumber
         )
 
       case buildingSociety: JourneyModel.BuildingSocietyWithHolder =>
@@ -349,7 +347,7 @@ object DownloadAuditEvent {
     implicit lazy val writes: Writes[BuildingSociety] = Json.writes
   }
 
-  private[audit] final case class BankAccount(holder: String, firstName: String, lastName: String, bankName: String, sortCode: String, accountNumber: String, rollNumber: Option[String]) extends AccountDetails
+  private[audit] final case class BankAccount(holder: String, firstName: String, lastName: String, sortCode: String, accountNumber: String) extends AccountDetails
   object BankAccount {
     implicit lazy val writes: Writes[BankAccount] = Json.writes
   }

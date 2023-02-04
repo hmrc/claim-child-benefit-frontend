@@ -10,10 +10,4 @@
 
 @line("pdf.accountHolder", messages(s"pdf.accountHolder.${accountHolder.toString}"))
 
-@line("pdf.bankName", bankAccount.bankName)
-
-@bankAccount.rollNumber.map { rollNumber =>
-    line("pdf.rollNumber", rollNumber)
-}
-
 @line("pdf.accountName", s"${bankAccount.firstName} ${bankAccount.lastName}")
