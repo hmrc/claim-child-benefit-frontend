@@ -12,7 +12,8 @@
 
 @line("pdf.wantToBePaidToExistingAccount", messages("site.no"))
 
-@accountDetails.map { details => details match {
-    case x: JourneyModel.BankAccountWithHolder => bankAccountSection(x)
-    case x: JourneyModel.BuildingSocietyWithHolder => buildingSocietySection(x)
+@{accountDetails.map {y => y match {
+    case JourneyModel.BankAccountWithHolder(holder, details) => bankAccountSection(holder, details)
+    case JourneyModel.BuildingSocietyWithHolder(holder, details) => buildingSocietySection(holder, details)
 }}.getOrElse(line("pdf.applicantHasSuitableAccount", messages("site.no")))
+}

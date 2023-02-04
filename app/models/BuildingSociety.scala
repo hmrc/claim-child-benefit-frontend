@@ -122,7 +122,7 @@ object BuildingSociety {
       allBuildingSocieties.map {
         nationality =>
           SelectItemViewModel(
-            value = nationality.name,
+            value = nationality.id,
             text = nationality.name
           )
       }

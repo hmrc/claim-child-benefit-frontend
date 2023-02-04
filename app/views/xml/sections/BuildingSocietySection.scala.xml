@@ -2,10 +2,12 @@
     line: Line
 )
 
-@(accountHolder: BankAccountHolder, buildingSociety: BuildingSocietyDetails)(implicit messages: Messages)
+@(holder: BankAccountHolder, details: BuildingSocietyDetails)(implicit messages: Messages)
 
-@line("pdf.buildingSociety", buildingSociety.buildingSociety.name)
+@line("pdf.buildingSociety", details.buildingSociety.name)
 
-@line("pdf.accountHolder", messages(s"pdf.accountHolder.${accountHolder.toString}"))
+line("pdf.rollNumber", details.rollNumber)
 
-line("pdf.rollNumber", buildingSociety.rollNumber)
+@line("pdf.accountHolder", messages(s"pdf.accountHolder.${holder.toString}"))
+
+@line("pdf.accountName", s"${details.firstName} ${details.lastName}")
