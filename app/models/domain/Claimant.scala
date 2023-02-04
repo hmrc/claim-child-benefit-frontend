@@ -16,6 +16,7 @@
 
 package models.domain
 
+import models.JourneyModel
 import models.domain.Nationality.UkCta
 import play.api.libs.json.{Json, OWrites}
 
@@ -24,10 +25,28 @@ sealed trait Claimant
 object Claimant {
 
   implicit lazy val writes: OWrites[Claimant] = OWrites {
-    case x: UkCtaClaimantAlwaysResident       => Json.toJsObject(x)(UkCtaClaimantAlwaysResident.writes)
-    case x: UkCtaClaimantNotAlwaysResident    => Json.toJsObject(x)(UkCtaClaimantNotAlwaysResident.writes)
-    case x: NonUkCtaClaimantAlwaysResident    => Json.toJsObject(x)(NonUkCtaClaimantAlwaysResident.writes)
+    case x: UkCtaClaimantAlwaysResident => Json.toJsObject(x)(UkCtaClaimantAlwaysResident.writes)
+    case x: UkCtaClaimantNotAlwaysResident => Json.toJsObject(x)(UkCtaClaimantNotAlwaysResident.writes)
+    case x: NonUkCtaClaimantAlwaysResident => Json.toJsObject(x)(NonUkCtaClaimantAlwaysResident.writes)
     case x: NonUkCtaClaimantNotAlwaysResident => Json.toJsObject(x)(NonUkCtaClaimantNotAlwaysResident.writes)
+  }
+
+  def build(nino: String, journeyModel: JourneyModel): Claimant = {
+    val ukCta = journeyModel.applicant.nationalities.exists(_.group == models.NationalityGroup.UkCta)
+    val alwaysResident = journeyModel.applicant.residency == JourneyModel.Residency.AlwaysLivedInUk
+    val hicbcOptOut = journeyModel.paymentPreference match {
+      case _: JourneyModel.PaymentPreference.DoNotPay => true
+      case _ => false
+    }
+
+    (ukCta, alwaysResident) match {
+      case (true, true) =>
+        UkCtaClaimantAlwaysResident(
+          nino = nino,
+          hmfAbroad = journeyModel.applicant.memberOfHMForcesOrCivilServantAbroad,
+          hicbcOptOut = hicbcOptOut
+        )
+    }
   }
 }
 

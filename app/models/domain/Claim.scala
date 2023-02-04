@@ -16,6 +16,7 @@
 
 package models.domain
 
+import models.JourneyModel
 import play.api.libs.json.{Json, OWrites, Writes}
 
 import java.time.LocalDate
@@ -34,4 +35,8 @@ object Claim {
   implicit private lazy val dateWrites: Writes[LocalDate] = CbsDateFormats.localDateWrites
 
   implicit lazy val writes: OWrites[Claim] = Json.writes
+
+  def build(model: JourneyModel): Claim = ???
+
+
 }
