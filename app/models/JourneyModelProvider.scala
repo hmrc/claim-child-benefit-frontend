@@ -452,13 +452,28 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
     import CurrentlyReceivingChildBenefit._
     import PaymentPreference._
 
-    def getBankAccount: IorNec[Query, Option[BankAccount]] =
+    def getBank: IorNec[Query, BankAccountWithHolder] =
+      (
+        answers.getIor(BankAccountHolderPage),
+        answers.getIor(BankAccountDetailsPage)
+      ).parMapN(BankAccountWithHolder.apply)
+
+    def getBuildingSociety: IorNec[Query, BuildingSocietyWithHolder] =
+      (
+        answers.getIor(BankAccountHolderPage),
+        answers.getIor(BuildingSocietyDetailsPage)
+      ).parMapN(BuildingSocietyWithHolder.apply)
+
+    def getAccountDetails: IorNec[Query, AccountDetailsWithHolder] =
+      answers.getIor(AccountTypePage).flatMap {
+        case AccountType.SortCodeAccountNumber     => getBank
+        case AccountType.BuildingSocietyRollNumber => getBuildingSociety
+      }
+
+    def getBankAccount: IorNec[Query, Option[AccountDetailsWithHolder]] =
       answers.getIor(ApplicantHasSuitableAccountPage).flatMap {
         case true =>
-          (
-            answers.getIor(BankAccountHolderPage),
-            answers.getIor(BankAccountDetailsPage)
-            ).parMapN(BankAccount.apply).map(Some(_))
+          getAccountDetails.map(Some(_))
         case false =>
           Ior.Right(None)
       }
@@ -467,7 +482,7 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
       (
         answers.getIor(EldestChildNamePage),
         answers.getIor(EldestChildDateOfBirthPage)
-        ).parMapN(EldestChild.apply)
+      ).parMapN(EldestChild.apply)
 
     def getWeeklyOrEveryFourWeeksWithChild: IorNec[Query, PaymentPreference] =
       answers.get(PaymentFrequencyPage) match {

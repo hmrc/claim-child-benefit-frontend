@@ -18,6 +18,21 @@ package models
 
 import play.api.libs.json._
 
+sealed trait AccountDetails
+
+object AccountDetails {
+
+  private val reads: Reads[AccountDetails] =
+    BankAccountDetails.format.widen[AccountDetails] orElse BuildingSocietyDetails.format.widen[AccountDetails]
+
+  private val writes: Writes[AccountDetails] = Writes {
+    case x: BankAccountDetails => Json.toJson(x)(BankAccountDetails.format)
+    case x: BuildingSocietyDetails => Json.toJson(x)(BuildingSocietyDetails.format)
+  }
+
+  implicit lazy val format: Format[AccountDetails] = Format(reads, writes)
+}
+
 final case class BankAccountDetails (
                                       firstName: String,
                                       lastName: String,
@@ -25,7 +40,7 @@ final case class BankAccountDetails (
                                       sortCode: String,
                                       accountNumber: String,
                                       rollNumber: Option[String]
-                                    ) {
+                                    ) extends AccountDetails {
 
   lazy val sortCodeTrimmed: String =
     sortCode
@@ -50,7 +65,7 @@ final case class BuildingSocietyDetails(
                                          lastName: String,
                                          buildingSociety: BuildingSociety,
                                          rollNumber: String
-                                       )
+                                       ) extends AccountDetails
 
 object BuildingSocietyDetails {
 

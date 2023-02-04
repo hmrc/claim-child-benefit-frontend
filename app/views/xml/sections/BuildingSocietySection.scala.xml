@@ -1,0 +1,11 @@
+@this(
+    line: Line
+)
+
+@(accountHolder: BankAccountHolder, buildingSociety: BuildingSocietyDetails)(implicit messages: Messages)
+
+@line("pdf.buildingSociety", buildingSociety.buildingSociety.name)
+
+@line("pdf.accountHolder", messages(s"pdf.accountHolder.${accountHolder.toString}"))
+
+line("pdf.rollNumber", buildingSociety.rollNumber)

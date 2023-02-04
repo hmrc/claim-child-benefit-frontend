@@ -101,13 +101,13 @@ object DownloadAuditEvent {
       paymentPreference = model.paymentPreference match {
         case JourneyModel.PaymentPreference.Weekly(bankAccount, eldestChild) =>
           Weekly(
-            bankAccount.map(convertBankAccount),
+            bankAccount.map(convertAccountDetails),
             eldestChild.map(convertEldestChild)
           )
 
         case JourneyModel.PaymentPreference.EveryFourWeeks(bankAccount, eldestChild) =>
           EveryFourWeeks(
-            bankAccount.map(convertBankAccount),
+            bankAccount.map(convertAccountDetails),
             eldestChild.map(convertEldestChild)
           )
 
@@ -146,16 +146,28 @@ object DownloadAuditEvent {
     }
   }
 
-  private def convertBankAccount(bankAccount: JourneyModel.BankAccount): BankAccount =
-    BankAccount(
-      holder        = bankAccount.holder.toString,
-      bankName      = bankAccount.details.bankName,
-      firstName     = bankAccount.details.firstName,
-      lastName      = bankAccount.details.lastName,
-      sortCode      = bankAccount.details.sortCode,
-      accountNumber = bankAccount.details.accountNumber,
-      rollNumber    = bankAccount.details.rollNumber
-    )
+  private def convertAccountDetails(details: JourneyModel.AccountDetailsWithHolder): AccountDetails =
+    details match {
+      case bankAccount: JourneyModel.BankAccountWithHolder =>
+        BankAccount(
+          holder = bankAccount.holder.toString,
+          bankName = bankAccount.details.bankName,
+          firstName = bankAccount.details.firstName,
+          lastName = bankAccount.details.lastName,
+          sortCode = bankAccount.details.sortCode,
+          accountNumber = bankAccount.details.accountNumber,
+          rollNumber = bankAccount.details.rollNumber
+        )
+
+      case buildingSociety: JourneyModel.BuildingSocietyWithHolder =>
+        BuildingSociety(
+          holder = buildingSociety.holder.toString,
+          firstName = buildingSociety.details.firstName,
+          lastName = buildingSociety.details.lastName,
+          buildingSociety = buildingSociety.details.buildingSociety.name,
+          rollNumber = buildingSociety.details.rollNumber
+        )
+    }
 
   private def convertAdultName(name: models.AdultName): AdultName =
     AdultName(
@@ -324,14 +336,27 @@ object DownloadAuditEvent {
     implicit lazy val writes: Writes[Child] = Json.writes
   }
 
-  private[audit] final case class BankAccount(holder: String, firstName: String, lastName: String, bankName: String, sortCode: String, accountNumber: String, rollNumber: Option[String])
+  private[audit] sealed trait AccountDetails
+  object AccountDetails {
+    implicit lazy val writes: Writes[AccountDetails] = Writes {
+      case x: BankAccount => Json.toJson(x)(BankAccount.writes)
+      case x: BuildingSociety => Json.toJson(x)(BuildingSociety.writes)
+    }
+  }
+
+  private[audit] final case class BuildingSociety(holder: String, firstName: String, lastName: String, buildingSociety: String, rollNumber: String) extends AccountDetails
+  object BuildingSociety {
+    implicit lazy val writes: Writes[BuildingSociety] = Json.writes
+  }
+
+  private[audit] final case class BankAccount(holder: String, firstName: String, lastName: String, bankName: String, sortCode: String, accountNumber: String, rollNumber: Option[String]) extends AccountDetails
   object BankAccount {
     implicit lazy val writes: Writes[BankAccount] = Json.writes
   }
 
   private[audit] sealed trait PaymentPreference
 
-  private[audit] final case class Weekly(bankAccount: Option[BankAccount], eldestChild: Option[EldestChild]) extends PaymentPreference
+  private[audit] final case class Weekly(bankAccount: Option[AccountDetails], eldestChild: Option[EldestChild]) extends PaymentPreference
   object Weekly {
     implicit lazy val writes: Writes[Weekly] = Writes {
       x =>
@@ -351,7 +376,7 @@ object DownloadAuditEvent {
     }
   }
 
-  private[audit] final case class EveryFourWeeks(bankAccount: Option[BankAccount], eldestChild: Option[EldestChild]) extends PaymentPreference
+  private[audit] final case class EveryFourWeeks(bankAccount: Option[AccountDetails], eldestChild: Option[EldestChild]) extends PaymentPreference
   object EveryFourWeeks {
     implicit lazy val writes: Writes[EveryFourWeeks] = Writes {
       x =>

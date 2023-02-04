@@ -115,7 +115,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
         ),
         benefits = Some(Set(models.Benefits.IncomeSupport, models.Benefits.JobseekersAllowance)),
         paymentPreference = JourneyModel.PaymentPreference.Weekly(
-          bankAccount = Some(JourneyModel.BankAccount(
+          accountDetails = Some(JourneyModel.BankAccountWithHolder(
             holder = models.BankAccountHolder.Applicant,
             details = models.BankAccountDetails("first", "last", "bank name", "000000", "00000000", Some("roll number"))
           )),
