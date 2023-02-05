@@ -41,4 +41,20 @@ final case class AddCountryApplicantReceivedBenefitsPage(override val index: Opt
     routes.AddCountryApplicantReceivedBenefitsController.onPageLoad(waypoints)
 
   override def deriveNumberOfItems: Derivable[Seq[JsObject], Int] = DeriveNumberOfCountriesApplicantReceivedBenefits
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true =>
+        index
+          .map(i => CountryApplicantReceivedBenefitsPage(Index(i.position + 1)))
+          .getOrElse {
+            answers
+              .get(deriveNumberOfItems)
+              .map(n => CountryApplicantReceivedBenefitsPage(Index(n)))
+              .orRecover
+          }
+
+      case false =>
+        ApplicantIsHmfOrCivilServantPage
+    }.orRecover
 }

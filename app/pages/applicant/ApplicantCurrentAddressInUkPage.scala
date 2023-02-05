@@ -35,7 +35,7 @@ case object ApplicantCurrentAddressInUkPage extends QuestionPage[Boolean] {
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
-      case true  => ApplicantCurrentUkAddressPage
+      case true  => ApplicantArrivedInUkPage
       case false => ApplicantCurrentInternationalAddressPage
     }.orRecover
 

@@ -30,4 +30,7 @@ final case class CountryApplicantReceivedBenefitsPage(index: Index) extends Ques
 
   override def route(waypoints: Waypoints): Call =
     routes.CountryApplicantReceivedBenefitsController.onPageLoad(waypoints, index)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    AddCountryApplicantReceivedBenefitsPage(Some(index))
 }

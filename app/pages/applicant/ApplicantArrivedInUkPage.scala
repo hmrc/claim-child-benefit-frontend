@@ -34,5 +34,5 @@ case object ApplicantArrivedInUkPage extends QuestionPage[LocalDate] {
     routes.ApplicantArrivedInUkController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantCurrentAddressInUkPage
+    ApplicantCurrentUkAddressPage
 }

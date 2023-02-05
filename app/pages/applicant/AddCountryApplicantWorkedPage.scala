@@ -40,6 +40,21 @@ final case class AddCountryApplicantWorkedPage(override val index: Option[Index]
   override def route(waypoints: Waypoints): Call =
     routes.AddCountryApplicantWorkedController.onPageLoad(waypoints)
 
-
   override def deriveNumberOfItems: Derivable[Seq[JsObject], Int] = DeriveNumberOfCountriesApplicantWorked
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true =>
+        index
+        .map(i => CountryApplicantWorkedPage(Index(i.position + 1)))
+        .getOrElse {
+          answers
+            .get(deriveNumberOfItems)
+            .map(n => CountryApplicantWorkedPage(Index(n)))
+            .orRecover
+        }
+
+      case false =>
+        ApplicantReceivedBenefitsAbroadPage
+    }.orRecover
 }

@@ -18,7 +18,7 @@ package journey
 
 import generators.ModelGenerators
 import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments}
-import models.{AdultName, ApplicantPreviousName, ChildName, Country, Index, InternationalAddress, Nationality, UkAddress}
+import models.{AdultName, ApplicantPreviousName, ApplicantResidence, ChildName, Country, Index, InternationalAddress, Nationality, UkAddress}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
@@ -51,7 +51,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
         submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
         submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
         submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
-        submitAnswer(AlwaysLivedInUkPage, true),
+        submitAnswer(ApplicantResidencePage, ApplicantResidence.AlwaysUk),
         submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
         submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
         submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
@@ -76,7 +76,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
 
     "must not be asked if they have lived at their current address for a year" - {
 
-      "when their address is in the UK" in {
+      "when the user has always lived in the UK" in {
 
         startingFrom(ApplicantNinoKnownPage)
           .run(
@@ -88,7 +88,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
             submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
             submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
             submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
-            submitAnswer(AlwaysLivedInUkPage, true),
+            submitAnswer(ApplicantResidencePage, ApplicantResidence.AlwaysUk),
             submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
             pageMustBe(ApplicantIsHmfOrCivilServantPage)
           )
@@ -106,9 +106,8 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
             submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
             submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
             submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
-            submitAnswer(AlwaysLivedInUkPage, false),
+            submitAnswer(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
             submitAnswer(ApplicantUsuallyLivesInUkPage, true),
-            submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
             submitAnswer(ApplicantCurrentAddressInUkPage, false),
             submitAnswer(ApplicantCurrentInternationalAddressPage, internationalAddress),
             submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
@@ -161,7 +160,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
           submitAnswer(AddApplicantNationalityPage(Some(Index(0))), true),
           submitAnswer(ApplicantNationalityPage(Index(1)), Nationality.allNationalities.head),
           submitAnswer(AddApplicantNationalityPage(Some(Index(1))), false),
-          pageMustBe(AlwaysLivedInUkPage)
+          pageMustBe(ApplicantResidencePage)
         )
     }
 
@@ -185,6 +184,48 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
 
   "users who did not give a NINO" - {
 
+    "who have lived at their current address a year" - {
+      
+      "who have always lived in the UK" - {
+        
+        "must proceed" in {
+
+          startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
+            .run(
+              setUserAnswerTo(ApplicantResidencePage, ApplicantResidence.AlwaysUk),
+              submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+              pageMustBe(ApplicantIsHmfOrCivilServantPage)
+            )
+        }
+      }
+      
+      "who have lived in the UK and abroad" - {
+        
+        "must proceed" in {
+          
+          startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
+            .run(
+              setUserAnswerTo(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
+              submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+              pageMustBe(ApplicantWorkedAbroadPage)
+            )
+        }
+      }
+      
+      "who have always lived abroad" - {
+        
+        "must proceed" in {
+          
+          startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
+            .run(
+              setUserAnswerTo(ApplicantResidencePage, ApplicantResidence.AlwaysAbroad),
+              submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+              pageMustBe(ApplicantWorkedAbroadPage)
+            )
+        }
+      }
+    }
+    
     "who have not lived at their current address a year" - {
 
       "who have always lived in the UK" - {
@@ -193,7 +234,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
 
           startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
             .run(
-              setUserAnswerTo(AlwaysLivedInUkPage, true),
+              setUserAnswerTo(ApplicantResidencePage, ApplicantResidence.AlwaysUk),
               submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
               submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
               pageMustBe(ApplicantIsHmfOrCivilServantPage)
@@ -201,7 +242,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
         }
       }
 
-      "who have not always lived in the UK" - {
+      "who have lived in the UK and abroad" - {
 
         "must be asked for their previous address" - {
 
@@ -209,11 +250,11 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
 
             startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
               .run(
-                setUserAnswerTo(AlwaysLivedInUkPage, false),
+                setUserAnswerTo(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
                 submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
                 submitAnswer(ApplicantPreviousAddressInUkPage, true),
                 submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
-                pageMustBe(ApplicantIsHmfOrCivilServantPage)
+                pageMustBe(ApplicantWorkedAbroadPage)
               )
           }
 
@@ -221,48 +262,168 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
 
             startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
               .run(
-                setUserAnswerTo(AlwaysLivedInUkPage, false),
+                setUserAnswerTo(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
                 submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
                 submitAnswer(ApplicantPreviousAddressInUkPage, false),
                 submitAnswer(ApplicantPreviousInternationalAddressPage, internationalAddress),
-                pageMustBe(ApplicantIsHmfOrCivilServantPage)
+                pageMustBe(ApplicantWorkedAbroadPage)
               )
           }
+        }
+      }
+
+      "who have always lived abroad" - {
+
+        "must be asked for their previous address" in {
+
+          startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
+            .run(
+              setUserAnswerTo(ApplicantResidencePage, ApplicantResidence.AlwaysAbroad),
+              submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
+              submitAnswer(ApplicantPreviousInternationalAddressPage, internationalAddress),
+              pageMustBe(ApplicantWorkedAbroadPage)
+            )
         }
       }
     }
   }
 
-  "users who have not always lived in the UK" - {
+  "users who have lived in the UK and abroad" - {
 
     "who usually live in the UK" - {
 
-      "must be asked when they arrived in the UK" in {
+      "and currently live in the UK" - {
 
-        startingFrom(AlwaysLivedInUkPage)
-          .run(
-            submitAnswer(AlwaysLivedInUkPage, false),
-            submitAnswer(ApplicantUsuallyLivesInUkPage, true),
-            submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
-            pageMustBe(ApplicantCurrentAddressInUkPage)
-          )
+        "must be asked when they arrived in the UK" in {
+
+          startingFrom(ApplicantResidencePage)
+            .run(
+              submitAnswer(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
+              submitAnswer(ApplicantUsuallyLivesInUkPage, true),
+              submitAnswer(ApplicantCurrentAddressInUkPage, true),
+              submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
+              pageMustBe(ApplicantCurrentUkAddressPage)
+            )
+        }
+      }
+
+      "and do not currently live in the UK" - {
+
+        "must not be asked when they arrived in the UK" in {
+
+          startingFrom(ApplicantResidencePage)
+            .run(
+              submitAnswer(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
+              submitAnswer(ApplicantUsuallyLivesInUkPage, true),
+              submitAnswer(ApplicantCurrentAddressInUkPage, false),
+              pageMustBe(ApplicantCurrentInternationalAddressPage)
+            )
+        }
       }
     }
 
     "who do not usually live in the UK" - {
 
-      "must be asked which country they usually live in and when they arrived in the UK" in {
+      "and currently live in the UK" - {
 
-        startingFrom(AlwaysLivedInUkPage)
-          .run(
-            submitAnswer(AlwaysLivedInUkPage, false),
-            submitAnswer(ApplicantUsuallyLivesInUkPage, false),
-            submitAnswer(ApplicantUsualCountryOfResidencePage, country),
-            submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
-            pageMustBe(ApplicantCurrentAddressInUkPage)
-          )
+        "must be asked which country they usually live in and when they arrived in the UK" in {
+
+          startingFrom(ApplicantResidencePage)
+            .run(
+              submitAnswer(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
+              submitAnswer(ApplicantUsuallyLivesInUkPage, false),
+              submitAnswer(ApplicantUsualCountryOfResidencePage, country),
+              submitAnswer(ApplicantCurrentAddressInUkPage, true),
+              submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
+              pageMustBe(ApplicantCurrentUkAddressPage)
+            )
+        }
+      }
+
+      "and do not currently live in the UK" - {
+
+        "must be asked which country they usually live in" in {
+
+          startingFrom(ApplicantResidencePage)
+            .run(
+              submitAnswer(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
+              submitAnswer(ApplicantUsuallyLivesInUkPage, false),
+              submitAnswer(ApplicantUsualCountryOfResidencePage, country),
+              submitAnswer(ApplicantCurrentAddressInUkPage, false),
+              pageMustBe(ApplicantCurrentInternationalAddressPage)
+            )
+        }
       }
     }
+  }
+
+  "users who have always lived abroad" - {
+
+    "must be asked which country they usually live in" in {
+
+      startingFrom(ApplicantResidencePage)
+        .run(
+          submitAnswer(ApplicantResidencePage, ApplicantResidence.AlwaysAbroad),
+          submitAnswer(ApplicantUsualCountryOfResidencePage, country),
+          pageMustBe(ApplicantCurrentInternationalAddressPage)
+        )
+    }
+  }
+
+  "users who have worked abroad" - {
+
+    "must be able to add and remove multiple countries" in {
+
+      startingFrom(ApplicantWorkedAbroadPage)
+        .run(
+          submitAnswer(ApplicantWorkedAbroadPage, true),
+          submitAnswer(CountryApplicantWorkedPage(Index(0)), country),
+          submitAnswer(AddCountryApplicantWorkedPage(Some(Index(0))), true),
+          submitAnswer(CountryApplicantWorkedPage(Index(1)), country),
+          goTo(RemoveCountryApplicantWorkedPage(Index(1))),
+          removeAddToListItem(CountryApplicantWorkedPage(Index(1))),
+          pageMustBe(AddCountryApplicantWorkedPage()),
+          submitAnswer(AddCountryApplicantWorkedPage(), false),
+          pageMustBe(ApplicantReceivedBenefitsAbroadPage)
+        )
+    }
+  }
+  
+  "users who have not worked abroad must proceed" in {
+    
+    startingFrom(ApplicantWorkedAbroadPage)
+      .run(
+        submitAnswer(ApplicantWorkedAbroadPage, false),
+        pageMustBe(ApplicantReceivedBenefitsAbroadPage)
+      )
+  }
+
+  "users who have received benefits abroad" - {
+
+    "must be able to add and remove multiple countries" in {
+
+      startingFrom(ApplicantReceivedBenefitsAbroadPage)
+        .run(
+          submitAnswer(ApplicantReceivedBenefitsAbroadPage, true),
+          submitAnswer(CountryApplicantReceivedBenefitsPage(Index(0)), country),
+          submitAnswer(AddCountryApplicantReceivedBenefitsPage(Some(Index(0))), true),
+          submitAnswer(CountryApplicantReceivedBenefitsPage(Index(1)), country),
+          goTo(RemoveCountryApplicantReceivedBenefitsPage(Index(1))),
+          removeAddToListItem(CountryApplicantReceivedBenefitsPage(Index(1))),
+          pageMustBe(AddCountryApplicantReceivedBenefitsPage()),
+          submitAnswer(AddCountryApplicantReceivedBenefitsPage(), false),
+          pageMustBe(ApplicantIsHmfOrCivilServantPage)
+        )
+    }
+  }
+
+  "users who have not received benefits abroad must proceed" in {
+
+    startingFrom(ApplicantReceivedBenefitsAbroadPage)
+      .run(
+        submitAnswer(ApplicantReceivedBenefitsAbroadPage, false),
+        pageMustBe(ApplicantIsHmfOrCivilServantPage)
+      )
   }
 
   "users claiming Child Benefit must be asked for their eldest child's details" in {

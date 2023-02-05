@@ -31,4 +31,6 @@ final case class CountryApplicantWorkedPage(index: Index) extends QuestionPage[C
   override def route(waypoints: Waypoints): Call =
     routes.CountryApplicantWorkedController.onPageLoad(waypoints, index)
 
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    AddCountryApplicantWorkedPage(Some(index))
 }
