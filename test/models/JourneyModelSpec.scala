@@ -78,7 +78,7 @@ class JourneyModelSpec
         .set(ApplicantDateOfBirthPage, now).success.value
         .set(ApplicantPhoneNumberPage, phoneNumber).success.value
         .set(ApplicantNationalityPage(Index(0)), applicantNationality).success.value
-        .set(AlwaysLivedInUkPage, true).success.value
+        .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
         .set(ApplicantCurrentUkAddressPage, currentUkAddress).success.value
         .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
         .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value

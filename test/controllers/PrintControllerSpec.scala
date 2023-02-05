@@ -63,6 +63,7 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
       .set(ApplicantHasPreviousFamilyNamePage, false).success.value
       .set(ApplicantNinoKnownPage, false).success.value
       .set(ApplicantDateOfBirthPage, now).success.value
+      .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
       .set(ApplicantCurrentUkAddressPage, currentAddress).success.value
       .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
       .set(ApplicantPhoneNumberPage, phoneNumber).success.value

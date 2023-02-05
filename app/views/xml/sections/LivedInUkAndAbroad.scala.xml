@@ -1,0 +1,17 @@
+@import java.time.LocalDate
+
+@this(line: Line)
+
+@(usualCountryOfResidence: Option[Country], arrivalDate: Option[LocalDate])(implicit messages: Messages)
+
+@line("pdf.alwaysLivedInUk", messages("site.no"))
+
+@usualCountryOfResidence.map { country =>
+    @line("pdf.usuallyLivesInUk", messages("site.no"))
+
+    @line("pdf.usualCountryOfResidence", country.name)
+}.getOrElse(line("pdf.usuallyLivesInUk", messages("site.yes")))
+
+@arrivalDate.map { arrivalDate =>
+    @line("pdf.arrivedInUk", date(arrivalDate))
+}

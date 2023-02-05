@@ -19,6 +19,7 @@ package models
 import cats.data._
 import cats.implicits._
 import logging.Logging
+import models.ApplicantResidence._
 import models.JourneyModel._
 import models.{ChildBirthRegistrationCountry => RegistrationCountry}
 import pages._
@@ -298,11 +299,11 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
               Ior.Right(None)
 
             case false =>
-              answers.getIor(AlwaysLivedInUkPage).flatMap {
-                case true =>
+              answers.getIor(ApplicantResidencePage).flatMap {
+                case AlwaysUk =>
                   answers.getIor(ApplicantPreviousUkAddressPage).map(Some(_))
 
-                case false =>
+                case _ =>
                   answers.getIor(ApplicantPreviousAddressInUkPage).flatMap {
                     case true => answers.getIor(ApplicantPreviousUkAddressPage).map(Some(_))
                     case false => answers.getIor(ApplicantPreviousInternationalAddressPage).map(Some(_))
@@ -329,24 +330,30 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
         .map(x => Ior.Right(Some(x)))
         .getOrElse(Ior.Right(None))
 
-    def getResidency: IorNec[Query, Residency] = {
-      answers.getIor(AlwaysLivedInUkPage).flatMap {
-        case true =>
+    def getResidency: IorNec[Query, Residency] =
+      answers.getIor(ApplicantResidencePage).flatMap {
+        case AlwaysUk =>
           Ior.Right(Residency.AlwaysLivedInUk)
 
-        case false =>
-          answers.getIor(ApplicantUsuallyLivesInUkPage).flatMap {
-            case true =>
-              answers.getIor(ApplicantArrivedInUkPage).map(Residency.UsuallyLivesInUk)
-
-            case false =>
-              (
-                answers.getIor(ApplicantUsualCountryOfResidencePage),
-                answers.getIor(ApplicantArrivedInUkPage)
-              ).parMapN(Residency.UsuallyLivesAbroad)
+        case UkAndAbroad =>
+          def getCountry = answers.getIor(ApplicantUsuallyLivesInUkPage).flatMap {
+            case true  => Ior.Right(None)
+            case false => answers.getIor(ApplicantUsualCountryOfResidencePage).map(Some(_))
           }
+
+          def getArrivalDate = answers.getIor(ApplicantCurrentAddressInUkPage).flatMap {
+            case true  => answers.getIor(ApplicantArrivedInUkPage).map(Some(_))
+            case false => Ior.Right(None)
+          }
+
+          (
+            getCountry,
+            getArrivalDate
+          ).parMapN(Residency.LivedInUkAndAbroad)
+
+        case AlwaysAbroad =>
+          answers.getIor(ApplicantUsualCountryOfResidencePage).map(Residency.AlwaysLivedAbroad)
       }
-    }
 
     def getNationalities: IorNec[Query, NonEmptyList[Nationality]] = {
       val nationalities = answers.get(AllApplicantNationalities).getOrElse(Nil)

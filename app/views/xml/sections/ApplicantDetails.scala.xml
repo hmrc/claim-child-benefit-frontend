@@ -7,8 +7,8 @@
     line: Line,
     eldestChildSection: EldestChildSection,
     alwaysLivedInUk: AlwaysLivedInUk,
-    usuallyLivesInUk: UsuallyLivesInUk,
-    usuallyLivesAbroad: UsuallyLivesAbroad
+    livedInUkAndAbroad: LivedInUkAndAbroad,
+    alwaysLivedAbroad: AlwaysLivedAbroad
 )
 
 @(model: JourneyModel)(implicit messages: Messages)
@@ -57,11 +57,11 @@
                         case JourneyModel.Residency.AlwaysLivedInUk =>
                             alwaysLivedInUk()
 
-                        case JourneyModel.Residency.UsuallyLivesInUk(arrivalDate) =>
-                            usuallyLivesInUk(arrivalDate)
+                        case JourneyModel.Residency.LivedInUkAndAbroad(usualCountryOfResidence, arrivalDate) =>
+                            livedInUkAndAbroad(usualCountryOfResidence, arrivalDate)
 
-                        case JourneyModel.Residency.UsuallyLivesAbroad(country, arrivalDate) =>
-                            usuallyLivesAbroad(country.name, arrivalDate)
+                        case JourneyModel.Residency.AlwaysLivedAbroad(usualCountryOfResidence) =>
+                            alwaysLivedAbroad(usualCountryOfResidence)
                     }}
 
                     @line("pdf.hmfOrCivilServant", booleanToYesNo(model.applicant.memberOfHMForcesOrCivilServantAbroad.getOrElse(false)))

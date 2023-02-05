@@ -64,8 +64,8 @@ object JourneyModel {
 
   object Residency {
     case object AlwaysLivedInUk extends Residency
-    final case class UsuallyLivesInUk(arrivalDate: LocalDate) extends Residency
-    final case class UsuallyLivesAbroad(country: Country, arrivalDate: LocalDate) extends Residency
+    final case class LivedInUkAndAbroad(usualCountryOfResidence: Option[Country], arrivalDate: Option[LocalDate]) extends Residency
+    final case class AlwaysLivedAbroad(usualCountryOfResidence: Country) extends Residency
   }
 
   final case class Applicant(

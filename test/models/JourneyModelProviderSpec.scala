@@ -789,7 +789,7 @@ class JourneyModelProviderSpec
           .withMinimalSingleIncomeDetails
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
-          .set(AlwaysLivedInUkPage, false).success.value
+          .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
           .set(ApplicantUsuallyLivesInUkPage, false).success.value
           .set(ApplicantUsualCountryOfResidencePage, country).success.value
           .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
@@ -806,7 +806,7 @@ class JourneyModelProviderSpec
           previousAddress = None,
           telephoneNumber = phoneNumber,
           nationalities = NonEmptyList(applicantNationality, Nil),
-          residency = UsuallyLivesAbroad(country, LocalDate.now),
+          residency = LivedInUkAndAbroad(Some(country), None),
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
         )
@@ -829,6 +829,10 @@ class JourneyModelProviderSpec
             .withMinimalSingleIncomeDetails
             .withMinimalPaymentDetails
             .set(RelationshipStatusPage, Single).success.value
+            .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
+            .set(ApplicantUsuallyLivesInUkPage, true).success.value
+            .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
+            .set(ApplicantCurrentAddressInUkPage, true).success.value
             .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
             .set(ApplicantPreviousAddressInUkPage, true).success.value
             .set(ApplicantPreviousUkAddressPage, previousUkAddress).success.value
@@ -843,7 +847,7 @@ class JourneyModelProviderSpec
             previousAddress = Some(previousUkAddress),
             telephoneNumber = phoneNumber,
             nationalities = NonEmptyList(applicantNationality, Nil),
-            residency = AlwaysLivedInUk,
+            residency = LivedInUkAndAbroad(None, Some(LocalDate.now)),
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
           )
@@ -863,9 +867,10 @@ class JourneyModelProviderSpec
             .withOneChild
             .withMinimalSingleIncomeDetails
             .withMinimalPaymentDetails
-            .set(AlwaysLivedInUkPage, false).success.value
+            .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
             .set(ApplicantUsuallyLivesInUkPage, true).success.value
             .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
+            .set(ApplicantCurrentAddressInUkPage, true).success.value
             .set(RelationshipStatusPage, Single).success.value
             .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
             .set(ApplicantPreviousAddressInUkPage, false).success.value
@@ -881,7 +886,7 @@ class JourneyModelProviderSpec
             previousAddress = Some(previousInternationalAddress),
             telephoneNumber = phoneNumber,
             nationalities = NonEmptyList(applicantNationality, Nil),
-            residency = UsuallyLivesInUk(LocalDate.now),
+            residency = LivedInUkAndAbroad(None, Some(LocalDate.now)),
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
           )
@@ -2207,6 +2212,26 @@ class JourneyModelProviderSpec
         data mustBe empty
       }
 
+      "when the applicant said they haven't always lived in the UK, but whether they currently live in the UK is missing" in {
+
+        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
+          .set(ApplicantUsuallyLivesInUkPage, true).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors.value.toChain.toList must contain only ApplicantCurrentAddressInUkPage
+        data mustBe empty
+      }
+
       "when the applicant said they haven't always lived in the UK, but whether they usually live in the UK is missing" in {
 
         when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
@@ -2217,12 +2242,13 @@ class JourneyModelProviderSpec
           .withMinimalSingleIncomeDetails
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
-          .set(AlwaysLivedInUkPage, false).success.value
+          .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
+          .set(ApplicantCurrentAddressInUkPage, true).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
-        errors.value.toChain.toList must contain only ApplicantUsuallyLivesInUkPage
+        errors.value.toChain.toList must contain theSameElementsAs Seq(ApplicantUsuallyLivesInUkPage, ApplicantArrivedInUkPage)
         data mustBe empty
       }
 
@@ -2236,7 +2262,8 @@ class JourneyModelProviderSpec
           .withMinimalSingleIncomeDetails
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
-          .set(AlwaysLivedInUkPage, false).success.value
+          .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
+          .set(ApplicantCurrentAddressInUkPage, true).success.value
           .set(ApplicantUsuallyLivesInUkPage, true).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
@@ -2256,7 +2283,8 @@ class JourneyModelProviderSpec
           .withMinimalSingleIncomeDetails
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
-          .set(AlwaysLivedInUkPage, false).success.value
+          .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
+          .set(ApplicantCurrentAddressInUkPage, true).success.value
           .set(ApplicantUsuallyLivesInUkPage, false).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
@@ -2295,7 +2323,8 @@ class JourneyModelProviderSpec
           .withOneChild
           .withMinimalSingleIncomeDetails
           .withMinimalPaymentDetails
-          .set(AlwaysLivedInUkPage, false).success.value
+          .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
+          .set(ApplicantCurrentAddressInUkPage, true).success.value
           .set(ApplicantUsuallyLivesInUkPage, true).success.value
           .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
           .set(RelationshipStatusPage, Single).success.value
@@ -2862,11 +2891,11 @@ class JourneyModelProviderSpec
         .set(ApplicantNamePage, applicantName).success.value
         .set(ApplicantHasPreviousFamilyNamePage, false).success.value
         .set(ApplicantDateOfBirthPage, now).success.value
-        .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
         .set(ApplicantPhoneNumberPage, phoneNumber).success.value
         .set(ApplicantNationalityPage(Index(0)), applicantNationality).success.value
-        .set(AlwaysLivedInUkPage, true).success.value
+        .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
         .set(ApplicantCurrentUkAddressPage, currentUkAddress).success.value
+        .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
         .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
 
     def withMinimalPartnerDetails: UserAnswers =
