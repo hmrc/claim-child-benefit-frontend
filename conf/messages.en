@@ -178,6 +178,11 @@ benefits.employmentSupport = Income-related Employment and Support Allowance (ES
 benefits.universalCredit = Universal Credit
 benefits.none = None of these benefits
 
+employmentStatus.employed = Employed
+employmentStatus.lookingForWork = Looking for work
+employmentStatus.selfEmployed = Self-employed
+employmentStatus.noneOfTheseApply = None of these apply
+
 income.belowLowerThreshold = Below £50,100
 income.betweenThresholds = £50,100 - £60,000
 income.aboveUpperThreshold = Above £60,000
@@ -189,6 +194,14 @@ applicantBenefits.checkYourAnswersLabel = Benefits you get
 applicantBenefits.error.required = Select the benefits you get
 applicantBenefits.error.mutuallyExclusive = Select the benefits you get or none of these benefits
 applicantBenefits.change.hidden = the benefits you get
+
+applicantEmploymentStatus.title = What is your employment status?
+applicantEmploymentStatus.heading = What is your employment status?
+applicantEmploymentStatus.hint = Select all that apply.
+applicantEmploymentStatus.checkYourAnswersLabel = Your employment status
+applicantEmploymentStatus.error.required = Select your employment status
+applicantEmploymentStatus.error.mutuallyExclusive = Select your employment status or none of these apply
+applicantEmploymentStatus.change.hidden = your employment status
 
 applicantIncome.title = What is your adjusted net income each year?
 applicantIncome.heading = What is your adjusted net income each year?
