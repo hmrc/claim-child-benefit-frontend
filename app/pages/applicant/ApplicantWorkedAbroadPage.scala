@@ -18,9 +18,10 @@ package pages.applicant
 
 import controllers.applicant.routes
 import models.{Index, UserAnswers}
-import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
+import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+import queries.AllCountriesApplicantWorked
 
 import scala.util.Try
 
@@ -38,4 +39,15 @@ case object ApplicantWorkedAbroadPage extends QuestionPage[Boolean] {
       case true  => CountryApplicantWorkedPage(Index(0))
       case false => ApplicantReceivedBenefitsAbroadPage
     }.orRecover
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    value.map {
+      case true =>
+        super.cleanup(value, userAnswers)
+
+      case false =>
+        userAnswers
+          .remove(AllCountriesApplicantWorked)
+          .flatMap(_.remove(AddCountryApplicantWorkedPage()))
+    }.getOrElse(super.cleanup(value, userAnswers))
 }

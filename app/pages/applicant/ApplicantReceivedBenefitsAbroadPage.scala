@@ -21,6 +21,7 @@ import models.{Index, UserAnswers}
 import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+import queries.AllCountriesApplicantReceivedBenefits
 
 import scala.util.Try
 
@@ -38,4 +39,15 @@ case object ApplicantReceivedBenefitsAbroadPage extends QuestionPage[Boolean] {
       case true  => CountryApplicantReceivedBenefitsPage(Index(0))
       case false => ApplicantIsHmfOrCivilServantPage
     }.orRecover
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    value.map {
+      case true =>
+        super.cleanup(value, userAnswers)
+
+      case false =>
+        userAnswers
+          .remove(AllCountriesApplicantReceivedBenefits)
+          .flatMap(_.remove(AddCountryApplicantReceivedBenefitsPage()))
+    }.getOrElse(super.cleanup(value, userAnswers))
 }

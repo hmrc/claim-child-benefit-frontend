@@ -41,7 +41,12 @@ case object ApplicantCurrentAddressInUkPage extends QuestionPage[Boolean] {
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
     value.map {
-      case true  => userAnswers.remove(ApplicantCurrentInternationalAddressPage)
-      case false => userAnswers.remove(ApplicantCurrentUkAddressPage)
+      case true =>
+        userAnswers.remove(ApplicantCurrentInternationalAddressPage)
+
+      case false =>
+        userAnswers
+          .remove(ApplicantCurrentUkAddressPage)
+          .flatMap(_.remove(ApplicantArrivedInUkPage))
     }.getOrElse(super.cleanup(value, userAnswers))
 }

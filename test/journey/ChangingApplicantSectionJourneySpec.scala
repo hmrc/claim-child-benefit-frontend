@@ -88,7 +88,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
           submitAnswer(ApplicantNinoKnownPage, true),
           submitAnswer(ApplicantNinoPage, nino),
           submitAnswer(ApplicantNamePage, adultName),
-          setUserAnswerTo(AlwaysLivedInUkPage, true),
+          setUserAnswerTo(ApplicantResidencePage, ApplicantResidence.AlwaysUk),
           setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, true),
           goTo(CheckApplicantDetailsPage)
         )
@@ -106,12 +106,16 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
       }
     }
 
-    "and has not always lived in the UK" - {
+    "and has lived in the UK and abroad" - {
 
       "changing to say they don't know their NINO must remove it, ask if they have lived at their current address a year, then return to Check Applicant" in {
 
         val initialise = journeyOf(
-          setUserAnswerTo(AlwaysLivedInUkPage, false),
+          setUserAnswerTo(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
+          setUserAnswerTo(ApplicantUsuallyLivesInUkPage, true),
+          setUserAnswerTo(ApplicantWorkedAbroadPage, false),
+          setUserAnswerTo(ApplicantReceivedBenefitsAbroadPage, false),
+          setUserAnswerTo(ApplicantArrivedInUkPage, LocalDate.now),
           submitAnswer(ApplicantNinoKnownPage, true),
           submitAnswer(ApplicantNinoPage, nino),
           submitAnswer(ApplicantNamePage, adultName),
@@ -126,6 +130,35 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
             submitAnswer(ApplicantNinoKnownPage, false),
             submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
             submitAnswer(ApplicantPreviousAddressInUkPage, false),
+            submitAnswer(ApplicantPreviousInternationalAddressPage, internationalAddress),
+            pageMustBe(CheckApplicantDetailsPage),
+            answersMustNotContain(ApplicantNinoPage)
+          )
+      }
+    }
+
+    "and has always lived abroad" - {
+
+      "changing to say they don't know their NINO must remove it, ask if they have lived at their current address a year, then return to Check Applicant" in {
+
+        val initialise = journeyOf(
+          setUserAnswerTo(ApplicantResidencePage, ApplicantResidence.AlwaysAbroad),
+          setUserAnswerTo(ApplicantUsualCountryOfResidencePage, country),
+          setUserAnswerTo(ApplicantWorkedAbroadPage, false),
+          setUserAnswerTo(ApplicantReceivedBenefitsAbroadPage, false),
+          submitAnswer(ApplicantNinoKnownPage, true),
+          submitAnswer(ApplicantNinoPage, nino),
+          submitAnswer(ApplicantNamePage, adultName),
+          setUserAnswerTo(ApplicantIsHmfOrCivilServantPage, true),
+          goTo(CheckApplicantDetailsPage)
+        )
+
+        startingFrom(ApplicantNinoKnownPage)
+          .run(
+            initialise,
+            goToChangeAnswer(ApplicantNinoKnownPage),
+            submitAnswer(ApplicantNinoKnownPage, false),
+            submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
             submitAnswer(ApplicantPreviousInternationalAddressPage, internationalAddress),
             pageMustBe(CheckApplicantDetailsPage),
             answersMustNotContain(ApplicantNinoPage)
@@ -167,333 +200,213 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
 
   "when the user originally said they had always lived in the UK" - {
 
-    "When they had originally given a previous address" - {
+      val initialise = journeyOf(
+        submitAnswer(ApplicantNinoKnownPage, false),
+        submitAnswer(ApplicantNamePage, adultName),
+        submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
+        submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
+        submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
+        submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
+        submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
+        submitAnswer(ApplicantResidencePage, ApplicantResidence.AlwaysUk),
+        submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
+        submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
+        submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
+        submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
+        submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
+        pageMustBe(CheckApplicantDetailsPage)
+      )
 
-      "changing to say they haven't always lived in the UK must ask residency questions, set `address in UK` questions to true, then go to Check Applicant" in {
+    "changing to say they have lived in the UK and abroad must remove addresses, ask residency and address questions, then go to Check Applicant" in {
 
-        val initialise = journeyOf(
-          submitAnswer(ApplicantNinoKnownPage, false),
-          submitAnswer(ApplicantNamePage, adultName),
-          submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
-          submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
-          submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
-          submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
-          submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
-          submitAnswer(AlwaysLivedInUkPage, true),
+      startingFrom(ApplicantNinoKnownPage)
+        .run(
+          initialise,
+          goToChangeAnswer(ApplicantResidencePage),
+          submitAnswer(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
+          submitAnswer(ApplicantUsuallyLivesInUkPage, true),
+          submitAnswer(ApplicantCurrentAddressInUkPage, true),
+          submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
           submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
-          submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
-          submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
-          submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
-          submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
-          pageMustBe(CheckApplicantDetailsPage)
+          submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+          submitAnswer(ApplicantWorkedAbroadPage, false),
+          submitAnswer(ApplicantReceivedBenefitsAbroadPage, false),
+          pageMustBe(CheckApplicantDetailsPage),
         )
+    }
+
+    "changing to say they have always lived abroad must remove addresses, ask residency and address questions, then go to Check Applicant" in {
+
+      startingFrom(ApplicantNinoKnownPage)
+        .run(
+          initialise,
+          goToChangeAnswer(ApplicantResidencePage),
+          submitAnswer(ApplicantResidencePage, ApplicantResidence.AlwaysAbroad),
+          submitAnswer(ApplicantUsualCountryOfResidencePage, country),
+          submitAnswer(ApplicantCurrentInternationalAddressPage, internationalAddress),
+          submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+          submitAnswer(ApplicantWorkedAbroadPage, false),
+          submitAnswer(ApplicantReceivedBenefitsAbroadPage, false),
+          pageMustBe(CheckApplicantDetailsPage),
+          answersMustNotContain(ApplicantPreviousUkAddressPage)
+        )
+    }
+  }
+
+  "when the user originally said they had lived in the UK and abroad" - {
+
+    val initialise = journeyOf(
+      submitAnswer(ApplicantNinoKnownPage, false),
+      submitAnswer(ApplicantNamePage, adultName),
+      submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
+      submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
+      submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
+      submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
+      submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
+      submitAnswer(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
+      submitAnswer(ApplicantUsuallyLivesInUkPage, false),
+      submitAnswer(ApplicantUsualCountryOfResidencePage, country),
+      submitAnswer(ApplicantCurrentAddressInUkPage, true),
+      submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
+      submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
+      submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
+      submitAnswer(ApplicantPreviousAddressInUkPage, true),
+      submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
+      submitAnswer(ApplicantWorkedAbroadPage, true),
+      submitAnswer(CountryApplicantWorkedPage(Index(0)), country),
+      submitAnswer(AddCountryApplicantWorkedPage(Some(Index(0))), false),
+      submitAnswer(ApplicantReceivedBenefitsAbroadPage, true),
+      submitAnswer(CountryApplicantReceivedBenefitsPage(Index(0)), country),
+      submitAnswer(AddCountryApplicantReceivedBenefitsPage(Some(Index(0))), false),
+      submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
+      submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
+      pageMustBe(CheckApplicantDetailsPage),
+      setUserAnswerTo(ApplicantCurrentInternationalAddressPage, internationalAddress),
+      setUserAnswerTo(ApplicantPreviousInternationalAddressPage, internationalAddress)
+    )
+
+    "changing to say they have always lived in the UK" - {
+
+      "must remove addresses and residency questions, collect address details, then go to Check Applicant" in {
 
         startingFrom(ApplicantNinoKnownPage)
           .run(
             initialise,
-            goToChangeAnswer(AlwaysLivedInUkPage),
-            submitAnswer(AlwaysLivedInUkPage, false),
-            submitAnswer(ApplicantUsuallyLivesInUkPage, true),
-            submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
+            goToChangeAnswer(ApplicantResidencePage),
+            submitAnswer(ApplicantResidencePage, ApplicantResidence.AlwaysUk),
+            submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
+            submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
             pageMustBe(CheckApplicantDetailsPage),
-            answerMustEqual(ApplicantCurrentAddressInUkPage, true),
-            answerMustEqual(ApplicantPreviousAddressInUkPage, true)
+            answersMustNotContain(ApplicantUsuallyLivesInUkPage),
+            answersMustNotContain(ApplicantUsualCountryOfResidencePage),
+            answersMustNotContain(ApplicantCurrentAddressInUkPage),
+            answersMustNotContain(ApplicantArrivedInUkPage),
+            answersMustNotContain(ApplicantCurrentInternationalAddressPage),
+            answersMustNotContain(ApplicantPreviousAddressInUkPage),
+            answersMustNotContain(ApplicantPreviousUkAddressPage),
+            answersMustNotContain(ApplicantPreviousInternationalAddressPage),
+            answersMustNotContain(ApplicantWorkedAbroadPage),
+            answersMustNotContain(CountryApplicantWorkedPage(Index(0))),
+            answersMustNotContain(ApplicantReceivedBenefitsAbroadPage),
+            answersMustNotContain(CountryApplicantReceivedBenefitsPage(Index(0)))
           )
       }
     }
 
-    "when they had not originally given a previous address" - {
+    "changing to say they have always lived abroad" - {
 
-      "changing to say they haven't always lived in the UK must ask residency questions, set `current address in UK` to true, then go to Check Applicant" in {
-
-        val initialise = journeyOf(
-          submitAnswer(ApplicantNinoKnownPage, false),
-          submitAnswer(ApplicantNamePage, adultName),
-          submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
-          submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
-          submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
-          submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
-          submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
-          submitAnswer(AlwaysLivedInUkPage, true),
-          submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
-          submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
-          submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
-          submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
-          pageMustBe(CheckApplicantDetailsPage)
-        )
+      "must remove addresses and residency questions, collect them, then to go Check Applicant" in {
 
         startingFrom(ApplicantNinoKnownPage)
           .run(
             initialise,
-            goToChangeAnswer(AlwaysLivedInUkPage),
-            submitAnswer(AlwaysLivedInUkPage, false),
-            submitAnswer(ApplicantUsuallyLivesInUkPage, true),
-            submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
+            goToChangeAnswer(ApplicantResidencePage),
+            submitAnswer(ApplicantResidencePage, ApplicantResidence.AlwaysAbroad),
+            submitAnswer(ApplicantUsualCountryOfResidencePage, country),
+            submitAnswer(ApplicantCurrentInternationalAddressPage, internationalAddress),
+            submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+            submitAnswer(ApplicantWorkedAbroadPage, false),
+            submitAnswer(ApplicantReceivedBenefitsAbroadPage, false),
             pageMustBe(CheckApplicantDetailsPage),
-            answerMustEqual(ApplicantCurrentAddressInUkPage, true),
-            answersMustNotContain(ApplicantPreviousAddressInUkPage)
+            answersMustNotContain(ApplicantCurrentAddressInUkPage),
+            answersMustNotContain(ApplicantArrivedInUkPage),
+            answersMustNotContain(ApplicantPreviousAddressInUkPage),
+            answersMustNotContain(ApplicantPreviousUkAddressPage),
+            answersMustNotContain(ApplicantPreviousInternationalAddressPage)
           )
       }
     }
   }
 
-  "when the user originally said they had not always lived in the UK" - {
+  "when the user originally said they had always lived abroad" - {
 
-    "changing to say they have always lived in the UK" - {
+    val initialise = journeyOf(
+      submitAnswer(ApplicantNinoKnownPage, false),
+      submitAnswer(ApplicantNamePage, adultName),
+      submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
+      submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
+      submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
+      submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
+      submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
+      submitAnswer(ApplicantResidencePage, ApplicantResidence.AlwaysAbroad),
+      submitAnswer(ApplicantUsualCountryOfResidencePage, country),
+      submitAnswer(ApplicantCurrentInternationalAddressPage, internationalAddress),
+      submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
+      submitAnswer(ApplicantPreviousInternationalAddressPage, internationalAddress),
+      submitAnswer(ApplicantWorkedAbroadPage, true),
+      submitAnswer(CountryApplicantWorkedPage(Index(0)), country),
+      submitAnswer(AddCountryApplicantWorkedPage(Some(Index(0))), false),
+      submitAnswer(ApplicantReceivedBenefitsAbroadPage, true),
+      submitAnswer(CountryApplicantReceivedBenefitsPage(Index(0)), country),
+      submitAnswer(AddCountryApplicantReceivedBenefitsPage(Some(Index(0))), false),
+      submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
+      submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
+      pageMustBe(CheckApplicantDetailsPage)
+    )
 
-      "when they had given a current UK address and did not give a previous address" - {
+    "changing to say they have always lived in the UK must remove address and residency questions, collect address details, then go to Check Applicant" in {
 
-        "must remove residency questions and `current address in UK`, then go to Check Applicant" in {
+      startingFrom(ApplicantNinoKnownPage)
+        .run(
+          initialise,
+          goToChangeAnswer(ApplicantResidencePage),
+          submitAnswer(ApplicantResidencePage, ApplicantResidence.AlwaysUk),
+          submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
+          submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+          pageMustBe(CheckApplicantDetailsPage),
+          answersMustNotContain(ApplicantUsualCountryOfResidencePage),
+          answersMustNotContain(ApplicantCurrentInternationalAddressPage),
+          answersMustNotContain(ApplicantPreviousInternationalAddressPage),
+          answersMustNotContain(ApplicantWorkedAbroadPage),
+          answersMustNotContain(CountryApplicantWorkedPage(Index(0))),
+          answersMustNotContain(ApplicantReceivedBenefitsAbroadPage),
+          answersMustNotContain(CountryApplicantReceivedBenefitsPage(Index(0)))
+        )
+    }
 
-          val initialise = journeyOf(
-            submitAnswer(ApplicantNinoKnownPage, false),
-            submitAnswer(ApplicantNamePage, adultName),
-            submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
-            submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
-            submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
-            submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
-            submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
-            submitAnswer(AlwaysLivedInUkPage, false),
-            submitAnswer(ApplicantUsuallyLivesInUkPage, false),
-            submitAnswer(ApplicantUsualCountryOfResidencePage, country),
-            submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
-            submitAnswer(ApplicantCurrentAddressInUkPage, true),
-            submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
-            submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
-            submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
-            submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
-            pageMustBe(CheckApplicantDetailsPage)
-          )
+    "changing to say they have lived in the UK and abroad must remove address and residency questions, collect them, then go to Check Applicant" in {
 
-          startingFrom(ApplicantNinoKnownPage)
-            .run(
-              initialise,
-              goToChangeAnswer(AlwaysLivedInUkPage),
-              submitAnswer(AlwaysLivedInUkPage, true),
-              pageMustBe(CheckApplicantDetailsPage),
-              answersMustNotContain(ApplicantCurrentAddressInUkPage),
-              answersMustNotContain(ApplicantUsuallyLivesInUkPage),
-              answersMustNotContain(ApplicantUsualCountryOfResidencePage),
-              answersMustNotContain(ApplicantArrivedInUkPage)
-            )
-        }
-      }
-
-      "when they had given a current UK address and previous UK address" - {
-
-        "must remove residency questions and `address in UK` questions, then go to Check Applicant" in {
-
-          val initialise = journeyOf(
-            submitAnswer(ApplicantNinoKnownPage, false),
-            submitAnswer(ApplicantNamePage, adultName),
-            submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
-            submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
-            submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
-            submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
-            submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
-            submitAnswer(AlwaysLivedInUkPage, false),
-            submitAnswer(ApplicantUsuallyLivesInUkPage, false),
-            submitAnswer(ApplicantUsualCountryOfResidencePage, country),
-            submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
-            submitAnswer(ApplicantCurrentAddressInUkPage, true),
-            submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
-            submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
-            submitAnswer(ApplicantPreviousAddressInUkPage, true),
-            submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
-            submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
-            submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
-            pageMustBe(CheckApplicantDetailsPage)
-          )
-
-          startingFrom(ApplicantNinoKnownPage)
-            .run(
-              initialise,
-              goToChangeAnswer(AlwaysLivedInUkPage),
-              submitAnswer(AlwaysLivedInUkPage, true),
-              pageMustBe(CheckApplicantDetailsPage),
-              answersMustNotContain(ApplicantCurrentAddressInUkPage),
-              answersMustNotContain(ApplicantPreviousAddressInUkPage),
-              answersMustNotContain(ApplicantUsuallyLivesInUkPage),
-              answersMustNotContain(ApplicantUsualCountryOfResidencePage),
-              answersMustNotContain(ApplicantArrivedInUkPage)
-            )
-        }
-      }
-
-      "when they had given a current UK address and previous international address" - {
-
-        "must remove residency questions, `current address in UK`, and previous address questions, collect previous UK address, then go to Check Applicant" in {
-
-          val initialise = journeyOf(
-            submitAnswer(ApplicantNinoKnownPage, false),
-            submitAnswer(ApplicantNamePage, adultName),
-            submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
-            submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
-            submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
-            submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
-            submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
-            submitAnswer(AlwaysLivedInUkPage, false),
-            submitAnswer(ApplicantUsuallyLivesInUkPage, false),
-            submitAnswer(ApplicantUsualCountryOfResidencePage, country),
-            submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
-            submitAnswer(ApplicantCurrentAddressInUkPage, true),
-            submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
-            submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
-            submitAnswer(ApplicantPreviousAddressInUkPage, false),
-            submitAnswer(ApplicantPreviousInternationalAddressPage, internationalAddress),
-            submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
-            submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
-            pageMustBe(CheckApplicantDetailsPage)
-          )
-
-          startingFrom(ApplicantNinoKnownPage)
-            .run(
-              initialise,
-              goToChangeAnswer(AlwaysLivedInUkPage),
-              submitAnswer(AlwaysLivedInUkPage, true),
-              submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
-              submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
-              pageMustBe(CheckApplicantDetailsPage),
-              answersMustNotContain(ApplicantCurrentAddressInUkPage),
-              answersMustNotContain(ApplicantPreviousAddressInUkPage),
-              answersMustNotContain(ApplicantPreviousInternationalAddressPage),
-              answersMustNotContain(ApplicantUsuallyLivesInUkPage),
-              answersMustNotContain(ApplicantUsualCountryOfResidencePage),
-              answersMustNotContain(ApplicantArrivedInUkPage)
-            )
-        }
-      }
-
-      "when they had given a current international address and did not give a previous address" - {
-
-        "must remove residency questions and current UK address, collect a current address, then go to Check Applicant" in {
-
-          val initialise = journeyOf(
-            submitAnswer(ApplicantNinoKnownPage, false),
-            submitAnswer(ApplicantNamePage, adultName),
-            submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
-            submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
-            submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
-            submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
-            submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
-            submitAnswer(AlwaysLivedInUkPage, false),
-            submitAnswer(ApplicantUsuallyLivesInUkPage, false),
-            submitAnswer(ApplicantUsualCountryOfResidencePage, country),
-            submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
-            submitAnswer(ApplicantCurrentAddressInUkPage, false),
-            submitAnswer(ApplicantCurrentInternationalAddressPage, internationalAddress),
-            submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
-            submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
-            submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
-            pageMustBe(CheckApplicantDetailsPage)
-          )
-
-          startingFrom(ApplicantNinoKnownPage)
-            .run(
-              initialise,
-              goToChangeAnswer(AlwaysLivedInUkPage),
-              submitAnswer(AlwaysLivedInUkPage, true),
-              submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
-              pageMustBe(CheckApplicantDetailsPage),
-              answersMustNotContain(ApplicantCurrentAddressInUkPage),
-              answersMustNotContain(ApplicantCurrentInternationalAddressPage),
-              answersMustNotContain(ApplicantUsuallyLivesInUkPage),
-              answersMustNotContain(ApplicantUsualCountryOfResidencePage),
-              answersMustNotContain(ApplicantArrivedInUkPage)
-            )
-        }
-      }
-
-      "when they had given a current international address and international previous address" - {
-
-        "must remove residency questions and addresses, collect current and previous addresses, then go to Check Applicant" in {
-
-          val initialise = journeyOf(
-            submitAnswer(ApplicantNinoKnownPage, false),
-            submitAnswer(ApplicantNamePage, adultName),
-            submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
-            submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
-            submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
-            submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
-            submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
-            submitAnswer(AlwaysLivedInUkPage, false),
-            submitAnswer(ApplicantUsuallyLivesInUkPage, false),
-            submitAnswer(ApplicantUsualCountryOfResidencePage, country),
-            submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
-            submitAnswer(ApplicantCurrentAddressInUkPage, false),
-            submitAnswer(ApplicantCurrentInternationalAddressPage, internationalAddress),
-            submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
-            submitAnswer(ApplicantPreviousAddressInUkPage, false),
-            submitAnswer(ApplicantPreviousInternationalAddressPage, internationalAddress),
-            submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
-            submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
-            pageMustBe(CheckApplicantDetailsPage)
-          )
-
-          startingFrom(ApplicantNinoKnownPage)
-            .run(
-              initialise,
-              goToChangeAnswer(AlwaysLivedInUkPage),
-              submitAnswer(AlwaysLivedInUkPage, true),
-              submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
-              submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
-              submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
-              pageMustBe(CheckApplicantDetailsPage),
-              answersMustNotContain(ApplicantCurrentAddressInUkPage),
-              answersMustNotContain(ApplicantCurrentInternationalAddressPage),
-              answersMustNotContain(ApplicantPreviousAddressInUkPage),
-              answersMustNotContain(ApplicantPreviousInternationalAddressPage),
-              answersMustNotContain(ApplicantUsuallyLivesInUkPage),
-              answersMustNotContain(ApplicantUsualCountryOfResidencePage),
-              answersMustNotContain(ApplicantArrivedInUkPage)
-            )
-        }
-      }
-
-      "when they had given a current international address and previous UK address" - {
-
-        "must remove residency questions, current address and `previous address in UK`, collect current address, then go to Check Applicant" in {
-
-          val initialise = journeyOf(
-            submitAnswer(ApplicantNinoKnownPage, false),
-            submitAnswer(ApplicantNamePage, adultName),
-            submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
-            submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
-            submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
-            submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
-            submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
-            submitAnswer(AlwaysLivedInUkPage, false),
-            submitAnswer(ApplicantUsuallyLivesInUkPage, false),
-            submitAnswer(ApplicantUsualCountryOfResidencePage, country),
-            submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
-            submitAnswer(ApplicantCurrentAddressInUkPage, false),
-            submitAnswer(ApplicantCurrentInternationalAddressPage, internationalAddress),
-            submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
-            submitAnswer(ApplicantPreviousAddressInUkPage, true),
-            submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
-            submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
-            submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
-            pageMustBe(CheckApplicantDetailsPage)
-          )
-
-          startingFrom(ApplicantNinoKnownPage)
-            .run(
-              initialise,
-              goToChangeAnswer(AlwaysLivedInUkPage),
-              submitAnswer(AlwaysLivedInUkPage, true),
-              submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
-              pageMustBe(CheckApplicantDetailsPage),
-              answersMustNotContain(ApplicantCurrentAddressInUkPage),
-              answersMustNotContain(ApplicantCurrentInternationalAddressPage),
-              answersMustNotContain(ApplicantPreviousAddressInUkPage),
-              answersMustNotContain(ApplicantPreviousInternationalAddressPage),
-              answersMustNotContain(ApplicantUsuallyLivesInUkPage),
-              answersMustNotContain(ApplicantUsualCountryOfResidencePage),
-              answersMustNotContain(ApplicantArrivedInUkPage),
-              answersMustContain(ApplicantPreviousUkAddressPage)
-            )
-        }
-      }
+      startingFrom(ApplicantNinoKnownPage)
+        .run(
+          initialise,
+          goToChangeAnswer(ApplicantResidencePage),
+          submitAnswer(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
+          submitAnswer(ApplicantUsuallyLivesInUkPage, false),
+          submitAnswer(ApplicantUsualCountryOfResidencePage, country),
+          submitAnswer(ApplicantCurrentAddressInUkPage, true),
+          submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
+          submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
+          submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+          submitAnswer(ApplicantWorkedAbroadPage, true),
+          submitAnswer(CountryApplicantWorkedPage(Index(0)), country),
+          submitAnswer(AddCountryApplicantWorkedPage(Some(Index(0))), false),
+          submitAnswer(ApplicantReceivedBenefitsAbroadPage, true),
+          submitAnswer(CountryApplicantReceivedBenefitsPage(Index(0)), country),
+          submitAnswer(AddCountryApplicantReceivedBenefitsPage(Some(Index(0))), false),
+          pageMustBe(CheckApplicantDetailsPage),
+          answersMustNotContain(ApplicantCurrentInternationalAddressPage),
+          answersMustNotContain(ApplicantPreviousInternationalAddressPage),
+        )
     }
   }
 
@@ -606,7 +519,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
     val initialise = journeyOf(
       submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
       submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
-      submitAnswer(AlwaysLivedInUkPage, true),
+      submitAnswer(ApplicantResidencePage, ApplicantResidence.AlwaysUk),
       goTo(CheckApplicantDetailsPage)
     )
 
@@ -628,7 +541,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
       submitAnswer(AddApplicantNationalityPage(Some(Index(0))), true),
       submitAnswer(ApplicantNationalityPage(Index(1)), nationality),
       submitAnswer(AddApplicantNationalityPage(Some(Index(1))), false),
-      submitAnswer(AlwaysLivedInUkPage, true),
+      submitAnswer(ApplicantResidencePage, ApplicantResidence.AlwaysUk),
       goTo(CheckApplicantDetailsPage)
     )
 
@@ -648,7 +561,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
     val initialise = journeyOf(
       submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
       submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
-      submitAnswer(AlwaysLivedInUkPage, true),
+      submitAnswer(ApplicantResidencePage, ApplicantResidence.AlwaysUk),
       goTo(CheckApplicantDetailsPage)
     )
 
@@ -670,6 +583,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
 
         val initialise = journeyOf(
           submitAnswer(ApplicantCurrentAddressInUkPage, true),
+          submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
           submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
           submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
           goTo(CheckApplicantDetailsPage)
@@ -682,14 +596,15 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
             submitAnswer(ApplicantCurrentAddressInUkPage, false),
             submitAnswer(ApplicantCurrentInternationalAddressPage, internationalAddress),
             pageMustBe(CheckApplicantDetailsPage),
-            answersMustNotContain(ApplicantCurrentUkAddressPage)
+            answersMustNotContain(ApplicantCurrentUkAddressPage),
+            answersMustNotContain(ApplicantArrivedInUkPage)
           )
       }
     }
 
     "and originally gave an international address" - {
 
-      "changing to say their address is in the UK must collect the address, remove the international address, and return to Check Applicant" in {
+      "changing to say their address is in the UK must collect the date they arrived in the UK and the address, remove the international address, and return to Check Applicant" in {
 
         val initialise = journeyOf(
           submitAnswer(ApplicantCurrentAddressInUkPage, false),
@@ -703,6 +618,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
             initialise,
             goToChangeAnswer(ApplicantCurrentAddressInUkPage),
             submitAnswer(ApplicantCurrentAddressInUkPage, true),
+            submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
             submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
             pageMustBe(CheckApplicantDetailsPage),
             answersMustNotContain(ApplicantCurrentInternationalAddressPage)
@@ -720,7 +636,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
         "must collect their previous UK address and return to Check Applicant" in {
 
           val initialise = journeyOf(
-            setUserAnswerTo(AlwaysLivedInUkPage, true),
+            setUserAnswerTo(ApplicantResidencePage, ApplicantResidence.AlwaysUk),
             submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
             submitAnswer(ApplicantIsHmfOrCivilServantPage, true),
             goTo(CheckApplicantDetailsPage)
@@ -737,12 +653,12 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
         }
       }
 
-      "when they have not always lived in the UK" - {
+      "when they have lived in the UK and abroad" - {
 
         val initialise = journeyOf(
-          setUserAnswerTo(AlwaysLivedInUkPage, false),
+          setUserAnswerTo(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
           submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
-          submitAnswer(ApplicantIsHmfOrCivilServantPage, true),
+          submitAnswer(ApplicantWorkedAbroadPage, false),
           goTo(CheckApplicantDetailsPage)
         )
 
@@ -772,6 +688,28 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
             )
         }
       }
+
+      "when they have always lived abroad" - {
+
+        "must collect their previous UK address and return to Check Applicant" in {
+
+          val initialise = journeyOf(
+            setUserAnswerTo(ApplicantResidencePage, ApplicantResidence.AlwaysAbroad),
+            submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+            submitAnswer(ApplicantWorkedAbroadPage, false),
+            goTo(CheckApplicantDetailsPage)
+          )
+
+          startingFrom(ApplicantLivedAtCurrentAddressOneYearPage)
+            .run(
+              initialise,
+              goToChangeAnswer(ApplicantLivedAtCurrentAddressOneYearPage),
+              submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
+              submitAnswer(ApplicantPreviousInternationalAddressPage, internationalAddress),
+              pageMustBe(CheckApplicantDetailsPage)
+            )
+        }
+      }
     }
   }
 
@@ -780,11 +718,11 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
     "changing to say they have lived there a year must remove their previous address and return to Check Applicant" in {
 
       val initialise = journeyOf(
-        setUserAnswerTo(AlwaysLivedInUkPage, false),
+        setUserAnswerTo(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
         submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
         submitAnswer(ApplicantPreviousAddressInUkPage, true),
         submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
-        submitAnswer(ApplicantIsHmfOrCivilServantPage, true),
+        submitAnswer(ApplicantWorkedAbroadPage, false),
         setUserAnswerTo(ApplicantPreviousInternationalAddressPage, internationalAddress),
         goTo(CheckApplicantDetailsPage)
       )
@@ -806,11 +744,11 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
       "changing to say it was international must collect the address, remove the UK address, and return to Check Applicant" in {
 
         val initialise = journeyOf(
-          setUserAnswerTo(AlwaysLivedInUkPage, false),
+          setUserAnswerTo(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
           submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
           submitAnswer(ApplicantPreviousAddressInUkPage, true),
           submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
-          submitAnswer(ApplicantIsHmfOrCivilServantPage, true),
+          submitAnswer(ApplicantWorkedAbroadPage, false),
           goTo(CheckApplicantDetailsPage)
         )
 
@@ -831,11 +769,11 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
       "changing to say it was in the UK must collect the address, remove the international address, and return to Check Applicant" in {
 
         val initialise = journeyOf(
-          setUserAnswerTo(AlwaysLivedInUkPage, false),
+          setUserAnswerTo(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
           submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
           submitAnswer(ApplicantPreviousAddressInUkPage, false),
           submitAnswer(ApplicantPreviousInternationalAddressPage, internationalAddress),
-          submitAnswer(ApplicantIsHmfOrCivilServantPage, true),
+          submitAnswer(ApplicantWorkedAbroadPage, false),
           goTo(CheckApplicantDetailsPage)
         )
 
@@ -852,6 +790,214 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
     }
   }
 
+  "when the user originally said they had worked abroad" - {
+
+    val initialise = journeyOf(
+      submitAnswer(ApplicantWorkedAbroadPage, true),
+      submitAnswer(CountryApplicantWorkedPage(Index(0)), country),
+      submitAnswer(AddCountryApplicantWorkedPage(Some(Index(0))), true),
+      submitAnswer(CountryApplicantWorkedPage(Index(1)), country),
+      submitAnswer(AddCountryApplicantWorkedPage(Some(Index(1))), false),
+      submitAnswer(ApplicantReceivedBenefitsAbroadPage, false),
+      goTo(CheckApplicantDetailsPage)
+    )
+
+    "changing to say they haven't must remove the countries and return to Check Applicant" in {
+
+      startingFrom(ApplicantWorkedAbroadPage)
+        .run(
+          initialise,
+          goToChangeAnswer(ApplicantWorkedAbroadPage),
+          submitAnswer(ApplicantWorkedAbroadPage, false),
+          pageMustBe(CheckApplicantDetailsPage),
+          answersMustNotContain(CountryApplicantWorkedPage(Index(1))),
+          answersMustNotContain(CountryApplicantWorkedPage(Index(0))),
+          answersMustNotContain(AddCountryApplicantWorkedPage())
+        )
+    }
+
+    "they must be able to add another country" in {
+
+      startingFrom(ApplicantWorkedAbroadPage)
+        .run(
+          initialise,
+          goToChangeAnswer(AddCountryApplicantWorkedPage()),
+          submitAnswer(AddCountryApplicantWorkedPage(), true),
+          submitAnswer(CountryApplicantWorkedPage(Index(2)), country),
+          submitAnswer(AddCountryApplicantWorkedPage(Some(Index(2))), false),
+          pageMustBe(CheckApplicantDetailsPage)
+        )
+    }
+
+    "they must be able to change a country" in {
+
+      startingFrom(ApplicantWorkedAbroadPage)
+        .run(
+          initialise,
+          goToChangeAnswer(AddCountryApplicantWorkedPage()),
+          goToChangeAnswer(CountryApplicantWorkedPage(Index(1))),
+          submitAnswer(CountryApplicantWorkedPage(Index(1)), country),
+          submitAnswer(AddCountryApplicantWorkedPage(Some(Index(1))), false),
+          pageMustBe(CheckApplicantDetailsPage)
+        )
+    }
+
+    "they must be able to remove a country, leaving at least one" in {
+
+      startingFrom(ApplicantWorkedAbroadPage)
+        .run(
+          initialise,
+          goToChangeAnswer(AddCountryApplicantWorkedPage()),
+          goTo(RemoveCountryApplicantWorkedPage(Index(1))),
+          removeAddToListItem(CountryApplicantWorkedPage(Index(1))),
+          submitAnswer(AddCountryApplicantWorkedPage(), false),
+          pageMustBe(CheckApplicantDetailsPage),
+          answersMustNotContain(CountryApplicantWorkedPage(Index(1))),
+          answersMustContain(CountryApplicantWorkedPage(Index(0)))
+        )
+    }
+
+    "removing the last country must ask if the user has worked abroad" in {
+
+      startingFrom(ApplicantWorkedAbroadPage)
+        .run(
+          initialise,
+          goToChangeAnswer(AddCountryApplicantWorkedPage()),
+          goTo(RemoveCountryApplicantWorkedPage(Index(1))),
+          removeAddToListItem(CountryApplicantWorkedPage(Index(1))),
+          goTo(RemoveCountryApplicantWorkedPage(Index(0))),
+          removeAddToListItem(CountryApplicantWorkedPage(Index(0))),
+          pageMustBe(ApplicantWorkedAbroadPage)
+        )
+    }
+  }
+
+  "when the user originally said they had not worked abroad" - {
+
+    "changing to say they have worked abroad must collect the countries where they worked then return to Check Applicant" in {
+
+      val initialise = journeyOf(
+        submitAnswer(ApplicantWorkedAbroadPage, false),
+        submitAnswer(ApplicantReceivedBenefitsAbroadPage, false),
+        goTo(CheckApplicantDetailsPage)
+      )
+
+      startingFrom(ApplicantWorkedAbroadPage)
+        .run(
+          initialise,
+          goToChangeAnswer(ApplicantWorkedAbroadPage),
+          submitAnswer(ApplicantWorkedAbroadPage, true),
+          submitAnswer(CountryApplicantWorkedPage(Index(0)), country),
+          submitAnswer(AddCountryApplicantWorkedPage(Some(Index(0))), false),
+          pageMustBe(CheckApplicantDetailsPage)
+        )
+    }
+  }
+
+  "when the user originally said they had received benefits abroad" - {
+
+    val initialise = journeyOf(
+      submitAnswer(ApplicantReceivedBenefitsAbroadPage, true),
+      submitAnswer(CountryApplicantReceivedBenefitsPage(Index(0)), country),
+      submitAnswer(AddCountryApplicantReceivedBenefitsPage(Some(Index(0))), true),
+      submitAnswer(CountryApplicantReceivedBenefitsPage(Index(1)), country),
+      submitAnswer(AddCountryApplicantReceivedBenefitsPage(Some(Index(1))), false),
+      submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
+      goTo(CheckApplicantDetailsPage)
+    )
+
+    "changing to say they haven't must remove the countries and return to Check Applicant" in {
+
+      startingFrom(ApplicantReceivedBenefitsAbroadPage)
+        .run(
+          initialise,
+          goToChangeAnswer(ApplicantReceivedBenefitsAbroadPage),
+          submitAnswer(ApplicantReceivedBenefitsAbroadPage, false),
+          pageMustBe(CheckApplicantDetailsPage),
+          answersMustNotContain(CountryApplicantReceivedBenefitsPage(Index(1))),
+          answersMustNotContain(CountryApplicantReceivedBenefitsPage(Index(0))),
+          answersMustNotContain(AddCountryApplicantReceivedBenefitsPage())
+        )
+    }
+
+    "they must be able to add another country" in {
+
+      startingFrom(ApplicantReceivedBenefitsAbroadPage)
+        .run(
+          initialise,
+          goToChangeAnswer(AddCountryApplicantReceivedBenefitsPage()),
+          submitAnswer(AddCountryApplicantReceivedBenefitsPage(), true),
+          submitAnswer(CountryApplicantReceivedBenefitsPage(Index(2)), country),
+          submitAnswer(AddCountryApplicantReceivedBenefitsPage(Some(Index(2))), false),
+          pageMustBe(CheckApplicantDetailsPage)
+        )
+    }
+
+    "they must be able to change a country" in {
+
+      startingFrom(ApplicantReceivedBenefitsAbroadPage)
+        .run(
+          initialise,
+          goToChangeAnswer(AddCountryApplicantReceivedBenefitsPage()),
+          goToChangeAnswer(CountryApplicantReceivedBenefitsPage(Index(1))),
+          submitAnswer(CountryApplicantReceivedBenefitsPage(Index(1)), country),
+          submitAnswer(AddCountryApplicantReceivedBenefitsPage(Some(Index(1))), false),
+          pageMustBe(CheckApplicantDetailsPage)
+        )
+    }
+
+    "they must be able to remove a country, leaving at least one" in {
+
+      startingFrom(ApplicantReceivedBenefitsAbroadPage)
+        .run(
+          initialise,
+          goToChangeAnswer(AddCountryApplicantReceivedBenefitsPage()),
+          goTo(RemoveCountryApplicantReceivedBenefitsPage(Index(1))),
+          removeAddToListItem(CountryApplicantReceivedBenefitsPage(Index(1))),
+          submitAnswer(AddCountryApplicantReceivedBenefitsPage(), false),
+          pageMustBe(CheckApplicantDetailsPage),
+          answersMustNotContain(CountryApplicantReceivedBenefitsPage(Index(1))),
+          answersMustContain(CountryApplicantReceivedBenefitsPage(Index(0)))
+        )
+    }
+
+    "removing the last country must ask if the user has received benefits" in {
+
+      startingFrom(ApplicantReceivedBenefitsAbroadPage)
+        .run(
+          initialise,
+          goToChangeAnswer(AddCountryApplicantReceivedBenefitsPage()),
+          goTo(RemoveCountryApplicantReceivedBenefitsPage(Index(1))),
+          removeAddToListItem(CountryApplicantReceivedBenefitsPage(Index(1))),
+          goTo(RemoveCountryApplicantReceivedBenefitsPage(Index(0))),
+          removeAddToListItem(CountryApplicantReceivedBenefitsPage(Index(0))),
+          pageMustBe(ApplicantReceivedBenefitsAbroadPage)
+        )
+    }
+  }
+
+  "when the user originally said they had not received benefits abroad" - {
+
+    "changing to say they have received benefits abroad must collect the countries where they worked then return to Check Applicant" in {
+
+      val initialise = journeyOf(
+        submitAnswer(ApplicantReceivedBenefitsAbroadPage, false),
+        submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
+        goTo(CheckApplicantDetailsPage)
+      )
+
+      startingFrom(ApplicantReceivedBenefitsAbroadPage)
+        .run(
+          initialise,
+          goToChangeAnswer(ApplicantReceivedBenefitsAbroadPage),
+          submitAnswer(ApplicantReceivedBenefitsAbroadPage, true),
+          submitAnswer(CountryApplicantReceivedBenefitsPage(Index(0)), country),
+          submitAnswer(AddCountryApplicantReceivedBenefitsPage(Some(Index(0))), false),
+          pageMustBe(CheckApplicantDetailsPage)
+        )
+    }
+  }
+  
   "when the user originally said they were getting Child Benefit payments" - {
 
     "and they had not already given payment details" - {

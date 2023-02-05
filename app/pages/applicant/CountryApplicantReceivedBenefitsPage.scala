@@ -18,7 +18,7 @@ package pages.applicant
 
 import controllers.applicant.routes
 import models.{Country, Index, UserAnswers}
-import pages.{Page, QuestionPage, Waypoints}
+import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
@@ -32,5 +32,8 @@ final case class CountryApplicantReceivedBenefitsPage(index: Index) extends Ques
     routes.CountryApplicantReceivedBenefitsController.onPageLoad(waypoints, index)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    AddCountryApplicantReceivedBenefitsPage(Some(index))
+
+  override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
     AddCountryApplicantReceivedBenefitsPage(Some(index))
 }
