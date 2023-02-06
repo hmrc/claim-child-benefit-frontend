@@ -303,21 +303,33 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
                 case AlwaysUk =>
                   answers.getIor(ApplicantPreviousUkAddressPage).map(Some(_))
 
-                case _ =>
+                case UkAndAbroad =>
                   answers.getIor(ApplicantPreviousAddressInUkPage).flatMap {
                     case true => answers.getIor(ApplicantPreviousUkAddressPage).map(Some(_))
                     case false => answers.getIor(ApplicantPreviousInternationalAddressPage).map(Some(_))
                   }
+
+                case AlwaysAbroad =>
+                  answers.getIor(ApplicantPreviousInternationalAddressPage).map(Some(_))
               }
           }
       }
 
-    def getCurrentAddress: IorNec[Query, Address] =
-      if (answers.get(ApplicantCurrentAddressInUkPage).getOrElse(true)) {
-        answers.getIor(ApplicantCurrentUkAddressPage)
-      } else {
-        answers.getIor(ApplicantCurrentInternationalAddressPage)
+    def getCurrentAddress: IorNec[Query, Address] = {
+      answers.getIor(ApplicantResidencePage).flatMap {
+        case AlwaysUk =>
+          answers.getIor(ApplicantCurrentUkAddressPage)
+
+        case UkAndAbroad =>
+          answers.getIor(ApplicantCurrentAddressInUkPage).flatMap {
+            case true => answers.getIor(ApplicantCurrentUkAddressPage)
+            case false => answers.getIor(ApplicantCurrentInternationalAddressPage)
+          }
+
+        case AlwaysAbroad =>
+          answers.getIor(ApplicantCurrentInternationalAddressPage)
       }
+    }
 
     def getPreviousFamilyNames: IorNec[Query, List[ApplicantPreviousName]] =
       answers.getIor(ApplicantHasPreviousFamilyNamePage).flatMap {

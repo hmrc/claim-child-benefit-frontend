@@ -60,11 +60,7 @@ class JourneyModelProviderSpec
   private val now = LocalDate.now
   private val applicantName = AdultName(None, "first", None, "last")
   private val applicantNino = arbitrary[Nino].sample.value
-  private val currentUkAddress = UkAddress("line 1", None, "town", None, "AA11 1AA")
   private val country = arbitrary[Country].sample.value
-  private val currentInternationalAddress = InternationalAddress("line 1", None, "town", None, None, country)
-  private val previousUkAddress = UkAddress("line 1", None, "town", None, "BB22 2BB")
-  private val previousInternationalAddress = InternationalAddress("line 1", None, "town", None, None, country)
   private val phoneNumber = "07777 777777"
   private val applicantBenefits = Set[Benefits](Benefits.NoneOfTheAbove)
   private val applicantNationality = Gen.oneOf(Nationality.allNationalities).sample.value
@@ -124,7 +120,7 @@ class JourneyModelProviderSpec
             previousFamilyNames = Nil,
             dateOfBirth = now,
             nationalInsuranceNumber = None,
-            currentAddress = currentUkAddress,
+            currentAddress = ukAddress,
             previousAddress = None,
             telephoneNumber = phoneNumber,
             nationalities = NonEmptyList(applicantNationality, Nil),
@@ -187,7 +183,7 @@ class JourneyModelProviderSpec
             previousFamilyNames = Nil,
             dateOfBirth = now,
             nationalInsuranceNumber = None,
-            currentAddress = currentUkAddress,
+            currentAddress = ukAddress,
             previousAddress = None,
             telephoneNumber = phoneNumber,
             nationalities = NonEmptyList(applicantNationality, Nil),
@@ -270,7 +266,7 @@ class JourneyModelProviderSpec
             previousFamilyNames = Nil,
             dateOfBirth = now,
             nationalInsuranceNumber = None,
-            currentAddress = currentUkAddress,
+            currentAddress = ukAddress,
             previousAddress = None,
             telephoneNumber = phoneNumber,
             nationalities = NonEmptyList(applicantNationality, Nil),
@@ -729,7 +725,7 @@ class JourneyModelProviderSpec
           previousFamilyNames = Nil,
           dateOfBirth = now,
           nationalInsuranceNumber = Some(applicantNino.value),
-          currentAddress = currentUkAddress,
+          currentAddress = ukAddress,
           previousAddress = None,
           telephoneNumber = phoneNumber,
           nationalities = NonEmptyList(applicantNationality, Nil),
@@ -764,7 +760,7 @@ class JourneyModelProviderSpec
           previousFamilyNames = List(previousName1, previousName2),
           dateOfBirth = now,
           nationalInsuranceNumber = None,
-          currentAddress = currentUkAddress,
+          currentAddress = ukAddress,
           previousAddress = None,
           telephoneNumber = phoneNumber,
           nationalities = NonEmptyList(applicantNationality, Nil),
@@ -794,7 +790,8 @@ class JourneyModelProviderSpec
           .set(ApplicantUsualCountryOfResidencePage, country).success.value
           .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
           .set(ApplicantCurrentAddressInUkPage, false).success.value
-          .set(ApplicantCurrentInternationalAddressPage, currentInternationalAddress).success.value
+          .set(ApplicantCurrentInternationalAddressPage, internationalAddress).success.value
+          .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
         val expectedApplicant = JourneyModel.Applicant(
@@ -802,7 +799,7 @@ class JourneyModelProviderSpec
           previousFamilyNames = Nil,
           dateOfBirth = now,
           nationalInsuranceNumber = None,
-          currentAddress = currentInternationalAddress,
+          currentAddress = internationalAddress,
           previousAddress = None,
           telephoneNumber = phoneNumber,
           nationalities = NonEmptyList(applicantNationality, Nil),
@@ -833,9 +830,10 @@ class JourneyModelProviderSpec
             .set(ApplicantUsuallyLivesInUkPage, true).success.value
             .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
             .set(ApplicantCurrentAddressInUkPage, true).success.value
+            .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
             .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
             .set(ApplicantPreviousAddressInUkPage, true).success.value
-            .set(ApplicantPreviousUkAddressPage, previousUkAddress).success.value
+            .set(ApplicantPreviousUkAddressPage, ukAddress).success.value
             .set(AdditionalInformationPage, NoInformation).success.value
 
           val expectedApplicant = JourneyModel.Applicant(
@@ -843,8 +841,8 @@ class JourneyModelProviderSpec
             previousFamilyNames = Nil,
             dateOfBirth = now,
             nationalInsuranceNumber = None,
-            currentAddress = currentUkAddress,
-            previousAddress = Some(previousUkAddress),
+            currentAddress = ukAddress,
+            previousAddress = Some(ukAddress),
             telephoneNumber = phoneNumber,
             nationalities = NonEmptyList(applicantNationality, Nil),
             residency = LivedInUkAndAbroad(None, Some(LocalDate.now)),
@@ -871,10 +869,11 @@ class JourneyModelProviderSpec
             .set(ApplicantUsuallyLivesInUkPage, true).success.value
             .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
             .set(ApplicantCurrentAddressInUkPage, true).success.value
+            .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
             .set(RelationshipStatusPage, Single).success.value
             .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
             .set(ApplicantPreviousAddressInUkPage, false).success.value
-            .set(ApplicantPreviousInternationalAddressPage, previousInternationalAddress).success.value
+            .set(ApplicantPreviousInternationalAddressPage, internationalAddress).success.value
             .set(AdditionalInformationPage, NoInformation).success.value
 
           val expectedApplicant = JourneyModel.Applicant(
@@ -882,8 +881,8 @@ class JourneyModelProviderSpec
             previousFamilyNames = Nil,
             dateOfBirth = now,
             nationalInsuranceNumber = None,
-            currentAddress = currentUkAddress,
-            previousAddress = Some(previousInternationalAddress),
+            currentAddress = ukAddress,
+            previousAddress = Some(internationalAddress),
             telephoneNumber = phoneNumber,
             nationalities = NonEmptyList(applicantNationality, Nil),
             residency = LivedInUkAndAbroad(None, Some(LocalDate.now)),
@@ -2224,7 +2223,9 @@ class JourneyModelProviderSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
           .set(ApplicantUsuallyLivesInUkPage, true).success.value
+          .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
+          .remove(ApplicantCurrentAddressInUkPage).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2244,6 +2245,8 @@ class JourneyModelProviderSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
           .set(ApplicantCurrentAddressInUkPage, true).success.value
+          .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
+          .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -2264,6 +2267,8 @@ class JourneyModelProviderSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
           .set(ApplicantCurrentAddressInUkPage, true).success.value
+          .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
+          .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
           .set(ApplicantUsuallyLivesInUkPage, true).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
@@ -2285,7 +2290,9 @@ class JourneyModelProviderSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
           .set(ApplicantCurrentAddressInUkPage, true).success.value
+          .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
           .set(ApplicantUsuallyLivesInUkPage, false).success.value
+          .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -2327,6 +2334,7 @@ class JourneyModelProviderSpec
           .set(ApplicantCurrentAddressInUkPage, true).success.value
           .set(ApplicantUsuallyLivesInUkPage, true).success.value
           .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
+          .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
           .set(ApplicantPreviousAddressInUkPage, false).success.value
@@ -2894,7 +2902,7 @@ class JourneyModelProviderSpec
         .set(ApplicantPhoneNumberPage, phoneNumber).success.value
         .set(ApplicantNationalityPage(Index(0)), applicantNationality).success.value
         .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
-        .set(ApplicantCurrentUkAddressPage, currentUkAddress).success.value
+        .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
         .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
         .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
 
