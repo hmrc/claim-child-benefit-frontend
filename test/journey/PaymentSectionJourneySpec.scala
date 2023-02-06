@@ -19,7 +19,7 @@ package journey
 import generators.ModelGenerators
 import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments}
 import models.RelationshipStatus._
-import models.{BankAccountDetails, BankAccountHolder, Benefits, Income, PaymentFrequency}
+import models.{AccountType, BankAccountDetails, BankAccountHolder, Benefits, BuildingSocietyDetails, Income, PaymentFrequency}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
@@ -223,7 +223,7 @@ class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
     }
   }
 
-  "users who have a suitable bank account must be asked for the details then go to Check Payment" in {
+  "users who have a suitable account who know their sort code and account number must be asked for the details then go to Check Payment" in {
 
     val accountHolder = Gen.oneOf(BankAccountHolder.values).sample.value
     val bankDetails = arbitrary[BankAccountDetails].sample.value
@@ -232,7 +232,23 @@ class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
       .run(
         submitAnswer(ApplicantHasSuitableAccountPage, true),
         submitAnswer(BankAccountHolderPage, accountHolder),
+        submitAnswer(AccountTypePage, AccountType.SortCodeAccountNumber),
         submitAnswer(BankAccountDetailsPage, bankDetails),
+        pageMustBe(CheckPaymentDetailsPage)
+      )
+  }
+
+  "users who have a suitable account who know their roll number must be asked for the details then go to Check Payment" in {
+
+    val accountHolder = Gen.oneOf(BankAccountHolder.values).sample.value
+    val buildingSocietyDetails = arbitrary[BuildingSocietyDetails].sample.value
+
+    startingFrom(ApplicantHasSuitableAccountPage)
+      .run(
+        submitAnswer(ApplicantHasSuitableAccountPage, true),
+        submitAnswer(BankAccountHolderPage, accountHolder),
+        submitAnswer(AccountTypePage, AccountType.BuildingSocietyRollNumber),
+        submitAnswer(BuildingSocietyDetailsPage, buildingSocietyDetails),
         pageMustBe(CheckPaymentDetailsPage)
       )
   }

@@ -46,14 +46,16 @@ object JourneyModel {
   final case class Relationship(status: RelationshipStatus, since: Option[LocalDate], partner: Option[Partner])
   final case class EldestChild(name: ChildName, dateOfBirth: LocalDate)
 
-  final case class BankAccount(holder: BankAccountHolder, details: BankAccountDetails)
+  sealed trait AccountDetailsWithHolder
+  final case class BankAccountWithHolder(holder: BankAccountHolder, details: BankAccountDetails) extends AccountDetailsWithHolder
+  final case class BuildingSocietyWithHolder(holder: BankAccountHolder, details: BuildingSocietyDetails) extends AccountDetailsWithHolder
 
   sealed trait PaymentPreference
 
   object PaymentPreference {
 
-    final case class Weekly(bankAccount: Option[BankAccount], eldestChild: Option[EldestChild]) extends PaymentPreference
-    final case class EveryFourWeeks(bankAccount: Option[BankAccount], eldestChild: Option[EldestChild]) extends PaymentPreference
+    final case class Weekly(accountDetails: Option[AccountDetailsWithHolder], eldestChild: Option[EldestChild]) extends PaymentPreference
+    final case class EveryFourWeeks(accountDetails: Option[AccountDetailsWithHolder], eldestChild: Option[EldestChild]) extends PaymentPreference
     final case class ExistingAccount(eldestChild: EldestChild, frequency: PaymentFrequency) extends PaymentPreference
     final case class DoNotPay(eldestChild: Option[EldestChild]) extends PaymentPreference
   }
@@ -127,4 +129,3 @@ object JourneyModel {
 
   final case class PreviousGuardian(name: Option[AdultName], address: Option[Address], phoneNumber: Option[String])
 }
-

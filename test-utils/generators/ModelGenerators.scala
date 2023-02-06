@@ -128,12 +128,21 @@ trait ModelGenerators {
   implicit lazy val arbitraryBankAccountDetails: Arbitrary[BankAccountDetails] =
     Arbitrary {
       for {
-        accountName <- arbitrary[String]
-        bankName <- arbitrary[String]
+        firstName <- arbitrary[String]
+        lastName <- arbitrary[String]
         accountNumber <- arbitrary[String]
         sortCode <- arbitrary[String]
-        rollNumber <- Gen.option(arbitrary[String])
-      } yield BankAccountDetails(accountName, bankName, accountNumber, sortCode, rollNumber)
+      } yield BankAccountDetails(firstName, lastName, accountNumber, sortCode)
+    }
+
+  implicit lazy val arbitraryBuildingSocietyDetails: Arbitrary[BuildingSocietyDetails] =
+    Arbitrary {
+      for {
+        firstName <- arbitrary[String]
+        lastName <- arbitrary[String]
+        buildingSociety <- Gen.oneOf(BuildingSociety.allBuildingSocieties)
+        rollNumber <- arbitrary[String]
+      } yield BuildingSocietyDetails(firstName, lastName, buildingSociety, rollNumber)
     }
 
   implicit lazy val arbitraryBenefits: Arbitrary[Benefits] =

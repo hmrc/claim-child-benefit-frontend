@@ -2,18 +2,12 @@
     line: Line
 )
 
-@(bankAccount: JourneyModel.BankAccount)(implicit messages: Messages)
+@(holder: BankAccountHolder, details: BankAccountDetails)(implicit messages: Messages)
 
-@line("pdf.sortCode", bankAccount.details.sortCode)
+@line("pdf.sortCode", details.sortCode)
 
-@line("pdf.accountNumber", bankAccount.details.accountNumber)
+@line("pdf.accountNumber", details.accountNumber)
 
-@line("pdf.accountHolder", messages(s"pdf.accountHolder.${bankAccount.holder.toString}"))
+@line("pdf.accountHolder", messages(s"pdf.accountHolder.${holder.toString}"))
 
-@line("pdf.bankName", bankAccount.details.bankName)
-
-@bankAccount.details.rollNumber.map { rollNumber =>
-    line("pdf.rollNumber", rollNumber)
-}
-
-@line("pdf.accountName", bankAccount.details.accountName)
+@line("pdf.accountName", s"${details.firstName} ${details.lastName}")

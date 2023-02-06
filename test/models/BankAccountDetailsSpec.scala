@@ -25,8 +25,8 @@ class BankAccountDetailsSpec extends AnyFreeSpec with Matchers {
 
     "must remove spaces and dashes from the sort code" in {
 
-      val details1 = BankAccountDetails("name on account", "bank name", "12 34 56", "00123456", None)
-      val details2 = BankAccountDetails("name on account", "bank name", "12-34-56", "00123456", None)
+      val details1 = BankAccountDetails("first", "last", "12 34 56", "00123456")
+      val details2 = BankAccountDetails("first", "last", "12-34-56", "00123456")
 
       details1.sortCodeTrimmed mustEqual "123456"
       details2.sortCodeTrimmed mustEqual "123456"
@@ -37,8 +37,8 @@ class BankAccountDetailsSpec extends AnyFreeSpec with Matchers {
 
     "must left-pad the account number with zeros" in {
 
-      val details1 = BankAccountDetails("name on account", "bank name", "123456", "123456", None)
-      val details2 = BankAccountDetails("name on account", "bank name", "123456", "1234567", None)
+      val details1 = BankAccountDetails("first", "last", "123456", "123456")
+      val details2 = BankAccountDetails("first", "last", "123456", "1234567")
 
       details1.accountNumberPadded mustEqual "00123456"
       details2.accountNumberPadded mustEqual "01234567"

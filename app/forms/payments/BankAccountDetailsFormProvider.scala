@@ -28,19 +28,14 @@ class BankAccountDetailsFormProvider @Inject() extends Mappings {
 
   def apply(): Form[BankAccountDetails] = Form(
     mapping(
-      "accountName" -> text("bankAccountDetails.error.accountName.required")
-        .verifying(maxLength(100, "bankAccountDetails.error.accountName.length")),
-      "bankName" -> text("bankAccountDetails.error.bankName.required")
-        .verifying(maxLength(100, "bankAccountDetails.error.bankName.length")),
+      "firstName" -> text("bankAccountDetails.error.firstName.required")
+        .verifying(maxLength(35, "bankAccountDetails.error.firstName.length")),
+      "lastName" -> text("bankAccountDetails.error.lastName.required")
+        .verifying(maxLength(35, "bankAccountDetails.error.lastName.length")),
       "sortCode" -> text("bankAccountDetails.error.sortCode.required")
         .verifying(regexp(Validation.sortCodePattern.toString, "bankAccountDetails.error.sortCode.invalid")),
       "accountNumber" -> text("bankAccountDetails.error.accountNumber.required")
-        .verifying(regexp(Validation.accountNumberPattern.toString, "bankAccountDetails.error.accountNumber.invalid")),
-      "rollNumber" -> optional(text("bankAccountDetails.error.sortCode.required")
-        .verifying(firstError(
-          maxLength(18, "bankAccountDetails.error.rollNumber.length"),
-          regexp(Validation.rollNumberPattern.toString, "bankAccountDetails.error.rollNumber.invalid")
-        )))
+        .verifying(regexp(Validation.accountNumberPattern.toString, "bankAccountDetails.error.accountNumber.invalid"))
     )(BankAccountDetails.apply)(BankAccountDetails.unapply)
   )
 }

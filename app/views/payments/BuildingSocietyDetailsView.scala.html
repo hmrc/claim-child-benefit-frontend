@@ -18,56 +18,57 @@
 @import viewmodels.InputWidth._
 
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
-    govukButton: GovukButton
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukInput: GovukInput,
+        govukSelect: GovukSelect,
+        govukButton: GovukButton
 )
 
 @(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("bankAccountDetails.title"), section = Some(messages("section.payments")))) {
+@layout(pageTitle = title(form, messages("buildingSocietyDetails.title"), section = Some(messages("section.payments")))) {
 
-    @formHelper(action = routes.BankAccountDetailsController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.BuildingSocietyDetailsController.onSubmit(waypoints), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <h1 class="govuk-heading-xl">@messages("bankAccountDetails.heading")</h1>
+        <h1 class="govuk-heading-xl">@messages("buildingSocietyDetails.heading")</h1>
 
         @govukInput(
             InputViewModel(
                 field = form("firstName"),
-                label = LabelViewModel(messages("bankAccountDetails.firstName"))
+                label = LabelViewModel(messages("buildingSocietyDetails.firstName"))
             )
             .withWidth(Full)
         )
         @govukInput(
             InputViewModel(
                 field = form("lastName"),
-                label = LabelViewModel(messages("bankAccountDetails.lastName"))
+                label = LabelViewModel(messages("buildingSocietyDetails.lastName"))
             )
             .withWidth(Full)
         )
 
-        @govukInput(
-            InputViewModel(
-                field = form("sortCode"),
-                label = LabelViewModel(messages("bankAccountDetails.sortCode"))
+        @govukSelect(
+            SelectViewModel(
+                field = form("buildingSociety"),
+                items = BuildingSociety.selectItems,
+                label = LabelViewModel(messages("buildingSocietyDetails.buildingSociety"))
             )
-            .withWidth(Fixed5)
-            .withHint(HintViewModel(messages("bankAccountDetails.sortCode.hint")))
+            .withCssClass("autocomplete")
         )
 
         @govukInput(
             InputViewModel(
-                field = form("accountNumber"),
-                label = LabelViewModel(messages("bankAccountDetails.accountNumber"))
+                field = form("rollNumber"),
+                label = LabelViewModel(messages("buildingSocietyDetails.rollNumber"))
             )
             .withWidth(Fixed10)
-            .withHint(HintViewModel("bankAccountDetails.accountNumber.hint"))
+            .withHint(HintViewModel("buildingSocietyDetails.rollNumber.hint"))
         )
 
         @govukButton(

@@ -64,7 +64,9 @@ class CheckPaymentDetailsController  @Inject()(
           WantToBePaidToExistingAccountSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantHasSuitableAccountSummary.row(request.userAnswers, waypoints, thisPage),
           BankAccountHolderSummary.row(request.userAnswers, waypoints, thisPage),
+          AccountTypeSummary.row(request.userAnswers, waypoints, thisPage),
           BankAccountDetailsSummary.row(request.userAnswers, waypoints, thisPage),
+          BuildingSocietyDetailsSummary.row(request.userAnswers, waypoints, thisPage),
         ).flatten
       )
       Ok(view(paymentsDetails))

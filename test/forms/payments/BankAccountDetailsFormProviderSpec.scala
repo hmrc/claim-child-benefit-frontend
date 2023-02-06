@@ -25,12 +25,12 @@ class BankAccountDetailsFormProviderSpec extends StringFieldBehaviours {
 
   val form = new BankAccountDetailsFormProvider()()
 
-  ".accountName" - {
+  ".firstName" - {
 
-    val fieldName = "accountName"
-    val requiredKey = "bankAccountDetails.error.accountName.required"
-    val lengthKey = "bankAccountDetails.error.accountName.length"
-    val maxLength = 100
+    val fieldName = "firstName"
+    val requiredKey = "bankAccountDetails.error.firstName.required"
+    val lengthKey = "bankAccountDetails.error.firstName.length"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
@@ -51,13 +51,13 @@ class BankAccountDetailsFormProviderSpec extends StringFieldBehaviours {
       requiredError = FormError(fieldName, requiredKey)
     )
   }
-  
-  ".bankName" - {
 
-    val fieldName = "bankName"
-    val requiredKey = "bankAccountDetails.error.bankName.required"
-    val lengthKey = "bankAccountDetails.error.bankName.length"
-    val maxLength = 100
+  ".lastName" - {
+
+    val fieldName = "lastName"
+    val requiredKey = "bankAccountDetails.error.lastName.required"
+    val lengthKey = "bankAccountDetails.error.lastName.length"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
@@ -173,51 +173,6 @@ class BankAccountDetailsFormProviderSpec extends StringFieldBehaviours {
     "must not bind sort codes with more than 6 digit" in {
       val result = form.bind(Map(fieldName -> "12   34  5678")).apply(fieldName)
       val expectedError = FormError(fieldName, "bankAccountDetails.error.sortCode.invalid", Seq(Validation.sortCodePattern.toString))
-      result.errors must contain only expectedError
-    }
-  }
-
-  ".rollNumber" - {
-
-    val fieldName = "rollNumber"
-
-    val validChars = Gen.oneOf(Gen.alphaNumChar, Gen.oneOf(' ', '.', '/', '-'))
-
-    val validRollNumberGen = {
-      for {
-        length <- Gen.choose(1, 18)
-        chars  <- Gen.listOfN(length, validChars)
-      } yield chars.mkString
-    }.suchThat(_.trim.nonEmpty)
-
-    behave like fieldThatBindsValidData(
-      form,
-      fieldName,
-      validRollNumberGen
-    )
-
-    "must not bind strings longer than 18 characters" in {
-
-      val data = {
-        for {
-          length <- Gen.choose(19, 100)
-          chars <- Gen.listOfN(length, validChars)
-        } yield chars.mkString
-      }.suchThat(_.trim.length > 18)
-
-      forAll(data) {
-        invalidString =>
-
-          val result = form.bind(Map(fieldName -> invalidString)).apply(fieldName)
-          val expectedError = FormError(fieldName, "bankAccountDetails.error.rollNumber.length", Seq(18))
-          result.errors must contain only expectedError
-      }
-    }
-
-    "must not bind strings with invalid characters" in {
-
-      val result = form.bind(Map(fieldName -> "*foo*")).apply(fieldName)
-      val expectedError = FormError(fieldName, "bankAccountDetails.error.rollNumber.invalid", Seq(Validation.rollNumberPattern.toString))
       result.errors must contain only expectedError
     }
   }

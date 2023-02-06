@@ -1,9 +1,10 @@
 @this(
     line: Line,
-    bankAccountSection: BankAccountSection
+    bankAccountSection: BankAccountSection,
+    buildingSocietySection: BuildingSocietySection
 )
 
-@(bankAccount: Option[JourneyModel.BankAccount])(implicit messages: Messages)
+@(accountDetails: Option[JourneyModel.AccountDetailsWithHolder])(implicit messages: Messages)
 
 @line("pdf.wantToBePaid", messages("site.yes"))
 
@@ -11,4 +12,8 @@
 
 @line("pdf.wantToBePaidToExistingAccount", messages("site.no"))
 
-@bankAccount.map(x => bankAccountSection(x)).getOrElse(line("pdf.applicantHasSuitableAccount", messages("site.no")))
+@{accountDetails.map {y => y match {
+    case JourneyModel.BankAccountWithHolder(holder, details) => bankAccountSection(holder, details)
+    case JourneyModel.BuildingSocietyWithHolder(holder, details) => buildingSocietySection(holder, details)
+}}.getOrElse(line("pdf.applicantHasSuitableAccount", messages("site.no")))
+}

@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers.payments
 
 import models.UserAnswers
-import pages.payments.BankAccountDetailsPage
+import pages.payments.BuildingSocietyDetailsPage
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
@@ -26,25 +26,25 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object BankAccountDetailsSummary {
+object BuildingSocietyDetailsSummary {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(BankAccountDetailsPage).map {
+    answers.get(BuildingSocietyDetailsPage).map {
       answer =>
 
         val value = Seq(
           HtmlFormat.escape(s"${answer.firstName} ${answer.lastName}").toString,
-          HtmlFormat.escape(answer.sortCode).toString,
-          HtmlFormat.escape(answer.accountNumber).toString,
+          answer.buildingSociety.name,
+          HtmlFormat.escape(answer.rollNumber).toString
         ).mkString("<br/>")
 
         SummaryListRowViewModel(
-          key = "bankAccountDetails.checkYourAnswersLabel",
+          key = "buildingSocietyDetails.checkYourAnswersLabel",
           value = ValueViewModel(HtmlContent(value)),
           actions = Seq(
-            ActionItemViewModel("site.change", BankAccountDetailsPage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("bankAccountDetails.change.hidden"))
+            ActionItemViewModel("site.change", BuildingSocietyDetailsPage.changeLink(waypoints, sourcePage).url)
+              .withVisuallyHiddenText(messages("buildingSocietyDetails.change.hidden"))
           )
         )
     }

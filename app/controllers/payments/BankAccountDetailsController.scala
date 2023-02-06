@@ -93,8 +93,8 @@ class BankAccountDetailsController @Inject()(
         Some(FormError("sortCode", "bankAccountDetails.error.sortCode.doesNotExist"))
       } else if (result.accountNumberIsWellFormatted == ReputationResponseEnum.No) {
         Some(FormError("sortCode", "bankAccountDetails.error.sortCode.failedModulusCheck"))
-      } else if (result.nonStandardAccountDetailsRequiredForBacs == ReputationResponseEnum.Yes && submittedDetails.rollNumber.isEmpty) {
-        Some(FormError("rollNumber", "bankAccountDetails.error.rollNumber.required"))
+      } else if (result.nonStandardAccountDetailsRequiredForBacs == ReputationResponseEnum.Yes) {
+        Some(FormError("sortCode", "bankAccountDetails.error.sortCode.nonStandardDetailsRequired"))
       } else if (result.sortCodeSupportsDirectCredit.contains(ReputationResponseEnum.No)) {
         Some(FormError("sortCode", "bankAccountDetails.error.sortCode.doesNotSupportDirectCredit"))
       } else {

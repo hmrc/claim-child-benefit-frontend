@@ -17,31 +17,29 @@
 package models
 
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
+import viewmodels.govuk.hint._
 
-sealed trait ApplicantResidence
+sealed trait AccountType
 
-object ApplicantResidence extends Enumerable.Implicits {
+object AccountType extends Enumerable.Implicits {
 
-  case object AlwaysUk extends WithName("alwaysUk") with ApplicantResidence
-  case object CurrentlyUk extends WithName("currentlyUk") with ApplicantResidence
-  case object CurrentlyAbroad extends WithName("currentlyAbroad") with ApplicantResidence
-  case object AlwaysAbroad extends WithName("alwaysAbroad") with ApplicantResidence
+  case object SortCodeAccountNumber extends WithName("sortCodeAndAccountNumber") with AccountType
+  case object BuildingSocietyRollNumber extends WithName("buildingSocietyRollNumber") with AccountType
 
-  val values: Seq[ApplicantResidence] = Seq(
-    AlwaysUk, CurrentlyUk, CurrentlyAbroad, AlwaysAbroad
-  )
+  val values: Seq[AccountType] = Seq(SortCodeAccountNumber, BuildingSocietyRollNumber)
 
   def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
     case (value, index) =>
       RadioItem(
-        content = Text(messages(s"applicantResidence.${value.toString}")),
-        value   = Some(value.toString),
-        id      = Some(s"value_$index")
+        content = Text(messages(s"accountType.${value.toString}")),
+        value = Some(value.toString),
+        id = Some(s"value_$index"),
+        hint = Some(HintViewModel(Text(messages(s"accountType.${value.toString}.hint"))))
       )
   }
 
-  implicit val enumerable: Enumerable[ApplicantResidence] =
+  implicit val enumerable: Enumerable[AccountType] =
     Enumerable(values.map(v => v.toString -> v): _*)
 }

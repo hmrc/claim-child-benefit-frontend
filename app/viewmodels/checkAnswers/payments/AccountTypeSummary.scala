@@ -17,34 +17,26 @@
 package viewmodels.checkAnswers.payments
 
 import models.UserAnswers
-import pages.payments.BankAccountDetailsPage
+import pages.payments.AccountTypePage
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object BankAccountDetailsSummary {
+object AccountTypeSummary {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(BankAccountDetailsPage).map {
+    answers.get(AccountTypePage).map {
       answer =>
 
-        val value = Seq(
-          HtmlFormat.escape(s"${answer.firstName} ${answer.lastName}").toString,
-          HtmlFormat.escape(answer.sortCode).toString,
-          HtmlFormat.escape(answer.accountNumber).toString,
-        ).mkString("<br/>")
-
         SummaryListRowViewModel(
-          key = "bankAccountDetails.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlContent(value)),
+          key = "accountType.checkYourAnswersLabel",
+          value = ValueViewModel(messages(s"accountType.${answer.toString}")),
           actions = Seq(
-            ActionItemViewModel("site.change", BankAccountDetailsPage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("bankAccountDetails.change.hidden"))
+            ActionItemViewModel("site.change", AccountTypePage.changeLink(waypoints, sourcePage).url)
+              .withVisuallyHiddenText(messages("accountType.change.hidden"))
           )
         )
     }

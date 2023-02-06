@@ -71,8 +71,9 @@ class JourneyModelProviderSpec
   private val previousName1 = ApplicantPreviousName("previous name 1")
   private val previousName2 = ApplicantPreviousName("previous name 2")
 
-  private val bankAccountDetails = BankAccountDetails("name on account", "bank name", "00000000", "000000", None)
+  private val bankAccountDetails = BankAccountDetails("first", "last", "00000000", "000000")
   private val bankAccountHolder = BankAccountHolder.Applicant
+  private val buildingSocietyDetails = arbitrary[BuildingSocietyDetails].sample.value
   private val eldestChildName = ChildName("first", None, "last")
 
   private val partnerName = AdultName(None, "partner first", None, "partner last")
@@ -388,11 +389,12 @@ class JourneyModelProviderSpec
               .set(WantToBePaidToExistingAccountPage, false).success.value
               .set(ApplicantHasSuitableAccountPage, true).success.value
               .set(BankAccountHolderPage, bankAccountHolder).success.value
+              .set(AccountTypePage, AccountType.SortCodeAccountNumber).success.value
               .set(BankAccountDetailsPage, bankAccountDetails).success.value
               .set(AdditionalInformationPage, NoInformation).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(
-              bankAccount = Some(JourneyModel.BankAccount(bankAccountHolder, bankAccountDetails)),
+              accountDetails = Some(JourneyModel.BankAccountWithHolder(bankAccountHolder, bankAccountDetails)),
               eldestChild = Some(JourneyModel.EldestChild(eldestChildName, now))
             )
 
@@ -424,7 +426,7 @@ class JourneyModelProviderSpec
               .set(AdditionalInformationPage, NoInformation).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.Weekly(
-              bankAccount = None,
+              accountDetails = None,
               eldestChild = Some(JourneyModel.EldestChild(eldestChildName, now))
             )
 
@@ -486,10 +488,11 @@ class JourneyModelProviderSpec
               .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks).success.value
               .set(ApplicantHasSuitableAccountPage, true).success.value
               .set(BankAccountHolderPage, bankAccountHolder).success.value
+              .set(AccountTypePage, AccountType.SortCodeAccountNumber).success.value
               .set(BankAccountDetailsPage, bankAccountDetails).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(
-              bankAccount = Some(JourneyModel.BankAccount(bankAccountHolder, bankAccountDetails)),
+              accountDetails = Some(JourneyModel.BankAccountWithHolder(bankAccountHolder, bankAccountDetails)),
               eldestChild = Some(JourneyModel.EldestChild(eldestChildName, now))
             )
 
@@ -510,7 +513,7 @@ class JourneyModelProviderSpec
               .set(ApplicantHasSuitableAccountPage, false).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(
-              bankAccount = None,
+              accountDetails = None,
               eldestChild = Some(JourneyModel.EldestChild(eldestChildName, now))
             )
 
@@ -533,10 +536,11 @@ class JourneyModelProviderSpec
               .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
               .set(ApplicantHasSuitableAccountPage, true).success.value
               .set(BankAccountHolderPage, bankAccountHolder).success.value
-              .set(BankAccountDetailsPage, bankAccountDetails).success.value
+              .set(AccountTypePage, AccountType.BuildingSocietyRollNumber).success.value
+              .set(BuildingSocietyDetailsPage, buildingSocietyDetails).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.Weekly(
-              bankAccount = Some(JourneyModel.BankAccount(bankAccountHolder, bankAccountDetails)),
+              accountDetails = Some(JourneyModel.BuildingSocietyWithHolder(bankAccountHolder, buildingSocietyDetails)),
               eldestChild = Some(JourneyModel.EldestChild(eldestChildName, now))
             )
 
@@ -557,7 +561,7 @@ class JourneyModelProviderSpec
               .set(ApplicantHasSuitableAccountPage, false).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.Weekly(
-              bankAccount = None,
+              accountDetails = None,
               eldestChild = Some(JourneyModel.EldestChild(eldestChildName, now))
             )
 
@@ -608,10 +612,11 @@ class JourneyModelProviderSpec
               .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks).success.value
               .set(ApplicantHasSuitableAccountPage, true).success.value
               .set(BankAccountHolderPage, bankAccountHolder).success.value
+              .set(AccountTypePage, AccountType.SortCodeAccountNumber).success.value
               .set(BankAccountDetailsPage, bankAccountDetails).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(
-              bankAccount = Some(JourneyModel.BankAccount(bankAccountHolder, bankAccountDetails)),
+              accountDetails = Some(JourneyModel.BankAccountWithHolder(bankAccountHolder, bankAccountDetails)),
               eldestChild = None
             )
 
@@ -632,7 +637,7 @@ class JourneyModelProviderSpec
               .set(ApplicantHasSuitableAccountPage, false).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(
-              bankAccount = None,
+              accountDetails = None,
               eldestChild = None
             )
 
@@ -654,10 +659,11 @@ class JourneyModelProviderSpec
               .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
               .set(ApplicantHasSuitableAccountPage, true).success.value
               .set(BankAccountHolderPage, bankAccountHolder).success.value
+              .set(AccountTypePage, AccountType.SortCodeAccountNumber).success.value
               .set(BankAccountDetailsPage, bankAccountDetails).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.Weekly(
-              bankAccount = Some(JourneyModel.BankAccount(bankAccountHolder, bankAccountDetails)),
+              accountDetails = Some(JourneyModel.BankAccountWithHolder(bankAccountHolder, bankAccountDetails)),
               eldestChild = None
             )
 
@@ -677,7 +683,7 @@ class JourneyModelProviderSpec
               .set(ApplicantHasSuitableAccountPage, false).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.Weekly(
-              bankAccount = None,
+              accountDetails = None,
               eldestChild = None
             )
 
@@ -2052,7 +2058,7 @@ class JourneyModelProviderSpec
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
-          errors.value.toChain.toList must contain theSameElementsAs Seq(BankAccountHolderPage, BankAccountDetailsPage)
+          errors.value.toChain.toList must contain only AccountTypePage
           data mustBe empty
         }
       }
@@ -2094,7 +2100,53 @@ class JourneyModelProviderSpec
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
-        errors.value.toChain.toList must contain theSameElementsAs Seq(BankAccountHolderPage, BankAccountDetailsPage)
+        errors.value.toChain.toList must contain only AccountTypePage
+        data mustBe empty
+      }
+
+      "when the applicant wants to be paid to a bank account but their account details are missing" in {
+
+        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
+          .set(WantToBePaidPage, true).success.value
+          .set(ApplicantBenefitsPage, applicantBenefits).success.value
+          .set(ApplicantHasSuitableAccountPage, true).success.value
+          .set(BankAccountHolderPage, bankAccountHolder).success.value
+          .set(AccountTypePage, AccountType.SortCodeAccountNumber).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors.value.toChain.toList must contain theSameElementsAs Seq(BankAccountDetailsPage)
+        data mustBe empty
+      }
+
+      "when the applicant wants to be paid to a building society but their account details are missing" in {
+
+        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
+          .set(WantToBePaidPage, true).success.value
+          .set(ApplicantBenefitsPage, applicantBenefits).success.value
+          .set(ApplicantHasSuitableAccountPage, true).success.value
+          .set(BankAccountHolderPage, bankAccountHolder).success.value
+          .set(AccountTypePage, AccountType.BuildingSocietyRollNumber).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors.value.toChain.toList must contain theSameElementsAs Seq(BuildingSocietyDetailsPage)
         data mustBe empty
       }
 
