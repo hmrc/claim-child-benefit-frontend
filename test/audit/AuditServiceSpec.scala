@@ -64,7 +64,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           previousAddress = Some(models.UkAddress("previous line 1", Some("previous line 2"), "previous town", Some("previous county"), "previous postcode")),
           telephoneNumber = "07777 777777",
           nationalities = NonEmptyList(Nationality.allNationalities.head, Nil),
-          residency = JourneyModel.Residency.LivedInUkAndAbroad(Some(Country.internationalCountries.head), Some(LocalDate.now)),
+          residency = JourneyModel.Residency.LivedInUkAndAbroad(Some(Country.internationalCountries.head), Some(LocalDate.now), List(Country("ES", "Spain")), List(Country("ES", "Spain"))),
           memberOfHMForcesOrCivilServantAbroad = Some(false),
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
         ),
@@ -137,7 +137,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           previousAddress = Some(UkAddress("previous line 1", Some("previous line 2"), "previous town", Some("previous county"), "previous postcode")),
           telephoneNumber = "07777 777777",
           nationalities = Seq(Nationality.allNationalities.head.name),
-          residency = Residency.LivedInUkAndAbroad(Some(Country.internationalCountries.head.name), Some(LocalDate.now)),
+          residency = Residency.LivedInUkAndAbroad(Some(Country.internationalCountries.head.name), Some(LocalDate.now), List("Spain"), List("Spain")),
           memberOfHMForcesOrCivilServantAbroad = Some(false),
           currentlyClaimingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming.toString
         ),

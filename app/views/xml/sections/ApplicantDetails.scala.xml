@@ -57,11 +57,11 @@
                         case JourneyModel.Residency.AlwaysLivedInUk =>
                             alwaysLivedInUk()
 
-                        case JourneyModel.Residency.LivedInUkAndAbroad(usualCountryOfResidence, arrivalDate) =>
-                            livedInUkAndAbroad(usualCountryOfResidence, arrivalDate)
+                        case JourneyModel.Residency.LivedInUkAndAbroad(usualCountryOfResidence, arrivalDate, countriesWorked, countriesReceivedBenefits) =>
+                            livedInUkAndAbroad(usualCountryOfResidence, arrivalDate, countriesWorked, countriesReceivedBenefits)
 
-                        case JourneyModel.Residency.AlwaysLivedAbroad(usualCountryOfResidence) =>
-                            alwaysLivedAbroad(usualCountryOfResidence)
+                        case JourneyModel.Residency.AlwaysLivedAbroad(usualCountryOfResidence, countriesWorked, countriesReceivedBenefits) =>
+                            alwaysLivedAbroad(usualCountryOfResidence, countriesWorked, countriesReceivedBenefits)
                     }}
 
                     @line("pdf.hmfOrCivilServant", booleanToYesNo(model.applicant.memberOfHMForcesOrCivilServantAbroad.getOrElse(false)))

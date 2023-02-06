@@ -2,7 +2,7 @@
 
 @this(line: Line)
 
-@(usualCountryOfResidence: Option[Country], arrivalDate: Option[LocalDate])(implicit messages: Messages)
+@(usualCountryOfResidence: Option[Country], arrivalDate: Option[LocalDate], countriesWorked: List[Country], countriesReceivedBenefits: List[Country])(implicit messages: Messages)
 
 @line("pdf.alwaysLivedInUk", messages("site.no"))
 
@@ -14,4 +14,16 @@
 
 @arrivalDate.map { arrivalDate =>
     @line("pdf.arrivedInUk", date(arrivalDate))
+}
+
+@line("pdf.workedAbroad", booleanToYesNo(countriesWorked.nonEmpty))
+
+@if(countriesWorked.nonEmpty) {
+    @line("pdf.countriesWorked", countriesWorked.map(_.name).mkString(", "))
+}
+
+@line("pdf.receivedBenefitsAbroad", booleanToYesNo(countriesReceivedBenefits.nonEmpty))
+
+@if(countriesReceivedBenefits.nonEmpty) {
+    @line("pdf.countriesReceivedBenefits", countriesReceivedBenefits.map(_.name).mkString(", "))
 }

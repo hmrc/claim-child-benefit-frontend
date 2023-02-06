@@ -2,10 +2,22 @@
 
 @this(line: Line)
 
-@(country: Country)(implicit messages: Messages)
+@(usualCountryOfResidence: Country, countriesWorked: List[Country], countriesReceivedBenefits: List[Country])(implicit messages: Messages)
 
 @line("pdf.alwaysLivedInUk", messages("site.no"))
 
 @line("pdf.usuallyLivesInUk", messages("site.no"))
 
-@line("pdf.usualCountryOfResidence", country.name)
+@line("pdf.usualCountryOfResidence", usualCountryOfResidence.name)
+
+@line("pdf.workedAbroad", booleanToYesNo(countriesWorked.nonEmpty))
+
+@if(countriesWorked.nonEmpty) {
+    @line("pdf.countriesWorked", countriesWorked.map(_.name).mkString(", "))
+}
+
+@line("pdf.receivedBenefitsAbroad", booleanToYesNo(countriesReceivedBenefits.nonEmpty))
+
+@if(countriesReceivedBenefits.nonEmpty) {
+    @line("pdf.countriesReceivedBenefits", countriesReceivedBenefits.map(_.name).mkString(", "))
+}

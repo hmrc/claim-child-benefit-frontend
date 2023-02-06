@@ -165,4 +165,64 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
     )
 
   }
+
+  "Lived In Uk And Abroad must serialise to JSON" - {
+
+    "when optional values are not present" in {
+
+      val model = Residency.LivedInUkAndAbroad(None, None, Nil, Nil)
+
+      Json.toJson(model) mustEqual Json.obj(
+        "alwaysLivedInUk" -> false,
+        "usuallyLivesInUk" -> true
+      )
+    }
+
+    "when optional values are present" in {
+
+      val model = Residency.LivedInUkAndAbroad(Some("country 1"), Some(LocalDate.of(2022, 12, 31)), List("country 2"), List("country 3"))
+
+      val json = Json.toJson(model)
+
+      json mustEqual Json.obj(
+        "alwaysLivedInUk" -> false,
+        "usuallyLivesInUk" -> false,
+        "usualCountryOfResidence" -> "country 1",
+        "arrivalDate" -> "2022-12-31",
+        "countriesRecentlyWorked" -> Json.arr("country 2"),
+        "countriesRecentlyReceivedBenefits" -> Json.arr("country 3")
+      )
+    }
+  }
+
+  "Always lived abroad must serialise to JSON" - {
+
+    "when optional values are not present" in {
+
+      val model = Residency.AlwaysLivedAbroad("country 1", Nil, Nil)
+
+      val json = Json.toJson(model)
+
+      json mustEqual Json.obj(
+        "alwaysLivedInUk" -> false,
+        "usuallyLivesInUk" -> false,
+        "usualCountryOfResidence" -> "country 1"
+      )
+    }
+
+    "when optional values are present" in {
+
+      val model = Residency.AlwaysLivedAbroad("country 1", List("country 2"), List("country 3"))
+
+      val json = Json.toJson(model)
+
+      json mustEqual Json.obj(
+        "alwaysLivedInUk" -> false,
+        "usuallyLivesInUk" -> false,
+        "usualCountryOfResidence" -> "country 1",
+        "countriesRecentlyWorked" -> Json.arr("country 2"),
+        "countriesRecentlyReceivedBenefits" -> Json.arr("country 3")
+      )
+    }
+  }
 }

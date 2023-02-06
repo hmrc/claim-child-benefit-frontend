@@ -191,8 +191,8 @@ object DownloadAuditEvent {
   private def convertResidency(residency: models.JourneyModel.Residency): Residency =
     residency match {
       case models.JourneyModel.Residency.AlwaysLivedInUk => Residency.AlwaysLivedInUk
-      case x: models.JourneyModel.Residency.LivedInUkAndAbroad => Residency.LivedInUkAndAbroad(x.usualCountryOfResidence.map(_.name), x.arrivalDate)
-      case x: models.JourneyModel.Residency.AlwaysLivedAbroad => Residency.AlwaysLivedAbroad(x.usualCountryOfResidence.name)
+      case x: models.JourneyModel.Residency.LivedInUkAndAbroad => Residency.LivedInUkAndAbroad(x.usualCountryOfResidence.map(_.name), x.arrivalDate, x.countriesWorked.map(_.name), x.countriesReceivedBenefits.map(_.name))
+      case x: models.JourneyModel.Residency.AlwaysLivedAbroad => Residency.AlwaysLivedAbroad(x.usualCountryOfResidence.name, x.countriesWorked.map(_.name), x.countriesReceivedBenefits.map(_.name))
     }
 
   private[audit] final case class AdultName(title: Option[String], firstName: String, middleNames: Option[String], lastName: String)
@@ -233,27 +233,33 @@ object DownloadAuditEvent {
 
     case object AlwaysLivedInUk extends Residency
 
-    final case class LivedInUkAndAbroad(usualCountryOfResidence: Option[String], arrivalDate: Option[LocalDate]) extends Residency
+    final case class LivedInUkAndAbroad(usualCountryOfResidence: Option[String], arrivalDate: Option[LocalDate], countriesWorked: List[String], countriesReceivedBenefits: List[String]) extends Residency
     object LivedInUkAndAbroad {
       implicit lazy val writes: Writes[LivedInUkAndAbroad] = Writes { a =>
 
         val arrivalDateJson = a.arrivalDate.map(d => Json.obj("arrivalDate" -> d)).getOrElse(Json.obj())
-        val countryJson = a.usualCountryOfResidence.map(c => Json.obj("usualCountryOfResidence" -> c)).getOrElse(Json.obj())
+        val countryJson = a.usualCountryOfResidence.map(c => Json.obj("usualCountryOfResidence" -> c, "usuallyLivesInUk" -> false)).getOrElse(Json.obj("usuallyLivesInUk" -> true))
+        val countriesWorkedJson = if(a.countriesWorked.nonEmpty) Json.obj("countriesRecentlyWorked" -> a.countriesWorked) else Json.obj()
+        val countreisReceivedBenefitsJson = if(a.countriesReceivedBenefits.nonEmpty) Json.obj("countriesRecentlyReceivedBenefits" -> a.countriesReceivedBenefits) else Json.obj()
 
         Json.obj(
           "alwaysLivedInUk" -> false
-        ) ++ arrivalDateJson ++ countryJson
+        ) ++ arrivalDateJson ++ countryJson ++ countriesWorkedJson ++ countreisReceivedBenefitsJson
       }
     }
 
-    final case class AlwaysLivedAbroad(country: String) extends Residency
+    final case class AlwaysLivedAbroad(usualCountryOfResidence: String, countriesWorked: List[String], countriesReceivedBenefits: List[String]) extends Residency
     object AlwaysLivedAbroad {
       implicit lazy val writes: Writes[AlwaysLivedAbroad] = Writes { a =>
+
+        val countriesWorkedJson = if (a.countriesWorked.nonEmpty) Json.obj("countriesRecentlyWorked" -> a.countriesWorked) else Json.obj()
+        val countreisReceivedBenefitsJson = if (a.countriesReceivedBenefits.nonEmpty) Json.obj("countriesRecentlyReceivedBenefits" -> a.countriesReceivedBenefits) else Json.obj()
+
         Json.obj(
           "alwaysLivedInUk" -> false,
           "usuallyLivesInUk" -> false,
-          "usualCountryOfResidence" -> a.country
-        )
+          "usualCountryOfResidence" -> a.usualCountryOfResidence
+        ) ++ countriesWorkedJson ++ countreisReceivedBenefitsJson
       }
     }
 
