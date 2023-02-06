@@ -33,11 +33,16 @@
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value.day")))
         }
+        <h1 class="govuk-heading-xl">@messages("applicantArrivedInUk.heading")</h1>
+
+        <p class="govuk-body">messages("applicantArrivedInUk.p1")</p>
+
+        <p class="govuk-body">messages("applicantArrivedInUk.p2")</p>
 
         @govukDateInput(
             DateViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(messages("applicantArrivedInUk.heading")).asPageHeading()
+                legend = LegendViewModel(messages("applicantArrivedInUk.heading")).visuallyHidden()
             )
             .withHint(HintViewModel(messages("applicantArrivedInUk.hint")))
 
