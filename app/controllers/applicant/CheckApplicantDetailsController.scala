@@ -65,6 +65,7 @@ class CheckApplicantDetailsController  @Inject()(
           ApplicantPreviousUkAddressSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantPreviousInternationalAddressSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantWorkedAbroadSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantEmploymentStatusSummary.row(request.userAnswers, waypoints, thisPage),
           AddCountryApplicantWorkedSummary.checkAnswersRow(request.userAnswers, waypoints, thisPage),
           ApplicantReceivedBenefitsAbroadSummary.row(request.userAnswers, waypoints, thisPage),
           AddCountryApplicantReceivedBenefitsSummary.checkAnswersRow(request.userAnswers, waypoints, thisPage),

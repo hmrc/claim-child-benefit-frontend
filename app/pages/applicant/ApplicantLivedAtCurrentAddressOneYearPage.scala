@@ -41,7 +41,7 @@ case object ApplicantLivedAtCurrentAddressOneYearPage extends QuestionPage[Boole
             ApplicantIsHmfOrCivilServantPage
 
           case _ =>
-            ApplicantWorkedAbroadPage
+            ApplicantEmploymentStatusPage
         }.orRecover
 
       case false =>

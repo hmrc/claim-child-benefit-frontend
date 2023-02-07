@@ -18,7 +18,7 @@ package journey
 
 import generators.ModelGenerators
 import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments}
-import models.{AdultName, ApplicantPreviousName, ApplicantResidence, ChildName, Country, Index, InternationalAddress, Nationality, UkAddress}
+import models.{AdultName, ApplicantPreviousName, ApplicantResidence, ChildName, Country, EmploymentStatus, Index, InternationalAddress, Nationality, UkAddress}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
@@ -207,6 +207,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
             .run(
               setUserAnswerTo(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
               submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+              submitAnswer(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses),
               pageMustBe(ApplicantWorkedAbroadPage)
             )
         }
@@ -220,6 +221,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
             .run(
               setUserAnswerTo(ApplicantResidencePage, ApplicantResidence.AlwaysAbroad),
               submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+              submitAnswer(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses),
               pageMustBe(ApplicantWorkedAbroadPage)
             )
         }
@@ -254,6 +256,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
                 submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
                 submitAnswer(ApplicantPreviousAddressInUkPage, true),
                 submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
+                submitAnswer(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses),
                 pageMustBe(ApplicantWorkedAbroadPage)
               )
           }
@@ -266,6 +269,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
                 submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
                 submitAnswer(ApplicantPreviousAddressInUkPage, false),
                 submitAnswer(ApplicantPreviousInternationalAddressPage, internationalAddress),
+                submitAnswer(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses),
                 pageMustBe(ApplicantWorkedAbroadPage)
               )
           }
@@ -281,6 +285,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
               setUserAnswerTo(ApplicantResidencePage, ApplicantResidence.AlwaysAbroad),
               submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
               submitAnswer(ApplicantPreviousInternationalAddressPage, internationalAddress),
+              submitAnswer(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses),
               pageMustBe(ApplicantWorkedAbroadPage)
             )
         }

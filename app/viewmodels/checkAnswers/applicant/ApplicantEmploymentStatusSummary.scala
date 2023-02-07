@@ -37,7 +37,7 @@ object ApplicantEmploymentStatusSummary  {
             answer.map {
               x => messages(s"employmentStatus.$x")
             }
-              .mkString(",<br>")
+            .mkString("<br>")
           )
         )
 

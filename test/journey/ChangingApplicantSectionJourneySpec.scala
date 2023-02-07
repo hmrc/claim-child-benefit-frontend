@@ -116,6 +116,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
           setUserAnswerTo(ApplicantWorkedAbroadPage, false),
           setUserAnswerTo(ApplicantReceivedBenefitsAbroadPage, false),
           setUserAnswerTo(ApplicantArrivedInUkPage, LocalDate.now),
+          setUserAnswerTo(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses),
           submitAnswer(ApplicantNinoKnownPage, true),
           submitAnswer(ApplicantNinoPage, nino),
           submitAnswer(ApplicantNamePage, adultName),
@@ -146,6 +147,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
           setUserAnswerTo(ApplicantUsualCountryOfResidencePage, country),
           setUserAnswerTo(ApplicantWorkedAbroadPage, false),
           setUserAnswerTo(ApplicantReceivedBenefitsAbroadPage, false),
+          setUserAnswerTo(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses),
           submitAnswer(ApplicantNinoKnownPage, true),
           submitAnswer(ApplicantNinoPage, nino),
           submitAnswer(ApplicantNamePage, adultName),
@@ -229,6 +231,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
           submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
           submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
           submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+          submitAnswer(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses),
           submitAnswer(ApplicantWorkedAbroadPage, false),
           submitAnswer(ApplicantReceivedBenefitsAbroadPage, false),
           pageMustBe(CheckApplicantDetailsPage),
@@ -245,6 +248,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
           submitAnswer(ApplicantUsualCountryOfResidencePage, country),
           submitAnswer(ApplicantCurrentInternationalAddressPage, internationalAddress),
           submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+          submitAnswer(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses),
           submitAnswer(ApplicantWorkedAbroadPage, false),
           submitAnswer(ApplicantReceivedBenefitsAbroadPage, false),
           pageMustBe(CheckApplicantDetailsPage),
@@ -272,6 +276,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
       submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
       submitAnswer(ApplicantPreviousAddressInUkPage, true),
       submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
+      submitAnswer(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses),
       submitAnswer(ApplicantWorkedAbroadPage, true),
       submitAnswer(CountryApplicantWorkedPage(Index(0)), country),
       submitAnswer(AddCountryApplicantWorkedPage(Some(Index(0))), false),
@@ -305,6 +310,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
             answersMustNotContain(ApplicantPreviousAddressInUkPage),
             answersMustNotContain(ApplicantPreviousUkAddressPage),
             answersMustNotContain(ApplicantPreviousInternationalAddressPage),
+            answersMustNotContain(ApplicantEmploymentStatusPage),
             answersMustNotContain(ApplicantWorkedAbroadPage),
             answersMustNotContain(CountryApplicantWorkedPage(Index(0))),
             answersMustNotContain(ApplicantReceivedBenefitsAbroadPage),
@@ -325,6 +331,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
             submitAnswer(ApplicantUsualCountryOfResidencePage, country),
             submitAnswer(ApplicantCurrentInternationalAddressPage, internationalAddress),
             submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+            submitAnswer(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses),
             submitAnswer(ApplicantWorkedAbroadPage, false),
             submitAnswer(ApplicantReceivedBenefitsAbroadPage, false),
             pageMustBe(CheckApplicantDetailsPage),
@@ -353,6 +360,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
       submitAnswer(ApplicantCurrentInternationalAddressPage, internationalAddress),
       submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
       submitAnswer(ApplicantPreviousInternationalAddressPage, internationalAddress),
+      submitAnswer(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses),
       submitAnswer(ApplicantWorkedAbroadPage, true),
       submitAnswer(CountryApplicantWorkedPage(Index(0)), country),
       submitAnswer(AddCountryApplicantWorkedPage(Some(Index(0))), false),
@@ -378,6 +386,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
           answersMustNotContain(ApplicantCurrentInternationalAddressPage),
           answersMustNotContain(ApplicantPreviousInternationalAddressPage),
           answersMustNotContain(ApplicantWorkedAbroadPage),
+          answersMustNotContain(ApplicantEmploymentStatusPage),
           answersMustNotContain(CountryApplicantWorkedPage(Index(0))),
           answersMustNotContain(ApplicantReceivedBenefitsAbroadPage),
           answersMustNotContain(CountryApplicantReceivedBenefitsPage(Index(0)))
@@ -397,6 +406,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
           submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
           submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
           submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+          submitAnswer(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses),
           submitAnswer(ApplicantWorkedAbroadPage, true),
           submitAnswer(CountryApplicantWorkedPage(Index(0)), country),
           submitAnswer(AddCountryApplicantWorkedPage(Some(Index(0))), false),
@@ -658,6 +668,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
         val initialise = journeyOf(
           setUserAnswerTo(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
           submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+          submitAnswer(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses),
           submitAnswer(ApplicantWorkedAbroadPage, false),
           goTo(CheckApplicantDetailsPage)
         )
@@ -696,6 +707,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
           val initialise = journeyOf(
             setUserAnswerTo(ApplicantResidencePage, ApplicantResidence.AlwaysAbroad),
             submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, true),
+            submitAnswer(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses),
             submitAnswer(ApplicantWorkedAbroadPage, false),
             goTo(CheckApplicantDetailsPage)
           )
@@ -722,6 +734,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
         submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
         submitAnswer(ApplicantPreviousAddressInUkPage, true),
         submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
+        submitAnswer(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses),
         submitAnswer(ApplicantWorkedAbroadPage, false),
         setUserAnswerTo(ApplicantPreviousInternationalAddressPage, internationalAddress),
         goTo(CheckApplicantDetailsPage)
@@ -748,6 +761,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
           submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
           submitAnswer(ApplicantPreviousAddressInUkPage, true),
           submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
+          submitAnswer(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses),
           submitAnswer(ApplicantWorkedAbroadPage, false),
           goTo(CheckApplicantDetailsPage)
         )
@@ -773,6 +787,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
           submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
           submitAnswer(ApplicantPreviousAddressInUkPage, false),
           submitAnswer(ApplicantPreviousInternationalAddressPage, internationalAddress),
+          submitAnswer(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses),
           submitAnswer(ApplicantWorkedAbroadPage, false),
           goTo(CheckApplicantDetailsPage)
         )

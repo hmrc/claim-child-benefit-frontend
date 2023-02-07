@@ -58,6 +58,7 @@ case object ApplicantResidencePage extends QuestionPage[ApplicantResidence] {
             .flatMap(_.remove(ApplicantPreviousAddressInUkPage))
             .flatMap(_.remove(ApplicantPreviousUkAddressPage))
             .flatMap(_.remove(ApplicantPreviousInternationalAddressPage))
+            .flatMap(_.remove(ApplicantEmploymentStatusPage))
             .flatMap(_.remove(ApplicantWorkedAbroadPage))
             .flatMap(_.remove(AllCountriesApplicantWorked))
             .flatMap(_.remove(AddCountryApplicantWorkedPage()))

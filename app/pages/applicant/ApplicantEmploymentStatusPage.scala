@@ -30,4 +30,7 @@ case object ApplicantEmploymentStatusPage extends QuestionPage[Set[EmploymentSta
 
   override def route(waypoints: Waypoints): Call =
     routes.ApplicantEmploymentStatusController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    ApplicantWorkedAbroadPage
 }

@@ -37,6 +37,6 @@ case object ApplicantPreviousUkAddressPage extends QuestionPage[UkAddress] {
         ApplicantIsHmfOrCivilServantPage
 
       case _ =>
-        ApplicantWorkedAbroadPage
+        ApplicantEmploymentStatusPage
     }.orRecover
 }
