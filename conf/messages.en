@@ -1251,6 +1251,7 @@ pdf.alwaysLivedInUk = Always lived in the UK
 pdf.usuallyLivesInUk = Usually lives in the UK
 pdf.usualCountryOfResidence = Usual country of residence
 pdf.arrivedInUk = Date of arrival in UK
+pdf.employmentStatus = Employment status
 pdf.workedAbroad = Worked abroad in last 3 months
 pdf.countriesWorked = Countries worked in last 3 months
 pdf.receivedBenefitsAbroad = Received benefits abroad in last 3 months

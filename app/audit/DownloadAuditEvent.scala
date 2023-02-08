@@ -191,8 +191,8 @@ object DownloadAuditEvent {
   private def convertResidency(residency: models.JourneyModel.Residency): Residency =
     residency match {
       case models.JourneyModel.Residency.AlwaysLivedInUk => Residency.AlwaysLivedInUk
-      case x: models.JourneyModel.Residency.LivedInUkAndAbroad => Residency.LivedInUkAndAbroad(x.usualCountryOfResidence.map(_.name), x.arrivalDate, x.countriesWorked.map(_.name), x.countriesReceivedBenefits.map(_.name))
-      case x: models.JourneyModel.Residency.AlwaysLivedAbroad => Residency.AlwaysLivedAbroad(x.usualCountryOfResidence.name, x.countriesWorked.map(_.name), x.countriesReceivedBenefits.map(_.name))
+      case x: models.JourneyModel.Residency.LivedInUkAndAbroad => Residency.LivedInUkAndAbroad(x.usualCountryOfResidence.map(_.name), x.arrivalDate, x.employmentStatus.map(_.toString), x.countriesWorked.map(_.name), x.countriesReceivedBenefits.map(_.name))
+      case x: models.JourneyModel.Residency.AlwaysLivedAbroad => Residency.AlwaysLivedAbroad(x.usualCountryOfResidence.name, x.employmentStatus.map(_.toString), x.countriesWorked.map(_.name), x.countriesReceivedBenefits.map(_.name))
     }
 
   private[audit] final case class AdultName(title: Option[String], firstName: String, middleNames: Option[String], lastName: String)
@@ -233,7 +233,7 @@ object DownloadAuditEvent {
 
     case object AlwaysLivedInUk extends Residency
 
-    final case class LivedInUkAndAbroad(usualCountryOfResidence: Option[String], arrivalDate: Option[LocalDate], countriesWorked: List[String], countriesReceivedBenefits: List[String]) extends Residency
+    final case class LivedInUkAndAbroad(usualCountryOfResidence: Option[String], arrivalDate: Option[LocalDate], employmentStatus: Set[String], countriesWorked: List[String], countriesReceivedBenefits: List[String]) extends Residency
     object LivedInUkAndAbroad {
       implicit lazy val writes: Writes[LivedInUkAndAbroad] = Writes { a =>
 
@@ -241,25 +241,27 @@ object DownloadAuditEvent {
         val countryJson = a.usualCountryOfResidence.map(c => Json.obj("usualCountryOfResidence" -> c, "usuallyLivesInUk" -> false)).getOrElse(Json.obj("usuallyLivesInUk" -> true))
         val countriesWorkedJson = if(a.countriesWorked.nonEmpty) Json.obj("countriesRecentlyWorked" -> a.countriesWorked) else Json.obj()
         val countreisReceivedBenefitsJson = if(a.countriesReceivedBenefits.nonEmpty) Json.obj("countriesRecentlyReceivedBenefits" -> a.countriesReceivedBenefits) else Json.obj()
+        val employmentJson = if(a.employmentStatus.nonEmpty) Json.obj("employmentStatus" -> a.employmentStatus) else Json.obj()
 
         Json.obj(
           "alwaysLivedInUk" -> false
-        ) ++ arrivalDateJson ++ countryJson ++ countriesWorkedJson ++ countreisReceivedBenefitsJson
+        ) ++ arrivalDateJson ++ countryJson ++ countriesWorkedJson ++ countreisReceivedBenefitsJson ++ employmentJson
       }
     }
 
-    final case class AlwaysLivedAbroad(usualCountryOfResidence: String, countriesWorked: List[String], countriesReceivedBenefits: List[String]) extends Residency
+    final case class AlwaysLivedAbroad(usualCountryOfResidence: String, employmentStatus: Set[String], countriesWorked: List[String], countriesReceivedBenefits: List[String]) extends Residency
     object AlwaysLivedAbroad {
       implicit lazy val writes: Writes[AlwaysLivedAbroad] = Writes { a =>
 
         val countriesWorkedJson = if (a.countriesWorked.nonEmpty) Json.obj("countriesRecentlyWorked" -> a.countriesWorked) else Json.obj()
         val countreisReceivedBenefitsJson = if (a.countriesReceivedBenefits.nonEmpty) Json.obj("countriesRecentlyReceivedBenefits" -> a.countriesReceivedBenefits) else Json.obj()
+        val employmentJson = if(a.employmentStatus.nonEmpty) Json.obj("employmentStatus" -> a.employmentStatus) else Json.obj()
 
         Json.obj(
           "alwaysLivedInUk" -> false,
           "usuallyLivesInUk" -> false,
           "usualCountryOfResidence" -> a.usualCountryOfResidence
-        ) ++ countriesWorkedJson ++ countreisReceivedBenefitsJson
+        ) ++ countriesWorkedJson ++ countreisReceivedBenefitsJson ++ employmentJson
       }
     }
 

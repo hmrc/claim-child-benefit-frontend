@@ -792,6 +792,7 @@ class JourneyModelProviderSpec
           .set(ApplicantCurrentAddressInUkPage, false).success.value
           .set(ApplicantCurrentInternationalAddressPage, internationalAddress).success.value
           .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+          .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
           .set(ApplicantWorkedAbroadPage, false).success.value
           .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
@@ -805,7 +806,7 @@ class JourneyModelProviderSpec
           previousAddress = None,
           telephoneNumber = phoneNumber,
           nationalities = NonEmptyList(applicantNationality, Nil),
-          residency = LivedInUkAndAbroad(Some(country), None, Nil, Nil),
+          residency = LivedInUkAndAbroad(Some(country), None, EmploymentStatus.activeStatuses, Nil, Nil),
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
         )
@@ -836,6 +837,7 @@ class JourneyModelProviderSpec
             .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
             .set(ApplicantPreviousAddressInUkPage, true).success.value
             .set(ApplicantPreviousUkAddressPage, ukAddress).success.value
+            .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
             .set(ApplicantWorkedAbroadPage, false).success.value
             .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
             .set(AdditionalInformationPage, NoInformation).success.value
@@ -849,7 +851,7 @@ class JourneyModelProviderSpec
             previousAddress = Some(ukAddress),
             telephoneNumber = phoneNumber,
             nationalities = NonEmptyList(applicantNationality, Nil),
-            residency = LivedInUkAndAbroad(None, Some(LocalDate.now), Nil, Nil),
+            residency = LivedInUkAndAbroad(None, Some(LocalDate.now), EmploymentStatus.activeStatuses, Nil, Nil),
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
           )
@@ -878,6 +880,7 @@ class JourneyModelProviderSpec
             .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
             .set(ApplicantPreviousAddressInUkPage, false).success.value
             .set(ApplicantPreviousInternationalAddressPage, internationalAddress).success.value
+            .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
             .set(ApplicantWorkedAbroadPage, false).success.value
             .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
             .set(AdditionalInformationPage, NoInformation).success.value
@@ -891,7 +894,7 @@ class JourneyModelProviderSpec
             previousAddress = Some(internationalAddress),
             telephoneNumber = phoneNumber,
             nationalities = NonEmptyList(applicantNationality, Nil),
-            residency = LivedInUkAndAbroad(None, Some(LocalDate.now), Nil, Nil),
+            residency = LivedInUkAndAbroad(None, Some(LocalDate.now), EmploymentStatus.activeStatuses, Nil, Nil),
             memberOfHMForcesOrCivilServantAbroad = None,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
           )
@@ -919,6 +922,7 @@ class JourneyModelProviderSpec
           .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+          .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
           .set(ApplicantWorkedAbroadPage, true).success.value
           .set(CountryApplicantWorkedPage(Index(0)), country).success.value
           .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
@@ -933,7 +937,7 @@ class JourneyModelProviderSpec
           previousAddress = None,
           telephoneNumber = phoneNumber,
           nationalities = NonEmptyList(applicantNationality, Nil),
-          residency = LivedInUkAndAbroad(None, Some(LocalDate.now), List(country), Nil),
+          residency = LivedInUkAndAbroad(None, Some(LocalDate.now), EmploymentStatus.activeStatuses, List(country), Nil),
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
         )
@@ -960,6 +964,7 @@ class JourneyModelProviderSpec
           .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+          .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
           .set(ApplicantWorkedAbroadPage, false).success.value
           .set(ApplicantReceivedBenefitsAbroadPage, true).success.value
           .set(CountryApplicantReceivedBenefitsPage(Index(0)), country).success.value
@@ -974,7 +979,7 @@ class JourneyModelProviderSpec
           previousAddress = None,
           telephoneNumber = phoneNumber,
           nationalities = NonEmptyList(applicantNationality, Nil),
-          residency = LivedInUkAndAbroad(None, Some(LocalDate.now), Nil, List(country)),
+          residency = LivedInUkAndAbroad(None, Some(LocalDate.now), EmploymentStatus.activeStatuses, Nil, List(country)),
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
         )
@@ -2312,6 +2317,7 @@ class JourneyModelProviderSpec
           .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
           .set(ApplicantUsuallyLivesInUkPage, true).success.value
           .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+          .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
           .set(ApplicantWorkedAbroadPage, false).success.value
           .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
@@ -2337,6 +2343,7 @@ class JourneyModelProviderSpec
           .set(ApplicantCurrentAddressInUkPage, true).success.value
           .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
           .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+          .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
           .set(ApplicantWorkedAbroadPage, false).success.value
           .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
@@ -2362,6 +2369,7 @@ class JourneyModelProviderSpec
           .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
           .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
           .set(ApplicantUsuallyLivesInUkPage, true).success.value
+          .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
           .set(ApplicantWorkedAbroadPage, false).success.value
           .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
@@ -2387,6 +2395,7 @@ class JourneyModelProviderSpec
           .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
           .set(ApplicantUsuallyLivesInUkPage, false).success.value
           .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+          .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
           .set(ApplicantWorkedAbroadPage, false).success.value
           .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
@@ -2413,6 +2422,7 @@ class JourneyModelProviderSpec
           .set(ApplicantUsuallyLivesInUkPage, true).success.value
           .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
           .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+          .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -2437,6 +2447,7 @@ class JourneyModelProviderSpec
           .set(ApplicantUsuallyLivesInUkPage, true).success.value
           .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
           .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+          .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
           .set(ApplicantWorkedAbroadPage, true).success.value
           .set(ApplicantReceivedBenefitsAbroadPage, true).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
@@ -2461,6 +2472,7 @@ class JourneyModelProviderSpec
           .set(ApplicantUsualCountryOfResidencePage, country).success.value
           .set(ApplicantCurrentInternationalAddressPage, internationalAddress).success.value
           .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+          .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -2483,6 +2495,7 @@ class JourneyModelProviderSpec
           .set(ApplicantUsualCountryOfResidencePage, country).success.value
           .set(ApplicantCurrentInternationalAddressPage, internationalAddress).success.value
           .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+          .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
           .set(ApplicantWorkedAbroadPage, true).success.value
           .set(ApplicantReceivedBenefitsAbroadPage, true).success.value
           .set(AdditionalInformationPage, NoInformation).success.value
@@ -2530,6 +2543,7 @@ class JourneyModelProviderSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
           .set(ApplicantPreviousAddressInUkPage, false).success.value
+          .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
           .set(ApplicantWorkedAbroadPage, false).success.value
           .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
           .set(AdditionalInformationPage, NoInformation).success.value

@@ -2,22 +2,29 @@
 
 @this(line: Line)
 
-@(usualCountryOfResidence: Country, countriesWorked: List[Country], countriesReceivedBenefits: List[Country])(implicit messages: Messages)
+@(model: JourneyModel.Residency.AlwaysLivedAbroad)(implicit messages: Messages)
 
 @line("pdf.alwaysLivedInUk", messages("site.no"))
 
 @line("pdf.usuallyLivesInUk", messages("site.no"))
 
-@line("pdf.usualCountryOfResidence", usualCountryOfResidence.name)
+@line("pdf.usualCountryOfResidence", model.usualCountryOfResidence.name)
 
-@line("pdf.workedAbroad", booleanToYesNo(countriesWorked.nonEmpty))
+@line("pdf.workedAbroad", booleanToYesNo(model.countriesWorked.nonEmpty))
 
-@if(countriesWorked.nonEmpty) {
-    @line("pdf.countriesWorked", countriesWorked.map(_.name).mkString(", "))
+@if(model.countriesWorked.nonEmpty) {
+    @line("pdf.countriesWorked", model.countriesWorked.map(_.name).mkString(", "))
 }
 
-@line("pdf.receivedBenefitsAbroad", booleanToYesNo(countriesReceivedBenefits.nonEmpty))
+@line("pdf.receivedBenefitsAbroad", booleanToYesNo(model.countriesReceivedBenefits.nonEmpty))
 
-@if(countriesReceivedBenefits.nonEmpty) {
-    @line("pdf.countriesReceivedBenefits", countriesReceivedBenefits.map(_.name).mkString(", "))
+@if(model.countriesReceivedBenefits.nonEmpty) {
+    @line("pdf.countriesReceivedBenefits", model.countriesReceivedBenefits.map(_.name).mkString(", "))
 }
+
+<fo:block margin-bottom="3mm">
+    <fo:block font-weight="bold">@messages("pdf.employmentStatus")</fo:block>
+    @model.employmentStatus.map { status =>
+        <fo:block width="8cm" wrap-option="wrap">@messages(s"employmentStatus.${status.toString}")</fo:block>
+    }
+</fo:block>

@@ -374,6 +374,7 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
           (
             getCountry,
             getArrivalDate,
+            answers.getIor(ApplicantEmploymentStatusPage),
             getCountriesWorked,
             getCountriesReceivedBenefits
           ).parMapN(Residency.LivedInUkAndAbroad)
@@ -381,6 +382,7 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
         case AlwaysAbroad =>
           (
             answers.getIor(ApplicantUsualCountryOfResidencePage),
+            answers.getIor(ApplicantEmploymentStatusPage),
             getCountriesWorked,
             getCountriesReceivedBenefits
           ).parMapN(Residency.AlwaysLivedAbroad)

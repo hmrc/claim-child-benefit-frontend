@@ -21,7 +21,7 @@ import cats.data.NonEmptyList
 import generators.ModelGenerators
 import models.AdditionalInformation.Information
 import models.BirthRegistrationMatchingResult.NotAttempted
-import models.{ApplicantPreviousName, BirthCertificateSystemNumber, Country, CurrentlyReceivingChildBenefit, JourneyModel, Nationality, PartnerClaimingChildBenefit}
+import models.{ApplicantPreviousName, BirthCertificateSystemNumber, Country, CurrentlyReceivingChildBenefit, EmploymentStatus, JourneyModel, Nationality, PartnerClaimingChildBenefit}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
 import org.scalacheck.Arbitrary.arbitrary
@@ -64,7 +64,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           previousAddress = Some(models.UkAddress("previous line 1", Some("previous line 2"), "previous town", Some("previous county"), "previous postcode")),
           telephoneNumber = "07777 777777",
           nationalities = NonEmptyList(Nationality.allNationalities.head, Nil),
-          residency = JourneyModel.Residency.LivedInUkAndAbroad(Some(Country.internationalCountries.head), Some(LocalDate.now), List(Country("ES", "Spain")), List(Country("ES", "Spain"))),
+          residency = JourneyModel.Residency.LivedInUkAndAbroad(Some(Country.internationalCountries.head), Some(LocalDate.now), EmploymentStatus.activeStatuses, List(Country("ES", "Spain")), List(Country("ES", "Spain"))),
           memberOfHMForcesOrCivilServantAbroad = Some(false),
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
         ),
@@ -137,7 +137,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           previousAddress = Some(UkAddress("previous line 1", Some("previous line 2"), "previous town", Some("previous county"), "previous postcode")),
           telephoneNumber = "07777 777777",
           nationalities = Seq(Nationality.allNationalities.head.name),
-          residency = Residency.LivedInUkAndAbroad(Some(Country.internationalCountries.head.name), Some(LocalDate.now), List("Spain"), List("Spain")),
+          residency = Residency.LivedInUkAndAbroad(Some(Country.internationalCountries.head.name), Some(LocalDate.now), EmploymentStatus.activeStatuses.map(_.toString), List("Spain"), List("Spain")),
           memberOfHMForcesOrCivilServantAbroad = Some(false),
           currentlyClaimingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming.toString
         ),

@@ -17,7 +17,7 @@
 package audit
 
 import audit.DownloadAuditEvent._
-import models.PaymentFrequency
+import models.{EmploymentStatus, PaymentFrequency}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import play.api.libs.json.Json
@@ -170,7 +170,7 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
 
     "when optional values are not present" in {
 
-      val model = Residency.LivedInUkAndAbroad(None, None, Nil, Nil)
+      val model = Residency.LivedInUkAndAbroad(None, None, Set.empty[String], Nil, Nil)
 
       Json.toJson(model) mustEqual Json.obj(
         "alwaysLivedInUk" -> false,
@@ -180,7 +180,13 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
 
     "when optional values are present" in {
 
-      val model = Residency.LivedInUkAndAbroad(Some("country 1"), Some(LocalDate.of(2022, 12, 31)), List("country 2"), List("country 3"))
+      val model = Residency.LivedInUkAndAbroad(
+        Some("country 1"),
+        Some(LocalDate.of(2022, 12, 31)),
+        Set("employment status"),
+        List("country 2"),
+        List("country 3")
+      )
 
       val json = Json.toJson(model)
 
@@ -190,7 +196,8 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
         "usualCountryOfResidence" -> "country 1",
         "arrivalDate" -> "2022-12-31",
         "countriesRecentlyWorked" -> Json.arr("country 2"),
-        "countriesRecentlyReceivedBenefits" -> Json.arr("country 3")
+        "countriesRecentlyReceivedBenefits" -> Json.arr("country 3"),
+        "employmentStatus" -> Json.arr("employment status")
       )
     }
   }
@@ -199,7 +206,7 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
 
     "when optional values are not present" in {
 
-      val model = Residency.AlwaysLivedAbroad("country 1", Nil, Nil)
+      val model = Residency.AlwaysLivedAbroad("country 1", Set.empty, Nil, Nil)
 
       val json = Json.toJson(model)
 
@@ -212,7 +219,7 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
 
     "when optional values are present" in {
 
-      val model = Residency.AlwaysLivedAbroad("country 1", List("country 2"), List("country 3"))
+      val model = Residency.AlwaysLivedAbroad("country 1", Set("employment status"), List("country 2"), List("country 3"))
 
       val json = Json.toJson(model)
 
@@ -221,7 +228,8 @@ class DownloadAuditEventSpec extends AnyFreeSpec with Matchers {
         "usuallyLivesInUk" -> false,
         "usualCountryOfResidence" -> "country 1",
         "countriesRecentlyWorked" -> Json.arr("country 2"),
-        "countriesRecentlyReceivedBenefits" -> Json.arr("country 3")
+        "countriesRecentlyReceivedBenefits" -> Json.arr("country 3"),
+        "employmentStatus" -> Json.arr("employment status")
       )
     }
   }

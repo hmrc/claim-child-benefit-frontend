@@ -94,7 +94,59 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
           )
       }
 
-      "when their address is not in the UK" in {
+      "when the user has lived in the UK and abroad" - {
+
+        "and their address is in the UK" in {
+
+          startingFrom(ApplicantNinoKnownPage)
+            .run(
+              submitAnswer(ApplicantNinoKnownPage, true),
+              submitAnswer(ApplicantNinoPage, nino),
+              submitAnswer(ApplicantNamePage, adultName),
+              submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
+              submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
+              submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
+              submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
+              submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
+              submitAnswer(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
+              submitAnswer(ApplicantUsuallyLivesInUkPage, true),
+              submitAnswer(ApplicantCurrentAddressInUkPage, true),
+              submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
+              submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
+              submitAnswer(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses),
+              submitAnswer(ApplicantWorkedAbroadPage, false),
+              submitAnswer(ApplicantReceivedBenefitsAbroadPage, false),
+              submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
+              pageMustBe(CurrentlyReceivingChildBenefitPage)
+            )
+        }
+
+        "and their address is not in the UK" in {
+
+          startingFrom(ApplicantNinoKnownPage)
+            .run(
+              submitAnswer(ApplicantNinoKnownPage, true),
+              submitAnswer(ApplicantNinoPage, nino),
+              submitAnswer(ApplicantNamePage, adultName),
+              submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
+              submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
+              submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
+              submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
+              submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
+              submitAnswer(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
+              submitAnswer(ApplicantUsuallyLivesInUkPage, true),
+              submitAnswer(ApplicantCurrentAddressInUkPage, false),
+              submitAnswer(ApplicantCurrentInternationalAddressPage, internationalAddress),
+              submitAnswer(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses),
+              submitAnswer(ApplicantWorkedAbroadPage, false),
+              submitAnswer(ApplicantReceivedBenefitsAbroadPage, false),
+              submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
+              pageMustBe(CurrentlyReceivingChildBenefitPage)
+            )
+        }
+      }
+
+      "when the user has never lived in the UK" in {
 
         startingFrom(ApplicantNinoKnownPage)
           .run(
@@ -106,10 +158,12 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
             submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
             submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
             submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
-            submitAnswer(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
-            submitAnswer(ApplicantUsuallyLivesInUkPage, true),
-            submitAnswer(ApplicantCurrentAddressInUkPage, false),
+            submitAnswer(ApplicantResidencePage, ApplicantResidence.AlwaysAbroad),
+            submitAnswer(ApplicantUsualCountryOfResidencePage, country),
             submitAnswer(ApplicantCurrentInternationalAddressPage, internationalAddress),
+            submitAnswer(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses),
+            submitAnswer(ApplicantWorkedAbroadPage, false),
+            submitAnswer(ApplicantReceivedBenefitsAbroadPage, false),
             submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
             pageMustBe(CurrentlyReceivingChildBenefitPage)
           )
