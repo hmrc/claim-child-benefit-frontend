@@ -446,6 +446,18 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
       NonEmptyList.fromList(nationalities).toRightIor(NonEmptyChain.one(AllPartnerNationalities))
     }
 
+    def getCountriesWorked: IorNec[Query, List[Country]] =
+      answers.getIor(PartnerWorkedAbroadPage).flatMap {
+        case true => answers.getIor(AllCountriesPartnerWorked)
+        case false => Ior.Right(Nil)
+      }
+
+    def getCountriesReceivedBenefits: IorNec[Query, List[Country]] =
+      answers.getIor(PartnerReceivedBenefitsAbroadPage).flatMap {
+        case true => answers.getIor(AllCountriesPartnerReceivedBenefits)
+        case false => Ior.Right(Nil)
+      }
+
     (
       answers.getIor(PartnerNamePage),
       answers.getIor(PartnerDateOfBirthPage),
@@ -453,7 +465,9 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
       getPartnerNino,
       getHmForces,
       answers.getIor(PartnerClaimingChildBenefitPage),
-      getPartnerEldestChild
+      getPartnerEldestChild,
+      getCountriesWorked,
+      getCountriesReceivedBenefits
       ).parMapN(Partner.apply)
   }
 

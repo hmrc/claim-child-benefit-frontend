@@ -38,6 +38,18 @@
                         @line("pdf.hmfOrCivilServant", booleanToYesNo(answer))
                     }
 
+                    @line("pdf.workedAbroad", booleanToYesNo(model.countriesWorked.nonEmpty))
+
+                    @if(model.countriesWorked.nonEmpty) {
+                        @line("pdf.countriesWorked", model.countriesWorked.map(_.name).mkString(", "))
+                    }
+
+                    @line("pdf.receivedBenefitsAbroad", booleanToYesNo(model.countriesReceivedBenefits.nonEmpty))
+
+                    @if(model.countriesReceivedBenefits.nonEmpty) {
+                        @line("pdf.countriesReceivedBenefits", model.countriesReceivedBenefits.map(_.name).mkString(", "))
+                    }
+
                     @line("pdf.claimingChildBenefit", messages(s"partnerClaimingChildBenefit.${model.currentlyClaimingChildBenefit.toString}"))
 
                     @model.eldestChild.map { child =>

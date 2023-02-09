@@ -81,7 +81,9 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             eldestChild = Some(JourneyModel.EldestChild(
               name        = models.ChildName("partner eldest child first", Some("partner eldest child middle"), "partner eldest child last"),
               dateOfBirth = now
-            ))
+            )),
+            countriesWorked = List(Country("ES", "Spain")),
+            countriesReceivedBenefits = List(Country("ES", "Spain"))
           ))
         ),
         children = NonEmptyList(
@@ -154,7 +156,9 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             eldestChild = Some(EldestChild(
               name        = ChildName("partner eldest child first", Some("partner eldest child middle"), "partner eldest child last"),
               dateOfBirth = now
-            ))
+            )),
+            countriesWorked = Seq("Spain"),
+            countriesReceivedBenefits = Seq("Spain")
           ))
         ),
         children = List(

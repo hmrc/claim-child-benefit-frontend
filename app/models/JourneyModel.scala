@@ -89,7 +89,9 @@ object JourneyModel {
                             nationalInsuranceNumber: Option[String],
                             memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
                             currentlyClaimingChildBenefit: PartnerClaimingChildBenefit,
-                            eldestChild: Option[EldestChild]
+                            eldestChild: Option[EldestChild],
+                            countriesWorked: List[Country],
+                            countriesReceivedBenefits: List[Country]
                           )
 
   final case class Child(

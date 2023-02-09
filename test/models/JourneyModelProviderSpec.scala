@@ -37,7 +37,7 @@ import pages.applicant._
 import pages.child._
 import pages.partner._
 import pages.payments._
-import queries.{AllChildPreviousNames, AllChildSummaries, AllCountriesApplicantReceivedBenefits, AllCountriesApplicantWorked, AllPartnerNationalities, AllPreviousFamilyNames}
+import queries.{AllChildPreviousNames, AllChildSummaries, AllCountriesApplicantReceivedBenefits, AllCountriesApplicantWorked, AllCountriesPartnerReceivedBenefits, AllCountriesPartnerWorked, AllPartnerNationalities, AllPreviousFamilyNames}
 import services.BrmsService
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
@@ -174,6 +174,8 @@ class JourneyModelProviderSpec
           .set(PartnerNinoKnownPage, false).success.value
           .set(PartnerDateOfBirthPage, now).success.value
           .set(PartnerNationalityPage(Index(0)), partnerNationality).success.value
+          .set(PartnerWorkedAbroadPage, false).success.value
+          .set(PartnerReceivedBenefitsAbroadPage, false).success.value
           .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming).success.value
           .set(AdditionalInformationPage, Information("info")).success.value
 
@@ -201,7 +203,9 @@ class JourneyModelProviderSpec
               nationalInsuranceNumber = None,
               memberOfHMForcesOrCivilServantAbroad = None,
               currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
-              eldestChild = None
+              eldestChild = None,
+              countriesWorked = Nil,
+              countriesReceivedBenefits = Nil
             ))
           ),
           children = NonEmptyList(
@@ -284,7 +288,9 @@ class JourneyModelProviderSpec
               nationalInsuranceNumber = None,
               memberOfHMForcesOrCivilServantAbroad = None,
               currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
-              eldestChild = None
+              eldestChild = None,
+              countriesWorked = Nil,
+              countriesReceivedBenefits = Nil
             ))
           ),
           children = NonEmptyList(
@@ -1012,7 +1018,9 @@ class JourneyModelProviderSpec
           nationalInsuranceNumber = Some(partnerNino.value),
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
-          eldestChild = None
+          eldestChild = None,
+          countriesWorked = Nil,
+          countriesReceivedBenefits = Nil
         )
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -1044,7 +1052,9 @@ class JourneyModelProviderSpec
           nationalInsuranceNumber = None,
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyClaimingChildBenefit = partnerClaiming,
-          eldestChild = Some(JourneyModel.EldestChild(partnerEldestChildName, now))
+          eldestChild = Some(JourneyModel.EldestChild(partnerEldestChildName, now)),
+          countriesWorked = Nil,
+          countriesReceivedBenefits = Nil
         )
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -1076,7 +1086,44 @@ class JourneyModelProviderSpec
           nationalInsuranceNumber = None,
           memberOfHMForcesOrCivilServantAbroad = None,
           currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments,
-          eldestChild = Some(JourneyModel.EldestChild(partnerEldestChildName, now))
+          eldestChild = Some(JourneyModel.EldestChild(partnerEldestChildName, now)),
+          countriesWorked = Nil,
+          countriesReceivedBenefits = Nil
+        )
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors mustBe empty
+        data.value.relationship.partner.value mustEqual expectedPartner
+      }
+
+      "when the applicant's partner has worked and receive benefits abroad" in {
+
+        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalCoupleIncomeDetails
+          .withMinimalPaymentDetails
+          .withMinimalPartnerDetails
+          .set(RelationshipStatusPage, Married).success.value
+          .set(PartnerWorkedAbroadPage, true).success.value
+          .set(CountryPartnerWorkedPage(Index(0)), country).success.value
+          .set(PartnerReceivedBenefitsAbroadPage, true).success.value
+          .set(CountryPartnerReceivedBenefitsPage(Index(0)), country).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
+
+        val expectedPartner = JourneyModel.Partner(
+          name = partnerName,
+          dateOfBirth = now,
+          nationalities = NonEmptyList(partnerNationality, Nil),
+          nationalInsuranceNumber = None,
+          memberOfHMForcesOrCivilServantAbroad = None,
+          currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
+          eldestChild = None,
+          countriesWorked = List(country),
+          countriesReceivedBenefits = List(country)
         )
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -1932,6 +1979,8 @@ class JourneyModelProviderSpec
           PartnerNamePage,
           PartnerDateOfBirthPage,
           AllPartnerNationalities,
+          PartnerWorkedAbroadPage,
+          PartnerReceivedBenefitsAbroadPage,
           PartnerNinoKnownPage,
           PartnerClaimingChildBenefitPage
         )
@@ -1976,6 +2025,8 @@ class JourneyModelProviderSpec
           PartnerNamePage,
           PartnerDateOfBirthPage,
           AllPartnerNationalities,
+          PartnerWorkedAbroadPage,
+          PartnerReceivedBenefitsAbroadPage,
           PartnerNinoKnownPage,
           PartnerClaimingChildBenefitPage
         )
@@ -1997,6 +2048,46 @@ class JourneyModelProviderSpec
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors.value.toChain.toList must contain only SeparationDatePage
+        data mustBe empty
+      }
+
+      "when the applicant's partner worked abroad but the countries are missing" in {
+
+        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalCoupleIncomeDetails
+          .withMinimalPaymentDetails
+          .withMinimalPartnerDetails
+          .set(RelationshipStatusPage, Married).success.value
+          .set(PartnerWorkedAbroadPage, true).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors.value.toChain.toList must contain only AllCountriesPartnerWorked
+        data mustBe empty
+      }
+
+      "when the applicant's partner received benefits abroad but the countries are missing" in {
+
+        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalCoupleIncomeDetails
+          .withMinimalPaymentDetails
+          .withMinimalPartnerDetails
+          .set(RelationshipStatusPage, Married).success.value
+          .set(PartnerReceivedBenefitsAbroadPage, true).success.value
+          .set(AdditionalInformationPage, NoInformation).success.value
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors.value.toChain.toList must contain only AllCountriesPartnerReceivedBenefits
         data mustBe empty
       }
 
@@ -3120,6 +3211,8 @@ class JourneyModelProviderSpec
         .set(PartnerNinoKnownPage, false).success.value
         .set(PartnerDateOfBirthPage, now).success.value
         .set(PartnerNationalityPage(Index(0)), partnerNationality).success.value
+        .set(PartnerWorkedAbroadPage, false).success.value
+        .set(PartnerReceivedBenefitsAbroadPage, false).success.value
         .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming).success.value
 
     def withOneChild: UserAnswers =
