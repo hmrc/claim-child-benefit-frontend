@@ -53,7 +53,7 @@ final case class AddApplicantNationalityPage(override val index: Option[Index] =
           }
 
       case false =>
-        AlwaysLivedInUkPage
+        ApplicantResidencePage
     }.orRecover
 
   override def deriveNumberOfItems: Derivable[Seq[JsObject], Int] = DeriveNumberOfApplicantNationalities

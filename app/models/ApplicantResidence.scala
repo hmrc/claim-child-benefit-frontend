@@ -25,12 +25,11 @@ sealed trait ApplicantResidence
 object ApplicantResidence extends Enumerable.Implicits {
 
   case object AlwaysUk extends WithName("alwaysUk") with ApplicantResidence
-  case object CurrentlyUk extends WithName("currentlyUk") with ApplicantResidence
-  case object CurrentlyAbroad extends WithName("currentlyAbroad") with ApplicantResidence
+  case object UkAndAbroad extends WithName("ukAndAbroad") with ApplicantResidence
   case object AlwaysAbroad extends WithName("alwaysAbroad") with ApplicantResidence
 
   val values: Seq[ApplicantResidence] = Seq(
-    AlwaysUk, CurrentlyUk, CurrentlyAbroad, AlwaysAbroad
+    AlwaysUk, UkAndAbroad, AlwaysAbroad
   )
 
   def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {

@@ -17,7 +17,7 @@
 package pages.applicant
 
 import controllers.applicant.routes
-import models.UserAnswers
+import models.{ApplicantResidence, UserAnswers}
 import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
@@ -36,12 +36,19 @@ case object ApplicantLivedAtCurrentAddressOneYearPage extends QuestionPage[Boole
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case true =>
-        ApplicantIsHmfOrCivilServantPage
+        answers.get(ApplicantResidencePage).map {
+          case ApplicantResidence.AlwaysUk =>
+            ApplicantIsHmfOrCivilServantPage
+
+          case _ =>
+            ApplicantEmploymentStatusPage
+        }.orRecover
 
       case false =>
-        answers.get(AlwaysLivedInUkPage).map {
-          case true  => ApplicantPreviousUkAddressPage
-          case false => ApplicantPreviousAddressInUkPage
+        answers.get(ApplicantResidencePage).map {
+          case ApplicantResidence.AlwaysUk     => ApplicantPreviousUkAddressPage
+          case ApplicantResidence.UkAndAbroad  => ApplicantPreviousAddressInUkPage
+          case ApplicantResidence.AlwaysAbroad => ApplicantPreviousInternationalAddressPage
         }.orRecover
     }.orRecover
 

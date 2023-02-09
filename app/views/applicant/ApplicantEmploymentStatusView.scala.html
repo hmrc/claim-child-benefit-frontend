@@ -20,26 +20,27 @@
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukErrorSummary: GovukErrorSummary,
-        govukRadios: GovukRadios,
-        govukButton: GovukButton,
-        govukWarningText: GovukWarningText
+        govukCheckboxes: GovukCheckboxes,
+        govukButton: GovukButton
 )
 
 @(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("applicantWorkedAbroad.title"))) {
+@layout(pageTitle = title(form, messages("applicantEmploymentStatus.title"), section = Some(messages("section.income")))) {
 
-    @formHelper(action = routes.ApplicantWorkedAbroadController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.ApplicantEmploymentStatusController.onSubmit(waypoints), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
+            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
         }
 
-        @govukRadios(
-            RadiosViewModel.yesNo(
-                field = form("value"),
-                legend = LegendViewModel(messages("applicantWorkedAbroad.heading")).asPageHeading()
-            )
+        @govukCheckboxes(
+            CheckboxesViewModel(
+                form   = form,
+                name   = "value",
+                legend = LegendViewModel(messages("applicantEmploymentStatus.heading")).asPageHeading(),
+                items  = EmploymentStatus.checkboxItems
+            ).withHint(HintViewModel(messages("applicantEmploymentStatus.hint")))
         )
 
         @govukButton(

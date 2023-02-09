@@ -17,10 +17,11 @@
 package pages.applicant
 
 import controllers.applicant.routes
-import models.UserAnswers
-import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
+import models.{Index, UserAnswers}
+import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+import queries.AllCountriesApplicantWorked
 
 import scala.util.Try
 
@@ -32,4 +33,21 @@ case object ApplicantWorkedAbroadPage extends QuestionPage[Boolean] {
 
   override def route(waypoints: Waypoints): Call =
     routes.ApplicantWorkedAbroadController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true  => CountryApplicantWorkedPage(Index(0))
+      case false => ApplicantReceivedBenefitsAbroadPage
+    }.orRecover
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    value.map {
+      case true =>
+        super.cleanup(value, userAnswers)
+
+      case false =>
+        userAnswers
+          .remove(AllCountriesApplicantWorked)
+          .flatMap(_.remove(AddCountryApplicantWorkedPage()))
+    }.getOrElse(super.cleanup(value, userAnswers))
 }

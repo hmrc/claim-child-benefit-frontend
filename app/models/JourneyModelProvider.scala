@@ -19,6 +19,7 @@ package models
 import cats.data._
 import cats.implicits._
 import logging.Logging
+import models.ApplicantResidence._
 import models.JourneyModel._
 import models.{ChildBirthRegistrationCountry => RegistrationCountry}
 import pages._
@@ -26,7 +27,7 @@ import pages.applicant._
 import pages.child._
 import pages.partner._
 import pages.payments._
-import queries.{AllApplicantNationalities, AllChildPreviousNames, AllChildSummaries, AllPartnerNationalities, AllPreviousFamilyNames, Query}
+import queries._
 import services.BrmsService
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -298,25 +299,37 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
               Ior.Right(None)
 
             case false =>
-              answers.getIor(AlwaysLivedInUkPage).flatMap {
-                case true =>
+              answers.getIor(ApplicantResidencePage).flatMap {
+                case AlwaysUk =>
                   answers.getIor(ApplicantPreviousUkAddressPage).map(Some(_))
 
-                case false =>
+                case UkAndAbroad =>
                   answers.getIor(ApplicantPreviousAddressInUkPage).flatMap {
                     case true => answers.getIor(ApplicantPreviousUkAddressPage).map(Some(_))
                     case false => answers.getIor(ApplicantPreviousInternationalAddressPage).map(Some(_))
                   }
+
+                case AlwaysAbroad =>
+                  answers.getIor(ApplicantPreviousInternationalAddressPage).map(Some(_))
               }
           }
       }
 
-    def getCurrentAddress: IorNec[Query, Address] =
-      if (answers.get(ApplicantCurrentAddressInUkPage).getOrElse(true)) {
-        answers.getIor(ApplicantCurrentUkAddressPage)
-      } else {
-        answers.getIor(ApplicantCurrentInternationalAddressPage)
+    def getCurrentAddress: IorNec[Query, Address] = {
+      answers.getIor(ApplicantResidencePage).flatMap {
+        case AlwaysUk =>
+          answers.getIor(ApplicantCurrentUkAddressPage)
+
+        case UkAndAbroad =>
+          answers.getIor(ApplicantCurrentAddressInUkPage).flatMap {
+            case true => answers.getIor(ApplicantCurrentUkAddressPage)
+            case false => answers.getIor(ApplicantCurrentInternationalAddressPage)
+          }
+
+        case AlwaysAbroad =>
+          answers.getIor(ApplicantCurrentInternationalAddressPage)
       }
+    }
 
     def getPreviousFamilyNames: IorNec[Query, List[ApplicantPreviousName]] =
       answers.getIor(ApplicantHasPreviousFamilyNamePage).flatMap {
@@ -330,21 +343,50 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
         .getOrElse(Ior.Right(None))
 
     def getResidency: IorNec[Query, Residency] = {
-      answers.getIor(AlwaysLivedInUkPage).flatMap {
-        case true =>
+
+      def getCountriesWorked: IorNec[Query, List[Country]] =
+        answers.getIor(ApplicantWorkedAbroadPage).flatMap {
+          case true => answers.getIor(AllCountriesApplicantWorked)
+          case false => Ior.Right(Nil)
+        }
+
+      def getCountriesReceivedBenefits: IorNec[Query, List[Country]] =
+        answers.getIor(ApplicantReceivedBenefitsAbroadPage).flatMap {
+          case true => answers.getIor(AllCountriesApplicantReceivedBenefits)
+          case false => Ior.Right(Nil)
+        }
+
+      answers.getIor(ApplicantResidencePage).flatMap {
+        case AlwaysUk =>
           Ior.Right(Residency.AlwaysLivedInUk)
 
-        case false =>
-          answers.getIor(ApplicantUsuallyLivesInUkPage).flatMap {
-            case true =>
-              answers.getIor(ApplicantArrivedInUkPage).map(Residency.UsuallyLivesInUk)
-
-            case false =>
-              (
-                answers.getIor(ApplicantUsualCountryOfResidencePage),
-                answers.getIor(ApplicantArrivedInUkPage)
-              ).parMapN(Residency.UsuallyLivesAbroad)
+        case UkAndAbroad =>
+          def getCountry = answers.getIor(ApplicantUsuallyLivesInUkPage).flatMap {
+            case true => Ior.Right(None)
+            case false => answers.getIor(ApplicantUsualCountryOfResidencePage).map(Some(_))
           }
+
+          def getArrivalDate = answers.getIor(ApplicantCurrentAddressInUkPage).flatMap {
+            case true => answers.getIor(ApplicantArrivedInUkPage).map(Some(_))
+            case false => Ior.Right(None)
+          }
+
+          (
+            getCountry,
+            getArrivalDate,
+            answers.getIor(ApplicantEmploymentStatusPage),
+            getCountriesWorked,
+            getCountriesReceivedBenefits
+          ).parMapN(Residency.LivedInUkAndAbroad)
+
+        case AlwaysAbroad =>
+          (
+            answers.getIor(ApplicantUsualCountryOfResidencePage),
+            answers.getIor(ApplicantEmploymentStatusPage),
+            getCountriesWorked,
+            getCountriesReceivedBenefits
+          ).parMapN(Residency.AlwaysLivedAbroad)
+
       }
     }
 
