@@ -135,23 +135,23 @@ POST       /add-country-you-worked-in/                        controllers.applic
 GET        /remove-country-you-worked-in/:index                        controllers.applicant.RemoveCountryApplicantWorkedController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /remove-country-you-worked-in/:index                        controllers.applicant.RemoveCountryApplicantWorkedController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
-GET        /have-you-received-benefits-abroad                        controllers.applicant.ApplicantReceivedBenefitsAbroadController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /have-you-received-benefits-abroad                        controllers.applicant.ApplicantReceivedBenefitsAbroadController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /been-paid-benefits-abroad                        controllers.applicant.ApplicantReceivedBenefitsAbroadController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /been-paid-benefits-abroad                        controllers.applicant.ApplicantReceivedBenefitsAbroadController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /country-you-received-benefits-in/:index                        controllers.applicant.CountryApplicantReceivedBenefitsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
-POST       /country-you-received-benefits-in/:index                        controllers.applicant.CountryApplicantReceivedBenefitsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+GET        /country-paid-you-benefits/:index                        controllers.applicant.CountryApplicantReceivedBenefitsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /country-paid-you-benefits/:index                        controllers.applicant.CountryApplicantReceivedBenefitsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
-GET        /add-country-you-received-benefits-in                        controllers.applicant.AddCountryApplicantReceivedBenefitsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /add-country-you-received-benefits-in                        controllers.applicant.AddCountryApplicantReceivedBenefitsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /add-country-paid-you-benefits                        controllers.applicant.AddCountryApplicantReceivedBenefitsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /add-country-paid-you-benefits                        controllers.applicant.AddCountryApplicantReceivedBenefitsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /remove-country-you-received-benefits-in/:index                        controllers.applicant.RemoveCountryApplicantReceivedBenefitsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
-POST       /remove-country-you-received-benefits-in/:index                        controllers.applicant.RemoveCountryApplicantReceivedBenefitsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+GET        /remove-country-paid-you-benefits/:index                        controllers.applicant.RemoveCountryApplicantReceivedBenefitsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /remove-country-paid-you-benefits/:index                        controllers.applicant.RemoveCountryApplicantReceivedBenefitsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
-GET        /usually-lived-in-uk                        controllers.applicant.ApplicantUsuallyLivesInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /usually-lived-in-uk                        controllers.applicant.ApplicantUsuallyLivesInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /normally-live-in-uk                        controllers.applicant.ApplicantUsuallyLivesInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /normally-live-in-uk                        controllers.applicant.ApplicantUsuallyLivesInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /usual-country-of-residence                        controllers.applicant.ApplicantUsualCountryOfResidenceController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /usual-country-of-residence                        controllers.applicant.ApplicantUsualCountryOfResidenceController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /country-you-normally-live                        controllers.applicant.ApplicantUsualCountryOfResidenceController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /country-you-normally-live                        controllers.applicant.ApplicantUsualCountryOfResidenceController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /add-previous-family-name                        controllers.applicant.AddApplicantPreviousFamilyNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /add-previous-family-name                        controllers.applicant.AddApplicantPreviousFamilyNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
@@ -213,8 +213,8 @@ POST       /remove-previous-family-name/:index                        controller
 GET        /check-your-details                              controllers.applicant.CheckApplicantDetailsController.onPageLoad
 POST       /check-your-details                              controllers.applicant.CheckApplicantDetailsController.onSubmit
 
-GET        /your-employmentStatus                        controllers.applicant.ApplicantEmploymentStatusController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /your-employmentStatus                        controllers.applicant.ApplicantEmploymentStatusController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /your-employment-status                        controllers.applicant.ApplicantEmploymentStatusController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /your-employment-status                        controllers.applicant.ApplicantEmploymentStatusController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 # Partner section
 GET        /partners-date-of-birth                  controllers.partner.PartnerDateOfBirthController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
