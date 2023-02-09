@@ -20,7 +20,7 @@ import controllers.partner.routes
 import models.{Index, UserAnswers}
 import pages.{NonEmptyWaypoints, Page, Waypoints}
 import play.api.mvc.Call
-import queries.DeriveNumberOfPartnerNationalities
+import queries.DeriveNumberOfCountriesPartnerWorked
 
 case class RemoveCountryPartnerWorkedPage(index: Index) extends Page {
 
@@ -28,13 +28,13 @@ case class RemoveCountryPartnerWorkedPage(index: Index) extends Page {
     routes.RemoveCountryPartnerWorkedController.onPageLoad(waypoints, index)
 
   override def nextPageNormalMode(waypoints: Waypoints, originalAnswers: UserAnswers): Page =
-    originalAnswers.get(DeriveNumberOfPartnerNationalities).map {
+    originalAnswers.get(DeriveNumberOfCountriesPartnerWorked).map {
       case n if n > 0 => AddCountryPartnerWorkedPage()
       case _ => PartnerWorkedAbroadPage
     }.getOrElse(PartnerWorkedAbroadPage)
 
   override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
-    answers.get(DeriveNumberOfPartnerNationalities).map {
+    answers.get(DeriveNumberOfCountriesPartnerWorked).map {
       case n if n > 0 => AddCountryPartnerWorkedPage()
       case _ => PartnerWorkedAbroadPage
     }.getOrElse(PartnerWorkedAbroadPage)

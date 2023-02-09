@@ -18,7 +18,7 @@ package journey
 
 import generators.ModelGenerators
 import models.RelationshipStatus._
-import models._
+import models.{Index, _}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
@@ -36,6 +36,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
   private def adultName = arbitrary[AdultName].sample.value
   private def nationality = Gen.oneOf(Nationality.allNationalities).sample.value
   private def bankDetails = arbitrary[BankAccountDetails].sample.value
+  private def country = Gen.oneOf(Country.internationalCountries).sample.value
 
   private val setFullPaymentDetailsSingle: JourneyStep[Unit] = journeyOf(
     setUserAnswerTo(ApplicantIncomePage, Income.BetweenThresholds),
@@ -100,10 +101,14 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
     answersMustNotContain(PartnerNinoPage),
     answersMustNotContain(PartnerDateOfBirthPage),
     answersMustNotContain(PartnerNationalityPage(Index(0))),
+    answersMustNotContain(PartnerWorkedAbroadPage),
+    answersMustNotContain(CountryPartnerWorkedPage(Index(0))),
+    answersMustNotContain(PartnerReceivedBenefitsAbroadPage),
+    answersMustNotContain(CountryPartnerReceivedBenefitsPage(Index(0))),
     answersMustNotContain(PartnerIsHmfOrCivilServantPage),
     answersMustNotContain(PartnerClaimingChildBenefitPage),
     answersMustNotContain(PartnerEldestChildNamePage),
-    answersMustNotContain(PartnerEldestChildDateOfBirthPage)
+    answersMustNotContain(PartnerEldestChildDateOfBirthPage),
   )
 
   "when a user initially said they were married" - {
@@ -116,6 +121,12 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
       submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
       submitAnswer(PartnerNationalityPage(Index(0)), nationality),
       submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
+      submitAnswer(PartnerWorkedAbroadPage, true),
+      submitAnswer(CountryPartnerWorkedPage(Index(0)), country),
+      submitAnswer(AddCountryPartnerWorkedPage(Some(Index(0))), false),
+      submitAnswer(PartnerReceivedBenefitsAbroadPage, true),
+      submitAnswer(CountryPartnerReceivedBenefitsPage(Index(0)), country),
+      submitAnswer(AddCountryPartnerReceivedBenefitsPage(Some(Index(0))), false),
       submitAnswer(PartnerIsHmfOrCivilServantPage, false),
       submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
       submitAnswer(PartnerEldestChildNamePage, childName),
@@ -139,6 +150,10 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
           answersMustContain(PartnerDateOfBirthPage),
           answersMustContain(PartnerNationalityPage(Index(0))),
           answersMustContain(PartnerIsHmfOrCivilServantPage),
+          answersMustContain(PartnerWorkedAbroadPage),
+          answersMustContain(CountryPartnerWorkedPage(Index(0))),
+          answersMustContain(PartnerReceivedBenefitsAbroadPage),
+          answersMustContain(CountryPartnerReceivedBenefitsPage(Index(0))),
           answersMustContain(PartnerClaimingChildBenefitPage),
           answersMustContain(PartnerEldestChildNamePage),
           answersMustContain(PartnerEldestChildDateOfBirthPage),
@@ -240,6 +255,12 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
       submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
       submitAnswer(PartnerNationalityPage(Index(0)), nationality),
       submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
+      submitAnswer(PartnerWorkedAbroadPage, true),
+      submitAnswer(CountryPartnerWorkedPage(Index(0)), country),
+      submitAnswer(AddCountryPartnerWorkedPage(Some(Index(0))), false),
+      submitAnswer(PartnerReceivedBenefitsAbroadPage, true),
+      submitAnswer(CountryPartnerReceivedBenefitsPage(Index(0)), country),
+      submitAnswer(AddCountryPartnerReceivedBenefitsPage(Some(Index(0))), false),
       submitAnswer(PartnerIsHmfOrCivilServantPage, false),
       submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
       submitAnswer(PartnerEldestChildNamePage, childName),
@@ -262,6 +283,10 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
           answersMustContain(PartnerNinoPage),
           answersMustContain(PartnerDateOfBirthPage),
           answersMustContain(PartnerNationalityPage(Index(0))),
+          answersMustContain(PartnerWorkedAbroadPage),
+          answersMustContain(CountryPartnerWorkedPage(Index(0))),
+          answersMustContain(PartnerReceivedBenefitsAbroadPage),
+          answersMustContain(CountryPartnerReceivedBenefitsPage(Index(0))),
           answersMustContain(PartnerIsHmfOrCivilServantPage),
           answersMustContain(PartnerClaimingChildBenefitPage),
           answersMustContain(PartnerEldestChildNamePage),
@@ -385,6 +410,8 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
               submitAnswer(PartnerNationalityPage(Index(0)), nationality),
               submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
+              submitAnswer(PartnerWorkedAbroadPage, false),
+              submitAnswer(PartnerReceivedBenefitsAbroadPage, false),
               submitAnswer(PartnerIsHmfOrCivilServantPage, false),
               submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
               submitAnswer(PartnerEldestChildNamePage, childName),
@@ -412,6 +439,8 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
               submitAnswer(PartnerNationalityPage(Index(0)), nationality),
               submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
+              submitAnswer(PartnerWorkedAbroadPage, false),
+              submitAnswer(PartnerReceivedBenefitsAbroadPage, false),
               submitAnswer(PartnerIsHmfOrCivilServantPage, false),
               submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
               submitAnswer(PartnerEldestChildNamePage, childName),
@@ -445,6 +474,8 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
               submitAnswer(PartnerNationalityPage(Index(0)), nationality),
               submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
+              submitAnswer(PartnerWorkedAbroadPage, false),
+              submitAnswer(PartnerReceivedBenefitsAbroadPage, false),
               submitAnswer(PartnerIsHmfOrCivilServantPage, false),
               submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
               submitAnswer(PartnerEldestChildNamePage, childName),
@@ -473,6 +504,8 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
               submitAnswer(PartnerNationalityPage(Index(0)), nationality),
               submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
+              submitAnswer(PartnerWorkedAbroadPage, false),
+              submitAnswer(PartnerReceivedBenefitsAbroadPage, false),
               submitAnswer(PartnerIsHmfOrCivilServantPage, false),
               submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
               submitAnswer(PartnerEldestChildNamePage, childName),
@@ -535,6 +568,8 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
               submitAnswer(PartnerNationalityPage(Index(0)), nationality),
               submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
+              submitAnswer(PartnerWorkedAbroadPage, false),
+              submitAnswer(PartnerReceivedBenefitsAbroadPage, false),
               submitAnswer(PartnerIsHmfOrCivilServantPage, false),
               submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
               submitAnswer(PartnerEldestChildNamePage, childName),
@@ -561,6 +596,8 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
               submitAnswer(PartnerNationalityPage(Index(0)), nationality),
               submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
+              submitAnswer(PartnerWorkedAbroadPage, false),
+              submitAnswer(PartnerReceivedBenefitsAbroadPage, false),
               submitAnswer(PartnerIsHmfOrCivilServantPage, false),
               submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
               submitAnswer(PartnerEldestChildNamePage, childName),
@@ -593,6 +630,8 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
               submitAnswer(PartnerNationalityPage(Index(0)), nationality),
               submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
+              submitAnswer(PartnerWorkedAbroadPage, false),
+              submitAnswer(PartnerReceivedBenefitsAbroadPage, false),
               submitAnswer(PartnerIsHmfOrCivilServantPage, false),
               submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
               submitAnswer(PartnerEldestChildNamePage, childName),
@@ -620,6 +659,8 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
               submitAnswer(PartnerNationalityPage(Index(0)), nationality),
               submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
+              submitAnswer(PartnerWorkedAbroadPage, false),
+              submitAnswer(PartnerReceivedBenefitsAbroadPage, false),
               submitAnswer(PartnerIsHmfOrCivilServantPage, false),
               submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments),
               submitAnswer(PartnerEldestChildNamePage, childName),
@@ -718,7 +759,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
     val initialise = journeyOf(
       submitAnswer(PartnerNationalityPage(Index(0)), nationality),
       submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
-      submitAnswer(PartnerIsHmfOrCivilServantPage, true),
+      submitAnswer(PartnerWorkedAbroadPage, false),
       goTo(CheckPartnerDetailsPage)
     )
 
@@ -740,7 +781,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
       submitAnswer(AddPartnerNationalityPage(Some(Index(0))), true),
       submitAnswer(PartnerNationalityPage(Index(1)), nationality),
       submitAnswer(AddPartnerNationalityPage(Some(Index(1))), false),
-      submitAnswer(PartnerIsHmfOrCivilServantPage, true),
+      submitAnswer(PartnerWorkedAbroadPage, false),
       goTo(CheckPartnerDetailsPage)
     )
 
@@ -760,7 +801,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
     val initialise = journeyOf(
       submitAnswer(PartnerNationalityPage(Index(0)), nationality),
       submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
-      submitAnswer(PartnerIsHmfOrCivilServantPage, true),
+      submitAnswer(PartnerWorkedAbroadPage, true),
       goTo(CheckPartnerDetailsPage)
     )
 
@@ -772,6 +813,184 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
         removeAddToListItem(PartnerNationalityPage(Index(0))),
         pageMustBe(PartnerNationalityPage(Index(0)))
       )
+  }
+
+  "when the user initially said their partner had not worked abroad" - {
+
+    "changing to say they had worked abroad must collect the countries" in {
+
+      val initialise = journeyOf(
+        submitAnswer(PartnerWorkedAbroadPage, false),
+        submitAnswer(PartnerReceivedBenefitsAbroadPage, false),
+        goTo(CheckPartnerDetailsPage)
+      )
+
+      startingFrom(PartnerWorkedAbroadPage)
+        .run(
+          initialise,
+          goToChangeAnswer(PartnerWorkedAbroadPage),
+          submitAnswer(PartnerWorkedAbroadPage, true),
+          submitAnswer(CountryPartnerWorkedPage(Index(0)), country),
+          submitAnswer(AddCountryPartnerWorkedPage(Some(Index(0))), false),
+          pageMustBe(CheckPartnerDetailsPage)
+        )
+    }
+  }
+
+  "when the user initially said their partner had worked abroad" - {
+
+    val initialise = journeyOf(
+      submitAnswer(PartnerWorkedAbroadPage, true),
+      submitAnswer(CountryPartnerWorkedPage(Index(0)), country),
+      submitAnswer(AddCountryPartnerWorkedPage(Some(Index(0))), true),
+      submitAnswer(CountryPartnerWorkedPage(Index(1)), country),
+      submitAnswer(AddCountryPartnerWorkedPage(Some(Index(1))), false),
+      submitAnswer(PartnerReceivedBenefitsAbroadPage, false),
+      goTo(CheckPartnerDetailsPage)
+    )
+
+    "changing to say they haven't worked abroad must remove the countries" in {
+
+      startingFrom(PartnerWorkedAbroadPage)
+        .run(
+          initialise,
+          goToChangeAnswer(PartnerWorkedAbroadPage),
+          submitAnswer(PartnerWorkedAbroadPage, false),
+          pageMustBe(CheckPartnerDetailsPage),
+          answersMustNotContain(CountryPartnerWorkedPage(Index(1))),
+          answersMustNotContain(CountryPartnerWorkedPage(Index(0)))
+        )
+    }
+
+    "they must be able to add another country" in {
+
+      startingFrom(PartnerWorkedAbroadPage)
+        .run(
+          initialise,
+          goToChangeAnswer(AddCountryPartnerWorkedPage()),
+          submitAnswer(AddCountryPartnerWorkedPage(), true),
+          submitAnswer(CountryPartnerWorkedPage(Index(2)), country),
+          submitAnswer(AddCountryPartnerWorkedPage(Some(Index(2))), false),
+          pageMustBe(CheckPartnerDetailsPage)
+        )
+    }
+
+    "they must be able to remove a country, leaving at least one" in {
+
+      startingFrom(PartnerWorkedAbroadPage)
+        .run(
+          initialise,
+          goToChangeAnswer(AddCountryPartnerWorkedPage()),
+          goTo(RemoveCountryPartnerWorkedPage(Index(1))),
+          removeAddToListItem(CountryPartnerWorkedPage(Index(1))),
+          submitAnswer(AddCountryPartnerWorkedPage(), false),
+          pageMustBe(CheckPartnerDetailsPage),
+          answersMustNotContain(CountryPartnerWorkedPage(Index(1))),
+          answersMustContain(CountryPartnerWorkedPage(Index(0)))
+        )
+    }
+
+    "removing the last country must ask if the user has worked abroad" in {
+
+      startingFrom(PartnerWorkedAbroadPage)
+        .run(
+          initialise,
+          goToChangeAnswer(AddCountryPartnerWorkedPage()),
+          goTo(RemoveCountryPartnerWorkedPage(Index(1))),
+          removeAddToListItem(CountryPartnerWorkedPage(Index(1))),
+          goTo(RemoveCountryPartnerWorkedPage(Index(0))),
+          removeAddToListItem(CountryPartnerWorkedPage(Index(0))),
+          pageMustBe(PartnerWorkedAbroadPage)
+        )
+    }
+  }
+
+  "when the user initially said their partner had not received benefits abroad" - {
+
+    "changing to say they had received benefits abroad must collect the countries" in {
+
+      val initialise = journeyOf(
+        submitAnswer(PartnerReceivedBenefitsAbroadPage, false),
+        submitAnswer(PartnerIsHmfOrCivilServantPage, false),
+        goTo(CheckPartnerDetailsPage)
+      )
+
+      startingFrom(PartnerReceivedBenefitsAbroadPage)
+        .run(
+          initialise,
+          goToChangeAnswer(PartnerReceivedBenefitsAbroadPage),
+          submitAnswer(PartnerReceivedBenefitsAbroadPage, true),
+          submitAnswer(CountryPartnerReceivedBenefitsPage(Index(0)), country),
+          submitAnswer(AddCountryPartnerReceivedBenefitsPage(Some(Index(0))), false),
+          pageMustBe(CheckPartnerDetailsPage)
+        )
+    }
+  }
+
+  "when the user initially said their partner had received benefits abroad" - {
+
+    val initialise = journeyOf(
+      submitAnswer(PartnerReceivedBenefitsAbroadPage, true),
+      submitAnswer(CountryPartnerReceivedBenefitsPage(Index(0)), country),
+      submitAnswer(AddCountryPartnerReceivedBenefitsPage(Some(Index(0))), true),
+      submitAnswer(CountryPartnerReceivedBenefitsPage(Index(1)), country),
+      submitAnswer(AddCountryPartnerReceivedBenefitsPage(Some(Index(1))), false),
+      submitAnswer(PartnerIsHmfOrCivilServantPage, false),
+      goTo(CheckPartnerDetailsPage)
+    )
+
+    "changing to say they haven't received benefits abroad must remove the countries" in {
+
+      startingFrom(PartnerReceivedBenefitsAbroadPage)
+        .run(
+          initialise,
+          goToChangeAnswer(PartnerReceivedBenefitsAbroadPage),
+          submitAnswer(PartnerReceivedBenefitsAbroadPage, false),
+          pageMustBe(CheckPartnerDetailsPage),
+          answersMustNotContain(CountryPartnerReceivedBenefitsPage(Index(0)))
+        )
+    }
+
+    "they must be able to add another country" in {
+
+      startingFrom(PartnerReceivedBenefitsAbroadPage)
+        .run(
+          initialise,
+          goToChangeAnswer(AddCountryPartnerReceivedBenefitsPage()),
+          submitAnswer(AddCountryPartnerReceivedBenefitsPage(), true),
+          submitAnswer(CountryPartnerReceivedBenefitsPage(Index(2)), country),
+          submitAnswer(AddCountryPartnerReceivedBenefitsPage(Some(Index(2))), false),
+          pageMustBe(CheckPartnerDetailsPage)
+        )
+    }
+
+    "they must be able to remove a country, leaving at least one" in {
+
+      startingFrom(PartnerReceivedBenefitsAbroadPage)
+        .run(
+          initialise,
+          goToChangeAnswer(AddCountryPartnerReceivedBenefitsPage()),
+          goTo(RemoveCountryPartnerReceivedBenefitsPage(Index(1))),
+          removeAddToListItem(CountryPartnerReceivedBenefitsPage(Index(1))),
+          submitAnswer(AddCountryPartnerReceivedBenefitsPage(), false),
+          pageMustBe(CheckPartnerDetailsPage),
+          answersMustContain(CountryPartnerReceivedBenefitsPage(Index(0)))
+        )
+    }
+
+    "removing the last country must ask if the user has received benefits abroad" in {
+
+      startingFrom(PartnerReceivedBenefitsAbroadPage)
+        .run(
+          initialise,
+          goToChangeAnswer(AddCountryPartnerReceivedBenefitsPage()),
+          goTo(RemoveCountryPartnerReceivedBenefitsPage(Index(1))),
+          removeAddToListItem(CountryPartnerReceivedBenefitsPage(Index(1))),
+          goTo(RemoveCountryPartnerReceivedBenefitsPage(Index(0))),
+          removeAddToListItem(CountryPartnerReceivedBenefitsPage(Index(0))),
+          pageMustBe(PartnerReceivedBenefitsAbroadPage)
+        )
+    }
   }
 
   "when a user initially said their partner was entitled to claim Child Benefit or waiting to hear" - {

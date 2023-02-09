@@ -23,7 +23,7 @@ import pages.payments._
 import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
-import queries.{AllPartnerNationalities, Settable}
+import queries.{AllCountriesPartnerReceivedBenefits, AllCountriesPartnerWorked, AllPartnerNationalities, Settable}
 
 import scala.util.{Success, Try}
 
@@ -146,6 +146,10 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
     PartnerNinoPage,
     PartnerDateOfBirthPage,
     AllPartnerNationalities,
+    PartnerWorkedAbroadPage,
+    AllCountriesPartnerWorked,
+    PartnerReceivedBenefitsAbroadPage,
+    AllCountriesPartnerReceivedBenefits,
     PartnerIsHmfOrCivilServantPage,
     PartnerClaimingChildBenefitPage,
     PartnerEldestChildNamePage,

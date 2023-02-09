@@ -17,12 +17,15 @@
 package pages.partner
 
 import controllers.partner.routes
-import models.{Country, Index, UserAnswers}
-import pages.{Page, QuestionPage, Waypoints}
+import models.{Country, Index, NormalMode, UserAnswers}
+import pages.{AddToListQuestionPage, AddToListSection, CountriesPartnerWorkedSection, Page, QuestionPage, Waypoint, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-final case class CountryPartnerWorkedPage(index: Index) extends QuestionPage[Country] {
+final case class CountryPartnerWorkedPage(index: Index) extends QuestionPage[Country] with AddToListQuestionPage {
+
+  override val section: AddToListSection = CountriesPartnerWorkedSection
+  override val addItemWaypoint: Waypoint = AddCountryPartnerWorkedPage().waypoint(NormalMode)
 
   override def path: JsPath = JsPath \ toString \ index.position
 
@@ -31,4 +34,6 @@ final case class CountryPartnerWorkedPage(index: Index) extends QuestionPage[Cou
   override def route(waypoints: Waypoints): Call =
     routes.CountryPartnerWorkedController.onPageLoad(waypoints, index)
 
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    AddCountryPartnerWorkedPage(Some(index))
 }
