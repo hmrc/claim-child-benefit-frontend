@@ -190,9 +190,14 @@ object DownloadAuditEvent {
 
   private def convertResidency(residency: models.JourneyModel.Residency): Residency =
     residency match {
-      case models.JourneyModel.Residency.AlwaysLivedInUk => Residency.AlwaysLivedInUk
-      case x: models.JourneyModel.Residency.LivedInUkAndAbroad => Residency.LivedInUkAndAbroad(x.usualCountryOfResidence.map(_.name), x.arrivalDate, x.employmentStatus.map(_.toString), x.countriesWorked.map(_.name), x.countriesReceivedBenefits.map(_.name))
-      case x: models.JourneyModel.Residency.AlwaysLivedAbroad => Residency.AlwaysLivedAbroad(x.usualCountryOfResidence.name, x.employmentStatus.map(_.toString), x.countriesWorked.map(_.name), x.countriesReceivedBenefits.map(_.name))
+      case models.JourneyModel.Residency.AlwaysLivedInUk =>
+        Residency.AlwaysLivedInUk
+
+      case models.JourneyModel.Residency.LivedInUkAndAbroad(usualCountry, arrivalDate, employmentStatus, countriesWorked, countriesReceivedBenefits) =>
+        Residency.LivedInUkAndAbroad(usualCountry.map(_.name), arrivalDate, employmentStatus.map(_.toString), countriesWorked.map(_.name), countriesReceivedBenefits.map(_.name))
+
+      case models.JourneyModel.Residency.AlwaysLivedAbroad(usualCountry, employmentStatus, countriesWorked, countriesReceivedBenefits) =>
+        Residency.AlwaysLivedAbroad(usualCountry.name, employmentStatus.map(_.toString), countriesWorked.map(_.name), countriesReceivedBenefits.map(_.name))
     }
 
   private[audit] final case class AdultName(title: Option[String], firstName: String, middleNames: Option[String], lastName: String)
