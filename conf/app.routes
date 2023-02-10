@@ -247,29 +247,29 @@ POST       /partners-national-insurance-number                        controller
 GET        /know-partners-national-insurance-number                        controllers.partner.PartnerNinoKnownController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /know-partners-national-insurance-number                        controllers.partner.PartnerNinoKnownController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /has-your-partner-worked-abroad                        controllers.partner.PartnerWorkedAbroadController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /has-your-partner-worked-abroad                        controllers.partner.PartnerWorkedAbroadController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /partner-worked-abroad                        controllers.partner.PartnerWorkedAbroadController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /partner-worked-abroad                        controllers.partner.PartnerWorkedAbroadController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /country-your-partner-worked-in/:index                        controllers.partner.CountryPartnerWorkedController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
-POST       /country-your-partner-worked-in/:index                        controllers.partner.CountryPartnerWorkedController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+GET        /country-partner-worked-in/:index                        controllers.partner.CountryPartnerWorkedController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /country-partner-worked-in/:index                        controllers.partner.CountryPartnerWorkedController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
-GET        /add-country-your-partner-worked-in                        controllers.partner.AddCountryPartnerWorkedController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /add-country-your-partner-worked-in                        controllers.partner.AddCountryPartnerWorkedController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /add-country-partner-worked-in                        controllers.partner.AddCountryPartnerWorkedController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /add-country-partner-worked-in                        controllers.partner.AddCountryPartnerWorkedController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /remove-country-your-partner-worked-in/:index                        controllers.partner.RemoveCountryPartnerWorkedController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
-POST       /remove-country-your-partner-worked-in/:index                        controllers.partner.RemoveCountryPartnerWorkedController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+GET        /remove-country-partner-worked-in/:index                        controllers.partner.RemoveCountryPartnerWorkedController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /remove-country-partner-worked-in/:index                        controllers.partner.RemoveCountryPartnerWorkedController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
-GET        /has-your-partner-received-benefits-abroad                        controllers.partner.PartnerReceivedBenefitsAbroadController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /has-your-partner-received-benefits-abroad                        controllers.partner.PartnerReceivedBenefitsAbroadController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /partner-paid-benefits-abroad                        controllers.partner.PartnerReceivedBenefitsAbroadController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /partner-paid-benefits-abroad                        controllers.partner.PartnerReceivedBenefitsAbroadController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /country-your-partner-received-benefits-in/:index                        controllers.partner.CountryPartnerReceivedBenefitsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
-POST       /country-your-partner-received-benefits-in/:index                        controllers.partner.CountryPartnerReceivedBenefitsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+GET        /country-paid-partner-benefits/:index                        controllers.partner.CountryPartnerReceivedBenefitsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /country-paid-partner-benefits/:index                        controllers.partner.CountryPartnerReceivedBenefitsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
-GET        /add-country-your-partner-received-benefits-in                        controllers.partner.AddCountryPartnerReceivedBenefitsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /add-country-your-partner-received-benefits-in                        controllers.partner.AddCountryPartnerReceivedBenefitsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /add-country-paid-partner-benefits                        controllers.partner.AddCountryPartnerReceivedBenefitsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /add-country-paid-partner-benefits                        controllers.partner.AddCountryPartnerReceivedBenefitsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /remove-country-your-partner-received-benefits-in/:index                        controllers.partner.RemoveCountryPartnerReceivedBenefitsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
-POST       /remove-country-your-partner-received-benefits-in/:index                        controllers.partner.RemoveCountryPartnerReceivedBenefitsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+GET        /remove-country-paid-partner-benefits/:index                        controllers.partner.RemoveCountryPartnerReceivedBenefitsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /remove-country-paid-partner-benefits/:index                        controllers.partner.RemoveCountryPartnerReceivedBenefitsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
 GET        /check-partners-details                              controllers.partner.CheckPartnerDetailsController.onPageLoad
 POST       /check-partners-details                              controllers.partner.CheckPartnerDetailsController.onSubmit
