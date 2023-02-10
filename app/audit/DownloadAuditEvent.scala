@@ -290,7 +290,7 @@ object DownloadAuditEvent {
                                              telephoneNumber: String,
                                              nationalities: Seq[String],
                                              residency: Residency,
-                                             memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
+                                             memberOfHMForcesOrCivilServantAbroad: Boolean,
                                              currentlyClaimingChildBenefit: String
                                            )
   object Applicant {
@@ -303,7 +303,7 @@ object DownloadAuditEvent {
                                            nationalities: Seq[String],
                                            currentlyClaimingChildBenefit: String,
                                            nationalInsuranceNumber: Option[String],
-                                           memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
+                                           memberOfHMForcesOrCivilServantAbroad: Boolean,
                                            eldestChild: Option[EldestChild],
                                            countriesWorked: Seq[String],
                                            countriesReceivedBenefits: Seq[String],

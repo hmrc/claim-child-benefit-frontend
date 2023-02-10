@@ -78,7 +78,7 @@ object JourneyModel {
                               telephoneNumber: String,
                               nationalities: NonEmptyList[Nationality],
                               residency: Residency,
-                              memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
+                              memberOfHMForcesOrCivilServantAbroad: Boolean,
                               currentlyReceivingChildBenefit: CurrentlyReceivingChildBenefit
                             )
 
@@ -87,7 +87,7 @@ object JourneyModel {
                             dateOfBirth: LocalDate,
                             nationalities: NonEmptyList[Nationality],
                             nationalInsuranceNumber: Option[String],
-                            memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
+                            memberOfHMForcesOrCivilServantAbroad: Boolean,
                             currentlyClaimingChildBenefit: PartnerClaimingChildBenefit,
                             eldestChild: Option[EldestChild],
                             countriesWorked: List[Country],

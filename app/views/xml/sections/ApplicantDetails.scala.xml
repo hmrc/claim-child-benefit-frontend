@@ -64,7 +64,7 @@
                             alwaysLivedAbroad(x)
                     }}
 
-                    @line("pdf.hmfOrCivilServant", booleanToYesNo(model.applicant.memberOfHMForcesOrCivilServantAbroad.getOrElse(false)))
+                    @line("pdf.hmfOrCivilServant", booleanToYesNo(model.applicant.memberOfHMForcesOrCivilServantAbroad))
 
                     @if(model.applicant.previousFamilyNames.nonEmpty) {
                         <fo:block margin-bottom="3mm">

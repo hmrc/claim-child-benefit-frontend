@@ -41,9 +41,7 @@
                         }
                     </fo:block>
 
-                    @model.memberOfHMForcesOrCivilServantAbroad.map { answer =>
-                        @line("pdf.hmfOrCivilServant", booleanToYesNo(answer))
-                    }
+                    @line("pdf.hmfOrCivilServant", booleanToYesNo(model.memberOfHMForcesOrCivilServantAbroad))
 
                     @line("pdf.workedAbroad", booleanToYesNo(model.countriesWorked.nonEmpty))
 

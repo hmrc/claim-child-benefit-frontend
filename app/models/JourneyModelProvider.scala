@@ -337,11 +337,6 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
         case false => Ior.Right(Nil)
       }
 
-    def getHmForces: IorNec[Query, Option[Boolean]] =
-      answers.get(ApplicantIsHmfOrCivilServantPage)
-        .map(x => Ior.Right(Some(x)))
-        .getOrElse(Ior.Right(None))
-
     def getResidency: IorNec[Query, Residency] = {
 
       def getCountriesWorked: IorNec[Query, List[Country]] =
@@ -405,7 +400,7 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
       answers.getIor(ApplicantPhoneNumberPage),
       getNationalities,
       getResidency,
-      getHmForces,
+      answers.getIor(ApplicantIsHmfOrCivilServantPage),
       answers.getIor(CurrentlyReceivingChildBenefitPage)
       ).parMapN(Applicant.apply)
   }
@@ -436,11 +431,6 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
       }
     }
 
-    def getHmForces: IorNec[Query, Option[Boolean]] =
-      answers.get(PartnerIsHmfOrCivilServantPage)
-        .map(x => Ior.Right(Some(x)))
-        .getOrElse(Ior.Right(None))
-
     def getNationalities: IorNec[Query, NonEmptyList[Nationality]] = {
       val nationalities = answers.get(AllPartnerNationalities).getOrElse(Nil)
       NonEmptyList.fromList(nationalities).toRightIor(NonEmptyChain.one(AllPartnerNationalities))
@@ -463,7 +453,7 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
       answers.getIor(PartnerDateOfBirthPage),
       getNationalities,
       getPartnerNino,
-      getHmForces,
+      answers.getIor(PartnerIsHmfOrCivilServantPage),
       answers.getIor(PartnerClaimingChildBenefitPage),
       getPartnerEldestChild,
       getCountriesWorked,

@@ -65,7 +65,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           telephoneNumber = "07777 777777",
           nationalities = NonEmptyList(Nationality.allNationalities.head, Nil),
           residency = JourneyModel.Residency.LivedInUkAndAbroad(Some(Country.internationalCountries.head), Some(LocalDate.now), EmploymentStatus.activeStatuses, List(Country("ES", "Spain")), List(Country("ES", "Spain"))),
-          memberOfHMForcesOrCivilServantAbroad = Some(false),
+          memberOfHMForcesOrCivilServantAbroad = false,
           currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
         ),
         relationship = JourneyModel.Relationship(
@@ -76,7 +76,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             dateOfBirth = now,
             nationalities = NonEmptyList(Nationality.allNationalities.head, Nil),
             nationalInsuranceNumber = Some(partnerNino),
-            memberOfHMForcesOrCivilServantAbroad = Some(false),
+            memberOfHMForcesOrCivilServantAbroad = false,
             currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments,
             eldestChild = Some(JourneyModel.EldestChild(
               name        = models.ChildName("partner eldest child first", Some("partner eldest child middle"), "partner eldest child last"),
@@ -141,7 +141,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           telephoneNumber = "07777 777777",
           nationalities = Seq(Nationality.allNationalities.head.name),
           residency = Residency.LivedInUkAndAbroad(Some(Country.internationalCountries.head.name), Some(LocalDate.now), EmploymentStatus.activeStatuses.map(_.toString), List("Spain"), List("Spain")),
-          memberOfHMForcesOrCivilServantAbroad = Some(false),
+          memberOfHMForcesOrCivilServantAbroad = false,
           currentlyClaimingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming.toString
         ),
         relationship = Relationship(
@@ -152,7 +152,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             dateOfBirth = now,
             nationalities = Seq(Nationality.allNationalities.head.name),
             nationalInsuranceNumber = Some(partnerNino),
-            memberOfHMForcesOrCivilServantAbroad = Some(false),
+            memberOfHMForcesOrCivilServantAbroad = false,
             currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments.toString,
             eldestChild = Some(EldestChild(
               name        = ChildName("partner eldest child first", Some("partner eldest child middle"), "partner eldest child last"),
