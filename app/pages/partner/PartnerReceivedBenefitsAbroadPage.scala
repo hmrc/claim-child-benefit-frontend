@@ -37,7 +37,7 @@ case object PartnerReceivedBenefitsAbroadPage extends QuestionPage[Boolean] {
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case true => CountryPartnerReceivedBenefitsPage(Index(0))
-      case false => PartnerIsHmfOrCivilServantPage
+      case false => PartnerClaimingChildBenefitPage
     }.orRecover
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =

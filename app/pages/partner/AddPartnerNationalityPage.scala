@@ -53,7 +53,7 @@ final case class AddPartnerNationalityPage(override val index: Option[Index] = N
           }
 
       case false =>
-        PartnerWorkedAbroadPage
+        PartnerEmploymentStatusPage
     }.orRecover
 
   override def deriveNumberOfItems: Derivable[Seq[JsObject], Int] = DeriveNumberOfPartnerNationalities

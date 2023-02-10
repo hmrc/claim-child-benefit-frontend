@@ -55,6 +55,6 @@ final case class AddCountryPartnerReceivedBenefitsPage(override val index: Optio
         }
 
       case false =>
-        PartnerIsHmfOrCivilServantPage
+        PartnerClaimingChildBenefitPage
     }.orRecover
 }

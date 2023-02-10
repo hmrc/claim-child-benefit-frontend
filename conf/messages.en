@@ -1623,3 +1623,11 @@ addCountryApplicantReceivedBenefits.checkAnswers.change.hidden = the countries y
 removeCountryApplicantReceivedBenefits.title = Are you sure you want to remove this country?
 removeCountryApplicantReceivedBenefits.heading = Are you sure you want to remove {0}?
 removeCountryApplicantReceivedBenefits.error.required = Select yes if you are sure you want to remove {0}
+
+partnerEmploymentStatus.title = What is your partner’s employment status?
+partnerEmploymentStatus.heading = What is {0}’s employment status?
+partnerEmploymentStatus.hint = Select all that apply.
+partnerEmploymentStatus.checkYourAnswersLabel = {0}’s employment status
+partnerEmploymentStatus.error.required = Select {0}’s employment status
+partnerEmploymentStatus.error.mutuallyExclusive = Select {0}’s employment status or none of these apply
+partnerEmploymentStatus.change.hidden = {0}’s employment status

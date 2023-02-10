@@ -146,11 +146,12 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
     PartnerNinoPage,
     PartnerDateOfBirthPage,
     AllPartnerNationalities,
+    PartnerIsHmfOrCivilServantPage,
+    PartnerEmploymentStatusPage,
     PartnerWorkedAbroadPage,
     AllCountriesPartnerWorked,
     PartnerReceivedBenefitsAbroadPage,
     AllCountriesPartnerReceivedBenefits,
-    PartnerIsHmfOrCivilServantPage,
     PartnerClaimingChildBenefitPage,
     PartnerEldestChildNamePage,
     PartnerEldestChildDateOfBirthPage

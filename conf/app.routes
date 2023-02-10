@@ -274,6 +274,9 @@ POST       /remove-country-your-partner-received-benefits-in/:index             
 GET        /check-partners-details                              controllers.partner.CheckPartnerDetailsController.onPageLoad
 POST       /check-partners-details                              controllers.partner.CheckPartnerDetailsController.onSubmit
 
+GET        /partners-employment-status                        controllers.partner.PartnerEmploymentStatusController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /partners-employment-status                        controllers.partner.PartnerEmploymentStatusController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 # Child section
 GET        /add-child                        controllers.child.AddChildController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /add-child                        controllers.child.AddChildController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

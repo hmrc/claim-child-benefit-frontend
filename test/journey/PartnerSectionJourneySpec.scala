@@ -18,7 +18,7 @@ package journey
 
 import generators.ModelGenerators
 import models.RelationshipStatus.{Cohabiting, Divorced, Married, Separated, Single, Widowed}
-import models.{AdultName, ChildName, Country, Index, Nationality, PartnerClaimingChildBenefit}
+import models.{AdultName, ChildName, Country, EmploymentStatus, Index, Nationality, PartnerClaimingChildBenefit}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
@@ -48,9 +48,10 @@ class PartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
           submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
           submitAnswer(PartnerNationalityPage(Index(0)), nationality),
           submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
+          submitAnswer(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses),
+          submitAnswer(PartnerIsHmfOrCivilServantPage, false),
           submitAnswer(PartnerWorkedAbroadPage, false),
           submitAnswer(PartnerReceivedBenefitsAbroadPage, false),
-          submitAnswer(PartnerIsHmfOrCivilServantPage, false),
           submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
           pageMustBe(CheckPartnerDetailsPage)
         )
@@ -70,9 +71,10 @@ class PartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
           submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
           submitAnswer(PartnerNationalityPage(Index(0)), nationality),
           submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
+          submitAnswer(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses),
+          submitAnswer(PartnerIsHmfOrCivilServantPage, false),
           submitAnswer(PartnerWorkedAbroadPage, false),
           submitAnswer(PartnerReceivedBenefitsAbroadPage, false),
-          submitAnswer(PartnerIsHmfOrCivilServantPage, false),
           submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
           pageMustBe(CheckPartnerDetailsPage)
         )
@@ -115,9 +117,10 @@ class PartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
         submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
         submitAnswer(PartnerNationalityPage(Index(0)), nationality),
         submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
+        submitAnswer(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses),
+        submitAnswer(PartnerIsHmfOrCivilServantPage, false),
         submitAnswer(PartnerWorkedAbroadPage, false),
         submitAnswer(PartnerReceivedBenefitsAbroadPage, false),
-        submitAnswer(PartnerIsHmfOrCivilServantPage, false),
         submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
         pageMustBe(CheckPartnerDetailsPage),
         next,
@@ -145,7 +148,7 @@ class PartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
           submitAnswer(AddPartnerNationalityPage(Some(Index(0))), true),
           submitAnswer(PartnerNationalityPage(Index(1)), Nationality.allNationalities.head),
           submitAnswer(AddPartnerNationalityPage(Some(Index(1))), false),
-          pageMustBe(PartnerWorkedAbroadPage)
+          pageMustBe(PartnerEmploymentStatusPage)
         )
     }
 
@@ -224,7 +227,7 @@ class PartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
           submitAnswer(AddCountryPartnerReceivedBenefitsPage(Some(Index(0))), true),
           submitAnswer(CountryPartnerReceivedBenefitsPage(Index(1)), country),
           submitAnswer(AddCountryPartnerReceivedBenefitsPage(Some(Index(1))), false),
-          pageMustBe(PartnerIsHmfOrCivilServantPage)
+          pageMustBe(PartnerClaimingChildBenefitPage)
         )
     }
 
@@ -239,7 +242,7 @@ class PartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
           goTo(RemoveCountryPartnerReceivedBenefitsPage(Index(1))),
           removeAddToListItem(CountryPartnerReceivedBenefitsPage(Index(1))),
           submitAnswer(AddCountryPartnerReceivedBenefitsPage(), false),
-          pageMustBe(PartnerIsHmfOrCivilServantPage)
+          pageMustBe(PartnerClaimingChildBenefitPage)
         )
     }
 

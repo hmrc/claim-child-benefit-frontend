@@ -17,20 +17,20 @@
 package pages.partner
 
 import controllers.partner.routes
-import models.UserAnswers
+import models.{EmploymentStatus, UserAnswers}
 import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object PartnerIsHmfOrCivilServantPage extends QuestionPage[Boolean] {
+case object PartnerEmploymentStatusPage extends QuestionPage[Set[EmploymentStatus]] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "partnerIsHmfOrCivilServant"
+  override def toString: String = "partnerEmploymentStatus"
 
   override def route(waypoints: Waypoints): Call =
-    routes.PartnerIsHmfOrCivilServantController.onPageLoad(waypoints)
+    routes.PartnerEmploymentStatusController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    PartnerWorkedAbroadPage
+    PartnerIsHmfOrCivilServantPage
 }
