@@ -34,6 +34,13 @@
 
                     @line("pdf.nationality", model.nationalities.toList.map(_.name).mkString(" - "))
 
+                    <fo:block margin-bottom="3mm">
+                        <fo:block font-weight="bold">@messages("pdf.employmentStatus")</fo:block>
+                        @model.employmentStatus.map { status =>
+                        <fo:block width="8cm" wrap-option="wrap">@messages(s"employmentStatus.${status.toString}")</fo:block>
+                        }
+                    </fo:block>
+
                     @model.memberOfHMForcesOrCivilServantAbroad.map { answer =>
                         @line("pdf.hmfOrCivilServant", booleanToYesNo(answer))
                     }

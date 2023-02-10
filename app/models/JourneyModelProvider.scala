@@ -467,8 +467,9 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
       answers.getIor(PartnerClaimingChildBenefitPage),
       getPartnerEldestChild,
       getCountriesWorked,
-      getCountriesReceivedBenefits
-      ).parMapN(Partner.apply)
+      getCountriesReceivedBenefits,
+      answers.getIor(PartnerEmploymentStatusPage)
+    ).parMapN(Partner.apply)
   }
 
   private def getRelationship(answers: UserAnswers): IorNec[Query, Relationship] = {

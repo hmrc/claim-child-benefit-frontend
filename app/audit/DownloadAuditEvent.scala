@@ -61,7 +61,8 @@ object DownloadAuditEvent {
             memberOfHMForcesOrCivilServantAbroad = partner.memberOfHMForcesOrCivilServantAbroad,
             eldestChild                          = partner.eldestChild.map(convertEldestChild),
             countriesWorked                      = partner.countriesWorked.map(_.name),
-            countriesReceivedBenefits            = partner.countriesReceivedBenefits.map(_.name)
+            countriesReceivedBenefits            = partner.countriesReceivedBenefits.map(_.name),
+            employmentStatus                     = partner.employmentStatus.map(_.toString)
           )
         }
       ),
@@ -305,7 +306,8 @@ object DownloadAuditEvent {
                                            memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
                                            eldestChild: Option[EldestChild],
                                            countriesWorked: Seq[String],
-                                           countriesReceivedBenefits: Seq[String]
+                                           countriesReceivedBenefits: Seq[String],
+                                           employmentStatus: Set[String]
                                          )
   object Partner {
     implicit lazy val writes: Writes[Partner] = Json.writes

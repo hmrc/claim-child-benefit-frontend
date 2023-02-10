@@ -91,7 +91,8 @@ object JourneyModel {
                             currentlyClaimingChildBenefit: PartnerClaimingChildBenefit,
                             eldestChild: Option[EldestChild],
                             countriesWorked: List[Country],
-                            countriesReceivedBenefits: List[Country]
+                            countriesReceivedBenefits: List[Country],
+                            employmentStatus: Set[EmploymentStatus]
                           )
 
   final case class Child(

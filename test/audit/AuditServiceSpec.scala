@@ -83,7 +83,8 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
               dateOfBirth = now
             )),
             countriesWorked = List(Country("ES", "Spain")),
-            countriesReceivedBenefits = List(Country("ES", "Spain"))
+            countriesReceivedBenefits = List(Country("ES", "Spain")),
+            employmentStatus = EmploymentStatus.activeStatuses
           ))
         ),
         children = NonEmptyList(
@@ -158,7 +159,8 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
               dateOfBirth = now
             )),
             countriesWorked = Seq("Spain"),
-            countriesReceivedBenefits = Seq("Spain")
+            countriesReceivedBenefits = Seq("Spain"),
+            employmentStatus = EmploymentStatus.activeStatuses.map(_.toString)
           ))
         ),
         children = List(

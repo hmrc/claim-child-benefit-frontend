@@ -174,6 +174,7 @@ class JourneyModelProviderSpec
           .set(PartnerNinoKnownPage, false).success.value
           .set(PartnerDateOfBirthPage, now).success.value
           .set(PartnerNationalityPage(Index(0)), partnerNationality).success.value
+          .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
           .set(PartnerWorkedAbroadPage, false).success.value
           .set(PartnerReceivedBenefitsAbroadPage, false).success.value
           .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming).success.value
@@ -205,7 +206,8 @@ class JourneyModelProviderSpec
               currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
               eldestChild = None,
               countriesWorked = Nil,
-              countriesReceivedBenefits = Nil
+              countriesReceivedBenefits = Nil,
+              employmentStatus = EmploymentStatus.activeStatuses
             ))
           ),
           children = NonEmptyList(
@@ -290,7 +292,8 @@ class JourneyModelProviderSpec
               currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
               eldestChild = None,
               countriesWorked = Nil,
-              countriesReceivedBenefits = Nil
+              countriesReceivedBenefits = Nil,
+              employmentStatus = EmploymentStatus.activeStatuses
             ))
           ),
           children = NonEmptyList(
@@ -1020,7 +1023,8 @@ class JourneyModelProviderSpec
           currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
           eldestChild = None,
           countriesWorked = Nil,
-          countriesReceivedBenefits = Nil
+          countriesReceivedBenefits = Nil,
+          employmentStatus = EmploymentStatus.activeStatuses
         )
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -1054,7 +1058,8 @@ class JourneyModelProviderSpec
           currentlyClaimingChildBenefit = partnerClaiming,
           eldestChild = Some(JourneyModel.EldestChild(partnerEldestChildName, now)),
           countriesWorked = Nil,
-          countriesReceivedBenefits = Nil
+          countriesReceivedBenefits = Nil,
+          employmentStatus = EmploymentStatus.activeStatuses
         )
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -1088,7 +1093,8 @@ class JourneyModelProviderSpec
           currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments,
           eldestChild = Some(JourneyModel.EldestChild(partnerEldestChildName, now)),
           countriesWorked = Nil,
-          countriesReceivedBenefits = Nil
+          countriesReceivedBenefits = Nil,
+          employmentStatus = EmploymentStatus.activeStatuses
         )
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -1123,7 +1129,8 @@ class JourneyModelProviderSpec
           currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
           eldestChild = None,
           countriesWorked = List(country),
-          countriesReceivedBenefits = List(country)
+          countriesReceivedBenefits = List(country),
+          employmentStatus = EmploymentStatus.activeStatuses
         )
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -1979,6 +1986,7 @@ class JourneyModelProviderSpec
           PartnerNamePage,
           PartnerDateOfBirthPage,
           AllPartnerNationalities,
+          PartnerEmploymentStatusPage,
           PartnerWorkedAbroadPage,
           PartnerReceivedBenefitsAbroadPage,
           PartnerNinoKnownPage,
@@ -2025,6 +2033,7 @@ class JourneyModelProviderSpec
           PartnerNamePage,
           PartnerDateOfBirthPage,
           AllPartnerNationalities,
+          PartnerEmploymentStatusPage,
           PartnerWorkedAbroadPage,
           PartnerReceivedBenefitsAbroadPage,
           PartnerNinoKnownPage,
@@ -3211,6 +3220,7 @@ class JourneyModelProviderSpec
         .set(PartnerNinoKnownPage, false).success.value
         .set(PartnerDateOfBirthPage, now).success.value
         .set(PartnerNationalityPage(Index(0)), partnerNationality).success.value
+        .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
         .set(PartnerWorkedAbroadPage, false).success.value
         .set(PartnerReceivedBenefitsAbroadPage, false).success.value
         .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming).success.value
