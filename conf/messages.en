@@ -181,7 +181,7 @@ benefits.none = None of these benefits
 employmentStatus.employed = Employed
 employmentStatus.lookingForWork = Looking for work
 employmentStatus.selfEmployed = Self-employed
-employmentStatus.noneOfTheseApply = None of these apply
+employmentStatus.none = None of these apply
 
 income.belowLowerThreshold = Below £50,100
 income.betweenThresholds = £50,100 - £60,000
@@ -1594,8 +1594,8 @@ removePartnerNationality.title = Are you sure you want to remove this nationalit
 removePartnerNationality.heading = Are you sure you want to remove {1} as {0}’s nationality?
 removePartnerNationality.error.required = Select yes if you are sure you want to remove {1} as {0}’s nationality
 
-addCountryApplicantWorked.title.plural = You have added {0} that you have worked in, in the last 3 months
-addCountryApplicantWorked.heading.plural = You have added {0} that you have worked in, in the last 3 months
+addCountryApplicantWorked.title.plural = You have added {0} country that you have worked in, in the last 3 months
+addCountryApplicantWorked.heading.plural = You have added {0} country that you have worked in, in the last 3 months
 addCountryApplicantWorked.title.singular = You have added 1 country that you have worked in, in the last 3 months
 addCountryApplicantWorked.heading.singular = You have added 1 country that you have worked in, in the last 3 months
 addCountryApplicantWorked.checkYourAnswersLabel = Countries you have worked in, in the last 3 months
@@ -1603,7 +1603,7 @@ addCountryApplicantWorked.error.required = Select yes if you have worked in anot
 addCountryApplicantWorked.addAnother = Have you worked in another country in the last 3 months?
 addCountryApplicantWorked.change.hidden = the country {0}
 addCountryApplicantWorked.remove.hidden = the country {0}
-addCountryApplicantWorked.checkAnswers.change.hidden = the countries you have worked in the last 3 months
+addCountryApplicantWorked.checkAnswers.change.hidden = the countries you have worked in, in the last 3 months
 
 removeCountryApplicantWorked.title = Are you sure you want to remove this country?
 removeCountryApplicantWorked.heading = Are you sure you want to remove {0}?
@@ -1623,6 +1623,36 @@ addCountryApplicantReceivedBenefits.checkAnswers.change.hidden = the countries y
 removeCountryApplicantReceivedBenefits.title = Are you sure you want to remove this country?
 removeCountryApplicantReceivedBenefits.heading = Are you sure you want to remove {0}?
 removeCountryApplicantReceivedBenefits.error.required = Select yes if you are sure you want to remove {0}
+
+addCountryPartnerWorked.title.plural = You have added {0} countries that your partner has worked in, in the last 3 months
+addCountryPartnerWorked.heading.plural = You have added {0} countries that {1} has worked in, in the last 3 months
+addCountryPartnerWorked.title.singular = You have added 1 country that your partner has worked in, in the last 3 months
+addCountryPartnerWorked.heading.singular = You have added 1 country that {0} has worked in, in the last 3 months
+addCountryPartnerWorked.checkYourAnswersLabel = Countries {0} has worked in, in the last 3 months
+addCountryPartnerWorked.error.required = Select yes if {0} has worked in another country in the last 3 months
+addCountryPartnerWorked.addAnother = Has {0} worked in another country in the last 3 months?
+addCountryPartnerWorked.change.hidden = the country {0}
+addCountryPartnerWorked.remove.hidden = the country {0}
+addCountryPartnerWorked.checkAnswers.change.hidden = the countries {0} has worked in, in the last 3 months
+
+removeCountryPartnerWorked.title = Are you sure you want to remove this country?
+removeCountryPartnerWorked.heading = Are you sure you want to remove {0}?
+removeCountryPartnerWorked.error.required = Select yes if you are sure you want to remove {0}
+
+addCountryPartnerReceivedBenefits.title.plural = You have added {0} countries that paid your partner benefits in the last 3 months
+addCountryPartnerReceivedBenefits.heading.plural = You have added {0} countries that paid {1} benefits in the last 3 months
+addCountryPartnerReceivedBenefits.title.singular = You have added 1 country that paid your partner benefits in the last 3 months
+addCountryPartnerReceivedBenefits.heading.singular = You have added 1 country that paid {0} benefits in the last 3 months
+addCountryPartnerReceivedBenefits.checkYourAnswersLabel = Countries that paid {0} benefits in the last 3 months
+addCountryPartnerReceivedBenefits.error.required = Select yes if {0} has been paid benefits from another country in the last 3 months
+addCountryPartnerReceivedBenefits.addAnother = Has {0} been paid benefits from another country in the last 3 months?
+addCountryPartnerReceivedBenefits.change.hidden = the country {0}
+addCountryPartnerReceivedBenefits.remove.hidden = the country {0}
+addCountryPartnerReceivedBenefits.checkAnswers.change.hidden = the countries you have been paid benefits from in the last 3 months
+
+removeCountryPartnerReceivedBenefits.title = Are you sure you want to remove this country?
+removeCountryPartnerReceivedBenefits.heading = Are you sure you want to remove {0}?
+removeCountryPartnerReceivedBenefits.error.required = Select yes if you are sure you want to remove {0}
 
 partnerEmploymentStatus.title = What is your partner’s employment status?
 partnerEmploymentStatus.heading = What is {0}’s employment status?

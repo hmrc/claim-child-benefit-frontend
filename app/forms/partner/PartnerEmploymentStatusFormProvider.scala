@@ -30,12 +30,12 @@ class PartnerEmploymentStatusFormProvider @Inject() extends Mappings {
       "value" ->
         set(enumerable[EmploymentStatus]("partnerEmploymentStatus.error.required", args = Seq(partnerFirstName)))
           .verifying(
-            nonEmptySet("partnerEmploymentStatus.error.required", args = Seq(partnerFirstName)),
+            nonEmptySet("partnerEmploymentStatus.error.required", args = partnerFirstName),
             noMutuallyExclusiveAnswers[EmploymentStatus](
               EmploymentStatus.activeStatuses,
               Set(EmploymentStatus.NoneOfThese),
               "partnerEmploymentStatus.error.mutuallyExclusive",
-              args = Seq(partnerFirstName)
+              args = partnerFirstName
             )
           )
     )

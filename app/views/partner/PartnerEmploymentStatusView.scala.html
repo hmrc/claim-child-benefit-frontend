@@ -38,7 +38,7 @@
             CheckboxesViewModel(
                 form   = form,
                 name   = "value",
-                legend = LegendViewModel(messages("partnerEmploymentStatus.heading")).asPageHeading(),
+                legend = LegendViewModel(messages("partnerEmploymentStatus.heading", partnerFirstName)).asPageHeading(),
                 items  = EmploymentStatus.checkboxItems
             ).withHint(HintViewModel(messages("partnerEmploymentStatus.hint")))
         )
