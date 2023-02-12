@@ -33,4 +33,13 @@ object CountryOfRegistration {
     case NorthernIreland => JsString("NORTHERN_IRELAND")
     case Abroad => JsString("ABROAD")
   }
+
+  def build(country: models.ChildBirthRegistrationCountry): CountryOfRegistration =
+    country match {
+      case models.ChildBirthRegistrationCountry.England => EnglandWales
+      case models.ChildBirthRegistrationCountry.Wales => EnglandWales
+      case models.ChildBirthRegistrationCountry.Scotland => Scotland
+      case models.ChildBirthRegistrationCountry.NorthernIreland => NorthernIreland
+      case _ => Abroad
+    }
 }

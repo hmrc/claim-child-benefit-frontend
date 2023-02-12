@@ -22,6 +22,39 @@ import play.api.libs.json.{JsString, Json}
 
 class CountryOfRegistrationSpec extends AnyFreeSpec with Matchers {
 
+  ".build" - {
+
+    "must return EnglandWales when given England" in {
+
+      CountryOfRegistration.build(models.ChildBirthRegistrationCountry.England) mustEqual CountryOfRegistration.EnglandWales
+    }
+
+    "must return EnglandWales when given Wales" in {
+
+      CountryOfRegistration.build(models.ChildBirthRegistrationCountry.Wales) mustEqual CountryOfRegistration.EnglandWales
+    }
+
+    "must return Scotland when given Scotland" in {
+
+      CountryOfRegistration.build(models.ChildBirthRegistrationCountry.Scotland) mustEqual CountryOfRegistration.Scotland
+    }
+
+    "must return NorthernIreland when given NorthernIreland" in {
+
+      CountryOfRegistration.build(models.ChildBirthRegistrationCountry.NorthernIreland) mustEqual CountryOfRegistration.NorthernIreland
+    }
+
+    "must return Abroad when given Other" in {
+
+      CountryOfRegistration.build(models.ChildBirthRegistrationCountry.Other) mustEqual CountryOfRegistration.Abroad
+    }
+
+    "must return Abroad when given Unknown" in {
+
+      CountryOfRegistration.build(models.ChildBirthRegistrationCountry.Unknown) mustEqual CountryOfRegistration.Abroad
+    }
+  }
+  
   ".writes" - {
 
     "must write England / Wales" in {

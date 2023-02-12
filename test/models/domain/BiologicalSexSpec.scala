@@ -22,6 +22,24 @@ import play.api.libs.json.{JsString, Json}
 
 class BiologicalSexSpec extends AnyFreeSpec with Matchers {
 
+  ".build" - {
+
+    "must return Female when given Female" in {
+
+      BiologicalSex.build(models.ChildBiologicalSex.Female) mustEqual BiologicalSex.Female
+    }
+
+    "must return Male when given Male" in {
+
+      BiologicalSex.build(models.ChildBiologicalSex.Male) mustEqual BiologicalSex.Male
+    }
+
+    "must return Unspecified when given Unspecified" in {
+
+      BiologicalSex.build(models.ChildBiologicalSex.Unspecified) mustEqual BiologicalSex.Unspecified
+    }
+  }
+
   ".writes" - {
 
     "must write Female" in {

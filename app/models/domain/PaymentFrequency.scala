@@ -29,4 +29,10 @@ case object PaymentFrequency {
     case Weekly         => JsString("ONCE_A_WEEK")
     case EveryFourWeeks => JsString("EVERY_4_WEEKS")
   }
+
+  def build(frequency: models.PaymentFrequency): PaymentFrequency =
+    frequency match {
+      case models.PaymentFrequency.Weekly => Weekly
+      case models.PaymentFrequency.EveryFourWeeks => EveryFourWeeks
+    }
 }

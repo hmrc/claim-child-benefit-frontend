@@ -16,6 +16,7 @@
 
 package models.domain
 
+import models.NationalityGroup
 import play.api.libs.json.{JsString, Writes}
 
 sealed trait Nationality
@@ -30,5 +31,11 @@ case object Nationality {
     case UkCta  => JsString("UK_OR_CTA")
     case Eea    => JsString("EEA")
     case NonEea => JsString("NON_EEA")
+  }
+
+  def fromNationalityGroup(group: NationalityGroup): Nationality = group match {
+    case NationalityGroup.UkCta  => UkCta
+    case NationalityGroup.Eea    => Eea
+    case NationalityGroup.NonEea => NonEea
   }
 }

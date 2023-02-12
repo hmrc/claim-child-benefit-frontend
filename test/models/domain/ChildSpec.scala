@@ -16,6 +16,7 @@
 
 package models.domain
 
+import models.{BirthRegistrationMatchingResult, JourneyModel}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import play.api.libs.json.Json
@@ -23,6 +24,80 @@ import play.api.libs.json.Json
 import java.time.LocalDate
 
 class ChildSpec extends AnyFreeSpec with Matchers {
+
+  ".build" - {
+
+      val basicChild = JourneyModel.Child(
+        name = models.ChildName("first", None, "last"),
+        nameChangedByDeedPoll = None,
+        previousNames = Nil,
+        biologicalSex = models.ChildBiologicalSex.Female,
+        dateOfBirth = LocalDate.now,
+        countryOfRegistration = models.ChildBirthRegistrationCountry.England,
+        birthCertificateNumber = None,
+        birthCertificateDetailsMatched = BirthRegistrationMatchingResult.NotAttempted,
+        relationshipToApplicant = models.ApplicantRelationshipToChild.BirthChild,
+        adoptingThroughLocalAuthority = false,
+        previousClaimant = None,
+        guardian = None,
+        previousGuardian = None,
+        dateChildStartedLivingWithApplicant = None
+      )
+
+    "must return a Child" in {
+
+      val result = Child.build(basicChild)
+
+      result mustEqual Child(
+        name = ChildName("first", None, "last"),
+        gender = BiologicalSex.Female,
+        dateOfBirth = LocalDate.now,
+        birthRegistrationNumber = None,
+        crn = None,
+        countryOfRegistration = CountryOfRegistration.EnglandWales,
+        dateOfBirthVerified = false,
+        livingWithClaimant = true,
+        claimantIsParent = true,
+        adoptionStatus = false
+      )
+    }
+
+    "must set `living with claimant` to false when the child has a guardian" in {
+
+      val child = basicChild.copy(guardian = Some(JourneyModel.Guardian(None, None)))
+
+      val result = Child.build(child)
+
+      result.livingWithClaimant mustEqual false
+    }
+
+    "must set `adoption status` to true when the child is adopted" in {
+
+      val child = basicChild.copy(relationshipToApplicant = models.ApplicantRelationshipToChild.AdoptedChild)
+
+      val result = Child.build(child)
+
+      result.adoptionStatus mustEqual true
+    }
+
+    "must set `adoption status` to true when the applicant is adopting the child" in {
+
+      val child = basicChild.copy(adoptingThroughLocalAuthority = true)
+
+      val result = Child.build(child)
+
+      result.adoptionStatus mustEqual true
+    }
+
+    "must set `claimant is parent` to false when the relationship is `other`" in {
+
+      val child = basicChild.copy(relationshipToApplicant = models.ApplicantRelationshipToChild.Other)
+
+      val result = Child.build(child)
+
+      result.claimantIsParent mustEqual false
+    }
+  }
 
   ".writes" - {
 

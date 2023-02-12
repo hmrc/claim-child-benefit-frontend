@@ -16,34 +16,26 @@
 
 package models.domain
 
+import org.scalacheck.Arbitrary.arbitrary
+import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import play.api.libs.json.{JsString, Json}
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
-class PaymentFrequencySpec extends AnyFreeSpec with Matchers {
+class ChildNameSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks {
 
   ".build" - {
 
-    "must return Weekly when given Weekly" in {
+    "must create a ChildName" in {
 
-      PaymentFrequency.build(models.PaymentFrequency.Weekly) mustEqual PaymentFrequency.Weekly
-    }
+      forAll(arbitrary[String], Gen.option(arbitrary[String]), arbitrary[String]) {
+        case (first, middle, last) =>
 
-    "must return Every Four Weeks when given Every Four Weeks" in {
+          val name = models.ChildName(first, middle, last)
+          val result = ChildName.build(name)
 
-      PaymentFrequency.build(models.PaymentFrequency.EveryFourWeeks) mustEqual PaymentFrequency.EveryFourWeeks
-    }
-  }
-  ".writes" - {
-
-    "must write Weekly" in {
-
-      Json.toJson[PaymentFrequency](PaymentFrequency.Weekly) mustEqual JsString("ONCE_A_WEEK")
-    }
-
-    "must write Every Four Weeks" in {
-
-      Json.toJson[PaymentFrequency](PaymentFrequency.EveryFourWeeks) mustEqual JsString("EVERY_4_WEEKS")
+          result mustEqual ChildName(first, middle, last)
+      }
     }
   }
 }

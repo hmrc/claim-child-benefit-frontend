@@ -16,9 +16,12 @@
 
 package models.domain
 
-import models.JourneyModel
+import models.{JourneyModel, NationalityGroupOrdering}
+import models.JourneyModel.Residency.{AlwaysLivedAbroad, AlwaysLivedInUk, LivedInUkAndAbroad}
 import models.domain.Nationality.UkCta
 import play.api.libs.json.{Json, OWrites}
+
+import java.time.LocalDate
 
 sealed trait Claimant
 
@@ -32,19 +35,76 @@ object Claimant {
   }
 
   def build(nino: String, journeyModel: JourneyModel): Claimant = {
-    val ukCta = journeyModel.applicant.nationalities.exists(_.group == models.NationalityGroup.UkCta)
-    val alwaysResident = journeyModel.applicant.residency == JourneyModel.Residency.AlwaysLivedInUk
+    val preferentialNationality: Nationality =
+      Nationality.fromNationalityGroup(
+        journeyModel.applicant
+          .nationalities.map(_.group)
+          .toList
+          .sorted(NationalityGroupOrdering)
+          .head
+        )
+
     val hicbcOptOut = journeyModel.paymentPreference match {
       case _: JourneyModel.PaymentPreference.DoNotPay => true
       case _ => false
     }
 
-    (ukCta, alwaysResident) match {
-      case (true, true) =>
+    (preferentialNationality, journeyModel.applicant.residency) match {
+      case (UkCta, AlwaysLivedInUk) =>
         UkCtaClaimantAlwaysResident(
           nino = nino,
           hmfAbroad = journeyModel.applicant.memberOfHMForcesOrCivilServantAbroad,
           hicbcOptOut = hicbcOptOut
+        )
+
+      case (UkCta, _: AlwaysLivedAbroad) =>
+        UkCtaClaimantNotAlwaysResident(
+          nino = nino,
+          hmfAbroad = journeyModel.applicant.memberOfHMForcesOrCivilServantAbroad,
+          hicbcOptOut = hicbcOptOut,
+          last3MonthsInUK = false
+        )
+
+      case (UkCta, residency: LivedInUkAndAbroad) =>
+        val last3MonthsInUK = residency.arrivalDate.exists(_.isBefore(LocalDate.now.minusMonths(3)))
+
+        UkCtaClaimantNotAlwaysResident(
+          nino = nino,
+          hmfAbroad = journeyModel.applicant.memberOfHMForcesOrCivilServantAbroad,
+          last3MonthsInUK = last3MonthsInUK,
+          hicbcOptOut = hicbcOptOut
+        )
+
+      case (nationality, AlwaysLivedInUk) =>
+
+        NonUkCtaClaimantAlwaysResident(
+          nino = nino,
+          hmfAbroad = journeyModel.applicant.memberOfHMForcesOrCivilServantAbroad,
+          hicbcOptOut = hicbcOptOut,
+          nationality = nationality,
+          rightToReside = false
+        )
+
+      case (nationality, _: AlwaysLivedAbroad) =>
+        NonUkCtaClaimantNotAlwaysResident(
+          nino = nino,
+          hmfAbroad = journeyModel.applicant.memberOfHMForcesOrCivilServantAbroad,
+          hicbcOptOut = hicbcOptOut,
+          nationality = nationality,
+          rightToReside = false,
+          last3MonthsInUK = false
+        )
+
+      case (nationality, residency: LivedInUkAndAbroad) =>
+        val last3MonthsInUK = residency.arrivalDate.exists(_.isBefore(LocalDate.now.minusMonths(3)))
+
+        NonUkCtaClaimantNotAlwaysResident(
+          nino = nino,
+          hmfAbroad = journeyModel.applicant.memberOfHMForcesOrCivilServantAbroad,
+          hicbcOptOut = hicbcOptOut,
+          nationality = nationality,
+          rightToReside = false,
+          last3MonthsInUK = last3MonthsInUK
         )
     }
   }

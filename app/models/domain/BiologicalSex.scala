@@ -31,4 +31,12 @@ object BiologicalSex {
     case Male => JsString("MALE")
     case Unspecified => JsString("UNSPECIFIED")
   }
+
+  def build(biologicalSex: models.ChildBiologicalSex): BiologicalSex = {
+    biologicalSex match {
+      case models.ChildBiologicalSex.Female => Female
+      case models.ChildBiologicalSex.Male => Male
+      case models.ChildBiologicalSex.Unspecified => Unspecified
+    }
+  }
 }

@@ -16,6 +16,7 @@
 
 package models.domain
 
+import models.JourneyModel
 import play.api.libs.json.{Json, OWrites, Writes}
 
 import java.time.LocalDate
@@ -34,6 +35,26 @@ final case class Child(
                       )
 
 object Child {
+
+  def build(child: JourneyModel.Child): Child = {
+
+    val adoptionStatus =
+      child.adoptingThroughLocalAuthority ||
+        child.relationshipToApplicant == models.ApplicantRelationshipToChild.AdoptedChild
+
+    Child(
+      name = ChildName.build(child.name),
+      gender = BiologicalSex.build(child.biologicalSex),
+      dateOfBirth = child.dateOfBirth,
+      birthRegistrationNumber = child.birthCertificateNumber.map(_.brmsFormat),
+      crn = None,
+      countryOfRegistration = CountryOfRegistration.build(child.countryOfRegistration),
+      dateOfBirthVerified = false,
+      livingWithClaimant = child.guardian.isEmpty,
+      claimantIsParent = child.relationshipToApplicant != models.ApplicantRelationshipToChild.Other,
+      adoptionStatus = adoptionStatus
+    )
+  }
 
   private implicit val dateWrites: Writes[LocalDate] = CbsDateFormats.localDateWrites
 

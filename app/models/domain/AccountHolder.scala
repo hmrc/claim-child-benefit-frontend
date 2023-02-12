@@ -16,6 +16,8 @@
 
 package models.domain
 
+import models.BankAccountHolder
+import models.JourneyModel.AccountDetailsWithHolder
 import play.api.libs.json.{Json, OWrites}
 
 sealed trait AccountHolder
@@ -25,6 +27,48 @@ object AccountHolder {
   implicit lazy val writes: OWrites[AccountHolder] = OWrites {
     case x: OtherAccountHolder => Json.toJsObject(x)(OtherAccountHolder.writes)
     case ClaimantAccountHolder => Json.obj("accountHolderType" -> Json.toJson[AccountHolderType](AccountHolderType.Claimant))
+  }
+
+  def build(accountDetailsWithHolder: AccountDetailsWithHolder): AccountHolder = accountDetailsWithHolder match {
+    case models.JourneyModel.BankAccountWithHolder(holder, details) =>
+      holder match {
+        case BankAccountHolder.Applicant =>
+          ClaimantAccountHolder
+
+        case BankAccountHolder.JointNames =>
+          OtherAccountHolder(
+            accountHolderType = AccountHolderType.Joint,
+            forenames = details.firstName,
+            surname = details.lastName
+          )
+
+        case BankAccountHolder.SomeoneElse =>
+          OtherAccountHolder(
+            accountHolderType = AccountHolderType.SomeoneElse,
+            forenames = details.firstName,
+            surname = details.lastName
+          )
+      }
+
+    case models.JourneyModel.BuildingSocietyWithHolder(holder, details) =>
+      holder match {
+        case BankAccountHolder.Applicant =>
+          ClaimantAccountHolder
+
+        case BankAccountHolder.JointNames =>
+          OtherAccountHolder(
+            accountHolderType = AccountHolderType.Joint,
+            forenames = details.firstName,
+            surname = details.lastName
+          )
+
+        case BankAccountHolder.SomeoneElse =>
+          OtherAccountHolder(
+            accountHolderType = AccountHolderType.SomeoneElse,
+            forenames = details.firstName,
+            surname = details.lastName
+          )
+      }
   }
 }
 

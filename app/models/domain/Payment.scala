@@ -16,6 +16,8 @@
 
 package models.domain
 
+import models.JourneyModel
+import models.JourneyModel.PaymentPreference
 import play.api.libs.json.{Json, OWrites}
 
 final case class Payment(
@@ -24,6 +26,20 @@ final case class Payment(
                         )
 
 object Payment {
+
+  def build(paymentPreference: PaymentPreference): Option[Payment] = paymentPreference match {
+    case JourneyModel.PaymentPreference.DoNotPay(_) =>
+      None
+
+    case JourneyModel.PaymentPreference.ExistingAccount(_, frequency) =>
+      Some(Payment(PaymentFrequency.build(frequency), None))
+
+    case x: JourneyModel.PaymentPreference.Weekly =>
+      Some(Payment(PaymentFrequency.Weekly, PaymentDetails.build(x)))
+
+    case x: JourneyModel.PaymentPreference.EveryFourWeeks =>
+      Some(Payment(PaymentFrequency.EveryFourWeeks, PaymentDetails.build(x)))
+  }
 
   implicit lazy val writes: OWrites[Payment] = Json.writes
 }

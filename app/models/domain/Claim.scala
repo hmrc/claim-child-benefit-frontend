@@ -36,7 +36,13 @@ object Claim {
 
   implicit lazy val writes: OWrites[Claim] = Json.writes
 
-  def build(model: JourneyModel): Claim = ???
-
-
+  def build(nino: String, model: JourneyModel): Claim =
+    Claim(
+      dateOfClaim = LocalDate.now,
+      claimant = Claimant.build(nino, model),
+      partner = model.relationship.partner.flatMap(Partner.build),
+      payment = Payment.build(model.paymentPreference),
+      children = model.children.toList.map(Child.build),
+      otherEligibilityFailure = false
+    )
 }

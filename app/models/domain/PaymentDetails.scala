@@ -16,6 +16,8 @@
 
 package models.domain
 
+import models.JourneyModel.{BankAccountWithHolder, BuildingSocietyWithHolder, PaymentPreference}
+import models.JourneyModel.PaymentPreference._
 import play.api.libs.json.{Json, OWrites}
 
 sealed trait PaymentDetails
@@ -25,6 +27,44 @@ object PaymentDetails {
   implicit lazy val writes: OWrites[PaymentDetails] = OWrites {
     case x: BankDetails            => Json.toJsObject(x)(BankDetails.writes)
     case x: BuildingSocietyDetails => Json.toJsObject(x)(BuildingSocietyDetails.writes)
+  }
+
+  def build(paymentPreference: PaymentPreference): Option[PaymentDetails] = paymentPreference match {
+    case DoNotPay(_) =>
+      None
+
+    case ExistingAccount(_, _) =>
+      None
+
+    case Weekly(accountDetails, _) =>
+      accountDetails.map {
+        case x: BuildingSocietyWithHolder =>
+          BuildingSocietyDetails(
+            accountHolder = AccountHolder.build(x),
+            buildingSocietyDetails = BuildingSocietyAccount(x.details.buildingSociety.id, x.details.rollNumber)
+          )
+
+        case x: BankAccountWithHolder =>
+          BankDetails(
+            accountHolder = AccountHolder.build(x),
+            bankAccount = BankAccount(x.details.sortCodeTrimmed, x.details.accountNumberPadded)
+          )
+      }
+
+    case EveryFourWeeks(accountDetails, _) =>
+      accountDetails.map {
+        case x: BuildingSocietyWithHolder =>
+          BuildingSocietyDetails(
+            accountHolder = AccountHolder.build(x),
+            buildingSocietyDetails = BuildingSocietyAccount(x.details.buildingSociety.id, x.details.rollNumber)
+          )
+
+        case x: BankAccountWithHolder =>
+          BankDetails(
+            accountHolder = AccountHolder.build(x),
+            bankAccount = BankAccount(x.details.sortCodeTrimmed, x.details.accountNumberPadded)
+          )
+      }
   }
 }
 

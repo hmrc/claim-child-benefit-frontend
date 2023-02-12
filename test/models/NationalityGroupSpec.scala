@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package models.domain
+package models
 
-import play.api.libs.json.{Json, OWrites}
+import models.NationalityGroup._
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
 
-final case class ChildName(forenames: String, middleNames: Option[String], surname: String)
+class NationalityGroupSpec extends AnyFreeSpec with Matchers {
 
-object ChildName {
+  "NationalityGroupOrder" - {
 
-  def build(name: models.ChildName): ChildName =
-    ChildName(
-      name.firstName,
-      name.middleNames,
-      name.lastName
-    )
+    "must sort nationality groups in order UkCta, Eea, NonEea" in {
 
-  implicit lazy val writes: OWrites[ChildName] = Json.writes
+      val unsorted = List[NationalityGroup](NonEea, Eea, UkCta)
+      unsorted.sorted(NationalityGroupOrdering) mustEqual List(UkCta, Eea, NonEea)
+    }
+  }
 }
