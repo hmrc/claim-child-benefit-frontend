@@ -47,7 +47,8 @@ object NPSAddress {
 }
 
 final case class DesignatoryDetails(
-                                     name: Option[AdultName],
+                                     realName: Option[AdultName],
+                                     knownAsName: Option[AdultName],
                                      residentialAddress: Option[NPSAddress],
                                      correspondenceAddress: Option[NPSAddress]
                                    )
