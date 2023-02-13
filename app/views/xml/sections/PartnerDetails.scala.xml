@@ -34,8 +34,25 @@
 
                     @line("pdf.nationality", model.nationalities.toList.map(_.name).mkString(" - "))
 
-                    @model.memberOfHMForcesOrCivilServantAbroad.map { answer =>
-                        @line("pdf.hmfOrCivilServant", booleanToYesNo(answer))
+                    <fo:block margin-bottom="3mm">
+                        <fo:block font-weight="bold">@messages("pdf.employmentStatus")</fo:block>
+                        @model.employmentStatus.map { status =>
+                        <fo:block width="8cm" wrap-option="wrap">@messages(s"employmentStatus.${status.toString}")</fo:block>
+                        }
+                    </fo:block>
+
+                    @line("pdf.hmfOrCivilServant", booleanToYesNo(model.memberOfHMForcesOrCivilServantAbroad))
+
+                    @line("pdf.workedAbroad", booleanToYesNo(model.countriesWorked.nonEmpty))
+
+                    @if(model.countriesWorked.nonEmpty) {
+                        @line("pdf.countriesWorked", model.countriesWorked.map(_.name).mkString(", "))
+                    }
+
+                    @line("pdf.receivedBenefitsAbroad", booleanToYesNo(model.countriesReceivedBenefits.nonEmpty))
+
+                    @if(model.countriesReceivedBenefits.nonEmpty) {
+                        @line("pdf.countriesReceivedBenefits", model.countriesReceivedBenefits.map(_.name).mkString(", "))
                     }
 
                     @line("pdf.claimingChildBenefit", messages(s"partnerClaimingChildBenefit.${model.currentlyClaimingChildBenefit.toString}"))

@@ -17,7 +17,7 @@
 package pages.partner
 
 import controllers.partner.routes
-import models.Index
+import models.{Index, UserAnswers}
 import pages.{AddItemPage, Page, QuestionPage, Waypoints}
 import play.api.libs.json.{JsObject, JsPath}
 import play.api.mvc.Call
@@ -41,4 +41,20 @@ final case class AddCountryPartnerReceivedBenefitsPage(override val index: Optio
     routes.AddCountryPartnerReceivedBenefitsController.onPageLoad(waypoints)
 
   override def deriveNumberOfItems: Derivable[Seq[JsObject], Int] = DeriveNumberOfCountriesPartnerReceivedBenefits
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true =>
+        index
+        .map(i => CountryPartnerReceivedBenefitsPage(Index(i.position + 1)))
+        .getOrElse {
+          answers
+            .get(deriveNumberOfItems)
+            .map(n => CountryPartnerReceivedBenefitsPage(Index(n)))
+            .orRecover
+        }
+
+      case false =>
+        PartnerClaimingChildBenefitPage
+    }.orRecover
 }

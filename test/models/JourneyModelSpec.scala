@@ -78,6 +78,7 @@ class JourneyModelSpec
         .set(ApplicantDateOfBirthPage, now).success.value
         .set(ApplicantPhoneNumberPage, phoneNumber).success.value
         .set(ApplicantNationalityPage(Index(0)), applicantNationality).success.value
+        .set(ApplicantIsHmfOrCivilServantPage, false).success.value
         .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
         .set(ApplicantCurrentUkAddressPage, currentUkAddress).success.value
         .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value

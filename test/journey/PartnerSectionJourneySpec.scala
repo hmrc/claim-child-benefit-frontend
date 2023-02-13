@@ -18,7 +18,7 @@ package journey
 
 import generators.ModelGenerators
 import models.RelationshipStatus.{Cohabiting, Divorced, Married, Separated, Single, Widowed}
-import models.{AdultName, ChildName, Index, Nationality, PartnerClaimingChildBenefit}
+import models.{AdultName, ChildName, Country, EmploymentStatus, Index, Nationality, PartnerClaimingChildBenefit}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
@@ -34,6 +34,7 @@ class PartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
   private val childName = ChildName("first", None, "last")
   private def nino = arbitrary[Nino].sample.value
   private def nationality = Gen.oneOf(Nationality.allNationalities).sample.value
+  private def country = Gen.oneOf(Country.internationalCountries).sample.value
 
   "users who say they are Married" - {
 
@@ -47,7 +48,10 @@ class PartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
           submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
           submitAnswer(PartnerNationalityPage(Index(0)), nationality),
           submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
+          submitAnswer(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses),
           submitAnswer(PartnerIsHmfOrCivilServantPage, false),
+          submitAnswer(PartnerWorkedAbroadPage, false),
+          submitAnswer(PartnerReceivedBenefitsAbroadPage, false),
           submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
           pageMustBe(CheckPartnerDetailsPage)
         )
@@ -67,7 +71,10 @@ class PartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
           submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
           submitAnswer(PartnerNationalityPage(Index(0)), nationality),
           submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
+          submitAnswer(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses),
           submitAnswer(PartnerIsHmfOrCivilServantPage, false),
+          submitAnswer(PartnerWorkedAbroadPage, false),
+          submitAnswer(PartnerReceivedBenefitsAbroadPage, false),
           submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
           pageMustBe(CheckPartnerDetailsPage)
         )
@@ -110,7 +117,10 @@ class PartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
         submitAnswer(PartnerDateOfBirthPage, LocalDate.now),
         submitAnswer(PartnerNationalityPage(Index(0)), nationality),
         submitAnswer(AddPartnerNationalityPage(Some(Index(0))), false),
+        submitAnswer(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses),
         submitAnswer(PartnerIsHmfOrCivilServantPage, false),
+        submitAnswer(PartnerWorkedAbroadPage, false),
+        submitAnswer(PartnerReceivedBenefitsAbroadPage, false),
         submitAnswer(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming),
         pageMustBe(CheckPartnerDetailsPage),
         next,
@@ -138,7 +148,7 @@ class PartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
           submitAnswer(AddPartnerNationalityPage(Some(Index(0))), true),
           submitAnswer(PartnerNationalityPage(Index(1)), Nationality.allNationalities.head),
           submitAnswer(AddPartnerNationalityPage(Some(Index(1))), false),
-          pageMustBe(PartnerIsHmfOrCivilServantPage)
+          pageMustBe(PartnerEmploymentStatusPage)
         )
     }
 
@@ -159,6 +169,100 @@ class PartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
     }
   }
 
+  "users who have worked abroad" - {
+
+    "must be asked for as many countries as necessary" in {
+
+      startingFrom(PartnerWorkedAbroadPage)
+        .run(
+          submitAnswer(PartnerWorkedAbroadPage, true),
+          submitAnswer(CountryPartnerWorkedPage(Index(0)), country),
+          submitAnswer(AddCountryPartnerWorkedPage(Some(Index(0))), true),
+          submitAnswer(CountryPartnerWorkedPage(Index(1)), country),
+          submitAnswer(AddCountryPartnerWorkedPage(Some(Index(1))), false),
+          pageMustBe(PartnerReceivedBenefitsAbroadPage)
+        )
+    }
+
+    "must be able to remove countries, leaving at least one" in {
+
+      startingFrom(PartnerWorkedAbroadPage)
+        .run(
+          submitAnswer(PartnerWorkedAbroadPage, true),
+          submitAnswer(CountryPartnerWorkedPage(Index(0)), country),
+          submitAnswer(AddCountryPartnerWorkedPage(Some(Index(0))), true),
+          submitAnswer(CountryPartnerWorkedPage(Index(1)), country),
+          goTo(RemoveCountryPartnerWorkedPage(Index(1))),
+          removeAddToListItem(CountryPartnerWorkedPage(Index(1))),
+          submitAnswer(AddCountryPartnerWorkedPage(), false),
+          pageMustBe(PartnerReceivedBenefitsAbroadPage)
+        )
+    }
+    
+    "must be able to remove them all and be asked again if they have worked abroad" in {
+
+      startingFrom(PartnerWorkedAbroadPage)
+        .run(
+          submitAnswer(PartnerWorkedAbroadPage, true),
+          submitAnswer(CountryPartnerWorkedPage(Index(0)), country),
+          submitAnswer(AddCountryPartnerWorkedPage(Some(Index(0))), true),
+          submitAnswer(CountryPartnerWorkedPage(Index(1)), country),
+          goTo(RemoveCountryPartnerWorkedPage(Index(1))),
+          removeAddToListItem(CountryPartnerWorkedPage(Index(1))),
+          goTo(RemoveCountryPartnerWorkedPage(Index(0))),
+          removeAddToListItem(CountryPartnerWorkedPage(Index(0))),
+          pageMustBe(PartnerWorkedAbroadPage)
+        )
+    }
+  }
+
+  "users who have received benefits abroad" - {
+
+    "must be asked for as many countries as necessary" in {
+
+      startingFrom(PartnerReceivedBenefitsAbroadPage)
+        .run(
+          submitAnswer(PartnerReceivedBenefitsAbroadPage, true),
+          submitAnswer(CountryPartnerReceivedBenefitsPage(Index(0)), country),
+          submitAnswer(AddCountryPartnerReceivedBenefitsPage(Some(Index(0))), true),
+          submitAnswer(CountryPartnerReceivedBenefitsPage(Index(1)), country),
+          submitAnswer(AddCountryPartnerReceivedBenefitsPage(Some(Index(1))), false),
+          pageMustBe(PartnerClaimingChildBenefitPage)
+        )
+    }
+
+    "must be able to remove countries, leaving at least one" in {
+
+      startingFrom(PartnerReceivedBenefitsAbroadPage)
+        .run(
+          submitAnswer(PartnerReceivedBenefitsAbroadPage, true),
+          submitAnswer(CountryPartnerReceivedBenefitsPage(Index(0)), country),
+          submitAnswer(AddCountryPartnerReceivedBenefitsPage(Some(Index(0))), true),
+          submitAnswer(CountryPartnerReceivedBenefitsPage(Index(1)), country),
+          goTo(RemoveCountryPartnerReceivedBenefitsPage(Index(1))),
+          removeAddToListItem(CountryPartnerReceivedBenefitsPage(Index(1))),
+          submitAnswer(AddCountryPartnerReceivedBenefitsPage(), false),
+          pageMustBe(PartnerClaimingChildBenefitPage)
+        )
+    }
+
+    "must be able to remove them all and be asked again if they have received benefits abroad" in {
+
+      startingFrom(PartnerReceivedBenefitsAbroadPage)
+        .run(
+          submitAnswer(PartnerReceivedBenefitsAbroadPage, true),
+          submitAnswer(CountryPartnerReceivedBenefitsPage(Index(0)), country),
+          submitAnswer(AddCountryPartnerReceivedBenefitsPage(Some(Index(0))), true),
+          submitAnswer(CountryPartnerReceivedBenefitsPage(Index(1)), country),
+          goTo(RemoveCountryPartnerReceivedBenefitsPage(Index(1))),
+          removeAddToListItem(CountryPartnerReceivedBenefitsPage(Index(1))),
+          goTo(RemoveCountryPartnerReceivedBenefitsPage(Index(0))),
+          removeAddToListItem(CountryPartnerReceivedBenefitsPage(Index(0))),
+          pageMustBe(PartnerReceivedBenefitsAbroadPage)
+        )
+    }
+  }
+  
   "users whose partner is entitled to Child Benefit or waiting to hear must be asked for their partner's eldest child's details then go to the task list" in {
 
     import PartnerClaimingChildBenefit._

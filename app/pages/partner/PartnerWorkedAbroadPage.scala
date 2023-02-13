@@ -17,10 +17,11 @@
 package pages.partner
 
 import controllers.partner.routes
-import models.UserAnswers
+import models.{Index, UserAnswers}
 import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+import queries.AllCountriesPartnerWorked
 
 import scala.util.Try
 
@@ -32,4 +33,17 @@ case object PartnerWorkedAbroadPage extends QuestionPage[Boolean] {
 
   override def route(waypoints: Waypoints): Call =
     routes.PartnerWorkedAbroadController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true => CountryPartnerWorkedPage(Index(0))
+      case false => PartnerReceivedBenefitsAbroadPage
+    }.orRecover
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    if(value.contains(false)) {
+      userAnswers.remove(AllCountriesPartnerWorked)
+    } else {
+      super.cleanup(value, userAnswers)
+    }
 }

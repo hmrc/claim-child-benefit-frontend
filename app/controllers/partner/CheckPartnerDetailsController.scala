@@ -53,7 +53,12 @@ class CheckPartnerDetailsController  @Inject()(
           PartnerNinoSummary.row(request.userAnswers, waypoints, thisPage),
           PartnerDateOfBirthSummary.row(request.userAnswers, waypoints, thisPage),
           AddPartnerNationalitySummary.checkAnswersRow(request.userAnswers, waypoints, thisPage),
+          PartnerEmploymentStatusSummary.row(request.userAnswers, waypoints, thisPage),
           PartnerIsHmfOrCivilServantSummary.row(request.userAnswers, waypoints, thisPage),
+          PartnerWorkedAbroadSummary.row(request.userAnswers, waypoints, thisPage),
+          AddCountryPartnerWorkedSummary.checkAnswersRow(request.userAnswers, waypoints, thisPage),
+          PartnerReceivedBenefitsAbroadSummary.row(request.userAnswers, waypoints, thisPage),
+          AddCountryPartnerReceivedBenefitsSummary.checkAnswersRow(request.userAnswers, waypoints, thisPage),
           PartnerClaimingChildBenefitSummary.row(request.userAnswers, waypoints, thisPage),
           PartnerEldestChildNameSummary.row(request.userAnswers, waypoints, thisPage),
           PartnerEldestChildDateOfBirthSummary.row(request.userAnswers, waypoints, thisPage)

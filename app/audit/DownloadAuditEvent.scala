@@ -59,7 +59,10 @@ object DownloadAuditEvent {
             nationalInsuranceNumber              = partner.nationalInsuranceNumber,
             currentlyClaimingChildBenefit        = partner.currentlyClaimingChildBenefit.toString,
             memberOfHMForcesOrCivilServantAbroad = partner.memberOfHMForcesOrCivilServantAbroad,
-            eldestChild                          = partner.eldestChild.map(convertEldestChild)
+            eldestChild                          = partner.eldestChild.map(convertEldestChild),
+            countriesWorked                      = partner.countriesWorked.map(_.name),
+            countriesReceivedBenefits            = partner.countriesReceivedBenefits.map(_.name),
+            employmentStatus                     = partner.employmentStatus.map(_.toString)
           )
         }
       ),
@@ -287,7 +290,7 @@ object DownloadAuditEvent {
                                              telephoneNumber: String,
                                              nationalities: Seq[String],
                                              residency: Residency,
-                                             memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
+                                             memberOfHMForcesOrCivilServantAbroad: Boolean,
                                              currentlyClaimingChildBenefit: String
                                            )
   object Applicant {
@@ -300,8 +303,11 @@ object DownloadAuditEvent {
                                            nationalities: Seq[String],
                                            currentlyClaimingChildBenefit: String,
                                            nationalInsuranceNumber: Option[String],
-                                           memberOfHMForcesOrCivilServantAbroad: Option[Boolean],
-                                           eldestChild: Option[EldestChild]
+                                           memberOfHMForcesOrCivilServantAbroad: Boolean,
+                                           eldestChild: Option[EldestChild],
+                                           countriesWorked: Seq[String],
+                                           countriesReceivedBenefits: Seq[String],
+                                           employmentStatus: Set[String]
                                          )
   object Partner {
     implicit lazy val writes: Writes[Partner] = Json.writes

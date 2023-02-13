@@ -23,3 +23,5 @@ object ChildPreviousNameSection extends AddToListSection
 object PreviousFamilyNamesSection extends AddToListSection
 object ApplicantNationalitiesSection extends AddToListSection
 object PartnerNationalitiesSection extends AddToListSection
+object CountriesPartnerWorkedSection extends AddToListSection
+object CountriesPartnerReceivedBenefitsSection extends AddToListSection
