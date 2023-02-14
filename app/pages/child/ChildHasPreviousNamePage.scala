@@ -37,7 +37,7 @@ final case class ChildHasPreviousNamePage(index: Index) extends ChildQuestionPag
   override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case true => ChildNameChangedByDeedPollPage(index)
-      case false => ChildBiologicalSexPage(index)
+      case false => ChildDateOfBirthPage(index)
     }.orRecover
 
 

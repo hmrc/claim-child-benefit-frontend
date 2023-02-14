@@ -40,8 +40,8 @@ class ChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Model
       .run(
         submitAnswer(ChildNamePage(Index(0)), childName),
         submitAnswer(ChildHasPreviousNamePage(Index(0)), false),
-        submitAnswer(ChildBiologicalSexPage(Index(0)), sex),
         submitAnswer(ChildDateOfBirthPage(Index(0)), LocalDate.now),
+        submitAnswer(ChildBiologicalSexPage(Index(0)), sex),
         pageMustBe(ChildBirthRegistrationCountryPage(Index(0)))
       )
   }
@@ -59,7 +59,7 @@ class ChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Model
           submitAnswer(AddChildPreviousNamePage(Index(0), Some(Index(0))), true),
           submitAnswer(ChildPreviousNamePage(Index(0), Index(1)), childName),
           submitAnswer(AddChildPreviousNamePage(Index(0), Some(Index(1))), false),
-          pageMustBe(ChildBiologicalSexPage(Index(0)))
+          pageMustBe(ChildDateOfBirthPage(Index(0)))
         )
     }
 
