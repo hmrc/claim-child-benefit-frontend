@@ -108,4 +108,10 @@ trait RadiosFluency {
     def inline(): Radios =
       radios.withCssClass("govuk-radios--inline")
   }
+
+  implicit class FluentRadioItem(item: RadioItem) {
+
+    def withHint(hint: Hint): RadioItem =
+      item copy (hint = Some(hint))
+  }
 }

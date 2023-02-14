@@ -19,7 +19,8 @@ package models
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
-
+import viewmodels.govuk.hint._
+import viewmodels.govuk.radios._
 sealed trait ChildBiologicalSex
 
 object ChildBiologicalSex extends Enumerable.Implicits {
@@ -32,14 +33,23 @@ object ChildBiologicalSex extends Enumerable.Implicits {
     Female, Male, Unspecified
   )
 
-  def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
-    case (value, index) =>
-      RadioItem(
-        content = Text(messages(s"childBiologicalSex.${value.toString}")),
-        value   = Some(value.toString),
-        id      = Some(s"value_$index")
-      )
-  }
+  def options(implicit messages: Messages): Seq[RadioItem] = Seq(
+    RadioItem(
+      content = Text(messages(s"childBiologicalSex.${Female.toString}")),
+      value   = Some(Female.toString),
+      id      = Some("value_0")
+    ),
+    RadioItem(
+      content = Text(messages(s"childBiologicalSex.${Male.toString}")),
+      value = Some(Male.toString),
+      id = Some("value_1")
+    ),
+    RadioItem(
+      content = Text(messages(s"childBiologicalSex.${Unspecified.toString}")),
+      value = Some(Unspecified.toString),
+      id = Some("value_2")
+    ).withHint(HintViewModel(Text(messages("childBiologicalSex.unspecified.hint"))))
+  )
 
   implicit val enumerable: Enumerable[ChildBiologicalSex] =
     Enumerable(values.map(v => v.toString -> v): _*)

@@ -19,12 +19,12 @@ package controllers.partner
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.partner.PartnerEldestChildDateOfBirthFormProvider
-import models.AdultName
+import models.{AdultName, ChildName}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.EmptyWaypoints
-import pages.partner.{PartnerEldestChildDateOfBirthPage, PartnerNamePage}
+import pages.partner.{PartnerEldestChildDateOfBirthPage, PartnerEldestChildNamePage, PartnerNamePage}
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
@@ -37,7 +37,7 @@ import scala.concurrent.Future
 
 class PartnerEldestChildDateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
-  private val name = AdultName(None, "first", None, "last")
+  private val name = ChildName("first", None, "last")
   val formProvider = new PartnerEldestChildDateOfBirthFormProvider(clockAtFixedInstant)
   private def form = formProvider(name.firstName)
   private val waypoints = EmptyWaypoints
@@ -46,7 +46,7 @@ class PartnerEldestChildDateOfBirthControllerSpec extends SpecBase with MockitoS
 
   lazy val partnerEldestChildDateOfBirthRoute = routes.PartnerEldestChildDateOfBirthController.onPageLoad(waypoints).url
 
-  val baseAnswers = emptyUserAnswers.set(PartnerNamePage, name).success.value
+  val baseAnswers = emptyUserAnswers.set(PartnerEldestChildNamePage, name).success.value
 
   def getRequest(): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, partnerEldestChildDateOfBirthRoute)

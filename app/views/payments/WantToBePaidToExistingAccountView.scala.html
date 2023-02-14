@@ -36,7 +36,15 @@
 
         <h1 class="govuk-heading-xl">@messages("wantToBePaidToExistingAccount.heading")</h1>
 
-        <p class="govuk-body">@messages("wantToBePaidToExistingAccount.guidance")</p>
+        <p class="govuk-body">@messages("wantToBePaidToExistingAccount.p1")</p>
+
+        <div class="govuk-warning-text">
+            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+            <strong class="govuk-warning-text__text">
+                <span class="govuk-warning-text__assistive">@messages("site.warning")</span>
+                @messages("wantToBePaidToExistingAccount.p2")
+            </strong>
+        </div>
 
         @govukRadios(
             RadiosViewModel.yesNo(
