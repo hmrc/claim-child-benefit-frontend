@@ -35,14 +35,10 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">@messages("partnerWorkedAbroad.heading", partnerFirstName)</h1>
-
-        <p class="govuk-body">@messages("partnerWorkedAbroad.p1")</p>
-
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("partnerWorkedAbroad.heading", partnerFirstName)).visuallyHidden()
+                legend = LegendViewModel(messages("partnerWorkedAbroad.heading", partnerFirstName)).asPageHeading()
             )
         )
 

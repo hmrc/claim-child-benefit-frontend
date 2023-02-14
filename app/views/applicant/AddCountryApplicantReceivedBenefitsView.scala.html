@@ -55,10 +55,14 @@
 
         @addToList(countries, Long, "addCountryApplicantReceivedBenefits.change.hidden", "addCountryApplicantReceivedBenefits.remove.hidden")
 
+        <h2 class="govuk-heading-m">@messages("addCountryApplicantReceivedBenefits.addAnother")</h2>
+
+        <p class="govuk-body">@messages("addCountryApplicantReceivedBenefits.p1")</p>
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("addCountryApplicantReceivedBenefits.addAnother")).withSize(LegendSize.Medium)
+                legend = LegendViewModel(messages("addCountryApplicantReceivedBenefits.addAnother")).visuallyHidden()
             )
         )
 

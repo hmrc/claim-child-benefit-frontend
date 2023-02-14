@@ -25,7 +25,7 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints, guidance: Option[String])(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("bankAccountDetails.title"), section = Some(messages("section.payments")))) {
 
@@ -36,6 +36,10 @@
         }
 
         <h1 class="govuk-heading-xl">@messages("bankAccountDetails.heading")</h1>
+
+        @guidance.map { x =>
+          <p class="govuk-body">@x</p>
+        }
 
         @govukInput(
             InputViewModel(

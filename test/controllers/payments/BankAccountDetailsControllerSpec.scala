@@ -20,12 +20,12 @@ import base.SpecBase
 import config.FeatureFlags
 import controllers.{routes => baseRoutes}
 import forms.payments.BankAccountDetailsFormProvider
-import models.{BankAccountDetails, ReputationResponseEnum, ValidateBankDetailsResponseModel}
+import models.{BankAccountDetails, BankAccountHolder, ReputationResponseEnum, ValidateBankDetailsResponseModel}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{never, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.EmptyWaypoints
-import pages.payments.BankAccountDetailsPage
+import pages.payments.{BankAccountDetailsPage, BankAccountHolderPage}
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -43,14 +43,15 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val bankAccountDetailsRoute = routes.BankAccountDetailsController.onPageLoad(waypoints).url
 
+  private val baseAnswers = emptyUserAnswers.set(BankAccountHolderPage, BankAccountHolder.Applicant).success.value
   private val validAnswer = BankAccountDetails("first", "last", "123456", "00123456")
-  private val userAnswers = emptyUserAnswers.set(BankAccountDetailsPage, validAnswer).success.value
+  private val userAnswers = baseAnswers.set(BankAccountDetailsPage, validAnswer).success.value
 
   "BankAccountDetails Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, bankAccountDetailsRoute)
@@ -60,7 +61,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, None)(request, messages(application)).toString
       }
     }
 
@@ -76,7 +77,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints, None)(request, messages(application)).toString
       }
     }
 
@@ -100,7 +101,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
         when(mockFeatureFlags.validateBankDetails) thenReturn true
 
         val application =
-          applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          applicationBuilder(userAnswers = Some(baseAnswers))
             .overrides(
               bind[UserDataService].toInstance(mockUserDataService),
               bind[BarsService].toInstance(mockBarsService),
@@ -114,10 +115,10 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
               .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"))
 
           val result = route(application, request).value
-          val expectedAnswers = emptyUserAnswers.set(BankAccountDetailsPage, validAnswer).success.value
+          val expectedAnswers = baseAnswers.set(BankAccountDetailsPage, validAnswer).success.value
 
           status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+          redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, baseAnswers, expectedAnswers).url
           verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
         }
       }
@@ -140,7 +141,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
         when(mockFeatureFlags.validateBankDetails) thenReturn true
 
         val application =
-          applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          applicationBuilder(userAnswers = Some(baseAnswers))
             .overrides(
               bind[UserDataService].toInstance(mockUserDataService),
               bind[BarsService].toInstance(mockBarsService),
@@ -154,10 +155,10 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
               .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"))
 
           val result = route(application, request).value
-          val expectedAnswers = emptyUserAnswers.set(BankAccountDetailsPage, validAnswer).success.value
+          val expectedAnswers = baseAnswers.set(BankAccountDetailsPage, validAnswer).success.value
 
           status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+          redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, baseAnswers, expectedAnswers).url
           verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
         }
       }
@@ -173,7 +174,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
         when(mockFeatureFlags.validateBankDetails) thenReturn true
 
         val application =
-          applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          applicationBuilder(userAnswers = Some(baseAnswers))
             .overrides(
               bind[UserDataService].toInstance(mockUserDataService),
               bind[BarsService].toInstance(mockBarsService),
@@ -187,10 +188,10 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
               .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"))
 
           val result = route(application, request).value
-          val expectedAnswers = emptyUserAnswers.set(BankAccountDetailsPage, validAnswer).success.value
+          val expectedAnswers = baseAnswers.set(BankAccountDetailsPage, validAnswer).success.value
 
           status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+          redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, baseAnswers, expectedAnswers).url
           verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
         }
       }
@@ -208,7 +209,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
         when(mockFeatureFlags.validateBankDetails) thenReturn false
 
         val application =
-          applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          applicationBuilder(userAnswers = Some(baseAnswers))
             .overrides(
               bind[UserDataService].toInstance(mockUserDataService),
               bind[BarsService].toInstance(mockBarsService),
@@ -222,10 +223,10 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
               .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"))
 
           val result = route(application, request).value
-          val expectedAnswers = emptyUserAnswers.set(BankAccountDetailsPage, validAnswer).success.value
+          val expectedAnswers = baseAnswers.set(BankAccountDetailsPage, validAnswer).success.value
 
           status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+          redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, baseAnswers, expectedAnswers).url
           verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
           verify(mockBarsService, never()).validateBankDetails(any())(any(), any())
         }
@@ -234,7 +235,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request =
@@ -248,7 +249,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, None)(request, messages(application)).toString
       }
     }
 
@@ -266,7 +267,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
       when(mockBarsService.validateBankDetails(any())(any(), any())) thenReturn Future.successful(Some(invalidDetailsResponse))
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
             bind[BarsService].toInstance(mockBarsService)
           )
@@ -297,7 +298,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
       when(mockBarsService.validateBankDetails(any())(any(), any())) thenReturn Future.successful(Some(invalidDetailsResponse))
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
             bind[BarsService].toInstance(mockBarsService)
           )
@@ -328,7 +329,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
       when(mockBarsService.validateBankDetails(any())(any(), any())) thenReturn Future.successful(Some(invalidDetailsResponse))
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
             bind[BarsService].toInstance(mockBarsService)
           )
@@ -359,7 +360,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar {
       when(mockBarsService.validateBankDetails(any())(any(), any())) thenReturn Future.successful(Some(invalidDetailsResponse))
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
             bind[BarsService].toInstance(mockBarsService)
           )

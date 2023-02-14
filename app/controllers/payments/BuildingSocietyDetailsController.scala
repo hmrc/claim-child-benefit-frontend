@@ -17,11 +17,13 @@
 package controllers.payments
 
 import config.FeatureFlags
+import controllers.AnswerExtractor
 import controllers.actions._
 import forms.payments.BuildingSocietyDetailsFormProvider
+import models.BankAccountHolder
 import pages.Waypoints
-import pages.payments.BuildingSocietyDetailsPage
-import play.api.i18n.{I18nSupport, MessagesApi}
+import pages.payments.{BankAccountHolderPage, BuildingSocietyDetailsPage}
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{BarsService, UserDataService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -39,34 +41,54 @@ class BuildingSocietyDetailsController @Inject()(
                                               formProvider: BuildingSocietyDetailsFormProvider,
                                               val controllerComponents: MessagesControllerComponents,
                                               view: BuildingSocietyDetailsView
-                                            )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                            )(implicit ec: ExecutionContext)
+  extends FrontendBaseController
+    with I18nSupport
+    with AnswerExtractor {
 
   val form = formProvider()
 
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
+      getAnswer(BankAccountHolderPage) {
+        accountHolder =>
 
-      val preparedForm = request.userAnswers.get(BuildingSocietyDetailsPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
+          val maybeGuidance = guidance(accountHolder)
+
+          val preparedForm = request.userAnswers.get(BuildingSocietyDetailsPage) match {
+            case None => form
+            case Some(value) => form.fill(value)
+          }
+
+          Ok(view(preparedForm, waypoints, maybeGuidance))
       }
-
-      Ok(view(preparedForm, waypoints))
   }
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      getAnswerAsync(BankAccountHolderPage) {
+        accountHolder =>
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints))),
+          val maybeGuidance = guidance(accountHolder)
 
-        value => {
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(BuildingSocietyDetailsPage, value))
-            _ <- userDataService.set(updatedAnswers)
-          } yield Redirect(BuildingSocietyDetailsPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
-        }
-      )
+          form.bindFromRequest().fold(
+            formWithErrors =>
+              Future.successful(BadRequest(view(formWithErrors, waypoints, maybeGuidance))),
+
+            value => {
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(BuildingSocietyDetailsPage, value))
+                _ <- userDataService.set(updatedAnswers)
+              } yield Redirect(BuildingSocietyDetailsPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+            }
+          )
+      }
   }
+
+  private def guidance(accountHolder: BankAccountHolder)(implicit messages: Messages): Option[String] =
+    accountHolder match {
+      case BankAccountHolder.Applicant => None
+      case BankAccountHolder.JointNames => Some(messages("buildingSocietyDetails.jointNames.p1"))
+      case BankAccountHolder.SomeoneElse => Some(messages("buildingSocietyDetails.someoneElse.p1"))
+    }
 }

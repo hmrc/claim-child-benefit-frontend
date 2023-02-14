@@ -38,7 +38,7 @@
 
         <h1 class="govuk-heading-xl">@messages("countryPartnerWorked.heading", partnerFirstName)</h1>
 
-        <p class="govuk-body">@messages("countryPartnerWorked.guidance")</p>
+        <p class="govuk-body">@messages("countryPartnerWorked.p1")</p>
 
         @govukSelect(
             SelectViewModel(
@@ -46,9 +46,7 @@
                 items = selectItems(internationalCountries),
                 label = LabelViewModel(messages("countryPartnerWorked.heading", partnerFirstName)).visuallyHidden()
             )
-                    .withCssClass(Fixed20.toString)
-                    .withCssClass("autocomplete")
-                    .withHint(HintViewModel("countryPartnerWorked.hint"))
+            .withCssClass("autocomplete")
         )
 
         @govukButton(

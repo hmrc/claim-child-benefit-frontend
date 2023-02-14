@@ -20,7 +20,7 @@ import controllers.AnswerExtractor
 import controllers.actions._
 import forms.partner.PartnerEldestChildDateOfBirthFormProvider
 import pages.Waypoints
-import pages.partner.{PartnerEldestChildDateOfBirthPage, PartnerNamePage}
+import pages.partner.{PartnerEldestChildDateOfBirthPage, PartnerEldestChildNamePage, PartnerNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserDataService
@@ -46,30 +46,30 @@ class PartnerEldestChildDateOfBirthController @Inject()(
 
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      getAnswer(PartnerNamePage) {
-        partnerName =>
+      getAnswer(PartnerEldestChildNamePage) {
+        eldestChildName =>
 
-          val form = formProvider(partnerName.firstName)
+          val form = formProvider(eldestChildName.firstName)
 
           val preparedForm = request.userAnswers.get(PartnerEldestChildDateOfBirthPage) match {
             case None => form
             case Some(value) => form.fill(value)
           }
 
-          Ok(view(preparedForm, waypoints, partnerName.firstName))
+          Ok(view(preparedForm, waypoints, eldestChildName.firstName))
       }
   }
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      getAnswerAsync(PartnerNamePage) {
-        partnerName =>
+      getAnswerAsync(PartnerEldestChildNamePage) {
+        eldestChildName =>
 
-          val form = formProvider(partnerName.firstName)
+          val form = formProvider(eldestChildName.firstName)
 
             form.bindFromRequest().fold(
             formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, waypoints, partnerName.firstName))),
+              Future.successful(BadRequest(view(formWithErrors, waypoints, eldestChildName.firstName))),
 
             value =>
               for {

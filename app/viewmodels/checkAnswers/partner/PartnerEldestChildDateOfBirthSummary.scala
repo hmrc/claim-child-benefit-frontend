@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers.partner
 
 import models.UserAnswers
-import pages.partner.{PartnerEldestChildDateOfBirthPage, PartnerNamePage}
+import pages.partner.{PartnerEldestChildDateOfBirthPage, PartnerEldestChildNamePage, PartnerNamePage}
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -31,20 +31,20 @@ object PartnerEldestChildDateOfBirthSummary {
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
     for {
-      partnerName <- answers.get(PartnerNamePage)
+      eldestChildName <- answers.get(PartnerEldestChildNamePage)
       dateOfBirth <- answers.get(PartnerEldestChildDateOfBirthPage)
     } yield {
 
       val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
       SummaryListRowViewModel(
-        key = messages("partnerEldestChildDateOfBirth.checkYourAnswersLabel", partnerName.firstName),
+        key = messages("partnerEldestChildDateOfBirth.checkYourAnswersLabel", eldestChildName.firstName),
         value = ValueViewModel(dateOfBirth.format(dateFormatter)),
         actions = Seq(
           ActionItemViewModel(
             messages("site.change"),
             PartnerEldestChildDateOfBirthPage.changeLink(waypoints, sourcePage).url
-          ).withVisuallyHiddenText(messages("partnerEldestChildDateOfBirth.change.hidden", partnerName.firstName))
+          ).withVisuallyHiddenText(messages("partnerEldestChildDateOfBirth.change.hidden", eldestChildName.firstName))
         )
       )
     }
