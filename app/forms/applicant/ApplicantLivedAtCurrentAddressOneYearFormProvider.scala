@@ -23,8 +23,8 @@ import javax.inject.Inject
 
 class ApplicantLivedAtCurrentAddressOneYearFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(addressLine1: String): Form[Boolean] =
     Form(
-      "value" -> boolean("applicantLivedAtCurrentAddressOneYear.error.required")
+      "value" -> boolean("applicantLivedAtCurrentAddressOneYear.error.required", args = Seq(addressLine1))
     )
 }

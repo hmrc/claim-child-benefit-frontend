@@ -38,33 +38,42 @@ class ApplicantPreviousAddressInUkController @Inject()(
                                                       formProvider: ApplicantPreviousAddressInUkFormProvider,
                                                       val controllerComponents: MessagesControllerComponents,
                                                       view: ApplicantPreviousAddressInUkView
-                                                    )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                                    )(implicit ec: ExecutionContext)
+  extends FrontendBaseController
+    with I18nSupport
+    with CurrentAddressExtractor {
 
-  val form = formProvider()
+  private val form = formProvider()
 
-  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      getCurrentAddress {
+        currentAddress =>
 
-      val preparedForm = request.userAnswers.get(ApplicantPreviousAddressInUkPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
+          val preparedForm = request.userAnswers.get(ApplicantPreviousAddressInUkPage) match {
+            case None => form
+            case Some(value) => form.fill(value)
+          }
+
+          Future.successful(Ok(view(preparedForm, waypoints, currentAddress.line1)))
       }
-
-      Ok(view(preparedForm, waypoints))
   }
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      getCurrentAddress {
+        currentAddress =>
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints))),
+          form.bindFromRequest().fold(
+            formWithErrors =>
+              Future.successful(BadRequest(view(formWithErrors, waypoints, currentAddress.line1))),
 
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(ApplicantPreviousAddressInUkPage, value))
-            _              <- userDataService.set(updatedAnswers)
-          } yield Redirect(ApplicantPreviousAddressInUkPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
-      )
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(ApplicantPreviousAddressInUkPage, value))
+                _ <- userDataService.set(updatedAnswers)
+              } yield Redirect(ApplicantPreviousAddressInUkPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+          )
+      }
   }
 }

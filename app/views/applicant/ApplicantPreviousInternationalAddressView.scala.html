@@ -27,7 +27,7 @@
         govukButton: GovukButton
 )
 
-@(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints, addressLine1: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("applicantPreviousInternationalAddress.title"))) {
 
@@ -37,7 +37,9 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <h1 class="govuk-heading-xl">@messages("applicantPreviousInternationalAddress.heading")</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">@messages("applicantPreviousInternationalAddress.heading")</h1>
+
+        <p class="govuk-body govuk-!-margin-bottom-6">@messages("applicantPreviousInternationalAddress.p1", addressLine1)</p>
 
         @govukInput(
             InputViewModel(
