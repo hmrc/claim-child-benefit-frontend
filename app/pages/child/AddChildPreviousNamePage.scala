@@ -53,7 +53,7 @@ final case class AddChildPreviousNamePage(childIndex: Index, nameIndex: Option[I
           }
 
       case false =>
-        ChildBiologicalSexPage(childIndex)
+        ChildDateOfBirthPage(childIndex)
     }.orRecover
 
   override def deriveNumberOfItems: Derivable[Seq[JsObject], Int] = DeriveNumberOfChildPreviousNames(childIndex)

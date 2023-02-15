@@ -34,5 +34,5 @@ final case class ChildDateOfBirthPage(index: Index) extends ChildQuestionPage[Lo
     routes.ChildDateOfBirthController.onPageLoad(waypoints, index)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ChildBirthRegistrationCountryPage(index)
+    ChildBiologicalSexPage(index)
 }
