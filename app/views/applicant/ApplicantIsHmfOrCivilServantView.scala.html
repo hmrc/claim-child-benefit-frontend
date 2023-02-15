@@ -34,9 +34,10 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <h1 class="govuk-heading-xl">@Html(messages("applicantIsHmfOrCivilServant.heading"))</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">@Html(messages("applicantIsHmfOrCivilServant.heading"))</h1>
 
         <p class="govuk-body">@messages("applicantIsHmfOrCivilServant.p1")</p>
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
