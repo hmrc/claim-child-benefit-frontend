@@ -1418,6 +1418,7 @@ applicantIsHmfOrCivilServant.change.hidden = if you are a member of HM Forces or
 
 partnerIsHmfOrCivilServant.title = Is your partner a member of HM Forces or a civil servant working abroad?
 partnerIsHmfOrCivilServant.heading = Is {0} a member of HM&nbsp;Forces or a civil servant working abroad?
+partnerIsHmfOrCivilServant.p1 = A member of HM Forces is someone who works for the British Army, Royal Navy, or Royal Air Force.
 partnerIsHmfOrCivilServant.checkYourAnswersLabel = Is {0} a member of HM Forces or a civil servant working abroad?
 partnerIsHmfOrCivilServant.error.required = Select yes if {0} is a member of HM Forces or a civil servant working abroad
 partnerIsHmfOrCivilServant.change.hidden = if {0} is a member of HM Forces or a civil servant working abroad
@@ -1561,7 +1562,7 @@ partnerWorkedAbroad.error.required = Select yes if {0} has worked in another cou
 partnerWorkedAbroad.change.hidden = if {0} has worked in another country in the last 3 months
 
 partnerReceivedBenefitsAbroad.title = In the last 3 months, has your partner been paid benefits from another country?
-partnerReceivedBenefitsAbroad.heading = in the last 3 months, has {0} been paid benefits from another country?
+partnerReceivedBenefitsAbroad.heading = In the last 3 months, has {0} been paid benefits from another country?
 partnerReceivedBenefitsAbroad.p1 = This includes allowances paid to {0} by a government.
 partnerReceivedBenefitsAbroad.checkYourAnswersLabel = In the last 3 months, has {0} been paid benefits from another country?
 partnerReceivedBenefitsAbroad.error.required = Select yes if {0} has been paid benefits from another country in the last 3 months
