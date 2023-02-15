@@ -265,7 +265,7 @@ accountType.change.hidden = what bank account or building society details you kn
 
 bankAccountDetails.title = What are the bank or building society account details that Child Benefit can be paid to?
 bankAccountDetails.heading = What are the bank or building society account details that Child Benefit can be paid to?
-bankAccountDetails.jointNames.p1 = Enter the other account holder’s name.
+bankAccountDetails.jointNames.p1 = Enter the name of the person you share this account with.
 bankAccountDetails.someoneElse.p1 = If this is a joint account, only enter one of the account holders’ names.
 bankAccountDetails.error.sortCode.failedModulusCheck = Enter a recognised sort code and account number
 bankAccountDetails.error.sortCode.doesNotExist = Enter a sort code that is recognised
@@ -291,7 +291,7 @@ bankAccountDetails.change.hidden = the bank or building society account details
 
 buildingSocietyDetails.title = What are the building society account details that Child Benefit can be paid to?
 buildingSocietyDetails.heading = What are the building society account details that Child Benefit can be paid to?
-buildingSocietyDetails.jointNames.p1 = Enter the other account holder’s name.
+buildingSocietyDetails.jointNames.p1 = Enter the name of the person you share this account with.
 buildingSocietyDetails.someoneElse.p1 = If this is a joint account, only enter one of the account holders’ names.
 buildingSocietyDetails.firstName = First name or given name on the account
 buildingSocietyDetails.lastName = Last name(s) or family name(s) on the account
