@@ -21,10 +21,11 @@ import play.api.data.FormError
 
 class ApplicantLivedAtCurrentAddressOneYearFormProviderSpec extends BooleanFieldBehaviours {
 
+  val addressLine1 = "foo"
   val requiredKey = "applicantLivedAtCurrentAddressOneYear.error.required"
   val invalidKey = "error.boolean"
 
-  val form = new ApplicantLivedAtCurrentAddressOneYearFormProvider()()
+  val form = new ApplicantLivedAtCurrentAddressOneYearFormProvider()(addressLine1)
 
   ".value" - {
 
@@ -33,13 +34,13 @@ class ApplicantLivedAtCurrentAddressOneYearFormProviderSpec extends BooleanField
     behave like booleanField(
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+      invalidError = FormError(fieldName, invalidKey, Seq(addressLine1))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq(addressLine1))
     )
   }
 }

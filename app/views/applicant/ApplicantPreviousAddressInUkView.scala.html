@@ -24,7 +24,7 @@
         govukButton: GovukButton
 )
 
-@(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints, addressLine1: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("applicantPreviousAddressInUk.title"))) {
 
@@ -34,10 +34,14 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">@messages("applicantPreviousAddressInUk.heading")</h1>
+
+        <p class="govuk-body govuk-!-margin-bottom-6">@messages("applicantPreviousAddressInUk.p1", addressLine1)</p>
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(content = messages("applicantPreviousAddressInUk.heading")).asPageHeading()
+                legend = LegendViewModel(content = messages("applicantPreviousAddressInUk.heading", addressLine1)).visuallyHidden()
             )
         )
 

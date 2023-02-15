@@ -560,9 +560,9 @@ applicantHasPreviousFamilyName.error.required = Select yes if you have been know
 applicantHasPreviousFamilyName.change.hidden = if you have been known by any other last names or family names
 
 applicantLivedAtCurrentAddressOneYear.title = Have you lived at this address for more than a year?
-applicantLivedAtCurrentAddressOneYear.heading = Have you lived at this address for more than a year?
+applicantLivedAtCurrentAddressOneYear.heading = Have you lived at {0} for more than a year?
 applicantLivedAtCurrentAddressOneYear.checkYourAnswersLabel = Have you lived at this address for more than a year?
-applicantLivedAtCurrentAddressOneYear.error.required = Select yes if you have lived at this address for more than a year
+applicantLivedAtCurrentAddressOneYear.error.required = Select yes if you have lived at {0} for more than a year
 applicantLivedAtCurrentAddressOneYear.change.hidden = if you have lived at this address for more than a year
 
 applicantName.title = What is your name?
@@ -615,12 +615,14 @@ applicantPhoneNumber.change.hidden = your telephone number
 
 applicantPreviousAddressInUk.title = Is your previous address in the UK?
 applicantPreviousAddressInUk.heading = Is your previous address in the UK?
+applicantPreviousAddressInUk.p1 = This is the address you lived at before {0}.
 applicantPreviousAddressInUk.checkYourAnswersLabel = Is your previous address in the UK?
 applicantPreviousAddressInUk.error.required = Select yes if your previous address is in the UK
 applicantPreviousAddressInUk.change.hidden = if your previous address is in the UK
 
 applicantPreviousInternationalAddress.title = What is your previous address?
 applicantPreviousInternationalAddress.heading = What is your previous address?
+applicantPreviousInternationalAddress.p1 = This is the address you lived at before {0}.
 applicantPreviousInternationalAddress.line1 = Address line 1
 applicantPreviousInternationalAddress.line2 = Address line 2 (optional)
 applicantPreviousInternationalAddress.town = Town or city
@@ -640,6 +642,7 @@ applicantPreviousInternationalAddress.change.hidden = your previous address
 
 applicantPreviousUkAddress.title = What was your previous address?
 applicantPreviousUkAddress.heading = What was your previous address?
+applicantPreviousUkAddress.p1 = This is the address you lived at before {0}.
 applicantPreviousUkAddress.line1 = Address line 1
 applicantPreviousUkAddress.line2 = Address line 2 (optional)
 applicantPreviousUkAddress.town = Town or city

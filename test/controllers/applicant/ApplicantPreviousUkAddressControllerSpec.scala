@@ -19,12 +19,14 @@ package controllers.applicant
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.applicant.ApplicantPreviousUkAddressFormProvider
+import generators.ModelGenerators
 import models.UkAddress
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
+import org.scalacheck.Arbitrary.arbitrary
 import org.scalatestplus.mockito.MockitoSugar
 import pages.EmptyWaypoints
-import pages.applicant.ApplicantPreviousUkAddressPage
+import pages.applicant.{ApplicantCurrentUkAddressPage, ApplicantPreviousUkAddressPage}
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -33,7 +35,10 @@ import views.html.applicant.ApplicantPreviousUkAddressView
 
 import scala.concurrent.Future
 
-class ApplicantPreviousUkAddressControllerSpec extends SpecBase with MockitoSugar {
+class ApplicantPreviousUkAddressControllerSpec extends SpecBase with MockitoSugar with ModelGenerators {
+
+  private val currentAddress = arbitrary[UkAddress].sample.value
+  private val baseAnswers = emptyUserAnswers.set(ApplicantCurrentUkAddressPage, currentAddress).success.value
 
   val formProvider = new ApplicantPreviousUkAddressFormProvider()
   val form = formProvider()
@@ -42,13 +47,13 @@ class ApplicantPreviousUkAddressControllerSpec extends SpecBase with MockitoSuga
   lazy val applicantPreviousUkAddressRoute = routes.ApplicantPreviousUkAddressController.onPageLoad(waypoints).url
 
   private val validAnswer = UkAddress("line 1", None, "town", None, "postcode")
-  private val userAnswers = emptyUserAnswers.set(ApplicantPreviousUkAddressPage, validAnswer).success.value
+  private val userAnswers = baseAnswers.set(ApplicantPreviousUkAddressPage, validAnswer).success.value
 
   "ApplicantPreviousUkAddress Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, applicantPreviousUkAddressRoute)
@@ -58,7 +63,7 @@ class ApplicantPreviousUkAddressControllerSpec extends SpecBase with MockitoSuga
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, currentAddress.line1)(request, messages(application)).toString
       }
     }
 
@@ -74,7 +79,7 @@ class ApplicantPreviousUkAddressControllerSpec extends SpecBase with MockitoSuga
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints, currentAddress.line1)(request, messages(application)).toString
       }
     }
 
@@ -85,7 +90,7 @@ class ApplicantPreviousUkAddressControllerSpec extends SpecBase with MockitoSuga
       when(mockUserDataService.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
             bind[UserDataService].toInstance(mockUserDataService)
           )
@@ -97,17 +102,17 @@ class ApplicantPreviousUkAddressControllerSpec extends SpecBase with MockitoSuga
             .withFormUrlEncodedBody(("line1", "line 1"), ("town", "town"), ("postcode", "postcode"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(ApplicantPreviousUkAddressPage, validAnswer).success.value
+        val expectedAnswers = baseAnswers.set(ApplicantPreviousUkAddressPage, validAnswer).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ApplicantPreviousUkAddressPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual ApplicantPreviousUkAddressPage.navigate(waypoints, baseAnswers, expectedAnswers).url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
       }
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request =
@@ -121,7 +126,7 @@ class ApplicantPreviousUkAddressControllerSpec extends SpecBase with MockitoSuga
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, currentAddress.line1)(request, messages(application)).toString
       }
     }
 

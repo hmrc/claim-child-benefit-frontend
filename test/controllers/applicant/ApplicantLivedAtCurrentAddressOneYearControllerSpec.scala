@@ -19,14 +19,15 @@ package controllers.applicant
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.applicant.ApplicantLivedAtCurrentAddressOneYearFormProvider
-import models.UserAnswers
+import generators.ModelGenerators
+import models.UkAddress
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
+import org.scalacheck.Arbitrary.arbitrary
 import org.scalatestplus.mockito.MockitoSugar
 import pages.EmptyWaypoints
-import pages.applicant.ApplicantLivedAtCurrentAddressOneYearPage
+import pages.applicant.{ApplicantCurrentUkAddressPage, ApplicantLivedAtCurrentAddressOneYearPage}
 import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserDataService
@@ -34,12 +35,13 @@ import views.html.applicant.ApplicantLivedAtCurrentAddressOneYearView
 
 import scala.concurrent.Future
 
-class ApplicantLivedAtCurrentAddressOneYearControllerSpec extends SpecBase with MockitoSugar {
+class ApplicantLivedAtCurrentAddressOneYearControllerSpec extends SpecBase with MockitoSugar with ModelGenerators {
 
-  def onwardRoute = Call("GET", "/foo")
+  private val currentAddress = arbitrary[UkAddress].sample.value
+  private val baseAnswers = emptyUserAnswers.set(ApplicantCurrentUkAddressPage, currentAddress).success.value
 
   val formProvider = new ApplicantLivedAtCurrentAddressOneYearFormProvider()
-  val form = formProvider()
+  val form = formProvider(currentAddress.line1)
   private val waypoints = EmptyWaypoints
 
   lazy val applicantLivedAtCurrentAddressOneYearRoute = routes.ApplicantLivedAtCurrentAddressOneYearController.onPageLoad(waypoints).url
@@ -48,7 +50,7 @@ class ApplicantLivedAtCurrentAddressOneYearControllerSpec extends SpecBase with 
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, applicantLivedAtCurrentAddressOneYearRoute)
@@ -58,13 +60,13 @@ class ApplicantLivedAtCurrentAddressOneYearControllerSpec extends SpecBase with 
         val view = application.injector.instanceOf[ApplicantLivedAtCurrentAddressOneYearView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, currentAddress.line1)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+      val userAnswers = baseAnswers.set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -76,7 +78,7 @@ class ApplicantLivedAtCurrentAddressOneYearControllerSpec extends SpecBase with 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), waypoints, currentAddress.line1)(request, messages(application)).toString
       }
     }
 
@@ -87,7 +89,7 @@ class ApplicantLivedAtCurrentAddressOneYearControllerSpec extends SpecBase with 
       when(mockUserDataService.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
             bind[UserDataService].toInstance(mockUserDataService)
           )
@@ -99,17 +101,17 @@ class ApplicantLivedAtCurrentAddressOneYearControllerSpec extends SpecBase with 
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+        val expectedAnswers = baseAnswers.set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ApplicantLivedAtCurrentAddressOneYearPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual ApplicantLivedAtCurrentAddressOneYearPage.navigate(waypoints, baseAnswers, expectedAnswers).url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
       }
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request =
@@ -123,7 +125,7 @@ class ApplicantLivedAtCurrentAddressOneYearControllerSpec extends SpecBase with 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, currentAddress.line1)(request, messages(application)).toString
       }
     }
 

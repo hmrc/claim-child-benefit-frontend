@@ -19,12 +19,14 @@ package controllers.applicant
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.applicant.ApplicantPreviousInternationalAddressFormProvider
-import models.{Country, InternationalAddress}
+import generators.ModelGenerators
+import models.{Country, InternationalAddress, UkAddress}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
+import org.scalacheck.Arbitrary.arbitrary
 import org.scalatestplus.mockito.MockitoSugar
 import pages.EmptyWaypoints
-import pages.applicant.ApplicantPreviousInternationalAddressPage
+import pages.applicant.{ApplicantCurrentUkAddressPage, ApplicantPreviousInternationalAddressPage}
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -33,7 +35,10 @@ import views.html.applicant.ApplicantPreviousInternationalAddressView
 
 import scala.concurrent.Future
 
-class ApplicantPreviousInternationalAddressControllerSpec extends SpecBase with MockitoSugar {
+class ApplicantPreviousInternationalAddressControllerSpec extends SpecBase with MockitoSugar with ModelGenerators {
+
+  private val currentAddress = arbitrary[UkAddress].sample.value
+  private val baseAnswers = emptyUserAnswers.set(ApplicantCurrentUkAddressPage, currentAddress).success.value
 
   val formProvider = new ApplicantPreviousInternationalAddressFormProvider()
   val form = formProvider()
@@ -43,13 +48,13 @@ class ApplicantPreviousInternationalAddressControllerSpec extends SpecBase with 
 
   private val country     = Country.internationalCountries.head
   private val validAnswer = InternationalAddress("line 1", None, "town", None, Some("postcode"), country)
-  private val userAnswers = emptyUserAnswers.set(ApplicantPreviousInternationalAddressPage, validAnswer).success.value
+  private val userAnswers = baseAnswers.set(ApplicantPreviousInternationalAddressPage, validAnswer).success.value
 
   "ApplicantPreviousAddress Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, applicantPreviousInternationalAddressRoute)
@@ -59,7 +64,7 @@ class ApplicantPreviousInternationalAddressControllerSpec extends SpecBase with 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, currentAddress.line1)(request, messages(application)).toString
       }
     }
 
@@ -75,7 +80,7 @@ class ApplicantPreviousInternationalAddressControllerSpec extends SpecBase with 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints, currentAddress.line1)(request, messages(application)).toString
       }
     }
 
@@ -86,7 +91,7 @@ class ApplicantPreviousInternationalAddressControllerSpec extends SpecBase with 
       when(mockUserDataService.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
             bind[UserDataService].toInstance(mockUserDataService)
           )
@@ -98,17 +103,17 @@ class ApplicantPreviousInternationalAddressControllerSpec extends SpecBase with 
             .withFormUrlEncodedBody(("line1", "line 1"), ("town", "town"), ("postcode", "postcode"), ("country", country.code))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(ApplicantPreviousInternationalAddressPage, validAnswer).success.value
+        val expectedAnswers = baseAnswers.set(ApplicantPreviousInternationalAddressPage, validAnswer).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ApplicantPreviousInternationalAddressPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual ApplicantPreviousInternationalAddressPage.navigate(waypoints, baseAnswers, expectedAnswers).url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
       }
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       running(application) {
         val request =
@@ -122,7 +127,7 @@ class ApplicantPreviousInternationalAddressControllerSpec extends SpecBase with 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, currentAddress.line1)(request, messages(application)).toString
       }
     }
 

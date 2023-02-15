@@ -19,7 +19,7 @@ package controllers.applicant
 import controllers.actions._
 import forms.applicant.ApplicantPreviousUkAddressFormProvider
 import pages.Waypoints
-import pages.applicant.ApplicantPreviousUkAddressPage
+import pages.applicant.{ApplicantLivedAtCurrentAddressOneYearPage, ApplicantPreviousUkAddressPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserDataService
@@ -38,33 +38,42 @@ class ApplicantPreviousUkAddressController @Inject()(
                                                     formProvider: ApplicantPreviousUkAddressFormProvider,
                                                     val controllerComponents: MessagesControllerComponents,
                                                     view: ApplicantPreviousUkAddressView
-                                                  )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                                  )(implicit ec: ExecutionContext)
+  extends FrontendBaseController
+    with I18nSupport
+    with CurrentAddressExtractor {
 
   val form = formProvider()
 
-  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      getCurrentAddress {
+        currentAddress =>
 
-      val preparedForm = request.userAnswers.get(ApplicantPreviousUkAddressPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
+          val preparedForm = request.userAnswers.get(ApplicantPreviousUkAddressPage) match {
+            case None => form
+            case Some(value) => form.fill(value)
+          }
+
+          Future.successful(Ok(view(preparedForm, waypoints, currentAddress.line1)))
       }
-
-      Ok(view(preparedForm, waypoints))
   }
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      getCurrentAddress {
+        currentAddress =>
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints))),
+          form.bindFromRequest().fold(
+            formWithErrors =>
+              Future.successful(BadRequest(view(formWithErrors, waypoints, currentAddress.line1))),
 
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(ApplicantPreviousUkAddressPage, value))
-            _              <- userDataService.set(updatedAnswers)
-          } yield Redirect(ApplicantPreviousUkAddressPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
-      )
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(ApplicantPreviousUkAddressPage, value))
+                _ <- userDataService.set(updatedAnswers)
+              } yield Redirect(ApplicantPreviousUkAddressPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+          )
+      }
   }
 }
