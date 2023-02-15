@@ -19,6 +19,7 @@ package config
 import controllers.actions._
 import play.api.inject.Binding
 import play.api.{Configuration, Environment}
+import uk.gov.hmrc.crypto.{Decrypter, Encrypter}
 
 import java.time.Clock
 
@@ -38,6 +39,7 @@ class Module extends play.api.inject.Module {
       bind[DataRequiredAction].to[DataRequiredActionImpl].eagerly,
       bind[Clock].toInstance(Clock.systemUTC()),
       bind[FeatureFlags].toSelf.eagerly,
+      bind[Encrypter with Decrypter].toProvider[CryptoProvider].eagerly,
       identifierActionBinding
     )
   }
