@@ -20,6 +20,9 @@ import cats.data.{IorNec, NonEmptyChain}
 import cats.implicits._
 import play.api.libs.json._
 import queries.{Derivable, Gettable, Query, Settable}
+import uk.gov.hmrc.crypto.Sensitive.SensitiveString
+import uk.gov.hmrc.crypto.json.JsonEncryption
+import uk.gov.hmrc.crypto.{Decrypter, Encrypter}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
 import java.time.Instant
@@ -88,7 +91,7 @@ final case class UserAnswers(
 
 object UserAnswers {
 
-  val reads: Reads[UserAnswers] = {
+  private val reads: Reads[UserAnswers] = {
 
     import play.api.libs.functional.syntax._
 
@@ -99,7 +102,7 @@ object UserAnswers {
     ) ((id, data, lastUpdated) => UserAnswers(id, data, None, lastUpdated))
   }
 
-  val writes: OWrites[UserAnswers] = {
+  private val writes: OWrites[UserAnswers] = {
 
     import play.api.libs.functional.syntax._
     
@@ -111,4 +114,28 @@ object UserAnswers {
   }
 
   implicit val format: OFormat[UserAnswers] = OFormat(reads, writes)
+
+  def encryptedFormat(implicit crypto: Encrypter with Decrypter): OFormat[UserAnswers] = {
+
+    import play.api.libs.functional.syntax._
+
+    implicit val sensitiveFormat: Format[SensitiveString] =
+      JsonEncryption.sensitiveEncrypterDecrypter(SensitiveString.apply)
+
+    val encryptedReads: Reads[UserAnswers] =
+      (
+        (__ \ "_id").read[String] and
+        (__ \ "data").read[SensitiveString] and
+        (__ \ "lastUpdated").read(MongoJavatimeFormats.instantFormat)
+      )((id, data, lastUpdated) => UserAnswers(id, Json.parse(data.decryptedValue).as[JsObject], None, lastUpdated))
+
+    val encryptedWrites: OWrites[UserAnswers] =
+      (
+        (__ \ "_id").write[String] and
+        (__ \ "data").write[SensitiveString] and
+        (__ \ "lastUpdated").write(MongoJavatimeFormats.instantFormat)
+      )(ua => (ua.id, SensitiveString(Json.stringify(ua.data)), ua.lastUpdated))
+
+    OFormat(encryptedReads orElse reads, encryptedWrites)
+  }
 }
