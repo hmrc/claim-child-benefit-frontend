@@ -42,7 +42,7 @@ object ApplicantEmploymentStatusSummary  {
         )
 
         SummaryListRowViewModel(
-          key     = "applicantName.checkYourAnswersLabel",
+          key     = "applicantEmploymentStatus.checkYourAnswersLabel",
           value   = value,
           actions = Seq(
             ActionItemViewModel("site.change", ApplicantEmploymentStatusPage.changeLink(waypoints, sourcePage).url)
