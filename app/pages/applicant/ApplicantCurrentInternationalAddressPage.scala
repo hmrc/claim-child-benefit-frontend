@@ -33,12 +33,5 @@ case object ApplicantCurrentInternationalAddressPage extends QuestionPage[Intern
     routes.ApplicantCurrentInternationalAddressController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    answers.get(ApplicantNinoPage)
-      .map { _ =>
-        answers.get(ApplicantResidencePage).map {
-          case AlwaysUk => ApplicantIsHmfOrCivilServantPage
-          case _        => ApplicantEmploymentStatusPage
-        }.orRecover
-      }
-      .getOrElse(ApplicantLivedAtCurrentAddressOneYearPage)
+    ApplicantLivedAtCurrentAddressOneYearPage
 }

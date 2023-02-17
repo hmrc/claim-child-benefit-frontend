@@ -47,19 +47,13 @@ case object ApplicantNinoKnownPage extends QuestionPage[Boolean] {
           .getOrElse(ApplicantNinoPage)
 
       case false =>
-        answers.get(ApplicantLivedAtCurrentAddressOneYearPage)
-          .map(_ => waypoints.next.page)
-          .getOrElse(ApplicantLivedAtCurrentAddressOneYearPage)
+        waypoints.next.page
     }.orRecover
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
     if (value.contains(false)) {
       userAnswers.remove(ApplicantNinoPage)
     } else {
-      userAnswers
-        .remove(ApplicantLivedAtCurrentAddressOneYearPage)
-        .flatMap(_.remove(ApplicantPreviousAddressInUkPage))
-        .flatMap(_.remove(ApplicantPreviousUkAddressPage))
-        .flatMap(_.remove(ApplicantPreviousInternationalAddressPage))
+      super.cleanup(value, userAnswers)
     }
 }
