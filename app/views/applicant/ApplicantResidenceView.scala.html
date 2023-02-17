@@ -15,12 +15,14 @@
  *@
 
 @import controllers.applicant.routes
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.newtablinkhelper.NewTabLinkHelper
 
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukErrorSummary: GovukErrorSummary,
         govukRadios: GovukRadios,
+        newTabLink: HmrcNewTabLinkHelper,
         govukButton: GovukButton
 )
 
@@ -36,7 +38,10 @@
 
         <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">@messages("applicantResidence.heading")</h1>
 
-        <p class="govuk-body">@messages("applicantResidence.p1")</p>
+        <p class="govuk-body">
+            @messages("applicantResidence.p1")
+            @{newTabLink(NewTabLinkHelper(text = messages("applicantResidence.p1.link.text"), href = Some(messages("applicantResidence.p1.link.href"))))}.
+        </p>
 
         <p class="govuk-body">@messages("applicantResidence.p2")</p>
 
