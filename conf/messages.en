@@ -1411,14 +1411,16 @@ ordinal.9 = tenth
 
 applicantIsHmfOrCivilServant.title = Are you a member of HM Forces or a civil servant working abroad?
 applicantIsHmfOrCivilServant.heading = Are you a member of HM&nbsp;Forces or a civil servant working abroad?
-applicantIsHmfOrCivilServant.p1 = A member of HM Forces is someone who works for the British Army, Royal Navy, or Royal Air Force.
+applicantIsHmfOrCivilServant.p1 = A member of HM Forces is a member of the Royal Navy, British Army or Royal Air Force who is serving as a member of the regular forces.
+applicantIsHmfOrCivilServant.p2 = A Civil Servant is someone who works in a central government department, agency or non-departmental government body.
 applicantIsHmfOrCivilServant.checkYourAnswersLabel = Are you a member of HM Forces or a civil servant working abroad?
 applicantIsHmfOrCivilServant.error.required = Select yes if you are a member of HM Forces or a civil servant working abroad
 applicantIsHmfOrCivilServant.change.hidden = if you are a member of HM Forces or a civil servant working abroad
 
 partnerIsHmfOrCivilServant.title = Is your partner a member of HM Forces or a civil servant working abroad?
 partnerIsHmfOrCivilServant.heading = Is {0} a member of HM&nbsp;Forces or a civil servant working abroad?
-partnerIsHmfOrCivilServant.p1 = A member of HM Forces is someone who works for the British Army, Royal Navy, or Royal Air Force.
+partnerIsHmfOrCivilServant.p1 = A member of HM Forces is a member of the Royal Navy, British Army or Royal Air Force who is serving as a member of the regular forces.
+partnerIsHmfOrCivilServant.p2 = A Civil Servant is someone who works in a central government department, agency or non-departmental government body.
 partnerIsHmfOrCivilServant.checkYourAnswersLabel = Is {0} a member of HM Forces or a civil servant working abroad?
 partnerIsHmfOrCivilServant.error.required = Select yes if {0} is a member of HM Forces or a civil servant working abroad
 partnerIsHmfOrCivilServant.change.hidden = if {0} is a member of HM Forces or a civil servant working abroad
