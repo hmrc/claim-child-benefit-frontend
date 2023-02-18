@@ -66,6 +66,9 @@ POST       /relationship-status                        controllers.partner.Relat
 GET        /your-name                        controllers.applicant.ApplicantNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-name                        controllers.applicant.ApplicantNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
+GET        /name                        controllers.applicant.DesignatoryNameController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /name                        controllers.applicant.DesignatoryNameController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 # Income section
 GET        /your-benefits                        controllers.payments.ApplicantBenefitsController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-benefits                        controllers.payments.ApplicantBenefitsController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
@@ -165,6 +168,24 @@ POST       /your-current-uk-address                        controllers.applicant
 GET        /your-current-international-address                        controllers.applicant.ApplicantCurrentInternationalAddressController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-current-international-address                        controllers.applicant.ApplicantCurrentInternationalAddressController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
+GET        /is-your-address-in-uk                        controllers.applicant.DesignatoryAddressInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /is-your-address-in-uk                        controllers.applicant.DesignatoryAddressInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /your-uk-address                        controllers.applicant.DesignatoryUkAddressController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /your-uk-address                        controllers.applicant.DesignatoryUkAddressController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /your-international-address                        controllers.applicant.DesignatoryInternationalAddressController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /your-international-address                        controllers.applicant.DesignatoryInternationalAddressController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /is-your-correspondence-address-in-uk                        controllers.applicant.CorrespondenceAddressInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /is-your-correspondence-address-in-uk                        controllers.applicant.CorrespondenceAddressInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /your-correspondence-uk-address                        controllers.applicant.CorrespondenceUkAddressController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /your-correspondence-uk-address                        controllers.applicant.CorrespondenceUkAddressController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /your-correspondence-international-address                        controllers.applicant.CorrespondenceInternationalAddressController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /your-correspondence-international-address                        controllers.applicant.CorrespondenceInternationalAddressController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 GET        /arrived-in-uk                     controllers.applicant.ApplicantArrivedInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /arrived-in-uk                     controllers.applicant.ApplicantArrivedInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
@@ -212,6 +233,9 @@ POST       /remove-previous-family-name/:index                        controller
 
 GET        /check-your-details                              controllers.applicant.CheckApplicantDetailsController.onPageLoad
 POST       /check-your-details                              controllers.applicant.CheckApplicantDetailsController.onSubmit
+
+GET        /check-details                              controllers.applicant.CheckDesignatoryDetailsController.onPageLoad
+POST       /check-details                              controllers.applicant.CheckDesignatoryDetailsController.onSubmit
 
 GET        /your-employment-status                        controllers.applicant.ApplicantEmploymentStatusController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-employment-status                        controllers.applicant.ApplicantEmploymentStatusController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
