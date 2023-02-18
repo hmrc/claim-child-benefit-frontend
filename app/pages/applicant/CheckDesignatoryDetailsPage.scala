@@ -27,4 +27,7 @@ object CheckDesignatoryDetailsPage extends QuestionPage[Boolean] {
   override def path: JsPath = JsPath \ "proceededFromDesignatoryDetails"
 
   override def route(waypoints: Waypoints): Call = routes.CheckDesignatoryDetailsController.onPageLoad
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    ApplicantPhoneNumberPage
 }

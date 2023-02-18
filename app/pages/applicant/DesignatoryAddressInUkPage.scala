@@ -32,4 +32,16 @@ case object DesignatoryAddressInUkPage extends QuestionPage[Boolean] {
 
   override def route(waypoints: Waypoints): Call =
     routes.DesignatoryAddressInUkController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true => DesignatoryUkAddressPage
+      case false => DesignatoryInternationalAddressPage
+    }.orRecover
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    value.map {
+      case true => userAnswers.remove(DesignatoryInternationalAddressPage)
+      case false => userAnswers.remove(DesignatoryUkAddressPage)
+    }.getOrElse(super.cleanup(value, userAnswers))
 }
