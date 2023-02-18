@@ -96,12 +96,6 @@ signedOut.guidance = We did not save your answers.
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
-alwaysLivedInUk.title = Have you always lived in the UK?
-alwaysLivedInUk.heading = Have you always lived in the UK?
-alwaysLivedInUk.checkYourAnswersLabel = Have you always lived in the UK?
-alwaysLivedInUk.error.required = Select yes if you have always lived in the UK
-alwaysLivedInUk.change.hidden = if you have always lived in the UK
-
 applicantUsuallyLivesInUk.title = Do you normally live in the UK?
 applicantUsuallyLivesInUk.heading = Do you normally live in the UK?
 applicantUsuallyLivesInUk.p1 = This means that you have chosen to live and settle in the UK for now. You will be recorded as being
@@ -1521,7 +1515,9 @@ currentlyReceivingChangesTaskList.p3 = Check over all your answers before submit
 applicantResidence.title = Where have you lived?
 applicantResidence.heading = Where have you lived?
 applicantResidence.checkYourAnswersLabel = Where you have lived
-applicantResidence.p1 = The UK includes England, Wales, Scotland and Northern Ireland. The UK does not include Isle of Man, Channel Islands or British overseas territories.
+applicantResidence.p1 = The UK includes England, Wales, Scotland and Northern Ireland. The UK does not include Isle of Man, Channel Islands or
+applicantResidence.p1.link.text = British overseas territories
+applicantResidence.p1.link.href = https://www.gov.uk/types-of-british-nationality/british-overseas-territories-citizen
 applicantResidence.p2 = You have lived abroad if you were outside of the UK for 8 weeks in a row. Do not include times where you stayed in other countries for holiday or for work.
 applicantResidence.alwaysUk = Always lived in the UK
 applicantResidence.ukAndAbroad = Lived in the UK and abroad
