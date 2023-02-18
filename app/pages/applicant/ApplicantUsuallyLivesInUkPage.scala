@@ -33,7 +33,21 @@ case object ApplicantUsuallyLivesInUkPage extends QuestionPage[Boolean] {
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
-      case true  => ApplicantCurrentAddressInUkPage
-      case false => ApplicantUsualCountryOfResidencePage
+      case true  =>
+        if (answers.isAuthenticated) {
+          (
+            answers.get(DesignatoryAddressInUkPage) orElse
+            answers.designatoryDetails.flatMap(_.residentialAddress.map(_.isUkAddress))
+          ).map {
+            case true => ApplicantArrivedInUkPage
+            case false => ApplicantEmploymentStatusPage
+          }.orRecover
+
+        } else {
+          ApplicantCurrentAddressInUkPage
+        }
+
+      case false =>
+        ApplicantUsualCountryOfResidencePage
     }.orRecover
 }

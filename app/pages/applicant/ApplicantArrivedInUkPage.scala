@@ -33,6 +33,7 @@ case object ApplicantArrivedInUkPage extends QuestionPage[LocalDate] {
   override def route(waypoints: Waypoints): Call =
     routes.ApplicantArrivedInUkController.onPageLoad(waypoints)
 
-  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    ApplicantCurrentUkAddressPage
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page = {
+    if (answers.isAuthenticated) ApplicantEmploymentStatusPage else ApplicantCurrentUkAddressPage
+  }
 }

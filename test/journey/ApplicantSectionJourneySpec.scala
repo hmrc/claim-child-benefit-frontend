@@ -18,12 +18,12 @@ package journey
 
 import generators.ModelGenerators
 import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments}
-import models.{AdultName, ApplicantPreviousName, ApplicantResidence, ChildName, Country, EmploymentStatus, Index, InternationalAddress, Nationality, UkAddress}
+import models._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
-import pages.applicant._
 import pages.TaskListPage
+import pages.applicant._
 import uk.gov.hmrc.domain.Nino
 
 import java.time.LocalDate
@@ -39,6 +39,8 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
   private val country = Gen.oneOf(Country.internationalCountries).sample.value
   private val internationalAddress = InternationalAddress("line1", None, "town", None, None, country)
   private val previousName = ApplicantPreviousName("name")
+  private val ukNpsAddress = NPSAddress("line 1", None, None, None, None, None, Country.allCountries.find(_.code == "GB"))
+  private val nonUkNpsAddress = NPSAddress("line 1", None, None, None, None, None, None)
 
   "users who don't know their NINO, with no previous names or addresses, who have always lived in the UK and are not claiming right now must proceed to the task list" in {
 
@@ -140,7 +142,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
     }
   }
 
-  "users who have lived at their current address a year" - {
+  "unauthenticated users who have lived at their current address a year" - {
 
     "who have always lived in the UK" - {
 
@@ -184,7 +186,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
     }
   }
 
-  "users who have not lived at their current address a year" - {
+  "unauthenticated users who have not lived at their current address a year" - {
 
     "who have always lived in the UK" - {
 
@@ -232,7 +234,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
       }
     }
 
-    "users who have always lived abroad" - {
+    "who have always lived abroad" - {
 
       "must be asked for their previous address" in {
 
@@ -248,7 +250,267 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
     }
   }
 
-  "users who have lived in the UK and abroad" - {
+  "authenticated users who have lived in the UK and abroad" - {
+
+    "who usually live in the UK" - {
+
+      "who have a designatory address in the UK and have not updated it" - {
+
+        val designatoryDetails = DesignatoryDetails(None, None, Some(ukNpsAddress), None)
+        val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
+
+        "must be asked when the arrived in the UK" in {
+
+          startingFrom(ApplicantResidencePage, answers = answers)
+            .run(
+              submitAnswer(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
+              submitAnswer(ApplicantUsuallyLivesInUkPage, true),
+              submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
+              pageMustBe(ApplicantEmploymentStatusPage)
+            )
+        }
+      }
+
+      "who have a designatory address in the UK and have updated it with a UK address" - {
+
+        val designatoryDetails = DesignatoryDetails(None, None, Some(ukNpsAddress), None)
+        val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
+
+        "must be asked when the arrived in the UK" in {
+
+          startingFrom(ApplicantResidencePage, answers = answers)
+            .run(
+              setUserAnswerTo(DesignatoryAddressInUkPage, true),
+              setUserAnswerTo(DesignatoryUkAddressPage, ukAddress),
+              submitAnswer(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
+              submitAnswer(ApplicantUsuallyLivesInUkPage, true),
+              submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
+              pageMustBe(ApplicantEmploymentStatusPage)
+            )
+        }
+      }
+
+      "who have a designatory address in the UK and have updated it with an international address" - {
+
+        val designatoryDetails = DesignatoryDetails(None, None, Some(ukNpsAddress), None)
+        val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
+
+        "must not be asked when the arrived in the UK" in {
+
+          startingFrom(ApplicantResidencePage, answers = answers)
+            .run(
+              setUserAnswerTo(DesignatoryAddressInUkPage, false),
+              setUserAnswerTo(DesignatoryInternationalAddressPage, internationalAddress),
+              submitAnswer(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
+              submitAnswer(ApplicantUsuallyLivesInUkPage, true),
+              pageMustBe(ApplicantEmploymentStatusPage)
+            )
+        }
+      }
+
+      "who have an international designatory address and have not updated it" - {
+
+        val designatoryDetails = DesignatoryDetails(None, None, Some(nonUkNpsAddress), None)
+        val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
+
+        "must not be asked when the arrived in the UK" in {
+
+          startingFrom(ApplicantResidencePage, answers = answers)
+            .run(
+              submitAnswer(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
+              submitAnswer(ApplicantUsuallyLivesInUkPage, true),
+              pageMustBe(ApplicantEmploymentStatusPage)
+            )
+        }
+      }
+
+      "who have an international designatory address and have updated it with a UK address" - {
+
+        val designatoryDetails = DesignatoryDetails(None, None, Some(nonUkNpsAddress), None)
+        val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
+
+        "must be asked when the arrived in the UK" in {
+
+          startingFrom(ApplicantResidencePage, answers = answers)
+            .run(
+              setUserAnswerTo(DesignatoryAddressInUkPage, true),
+              setUserAnswerTo(DesignatoryUkAddressPage, ukAddress),
+              submitAnswer(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
+              submitAnswer(ApplicantUsuallyLivesInUkPage, true),
+              submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
+              pageMustBe(ApplicantEmploymentStatusPage)
+            )
+        }
+      }
+
+      "who have an international designatory address and have updated it with an international address" - {
+
+        val designatoryDetails = DesignatoryDetails(None, None, Some(nonUkNpsAddress), None)
+        val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
+
+        "must not be asked when the arrived in the UK" in {
+
+          startingFrom(ApplicantResidencePage, answers = answers)
+            .run(
+              setUserAnswerTo(DesignatoryAddressInUkPage, false),
+              setUserAnswerTo(DesignatoryInternationalAddressPage, internationalAddress),
+              submitAnswer(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
+              submitAnswer(ApplicantUsuallyLivesInUkPage, true),
+              pageMustBe(ApplicantEmploymentStatusPage)
+            )
+        }
+      }
+    }
+
+    "who do not usually live in the UK" - {
+
+      "who have a designatory address in the UK and have not updated it" - {
+
+        val designatoryDetails = DesignatoryDetails(None, None, Some(ukNpsAddress), None)
+        val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
+
+        "must be asked when the arrived in the UK" in {
+
+          startingFrom(ApplicantResidencePage, answers = answers)
+            .run(
+              submitAnswer(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
+              submitAnswer(ApplicantUsuallyLivesInUkPage, false),
+              submitAnswer(ApplicantUsualCountryOfResidencePage, country),
+              submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
+              pageMustBe(ApplicantEmploymentStatusPage)
+            )
+        }
+      }
+
+      "who have a designatory address in the UK and have updated it with a UK address" - {
+
+        val designatoryDetails = DesignatoryDetails(None, None, Some(ukNpsAddress), None)
+        val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
+
+        "must be asked when the arrived in the UK" in {
+
+          startingFrom(ApplicantResidencePage, answers = answers)
+            .run(
+              setUserAnswerTo(DesignatoryAddressInUkPage, true),
+              setUserAnswerTo(DesignatoryUkAddressPage, ukAddress),
+              submitAnswer(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
+              submitAnswer(ApplicantUsuallyLivesInUkPage, false),
+              submitAnswer(ApplicantUsualCountryOfResidencePage, country),
+              submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
+              pageMustBe(ApplicantEmploymentStatusPage)
+            )
+        }
+      }
+
+      "who have a designatory address in the UK and have updated it with an international address" - {
+
+        val designatoryDetails = DesignatoryDetails(None, None, Some(ukNpsAddress), None)
+        val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
+
+        "must not be asked when the arrived in the UK" in {
+
+          startingFrom(ApplicantResidencePage, answers = answers)
+            .run(
+              setUserAnswerTo(DesignatoryAddressInUkPage, false),
+              setUserAnswerTo(DesignatoryInternationalAddressPage, internationalAddress),
+              submitAnswer(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
+              submitAnswer(ApplicantUsuallyLivesInUkPage, false),
+              submitAnswer(ApplicantUsualCountryOfResidencePage, country),
+              pageMustBe(ApplicantEmploymentStatusPage)
+            )
+        }
+      }
+
+      "who have an international designatory address and have not updated it" - {
+
+        val designatoryDetails = DesignatoryDetails(None, None, Some(nonUkNpsAddress), None)
+        val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
+
+        "must not be asked when the arrived in the UK" in {
+
+          startingFrom(ApplicantResidencePage, answers = answers)
+            .run(
+              submitAnswer(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
+              submitAnswer(ApplicantUsuallyLivesInUkPage, false),
+              submitAnswer(ApplicantUsualCountryOfResidencePage, country),
+              pageMustBe(ApplicantEmploymentStatusPage)
+            )
+        }
+      }
+
+      "who have an international designatory address and have updated it with a UK address" - {
+
+        val designatoryDetails = DesignatoryDetails(None, None, Some(nonUkNpsAddress), None)
+        val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
+
+        "must be asked when the arrived in the UK" in {
+
+          startingFrom(ApplicantResidencePage, answers = answers)
+            .run(
+              setUserAnswerTo(DesignatoryAddressInUkPage, true),
+              setUserAnswerTo(DesignatoryUkAddressPage, ukAddress),
+              submitAnswer(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
+              submitAnswer(ApplicantUsuallyLivesInUkPage, false),
+              submitAnswer(ApplicantUsualCountryOfResidencePage, country),
+              submitAnswer(ApplicantArrivedInUkPage, LocalDate.now),
+              pageMustBe(ApplicantEmploymentStatusPage)
+            )
+        }
+      }
+
+      "who have an international designatory address and have updated it with an international address" - {
+
+        val designatoryDetails = DesignatoryDetails(None, None, Some(nonUkNpsAddress), None)
+        val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
+
+        "must not be asked when the arrived in the UK" in {
+
+          startingFrom(ApplicantResidencePage, answers = answers)
+            .run(
+              setUserAnswerTo(DesignatoryAddressInUkPage, false),
+              setUserAnswerTo(DesignatoryInternationalAddressPage, internationalAddress),
+              submitAnswer(ApplicantResidencePage, ApplicantResidence.UkAndAbroad),
+              submitAnswer(ApplicantUsuallyLivesInUkPage, false),
+              submitAnswer(ApplicantUsualCountryOfResidencePage, country),
+              pageMustBe(ApplicantEmploymentStatusPage)
+            )
+        }
+      }
+    }
+  }
+
+  "authenticated users who have always lived abroad" - {
+
+    "must be asked where they usually live then for their employment status" in {
+
+      val designatoryDetails = DesignatoryDetails(None, None, Some(nonUkNpsAddress), None)
+      val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
+
+      startingFrom(ApplicantResidencePage, answers = answers)
+        .run(
+          submitAnswer(ApplicantResidencePage, ApplicantResidence.AlwaysAbroad),
+          submitAnswer(ApplicantUsualCountryOfResidencePage, country),
+          pageMustBe(ApplicantEmploymentStatusPage)
+        )
+    }
+  }
+  
+  "authenticated users who have always lived in the UK" - {
+    
+    "must proceed from Applicant Residence to Applicant is HM Forces" in {
+
+      val designatoryDetails = DesignatoryDetails(None, None, Some(ukNpsAddress), None)
+      val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
+
+      startingFrom(ApplicantResidencePage, answers = answers)
+        .run(
+          submitAnswer(ApplicantResidencePage, ApplicantResidence.AlwaysUk),
+          pageMustBe(ApplicantIsHmfOrCivilServantPage)
+        )
+    }
+  }
+
+  "unauthenticated users who have lived in the UK and abroad" - {
 
     "who usually live in the UK" - {
 
@@ -317,7 +579,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
     }
   }
 
-  "users who have always lived abroad" - {
+  "unauthenticated users who have always lived abroad" - {
 
     "must be asked which country they usually live in" in {
 

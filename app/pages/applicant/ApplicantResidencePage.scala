@@ -35,11 +35,17 @@ case object ApplicantResidencePage extends QuestionPage[ApplicantResidence] {
     routes.ApplicantResidenceController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case ApplicantResidence.AlwaysUk     => ApplicantCurrentUkAddressPage
-      case ApplicantResidence.UkAndAbroad  => ApplicantUsuallyLivesInUkPage
-      case ApplicantResidence.AlwaysAbroad => ApplicantUsualCountryOfResidencePage
-    }.orRecover
+      answers.get(this).map {
+        case ApplicantResidence.AlwaysUk =>
+          if (answers.isAuthenticated) ApplicantIsHmfOrCivilServantPage else ApplicantCurrentUkAddressPage
+
+        case ApplicantResidence.UkAndAbroad =>
+          ApplicantUsuallyLivesInUkPage
+
+        case ApplicantResidence.AlwaysAbroad =>
+          ApplicantUsualCountryOfResidencePage
+      }.orRecover
+
 
   override def cleanup(value: Option[ApplicantResidence], previousAnswers: UserAnswers, currentAnswers: UserAnswers): Try[UserAnswers] =
     value.map {
