@@ -18,11 +18,13 @@ package pages.applicant
 
 import controllers.applicant.routes
 import models.UserAnswers
-import pages.{CheckAnswersPage, Page, TaskListPage, Terminus, Waypoints}
+import pages.{CheckAnswersPage, Page, QuestionPage, TaskListPage, Terminus, Waypoints}
+import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-object CheckDesignatoryDetailsPage extends Page {
+object CheckDesignatoryDetailsPage extends QuestionPage[Boolean] {
+
+  override def path: JsPath = JsPath \ "proceededFromDesignatoryDetails"
 
   override def route(waypoints: Waypoints): Call = routes.CheckDesignatoryDetailsController.onPageLoad
-
 }
