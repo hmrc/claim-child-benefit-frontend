@@ -28,7 +28,7 @@ import viewmodels.implicits._
 
 object DesignatoryAddressSummary {
 
-  def row(answers: UserAnswers, waypoints: Waypoints)(implicit messages: Messages): Option[SummaryListRow] = {
+  def row(answers: UserAnswers, waypoints: Waypoints)(implicit messages: Messages): Option[SummaryListRow] =
     answers.designatoryDetails.flatMap { designatoryDetails =>
       (
         answers.get(DesignatoryUkAddressPage) orElse
@@ -52,5 +52,26 @@ object DesignatoryAddressSummary {
           )
       }
     }
-  }
+
+  def checkApplicantDetailsRow(answers: UserAnswers, waypoints: Waypoints)
+                              (implicit messages: Messages): Option[SummaryListRow] =
+    if (answers.notDefined(DesignatoryUkAddressPage) && answers.notDefined(DesignatoryInternationalAddressPage)) {
+      answers.designatoryDetails.flatMap { designatoryDetails =>
+        designatoryDetails.residentialAddress.map { address =>
+
+          val value =
+            address.lines
+              .map(HtmlFormat.escape(_).toString)
+              .mkString("<br/>")
+
+          SummaryListRowViewModel(
+            key = "designatoryAddress.checkYourAnswersLabel",
+            value = ValueViewModel(HtmlContent(value)),
+            actions = Nil
+          )
+        }
+      }
+    } else {
+      None
+    }
 }

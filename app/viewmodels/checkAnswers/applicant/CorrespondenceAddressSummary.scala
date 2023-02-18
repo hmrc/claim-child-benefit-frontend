@@ -53,4 +53,26 @@ object CorrespondenceAddressSummary {
       }
     }
   }
+
+  def checkApplicantDetailsRow(answers: UserAnswers, waypoints: Waypoints)
+                              (implicit messages: Messages): Option[SummaryListRow] =
+    if (answers.notDefined(CorrespondenceUkAddressPage) && answers.notDefined(CorrespondenceInternationalAddressPage)) {
+      answers.designatoryDetails.flatMap { designatoryDetails =>
+        designatoryDetails.correspondenceAddress.map { address =>
+
+          val value =
+            address.lines
+              .map(HtmlFormat.escape(_).toString)
+              .mkString("<br/>")
+
+          SummaryListRowViewModel(
+            key = "correspondenceAddress.checkYourAnswersLabel",
+            value = ValueViewModel(HtmlContent(value)),
+            actions = Nil
+          )
+        }
+      }
+    } else {
+      None
+    }
 }

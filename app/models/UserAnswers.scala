@@ -55,6 +55,9 @@ final case class UserAnswers(
       .map(_.isDefined)
       .getOrElse(false)
 
+  def notDefined(gettable: Gettable[_]): Boolean =
+    !isDefined(gettable)
+
   def set[A](page: Settable[A], value: A)(implicit writes: Writes[A]): Try[UserAnswers] = {
 
     val originalAnswers = this

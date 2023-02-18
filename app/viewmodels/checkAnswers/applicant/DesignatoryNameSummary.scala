@@ -17,9 +17,10 @@
 package viewmodels.checkAnswers.applicant
 
 import models.UserAnswers
-import pages.Waypoints
+import pages.{CheckAnswersPage, Waypoints}
 import pages.applicant.DesignatoryNamePage
 import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -36,6 +37,33 @@ object DesignatoryNameSummary {
             value = ValueViewModel(name.display),
             actions = Seq(
               ActionItemViewModel("site.change", DesignatoryNamePage.route(waypoints).url)
+                .withVisuallyHiddenText(messages("designatoryName.change.hidden"))
+            )
+          )
+      }
+    }
+
+  def checkApplicantDetailsRow(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
+                              (implicit messages: Messages): Option[SummaryListRow] =
+    if (answers.notDefined(DesignatoryNamePage)) {
+      answers.designatoryDetails.flatMap { designatoryDetails =>
+        designatoryDetails.preferredName.map { name =>
+
+          SummaryListRowViewModel(
+            key = "designatoryName.checkYourAnswersLabel",
+            value = ValueViewModel(Text(name.display))
+          )
+        }
+      }
+    } else {
+      answers.get(DesignatoryNamePage).map {
+        name =>
+
+          SummaryListRowViewModel(
+            key = "designatoryName.checkYourAnswersLabel",
+            value = ValueViewModel(name.display),
+            actions = Seq(
+              ActionItemViewModel("site.change", sourcePage.changeLink(waypoints, sourcePage).url)
                 .withVisuallyHiddenText(messages("designatoryName.change.hidden"))
             )
           )
