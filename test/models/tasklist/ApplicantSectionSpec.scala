@@ -16,7 +16,7 @@
 
 package models.tasklist
 
-import models.UserAnswers
+import models.{DesignatoryDetails, UserAnswers}
 import models.tasklist.SectionStatus.{Completed, InProgress, NotStarted}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
@@ -25,7 +25,7 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.applicant.{ApplicantDateOfBirthPage, ApplicantNinoKnownPage, ApplicantNinoPage, CheckApplicantDetailsPage}
+import pages.applicant.{ApplicantDateOfBirthPage, ApplicantNinoKnownPage, ApplicantNinoPage, CheckApplicantDetailsPage, CheckDesignatoryDetailsPage}
 import services.JourneyProgressService
 
 class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar with BeforeAndAfterEach with OptionValues {
@@ -50,6 +50,28 @@ class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar w
       result.value mustEqual ApplicantDateOfBirthPage
       verify(mockJourneyProgressService, times(1)).continue(ApplicantNinoKnownPage, answers)
     }
+
+    "must start from Applicant Nino Known when no designatory details exist in user answers" in {
+
+      when(mockJourneyProgressService.continue(any(), any())).thenReturn(ApplicantDateOfBirthPage)
+
+      val answers = UserAnswers("id")
+      val section = new ApplicantSection(mockJourneyProgressService)
+      section.continue(answers)
+
+      verify(mockJourneyProgressService, times(1)).continue(ApplicantNinoKnownPage, answers)
+    }
+
+    "must start from Check Designatory Details when designatory details exist in user answers" in {
+
+      when(mockJourneyProgressService.continue(any(), any())).thenReturn(ApplicantDateOfBirthPage)
+
+      val answers = UserAnswers("id", designatoryDetails = Some(DesignatoryDetails(None, None, None, None)))
+      val section = new ApplicantSection(mockJourneyProgressService)
+      section.continue(answers)
+
+      verify(mockJourneyProgressService, times(1)).continue(CheckDesignatoryDetailsPage, answers)
+    }
   }
 
   ".progress" - {
@@ -64,6 +86,18 @@ class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar w
 
       result mustEqual NotStarted
       verify(mockJourneyProgressService, times(1)).continue(ApplicantNinoKnownPage, answers)
+    }
+
+    "must be Not Started when the Journey Progress service returns Check Designatory Details" in {
+
+      when(mockJourneyProgressService.continue(any(), any())).thenReturn(CheckDesignatoryDetailsPage)
+
+      val answers = UserAnswers("id", designatoryDetails = Some(DesignatoryDetails(None, None, None, None)))
+      val section = new ApplicantSection(mockJourneyProgressService)
+      val result = section.progress(answers)
+
+      result mustEqual NotStarted
+      verify(mockJourneyProgressService, times(1)).continue(CheckDesignatoryDetailsPage, answers)
     }
 
     "must be Completed when the Journey Progress service returns Check Applicant Details" in {
@@ -91,7 +125,7 @@ class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar w
     }
   }
 
-  "the only prerequisite section must be empty" in {
+  "prerequisite sections must be empty" in {
 
     val answers = UserAnswers("id")
     val section = new ApplicantSection(mockJourneyProgressService)

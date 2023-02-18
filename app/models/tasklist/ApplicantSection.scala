@@ -19,7 +19,7 @@ package models.tasklist
 import models.UserAnswers
 import models.tasklist.SectionStatus.{CannotStart, Completed, InProgress, NotStarted}
 import pages.Page
-import pages.applicant.{ApplicantNinoKnownPage, CheckApplicantDetailsPage}
+import pages.applicant.{ApplicantNinoKnownPage, CheckApplicantDetailsPage, CheckDesignatoryDetailsPage}
 import services.JourneyProgressService
 
 import javax.inject.Inject
@@ -29,11 +29,16 @@ class ApplicantSection @Inject()(journeyProgress: JourneyProgressService) extend
   override val name: String = "taskList.applicantDetails"
 
   override def continue(answers: UserAnswers): Option[Page] =
-    Some(journeyProgress.continue(ApplicantNinoKnownPage, answers))
+    Some(
+      answers.designatoryDetails
+        .map(_ => journeyProgress.continue(CheckDesignatoryDetailsPage, answers))
+        .getOrElse(journeyProgress.continue(ApplicantNinoKnownPage, answers))
+    )
 
   override def progress(answers: UserAnswers): SectionStatus =
     continue(answers).map {
       case ApplicantNinoKnownPage => NotStarted
+      case CheckDesignatoryDetailsPage => NotStarted
       case CheckApplicantDetailsPage => Completed
       case _ => InProgress
     }.getOrElse(CannotStart)
