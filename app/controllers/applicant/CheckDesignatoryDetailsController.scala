@@ -40,13 +40,14 @@ class CheckDesignatoryDetailsController  @Inject()(
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val thisPage = CheckDesignatoryDetailsPage
       val waypoints = EmptyWaypoints
 
       val designatoryDetails = SummaryListViewModel(
         rows = Seq(
-
-        )
+          DesignatoryNameSummary.row(request.userAnswers, waypoints),
+          DesignatoryAddressSummary.row(request.userAnswers, waypoints),
+          CorrespondenceAddressSummary.row(request.userAnswers, waypoints)
+        ).flatten
       )
       Ok(view(designatoryDetails))
   }
