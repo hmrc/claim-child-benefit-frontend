@@ -17,23 +17,28 @@
 package controllers.auth
 
 import config.FrontendAppConfig
-import controllers.actions.IdentifierAction
+import controllers.actions.{DataRetrievalAction, IdentifierAction}
+import models.UserAnswers
+import pages.{EmptyWaypoints, TaskListPage}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.auth._
 
+import java.time.{Clock, Instant}
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class AuthController @Inject()(
                                 val controllerComponents: MessagesControllerComponents,
                                 userDataService: UserDataService,
                                 identify: IdentifierAction,
+                                getData: DataRetrievalAction,
                                 config: FrontendAppConfig,
                                 unsupportedAffinityGroupAgentView: UnsupportedAffinityGroupAgentView,
-                                unsupportedAffinityGroupOrganisationView: UnsupportedAffinityGroupOrganisationView
+                                unsupportedAffinityGroupOrganisationView: UnsupportedAffinityGroupOrganisationView,
+                                clock: Clock
                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
 
@@ -73,5 +78,16 @@ class AuthController @Inject()(
 
   def unsupportedAffinityGroupOrganisation(continueUrl: String): Action[AnyContent] = Action { implicit request =>
     Ok(unsupportedAffinityGroupOrganisationView(continueUrl))
+  }
+
+  def signedIn(): Action[AnyContent] = (identify andThen getData).async {
+    implicit request =>
+      request.userAnswers
+        .map(_ => Future.successful(Redirect(TaskListPage.route(EmptyWaypoints).url)))
+        .getOrElse {
+          userDataService
+            .set(UserAnswers(request.userId, lastUpdated = Instant.now(clock)))
+            .map(_ => Redirect(TaskListPage.route(EmptyWaypoints).url))
+        }
   }
 }

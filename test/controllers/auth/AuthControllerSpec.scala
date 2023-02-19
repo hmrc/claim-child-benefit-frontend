@@ -17,15 +17,18 @@
 package controllers.auth
 
 import base.SpecBase
+import models.UserAnswers
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
+import pages.{EmptyWaypoints, TaskListPage}
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserDataService
 import views.html.auth.{UnsupportedAffinityGroupAgentView, UnsupportedAffinityGroupOrganisationView}
 
+import java.time.Instant
 import scala.concurrent.Future
 
 class AuthControllerSpec extends SpecBase with MockitoSugar {
@@ -123,6 +126,44 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual "http://localhost:9553/bas-gateway/sign-in?origin=CHB&continue=continueUrl"
+      }
+    }
+  }
+
+  "signedIn" - {
+
+    "must redirect to the task list when the user already has user answers" in {
+
+      val application = applicationBuilder(Some(emptyUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.AuthController.signedIn().url)
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual TaskListPage.route(EmptyWaypoints).url
+      }
+    }
+
+    "must save an empty UserAnswers then redirect to the task list when the user does not have any user answers" in {
+
+      val mockUserDataService = mock[UserDataService]
+      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(None)
+          .overrides(bind[UserDataService].toInstance(mockUserDataService))
+          .build()
+
+      running(application) {
+
+        val request = FakeRequest(GET, routes.AuthController.signedIn().url)
+        val result = route(application, request).value
+        val expectedAnswers = UserAnswers(userAnswersId, lastUpdated = Instant.now(clockAtFixedInstant))
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual TaskListPage.route(EmptyWaypoints).url
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
       }
     }
   }

@@ -89,6 +89,11 @@ journeyRecovery.startAgain.p2.link.href = https://www.gov.uk/government/organisa
 journeyRecovery.startAgain.p2.link.text = Child Benefit helpline
 journeyRecovery.startAgain.p2.2 = if you need to speak to someone about claiming Child Benefit.
 
+signIn.title = Do you want to sign in to Government Gateway?
+signIn.heading = Do you want to sign in to Government Gateway?
+signIn.p1 = Signing in to Government Gateway can be the quickest way to make a Child Benefit claim, as you may be able to send your claim digitally.
+signIn.p2 = If you don’t sign in, you can only make a Child Benefit claim by printing and posting your claim to HMRC.
+
 signedOut.title = For your security, we reset your application form
 signedOut.heading = For your security, we reset your application form
 signedOut.guidance = We did not save your answers.
