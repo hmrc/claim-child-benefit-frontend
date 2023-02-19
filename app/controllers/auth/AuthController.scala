@@ -71,7 +71,7 @@ class AuthController @Inject()(
           _ =>
             request match {
               case _: AuthenticatedIdentifierRequest[_] =>
-                Redirect(config.signOutUrl, Map("continue" -> Seq(routes.SignedOutController.onPageLoad.url)))
+                Redirect(config.signOutUrl, Map("continue" -> Seq(config.host + routes.SignedOutController.onPageLoad.url)))
 
               case _ =>
                 Redirect(routes.SignedOutController.onPageLoad)

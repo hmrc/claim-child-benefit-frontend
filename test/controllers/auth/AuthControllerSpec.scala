@@ -80,7 +80,7 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
 
           val result = route(application, request).value
 
-          val expectedRedirectUrl = "http://localhost:9553/bas-gateway/sign-out-without-state?continue=%2Ffill-online%2Fclaim-child-benefit%2Fapplication-form-has-been-reset"
+          val expectedRedirectUrl = "http://localhost:9553/bas-gateway/sign-out-without-state?continue=http%3A%2F%2Flocalhost%3A11303%2Ffill-online%2Fclaim-child-benefit%2Fapplication-form-has-been-reset"
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual expectedRedirectUrl
