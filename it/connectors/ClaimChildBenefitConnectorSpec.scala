@@ -52,7 +52,7 @@ class ClaimChildBenefitConnectorSpec
           val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
 
           server.stubFor(
-            get(urlEqualTo("/designatory-details"))
+            get(urlEqualTo("/claim-child-benefit/designatory-details"))
               .willReturn(ok(happyResponseJson))
           )
 
@@ -74,7 +74,7 @@ class ClaimChildBenefitConnectorSpec
           val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
 
           server.stubFor(
-            get(urlEqualTo("/designatory-details"))
+            get(urlEqualTo("/claim-child-benefit/designatory-details"))
               .willReturn(aResponse().withStatus(500))
           )
 
