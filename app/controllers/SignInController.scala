@@ -54,7 +54,7 @@ class SignInController @Inject()(
 
         value =>
           if (value) {
-            Redirect(authRoutes.AuthController.redirectToLogin(config.loginContinueUrl))
+            Redirect(authRoutes.AuthController.redirectToLogin(config.loginContinueUrl + config.signedInUrl))
           } else {
             Redirect(TaskListPage.route(waypoints).url)
           }

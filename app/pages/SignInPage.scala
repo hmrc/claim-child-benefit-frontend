@@ -16,16 +16,9 @@
 
 package pages
 import controllers.routes
-import models.UserAnswers
 import play.api.mvc.Call
 
-import javax.inject.Inject
+object SignInPage extends Page {
 
-class IndexPage @Inject()(recentlyClaimedPage: RecentlyClaimedPage) extends Page {
-
-  override def route(waypoints: Waypoints): Call =
-    routes.IndexController.onPageLoad
-
-  override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    recentlyClaimedPage
+  override def route(waypoints: Waypoints): Call = routes.SignInController.onPageLoad(waypoints)
 }

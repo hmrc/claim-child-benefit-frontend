@@ -35,6 +35,8 @@ final case class UserAnswers(
                               lastUpdated: Instant = Instant.now
                             ) {
 
+  lazy val isAuthenticated: Boolean = nino.nonEmpty
+
   def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] =
     Reads.optionNoError(Reads.at(page.path)).reads(data).getOrElse(None)
 

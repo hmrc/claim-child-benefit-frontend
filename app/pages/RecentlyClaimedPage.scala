@@ -16,12 +16,15 @@
 
 package pages
 
+import config.FeatureFlags
 import controllers.routes
 import models.UserAnswers
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object RecentlyClaimedPage extends QuestionPage[Boolean] {
+import javax.inject.Inject
+
+class RecentlyClaimedPage @Inject()(featureFlags: FeatureFlags) extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString
 
@@ -32,7 +35,14 @@ case object RecentlyClaimedPage extends QuestionPage[Boolean] {
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
-      case true  => AlreadyClaimedPage
-      case false => TaskListPage
+      case true =>
+        AlreadyClaimedPage
+
+      case false =>
+        if (featureFlags.allowAuthenticatedSessions && !answers.isAuthenticated) {
+          SignInPage
+        } else {
+          TaskListPage
+        }
     }.orRecover
 }

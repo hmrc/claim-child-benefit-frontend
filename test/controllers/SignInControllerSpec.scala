@@ -59,7 +59,7 @@ class SignInControllerSpec extends SpecBase {
         val config = application.injector.instanceOf[FrontendAppConfig]
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual authRoutes.AuthController.redirectToLogin(config.loginContinueUrl).url
+        redirectLocation(result).value mustEqual authRoutes.AuthController.redirectToLogin(config.loginContinueUrl + config.signedInUrl).url
       }
     }
 
