@@ -35,27 +35,57 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
 
   "signOut" - {
 
-    "must clear user answers and redirect to signed out" in {
+    "when the user is unauthenticated" - {
 
-      val mockUserDataService = mock[UserDataService]
-      when(mockUserDataService.clear(any())) thenReturn Future.successful(true)
+      "must clear user answers and redirect to signed out" in {
 
-      val application =
-        applicationBuilder(None)
-          .overrides(bind[UserDataService].toInstance(mockUserDataService))
-          .build()
+        val mockUserDataService = mock[UserDataService]
+        when(mockUserDataService.clear(any())) thenReturn Future.successful(true)
 
-      running(application) {
+        val application =
+          applicationBuilder(None)
+            .overrides(bind[UserDataService].toInstance(mockUserDataService))
+            .build()
 
-        val request = FakeRequest(GET, routes.AuthController.signOut.url)
+        running(application) {
 
-        val result = route(application, request).value
+          val request = FakeRequest(GET, routes.AuthController.signOut.url)
 
-        val expectedRedirectUrl = routes.SignedOutController.onPageLoad.url
+          val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual expectedRedirectUrl
-        verify(mockUserDataService, times(1)).clear(eqTo(userAnswersId))
+          val expectedRedirectUrl = routes.SignedOutController.onPageLoad.url
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual expectedRedirectUrl
+          verify(mockUserDataService, times(1)).clear(eqTo(userAnswersId))
+        }
+      }
+    }
+
+    "when the user is authenticated" - {
+
+      "must clear user answers and redirect to BAS sign-out" in {
+
+        val mockUserDataService = mock[UserDataService]
+        when(mockUserDataService.clear(any())) thenReturn Future.successful(true)
+
+        val application =
+          applicationBuilder(None, userIsAuthenticated = true)
+            .overrides(bind[UserDataService].toInstance(mockUserDataService))
+            .build()
+
+        running(application) {
+
+          val request = FakeRequest(GET, routes.AuthController.signOut.url)
+
+          val result = route(application, request).value
+
+          val expectedRedirectUrl = "http://localhost:9553/bas-gateway/sign-out-without-state?continue=%2Ffill-online%2Fclaim-child-benefit%2Fapplication-form-has-been-reset"
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual expectedRedirectUrl
+          verify(mockUserDataService, times(1)).clear(eqTo(userAnswersId))
+        }
       }
     }
   }

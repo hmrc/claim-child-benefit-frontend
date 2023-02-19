@@ -19,6 +19,7 @@ package controllers.auth
 import config.FrontendAppConfig
 import controllers.actions.{DataRetrievalAction, IdentifierAction}
 import models.UserAnswers
+import models.requests.AuthenticatedIdentifierRequest
 import pages.{EmptyWaypoints, TaskListPage}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -68,7 +69,14 @@ class AuthController @Inject()(
         .clear(request.userId)
         .map {
           _ =>
-            Redirect(routes.SignedOutController.onPageLoad)
+            request match {
+              case _: AuthenticatedIdentifierRequest[_] =>
+                Redirect(config.signOutUrl, Map("continue" -> Seq(routes.SignedOutController.onPageLoad.url)))
+
+              case _ =>
+                Redirect(routes.SignedOutController.onPageLoad)
+            }
+
       }
   }
 
