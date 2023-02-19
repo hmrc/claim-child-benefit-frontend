@@ -20,10 +20,15 @@ date.day = Day
 date.month = Month
 date.year = Year
 
-timeout.title = The application form is about to be reset
-timeout.message = For your security, the application form will be reset in
-timeout.keepAlive = Continue form
-timeout.signOut = Reset
+timeout.unauthenticated.title = The application form is about to be reset
+timeout.unauthenticated.message = For your security, the application form will be reset in
+timeout.unauthenticated.keepAlive = Continue form
+timeout.unauthenticated.signOut = Reset
+
+timeout.authenticated.title = You’re about to be signed out
+timeout.authenticated.message = For your security, we wil sign you out in
+timeout.authenticated.keepAlive = Stay signed in
+timeout.authenticated.signOut = Sign out
 
 error.browser.title.prefix = Error:
 error.boolean = Please give an answer

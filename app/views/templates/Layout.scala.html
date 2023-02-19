@@ -15,7 +15,7 @@
  *@
 
 @import config.FrontendAppConfig
-@import uk.gov.hmrc.hmrcfrontend.views.config.StandardAlphaBanner
+@import models.requests._
 @import views.html.helper.CSPNonce
 
 @this(
@@ -33,7 +33,37 @@
     betaBanner: StandardBetaBanner
 )
 
-@(pageTitle: String, showBackLink: Boolean = true, timeout: Boolean = true, showSignOut: Boolean = false)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
+@(pageTitle: String, showBackLink: Boolean = true, timeout: Boolean = true)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
+
+@signedIn = @{
+    request match {
+        case x: DataRequest[_] =>
+            x.request match {
+                case _: AuthenticatedIdentifierRequest[_] => true
+                case _ => false
+            }
+
+        case x: OptionalDataRequest[_] =>
+            x.request match {
+                case _: AuthenticatedIdentifierRequest[_] => true
+                case _ => false
+            }
+
+        case x: AuthenticatedIdentifierRequest[_] =>
+            true
+
+        case _ =>
+            false
+    }
+}
+
+@timeoutType = @{
+    if (signedIn) {
+        "authenticated"
+    } else {
+        "unauthenticated"
+    }
+}
 
 @head = {
 
@@ -44,11 +74,11 @@
                 timeout             = Some(appConfig.timeout),
                 countdown           = Some(appConfig.countdown),
                 keepAliveUrl        = Some(routes.KeepAliveController.keepAlive.url),
-                keepAliveButtonText = Some(messages("timeout.keepAlive")),
+                keepAliveButtonText = Some(messages(s"timeout.$timeoutType.keepAlive")),
                 signOutUrl          = Some(controllers.auth.routes.AuthController.signOut.url),
-                signOutButtonText   = Some(messages("timeout.signOut")),
-                title               = Some(messages("timeout.title")),
-                message             = Some(messages("timeout.message"))
+                signOutButtonText   = Some(messages(s"timeout.$timeoutType.signOut")),
+                title               = Some(messages(s"timeout.$timeoutType.title")),
+                message             = Some(messages(s"timeout.$timeoutType.message"))
             )))
         } else None
     )
@@ -89,7 +119,7 @@
     headBlock   = Some(head),
     headerBlock = Some(hmrcStandardHeader(
         serviceUrl  = Some(routes.IndexController.onPageLoad.url),
-        signOutUrl  = if(showSignOut) Some(controllers.auth.routes.AuthController.signOut.url) else None,
+        signOutUrl  = if(signedIn) Some(controllers.auth.routes.AuthController.signOut.url) else None,
         phaseBanner = Some(betaBanner(appConfig.feedbackUrl))
     )),
     beforeContentBlock = Some(beforeContent),

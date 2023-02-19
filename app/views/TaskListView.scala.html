@@ -27,7 +27,7 @@
 @numberOfSections = @{sections.size}
 @completedSections = @{sections.count(_.status == Completed)}
 
-@layout(pageTitle = titleNoForm(messages("taskList.title"))) {
+@layout(pageTitle = titleNoForm(messages("taskList.title")), showBackLink = false) {
 
     <h1 class="govuk-heading-xl">@messages("taskList.heading")</h1>
 
