@@ -16,7 +16,7 @@
 
 package models.domain
 
-import models.JourneyModel
+import models.{JourneyModel, PartnerClaimingChildBenefit}
 import play.api.libs.json.{Json, OWrites}
 
 final case class Partner(nino: String, surname: String)
@@ -24,8 +24,15 @@ final case class Partner(nino: String, surname: String)
 object Partner {
 
   def build(partner: JourneyModel.Partner): Option[Partner] =
-    partner.nationalInsuranceNumber.map { nino =>
-      Partner(nino, partner.name.lastName)
+    partner.currentlyClaimingChildBenefit match {
+      case PartnerClaimingChildBenefit.NotClaiming =>
+        None
+
+      case _ =>
+        partner.nationalInsuranceNumber.map {
+          nino =>
+            Partner (nino, partner.name.lastName)
+        }
     }
 
   implicit lazy val writes: OWrites[Partner] = Json.writes

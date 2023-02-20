@@ -18,7 +18,8 @@ package models.domain
 
 import cats.data.NonEmptyList
 import generators.ModelGenerators
-import models.{AdultName, EmploymentStatus, JourneyModel, PartnerClaimingChildBenefit}
+import models.PartnerClaimingChildBenefit._
+import models.{AdultName, EmploymentStatus, JourneyModel}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.OptionValues
@@ -32,7 +33,30 @@ class PartnerSpec extends AnyFreeSpec with Matchers with ModelGenerators with Op
 
   ".build" - {
 
-    "must return a Partner when the given model has a NINO" in {
+    "must return a Partner when the given model has a NINO and is claiming Child Benefit or waiting to hear" in {
+
+      val surname = "surname"
+      val nino = arbitrary[Nino].sample.value.nino
+      val claiming = Gen.oneOf(GettingPayments, NotGettingPayments, WaitingToHear).sample.value
+
+      val partner = JourneyModel.Partner(
+        name = AdultName(None, "first", None, surname),
+        nationalInsuranceNumber = Some(nino),
+        dateOfBirth = LocalDate.now,
+        nationalities = NonEmptyList.fromListUnsafe(Gen.nonEmptyListOf(arbitrary[models.Nationality]).sample.value),
+        memberOfHMForcesOrCivilServantAbroad = true,
+        currentlyClaimingChildBenefit = claiming,
+        eldestChild = None,
+        countriesWorked = Nil,
+        countriesReceivedBenefits = Nil,
+        employmentStatus = Set[EmploymentStatus](EmploymentStatus.NoneOfThese)
+      )
+
+      val result = Partner.build(partner)
+      result.value mustEqual Partner(nino, surname)
+    }
+
+    "must return None when the given model has a NINO and is not claiming Child Benefit or waiting to hear about their eligibility" in {
 
       val surname = "surname"
       val nino = arbitrary[Nino].sample.value.nino
@@ -43,7 +67,7 @@ class PartnerSpec extends AnyFreeSpec with Matchers with ModelGenerators with Op
         dateOfBirth = LocalDate.now,
         nationalities = NonEmptyList.fromListUnsafe(Gen.nonEmptyListOf(arbitrary[models.Nationality]).sample.value),
         memberOfHMForcesOrCivilServantAbroad = true,
-        currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
+        currentlyClaimingChildBenefit = NotClaiming,
         eldestChild = None,
         countriesWorked = Nil,
         countriesReceivedBenefits = Nil,
@@ -51,8 +75,9 @@ class PartnerSpec extends AnyFreeSpec with Matchers with ModelGenerators with Op
       )
 
       val result = Partner.build(partner)
-      result.value mustEqual Partner(nino, surname)
+      result must not be defined
     }
+
     "must return None when the given model does not have a NINO" in {
 
       val surname = "surname"
@@ -63,7 +88,7 @@ class PartnerSpec extends AnyFreeSpec with Matchers with ModelGenerators with Op
         dateOfBirth = LocalDate.now,
         nationalities = NonEmptyList.fromListUnsafe(Gen.nonEmptyListOf(arbitrary[models.Nationality]).sample.value),
         memberOfHMForcesOrCivilServantAbroad = true,
-        currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
+        currentlyClaimingChildBenefit = GettingPayments,
         eldestChild = None,
         countriesWorked = Nil,
         countriesReceivedBenefits = Nil,
