@@ -16,8 +16,10 @@
 
 package views
 
+import models.requests.{AuthenticatedIdentifierRequest, DataRequest, OptionalDataRequest}
 import play.api.data.Form
 import play.api.i18n.Messages
+import play.api.mvc.Request
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -45,4 +47,27 @@ object ViewUtils {
 
   def booleanToYesNo(value: Boolean)(implicit messages: Messages): String =
     if (value) messages("site.yes") else messages("site.no")
+
+  implicit class RequestOps(request: Request[_]) {
+
+    def signedIn: Boolean = request match {
+      case d: DataRequest[_] =>
+        d.request match {
+          case _: AuthenticatedIdentifierRequest[_] => true
+          case _ => false
+        }
+
+      case x: OptionalDataRequest[_] =>
+        x.request match {
+          case _: AuthenticatedIdentifierRequest[_] => true
+          case _ => false
+        }
+
+      case x: AuthenticatedIdentifierRequest[_] =>
+        true
+
+      case _ =>
+        false
+    }
+  }
 }
