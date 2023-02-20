@@ -26,7 +26,9 @@ final case class NPSAddress(
                              line5: Option[String],
                              postcode: Option[String],
                              country: Option[Country]
-                           ) {
+                           ) extends Address {
+
+  lazy val isUkAddress: Boolean = country.exists(_.code == "GB")
 
   val lines: Seq[String] =
     Seq(
@@ -51,7 +53,10 @@ final case class DesignatoryDetails(
                                      knownAsName: Option[AdultName],
                                      residentialAddress: Option[NPSAddress],
                                      correspondenceAddress: Option[NPSAddress]
-                                   )
+                                   ) {
+
+  lazy val preferredName: Option[AdultName] = knownAsName orElse realName
+}
 
 object DesignatoryDetails {
   implicit lazy val format: OFormat[DesignatoryDetails] = Json.format

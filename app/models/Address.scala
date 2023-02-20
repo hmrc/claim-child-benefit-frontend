@@ -18,7 +18,7 @@ package models
 
 import play.api.libs.json.{Format, Json, OFormat, Reads, Writes}
 
-sealed trait Address extends Product with Serializable {
+trait Address extends Product with Serializable {
   val line1: String
   def lines: Seq[String]
 }

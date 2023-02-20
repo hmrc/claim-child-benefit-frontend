@@ -17,7 +17,6 @@
 package pages.applicant
 
 import controllers.applicant.routes
-import models.ApplicantResidence.AlwaysUk
 import models.{UkAddress, UserAnswers}
 import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
@@ -31,4 +30,7 @@ case object DesignatoryUkAddressPage extends QuestionPage[UkAddress] {
 
   override def route(waypoints: Waypoints): Call =
     routes.DesignatoryUkAddressController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    CheckDesignatoryDetailsPage
 }

@@ -31,4 +31,6 @@ case object DesignatoryNamePage extends QuestionPage[AdultName] {
   override def route(waypoints: Waypoints): Call =
     routes.DesignatoryNameController.onPageLoad(waypoints)
 
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    CheckDesignatoryDetailsPage
 }

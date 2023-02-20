@@ -32,4 +32,16 @@ case object CorrespondenceAddressInUkPage extends QuestionPage[Boolean] {
 
   override def route(waypoints: Waypoints): Call =
     routes.CorrespondenceAddressInUkController.onPageLoad(waypoints)
+
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    answers.get(this).map {
+      case true => CorrespondenceUkAddressPage
+      case false => CorrespondenceInternationalAddressPage
+    }.orRecover
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    value.map {
+      case true => userAnswers.remove(CorrespondenceInternationalAddressPage)
+      case false => userAnswers.remove(CorrespondenceUkAddressPage)
+    }.getOrElse(super.cleanup(value, userAnswers))
 }

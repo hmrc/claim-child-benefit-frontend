@@ -21,12 +21,14 @@ import pages.EmptyWaypoints
 import pages.applicant.CheckDesignatoryDetailsPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.applicant._
 import viewmodels.govuk.summarylist._
 import views.html.applicant.CheckDesignatoryDetailsView
 
 import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class CheckDesignatoryDetailsController  @Inject()(
                                                   override val messagesApi: MessagesApi,
@@ -34,25 +36,31 @@ class CheckDesignatoryDetailsController  @Inject()(
                                                   getData: DataRetrievalAction,
                                                   requireData: DataRequiredAction,
                                                   val controllerComponents: MessagesControllerComponents,
-                                                  view: CheckDesignatoryDetailsView
-                                                ) extends FrontendBaseController with I18nSupport {
+                                                  view: CheckDesignatoryDetailsView,
+                                                  userDataService: UserDataService
+                                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val thisPage = CheckDesignatoryDetailsPage
       val waypoints = EmptyWaypoints
 
       val designatoryDetails = SummaryListViewModel(
         rows = Seq(
-
-        )
+          DesignatoryNameSummary.row(request.userAnswers, waypoints),
+          DesignatoryAddressSummary.row(request.userAnswers, waypoints),
+          CorrespondenceAddressSummary.row(request.userAnswers, waypoints)
+        ).flatten
       )
       Ok(view(designatoryDetails))
   }
 
-  def onSubmit: Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onSubmit: Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      Redirect(CheckDesignatoryDetailsPage.navigate(EmptyWaypoints, request.userAnswers, request.userAnswers).route)
+
+      for {
+        updatedAnswers <- Future.fromTry(request.userAnswers.set(CheckDesignatoryDetailsPage, true))
+        _              <- userDataService.set(updatedAnswers)
+      } yield Redirect(CheckDesignatoryDetailsPage.navigate(EmptyWaypoints, request.userAnswers, request.userAnswers).route)
   }
 }

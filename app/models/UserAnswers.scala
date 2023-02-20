@@ -32,6 +32,7 @@ final case class UserAnswers(
                               id: String,
                               data: JsObject = Json.obj(),
                               nino: Option[String] = None,
+                              designatoryDetails: Option[DesignatoryDetails] = None,
                               lastUpdated: Instant = Instant.now
                             ) {
 
@@ -53,6 +54,9 @@ final case class UserAnswers(
     Reads.optionNoError(Reads.at[JsValue](gettable.path)).reads(data)
       .map(_.isDefined)
       .getOrElse(false)
+
+  def notDefined(gettable: Gettable[_]): Boolean =
+    !isDefined(gettable)
 
   def set[A](page: Settable[A], value: A)(implicit writes: Writes[A]): Try[UserAnswers] = {
 
@@ -101,7 +105,7 @@ object UserAnswers {
       (__ \ "_id").read[String] and
       (__ \ "data").read[JsObject] and
       (__ \ "lastUpdated").read(MongoJavatimeFormats.instantFormat)
-    ) ((id, data, lastUpdated) => UserAnswers(id, data, None, lastUpdated))
+    ) ((id, data, lastUpdated) => UserAnswers(id, data, None, None, lastUpdated))
   }
 
   private val writes: OWrites[UserAnswers] = {
@@ -129,7 +133,7 @@ object UserAnswers {
         (__ \ "_id").read[String] and
         (__ \ "data").read[SensitiveString] and
         (__ \ "lastUpdated").read(MongoJavatimeFormats.instantFormat)
-      )((id, data, lastUpdated) => UserAnswers(id, Json.parse(data.decryptedValue).as[JsObject], None, lastUpdated))
+      )((id, data, lastUpdated) => UserAnswers(id, Json.parse(data.decryptedValue).as[JsObject], None, None, lastUpdated))
 
     val encryptedWrites: OWrites[UserAnswers] =
       (

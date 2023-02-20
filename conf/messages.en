@@ -531,6 +531,11 @@ applicantCurrentUkAddress.error.county.length = County of your current address m
 applicantCurrentUkAddress.error.postcode.length = Postcode of your current address must be 100 characters or less
 applicantCurrentUkAddress.change.hidden = your current address
 
+designatoryAddress.checkYourAnswersLabel = Residential address
+designatoryAddress.change.hidden = your residential address
+correspondenceAddress.checkYourAnswersLabel = Correspondence address
+correspondenceAddress.change.hidden = your correspondence address
+
 designatoryAddressInUk.title = Is your current address in the UK?
 designatoryAddressInUk.heading = Is your current address in the UK?
 designatoryAddressInUk.checkYourAnswersLabel = Is your current address in the UK?
@@ -684,7 +689,7 @@ designatoryName.field.title = Title (optional)
 designatoryName.field.firstName = First name or given names
 designatoryName.field.middleNames = Middle names
 designatoryName.field.lastName = Last name(s) or family name(s)
-designatoryName.checkYourAnswersLabel = Your name
+designatoryName.checkYourAnswersLabel = Name
 designatoryName.error.firstName.required = Enter your first name or given names
 designatoryName.error.lastName.required = Enter your last name(s) or family name(s)
 designatoryName.error.title.length = Your title must be 100 characters or less

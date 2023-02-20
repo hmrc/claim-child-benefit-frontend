@@ -29,7 +29,7 @@ class ClaimChildBenefitConnector @Inject()(config: Configuration, httpClient: Ht
                                           (implicit ec: ExecutionContext) {
 
   private val baseUrl = config.get[Service]("microservice.services.claim-child-benefit")
-  private val designatoryDetailsUrl = url"$baseUrl/designatory-details"
+  private val designatoryDetailsUrl = url"$baseUrl/claim-child-benefit/designatory-details"
 
   def designatoryDetails()(implicit hc: HeaderCarrier): Future[DesignatoryDetails] = {
     httpClient

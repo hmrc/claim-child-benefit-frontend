@@ -43,7 +43,7 @@ class CheckApplicantDetailsController  @Inject()(
       val thisPage = CheckApplicantDetailsPage
       val waypoints = EmptyWaypoints
 
-      val applicantDetails = SummaryListViewModel(
+      lazy val unauthenticatedDetails = SummaryListViewModel(
         rows = Seq(
           ApplicantNinoKnownSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantNinoSummary.row(request.userAnswers, waypoints, thisPage),
@@ -75,7 +75,41 @@ class CheckApplicantDetailsController  @Inject()(
           EldestChildDateOfBirthSummary.row(request.userAnswers, waypoints, thisPage)
         ).flatten
       )
-      Ok(view(applicantDetails))
+      
+      lazy val authenticatedDetails = SummaryListViewModel(
+        rows = Seq(
+          DesignatoryNameSummary.checkApplicantDetailsRow(request.userAnswers, waypoints, thisPage),
+          DesignatoryAddressSummary.checkApplicantDetailsRow(request.userAnswers, waypoints),
+          DesignatoryAddressInUkSummary.row(request.userAnswers, waypoints, thisPage),
+          DesignatoryUkAddressSummary.row(request.userAnswers, waypoints, thisPage),
+          DesignatoryInternationalAddressSummary.row(request.userAnswers, waypoints, thisPage),
+          CorrespondenceAddressSummary.checkApplicantDetailsRow(request.userAnswers, waypoints),
+          CorrespondenceAddressInUkSummary.row(request.userAnswers, waypoints, thisPage),
+          CorrespondenceUkAddressSummary.row(request.userAnswers, waypoints, thisPage),
+          CorrespondenceInternationalAddressSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantPhoneNumberSummary.row(request.userAnswers, waypoints, thisPage),
+          AddApplicantNationalitySummary.checkAnswersRow(request.userAnswers, waypoints, thisPage),
+          ApplicantResidenceSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantUsuallyLivesInUkSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantUsualCountryOfResidenceSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantArrivedInUkSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantEmploymentStatusSummary.row(request.userAnswers, waypoints, thisPage),
+          ApplicantWorkedAbroadSummary.row(request.userAnswers, waypoints, thisPage),
+          AddCountryApplicantWorkedSummary.checkAnswersRow(request.userAnswers, waypoints, thisPage),
+          ApplicantReceivedBenefitsAbroadSummary.row(request.userAnswers, waypoints, thisPage),
+          AddCountryApplicantReceivedBenefitsSummary.checkAnswersRow(request.userAnswers, waypoints, thisPage),
+          ApplicantIsHmfOrCivilServantSummary.row(request.userAnswers, waypoints, thisPage),
+          CurrentlyReceivingChildBenefitSummary.row(request.userAnswers, waypoints, thisPage),
+          EldestChildNameSummary.row(request.userAnswers, waypoints, thisPage),
+          EldestChildDateOfBirthSummary.row(request.userAnswers, waypoints, thisPage)
+        ).flatten
+      )
+
+     if ( request.userAnswers.isAuthenticated) {
+       Ok(view(authenticatedDetails))
+     } else {
+       Ok(view(unauthenticatedDetails))
+     }
   }
 
   def onSubmit: Action[AnyContent] = (identify andThen getData andThen requireData) {

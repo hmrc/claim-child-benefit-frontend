@@ -16,26 +16,36 @@
 
 package controllers.actions
 
+import connectors.ClaimChildBenefitConnector
 import models.requests.{AuthenticatedIdentifierRequest, IdentifierRequest, OptionalDataRequest, UnauthenticatedIdentifierRequest}
 import play.api.mvc.ActionTransformer
 import services.UserDataService
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class DataRetrievalActionImpl @Inject()(
-                                         val userDataService: UserDataService
+                                         val userDataService: UserDataService,
+                                         val connector: ClaimChildBenefitConnector
                                        )(implicit val executionContext: ExecutionContext) extends DataRetrievalAction {
 
   override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = {
+    request match {
+      case a: AuthenticatedIdentifierRequest[_] =>
+        for {
+          maybeUserAnswers <- userDataService.get(request.userId)
+          designatoryDetails <- connector.designatoryDetails()(HeaderCarrierConverter.fromRequestAndSession(request, request.session))
+        } yield OptionalDataRequest(
+          request,
+          request.userId,
+          maybeUserAnswers.map(_.copy(nino = Some(a.nino), designatoryDetails = Some(designatoryDetails)))
+        )
 
-    val nino: Option[String] = request match {
-      case a: AuthenticatedIdentifierRequest[_]   => Some(a.nino)
-      case _: UnauthenticatedIdentifierRequest[_] => None
-    }
-
-    userDataService.get(request.userId).map { maybeAnswers =>
-      OptionalDataRequest(request, request.userId, maybeAnswers.map(_.copy(nino = nino)))
+      case _: UnauthenticatedIdentifierRequest[_] =>
+        userDataService.get(request.userId).map { maybeAnswers =>
+          OptionalDataRequest(request, request.userId, maybeAnswers)
+        }
     }
   }
 }
