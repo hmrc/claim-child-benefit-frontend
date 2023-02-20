@@ -1,0 +1,580 @@
+{
+  "description": "Payload for updating bank details",
+  "type": "object",
+  "properties": {
+    "dateOfClaim": {
+      "type": "string",
+      "description": "Date of claim",
+      "example": "23/09/2018",
+      "pattern": "^(0[1-9]|[1-2][0-9]|3[0-1])/(0[1-9]|1[0-2])/[0-9]{4}$"
+    },
+    "claimant": {
+      "type": "object",
+      "oneOf": [
+        {
+          "properties": {
+            "nino": {
+              "description": "Nino",
+              "example": "AB123456B",
+              "type": "string",
+              "pattern": "^((?:[ACEHJLMOPRSWXY][A-CEGHJ-NPR-TW-Z]|B[A-CEHJ-NPR-TW-Z]|G[ACEGHJ-NPR-TW-Z]|[KT][A-CEGHJ-MPR-TW-Z]|N[A-CEGHJL-NPR-SW-Z]|Z[A-CEGHJ-NPR-TW-Y])[0-9]{6})[A-D]?$"
+            },
+            "nationality": {
+              "type": "string",
+              "enum": [
+                "UK_OR_CTA"
+              ]
+            },
+            "alwaysLivedInUK": {
+              "type": "boolean",
+              "enum": [
+                true
+              ]
+            },
+            "hmfAbroad": {
+              "description": "His Majesty's Forces or Civil Servant abroad indicator",
+              "type": "boolean"
+            },
+            "hicbcOptOut": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "nino",
+            "nationality",
+            "alwaysLivedInUK",
+            "hmfAbroad",
+            "hicbcOptOut"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "nino": {
+              "description": "Nino",
+              "example": "AB123456B",
+              "type": "string",
+              "pattern": "^((?:[ACEHJLMOPRSWXY][A-CEGHJ-NPR-TW-Z]|B[A-CEHJ-NPR-TW-Z]|G[ACEGHJ-NPR-TW-Z]|[KT][A-CEGHJ-MPR-TW-Z]|N[A-CEGHJL-NPR-SW-Z]|Z[A-CEGHJ-NPR-TW-Y])[0-9]{6})[A-D]?$"
+            },
+            "nationality": {
+              "type": "string",
+              "enum": [
+                "EEA",
+                "NON_EEA"
+              ]
+            },
+            "alwaysLivedInUK": {
+              "type": "boolean",
+              "enum": [
+                true
+              ]
+            },
+            "rightToReside": {
+              "type": "boolean"
+            },
+            "hmfAbroad": {
+              "description": "His Majesty's Forces or Civil Servant abroad indicator",
+              "type": "boolean"
+            },
+            "hicbcOptOut": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "nino",
+            "nationality",
+            "alwaysLivedInUK",
+            "hmfAbroad",
+            "hicbcOptOut",
+            "rightToReside"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "nino": {
+              "description": "Nino",
+              "example": "AB123456B",
+              "type": "string",
+              "pattern": "^((?:[ACEHJLMOPRSWXY][A-CEGHJ-NPR-TW-Z]|B[A-CEHJ-NPR-TW-Z]|G[ACEGHJ-NPR-TW-Z]|[KT][A-CEGHJ-MPR-TW-Z]|N[A-CEGHJL-NPR-SW-Z]|Z[A-CEGHJ-NPR-TW-Y])[0-9]{6})[A-D]?$"
+            },
+            "nationality": {
+              "type": "string",
+              "enum": [
+                "UK_OR_CTA"
+              ]
+            },
+            "alwaysLivedInUK": {
+              "type": "boolean",
+              "enum": [
+                false
+              ]
+            },
+            "last3MonthsInUK": {
+              "type": "boolean"
+            },
+            "hmfAbroad": {
+              "description": "His Majesty's Forces or Civil Servant abroad indicator",
+              "type": "boolean"
+            },
+            "hicbcOptOut": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "nino",
+            "nationality",
+            "alwaysLivedInUK",
+            "hmfAbroad",
+            "hicbcOptOut",
+            "last3MonthsInUK"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "nino": {
+              "description": "Nino",
+              "example": "AB123456B",
+              "type": "string",
+              "pattern": "^((?:[ACEHJLMOPRSWXY][A-CEGHJ-NPR-TW-Z]|B[A-CEHJ-NPR-TW-Z]|G[ACEGHJ-NPR-TW-Z]|[KT][A-CEGHJ-MPR-TW-Z]|N[A-CEGHJL-NPR-SW-Z]|Z[A-CEGHJ-NPR-TW-Y])[0-9]{6})[A-D]?$"
+            },
+            "nationality": {
+              "type": "string",
+              "enum": [
+                "EEA",
+                "NON_EEA"
+              ]
+            },
+            "alwaysLivedInUK": {
+              "type": "boolean",
+              "enum": [
+                false
+              ]
+            },
+            "last3MonthsInUK": {
+              "type": "boolean"
+            },
+            "rightToReside": {
+              "type": "boolean"
+            },
+            "hmfAbroad": {
+              "description": "His Majesty's Forces or Civil Servant abroad indicator",
+              "type": "boolean"
+            },
+            "hicbcOptOut": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "nino",
+            "nationality",
+            "alwaysLivedInUK",
+            "hmfAbroad",
+            "hicbcOptOut",
+            "rightToReside",
+            "last3MonthsInUK"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "partner": {
+      "type": "object",
+      "properties": {
+        "nino": {
+          "description": "Nino",
+          "example": "AB123456B",
+          "type": "string",
+          "pattern": "^((?:[ACEHJLMOPRSWXY][A-CEGHJ-NPR-TW-Z]|B[A-CEHJ-NPR-TW-Z]|G[ACEGHJ-NPR-TW-Z]|[KT][A-CEGHJ-MPR-TW-Z]|N[A-CEGHJL-NPR-SW-Z]|Z[A-CEGHJ-NPR-TW-Y])[0-9]{6})[A-D]?$"
+        },
+        "surname": {
+          "description": "Surname",
+          "type": "string",
+          "pattern": "^[a-zA-Z' -]{1,35}$",
+          "minLength": 1,
+          "maxLength": 35
+        }
+      },
+      "required": [
+        "nino",
+        "surname"
+      ],
+      "additionalProperties": false
+    },
+    "payment": {
+      "type": "object",
+      "properties": {
+        "paymentFrequency": {
+          "type": "string",
+          "enum": [
+            "ONCE_A_WEEK",
+            "EVERY_4_WEEKS"
+          ]
+        },
+        "paymentDetails": {
+          "type": "object",
+          "oneOf": [
+            {
+              "properties": {
+                "accountHolder": {
+                  "type": "object",
+                  "oneOf": [
+                    {
+                      "properties": {
+                        "accountHolderType": {
+                          "type": "string",
+                          "enum": [
+                            "CLAIMANT"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "accountHolderType"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "properties": {
+                        "accountHolderType": {
+                          "type": "string",
+                          "enum": [
+                            "JOINT",
+                            "SOMEONE_ELSE"
+                          ]
+                        },
+                        "forenames": {
+                          "description": "Account holder forename(s)",
+                          "type": "string",
+                          "pattern": "^[a-zA-Z' -]{1,35}$",
+                          "minLength": 1,
+                          "maxLength": 35
+                        },
+                        "surname": {
+                          "description": "Account holder surname",
+                          "type": "string",
+                          "pattern": "^[a-zA-Z' -]{1,35}$",
+                          "minLength": 1,
+                          "maxLength": 35
+                        }
+                      },
+                      "required": [
+                        "accountHolderType",
+                        "forenames",
+                        "surname"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "bankAccount": {
+                  "type": "object",
+                  "properties": {
+                    "sortCode": {
+                      "description": "Sort code",
+                      "example": "123456",
+                      "type": "string",
+                      "pattern": "^[0-9]{6}$"
+                    },
+                    "accountNumber": {
+                      "description": "Account number",
+                      "example": "12345678",
+                      "type": "string",
+                      "pattern": "^[0-9]{8}$"
+                    }
+                  },
+                  "required": [
+                    "sortCode",
+                    "accountNumber"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "accountHolder",
+                "bankAccount"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "properties": {
+                "accountHolder": {
+                  "type": "object",
+                  "oneOf": [
+                    {
+                      "properties": {
+                        "accountHolderType": {
+                          "type": "string",
+                          "enum": [
+                            "CLAIMANT"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "accountHolderType"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "properties": {
+                        "accountHolderType": {
+                          "type": "string",
+                          "enum": [
+                            "JOINT",
+                            "SOMEONE_ELSE"
+                          ]
+                        },
+                        "forenames": {
+                          "description": "Account holder forename(s)",
+                          "type": "string",
+                          "pattern": "^[a-zA-Z' -]{1,35}$",
+                          "minLength": 1,
+                          "maxLength": 35
+                        },
+                        "surname": {
+                          "description": "Account holder surname",
+                          "type": "string",
+                          "pattern": "^[a-zA-Z' -]{1,35}$",
+                          "minLength": 1,
+                          "maxLength": 35
+                        }
+                      },
+                      "required": [
+                        "accountHolderType",
+                        "forenames",
+                        "surname"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "buildingSocietyDetails": {
+                  "type": "object",
+                  "properties": {
+                    "buildingSociety": {
+                      "description": "Refdata id for Building Society",
+                      "type": "string",
+                      "pattern": "^[0-9]{1,4}$"
+                    },
+                    "rollNumber": {
+                      "description": "Roll number",
+                      "example": "ACBDE-0123/4567.89",
+                      "type": "string",
+                      "pattern": "^[-0-9A-Z//.]{1,18}$"
+                    }
+                  },
+                  "required": [
+                    "buildingSociety",
+                    "rollNumber"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "accountHolder",
+                "buildingSocietyDetails"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "required": [
+        "paymentFrequency"
+      ],
+      "additionalProperties": false
+    },
+    "children": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 25,
+      "items": {
+        "type": "object",
+        "oneOf": [
+          {
+            "properties": {
+              "name": {
+                "type": "object",
+                "properties": {
+                  "forenames": {
+                    "description": "Child forename(s)",
+                    "type": "string",
+                    "pattern": "^[a-zA-Z' -]{1,35}$",
+                    "minLength": 1,
+                    "maxLength": 35
+                  },
+                  "middleNames": {
+                    "description": "Child middle name(s)",
+                    "type": "string",
+                    "pattern": "^[a-zA-Z' -]{1,35}$",
+                    "minLength": 1,
+                    "maxLength": 35
+                  },
+                  "surname": {
+                    "description": "Child surname",
+                    "type": "string",
+                    "pattern": "^[a-zA-Z' -]{1,35}$",
+                    "minLength": 1,
+                    "maxLength": 35
+                  }
+                },
+                "required": [
+                  "forenames",
+                  "surname"
+                ],
+                "additionalProperties": false
+              },
+              "crn": {
+                "description": "CRN",
+                "example": "AA123456A",
+                "type": "string",
+                "pattern": "^((?:[ACEHJLMOPRSWXY][A-CEGHJ-NPR-TW-Z]|B[A-CEHJ-NPR-TW-Z]|G[ACEGHJ-NPR-TW-Z]|[KT][A-CEGHJ-MPR-TW-Z]|N[A-CEGHJL-NPR-SW-Z]|Z[A-CEGHJ-NPR-TW-Y])[0-9]{6})[A-D]?$"
+              },
+              "gender": {
+                "type": "string",
+                "enum": [
+                  "MALE",
+                  "FEMALE",
+                  "UNSPECIFIED"
+                ]
+              },
+              "dateOfBirth": {
+                "type": "string",
+                "description": "Date of Birth",
+                "example": "23/09/2018",
+                "pattern": "^(0[1-9]|[1-2][0-9]|3[0-1])/(0[1-9]|1[0-2])/[0-9]{4}$"
+              },
+              "countryOfRegistration": {
+                "type": "string",
+                "enum": [
+                  "ENGLAND_WALES",
+                  "SCOTLAND"
+                ]
+              },
+              "birthRegistrationNumber": {
+                "description": "Birth registration number",
+                "example": "1234567890",
+                "type": "string",
+                "pattern": "^[0-9]{9,10}$"
+              },
+              "livingWithClaimant": {
+                "type": "boolean"
+              },
+              "claimantIsParent": {
+                "type": "boolean"
+              },
+              "adoptionStatus": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "name",
+              "gender",
+              "dateOfBirth",
+              "countryOfRegistration",
+              "livingWithClaimant",
+              "claimantIsParent",
+              "adoptionStatus"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "properties": {
+              "name": {
+                "type": "object",
+                "properties": {
+                  "forenames": {
+                    "description": "Child forename(s)",
+                    "type": "string",
+                    "pattern": "^[a-zA-Z' -]{1,35}$",
+                    "minLength": 1,
+                    "maxLength": 35
+                  },
+                  "middleNames": {
+                    "description": "Child middle name(s)",
+                    "type": "string",
+                    "pattern": "^[a-zA-Z' -]{1,35}$",
+                    "minLength": 1,
+                    "maxLength": 35
+                  },
+                  "surname": {
+                    "description": "Child surname",
+                    "type": "string",
+                    "pattern": "^[a-zA-Z' -]{1,35}$",
+                    "minLength": 1,
+                    "maxLength": 35
+                  }
+                },
+                "required": [
+                  "forenames",
+                  "surname"
+                ],
+                "additionalProperties": false
+              },
+              "crn": {
+                "description": "CRN",
+                "example": "AA123456A",
+                "type": "string",
+                "pattern": "^((?:[ACEHJLMOPRSWXY][A-CEGHJ-NPR-TW-Z]|B[A-CEHJ-NPR-TW-Z]|G[ACEGHJ-NPR-TW-Z]|[KT][A-CEGHJ-MPR-TW-Z]|N[A-CEGHJL-NPR-SW-Z]|Z[A-CEGHJ-NPR-TW-Y])[0-9]{6})[A-D]?$"
+              },
+              "gender": {
+                "type": "string",
+                "enum": [
+                  "MALE",
+                  "FEMALE",
+                  "UNSPECIFIED"
+                ]
+              },
+              "dateOfBirth": {
+                "type": "string",
+                "description": "Date of Birth",
+                "example": "23/09/2018",
+                "pattern": "^(0[1-9]|[1-2][0-9]|3[0-1])/(0[1-9]|1[0-2])/[0-9]{4}$"
+              },
+              "countryOfRegistration": {
+                "type": "string",
+                "enum": [
+                  "NORTHERN_IRELAND",
+                  "ABROAD"
+                ]
+              },
+              "dateOfBirthVerified": {
+                "type": "boolean"
+              },
+              "livingWithClaimant": {
+                "type": "boolean"
+              },
+              "claimantIsParent": {
+                "type": "boolean"
+              },
+              "adoptionStatus": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "name",
+              "gender",
+              "dateOfBirth",
+              "countryOfRegistration",
+              "livingWithClaimant",
+              "claimantIsParent",
+              "dateOfBirthVerified",
+              "adoptionStatus"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "otherEligibilityFailure": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "dateOfClaim",
+    "claimant",
+    "children",
+    "otherEligibilityFailure"
+  ],
+  "additionalProperties": false
+}
