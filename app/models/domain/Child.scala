@@ -16,6 +16,7 @@
 
 package models.domain
 
+import models.ChildBirthRegistrationCountry.{England, Scotland, Wales}
 import models.JourneyModel
 import play.api.libs.json.{Json, OWrites, Writes}
 
@@ -28,7 +29,7 @@ final case class Child(
                         birthRegistrationNumber: Option[String],
                         crn: Option[String],
                         countryOfRegistration: CountryOfRegistration,
-                        dateOfBirthVerified: Boolean,
+                        dateOfBirthVerified: Option[Boolean],
                         livingWithClaimant: Boolean,
                         claimantIsParent: Boolean,
                         adoptionStatus: Boolean
@@ -42,6 +43,11 @@ object Child {
       child.adoptingThroughLocalAuthority ||
         child.relationshipToApplicant == models.ApplicantRelationshipToChild.AdoptedChild
 
+    val dateOfBirthVerified = child.countryOfRegistration match {
+      case England | Scotland | Wales => None
+      case _ => Some(false)
+    }
+
     Child(
       name = ChildName.build(child.name),
       gender = BiologicalSex.build(child.biologicalSex),
@@ -49,7 +55,7 @@ object Child {
       birthRegistrationNumber = child.birthCertificateNumber.map(_.brmsFormat),
       crn = None,
       countryOfRegistration = CountryOfRegistration.build(child.countryOfRegistration),
-      dateOfBirthVerified = false,
+      dateOfBirthVerified = dateOfBirthVerified,
       livingWithClaimant = child.guardian.isEmpty,
       claimantIsParent = child.relationshipToApplicant != models.ApplicantRelationshipToChild.Other,
       adoptionStatus = adoptionStatus

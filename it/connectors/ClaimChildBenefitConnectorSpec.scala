@@ -112,7 +112,7 @@ class ClaimChildBenefitConnectorSpec
           birthRegistrationNumber = None,
           crn = None,
           countryOfRegistration = CountryOfRegistration.EnglandWales,
-          dateOfBirthVerified = false,
+          dateOfBirthVerified = None,
           livingWithClaimant = true,
           claimantIsParent = true,
           adoptionStatus = false

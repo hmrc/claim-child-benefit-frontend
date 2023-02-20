@@ -17,13 +17,14 @@
 package models.domain
 
 import models.{BirthRegistrationMatchingResult, JourneyModel}
+import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import play.api.libs.json.Json
 
 import java.time.LocalDate
 
-class ChildSpec extends AnyFreeSpec with Matchers {
+class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
   ".build" - {
 
@@ -55,7 +56,7 @@ class ChildSpec extends AnyFreeSpec with Matchers {
         birthRegistrationNumber = None,
         crn = None,
         countryOfRegistration = CountryOfRegistration.EnglandWales,
-        dateOfBirthVerified = false,
+        dateOfBirthVerified = None,
         livingWithClaimant = true,
         claimantIsParent = true,
         adoptionStatus = false
@@ -97,6 +98,60 @@ class ChildSpec extends AnyFreeSpec with Matchers {
 
       result.claimantIsParent mustEqual false
     }
+
+    "must set `date of birth verified` to None when the child is registered in England" in {
+
+      val child = basicChild.copy(countryOfRegistration = models.ChildBirthRegistrationCountry.England)
+
+      val result = Child.build(child)
+
+      result.dateOfBirthVerified must not be defined
+    }
+
+    "must set `date of birth verified` to None when the child is registered in Wales" in {
+
+      val child = basicChild.copy(countryOfRegistration = models.ChildBirthRegistrationCountry.Wales)
+
+      val result = Child.build(child)
+
+      result.dateOfBirthVerified must not be defined
+    }
+
+    "must set `date of birth verified` to None when the child is registered in Scotland" in {
+
+      val child = basicChild.copy(countryOfRegistration = models.ChildBirthRegistrationCountry.Scotland)
+
+      val result = Child.build(child)
+
+      result.dateOfBirthVerified must not be defined
+    }
+
+    "must set `date of birth verified` to `false` when the child is registered in Northern Ireland" in {
+
+      val child = basicChild.copy(countryOfRegistration = models.ChildBirthRegistrationCountry.NorthernIreland)
+
+      val result = Child.build(child)
+
+      result.dateOfBirthVerified.value mustBe false
+    }
+
+    "must set `date of birth verified` to `false` when the child is registered in another country" in {
+
+      val child = basicChild.copy(countryOfRegistration = models.ChildBirthRegistrationCountry.Other)
+
+      val result = Child.build(child)
+
+      result.dateOfBirthVerified.value mustBe false
+    }
+
+    "must set `date of birth verified` to `false` when the child's birth registration country is Unknown" in {
+
+      val child = basicChild.copy(countryOfRegistration = models.ChildBirthRegistrationCountry.Unknown)
+
+      val result = Child.build(child)
+
+      result.dateOfBirthVerified.value mustBe false
+    }
   }
 
   ".writes" - {
@@ -111,7 +166,7 @@ class ChildSpec extends AnyFreeSpec with Matchers {
         birthRegistrationNumber = Some("123456789"),
         crn = None,
         countryOfRegistration = CountryOfRegistration.EnglandWales,
-        dateOfBirthVerified = false,
+        dateOfBirthVerified = None,
         livingWithClaimant = true,
         claimantIsParent = true,
         adoptionStatus = false
@@ -127,7 +182,6 @@ class ChildSpec extends AnyFreeSpec with Matchers {
         "dateOfBirth" -> "02/01/2022",
         "birthRegistrationNumber" -> "123456789",
         "countryOfRegistration" -> "ENGLAND_WALES",
-        "dateOfBirthVerified" -> false,
         "livingWithClaimant" -> true,
         "claimantIsParent" -> true,
         "adoptionStatus" -> false
