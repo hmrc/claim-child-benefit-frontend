@@ -37,7 +37,8 @@ class RecentlyClaimedController @Inject()(
                                                    getData: DataRetrievalAction,
                                                    formProvider: RecentlyClaimedFormProvider,
                                                    val controllerComponents: MessagesControllerComponents,
-                                                   view: RecentlyClaimedView
+                                                   view: RecentlyClaimedView,
+                                                   recentlyClaimedPage: RecentlyClaimedPage
                                                  )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form = formProvider()
@@ -45,7 +46,7 @@ class RecentlyClaimedController @Inject()(
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(RecentlyClaimedPage) match {
+      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(recentlyClaimedPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -65,9 +66,9 @@ class RecentlyClaimedController @Inject()(
           val originalAnswers = request.userAnswers.getOrElse(UserAnswers(request.userId))
 
           for {
-            updatedAnswers <- Future.fromTry(originalAnswers.set(RecentlyClaimedPage, value))
+            updatedAnswers <- Future.fromTry(originalAnswers.set(recentlyClaimedPage, value))
             _              <- userDataService.set(updatedAnswers)
-          } yield Redirect(RecentlyClaimedPage.navigate(waypoints, originalAnswers, updatedAnswers).route)
+          } yield Redirect(recentlyClaimedPage.navigate(waypoints, originalAnswers, updatedAnswers).route)
         }
       )
   }

@@ -33,7 +33,8 @@ class IndexController @Inject()(
                                  val controllerComponents: MessagesControllerComponents,
                                  identify: IdentifierAction,
                                  view: IndexView,
-                                 userDataService: UserDataService
+                                 userDataService: UserDataService,
+                                 indexPage: IndexPage
                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = identify { implicit request =>
@@ -44,7 +45,7 @@ class IndexController @Inject()(
 
     val userAnswers = UserAnswers(request.userId)
 
-    Redirect(IndexPage.navigate(EmptyWaypoints, userAnswers, userAnswers).route)
+    Redirect(indexPage.navigate(EmptyWaypoints, userAnswers, userAnswers).route)
   }
 
   def startAgain: Action[AnyContent] = identify.async { implicit request =>

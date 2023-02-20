@@ -71,7 +71,6 @@ class JourneyModelSpec
     "must be a list of all documents required for all the children in the claim" in {
 
       val answers = UserAnswers("id")
-        .set(RecentlyClaimedPage, false).success.value
         .set(ApplicantNinoKnownPage, false).success.value
         .set(ApplicantNamePage, applicantName).success.value
         .set(ApplicantHasPreviousFamilyNamePage, false).success.value

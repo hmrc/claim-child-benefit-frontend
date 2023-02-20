@@ -23,6 +23,10 @@ GET         /organisation-unsupported                   controllers.auth.AuthCon
 GET         /register                                   controllers.auth.AuthController.redirectToRegister(continueUrl: String)
 GET         /sign-in                                    controllers.auth.AuthController.redirectToLogin(continueUrl: String)
 
+GET         /sign-in-to-government-gateway              controllers.SignInController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST        /sign-in-to-government-gateway              controllers.SignInController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+GET         /signed-in                                  controllers.auth.AuthController.signedIn()
+
 GET         /identity-verification/complete                          controllers.auth.IvController.handleIvFailure(continueUrl: String, journeyId: Option[String])
 GET         /identity-verification/incomplete                        controllers.auth.IvController.ivIncomplete
 GET         /identity-verification/failed-matching                   controllers.auth.IvController.ivFailedMatching(continueUrl: String)

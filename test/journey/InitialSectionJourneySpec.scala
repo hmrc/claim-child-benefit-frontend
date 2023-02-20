@@ -16,27 +16,79 @@
 
 package journey
 
+import config.FeatureFlags
 import generators.ModelGenerators
+import models.UserAnswers
+import org.scalacheck.Arbitrary.arbitrary
+import org.mockito.Mockito
+import org.mockito.Mockito.when
+import org.scalatest.BeforeAndAfterEach
 import org.scalatest.freespec.AnyFreeSpec
+import org.scalatestplus.mockito.MockitoSugar
 import pages._
+import uk.gov.hmrc.domain.Nino
 
-class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
+class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators with MockitoSugar with BeforeAndAfterEach {
+
+  private val mockFeatureFlags = mock[FeatureFlags]
+  private val recentlyClaimedPage = new RecentlyClaimedPage(mockFeatureFlags)
+
+  override def beforeEach(): Unit = {
+    Mockito.reset(mockFeatureFlags)
+    super.beforeEach()
+  }
 
   "users who have recently claimed must go to the Already Claimed page" in {
 
-    startingFrom(RecentlyClaimedPage)
+    startingFrom(recentlyClaimedPage)
       .run(
-        submitAnswer(RecentlyClaimedPage, true),
+        submitAnswer(recentlyClaimedPage, true),
         pageMustBe(AlreadyClaimedPage)
       )
   }
 
-  "users who have not recently claimed must go to the task list" in {
+  "users who have not recently claimed" - {
 
-    startingFrom(RecentlyClaimedPage)
-      .run(
-        submitAnswer(RecentlyClaimedPage, false),
-        pageMustBe(TaskListPage)
-      )
+    "when the auth feature flag is disabled" - {
+
+      when(mockFeatureFlags.allowAuthenticatedSessions) thenReturn false
+
+      "must go to the task list" in {
+
+        startingFrom(recentlyClaimedPage)
+          .run(
+            submitAnswer(recentlyClaimedPage, false),
+            pageMustBe(TaskListPage)
+          )
+      }
+    }
+
+    "when the auth feature flag is enabled" - {
+
+      "who are already authenticated must go to the task list" in {
+
+        when(mockFeatureFlags.allowAuthenticatedSessions) thenReturn true
+
+        val nino = arbitrary[Nino].sample.value
+        val authenticatedAnswers = UserAnswers("id", nino = Some(nino.nino))
+
+        startingFrom(recentlyClaimedPage, answers = authenticatedAnswers)
+          .run(
+            submitAnswer(recentlyClaimedPage, false),
+            pageMustBe(TaskListPage)
+          )
+      }
+
+      "who are not already authenticated must go to Sign In" in {
+
+        when(mockFeatureFlags.allowAuthenticatedSessions) thenReturn true
+
+        startingFrom(recentlyClaimedPage)
+          .run(
+            submitAnswer(recentlyClaimedPage, false),
+            pageMustBe(SignInPage)
+          )
+      }
+    }
   }
 }

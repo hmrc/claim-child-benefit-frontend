@@ -20,10 +20,15 @@ date.day = Day
 date.month = Month
 date.year = Year
 
-timeout.title = The application form is about to be reset
-timeout.message = For your security, the application form will be reset in
-timeout.keepAlive = Continue form
-timeout.signOut = Reset
+timeout.unauthenticated.title = The application form is about to be reset
+timeout.unauthenticated.message = For your security, the application form will be reset in
+timeout.unauthenticated.keepAlive = Continue form
+timeout.unauthenticated.signOut = Reset
+
+timeout.authenticated.title = You’re about to be signed out
+timeout.authenticated.message = For your security, we wil sign you out in
+timeout.authenticated.keepAlive = Stay signed in
+timeout.authenticated.signOut = Sign out
 
 error.browser.title.prefix = Error:
 error.boolean = Please give an answer
@@ -88,6 +93,11 @@ journeyRecovery.startAgain.p2.1 = Contact the
 journeyRecovery.startAgain.p2.link.href = https://www.gov.uk/government/organisations/hm-revenue-customs/contact/child-benefit
 journeyRecovery.startAgain.p2.link.text = Child Benefit helpline
 journeyRecovery.startAgain.p2.2 = if you need to speak to someone about claiming Child Benefit.
+
+signIn.title = Do you want to sign in to Government Gateway?
+signIn.heading = Do you want to sign in to Government Gateway?
+signIn.p1 = Signing in to Government Gateway can be the quickest way to make a Child Benefit claim, as you may be able to send your claim digitally.
+signIn.p2 = If you don’t sign in, you can only make a Child Benefit claim by printing and posting your claim to HMRC.
 
 signedOut.title = For your security, we reset your application form
 signedOut.heading = For your security, we reset your application form

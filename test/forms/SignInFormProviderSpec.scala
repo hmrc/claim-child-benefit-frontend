@@ -14,18 +14,32 @@
  * limitations under the License.
  */
 
-package pages
-import controllers.routes
-import models.UserAnswers
-import play.api.mvc.Call
+package forms
 
-import javax.inject.Inject
+import forms.behaviours.BooleanFieldBehaviours
+import play.api.data.FormError
 
-class IndexPage @Inject()(recentlyClaimedPage: RecentlyClaimedPage) extends Page {
+class SignInFormProviderSpec extends BooleanFieldBehaviours {
 
-  override def route(waypoints: Waypoints): Call =
-    routes.IndexController.onPageLoad
+  val requiredKey = "signIn.error.required"
+  val invalidKey = "error.boolean"
 
-  override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    recentlyClaimedPage
+  val form = new SignInFormProvider()()
+
+  ".value" - {
+
+    val fieldName = "value"
+
+    behave like booleanField(
+      form,
+      fieldName,
+      invalidError = FormError(fieldName, invalidKey)
+    )
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
+  }
 }

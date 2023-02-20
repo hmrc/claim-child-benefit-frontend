@@ -24,7 +24,7 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatest.{OptionValues, TryValues}
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
-import play.api.inject.bind
+import play.api.inject.{Binding, bind}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 
@@ -51,13 +51,22 @@ trait SpecBase
 
   protected def applicationBuilder(
                                     userAnswers: Option[UserAnswers] = None,
-                                    clock: Clock = clockAtFixedInstant
-                                  ): GuiceApplicationBuilder =
+                                    clock: Clock = clockAtFixedInstant,
+                                    userIsAuthenticated: Boolean = false
+                                  ): GuiceApplicationBuilder = {
+
+    val identifierActionBinding: Binding[IdentifierAction] = if (userIsAuthenticated) {
+      bind[IdentifierAction].to[FakeAuthenticatedIdentifierAction]
+    } else {
+      bind[IdentifierAction].to[FakeUnauthenticatedIdentifierAction]
+    }
+
     new GuiceApplicationBuilder()
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
-        bind[IdentifierAction].to[FakeIdentifierAction],
+        identifierActionBinding,
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
         bind[Clock].toInstance(clock)
       )
+  }
 }

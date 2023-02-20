@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package pages
-import controllers.routes
-import models.UserAnswers
-import play.api.mvc.Call
+package forms
+
+import forms.mappings.Mappings
+import play.api.data.Form
 
 import javax.inject.Inject
 
-class IndexPage @Inject()(recentlyClaimedPage: RecentlyClaimedPage) extends Page {
+class SignInFormProvider @Inject() extends Mappings {
 
-  override def route(waypoints: Waypoints): Call =
-    routes.IndexController.onPageLoad
-
-  override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    recentlyClaimedPage
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean("signIn.error.required")
+    )
 }

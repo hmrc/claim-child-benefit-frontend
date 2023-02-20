@@ -16,16 +16,28 @@
 
 package controllers.actions
 
-import models.requests.{IdentifierRequest, UnauthenticatedIdentifierRequest}
+import models.requests.{AuthenticatedIdentifierRequest, IdentifierRequest, UnauthenticatedIdentifierRequest}
 import play.api.mvc._
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeIdentifierAction @Inject()(bodyParsers: PlayBodyParsers) extends IdentifierAction {
+class FakeUnauthenticatedIdentifierAction @Inject()(bodyParsers: PlayBodyParsers) extends IdentifierAction {
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] =
     block(UnauthenticatedIdentifierRequest(request, "id"))
+
+  override def parser: BodyParser[AnyContent] =
+    bodyParsers.default
+
+  override protected def executionContext: ExecutionContext =
+    scala.concurrent.ExecutionContext.Implicits.global
+}
+
+class FakeAuthenticatedIdentifierAction @Inject()(bodyParsers: PlayBodyParsers) extends IdentifierAction {
+
+  override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] =
+    block(AuthenticatedIdentifierRequest(request, "id", "nino"))
 
   override def parser: BodyParser[AnyContent] =
     bodyParsers.default

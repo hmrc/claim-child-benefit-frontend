@@ -17,42 +17,75 @@
 package controllers.auth
 
 import base.SpecBase
+import models.UserAnswers
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
+import pages.{EmptyWaypoints, TaskListPage}
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserDataService
 import views.html.auth.{UnsupportedAffinityGroupAgentView, UnsupportedAffinityGroupOrganisationView}
 
+import java.time.Instant
 import scala.concurrent.Future
 
 class AuthControllerSpec extends SpecBase with MockitoSugar {
 
   "signOut" - {
 
-    "must clear user answers and redirect to signed out" in {
+    "when the user is unauthenticated" - {
 
-      val mockUserDataService = mock[UserDataService]
-      when(mockUserDataService.clear(any())) thenReturn Future.successful(true)
+      "must clear user answers and redirect to signed out" in {
 
-      val application =
-        applicationBuilder(None)
-          .overrides(bind[UserDataService].toInstance(mockUserDataService))
-          .build()
+        val mockUserDataService = mock[UserDataService]
+        when(mockUserDataService.clear(any())) thenReturn Future.successful(true)
 
-      running(application) {
+        val application =
+          applicationBuilder(None)
+            .overrides(bind[UserDataService].toInstance(mockUserDataService))
+            .build()
 
-        val request = FakeRequest(GET, routes.AuthController.signOut.url)
+        running(application) {
 
-        val result = route(application, request).value
+          val request = FakeRequest(GET, routes.AuthController.signOut.url)
 
-        val expectedRedirectUrl = routes.SignedOutController.onPageLoad.url
+          val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual expectedRedirectUrl
-        verify(mockUserDataService, times(1)).clear(eqTo(userAnswersId))
+          val expectedRedirectUrl = routes.SignedOutController.onPageLoad.url
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual expectedRedirectUrl
+          verify(mockUserDataService, times(1)).clear(eqTo(userAnswersId))
+        }
+      }
+    }
+
+    "when the user is authenticated" - {
+
+      "must clear user answers and redirect to BAS sign-out" in {
+
+        val mockUserDataService = mock[UserDataService]
+        when(mockUserDataService.clear(any())) thenReturn Future.successful(true)
+
+        val application =
+          applicationBuilder(None, userIsAuthenticated = true)
+            .overrides(bind[UserDataService].toInstance(mockUserDataService))
+            .build()
+
+        running(application) {
+
+          val request = FakeRequest(GET, routes.AuthController.signOut.url)
+
+          val result = route(application, request).value
+
+          val expectedRedirectUrl = "http://localhost:9553/bas-gateway/sign-out-without-state?continue=http%3A%2F%2Flocalhost%3A11303%2Ffill-online%2Fclaim-child-benefit%2Fapplication-form-has-been-reset"
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual expectedRedirectUrl
+          verify(mockUserDataService, times(1)).clear(eqTo(userAnswersId))
+        }
       }
     }
   }
@@ -123,6 +156,44 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual "http://localhost:9553/bas-gateway/sign-in?origin=CHB&continue=continueUrl"
+      }
+    }
+  }
+
+  "signedIn" - {
+
+    "must redirect to the task list when the user already has user answers" in {
+
+      val application = applicationBuilder(Some(emptyUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.AuthController.signedIn().url)
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual TaskListPage.route(EmptyWaypoints).url
+      }
+    }
+
+    "must save an empty UserAnswers then redirect to the task list when the user does not have any user answers" in {
+
+      val mockUserDataService = mock[UserDataService]
+      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(None)
+          .overrides(bind[UserDataService].toInstance(mockUserDataService))
+          .build()
+
+      running(application) {
+
+        val request = FakeRequest(GET, routes.AuthController.signedIn().url)
+        val result = route(application, request).value
+        val expectedAnswers = UserAnswers(userAnswersId, lastUpdated = Instant.now(clockAtFixedInstant))
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual TaskListPage.route(EmptyWaypoints).url
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
       }
     }
   }
