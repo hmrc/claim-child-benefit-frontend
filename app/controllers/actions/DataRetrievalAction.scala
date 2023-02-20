@@ -35,7 +35,7 @@ class DataRetrievalActionImpl @Inject()(
       case a: AuthenticatedIdentifierRequest[_] =>
         for {
           maybeUserAnswers <- userDataService.get(request.userId)
-          designatoryDetails <- connector.designatoryDetails()(HeaderCarrierConverter.fromRequest(request))
+          designatoryDetails <- connector.designatoryDetails()(HeaderCarrierConverter.fromRequestAndSession(request, request.session))
         } yield OptionalDataRequest(
           request,
           request.userId,
