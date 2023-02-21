@@ -8,7 +8,6 @@ import play.api.libs.json.{JsValue, Json}
 
 import javax.inject.{Inject, Singleton}
 import scala.io.Source
-import scala.collection.JavaConverters._
 
 @Singleton
 class CbsSchemaValidationService @Inject() (
@@ -27,21 +26,7 @@ class CbsSchemaValidationService @Inject() (
 
     val jsonObject = new JsonObject(Json.stringify(json))
     val result = cbsClaimValidator.validate(jsonObject)
-    val isValid = result.getValid
-
-    if (!isValid) {
-      println("*"*100)
-      println(Json.prettyPrint(json))
-      println("*"*100)
-
-      result.getErrors.asScala.foreach { error =>
-        println(error)
-      }
-
-      println("*"*100)
-    }
-
-    isValid
+    result.getValid
   }
 }
 

@@ -16,7 +16,7 @@
 
 package models.domain
 
-import models.JourneyModel.{BankAccountWithHolder, BuildingSocietyWithHolder, PaymentPreference}
+import models.JourneyModel.{AccountDetailsWithHolder, BankAccountWithHolder, BuildingSocietyWithHolder, PaymentPreference}
 import models.JourneyModel.PaymentPreference._
 import play.api.libs.json.{Json, OWrites}
 
@@ -37,35 +37,26 @@ object PaymentDetails {
       None
 
     case Weekly(accountDetails, _) =>
-      accountDetails.map {
-        case x: BuildingSocietyWithHolder =>
-          BuildingSocietyDetails(
-            accountHolder = AccountHolder.build(x),
-            buildingSocietyDetails = BuildingSocietyAccount(x.details.buildingSociety.id, x.details.rollNumber)
-          )
-
-        case x: BankAccountWithHolder =>
-          BankDetails(
-            accountHolder = AccountHolder.build(x),
-            bankAccount = BankAccount(x.details.sortCodeTrimmed, x.details.accountNumberPadded)
-          )
-      }
+      buildFromAccountDetails(accountDetails)
 
     case EveryFourWeeks(accountDetails, _) =>
-      accountDetails.map {
-        case x: BuildingSocietyWithHolder =>
-          BuildingSocietyDetails(
-            accountHolder = AccountHolder.build(x),
-            buildingSocietyDetails = BuildingSocietyAccount(x.details.buildingSociety.id, x.details.rollNumber)
-          )
-
-        case x: BankAccountWithHolder =>
-          BankDetails(
-            accountHolder = AccountHolder.build(x),
-            bankAccount = BankAccount(x.details.sortCodeTrimmed, x.details.accountNumberPadded)
-          )
-      }
+      buildFromAccountDetails(accountDetails)
   }
+
+  private def buildFromAccountDetails(accountDetails: Option[AccountDetailsWithHolder]): Option[PaymentDetails] =
+    accountDetails.map {
+      case x: BuildingSocietyWithHolder =>
+        BuildingSocietyDetails(
+          accountHolder = AccountHolder.build(x),
+          buildingSocietyDetails = BuildingSocietyAccount(x.details.buildingSociety.id, x.details.rollNumber)
+        )
+
+      case x: BankAccountWithHolder =>
+        BankDetails(
+          accountHolder = AccountHolder.build(x),
+          bankAccount = BankAccount(x.details.sortCodeTrimmed, x.details.accountNumberPadded)
+        )
+    }
 }
 
 final case class BankDetails(

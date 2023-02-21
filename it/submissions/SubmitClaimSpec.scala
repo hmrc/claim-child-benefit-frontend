@@ -82,7 +82,7 @@ class SubmitClaimSpec extends AnyFreeSpec with Matchers with ModelGenerators wit
       validator.validateCbsClaim(json) mustBe true
     }
 
-    "for a payload with a non-UK applicant who has always lived abroad and Other country child" in {
+    "for a payload with a non-UK applicant who has always lived abroad and child registered abroad" in {
 
       val claim = Claim(
         dateOfClaim = LocalDate.now,
@@ -107,7 +107,7 @@ class SubmitClaimSpec extends AnyFreeSpec with Matchers with ModelGenerators wit
             crn = None,
             countryOfRegistration = CountryOfRegistration.Abroad,
             dateOfBirthVerified = Some(false),
-            livingWithClaimant = true,
+            livingWithClaimant = false,
             claimantIsParent = true,
             adoptionStatus = false
           )
@@ -119,7 +119,7 @@ class SubmitClaimSpec extends AnyFreeSpec with Matchers with ModelGenerators wit
       validator.validateCbsClaim(json) mustBe true
     }
 
-    "for a payload with a non-UK applicant who hasn't always lived abroad and Other country child" in {
+    "for a payload with a non-UK applicant who hasn't always lived abroad and child registered abroad" in {
 
       val claim = Claim(
         dateOfClaim = LocalDate.now,
@@ -128,7 +128,7 @@ class SubmitClaimSpec extends AnyFreeSpec with Matchers with ModelGenerators wit
           hmfAbroad = false,
           hicbcOptOut = true,
           last3MonthsInUK = true,
-          nationality = Nationality.Eea,
+          nationality = Nationality.NonEea,
           rightToReside = false
         ),
         partner = None,
@@ -147,10 +147,10 @@ class SubmitClaimSpec extends AnyFreeSpec with Matchers with ModelGenerators wit
             dateOfBirthVerified = Some(false),
             livingWithClaimant = true,
             claimantIsParent = true,
-            adoptionStatus = false
+            adoptionStatus = true
           )
         ),
-        otherEligibilityFailure = false
+        otherEligibilityFailure = true
       )
 
       val json = Json.toJson(claim)
