@@ -99,6 +99,33 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
       result.claimantIsParent mustEqual false
     }
 
+    "must set `claimant is parent` to true when the relationship is `birth child`" in {
+
+      val child = basicChild.copy(relationshipToApplicant = models.ApplicantRelationshipToChild.BirthChild)
+
+      val result = Child.build(child)
+
+      result.claimantIsParent mustEqual true
+    }
+
+    "must set `claimant is parent` to true when the relationship is `stepchild`" in {
+
+      val child = basicChild.copy(relationshipToApplicant = models.ApplicantRelationshipToChild.StepChild)
+
+      val result = Child.build(child)
+
+      result.claimantIsParent mustEqual true
+    }
+
+    "must set `claimant is parent` to true when the relationship is `adopted child`" in {
+
+      val child = basicChild.copy(relationshipToApplicant = models.ApplicantRelationshipToChild.AdoptedChild)
+
+      val result = Child.build(child)
+
+      result.claimantIsParent mustEqual true
+    }
+
     "must set `date of birth verified` to None when the child is registered in England" in {
 
       val child = basicChild.copy(countryOfRegistration = models.ChildBirthRegistrationCountry.England)
