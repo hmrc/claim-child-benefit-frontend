@@ -30,7 +30,8 @@ object AppDependencies {
     "org.pegdown"             %  "pegdown"                 % "1.6.0",
     "org.jsoup"               %  "jsoup"                   % "1.14.3",
     "com.vladsch.flexmark"    %  "flexmark-all"            % "0.62.2",
-    "com.github.tomakehurst"  %  "wiremock-standalone"     % "2.27.2"
+    "com.github.tomakehurst"  %  "wiremock-standalone"     % "2.27.2",
+    "io.vertx"                %  "vertx-json-schema"       % "4.3.8"
   ).map(_ % "test, it")
 
   def apply(): Seq[ModuleID] = compile ++ test

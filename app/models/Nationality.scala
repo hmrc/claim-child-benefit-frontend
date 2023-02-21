@@ -21,18 +21,24 @@ import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.select.SelectItem
 import viewmodels.govuk.select._
 
-sealed trait NationalityGroup
+sealed trait NationalityGroup {
+  val order: Int
+}
 
 object NationalityGroup extends Enumerable.Implicits {
 
-  case object UkCta extends WithName("UkCta") with NationalityGroup
-  case object Eea extends WithName("Eea") with NationalityGroup
-  case object NonEea extends WithName("NonEea") with NationalityGroup
+  case object UkCta extends WithName("UkCta") with NationalityGroup { override val order: Int = 1 }
+  case object Eea extends WithName("Eea") with NationalityGroup { override val order: Int = 2 }
+  case object NonEea extends WithName("NonEea") with NationalityGroup { override val order: Int = 3 }
 
   val values: Seq[NationalityGroup] = Seq(UkCta, Eea, NonEea)
 
   implicit val enumerable: Enumerable[NationalityGroup] =
     Enumerable(values.map(v => v.toString -> v): _*)
+}
+
+object NationalityGroupOrdering extends Ordering[NationalityGroup] {
+  override def compare(x: NationalityGroup, y: NationalityGroup): Int = x.order compare y.order
 }
 
 final case class Nationality(name: String, group: NationalityGroup)

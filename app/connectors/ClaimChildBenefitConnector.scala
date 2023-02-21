@@ -17,8 +17,12 @@
 package connectors
 
 import config.Service
-import models.DesignatoryDetails
+import connectors.ClaimChildBenefitConnector._
+import connectors.SubmitClaimHttpParser._
+import models.domain.Claim
+import models.{DesignatoryDetails, Done}
 import play.api.Configuration
+import play.api.libs.json.Json
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 
@@ -30,6 +34,7 @@ class ClaimChildBenefitConnector @Inject()(config: Configuration, httpClient: Ht
 
   private val baseUrl = config.get[Service]("microservice.services.claim-child-benefit")
   private val designatoryDetailsUrl = url"$baseUrl/claim-child-benefit/designatory-details"
+  private val submitClaimUrl = url"$baseUrl/claim-child-benefit/claim"
 
   def designatoryDetails()(implicit hc: HeaderCarrier): Future[DesignatoryDetails] = {
     httpClient
@@ -37,4 +42,32 @@ class ClaimChildBenefitConnector @Inject()(config: Configuration, httpClient: Ht
       .execute[DesignatoryDetails]
   }
 
+  def submitClaim(claim: Claim)(implicit hc: HeaderCarrier): Future[Done] =
+    httpClient
+      .post(submitClaimUrl)
+      .withBody(Json.toJson(claim))
+      .execute[Either[SubmitClaimException, Done]]
+      .flatMap {
+        case Right(_)        => Future.successful(Done)
+        case Left(exception) => Future.failed(exception)
+      }
+}
+
+object ClaimChildBenefitConnector {
+
+  sealed abstract class SubmitClaimException(message: String) extends Exception(message)
+
+  class BadRequestException extends SubmitClaimException(message = "Received BAD_REQUEST when submitting a claim to CBS")
+
+  class InvalidClaimStateException extends SubmitClaimException(message = "Received INVALID_CLAIM_STATE when submitting a claim to CBS")
+
+  class InvalidAccountStateException extends SubmitClaimException(message = "Received INVALID_ACCOUNT_STATE when submitting a claim to CBS")
+
+  class UnprocessableEntityException extends SubmitClaimException(message = "Received UNPROCESSABLE_ENTITY when submitting a claim to CBS, with no recognised failure code")
+
+  class UnrecognisedResponseException(code: Int) extends SubmitClaimException(message = s"Received an unrecognised response code $code when submitting a claim to CBS")
+
+  class ServerErrorException extends SubmitClaimException(message = "Received INTERNAL_SERVER_ERROR when submitting a claim to CBS")
+
+  class ServiceUnavailableException extends SubmitClaimException(message = "Received SERVICE_UNAVAILABLE when submitting a claim to CBS")
 }

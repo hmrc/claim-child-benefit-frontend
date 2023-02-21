@@ -25,6 +25,25 @@ import java.time.LocalDate
 
 trait ModelGenerators {
 
+  def genUkCtaNationality: Gen[Nationality] =
+    Gen.oneOf(Nationality.allNationalities.filter(_.group == NationalityGroup.UkCta))
+
+  def genEeaNationality: Gen[Nationality] =
+    Gen.oneOf(Nationality.allNationalities.filter(_.group == NationalityGroup.Eea))
+
+  def genNonEeaNationality: Gen[Nationality] =
+    Gen.oneOf(Nationality.allNationalities.filter(_.group == NationalityGroup.NonEea))
+
+  implicit lazy val arbitraryNationality: Arbitrary[Nationality] =
+    Arbitrary{
+      Gen.oneOf(Nationality.allNationalities)
+    }
+
+  implicit lazy val arbitraryEmploymentStatus: Arbitrary[EmploymentStatus] =
+    Arbitrary {
+      Gen.oneOf(EmploymentStatus.values)
+    }
+
   implicit lazy val arbitraryScottishBirthCertificateDetails: Arbitrary[ScottishBirthCertificateDetails] =
     Arbitrary {
       for {
@@ -92,13 +111,13 @@ trait ModelGenerators {
     } yield Nino(firstChar ++ secondChar ++ digits :+ lastChar)
   }
 
-  implicit lazy val arbitraryApplicantName: Arbitrary[AdultName] =
+  implicit lazy val arbitraryAdultName: Arbitrary[AdultName] =
     Arbitrary {
       for {
-        title       <- Gen.option(arbitrary[String])
-        firstName   <- arbitrary[String]
+        title <- Gen.option(arbitrary[String])
+        firstName <- arbitrary[String]
         middleNames <- Gen.option(arbitrary[String])
-        lastName    <- arbitrary[String]
+        lastName <- arbitrary[String]
       } yield AdultName(title, firstName, middleNames, lastName)
     }
 

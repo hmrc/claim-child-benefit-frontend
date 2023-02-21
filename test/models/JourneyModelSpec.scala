@@ -81,6 +81,7 @@ class JourneyModelSpec
         .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
         .set(ApplicantCurrentUkAddressPage, currentUkAddress).success.value
         .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+        .set(ApplicantIsHmfOrCivilServantPage, false).success.value
         .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
         .set(RelationshipStatusPage, Single).success.value
         .set(ChildNamePage(Index(0)), childName).success.value
