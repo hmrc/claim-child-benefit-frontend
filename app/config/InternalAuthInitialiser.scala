@@ -75,9 +75,9 @@ class InternalAuthTokenInitialiserImpl @Inject() (
         "principal" -> appName,
         "permissions" -> Seq(
           Json.obj(
-            "resourceType" -> "object-store",
-            "resourceLocation" -> "claim-child-benefit",
-            "actions" -> List("READ", "WRITE", "DELETE")
+            "resourceType" -> "claim-child-benefit",
+            "resourceLocation" -> "*",
+            "actions" -> List("*")
           )
         )
       ))

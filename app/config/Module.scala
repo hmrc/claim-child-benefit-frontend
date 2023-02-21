@@ -27,6 +27,11 @@ class Module extends play.api.inject.Module {
 
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = {
 
+    val authTokenInitialiserBindings: Seq[Binding[_]] =
+      if (configuration.get[Boolean]("create-internal-auth-token-on-start")) {
+        Seq(bind[InternalAuthTokenInitialiser].to[InternalAuthTokenInitialiserImpl].eagerly())
+      } else Seq(bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser].eagerly())
+
     val identifierActionBinding: Binding[_] =
       if (configuration.get[Boolean]("features.allow-authenticated-sessions")) {
         bind[IdentifierAction].to[OptionalAuthIdentifierAction].eagerly
@@ -41,6 +46,6 @@ class Module extends play.api.inject.Module {
       bind[FeatureFlags].toSelf.eagerly,
       bind[Encrypter with Decrypter].toProvider[CryptoProvider].eagerly,
       identifierActionBinding
-    )
+    ) ++ authTokenInitialiserBindings
   }
 }
