@@ -22,7 +22,7 @@ import java.time.LocalDate
 
 trait CbsDateFormats {
 
-  val localDateWrites: Writes[LocalDate] = Writes {
+  implicit val localDateWrites: Writes[LocalDate] = Writes {
     date =>
       val day = "%02d".format(date.getDayOfMonth)
       val month = "%02d".format(date.getMonthValue)
@@ -30,5 +30,3 @@ trait CbsDateFormats {
       JsString(s"""$day/$month/$year""")
   }
 }
-
-object CbsDateFormats extends CbsDateFormats

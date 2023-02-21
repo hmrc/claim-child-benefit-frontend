@@ -26,9 +26,7 @@ class CbsDateFormatSpec extends AnyFreeSpec with Matchers {
 
   final case class TestModel(date: LocalDate)
 
-  object TestModel {
-
-    private implicit val dateWrites: Writes[LocalDate] = CbsDateFormats.localDateWrites
+  object TestModel extends CbsDateFormats {
 
     implicit val writes: OWrites[TestModel] = Json.writes
   }

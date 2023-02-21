@@ -35,7 +35,7 @@ final case class Child(
                         adoptionStatus: Boolean
                       )
 
-object Child {
+object Child extends CbsDateFormats {
 
   def build(child: JourneyModel.Child): Child = {
 
@@ -61,8 +61,6 @@ object Child {
       adoptionStatus = adoptionStatus
     )
   }
-
-  private implicit val dateWrites: Writes[LocalDate] = CbsDateFormats.localDateWrites
 
   implicit lazy val writes: OWrites[Child] = Json.writes
 }

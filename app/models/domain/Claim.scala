@@ -30,9 +30,7 @@ final case class Claim(
                         otherEligibilityFailure: Boolean
                       )
 
-object Claim {
-
-  implicit private lazy val dateWrites: Writes[LocalDate] = CbsDateFormats.localDateWrites
+object Claim extends CbsDateFormats {
 
   implicit lazy val writes: OWrites[Claim] = Json.writes
 
