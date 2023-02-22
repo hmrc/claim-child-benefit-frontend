@@ -27,6 +27,7 @@ import play.api.test.FakeRequest
 import services.UserDataService
 import uk.gov.hmrc.http.HeaderCarrier
 
+import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -84,7 +85,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
           val sessionRepository = mock[UserDataService]
           val connector = mock[ClaimChildBenefitConnector]
           val cachedAnswers = UserAnswers(userId)
-          val designatoryDetails = DesignatoryDetails(None, None, None, None)
+          val designatoryDetails = DesignatoryDetails(None, None, None, None, LocalDate.now)
 
           when(sessionRepository.get(userId)) thenReturn Future(Some(cachedAnswers))
           when(connector.designatoryDetails()(any())) thenReturn Future(designatoryDetails)

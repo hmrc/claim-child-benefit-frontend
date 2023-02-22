@@ -256,7 +256,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
 
       "who have a designatory address in the UK and have not updated it" - {
 
-        val designatoryDetails = DesignatoryDetails(None, None, Some(ukNpsAddress), None)
+        val designatoryDetails = DesignatoryDetails(None, None, Some(ukNpsAddress), None, LocalDate.now)
         val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
 
         "must be asked when the arrived in the UK" in {
@@ -273,7 +273,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
 
       "who have a designatory address in the UK and have updated it with a UK address" - {
 
-        val designatoryDetails = DesignatoryDetails(None, None, Some(ukNpsAddress), None)
+        val designatoryDetails = DesignatoryDetails(None, None, Some(ukNpsAddress), None, LocalDate.now)
         val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
 
         "must be asked when the arrived in the UK" in {
@@ -292,7 +292,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
 
       "who have a designatory address in the UK and have updated it with an international address" - {
 
-        val designatoryDetails = DesignatoryDetails(None, None, Some(ukNpsAddress), None)
+        val designatoryDetails = DesignatoryDetails(None, None, Some(ukNpsAddress), None, LocalDate.now)
         val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
 
         "must not be asked when the arrived in the UK" in {
@@ -310,7 +310,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
 
       "who have an international designatory address and have not updated it" - {
 
-        val designatoryDetails = DesignatoryDetails(None, None, Some(nonUkNpsAddress), None)
+        val designatoryDetails = DesignatoryDetails(None, None, Some(nonUkNpsAddress), None, LocalDate.now)
         val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
 
         "must not be asked when the arrived in the UK" in {
@@ -326,7 +326,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
 
       "who have an international designatory address and have updated it with a UK address" - {
 
-        val designatoryDetails = DesignatoryDetails(None, None, Some(nonUkNpsAddress), None)
+        val designatoryDetails = DesignatoryDetails(None, None, Some(nonUkNpsAddress), None, LocalDate.now)
         val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
 
         "must be asked when the arrived in the UK" in {
@@ -345,7 +345,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
 
       "who have an international designatory address and have updated it with an international address" - {
 
-        val designatoryDetails = DesignatoryDetails(None, None, Some(nonUkNpsAddress), None)
+        val designatoryDetails = DesignatoryDetails(None, None, Some(nonUkNpsAddress), None, LocalDate.now)
         val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
 
         "must not be asked when the arrived in the UK" in {
@@ -366,7 +366,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
 
       "who have a designatory address in the UK and have not updated it" - {
 
-        val designatoryDetails = DesignatoryDetails(None, None, Some(ukNpsAddress), None)
+        val designatoryDetails = DesignatoryDetails(None, None, Some(ukNpsAddress), None, LocalDate.now)
         val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
 
         "must be asked when the arrived in the UK" in {
@@ -384,7 +384,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
 
       "who have a designatory address in the UK and have updated it with a UK address" - {
 
-        val designatoryDetails = DesignatoryDetails(None, None, Some(ukNpsAddress), None)
+        val designatoryDetails = DesignatoryDetails(None, None, Some(ukNpsAddress), None, LocalDate.now)
         val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
 
         "must be asked when the arrived in the UK" in {
@@ -404,7 +404,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
 
       "who have a designatory address in the UK and have updated it with an international address" - {
 
-        val designatoryDetails = DesignatoryDetails(None, None, Some(ukNpsAddress), None)
+        val designatoryDetails = DesignatoryDetails(None, None, Some(ukNpsAddress), None, LocalDate.now)
         val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
 
         "must not be asked when the arrived in the UK" in {
@@ -423,7 +423,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
 
       "who have an international designatory address and have not updated it" - {
 
-        val designatoryDetails = DesignatoryDetails(None, None, Some(nonUkNpsAddress), None)
+        val designatoryDetails = DesignatoryDetails(None, None, Some(nonUkNpsAddress), None, LocalDate.now)
         val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
 
         "must not be asked when the arrived in the UK" in {
@@ -440,7 +440,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
 
       "who have an international designatory address and have updated it with a UK address" - {
 
-        val designatoryDetails = DesignatoryDetails(None, None, Some(nonUkNpsAddress), None)
+        val designatoryDetails = DesignatoryDetails(None, None, Some(nonUkNpsAddress), None, LocalDate.now)
         val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
 
         "must be asked when the arrived in the UK" in {
@@ -460,7 +460,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
 
       "who have an international designatory address and have updated it with an international address" - {
 
-        val designatoryDetails = DesignatoryDetails(None, None, Some(nonUkNpsAddress), None)
+        val designatoryDetails = DesignatoryDetails(None, None, Some(nonUkNpsAddress), None, LocalDate.now)
         val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
 
         "must not be asked when the arrived in the UK" in {
@@ -483,7 +483,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
 
     "must be asked where they usually live then for their employment status" in {
 
-      val designatoryDetails = DesignatoryDetails(None, None, Some(nonUkNpsAddress), None)
+      val designatoryDetails = DesignatoryDetails(None, None, Some(nonUkNpsAddress), None, LocalDate.now)
       val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
 
       startingFrom(ApplicantResidencePage, answers = answers)
@@ -499,7 +499,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
     
     "must proceed from Applicant Residence to Applicant is HM Forces" in {
 
-      val designatoryDetails = DesignatoryDetails(None, None, Some(ukNpsAddress), None)
+      val designatoryDetails = DesignatoryDetails(None, None, Some(ukNpsAddress), None, LocalDate.now)
       val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
 
       startingFrom(ApplicantResidencePage, answers = answers)

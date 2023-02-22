@@ -18,6 +18,8 @@ package models
 
 import play.api.libs.json.{Json, OFormat}
 
+import java.time.LocalDate
+
 final case class NPSAddress(
                              line1: String,
                              line2: Option[String],
@@ -52,7 +54,8 @@ final case class DesignatoryDetails(
                                      realName: Option[AdultName],
                                      knownAsName: Option[AdultName],
                                      residentialAddress: Option[NPSAddress],
-                                     correspondenceAddress: Option[NPSAddress]
+                                     correspondenceAddress: Option[NPSAddress],
+                                     dateOfBirth: LocalDate
                                    ) {
 
   lazy val preferredName: Option[AdultName] = knownAsName orElse realName

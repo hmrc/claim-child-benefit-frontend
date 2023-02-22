@@ -26,6 +26,8 @@ import play.api.i18n.Messages
 import play.api.test.Helpers.stubMessages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 
+import java.time.LocalDate
+
 class CorrespondenceAddressSummarySpec extends AnyFreeSpec with Matchers with OptionValues with TryValues {
 
   private implicit val messages: Messages = stubMessages()
@@ -35,7 +37,7 @@ class CorrespondenceAddressSummarySpec extends AnyFreeSpec with Matchers with Op
     val originalAddress = NPSAddress("original line 1", None, None, None, None, None, None)
     val newUkAddress = UkAddress("line1", None, "town", None, "postcode")
     val newInternationalAddress = InternationalAddress("line1", None, "town", None, None, Country("ES", "Spain"))
-    val designatoryDetails = DesignatoryDetails(None, None, None, Some(originalAddress))
+    val designatoryDetails = DesignatoryDetails(None, None, None, Some(originalAddress), LocalDate.now)
 
     "when designatory details exist" - {
 

@@ -42,12 +42,15 @@ class ClaimChildBenefitConnectorSpec
 
   private val happyDesignatoryDetailsJson ="""{
       |"realName": {"title": "Mrs", "firstName": "foo", "middleNames": "baz", "lastName": "bar"},
-      |"residentialAddress": {"line1": "123", "postcode": "NE98 1ZZ"}}""".stripMargin
+      |"residentialAddress": {"line1": "123", "postcode": "NE98 1ZZ"},
+      |"dateOfBirth": "2000-02-01"
+      |}""".stripMargin
   private val happyDesignatoryDetailsModel = DesignatoryDetails(
     realName = Some(AdultName(Some("Mrs"), "foo", Some("baz"), "bar")),
     knownAsName = None,
     residentialAddress = Some(NPSAddress("123", None, None, None, None, Some("NE98 1ZZ"), None)),
-    correspondenceAddress = None
+    correspondenceAddress = None,
+    dateOfBirth = LocalDate.of(2000, 2, 1)
   )
 
   ".designatoryDetails" - {
