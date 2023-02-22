@@ -37,7 +37,7 @@ import pages.applicant._
 import pages.child._
 import pages.partner._
 import pages.payments._
-import queries.{AllChildPreviousNames, AllChildSummaries, AllCountriesApplicantReceivedBenefits, AllCountriesApplicantWorked, AllCountriesPartnerReceivedBenefits, AllCountriesPartnerWorked, AllPartnerNationalities, AllPreviousFamilyNames}
+import queries._
 import services.BrmsService
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
@@ -89,6 +89,9 @@ class JourneyModelProviderSpec
   private val ukAddress = arbitrary[UkAddress].sample.value
   private val internationalAddress = arbitrary[InternationalAddress].sample.value
 
+  private val designatoryNino = arbitrary[Nino].sample.value
+  private val designatoryDateOfBirth = LocalDate.now.minusYears(20)
+
   private val mockBrmsService = mock[BrmsService]
   private val journeyModelProvider = new JourneyModelProvider(mockBrmsService)
   private implicit val hc: HeaderCarrier = HeaderCarrier()
@@ -126,7 +129,9 @@ class JourneyModelProviderSpec
             nationalities = NonEmptyList(applicantNationality, Nil),
             residency = AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = false,
-            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
+            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+            changedDesignatoryDetails = None,
+            correspondenceAddress = None
           ),
           relationship = JourneyModel.Relationship(Single, None, None),
           children = NonEmptyList(
@@ -193,7 +198,9 @@ class JourneyModelProviderSpec
             nationalities = NonEmptyList(applicantNationality, Nil),
             residency = AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = false,
-            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
+            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+            changedDesignatoryDetails = None,
+            correspondenceAddress = None
           ),
           relationship = JourneyModel.Relationship(
             status = Married,
@@ -279,7 +286,9 @@ class JourneyModelProviderSpec
             nationalities = NonEmptyList(applicantNationality, Nil),
             residency = AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = false,
-            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
+            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+            changedDesignatoryDetails = None,
+            correspondenceAddress = None
           ),
           relationship = JourneyModel.Relationship(
             status = Married,
@@ -741,7 +750,9 @@ class JourneyModelProviderSpec
           nationalities = NonEmptyList(applicantNationality, Nil),
           residency = AlwaysLivedInUk,
           memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
+          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+          changedDesignatoryDetails = None,
+          correspondenceAddress = None
         )
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -776,7 +787,9 @@ class JourneyModelProviderSpec
           nationalities = NonEmptyList(applicantNationality, Nil),
           residency = AlwaysLivedInUk,
           memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
+          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+          changedDesignatoryDetails = None,
+          correspondenceAddress = None
         )
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -818,7 +831,9 @@ class JourneyModelProviderSpec
           nationalities = NonEmptyList(applicantNationality, Nil),
           residency = LivedInUkAndAbroad(Some(country), None, EmploymentStatus.activeStatuses, Nil, Nil),
           memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
+          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+          changedDesignatoryDetails = None,
+          correspondenceAddress = None
         )
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -863,7 +878,9 @@ class JourneyModelProviderSpec
             nationalities = NonEmptyList(applicantNationality, Nil),
             residency = LivedInUkAndAbroad(None, Some(LocalDate.now), EmploymentStatus.activeStatuses, Nil, Nil),
             memberOfHMForcesOrCivilServantAbroad = false,
-            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
+            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+            changedDesignatoryDetails = None,
+            correspondenceAddress = None
           )
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -906,7 +923,9 @@ class JourneyModelProviderSpec
             nationalities = NonEmptyList(applicantNationality, Nil),
             residency = LivedInUkAndAbroad(None, Some(LocalDate.now), EmploymentStatus.activeStatuses, Nil, Nil),
             memberOfHMForcesOrCivilServantAbroad = false,
-            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
+            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+            changedDesignatoryDetails = None,
+            correspondenceAddress = None
           )
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -949,7 +968,9 @@ class JourneyModelProviderSpec
           nationalities = NonEmptyList(applicantNationality, Nil),
           residency = LivedInUkAndAbroad(None, Some(LocalDate.now), EmploymentStatus.activeStatuses, List(country), Nil),
           memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
+          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+          changedDesignatoryDetails = None,
+          correspondenceAddress = None
         )
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -991,13 +1012,313 @@ class JourneyModelProviderSpec
           nationalities = NonEmptyList(applicantNationality, Nil),
           residency = LivedInUkAndAbroad(None, Some(LocalDate.now), EmploymentStatus.activeStatuses, Nil, List(country)),
           memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
+          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+          changedDesignatoryDetails = None,
+          correspondenceAddress = None
         )
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
         errors mustBe empty
         data.value.applicant mustEqual expectedApplicant
+      }
+
+      "when the applicant is authenticated" - {
+
+        "and does not change their designatory details" in {
+
+          when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+          val designatoryDetails = DesignatoryDetails(
+            realName = Some(AdultName(None, "designatory first", None, "designatory last")),
+            knownAsName = None,
+            residentialAddress = Some(NPSAddress("designatory line 1", None, None, None, None, None, None)),
+            correspondenceAddress = Some(NPSAddress("correspondence line 1", None, None, None, None, None, None)),
+            dateOfBirth = designatoryDateOfBirth
+          )
+
+          val answers = UserAnswers("id", nino = Some(designatoryNino.nino), designatoryDetails = Some(designatoryDetails))
+            .set(ApplicantPhoneNumberPage, phoneNumber).success.value
+            .set(ApplicantNationalityPage(Index(0)), applicantNationality).success.value
+            .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
+            .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
+            .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+            .set(ApplicantIsHmfOrCivilServantPage, false).success.value
+            .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(WantToBePaidPage, false).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
+
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+          errors mustBe empty
+          data.value.applicant mustEqual JourneyModel.Applicant(
+            name = AdultName(None, "designatory first", None, "designatory last"),
+            previousFamilyNames = Nil,
+            dateOfBirth = designatoryDateOfBirth,
+            nationalInsuranceNumber = Some(designatoryNino.nino),
+            currentAddress = NPSAddress("designatory line 1", None, None, None, None, None, None),
+            previousAddress = None,
+            telephoneNumber = phoneNumber,
+            nationalities = NonEmptyList(applicantNationality, Nil),
+            residency = JourneyModel.Residency.AlwaysLivedInUk,
+            memberOfHMForcesOrCivilServantAbroad = false,
+            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+            changedDesignatoryDetails = Some(false),
+            correspondenceAddress = Some(NPSAddress("correspondence line 1", None, None, None, None, None, None))
+          )
+        }
+
+        "and supplies a new name" in {
+
+          when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+          val designatoryDetails = DesignatoryDetails(
+            realName = Some(AdultName(None, "designatory first", None, "designatory last")),
+            knownAsName = None,
+            residentialAddress = Some(NPSAddress("designatory line 1", None, None, None, None, None, None)),
+            correspondenceAddress = None,
+            dateOfBirth = designatoryDateOfBirth
+          )
+
+          val newName = AdultName(None, "new first name", None, "new last name")
+
+          val answers = UserAnswers("id", nino = Some(designatoryNino.nino), designatoryDetails = Some(designatoryDetails))
+            .set(ApplicantPhoneNumberPage, phoneNumber).success.value
+            .set(ApplicantNationalityPage(Index(0)), applicantNationality).success.value
+            .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
+            .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
+            .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+            .set(ApplicantIsHmfOrCivilServantPage, false).success.value
+            .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
+            .set(DesignatoryNamePage, newName).success.value
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(WantToBePaidPage, false).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
+
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+          errors mustBe empty
+          data.value.applicant mustEqual JourneyModel.Applicant(
+            name = newName,
+            previousFamilyNames = Nil,
+            dateOfBirth = designatoryDateOfBirth,
+            nationalInsuranceNumber = Some(designatoryNino.nino),
+            currentAddress = NPSAddress("designatory line 1", None, None, None, None, None, None),
+            previousAddress = None,
+            telephoneNumber = phoneNumber,
+            nationalities = NonEmptyList(applicantNationality, Nil),
+            residency = JourneyModel.Residency.AlwaysLivedInUk,
+            memberOfHMForcesOrCivilServantAbroad = false,
+            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+            changedDesignatoryDetails = Some(true),
+            correspondenceAddress = None
+          )
+        }
+
+        "and supplies a new UK residential address" in {
+
+          when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+          val designatoryDetails = DesignatoryDetails(
+            realName = Some(AdultName(None, "designatory first", None, "designatory last")),
+            knownAsName = None,
+            residentialAddress = Some(NPSAddress("designatory line 1", None, None, None, None, None, None)),
+            correspondenceAddress = None,
+            dateOfBirth = designatoryDateOfBirth
+          )
+
+          val newAddress = UkAddress("new line 1", None, "new town", None, "new postcode")
+
+          val answers = UserAnswers("id", nino = Some(designatoryNino.nino), designatoryDetails = Some(designatoryDetails))
+            .set(ApplicantPhoneNumberPage, phoneNumber).success.value
+            .set(ApplicantNationalityPage(Index(0)), applicantNationality).success.value
+            .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
+            .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
+            .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+            .set(ApplicantIsHmfOrCivilServantPage, false).success.value
+            .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
+            .set(DesignatoryAddressInUkPage, true).success.value
+            .set(DesignatoryUkAddressPage, newAddress).success.value
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(WantToBePaidPage, false).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
+
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+          errors mustBe empty
+          data.value.applicant mustEqual JourneyModel.Applicant(
+            name = AdultName(None, "designatory first", None, "designatory last"),
+            previousFamilyNames = Nil,
+            dateOfBirth = designatoryDateOfBirth,
+            nationalInsuranceNumber = Some(designatoryNino.nino),
+            currentAddress = newAddress,
+            previousAddress = None,
+            telephoneNumber = phoneNumber,
+            nationalities = NonEmptyList(applicantNationality, Nil),
+            residency = JourneyModel.Residency.AlwaysLivedInUk,
+            memberOfHMForcesOrCivilServantAbroad = false,
+            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+            changedDesignatoryDetails = Some(true),
+            correspondenceAddress = None
+          )
+        }
+
+        "and supplies a new international residential address" in {
+
+          when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+          val designatoryDetails = DesignatoryDetails(
+            realName = Some(AdultName(None, "designatory first", None, "designatory last")),
+            knownAsName = None,
+            residentialAddress = Some(NPSAddress("designatory line 1", None, None, None, None, None, None)),
+            correspondenceAddress = None,
+            dateOfBirth = designatoryDateOfBirth
+          )
+
+          val newAddress = InternationalAddress("new line 1", None, "new town", None, None, Country("ES", "Spain"))
+
+          val answers = UserAnswers("id", nino = Some(designatoryNino.nino), designatoryDetails = Some(designatoryDetails))
+            .set(ApplicantPhoneNumberPage, phoneNumber).success.value
+            .set(ApplicantNationalityPage(Index(0)), applicantNationality).success.value
+            .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
+            .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
+            .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+            .set(ApplicantIsHmfOrCivilServantPage, false).success.value
+            .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
+            .set(DesignatoryAddressInUkPage, false).success.value
+            .set(DesignatoryInternationalAddressPage, newAddress).success.value
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(WantToBePaidPage, false).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
+
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+          errors mustBe empty
+          data.value.applicant mustEqual JourneyModel.Applicant(
+            name = AdultName(None, "designatory first", None, "designatory last"),
+            previousFamilyNames = Nil,
+            dateOfBirth = designatoryDateOfBirth,
+            nationalInsuranceNumber = Some(designatoryNino.nino),
+            currentAddress = newAddress,
+            previousAddress = None,
+            telephoneNumber = phoneNumber,
+            nationalities = NonEmptyList(applicantNationality, Nil),
+            residency = JourneyModel.Residency.AlwaysLivedInUk,
+            memberOfHMForcesOrCivilServantAbroad = false,
+            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+            changedDesignatoryDetails = Some(true),
+            correspondenceAddress = None
+          )
+        }
+
+        "and supplies a new UK correspondence address" in {
+
+          when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+          val designatoryDetails = DesignatoryDetails(
+            realName = Some(AdultName(None, "designatory first", None, "designatory last")),
+            knownAsName = None,
+            residentialAddress = Some(NPSAddress("designatory line 1", None, None, None, None, None, None)),
+            correspondenceAddress = None,
+            dateOfBirth = designatoryDateOfBirth
+          )
+
+          val correspondenceAddress = UkAddress("new line 1", None, "new town", None, "new postcode")
+
+          val answers = UserAnswers("id", nino = Some(designatoryNino.nino), designatoryDetails = Some(designatoryDetails))
+            .set(ApplicantPhoneNumberPage, phoneNumber).success.value
+            .set(ApplicantNationalityPage(Index(0)), applicantNationality).success.value
+            .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
+            .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
+            .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+            .set(ApplicantIsHmfOrCivilServantPage, false).success.value
+            .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
+            .set(CorrespondenceAddressInUkPage, true).success.value
+            .set(CorrespondenceUkAddressPage, correspondenceAddress).success.value
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(WantToBePaidPage, false).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
+
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+          errors mustBe empty
+          data.value.applicant mustEqual JourneyModel.Applicant(
+            name = AdultName(None, "designatory first", None, "designatory last"),
+            previousFamilyNames = Nil,
+            dateOfBirth = designatoryDateOfBirth,
+            nationalInsuranceNumber = Some(designatoryNino.nino),
+            currentAddress = NPSAddress("designatory line 1", None, None, None, None, None, None),
+            previousAddress = None,
+            telephoneNumber = phoneNumber,
+            nationalities = NonEmptyList(applicantNationality, Nil),
+            residency = JourneyModel.Residency.AlwaysLivedInUk,
+            memberOfHMForcesOrCivilServantAbroad = false,
+            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+            changedDesignatoryDetails = Some(true),
+            correspondenceAddress = Some(correspondenceAddress)
+          )
+        }
+
+        "and supplies a new international correspondence address" in {
+
+          when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+          val designatoryDetails = DesignatoryDetails(
+            realName = Some(AdultName(None, "designatory first", None, "designatory last")),
+            knownAsName = None,
+            residentialAddress = Some(NPSAddress("designatory line 1", None, None, None, None, None, None)),
+            correspondenceAddress = None,
+            dateOfBirth = designatoryDateOfBirth
+          )
+
+          val correspondenceAddress = InternationalAddress("new line 1", None, "new town", None, None, Country("FR", "France"))
+
+          val answers = UserAnswers("id", nino = Some(designatoryNino.nino), designatoryDetails = Some(designatoryDetails))
+            .set(ApplicantPhoneNumberPage, phoneNumber).success.value
+            .set(ApplicantNationalityPage(Index(0)), applicantNationality).success.value
+            .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
+            .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
+            .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+            .set(ApplicantIsHmfOrCivilServantPage, false).success.value
+            .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
+            .set(CorrespondenceAddressInUkPage, false).success.value
+            .set(CorrespondenceInternationalAddressPage, correspondenceAddress).success.value
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(WantToBePaidPage, false).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
+
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+          errors mustBe empty
+          data.value.applicant mustEqual JourneyModel.Applicant(
+            name = AdultName(None, "designatory first", None, "designatory last"),
+            previousFamilyNames = Nil,
+            dateOfBirth = designatoryDateOfBirth,
+            nationalInsuranceNumber = Some(designatoryNino.nino),
+            currentAddress = NPSAddress("designatory line 1", None, None, None, None, None, None),
+            previousAddress = None,
+            telephoneNumber = phoneNumber,
+            nationalities = NonEmptyList(applicantNationality, Nil),
+            residency = JourneyModel.Residency.AlwaysLivedInUk,
+            memberOfHMForcesOrCivilServantAbroad = false,
+            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+            changedDesignatoryDetails = Some(true),
+            correspondenceAddress = Some(correspondenceAddress)
+          )
+        }
       }
 
       "when the applicant knows their partner's NINO" in {
@@ -1967,6 +2288,141 @@ class JourneyModelProviderSpec
 
         errors.value.toChain.toList must contain theSameElementsAs Seq(ApplicantNamePage, AdditionalInformationPage)
         data mustBe empty
+      }
+
+      "when the user is authenticated" - {
+
+        "and says they have a new UK residential address but it is missing" in {
+
+          when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+          val designatoryDetails = DesignatoryDetails(
+            realName = Some(AdultName(None, "designatory first", None, "designatory last")),
+            knownAsName = None,
+            residentialAddress = Some(NPSAddress("designatory line 1", None, None, None, None, None, None)),
+            correspondenceAddress = None,
+            dateOfBirth = designatoryDateOfBirth
+          )
+
+          val answers = UserAnswers("id", nino = Some(designatoryNino.nino), designatoryDetails = Some(designatoryDetails))
+            .set(ApplicantPhoneNumberPage, phoneNumber).success.value
+            .set(ApplicantNationalityPage(Index(0)), applicantNationality).success.value
+            .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
+            .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
+            .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+            .set(ApplicantIsHmfOrCivilServantPage, false).success.value
+            .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
+            .set(DesignatoryAddressInUkPage, true).success.value
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(WantToBePaidPage, false).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
+
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+          errors.value.toChain.toList must contain only DesignatoryUkAddressPage
+          data mustBe empty
+        }
+        
+        "and says they have a new international residential address but it is missing" in {
+
+          when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+          val designatoryDetails = DesignatoryDetails(
+            realName = Some(AdultName(None, "designatory first", None, "designatory last")),
+            knownAsName = None,
+            residentialAddress = Some(NPSAddress("designatory line 1", None, None, None, None, None, None)),
+            correspondenceAddress = None,
+            dateOfBirth = designatoryDateOfBirth
+          )
+
+          val answers = UserAnswers("id", nino = Some(designatoryNino.nino), designatoryDetails = Some(designatoryDetails))
+            .set(ApplicantPhoneNumberPage, phoneNumber).success.value
+            .set(ApplicantNationalityPage(Index(0)), applicantNationality).success.value
+            .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
+            .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
+            .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+            .set(ApplicantIsHmfOrCivilServantPage, false).success.value
+            .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
+            .set(DesignatoryAddressInUkPage, false).success.value
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(WantToBePaidPage, false).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
+
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+          errors.value.toChain.toList must contain only DesignatoryInternationalAddressPage
+          data mustBe empty
+        }
+
+        "and says they have a new UK correspondence address but it is missing" in {
+
+          when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+          val designatoryDetails = DesignatoryDetails(
+            realName = Some(AdultName(None, "designatory first", None, "designatory last")),
+            knownAsName = None,
+            residentialAddress = Some(NPSAddress("designatory line 1", None, None, None, None, None, None)),
+            correspondenceAddress = None,
+            dateOfBirth = designatoryDateOfBirth
+          )
+
+          val answers = UserAnswers("id", nino = Some(designatoryNino.nino), designatoryDetails = Some(designatoryDetails))
+            .set(ApplicantPhoneNumberPage, phoneNumber).success.value
+            .set(ApplicantNationalityPage(Index(0)), applicantNationality).success.value
+            .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
+            .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
+            .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+            .set(ApplicantIsHmfOrCivilServantPage, false).success.value
+            .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
+            .set(CorrespondenceAddressInUkPage, true).success.value
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(WantToBePaidPage, false).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
+
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+          errors.value.toChain.toList must contain only CorrespondenceUkAddressPage
+          data mustBe empty
+        }
+
+        "and says they have a new international correspondence address but it is missing" in {
+
+          when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+          val designatoryDetails = DesignatoryDetails(
+            realName = Some(AdultName(None, "designatory first", None, "designatory last")),
+            knownAsName = None,
+            residentialAddress = Some(NPSAddress("designatory line 1", None, None, None, None, None, None)),
+            correspondenceAddress = None,
+            dateOfBirth = designatoryDateOfBirth
+          )
+
+          val answers = UserAnswers("id", nino = Some(designatoryNino.nino), designatoryDetails = Some(designatoryDetails))
+            .set(ApplicantPhoneNumberPage, phoneNumber).success.value
+            .set(ApplicantNationalityPage(Index(0)), applicantNationality).success.value
+            .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
+            .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
+            .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+            .set(ApplicantIsHmfOrCivilServantPage, false).success.value
+            .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
+            .set(CorrespondenceAddressInUkPage, false).success.value
+            .withOneChild
+            .withMinimalSingleIncomeDetails
+            .set(RelationshipStatusPage, Single).success.value
+            .set(WantToBePaidPage, false).success.value
+            .set(AdditionalInformationPage, NoInformation).success.value
+
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+          errors.value.toChain.toList must contain only CorrespondenceInternationalAddressPage
+          data mustBe empty
+        }
       }
 
       "when the applicant is married and partner details are missing" in {

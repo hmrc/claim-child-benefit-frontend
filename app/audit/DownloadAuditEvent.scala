@@ -46,7 +46,9 @@ object DownloadAuditEvent {
         nationalities                        = model.applicant.nationalities.toList.map(_.name),
         residency                            = convertResidency(model.applicant.residency),
         memberOfHMForcesOrCivilServantAbroad = model.applicant.memberOfHMForcesOrCivilServantAbroad,
-        currentlyClaimingChildBenefit        = model.applicant.currentlyReceivingChildBenefit.toString
+        currentlyClaimingChildBenefit        = model.applicant.currentlyReceivingChildBenefit.toString,
+        changedDesignatoryDetails            = model.applicant.changedDesignatoryDetails,
+        correspondenceAddress                = model.applicant.correspondenceAddress.map(convertAddress)
       ),
       relationship = Relationship(
         status  = model.relationship.status.toString,
@@ -291,7 +293,9 @@ object DownloadAuditEvent {
                                              nationalities: Seq[String],
                                              residency: Residency,
                                              memberOfHMForcesOrCivilServantAbroad: Boolean,
-                                             currentlyClaimingChildBenefit: String
+                                             currentlyClaimingChildBenefit: String,
+                                             changedDesignatoryDetails: Option[Boolean],
+                                             correspondenceAddress: Option[Address]
                                            )
   object Applicant {
     implicit lazy val writes: Writes[Applicant] = Json.writes

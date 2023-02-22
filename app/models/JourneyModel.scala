@@ -79,7 +79,9 @@ object JourneyModel {
                               nationalities: NonEmptyList[Nationality],
                               residency: Residency,
                               memberOfHMForcesOrCivilServantAbroad: Boolean,
-                              currentlyReceivingChildBenefit: CurrentlyReceivingChildBenefit
+                              currentlyReceivingChildBenefit: CurrentlyReceivingChildBenefit,
+                              changedDesignatoryDetails: Option[Boolean],
+                              correspondenceAddress: Option[Address]
                             )
 
   final case class Partner(

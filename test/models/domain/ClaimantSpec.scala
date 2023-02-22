@@ -71,7 +71,9 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
         nationalities = NonEmptyList(genUkCtaNationality.sample.value, Gen.listOf(arbitrary[models.Nationality]).sample.value),
         residency = JourneyModel.Residency.AlwaysLivedInUk,
         memberOfHMForcesOrCivilServantAbroad = hmfAbroad,
-        currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
+        currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+        changedDesignatoryDetails = Some(false),
+        correspondenceAddress = None
       ),
       relationship = JourneyModel.Relationship(RelationshipStatus.Single, None, None),
       children = NonEmptyList(
