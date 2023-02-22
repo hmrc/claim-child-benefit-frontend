@@ -46,10 +46,19 @@
 
                     <fo:block margin-bottom="3mm">
                         <fo:block font-weight="bold">@messages("pdf.currentAddress")</fo:block>
-                        @model.applicant.currentAddress.lines.map { line =>
-                            <fo:block width="8cm" wrap-option="wrap">@(line.toUpperCase)</fo:block>
-                        }
+                            @model.applicant.currentAddress.lines.map { line =>
+                                <fo:block width="8cm" wrap-option="wrap">@(line.toUpperCase)</fo:block>
+                            }
                     </fo:block>
+
+                    @model.applicant.correspondenceAddress.map { address =>
+                        <fo:block margin-bottom="3mm">
+                            <fo:block font-weight="bold">@messages("pdf.correspondenceAddress")</fo:block>
+                                @address.lines.map { line =>
+                                    <fo:block width="8cm" wrap-option="wrap">@(line.toUpperCase)</fo:block>
+                                }
+                        </fo:block>
+                    }
 
                     @line("pdf.nationality", model.applicant.nationalities.toList.map(_.name).mkString(" - "))
 
