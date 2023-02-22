@@ -20,7 +20,6 @@ import config.FeatureFlags
 import connectors.ClaimChildBenefitConnector
 import models.requests.DataRequest
 import models.{JourneyModel, JourneyModelProvider}
-import pages.applicant.{CorrespondenceAddressInUkPage, DesignatoryAddressInUkPage, DesignatoryNamePage}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.RequestOps._
 
@@ -39,14 +38,17 @@ class ClaimSubmissionService @Inject()(
 
     val childAgeLimit = LocalDate.now(clock).minusMonths(6)
 
-    def kickoutForData(journeyModel: JourneyModel): Boolean =
-      journeyModel.children.exists(_.dateOfBirth.isBefore(childAgeLimit)) ||
-        journeyModel.anyDocumentsRequired ||
-        request.userAnswers.isDefined(DesignatoryNamePage) ||
-        request.userAnswers.isDefined(DesignatoryAddressInUkPage) ||
-        request.userAnswers.isDefined(CorrespondenceAddressInUkPage) ||
-        (journeyModel.relationship.partner.exists(_.eldestChild.nonEmpty) && journeyModel.relationship.partner.exists(_.nationalInsuranceNumber.isEmpty)) ||
-        journeyModel.additionalInformation.nonEmpty
+    def dataAllowsSubmission(journeyModel: JourneyModel): Boolean = {
+
+      val anyReasonNotToSubmit =
+        journeyModel.children.exists(_.dateOfBirth.isBefore(childAgeLimit)) ||
+          journeyModel.anyDocumentsRequired ||
+          journeyModel.applicant.changedDesignatoryDetails.contains(true) ||
+          (journeyModel.relationship.partner.exists(_.eldestChild.nonEmpty) && journeyModel.relationship.partner.exists(_.nationalInsuranceNumber.isEmpty)) ||
+          journeyModel.additionalInformation.nonEmpty
+
+      !anyReasonNotToSubmit
+    }
 
     if (featureFlags.allowSubmissionToCbs) {
       if (request.signedIn) {
@@ -58,10 +60,7 @@ class ClaimSubmissionService @Inject()(
               journeyModelProvider.buildFromUserAnswers(request.userAnswers)(hc).flatMap {
                 result =>
                   result.right.map { journeyModel =>
-
-                    val kickout = kickoutForData(journeyModel)
-
-                    Future.successful(!kickout)
+                    Future.successful(dataAllowsSubmission(journeyModel))
                   }.getOrElse(Future.successful(false))
               }
             case false =>

@@ -39,6 +39,7 @@ final case class JourneyModel(
     }
 
   val anyDocumentsRequired: Boolean = allRequiredDocuments.nonEmpty
+  val noDocumentsRequired: Boolean = !anyDocumentsRequired
 }
 
 object JourneyModel {

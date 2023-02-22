@@ -72,7 +72,16 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
   private val biologicalSex = ChildBiologicalSex.Female
   private val relationshipToChild = ApplicantRelationshipToChild.BirthChild
   private val systemNumber = BirthCertificateSystemNumber("000000000")
-  private val basicUserAnswers = UserAnswers("id")
+
+  val designatoryDetails = DesignatoryDetails(
+    Some(adultName),
+    None,
+    Some(NPSAddress("1", None, None, None, None, None, None)),
+    None,
+    LocalDate.now
+  )
+
+  private val basicUserAnswers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
     .set(ApplicantNinoKnownPage, false).success.value
     .set(ApplicantNamePage, adultName).success.value
     .set(ApplicantHasPreviousFamilyNamePage, false).success.value
