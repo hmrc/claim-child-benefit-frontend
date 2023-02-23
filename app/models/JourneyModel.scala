@@ -21,6 +21,7 @@ import models.ApplicantRelationshipToChild.AdoptedChild
 import models.ChildBirthRegistrationCountry._
 import models.DocumentType.{AdoptionCertificate, BirthCertificate, TravelDocument}
 import models.JourneyModel._
+import models.ReasonNotToSubmit._
 
 import java.time.LocalDate
 
@@ -30,7 +31,8 @@ final case class JourneyModel(
                                children: NonEmptyList[Child],
                                benefits: Option[Set[Benefits]],
                                paymentPreference: PaymentPreference,
-                               additionalInformation: AdditionalInformation
+                               additionalInformation: AdditionalInformation,
+                               userAuthenticated: Boolean
                              ) {
 
   val allRequiredDocuments: List[RequiredDocument] =
@@ -39,7 +41,25 @@ final case class JourneyModel(
     }
 
   val anyDocumentsRequired: Boolean = allRequiredDocuments.nonEmpty
-  val noDocumentsRequired: Boolean = !anyDocumentsRequired
+
+  lazy val reasonsNotToSubmit: Seq[ReasonNotToSubmit] = {
+
+    val userUnauthenticated =          if (userAuthenticated) None else Some(UserUnauthenticated)
+    val childOverSixMonths =           if (children.exists(_.dateOfBirth.isBefore(LocalDate.now.minusMonths(6)))) Some(ChildOverSixMonths) else None
+    val documentsRequired =            if (anyDocumentsRequired) Some(DocumentsRequired) else None
+    val designatoryDetailsChanged =    if (applicant.changedDesignatoryDetails.contains(true)) Some(DesignatoryDetailsChanged) else None
+    val partnerNinoMissing =           if (relationship.partner.exists(p => p.eldestChild.nonEmpty && p.nationalInsuranceNumber.isEmpty)) Some(PartnerNinoMissing) else None
+    val additionalInformationPresent = if (additionalInformation.nonEmpty) Some(AdditionalInformationPresent) else None
+
+    Seq(
+      userUnauthenticated,
+      childOverSixMonths,
+      documentsRequired,
+      designatoryDetailsChanged,
+      partnerNinoMissing,
+      additionalInformationPresent
+    ).flatten
+  }
 }
 
 object JourneyModel {

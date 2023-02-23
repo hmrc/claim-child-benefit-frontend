@@ -18,9 +18,12 @@ package models
 
 import generators.ModelGenerators
 import models.AdditionalInformation.NoInformation
+import models.PartnerClaimingChildBenefit.{GettingPayments, NotGettingPayments, WaitingToHear}
+import models.ReasonNotToSubmit._
 import models.RelationshipStatus._
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
@@ -30,9 +33,10 @@ import org.scalatestplus.mockito.MockitoSugar
 import pages._
 import pages.applicant._
 import pages.child._
-import pages.partner.RelationshipStatusPage
+import pages.partner._
 import pages.payments._
 import services.BrmsService
+import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.LocalDate
@@ -131,6 +135,160 @@ class JourneyModelSpec
         RequiredDocument(ChildName("child 3 first", None, "child 3 last"), DocumentType.TravelDocument),
         RequiredDocument(ChildName("child 3 first", None, "child 3 last"), DocumentType.AdoptionCertificate),
       )
+
+      data.value.userAuthenticated mustBe false
+    }
+  }
+
+  ".reasonsNotToSubmit" - {
+
+    val nino = arbitrary[Nino].sample.value
+    val designatoryDetails =
+      DesignatoryDetails(
+        Some(applicantName),
+        None,
+        Some(NPSAddress("1", None, None, None, None, None, None)),
+        None,
+        LocalDate.now
+      )
+
+    val basicAnswers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
+      .set(ApplicantNinoKnownPage, false).success.value
+      .set(ApplicantNamePage, applicantName).success.value
+      .set(ApplicantHasPreviousFamilyNamePage, false).success.value
+      .set(ApplicantDateOfBirthPage, now).success.value
+      .set(ApplicantPhoneNumberPage, phoneNumber).success.value
+      .set(ApplicantNationalityPage(Index(0)), applicantNationality).success.value
+      .set(ApplicantIsHmfOrCivilServantPage, false).success.value
+      .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
+      .set(ApplicantCurrentUkAddressPage, currentUkAddress).success.value
+      .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+      .set(ApplicantIsHmfOrCivilServantPage, false).success.value
+      .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
+      .set(RelationshipStatusPage, Single).success.value
+      .set(ChildNamePage(Index(0)), childName).success.value
+      .set(ChildHasPreviousNamePage(Index(0)), false).success.value
+      .set(ChildBiologicalSexPage(Index(0)), biologicalSex).success.value
+      .set(ChildDateOfBirthPage(Index(0)), now).success.value
+      .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.England).success.value
+      .set(BirthCertificateHasSystemNumberPage(Index(0)), true).success.value
+      .set(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber).success.value
+      .set(ApplicantRelationshipToChildPage(Index(0)), relationshipToChild).success.value
+      .set(AdoptingThroughLocalAuthorityPage(Index(0)), false).success.value
+      .set(AnyoneClaimedForChildBeforePage(Index(0)), false).success.value
+      .set(ChildLivesWithApplicantPage(Index(0)), true).success.value
+      .set(ChildLivedWithAnyoneElsePage(Index(0)), false).success.value
+      .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
+      .set(WantToBePaidPage, false).success.value
+      .set(AdditionalInformationPage, NoInformation).success.value
+
+    "must contain `User Unauthenticated` when the user is not authenticated" in {
+
+      val answers = basicAnswers.copy(nino = None, designatoryDetails = None)
+
+      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+      errors mustBe empty
+      data.value.reasonsNotToSubmit must contain only UserUnauthenticated
+      data.value.userAuthenticated mustBe false
+    }
+
+    "must contain `Child Over Six Months` when a child is over 6 months old" in {
+
+      val answers = basicAnswers.set(ChildDateOfBirthPage(Index(0)), LocalDate.now.minusMonths(6).minusDays(1)).success.value
+
+      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+      errors mustBe empty
+      data.value.reasonsNotToSubmit must contain only ChildOverSixMonths
+      data.value.userAuthenticated mustBe true
+    }
+
+    "must contain `Documents Required` when any documents are required for a child" in {
+
+      val answers = basicAnswers.set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.Other).success.value
+
+      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+      errors mustBe empty
+      data.value.reasonsNotToSubmit must contain only DocumentsRequired
+      data.value.userAuthenticated mustBe true
+    }
+
+    "must contain `Designatory Details Changed` when the user has given a different name" in {
+
+      val answers = basicAnswers.set(DesignatoryNamePage, AdultName(None, "new first", None, "new last")).success.value
+
+      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+      errors mustBe empty
+      data.value.reasonsNotToSubmit must contain only DesignatoryDetailsChanged
+      data.value.userAuthenticated mustBe true
+    }
+
+    "must contain `Designatory Details Changed` when the user has given a different residential address" in {
+
+      val answers =
+        basicAnswers
+          .set(DesignatoryAddressInUkPage, true).success.value
+          .set(DesignatoryUkAddressPage, UkAddress("new line 1", None, "new line 2", None, "new postcode")).success.value
+
+      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+      errors mustBe empty
+      data.value.reasonsNotToSubmit must contain only DesignatoryDetailsChanged
+      data.value.userAuthenticated mustBe true
+    }
+
+    "must contain `Designatory Details Changed` when the user has given a different correspondence address" in {
+
+      val answers =
+        basicAnswers
+          .set(CorrespondenceAddressInUkPage, true).success.value
+          .set(CorrespondenceUkAddressPage, UkAddress("new line 1", None, "new line 2", None, "new postcode")).success.value
+
+      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+      errors mustBe empty
+      data.value.reasonsNotToSubmit must contain only DesignatoryDetailsChanged
+      data.value.userAuthenticated mustBe true
+    }
+
+    "must contain `Partner Nino Missing' if the applicant has a partner who is claiming Child Benefit, but does not supply their NINO" in {
+
+      val claiming = Gen.oneOf(GettingPayments, NotGettingPayments, WaitingToHear).sample.value
+      val answers =
+        basicAnswers
+          .set(RelationshipStatusPage, RelationshipStatus.Married).success.value
+          .set(WantToBePaidPage, false).success.value
+          .set(PartnerNamePage, AdultName(None, "partner first", None, "partner last")).success.value
+          .set(PartnerNinoKnownPage, false).success.value
+          .set(PartnerDateOfBirthPage, now).success.value
+          .set(PartnerNationalityPage(Index(0)), Gen.oneOf(Nationality.allNationalities).sample.value).success.value
+          .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
+          .set(PartnerIsHmfOrCivilServantPage, false).success.value
+          .set(PartnerWorkedAbroadPage, false).success.value
+          .set(PartnerReceivedBenefitsAbroadPage, false).success.value
+          .set(PartnerClaimingChildBenefitPage, claiming).success.value
+          .set(PartnerEldestChildNamePage, ChildName("first", None, "last")).success.value
+          .set(PartnerEldestChildDateOfBirthPage, LocalDate.now).success.value
+
+      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+      errors mustBe empty
+      data.value.reasonsNotToSubmit must contain only PartnerNinoMissing
+      data.value.userAuthenticated mustBe true
+    }
+
+    "must contain `Additional Information Present` when some additional information is supplied" in {
+
+      val answers = basicAnswers.set(AdditionalInformationPage, AdditionalInformation.Information("foo")).success.value
+
+      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+      errors mustBe empty
+      data.value.reasonsNotToSubmit must contain only AdditionalInformationPresent
+      data.value.userAuthenticated mustBe true
     }
   }
 }

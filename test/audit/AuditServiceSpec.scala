@@ -129,7 +129,8 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             dateOfBirth = now
           ))
         ),
-        additionalInformation = Information("info")
+        additionalInformation = Information("info"),
+        userAuthenticated = true
       )
 
       val expectedAuditEvent: DownloadAuditEvent = DownloadAuditEvent(
@@ -203,7 +204,8 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             dateOfBirth = now
           ))
         ),
-        "info"
+        "info",
+        userAuthenticated = true
       )
 
       val hc = HeaderCarrier()

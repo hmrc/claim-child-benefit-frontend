@@ -34,22 +34,7 @@ class ClaimSubmissionService @Inject()(
                                         clock: Clock
                                       ) {
 
-  def canSubmit(request: DataRequest[_])(implicit ec: ExecutionContext): Future[Boolean] = {
-
-    val childAgeLimit = LocalDate.now(clock).minusMonths(6)
-
-    def dataAllowsSubmission(journeyModel: JourneyModel): Boolean = {
-
-      val anyReasonNotToSubmit =
-        journeyModel.children.exists(_.dateOfBirth.isBefore(childAgeLimit)) ||
-          journeyModel.anyDocumentsRequired ||
-          journeyModel.applicant.changedDesignatoryDetails.contains(true) ||
-          (journeyModel.relationship.partner.exists(_.eldestChild.nonEmpty) && journeyModel.relationship.partner.exists(_.nationalInsuranceNumber.isEmpty)) ||
-          journeyModel.additionalInformation.nonEmpty
-
-      !anyReasonNotToSubmit
-    }
-
+  def canSubmit(request: DataRequest[_])(implicit ec: ExecutionContext): Future[Boolean] =
     if (featureFlags.allowSubmissionToCbs) {
       if (request.signedIn) {
 
@@ -59,8 +44,9 @@ class ClaimSubmissionService @Inject()(
             case true =>
               journeyModelProvider.buildFromUserAnswers(request.userAnswers)(hc).flatMap {
                 result =>
-                  result.right.map { journeyModel =>
-                    Future.successful(dataAllowsSubmission(journeyModel))
+                  result.right.map {
+                    journeyModel =>
+                      Future.successful(journeyModel.reasonsNotToSubmit.isEmpty)
                   }.getOrElse(Future.successful(false))
               }
             case false =>
@@ -72,5 +58,4 @@ class ClaimSubmissionService @Inject()(
     } else {
       Future.successful(false)
     }
-  }
 }

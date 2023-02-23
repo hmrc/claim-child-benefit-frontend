@@ -154,7 +154,8 @@ class JourneyModelProviderSpec
           ),
           benefits = None,
           paymentPreference = JourneyModel.PaymentPreference.DoNotPay(None),
-          additionalInformation = NoInformation
+          additionalInformation = NoInformation,
+          userAuthenticated = false
         )
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -238,7 +239,8 @@ class JourneyModelProviderSpec
           ),
           benefits = None,
           paymentPreference = JourneyModel.PaymentPreference.DoNotPay(None),
-          additionalInformation = Information("info")
+          additionalInformation = Information("info"),
+          userAuthenticated = false
         )
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -343,7 +345,8 @@ class JourneyModelProviderSpec
           ),
           benefits = None,
           paymentPreference = JourneyModel.PaymentPreference.DoNotPay(None),
-          additionalInformation = NoInformation
+          additionalInformation = NoInformation,
+          userAuthenticated = false
         )
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
