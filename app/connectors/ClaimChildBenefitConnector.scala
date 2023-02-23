@@ -17,6 +17,7 @@
 package connectors
 
 import config.Service
+import connectors.AllowlistHttpParser._
 import connectors.ClaimChildBenefitConnector._
 import connectors.SubmitClaimHttpParser._
 import models.domain.Claim
@@ -35,12 +36,18 @@ class ClaimChildBenefitConnector @Inject()(config: Configuration, httpClient: Ht
   private val baseUrl = config.get[Service]("microservice.services.claim-child-benefit")
   private val designatoryDetailsUrl = url"$baseUrl/claim-child-benefit/designatory-details"
   private val submitClaimUrl = url"$baseUrl/claim-child-benefit/claim"
+  private val allowlistUrl = url"$baseUrl/claim-child-benefit/allow-list"
 
   def designatoryDetails()(implicit hc: HeaderCarrier): Future[DesignatoryDetails] = {
     httpClient
       .get(designatoryDetailsUrl)
       .execute[DesignatoryDetails]
   }
+
+  def checkAllowlist()(implicit hc: HeaderCarrier): Future[Boolean] =
+    httpClient
+      .get(allowlistUrl)
+      .execute[Boolean]
 
   def submitClaim(claim: Claim)(implicit hc: HeaderCarrier): Future[Done] =
     httpClient

@@ -71,7 +71,9 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
         nationalities = NonEmptyList(genUkCtaNationality.sample.value, Gen.listOf(arbitrary[models.Nationality]).sample.value),
         residency = JourneyModel.Residency.AlwaysLivedInUk,
         memberOfHMForcesOrCivilServantAbroad = hmfAbroad,
-        currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
+        currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+        changedDesignatoryDetails = Some(false),
+        correspondenceAddress = None
       ),
       relationship = JourneyModel.Relationship(RelationshipStatus.Single, None, None),
       children = NonEmptyList(
@@ -95,7 +97,8 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
       ),
       benefits = None,
       paymentPreference = JourneyModel.PaymentPreference.DoNotPay(None),
-      additionalInformation = models.AdditionalInformation.NoInformation
+      additionalInformation = models.AdditionalInformation.NoInformation,
+      userAuthenticated = true
     )
 
     "must return a UK/CTA claimant who has always been resident in the UK" - {

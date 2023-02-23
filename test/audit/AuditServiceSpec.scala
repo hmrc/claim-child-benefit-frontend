@@ -66,7 +66,9 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           nationalities = NonEmptyList(Nationality.allNationalities.head, Nil),
           residency = JourneyModel.Residency.LivedInUkAndAbroad(Some(Country.internationalCountries.head), Some(LocalDate.now), EmploymentStatus.activeStatuses, List(Country("ES", "Spain")), List(Country("ES", "Spain"))),
           memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming
+          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+          changedDesignatoryDetails = Some(true),
+          correspondenceAddress = Some(models.UkAddress("corr 1", Some("corr 2"), "corr town", Some("corr county"), "corr postcode"))
         ),
         relationship = JourneyModel.Relationship(
           status = models.RelationshipStatus.Cohabiting,
@@ -127,7 +129,8 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             dateOfBirth = now
           ))
         ),
-        additionalInformation = Information("info")
+        additionalInformation = Information("info"),
+        userAuthenticated = true
       )
 
       val expectedAuditEvent: DownloadAuditEvent = DownloadAuditEvent(
@@ -142,7 +145,9 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           nationalities = Seq(Nationality.allNationalities.head.name),
           residency = Residency.LivedInUkAndAbroad(Some(Country.internationalCountries.head.name), Some(LocalDate.now), EmploymentStatus.activeStatuses.map(_.toString), List("Spain"), List("Spain")),
           memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyClaimingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming.toString
+          currentlyClaimingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming.toString,
+          changedDesignatoryDetails = Some(true),
+          correspondenceAddress = Some(UkAddress("corr 1", Some("corr 2"), "corr town", Some("corr county"), "corr postcode"))
         ),
         relationship = Relationship(
           status = "cohabiting",
@@ -199,7 +204,9 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             dateOfBirth = now
           ))
         ),
-        "info"
+        "info",
+        userAuthenticated = true,
+        reasonsNotToSubmit = List("designatoryDetailsChanged", "additionalInformationPresent")
       )
 
       val hc = HeaderCarrier()

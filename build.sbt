@@ -34,7 +34,8 @@ lazy val root = (project in file("."))
       "models.Mode",
       "controllers.routes._",
       "viewmodels.govuk.all._",
-      "pages.Waypoints"
+      "pages.Waypoints",
+      "utils.RequestOps._"
     ),
     PlayKeys.playDefaultPort := 11303,
     ScoverageKeys.coverageExcludedFiles := "<empty>;Reverse.*;.*handlers.*;.*components.*;" +

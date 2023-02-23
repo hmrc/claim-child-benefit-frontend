@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package views
+package utils
 
 import base.SpecBase
 import generators.ModelGenerators
 import models.requests._
 import org.scalacheck.Arbitrary.arbitrary
 import play.api.test.FakeRequest
+import utils.RequestOps._
 import uk.gov.hmrc.domain.Nino
-import views.ViewUtils.RequestOps
 
 class RequestOpsSpec extends SpecBase with ModelGenerators {
 

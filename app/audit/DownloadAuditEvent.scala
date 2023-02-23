@@ -28,7 +28,9 @@ final case class DownloadAuditEvent(
                                      children: List[Child],
                                      benefits: Option[Set[String]],
                                      paymentPreference: PaymentPreference,
-                                     additionalInformation: String
+                                     additionalInformation: String,
+                                     userAuthenticated: Boolean,
+                                     reasonsNotToSubmit: List[String]
                                    )
 
 object DownloadAuditEvent {
@@ -46,7 +48,9 @@ object DownloadAuditEvent {
         nationalities                        = model.applicant.nationalities.toList.map(_.name),
         residency                            = convertResidency(model.applicant.residency),
         memberOfHMForcesOrCivilServantAbroad = model.applicant.memberOfHMForcesOrCivilServantAbroad,
-        currentlyClaimingChildBenefit        = model.applicant.currentlyReceivingChildBenefit.toString
+        currentlyClaimingChildBenefit        = model.applicant.currentlyReceivingChildBenefit.toString,
+        changedDesignatoryDetails            = model.applicant.changedDesignatoryDetails,
+        correspondenceAddress                = model.applicant.correspondenceAddress.map(convertAddress)
       ),
       relationship = Relationship(
         status  = model.relationship.status.toString,
@@ -120,7 +124,9 @@ object DownloadAuditEvent {
         case JourneyModel.PaymentPreference.DoNotPay(eldestChild) =>
           DoNotPay(eldestChild.map(convertEldestChild))
       },
-      additionalInformation = model.additionalInformation.toString
+      additionalInformation = model.additionalInformation.toString,
+      userAuthenticated = model.userAuthenticated,
+      reasonsNotToSubmit = model.reasonsNotToSubmit.map(_.toString).toList
     )
 
   private def convertUkAddress(address: models.UkAddress): UkAddress =
@@ -291,7 +297,9 @@ object DownloadAuditEvent {
                                              nationalities: Seq[String],
                                              residency: Residency,
                                              memberOfHMForcesOrCivilServantAbroad: Boolean,
-                                             currentlyClaimingChildBenefit: String
+                                             currentlyClaimingChildBenefit: String,
+                                             changedDesignatoryDetails: Option[Boolean],
+                                             correspondenceAddress: Option[Address]
                                            )
   object Applicant {
     implicit lazy val writes: Writes[Applicant] = Json.writes

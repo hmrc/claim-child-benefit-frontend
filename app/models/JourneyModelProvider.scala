@@ -35,6 +35,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
+//scalastyle:off
 class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: ExecutionContext) extends Logging {
 
   def buildFromUserAnswers(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[IorNec[Query, JourneyModel]] =
@@ -45,7 +46,7 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
         IorT.fromIor[Future](getBenefits(answers)),
         IorT.fromIor[Future](getPaymentPreference(answers)),
         IorT.fromIor[Future](answers.getIor(AdditionalInformationPage))
-      ).parMapN(JourneyModel.apply).value
+      ).parMapN(JourneyModel(_, _, _, _, _, _, answers.isAuthenticated)).value
 
   private def getBenefits(answers: UserAnswers): IorNec[Query, Option[Set[Benefits]]] = {
 
@@ -282,59 +283,127 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
 
   private def getApplicant(answers: UserAnswers): IorNec[Query, Applicant] = {
 
-    def getNino: IorNec[Query, Option[String]] =
-      answers.getIor(ApplicantNinoKnownPage).flatMap {
-        case true => answers.getIor(ApplicantNinoPage).map(nino => Some(nino.value))
-        case false => Ior.Right(None)
+    def designatoryDetailsChanged: IorNec[Query, Option[Boolean]] =
+      if (answers.isAuthenticated) {
+        if (answers.isDefined(DesignatoryNamePage) ||
+            answers.isDefined(DesignatoryAddressInUkPage) ||
+            answers.isDefined(CorrespondenceAddressInUkPage)) {
+
+          Ior.Right(Some(true))
+        } else {
+          Ior.Right(Some(false))
+        }
+      } else {
+        Ior.Right(None)
+      }
+
+    def getNino: IorNec[Query, Option[String]] = {
+      answers.nino
+        .map(nino => Ior.Right(Some(nino)))
+        .getOrElse {
+          answers.getIor(ApplicantNinoKnownPage).flatMap {
+            case true => answers.getIor(ApplicantNinoPage).map(nino => Some(nino.value))
+            case false => Ior.Right(None)
+          }
+        }
+    }
+
+    def getName: IorNec[Query, AdultName] =
+      if (answers.isAuthenticated) {
+        answers.designatoryDetails.map {
+          details =>
+            details.preferredName.map {
+              originalName =>
+                val name = answers.get(DesignatoryNamePage).getOrElse(originalName)
+                Ior.Right(name)
+            }.getOrElse(Ior.Left(NonEmptyChain(DesignatoryNamePage)))
+        }.getOrElse(Ior.Left(NonEmptyChain(DesignatoryNamePage)))
+      } else {
+        answers.getIor(ApplicantNamePage)
+      }
+
+    def getDateOfBirth: IorNec[Query, LocalDate] =
+      if (answers.isAuthenticated) {
+        answers.designatoryDetails
+          .map(details => Ior.Right(details.dateOfBirth))
+          .getOrElse(Ior.Left(NonEmptyChain(ApplicantDateOfBirthPage)))
+      } else {
+        answers.getIor(ApplicantDateOfBirthPage)
       }
 
     def getPreviousAddress: IorNec[Query, Option[Address]] =
-      answers.getIor(ApplicantNinoKnownPage).flatMap {
-        case true =>
-          Ior.Right(None)
+      if (answers.isAuthenticated) {
+        Ior.Right(None)
+      } else {
+        answers.getIor(ApplicantLivedAtCurrentAddressOneYearPage).flatMap {
+          case true =>
+            Ior.Right(None)
 
-        case false =>
-          answers.getIor(ApplicantLivedAtCurrentAddressOneYearPage).flatMap {
-            case true =>
-              Ior.Right(None)
+          case false =>
+            answers.getIor(ApplicantResidencePage).flatMap {
+              case AlwaysUk =>
+                answers.getIor(ApplicantPreviousUkAddressPage).map(Some(_))
 
-            case false =>
-              answers.getIor(ApplicantResidencePage).flatMap {
-                case AlwaysUk =>
-                  answers.getIor(ApplicantPreviousUkAddressPage).map(Some(_))
+              case UkAndAbroad =>
+                answers.getIor(ApplicantPreviousAddressInUkPage).flatMap {
+                  case true => answers.getIor(ApplicantPreviousUkAddressPage).map(Some(_))
+                  case false => answers.getIor(ApplicantPreviousInternationalAddressPage).map(Some(_))
+                }
 
-                case UkAndAbroad =>
-                  answers.getIor(ApplicantPreviousAddressInUkPage).flatMap {
-                    case true => answers.getIor(ApplicantPreviousUkAddressPage).map(Some(_))
-                    case false => answers.getIor(ApplicantPreviousInternationalAddressPage).map(Some(_))
-                  }
-
-                case AlwaysAbroad =>
-                  answers.getIor(ApplicantPreviousInternationalAddressPage).map(Some(_))
-              }
-          }
+              case AlwaysAbroad =>
+                answers.getIor(ApplicantPreviousInternationalAddressPage).map(Some(_))
+            }
+        }
       }
 
-    def getCurrentAddress: IorNec[Query, Address] = {
-      answers.getIor(ApplicantResidencePage).flatMap {
-        case AlwaysUk =>
-          answers.getIor(ApplicantCurrentUkAddressPage)
+    def getCurrentAddress: IorNec[Query, Address] =
+      if (answers.isAuthenticated) {
+        answers.get(DesignatoryAddressInUkPage).map {
+          case true => answers.getIor(DesignatoryUkAddressPage)
+          case false => answers.getIor(DesignatoryInternationalAddressPage)
+        }.getOrElse {
+          answers.designatoryDetails.flatMap { details =>
+            details.residentialAddress.map(Ior.Right(_))
+          }.getOrElse(Ior.Left(NonEmptyChain(DesignatoryAddressInUkPage)))
+        }
+      } else {
+        answers.getIor(ApplicantResidencePage).flatMap {
+          case AlwaysUk =>
+            answers.getIor(ApplicantCurrentUkAddressPage)
 
-        case UkAndAbroad =>
-          answers.getIor(ApplicantCurrentAddressInUkPage).flatMap {
-            case true => answers.getIor(ApplicantCurrentUkAddressPage)
-            case false => answers.getIor(ApplicantCurrentInternationalAddressPage)
-          }
+          case UkAndAbroad =>
+            answers.getIor(ApplicantCurrentAddressInUkPage).flatMap {
+              case true => answers.getIor(ApplicantCurrentUkAddressPage)
+              case false => answers.getIor(ApplicantCurrentInternationalAddressPage)
+            }
 
-        case AlwaysAbroad =>
-          answers.getIor(ApplicantCurrentInternationalAddressPage)
+          case AlwaysAbroad =>
+            answers.getIor(ApplicantCurrentInternationalAddressPage)
+        }
       }
-    }
+
+    def getCorrespondenceAddress: IorNec[Query, Option[Address]] =
+      if (answers.isAuthenticated) {
+        answers.get(CorrespondenceAddressInUkPage).map {
+          case true  => answers.getIor(CorrespondenceUkAddressPage).map(Some(_))
+          case false => answers.getIor(CorrespondenceInternationalAddressPage).map(Some(_))
+        }.getOrElse {
+          answers.designatoryDetails.map { details =>
+            Ior.Right(details.correspondenceAddress)
+          }.getOrElse(Ior.Left(NonEmptyChain(CorrespondenceAddressInUkPage)))
+        }
+      } else {
+        Ior.Right(None)
+      }
 
     def getPreviousFamilyNames: IorNec[Query, List[ApplicantPreviousName]] =
-      answers.getIor(ApplicantHasPreviousFamilyNamePage).flatMap {
-        case true => answers.getIor(AllPreviousFamilyNames)
-        case false => Ior.Right(Nil)
+      if (answers.isAuthenticated) {
+        Ior.Right(Nil)
+      } else {
+        answers.getIor(ApplicantHasPreviousFamilyNamePage).flatMap {
+          case true => answers.getIor(AllPreviousFamilyNames)
+          case false => Ior.Right(Nil)
+        }
       }
 
     def getResidency: IorNec[Query, Residency] = {
@@ -391,9 +460,9 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
     }
 
     (
-      answers.getIor(ApplicantNamePage),
+      getName,
       getPreviousFamilyNames,
-      answers.getIor(ApplicantDateOfBirthPage),
+      getDateOfBirth,
       getNino,
       getCurrentAddress,
       getPreviousAddress,
@@ -401,7 +470,9 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
       getNationalities,
       getResidency,
       answers.getIor(ApplicantIsHmfOrCivilServantPage),
-      answers.getIor(CurrentlyReceivingChildBenefitPage)
+      answers.getIor(CurrentlyReceivingChildBenefitPage),
+      designatoryDetailsChanged,
+      getCorrespondenceAddress
       ).parMapN(Applicant.apply)
   }
 

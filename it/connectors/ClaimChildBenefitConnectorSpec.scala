@@ -42,12 +42,15 @@ class ClaimChildBenefitConnectorSpec
 
   private val happyDesignatoryDetailsJson ="""{
       |"realName": {"title": "Mrs", "firstName": "foo", "middleNames": "baz", "lastName": "bar"},
-      |"residentialAddress": {"line1": "123", "postcode": "NE98 1ZZ"}}""".stripMargin
+      |"residentialAddress": {"line1": "123", "postcode": "NE98 1ZZ"},
+      |"dateOfBirth": "2000-02-01"
+      |}""".stripMargin
   private val happyDesignatoryDetailsModel = DesignatoryDetails(
     realName = Some(AdultName(Some("Mrs"), "foo", Some("baz"), "bar")),
     knownAsName = None,
     residentialAddress = Some(NPSAddress("123", None, None, None, None, Some("NE98 1ZZ"), None)),
-    correspondenceAddress = None
+    correspondenceAddress = None,
+    dateOfBirth = LocalDate.of(2000, 2, 1)
   )
 
   ".designatoryDetails" - {
@@ -346,6 +349,43 @@ class ClaimChildBenefitConnectorSpec
         val result = connector.submitClaim(claim).failed.futureValue
 
         result mustBe an[UnrecognisedResponseException]
+      }
+    }
+  }
+
+  ".checkAllowlist" - {
+
+    "must return true when the server responds with NoContent" in {
+
+      val app = application
+
+      running(app) {
+
+        val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
+
+        server.stubFor(
+          get(urlEqualTo("/claim-child-benefit/allow-list"))
+            .willReturn(aResponse().withStatus(NO_CONTENT))
+        )
+
+        connector.checkAllowlist().futureValue mustEqual true
+      }
+    }
+
+    "must return false when the server responds with NotFound" in {
+
+      val app = application
+
+      running(app) {
+
+        val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
+
+        server.stubFor(
+          get(urlEqualTo("/claim-child-benefit/allow-list"))
+            .willReturn(aResponse().withStatus(NOT_FOUND))
+        )
+
+        connector.checkAllowlist().futureValue mustEqual false
       }
     }
   }

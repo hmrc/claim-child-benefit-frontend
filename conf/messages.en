@@ -1402,6 +1402,7 @@ pdf.relationshipStatus.single = Single
 pdf.relationshipStatusDate.cohabiting = Living with partner since
 pdf.relationshipStatusDate.separated = Separated since
 pdf.currentAddress = Current address
+pdf.correspondenceAddress = Correspondence address
 pdf.livedAtAddressOneYear = Lived at address for more than a year
 pdf.nationality.british = British
 pdf.nationality.dualNationalityIncludingBritish = Dual nationality where one is British

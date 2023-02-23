@@ -26,6 +26,8 @@ import play.api.i18n.Messages
 import play.api.test.Helpers.stubMessages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 
+import java.time.LocalDate
+
 class DesignatoryNameSummarySpec extends AnyFreeSpec with Matchers with OptionValues with TryValues {
 
   private implicit val messages: Messages = stubMessages()
@@ -34,7 +36,7 @@ class DesignatoryNameSummarySpec extends AnyFreeSpec with Matchers with OptionVa
 
     val originalName = AdultName(None, "original first", None, "original last")
     val newName = AdultName(None, "new first", None, "new last")
-    val designatoryDetails = DesignatoryDetails(Some(originalName), None, None, None)
+    val designatoryDetails = DesignatoryDetails(Some(originalName), None, None, None, LocalDate.now)
 
     "when designatory details exist" - {
 

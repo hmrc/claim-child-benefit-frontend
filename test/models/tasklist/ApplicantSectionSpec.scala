@@ -28,6 +28,8 @@ import org.scalatestplus.mockito.MockitoSugar
 import pages.applicant.{ApplicantDateOfBirthPage, ApplicantNinoKnownPage, ApplicantNinoPage, CheckApplicantDetailsPage, CheckDesignatoryDetailsPage}
 import services.JourneyProgressService
 
+import java.time.LocalDate
+
 class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar with BeforeAndAfterEach with OptionValues {
 
   private val mockJourneyProgressService = mock[JourneyProgressService]
@@ -66,7 +68,7 @@ class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar w
 
       when(mockJourneyProgressService.continue(any(), any())).thenReturn(ApplicantDateOfBirthPage)
 
-      val answers = UserAnswers("id", designatoryDetails = Some(DesignatoryDetails(None, None, None, None)))
+      val answers = UserAnswers("id", designatoryDetails = Some(DesignatoryDetails(None, None, None, None, LocalDate.now)))
       val section = new ApplicantSection(mockJourneyProgressService)
       section.continue(answers)
 
@@ -92,7 +94,7 @@ class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar w
 
       when(mockJourneyProgressService.continue(any(), any())).thenReturn(CheckDesignatoryDetailsPage)
 
-      val answers = UserAnswers("id", designatoryDetails = Some(DesignatoryDetails(None, None, None, None)))
+      val answers = UserAnswers("id", designatoryDetails = Some(DesignatoryDetails(None, None, None, None, LocalDate.now)))
       val section = new ApplicantSection(mockJourneyProgressService)
       val result = section.progress(answers)
 
