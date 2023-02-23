@@ -29,7 +29,8 @@ final case class DownloadAuditEvent(
                                      benefits: Option[Set[String]],
                                      paymentPreference: PaymentPreference,
                                      additionalInformation: String,
-                                     userAuthenticated: Boolean
+                                     userAuthenticated: Boolean,
+                                     reasonsNotToSubmit: List[String]
                                    )
 
 object DownloadAuditEvent {
@@ -124,7 +125,8 @@ object DownloadAuditEvent {
           DoNotPay(eldestChild.map(convertEldestChild))
       },
       additionalInformation = model.additionalInformation.toString,
-      userAuthenticated = model.userAuthenticated
+      userAuthenticated = model.userAuthenticated,
+      reasonsNotToSubmit = model.reasonsNotToSubmit.map(_.toString).toList
     )
 
   private def convertUkAddress(address: models.UkAddress): UkAddress =

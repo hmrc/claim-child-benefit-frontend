@@ -205,7 +205,8 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           ))
         ),
         "info",
-        userAuthenticated = true
+        userAuthenticated = true,
+        reasonsNotToSubmit = List("designatoryDetailsChanged", "additionalInformationPresent")
       )
 
       val hc = HeaderCarrier()
