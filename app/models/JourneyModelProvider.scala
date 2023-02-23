@@ -285,7 +285,7 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
 
     def designatoryDetailsChanged: IorNec[Query, Option[Boolean]] =
       if (answers.isAuthenticated) {
-        if (answers.isDefined(DesignatoryNamePage) |
+        if (answers.isDefined(DesignatoryNamePage) ||
             answers.isDefined(DesignatoryAddressInUkPage) ||
             answers.isDefined(CorrespondenceAddressInUkPage)) {
 
