@@ -18,7 +18,6 @@ package models
 
 import cats.data.NonEmptyList
 import generators.ModelGenerators
-import models.AdditionalInformation.{Information, NoInformation}
 import models.BirthRegistrationMatchingResult.{Matched, NotAttempted, NotMatched}
 import models.JourneyModel.Residency._
 import models.RelationshipStatus._
@@ -115,7 +114,7 @@ class JourneyModelProviderSpec
           .withMinimalSingleIncomeDetails
           .set(RelationshipStatusPage, Single).success.value
           .set(WantToBePaidPage, false).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val expectedModel = JourneyModel(
           applicant = JourneyModel.Applicant(
@@ -154,7 +153,7 @@ class JourneyModelProviderSpec
           ),
           benefits = None,
           paymentPreference = JourneyModel.PaymentPreference.DoNotPay(None),
-          additionalInformation = NoInformation,
+          additionalInformation = None,
           userAuthenticated = false
         )
 
@@ -185,7 +184,8 @@ class JourneyModelProviderSpec
           .set(PartnerWorkedAbroadPage, false).success.value
           .set(PartnerReceivedBenefitsAbroadPage, false).success.value
           .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming).success.value
-          .set(AdditionalInformationPage, Information("info")).success.value
+          .set(IncludeAdditionalInformationPage, true).success.value
+          .set(AdditionalInformationPage, "info").success.value
 
         val expectedModel = JourneyModel(
           applicant = JourneyModel.Applicant(
@@ -239,7 +239,7 @@ class JourneyModelProviderSpec
           ),
           benefits = None,
           paymentPreference = JourneyModel.PaymentPreference.DoNotPay(None),
-          additionalInformation = Information("info"),
+          additionalInformation = Some("info"),
           userAuthenticated = false
         )
 
@@ -274,7 +274,7 @@ class JourneyModelProviderSpec
           .set(AnyoneClaimedForChildBeforePage(Index(1)), false).success.value
           .set(ChildLivesWithApplicantPage(Index(1)), true).success.value
           .set(ChildLivedWithAnyoneElsePage(Index(1)), false).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val expectedModel = JourneyModel(
           applicant = JourneyModel.Applicant(
@@ -345,8 +345,9 @@ class JourneyModelProviderSpec
           ),
           benefits = None,
           paymentPreference = JourneyModel.PaymentPreference.DoNotPay(None),
-          additionalInformation = NoInformation,
+          additionalInformation = None,
           userAuthenticated = false
+
         )
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -374,7 +375,7 @@ class JourneyModelProviderSpec
             .set(ApplicantBenefitsPage, applicantBenefits).success.value
             .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
             .set(WantToBePaidToExistingAccountPage, true).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val expectedPaymentPreference = JourneyModel.PaymentPreference.ExistingAccount(
             JourneyModel.EldestChild(eldestChildName, now),
@@ -409,7 +410,7 @@ class JourneyModelProviderSpec
               .set(BankAccountHolderPage, bankAccountHolder).success.value
               .set(AccountTypePage, AccountType.SortCodeAccountNumber).success.value
               .set(BankAccountDetailsPage, bankAccountDetails).success.value
-              .set(AdditionalInformationPage, NoInformation).success.value
+              .set(IncludeAdditionalInformationPage, false).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(
               accountDetails = Some(JourneyModel.BankAccountWithHolder(bankAccountHolder, bankAccountDetails)),
@@ -441,7 +442,7 @@ class JourneyModelProviderSpec
               .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
               .set(WantToBePaidToExistingAccountPage, false).success.value
               .set(ApplicantHasSuitableAccountPage, false).success.value
-              .set(AdditionalInformationPage, NoInformation).success.value
+              .set(IncludeAdditionalInformationPage, false).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.Weekly(
               accountDetails = None,
@@ -468,7 +469,7 @@ class JourneyModelProviderSpec
               .set(EldestChildNamePage, eldestChildName).success.value
               .set(EldestChildDateOfBirthPage, now).success.value
               .set(WantToBePaidPage, false).success.value
-              .set(AdditionalInformationPage, NoInformation).success.value
+              .set(IncludeAdditionalInformationPage, false).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.DoNotPay(
               Some(JourneyModel.EldestChild(eldestChildName, now))
@@ -490,7 +491,7 @@ class JourneyModelProviderSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
           .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
           .set(EldestChildNamePage, eldestChildName).success.value
           .set(EldestChildDateOfBirthPage, now).success.value
 
@@ -617,7 +618,7 @@ class JourneyModelProviderSpec
           .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
           .set(ApplicantBenefitsPage, applicantBenefits).success.value
           .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         "and wants to be paid every 4 weeks" - {
 
@@ -740,7 +741,7 @@ class JourneyModelProviderSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantNinoKnownPage, true).success.value
           .set(ApplicantNinoPage, applicantNino).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val expectedApplicant = JourneyModel.Applicant(
           name = applicantName,
@@ -777,7 +778,7 @@ class JourneyModelProviderSpec
           .set(ApplicantHasPreviousFamilyNamePage, true).success.value
           .set(ApplicantPreviousFamilyNamePage(Index(0)), previousName1).success.value
           .set(ApplicantPreviousFamilyNamePage(Index(1)), previousName2).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val expectedApplicant = JourneyModel.Applicant(
           name = applicantName,
@@ -821,7 +822,7 @@ class JourneyModelProviderSpec
           .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
           .set(ApplicantWorkedAbroadPage, false).success.value
           .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val expectedApplicant = JourneyModel.Applicant(
           name = applicantName,
@@ -868,7 +869,7 @@ class JourneyModelProviderSpec
             .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
             .set(ApplicantWorkedAbroadPage, false).success.value
             .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val expectedApplicant = JourneyModel.Applicant(
             name = applicantName,
@@ -913,7 +914,7 @@ class JourneyModelProviderSpec
             .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
             .set(ApplicantWorkedAbroadPage, false).success.value
             .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val expectedApplicant = JourneyModel.Applicant(
             name = applicantName,
@@ -958,7 +959,7 @@ class JourneyModelProviderSpec
           .set(ApplicantWorkedAbroadPage, true).success.value
           .set(CountryApplicantWorkedPage(Index(0)), country).success.value
           .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val expectedApplicant = JourneyModel.Applicant(
           name = applicantName,
@@ -1002,7 +1003,7 @@ class JourneyModelProviderSpec
           .set(ApplicantWorkedAbroadPage, false).success.value
           .set(ApplicantReceivedBenefitsAbroadPage, true).success.value
           .set(CountryApplicantReceivedBenefitsPage(Index(0)), country).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val expectedApplicant = JourneyModel.Applicant(
           name = applicantName,
@@ -1052,7 +1053,7 @@ class JourneyModelProviderSpec
             .withMinimalSingleIncomeDetails
             .set(RelationshipStatusPage, Single).success.value
             .set(WantToBePaidPage, false).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -1101,7 +1102,7 @@ class JourneyModelProviderSpec
             .withMinimalSingleIncomeDetails
             .set(RelationshipStatusPage, Single).success.value
             .set(WantToBePaidPage, false).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -1151,7 +1152,7 @@ class JourneyModelProviderSpec
             .withMinimalSingleIncomeDetails
             .set(RelationshipStatusPage, Single).success.value
             .set(WantToBePaidPage, false).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -1201,7 +1202,7 @@ class JourneyModelProviderSpec
             .withMinimalSingleIncomeDetails
             .set(RelationshipStatusPage, Single).success.value
             .set(WantToBePaidPage, false).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -1251,7 +1252,7 @@ class JourneyModelProviderSpec
             .withMinimalSingleIncomeDetails
             .set(RelationshipStatusPage, Single).success.value
             .set(WantToBePaidPage, false).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -1301,7 +1302,7 @@ class JourneyModelProviderSpec
             .withMinimalSingleIncomeDetails
             .set(RelationshipStatusPage, Single).success.value
             .set(WantToBePaidPage, false).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -1337,7 +1338,7 @@ class JourneyModelProviderSpec
           .set(RelationshipStatusPage, Married).success.value
           .set(PartnerNinoKnownPage, true).success.value
           .set(PartnerNinoPage, partnerNino).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val expectedPartner = JourneyModel.Partner(
           name = partnerName,
@@ -1372,7 +1373,7 @@ class JourneyModelProviderSpec
           .set(PartnerClaimingChildBenefitPage, partnerClaiming).success.value
           .set(PartnerEldestChildNamePage, partnerEldestChildName).success.value
           .set(PartnerEldestChildDateOfBirthPage, now).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val expectedPartner = JourneyModel.Partner(
           name = partnerName,
@@ -1407,7 +1408,7 @@ class JourneyModelProviderSpec
           .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.GettingPayments).success.value
           .set(PartnerEldestChildNamePage, partnerEldestChildName).success.value
           .set(PartnerEldestChildDateOfBirthPage, now).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val expectedPartner = JourneyModel.Partner(
           name = partnerName,
@@ -1443,7 +1444,7 @@ class JourneyModelProviderSpec
           .set(CountryPartnerWorkedPage(Index(0)), country).success.value
           .set(PartnerReceivedBenefitsAbroadPage, true).success.value
           .set(CountryPartnerReceivedBenefitsPage(Index(0)), country).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val expectedPartner = JourneyModel.Partner(
           name = partnerName,
@@ -1478,7 +1479,7 @@ class JourneyModelProviderSpec
           .set(ChildNameChangedByDeedPollPage(Index(0)), true).success.value
           .set(ChildPreviousNamePage(Index(0), Index(0)), childPreviousName1).success.value
           .set(ChildPreviousNamePage(Index(0), Index(1)), childPreviousName2).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val expectedChildDetails = JourneyModel.Child(
           name = childName,
@@ -1515,7 +1516,7 @@ class JourneyModelProviderSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.England).success.value
           .set(BirthCertificateHasSystemNumberPage(Index(0)), false).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val expectedChildDetails = JourneyModel.Child(
           name = childName,
@@ -1552,7 +1553,7 @@ class JourneyModelProviderSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.Wales).success.value
           .set(BirthCertificateHasSystemNumberPage(Index(0)), false).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val expectedChildDetails = JourneyModel.Child(
           name = childName,
@@ -1592,7 +1593,7 @@ class JourneyModelProviderSpec
             .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.Scotland).success.value
             .set(ScottishBirthCertificateHasNumbersPage(Index(0)), true).success.value
             .set(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBirthCertificateDetails).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val expectedChildDetails = JourneyModel.Child(
             name = childName,
@@ -1629,7 +1630,7 @@ class JourneyModelProviderSpec
             .set(RelationshipStatusPage, Single).success.value
             .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.Scotland).success.value
             .set(ScottishBirthCertificateHasNumbersPage(Index(0)), false).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val expectedChildDetails = JourneyModel.Child(
             name = childName,
@@ -1667,7 +1668,7 @@ class JourneyModelProviderSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.Other).success.value
           .set(BirthCertificateHasSystemNumberPage(Index(0)), false).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val expectedChildDetails = JourneyModel.Child(
           name = childName,
@@ -1705,7 +1706,7 @@ class JourneyModelProviderSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.Unknown).success.value
           .set(BirthCertificateHasSystemNumberPage(Index(0)), false).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val expectedChildDetails = JourneyModel.Child(
           name = childName,
@@ -1745,7 +1746,7 @@ class JourneyModelProviderSpec
             .set(RelationshipStatusPage, Single).success.value
             .set(AnyoneClaimedForChildBeforePage(Index(0)), true).success.value
             .set(PreviousClaimantNameKnownPage(Index(0)), false).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val expectedChildDetails = JourneyModel.Child(
             name = childName,
@@ -1784,7 +1785,7 @@ class JourneyModelProviderSpec
             .set(PreviousClaimantNameKnownPage(Index(0)), true).success.value
             .set(PreviousClaimantNamePage(Index(0)), adultName).success.value
             .set(PreviousClaimantAddressKnownPage(Index(0)), false).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val expectedChildDetails = JourneyModel.Child(
             name = childName,
@@ -1827,7 +1828,7 @@ class JourneyModelProviderSpec
               .set(PreviousClaimantAddressKnownPage(Index(0)), true).success.value
               .set(PreviousClaimantAddressInUkPage(Index(0)), true).success.value
               .set(PreviousClaimantUkAddressPage(Index(0)), ukAddress).success.value
-              .set(AdditionalInformationPage, NoInformation).success.value
+              .set(IncludeAdditionalInformationPage, false).success.value
 
             val expectedChildDetails = JourneyModel.Child(
               name = childName,
@@ -1868,7 +1869,7 @@ class JourneyModelProviderSpec
               .set(PreviousClaimantAddressKnownPage(Index(0)), true).success.value
               .set(PreviousClaimantAddressInUkPage(Index(0)), false).success.value
               .set(PreviousClaimantInternationalAddressPage(Index(0)), internationalAddress).success.value
-              .set(AdditionalInformationPage, NoInformation).success.value
+              .set(IncludeAdditionalInformationPage, false).success.value
 
             val expectedChildDetails = JourneyModel.Child(
               name = childName,
@@ -1909,7 +1910,7 @@ class JourneyModelProviderSpec
             .set(RelationshipStatusPage, Single).success.value
             .set(ChildLivesWithApplicantPage(Index(0)), false).success.value
             .set(GuardianNameKnownPage(Index(0)), false).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val expectedChildDetails = JourneyModel.Child(
             name = childName,
@@ -1948,7 +1949,7 @@ class JourneyModelProviderSpec
             .set(GuardianNameKnownPage(Index(0)), true).success.value
             .set(GuardianNamePage(Index(0)), adultName).success.value
             .set(GuardianAddressKnownPage(Index(0)), false).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val expectedChildDetails = JourneyModel.Child(
             name = childName,
@@ -1991,7 +1992,7 @@ class JourneyModelProviderSpec
               .set(GuardianAddressKnownPage(Index(0)), true).success.value
               .set(GuardianAddressInUkPage(Index(0)), true).success.value
               .set(GuardianUkAddressPage(Index(0)), ukAddress).success.value
-              .set(AdditionalInformationPage, NoInformation).success.value
+              .set(IncludeAdditionalInformationPage, false).success.value
 
             val expectedChildDetails = JourneyModel.Child(
               name = childName,
@@ -2032,7 +2033,7 @@ class JourneyModelProviderSpec
               .set(GuardianAddressKnownPage(Index(0)), true).success.value
               .set(GuardianAddressInUkPage(Index(0)), false).success.value
               .set(GuardianInternationalAddressPage(Index(0)), internationalAddress).success.value
-              .set(AdditionalInformationPage, NoInformation).success.value
+              .set(IncludeAdditionalInformationPage, false).success.value
 
             val expectedChildDetails = JourneyModel.Child(
               name = childName,
@@ -2074,7 +2075,7 @@ class JourneyModelProviderSpec
             .set(ChildLivedWithAnyoneElsePage(Index(0)), true).success.value
             .set(PreviousGuardianNameKnownPage(Index(0)), false).success.value
             .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val expectedChildDetails = JourneyModel.Child(
             name = childName,
@@ -2115,7 +2116,7 @@ class JourneyModelProviderSpec
             .set(PreviousGuardianAddressKnownPage(Index(0)), false).success.value
             .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), false).success.value
             .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val expectedChildDetails = JourneyModel.Child(
             name = childName,
@@ -2160,7 +2161,7 @@ class JourneyModelProviderSpec
               .set(PreviousGuardianUkAddressPage(Index(0)), ukAddress).success.value
               .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), false).success.value
               .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now).success.value
-              .set(AdditionalInformationPage, NoInformation).success.value
+              .set(IncludeAdditionalInformationPage, false).success.value
 
             val expectedChildDetails = JourneyModel.Child(
               name = childName,
@@ -2203,7 +2204,7 @@ class JourneyModelProviderSpec
               .set(PreviousGuardianInternationalAddressPage(Index(0)), internationalAddress).success.value
               .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), false).success.value
               .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now).success.value
-              .set(AdditionalInformationPage, NoInformation).success.value
+              .set(IncludeAdditionalInformationPage, false).success.value
 
             val expectedChildDetails = JourneyModel.Child(
               name = childName,
@@ -2246,7 +2247,7 @@ class JourneyModelProviderSpec
             .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), true).success.value
             .set(PreviousGuardianPhoneNumberPage(Index(0)), phoneNumber).success.value
             .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val expectedChildDetails = JourneyModel.Child(
             name = childName,
@@ -2289,7 +2290,7 @@ class JourneyModelProviderSpec
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
-        errors.value.toChain.toList must contain theSameElementsAs Seq(ApplicantNamePage, AdditionalInformationPage)
+        errors.value.toChain.toList must contain theSameElementsAs Seq(ApplicantNamePage, IncludeAdditionalInformationPage)
         data mustBe empty
       }
 
@@ -2320,14 +2321,14 @@ class JourneyModelProviderSpec
             .withMinimalSingleIncomeDetails
             .set(RelationshipStatusPage, Single).success.value
             .set(WantToBePaidPage, false).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
           errors.value.toChain.toList must contain only DesignatoryUkAddressPage
           data mustBe empty
         }
-        
+
         "and says they have a new international residential address but it is missing" in {
 
           when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
@@ -2353,7 +2354,7 @@ class JourneyModelProviderSpec
             .withMinimalSingleIncomeDetails
             .set(RelationshipStatusPage, Single).success.value
             .set(WantToBePaidPage, false).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2386,7 +2387,7 @@ class JourneyModelProviderSpec
             .withMinimalSingleIncomeDetails
             .set(RelationshipStatusPage, Single).success.value
             .set(WantToBePaidPage, false).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2419,13 +2420,32 @@ class JourneyModelProviderSpec
             .withMinimalSingleIncomeDetails
             .set(RelationshipStatusPage, Single).success.value
             .set(WantToBePaidPage, false).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
           errors.value.toChain.toList must contain only CorrespondenceInternationalAddressPage
           data mustBe empty
         }
+
+      }
+
+      "when the applicant says they want to provide additional information, but none is present" in {
+
+        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalCoupleIncomeDetails
+          .withMinimalPaymentDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(IncludeAdditionalInformationPage, true).success.value
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors.value.toChain.toList must contain only AdditionalInformationPage
+        data mustBe empty
       }
 
       "when the applicant is married and partner details are missing" in {
@@ -2438,7 +2458,7 @@ class JourneyModelProviderSpec
           .withMinimalCoupleIncomeDetails
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Married).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2467,7 +2487,7 @@ class JourneyModelProviderSpec
           .withMinimalPaymentDetails
           .withMinimalPartnerDetails
           .set(RelationshipStatusPage, Cohabiting).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2486,7 +2506,7 @@ class JourneyModelProviderSpec
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Cohabiting).success.value
           .set(CohabitationDatePage, now).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2514,7 +2534,7 @@ class JourneyModelProviderSpec
           .withMinimalSingleIncomeDetails
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Separated).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2534,7 +2554,7 @@ class JourneyModelProviderSpec
           .withMinimalPartnerDetails
           .set(RelationshipStatusPage, Married).success.value
           .set(PartnerWorkedAbroadPage, true).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2554,7 +2574,7 @@ class JourneyModelProviderSpec
           .withMinimalPartnerDetails
           .set(RelationshipStatusPage, Married).success.value
           .set(PartnerReceivedBenefitsAbroadPage, true).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2576,7 +2596,7 @@ class JourneyModelProviderSpec
             .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
             .set(EldestChildNamePage, eldestChildName).success.value
             .set(EldestChildDateOfBirthPage, now).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2597,7 +2617,7 @@ class JourneyModelProviderSpec
             .set(EldestChildNamePage, eldestChildName).success.value
             .set(EldestChildDateOfBirthPage, now).success.value
             .set(WantToBePaidPage, true).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2619,7 +2639,7 @@ class JourneyModelProviderSpec
             .set(EldestChildNamePage, eldestChildName).success.value
             .set(EldestChildDateOfBirthPage, now).success.value
             .set(WantToBePaidPage, true).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2641,7 +2661,7 @@ class JourneyModelProviderSpec
             .set(EldestChildDateOfBirthPage, now).success.value
             .set(WantToBePaidPage, true).success.value
             .set(ApplicantBenefitsPage, applicantBenefits).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2662,7 +2682,7 @@ class JourneyModelProviderSpec
             .set(WantToBePaidPage, true).success.value
             .set(ApplicantBenefitsPage, applicantBenefits).success.value
             .set(WantToBePaidToExistingAccountPage, true).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2689,7 +2709,7 @@ class JourneyModelProviderSpec
             .set(WantToBePaidPage, true).success.value
             .set(ApplicantBenefitsPage, applicantBenefits).success.value
             .set(WantToBePaidToExistingAccountPage, false).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2713,7 +2733,7 @@ class JourneyModelProviderSpec
             .set(ApplicantBenefitsPage, applicantBenefits).success.value
             .set(WantToBePaidToExistingAccountPage, false).success.value
             .set(ApplicantHasSuitableAccountPage, true).success.value
-            .set(AdditionalInformationPage, NoInformation).success.value
+            .set(IncludeAdditionalInformationPage, false).success.value
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2734,7 +2754,7 @@ class JourneyModelProviderSpec
           .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
           .set(WantToBePaidPage, true).success.value
           .set(ApplicantBenefitsPage, applicantBenefits).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2755,7 +2775,7 @@ class JourneyModelProviderSpec
           .set(WantToBePaidPage, true).success.value
           .set(ApplicantBenefitsPage, applicantBenefits).success.value
           .set(ApplicantHasSuitableAccountPage, true).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2778,7 +2798,7 @@ class JourneyModelProviderSpec
           .set(ApplicantHasSuitableAccountPage, true).success.value
           .set(BankAccountHolderPage, bankAccountHolder).success.value
           .set(AccountTypePage, AccountType.SortCodeAccountNumber).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2801,7 +2821,7 @@ class JourneyModelProviderSpec
           .set(ApplicantHasSuitableAccountPage, true).success.value
           .set(BankAccountHolderPage, bankAccountHolder).success.value
           .set(AccountTypePage, AccountType.BuildingSocietyRollNumber).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2820,7 +2840,7 @@ class JourneyModelProviderSpec
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantHasPreviousFamilyNamePage, true).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2839,7 +2859,7 @@ class JourneyModelProviderSpec
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantNinoKnownPage, true).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2858,7 +2878,7 @@ class JourneyModelProviderSpec
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
           .remove(ApplicantLivedAtCurrentAddressOneYearPage).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2882,7 +2902,7 @@ class JourneyModelProviderSpec
           .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
           .set(ApplicantWorkedAbroadPage, false).success.value
           .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
           .remove(ApplicantCurrentAddressInUkPage).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -2908,7 +2928,7 @@ class JourneyModelProviderSpec
           .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
           .set(ApplicantWorkedAbroadPage, false).success.value
           .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2934,7 +2954,7 @@ class JourneyModelProviderSpec
           .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
           .set(ApplicantWorkedAbroadPage, false).success.value
           .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2960,7 +2980,7 @@ class JourneyModelProviderSpec
           .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
           .set(ApplicantWorkedAbroadPage, false).success.value
           .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -2985,7 +3005,7 @@ class JourneyModelProviderSpec
           .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
           .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
           .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3012,7 +3032,7 @@ class JourneyModelProviderSpec
           .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
           .set(ApplicantWorkedAbroadPage, true).success.value
           .set(ApplicantReceivedBenefitsAbroadPage, true).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3035,7 +3055,7 @@ class JourneyModelProviderSpec
           .set(ApplicantCurrentInternationalAddressPage, internationalAddress).success.value
           .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
           .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3060,7 +3080,7 @@ class JourneyModelProviderSpec
           .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
           .set(ApplicantWorkedAbroadPage, true).success.value
           .set(ApplicantReceivedBenefitsAbroadPage, true).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3080,7 +3100,7 @@ class JourneyModelProviderSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(ApplicantLivedAtCurrentAddressOneYearPage, false).success.value
           .set(ApplicantPreviousAddressInUkPage, true).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3108,7 +3128,7 @@ class JourneyModelProviderSpec
           .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
           .set(ApplicantWorkedAbroadPage, false).success.value
           .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3128,7 +3148,7 @@ class JourneyModelProviderSpec
           .withMinimalPartnerDetails
           .set(RelationshipStatusPage, Married).success.value
           .set(PartnerNinoKnownPage, true).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3148,7 +3168,7 @@ class JourneyModelProviderSpec
           .withMinimalPartnerDetails
           .set(RelationshipStatusPage, Married).success.value
           .set(PartnerClaimingChildBenefitPage, partnerClaiming).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3172,7 +3192,7 @@ class JourneyModelProviderSpec
           .withMinimalPartnerDetails
           .set(RelationshipStatusPage, Married).success.value
           .set(PartnerClaimingChildBenefitPage, partnerClaiming).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3195,7 +3215,7 @@ class JourneyModelProviderSpec
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
           .set(ChildHasPreviousNamePage(Index(0)), true).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3222,7 +3242,7 @@ class JourneyModelProviderSpec
           .set(ChildBirthRegistrationCountryPage(Index(0)), country).success.value
           .set(BirthCertificateHasSystemNumberPage(Index(0)), true).success.value
           .remove(ChildBirthCertificateSystemNumberPage(Index(0))).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3243,7 +3263,7 @@ class JourneyModelProviderSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(ScottishBirthCertificateHasNumbersPage(Index(0)), true).success.value
           .set(ChildBirthRegistrationCountryPage(Index(0)), BirthCountry.Scotland).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3263,7 +3283,7 @@ class JourneyModelProviderSpec
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
           .set(AnyoneClaimedForChildBeforePage(Index(0)), true).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3284,7 +3304,7 @@ class JourneyModelProviderSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(AnyoneClaimedForChildBeforePage(Index(0)), true).success.value
           .set(PreviousClaimantNameKnownPage(Index(0)), true).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3310,7 +3330,7 @@ class JourneyModelProviderSpec
           .set(PreviousClaimantNameKnownPage(Index(0)), true).success.value
           .set(PreviousClaimantNamePage(Index(0)), adultName).success.value
           .set(PreviousClaimantAddressKnownPage(Index(0)), true).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3334,7 +3354,7 @@ class JourneyModelProviderSpec
           .set(PreviousClaimantNamePage(Index(0)), adultName).success.value
           .set(PreviousClaimantAddressKnownPage(Index(0)), true).success.value
           .set(PreviousClaimantAddressInUkPage(Index(0)), true).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3358,7 +3378,7 @@ class JourneyModelProviderSpec
           .set(PreviousClaimantNamePage(Index(0)), adultName).success.value
           .set(PreviousClaimantAddressKnownPage(Index(0)), true).success.value
           .set(PreviousClaimantAddressInUkPage(Index(0)), false).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3379,7 +3399,7 @@ class JourneyModelProviderSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(ChildLivesWithApplicantPage(Index(0)), false).success.value
 
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3401,7 +3421,7 @@ class JourneyModelProviderSpec
           .set(ChildLivesWithApplicantPage(Index(0)), false).success.value
           .set(GuardianNameKnownPage(Index(0)), true).success.value
 
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3428,7 +3448,7 @@ class JourneyModelProviderSpec
           .set(GuardianNamePage(Index(0)), adultName).success.value
           .set(GuardianAddressKnownPage(Index(0)), true).success.value
 
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3453,7 +3473,7 @@ class JourneyModelProviderSpec
           .set(GuardianAddressKnownPage(Index(0)), true).success.value
           .set(GuardianAddressInUkPage(Index(0)), true).success.value
 
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3478,7 +3498,7 @@ class JourneyModelProviderSpec
           .set(GuardianAddressKnownPage(Index(0)), true).success.value
           .set(GuardianAddressInUkPage(Index(0)), false).success.value
 
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3499,7 +3519,7 @@ class JourneyModelProviderSpec
           .set(RelationshipStatusPage, Single).success.value
           .set(ChildLivedWithAnyoneElsePage(Index(0)), true).success.value
           .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3523,7 +3543,7 @@ class JourneyModelProviderSpec
           .set(PreviousGuardianNameKnownPage(Index(0)), true).success.value
           .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), false).success.value
 
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3552,7 +3572,7 @@ class JourneyModelProviderSpec
           .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), true).success.value
           .set(PreviousGuardianPhoneNumberPage(Index(0)), phoneNumber).success.value
           .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3560,6 +3580,7 @@ class JourneyModelProviderSpec
 
         data mustBe empty
       }
+
       "when the child lived with someone else and the user says they know their name and address, but their UK address is not present" in {
 
         when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
@@ -3578,7 +3599,7 @@ class JourneyModelProviderSpec
           .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), true).success.value
           .set(PreviousGuardianPhoneNumberPage(Index(0)), phoneNumber).success.value
           .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3605,7 +3626,7 @@ class JourneyModelProviderSpec
           .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), true).success.value
           .set(PreviousGuardianPhoneNumberPage(Index(0)), phoneNumber).success.value
           .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3632,7 +3653,7 @@ class JourneyModelProviderSpec
           .set(PreviousGuardianUkAddressPage(Index(0)), ukAddress).success.value
           .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), true).success.value
           .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -3650,7 +3671,7 @@ class JourneyModelProviderSpec
           .withMinimalSingleIncomeDetails
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
-          .set(AdditionalInformationPage, NoInformation).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 

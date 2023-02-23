@@ -109,7 +109,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
     .set(ChildLivedWithAnyoneElsePage(Index(0)), false).success.value
     .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
     .set(WantToBePaidPage, false).success.value
-    .set(AdditionalInformationPage, AdditionalInformation.NoInformation).success.value
+    .set(IncludeAdditionalInformationPage, false).success.value
 
   ".canSubmit" - {
 
@@ -262,7 +262,10 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
 
         "must be false when the user gives any additional information" in {
 
-          val answers = basicUserAnswers.set(AdditionalInformationPage, AdditionalInformation.Information("foo")).success.value
+          val answers =
+            basicUserAnswers
+              .set(IncludeAdditionalInformationPage, true).success.value
+              .set(AdditionalInformationPage, "foo").success.value
 
           val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
           val request = DataRequest(identifierRequest, userId, answers)

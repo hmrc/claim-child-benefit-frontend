@@ -19,26 +19,19 @@ package journey
 import org.scalatest.freespec.AnyFreeSpec
 import pages.{AdditionalInformationPage, IncludeAdditionalInformationPage, TaskListPage}
 
-class AdditionalInfoSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
+class ChangingAdditionalInformationSectionJourneySpec extends AnyFreeSpec with JourneyHelpers {
 
-  "users must proceed from Include Additional Information" - {
+  "when the user originally gave information" - {
 
-    "to the task list when the user answers no" in {
+    "changing to say they haven't must remove the information" in {
 
       startingFrom(IncludeAdditionalInformationPage)
         .run(
+          setUserAnswerTo(IncludeAdditionalInformationPage, true),
+          setUserAnswerTo(AdditionalInformationPage, "foo"),
           submitAnswer(IncludeAdditionalInformationPage, false),
-          pageMustBe(TaskListPage)
-        )
-    }
-
-    "to Additional Information then the task list when the user answers no" in {
-
-      startingFrom(IncludeAdditionalInformationPage)
-        .run(
-          submitAnswer(IncludeAdditionalInformationPage, true),
-          submitAnswer(AdditionalInformationPage, "foo"),
-          pageMustBe(TaskListPage)
+          pageMustBe(TaskListPage),
+          answersMustNotContain(AdditionalInformationPage)
         )
     }
   }

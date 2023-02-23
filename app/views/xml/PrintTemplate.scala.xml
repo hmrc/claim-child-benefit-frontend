@@ -40,10 +40,9 @@
 
     @paymentDetails(model)
 
-    @{model.additionalInformation match {
-        case info: AdditionalInformation.Information => additionalInfoPage(info.value)
-        case _ => ()
-    }}
+    @model.additionalInformation.map { info =>
+        @additionalInfoPage(info)
+    }
 
     @declaration(model)
 

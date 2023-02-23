@@ -16,16 +16,30 @@
 
 package forms
 
-import forms.mappings.Mappings
-import play.api.data.Form
+import forms.behaviours.BooleanFieldBehaviours
+import play.api.data.FormError
 
-import javax.inject.Inject
+class IncludeAdditionalInformationFormProviderSpec extends BooleanFieldBehaviours {
 
-class AdditionalInformationFormProvider @Inject() extends Mappings {
+  val requiredKey = "includeAdditionalInformation.error.required"
+  val invalidKey = "error.boolean"
 
-  def apply(): Form[String] =
-    Form(
-      "value" -> text("additionalInformation.error.required")
-        .verifying(maxLength(1000, "additionalInformation.error.length"))
+  val form = new IncludeAdditionalInformationFormProvider()()
+
+  ".value" - {
+
+    val fieldName = "value"
+
+    behave like booleanField(
+      form,
+      fieldName,
+      invalidError = FormError(fieldName, invalidKey)
     )
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
+  }
 }

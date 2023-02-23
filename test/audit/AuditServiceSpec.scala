@@ -19,7 +19,6 @@ package audit
 import audit.DownloadAuditEvent._
 import cats.data.NonEmptyList
 import generators.ModelGenerators
-import models.AdditionalInformation.Information
 import models.BirthRegistrationMatchingResult.NotAttempted
 import models.{ApplicantPreviousName, BirthCertificateSystemNumber, Country, CurrentlyReceivingChildBenefit, EmploymentStatus, JourneyModel, Nationality, PartnerClaimingChildBenefit}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
@@ -129,7 +128,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             dateOfBirth = now
           ))
         ),
-        additionalInformation = Information("info"),
+        additionalInformation = Some("info"),
         userAuthenticated = true
       )
 
@@ -204,7 +203,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             dateOfBirth = now
           ))
         ),
-        "info",
+        Some("info"),
         userAuthenticated = true,
         reasonsNotToSubmit = List("designatoryDetailsChanged", "additionalInformationPresent")
       )

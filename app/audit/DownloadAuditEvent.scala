@@ -28,7 +28,7 @@ final case class DownloadAuditEvent(
                                      children: List[Child],
                                      benefits: Option[Set[String]],
                                      paymentPreference: PaymentPreference,
-                                     additionalInformation: String,
+                                     additionalInformation: Option[String],
                                      userAuthenticated: Boolean,
                                      reasonsNotToSubmit: List[String]
                                    )
@@ -124,7 +124,7 @@ object DownloadAuditEvent {
         case JourneyModel.PaymentPreference.DoNotPay(eldestChild) =>
           DoNotPay(eldestChild.map(convertEldestChild))
       },
-      additionalInformation = model.additionalInformation.toString,
+      additionalInformation = model.additionalInformation,
       userAuthenticated = model.userAuthenticated,
       reasonsNotToSubmit = model.reasonsNotToSubmit.map(_.toString).toList
     )

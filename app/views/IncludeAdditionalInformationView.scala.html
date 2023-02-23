@@ -14,36 +14,32 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.govukfrontend.views.viewmodels.charactercount.CharacterCount
-@import viewmodels.InputWidth._
-
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukErrorSummary: GovukErrorSummary,
-        govukCharacterCount: GovukCharacterCount,
+        govukRadios: GovukRadios,
         govukButton: GovukButton
 )
 
 @(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("additionalInformation.title"))) {
+@layout(pageTitle = title(form, messages("includeAdditionalInformation.title"))) {
 
-    @formHelper(action = routes.AdditionalInformationController.onSubmit(waypoints)) {
+    @formHelper(action = routes.IncludeAdditionalInformationController.onSubmit(waypoints), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @govukCharacterCount(
-            CharacterCount(
-                id = form("value").id,
-                name = form("value").name,
-                maxLength = Some(1000),
-                label = LabelViewModel(messages("additionalInformation.heading")).asPageHeading(),
-                value = form("value").value,
-                errorMessage = form("value").error.map(error => ErrorMessage(content = error.format)),
-                threshold = Some(75)
+        <h1 class="govuk-heading-xl">@messages("includeAdditionalInformation.heading")</h1>
+
+        <p class="govuk-body">@messages("includeAdditionalInformation.p1")</p>
+
+        @govukRadios(
+            RadiosViewModel.yesNo(
+                field = form("value"),
+                legend = LegendViewModel(messages("includeAdditionalInformation.heading")).visuallyHidden()
             )
         )
 
