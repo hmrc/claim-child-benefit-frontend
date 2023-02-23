@@ -75,6 +75,8 @@
         <appender-ref ref="STDOUT"/>
     </logger>
 
+    <logger name="org.apache.fop" level="INFO"/>
+
     <root level="DEBUG">
         <appender-ref ref="FILE"/>
         <appender-ref ref="STDOUT"/>

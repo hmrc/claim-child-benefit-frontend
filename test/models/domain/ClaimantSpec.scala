@@ -97,7 +97,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
       ),
       benefits = None,
       paymentPreference = JourneyModel.PaymentPreference.DoNotPay(None),
-      additionalInformation = models.AdditionalInformation.NoInformation,
+      additionalInformation = None,
       userAuthenticated = true
     )
 

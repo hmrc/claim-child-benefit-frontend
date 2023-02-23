@@ -16,11 +16,9 @@
 
 package models.tasklist
 
-import models.RelationshipStatus.{Cohabiting, Married}
 import models.UserAnswers
-import models.tasklist.SectionStatus.{Completed, NotStarted}
-import pages.partner.RelationshipStatusPage
-import pages.{AdditionalInformationPage, Page}
+import models.tasklist.SectionStatus.{Completed, InProgress, NotStarted}
+import pages.{AdditionalInformationPage, IncludeAdditionalInformationPage, Page}
 
 import javax.inject.Inject
 
@@ -34,13 +32,15 @@ class AdditionalInfoSection @Inject()(
   override val name: String = "taskList.additionalInfo"
 
   override def continue(answers: UserAnswers): Option[Page] =
-    Some(AdditionalInformationPage)
+    Some(IncludeAdditionalInformationPage)
 
   override def progress(answers: UserAnswers): SectionStatus =
     answers
-      .get(AdditionalInformationPage)
-      .map(_ => Completed)
-      .getOrElse(NotStarted)
+      .get(IncludeAdditionalInformationPage)
+      .map {
+        case true => if (answers.isDefined(AdditionalInformationPage)) Completed else InProgress
+        case false => Completed
+      }.getOrElse(NotStarted)
 
   override def prerequisiteSections(answers: UserAnswers): Set[Section] =
     Set(applicantSection, partnerSection, childSection, paymentSection)

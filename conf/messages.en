@@ -1305,13 +1305,16 @@ cannotBePaidWeekly.p3.link.href = https://www.gov.uk/child-benefit
 cannotBePaidWeekly.p4 = If you think that you’ve made a mistake you can
 cannotBePaidWeekly.p4.link.text = start your application again
 
-additionalInformation.title = Is there anything else you would like to share for this Child Benefit claim?
-additionalInformation.heading = Is there anything else you would like to share for this Child Benefit claim?
-additionalInformation.guidance = Add any other relevant information you would like to include in this Child Benefit claim. If you have nothing to add, you can continue.
+includeAdditionalInformation.title = Do you have additional information for this claim?
+includeAdditionalInformation.heading = Do you have additional information for this claim?
+includeAdditionalInformation.p1 = This could delay a decision on your claim.
+includeAdditionalInformation.error.required = Select yes if you have additional information for this claim
+
+additionalInformation.title = What additional information do you have for this claim?
+additionalInformation.heading = What additional information do you have for this claim?
 additionalInformation.checkYourAnswersLabel = Further information shared
-additionalInformation.error.length = Any other relevant information you would like to include must be 1,000 characters or less
-additionalInformation.change.hidden = any other relevant information you would like to include in this Child Benefit claim
-additionalInformation.noInformation = None
+additionalInformation.error.length = Additional information for this claim must be 1,000 characters or less
+additionalInformation.change.hidden = any additional information you have for this claim claim
 
 print.title = Your Child Benefit claim form is ready to be posted
 print.heading = Your Child Benefit claim form is ready to be posted

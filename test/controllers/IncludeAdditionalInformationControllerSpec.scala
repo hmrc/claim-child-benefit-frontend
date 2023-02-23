@@ -18,28 +18,29 @@ package controllers
 
 import base.SpecBase
 import controllers.{routes => baseRoutes}
-import forms.AdditionalInformationFormProvider
+import forms.{AdditionalInformationFormProvider, IncludeAdditionalInformationFormProvider}
 import models.UserAnswers
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{AdditionalInformationPage, EmptyWaypoints}
+import pages.EmptyWaypoints
+import pages.IncludeAdditionalInformationPage
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserDataService
-import views.html.AdditionalInformationView
+import views.html.IncludeAdditionalInformationView
 
 import scala.concurrent.Future
 
-class AdditionalInformationControllerSpec extends SpecBase with MockitoSugar {
+class IncludeAdditionalInformationControllerSpec extends SpecBase with MockitoSugar {
 
   private val waypoints = EmptyWaypoints
 
-  val formProvider = new AdditionalInformationFormProvider()
+  val formProvider = new IncludeAdditionalInformationFormProvider()
   val form = formProvider()
 
-  lazy val additionalInformationRoute = routes.AdditionalInformationController.onPageLoad(waypoints).url
+  lazy val includeAdditionalInformationRoute = routes.IncludeAdditionalInformationController.onPageLoad(waypoints).url
 
   "AdditionalInformation Controller" - {
 
@@ -48,11 +49,11 @@ class AdditionalInformationControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, additionalInformationRoute)
+        val request = FakeRequest(GET, includeAdditionalInformationRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[AdditionalInformationView]
+        val view = application.injector.instanceOf[IncludeAdditionalInformationView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
@@ -61,19 +62,19 @@ class AdditionalInformationControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(AdditionalInformationPage, "foo").success.value
+      val userAnswers = UserAnswers(userAnswersId).set(IncludeAdditionalInformationPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, additionalInformationRoute)
+        val request = FakeRequest(GET, includeAdditionalInformationRoute)
 
-        val view = application.injector.instanceOf[AdditionalInformationView]
+        val view = application.injector.instanceOf[IncludeAdditionalInformationView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("foo"), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
       }
     }
 
@@ -92,14 +93,14 @@ class AdditionalInformationControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, additionalInformationRoute)
-            .withFormUrlEncodedBody(("value", "foo"))
+          FakeRequest(POST, includeAdditionalInformationRoute)
+            .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(AdditionalInformationPage, "foo").success.value
+        val expectedAnswers = emptyUserAnswers.set(IncludeAdditionalInformationPage, true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual AdditionalInformationPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual IncludeAdditionalInformationPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
       }
     }
@@ -107,16 +108,15 @@ class AdditionalInformationControllerSpec extends SpecBase with MockitoSugar {
     "must return a Bad Request and errors when invalid data is submitted" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-      val invalidAnswer = "X" * 20000
 
       running(application) {
         val request =
-          FakeRequest(POST, additionalInformationRoute)
-            .withFormUrlEncodedBody(("value", invalidAnswer))
+          FakeRequest(POST, includeAdditionalInformationRoute)
+            .withFormUrlEncodedBody(("value", "invalid"))
 
-        val boundForm = form.bind(Map("value" -> invalidAnswer))
+        val boundForm = form.bind(Map("value" -> "invalid"))
 
-        val view = application.injector.instanceOf[AdditionalInformationView]
+        val view = application.injector.instanceOf[IncludeAdditionalInformationView]
 
         val result = route(application, request).value
 
@@ -130,7 +130,7 @@ class AdditionalInformationControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, additionalInformationRoute)
+        val request = FakeRequest(GET, includeAdditionalInformationRoute)
 
         val result = route(application, request).value
 
@@ -145,8 +145,8 @@ class AdditionalInformationControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, additionalInformationRoute)
-            .withFormUrlEncodedBody(("value", "foo"))
+          FakeRequest(POST, includeAdditionalInformationRoute)
+            .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 

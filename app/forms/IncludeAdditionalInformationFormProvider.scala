@@ -14,22 +14,17 @@
  * limitations under the License.
  */
 
-package pages
+package forms
 
-import controllers.routes
-import models.UserAnswers
-import play.api.libs.json.JsPath
-import play.api.mvc.Call
+import forms.mappings.Mappings
+import play.api.data.Form
 
-case object AdditionalInformationPage extends QuestionPage[String] {
+import javax.inject.Inject
 
-  override def path: JsPath = JsPath \ toString
+class IncludeAdditionalInformationFormProvider @Inject() extends Mappings {
 
-  override def toString: String = "additionalInformation"
-
-  override def route(waypoints: Waypoints): Call =
-    routes.AdditionalInformationController.onPageLoad(waypoints)
-
-  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    TaskListPage
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean("includeAdditionalInformation.error.required")
+    )
 }

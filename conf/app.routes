@@ -443,3 +443,6 @@ POST       /partner-hm-forces-or-civil-servant-abroad                 controller
 
 GET        /additional-information                         controllers.AdditionalInformationController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /additional-information                         controllers.AdditionalInformationController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /have-additional-information                         controllers.IncludeAdditionalInformationController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /have-additional-information                         controllers.IncludeAdditionalInformationController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

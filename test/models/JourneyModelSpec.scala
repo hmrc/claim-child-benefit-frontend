@@ -17,7 +17,6 @@
 package models
 
 import generators.ModelGenerators
-import models.AdditionalInformation.NoInformation
 import models.PartnerClaimingChildBenefit.{GettingPayments, NotGettingPayments, WaitingToHear}
 import models.ReasonNotToSubmit._
 import models.RelationshipStatus._
@@ -122,7 +121,7 @@ class JourneyModelSpec
         .set(ChildLivedWithAnyoneElsePage(Index(2)), false).success.value
         .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
         .set(WantToBePaidPage, false).success.value
-        .set(AdditionalInformationPage, NoInformation).success.value
+        .set(IncludeAdditionalInformationPage, false).success.value
 
       val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -180,7 +179,7 @@ class JourneyModelSpec
       .set(ChildLivedWithAnyoneElsePage(Index(0)), false).success.value
       .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
       .set(WantToBePaidPage, false).success.value
-      .set(AdditionalInformationPage, NoInformation).success.value
+      .set(IncludeAdditionalInformationPage, false).success.value
 
     "must contain `User Unauthenticated` when the user is not authenticated" in {
 
@@ -282,7 +281,10 @@ class JourneyModelSpec
 
     "must contain `Additional Information Present` when some additional information is supplied" in {
 
-      val answers = basicAnswers.set(AdditionalInformationPage, AdditionalInformation.Information("foo")).success.value
+      val answers =
+        basicAnswers
+          .set(IncludeAdditionalInformationPage, true).success.value
+          .set(AdditionalInformationPage, "foo").success.value
 
       val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 

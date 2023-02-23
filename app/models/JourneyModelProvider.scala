@@ -45,8 +45,14 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
         getChildren(answers),
         IorT.fromIor[Future](getBenefits(answers)),
         IorT.fromIor[Future](getPaymentPreference(answers)),
-        IorT.fromIor[Future](answers.getIor(AdditionalInformationPage))
+        IorT.fromIor[Future](getAdditionalInformation(answers))
       ).parMapN(JourneyModel(_, _, _, _, _, _, answers.isAuthenticated)).value
+
+  private def getAdditionalInformation(answers: UserAnswers): IorNec[Query, Option[String]] =
+    answers.getIor(IncludeAdditionalInformationPage).flatMap {
+      case true => answers.getIor(AdditionalInformationPage).map(Some(_))
+      case false => Ior.Right(None)
+    }
 
   private def getBenefits(answers: UserAnswers): IorNec[Query, Option[Set[Benefits]]] = {
 

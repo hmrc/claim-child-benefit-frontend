@@ -21,15 +21,27 @@ import models.UserAnswers
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object AdditionalInformationPage extends QuestionPage[String] {
+import scala.util.Try
+
+case object IncludeAdditionalInformationPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "additionalInformation"
+  override def toString: String = "includeAdditionalInformation"
 
   override def route(waypoints: Waypoints): Call =
-    routes.AdditionalInformationController.onPageLoad(waypoints)
+    routes.IncludeAdditionalInformationController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    TaskListPage
+    answers.get(this).map {
+      case true => AdditionalInformationPage
+      case false => TaskListPage
+    }.orRecover
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    if (value.contains(false)) {
+      userAnswers.remove(AdditionalInformationPage)
+    } else {
+      super.cleanup(value, userAnswers)
+    }
 }

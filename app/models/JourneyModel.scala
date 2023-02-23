@@ -31,7 +31,7 @@ final case class JourneyModel(
                                children: NonEmptyList[Child],
                                benefits: Option[Set[Benefits]],
                                paymentPreference: PaymentPreference,
-                               additionalInformation: AdditionalInformation,
+                               additionalInformation: Option[String],
                                userAuthenticated: Boolean
                              ) {
 

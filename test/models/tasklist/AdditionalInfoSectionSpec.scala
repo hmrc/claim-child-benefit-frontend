@@ -16,15 +16,14 @@
 
 package models.tasklist
 
-import models.AdditionalInformation.NoInformation
 import models.UserAnswers
-import models.tasklist.SectionStatus.{Completed, NotStarted}
+import models.tasklist.SectionStatus.{Completed, InProgress, NotStarted}
 import org.mockito.Mockito
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.AdditionalInformationPage
+import pages.{AdditionalInformationPage, IncludeAdditionalInformationPage}
 import services.JourneyProgressService
 
 class AdditionalInfoSectionSpec
@@ -48,18 +47,18 @@ class AdditionalInfoSectionSpec
 
   ".continue" - {
 
-    "must be Additional Information" in {
+    "must be Include Additional Information" in {
 
       val answers = UserAnswers("id")
       val section = new AdditionalInfoSection(applicantSection, partnerSection, childSection, paymentSection)
 
-      section.continue(answers).value mustEqual AdditionalInformationPage
+      section.continue(answers).value mustEqual IncludeAdditionalInformationPage
     }
   }
 
   ".progress" - {
 
-    "must be Not Started if Additional Information has not been answered" in {
+    "must be Not Started if Include Additional Information has not been answered" in {
 
       val answers = UserAnswers("id")
       val section = new AdditionalInfoSection(applicantSection, partnerSection, childSection, paymentSection)
@@ -67,9 +66,29 @@ class AdditionalInfoSectionSpec
       section.progress(answers) mustEqual NotStarted
     }
 
-    "must be Completed if Additional Information has been answered" in {
+    "must be in progress if Include Additional Information has been answered as true but Additional Information has not been answered" in {
 
-      val answers = UserAnswers("id").set(AdditionalInformationPage, NoInformation).success.value
+      val answers = UserAnswers("id").set(IncludeAdditionalInformationPage, true).success.value
+      val section = new AdditionalInfoSection(applicantSection, partnerSection, childSection, paymentSection)
+
+      section.progress(answers) mustEqual InProgress
+    }
+
+    "must be Completed if Include Additional Information has been answered as false" in {
+
+      val answers = UserAnswers("id").set(IncludeAdditionalInformationPage, false).success.value
+      val section = new AdditionalInfoSection(applicantSection, partnerSection, childSection, paymentSection)
+
+      section.progress(answers) mustEqual Completed
+    }
+
+    "must be Completed if Include Additional Information has been answered as true and Additional Information has been answered" in {
+
+      val answers =
+        UserAnswers("id")
+          .set(IncludeAdditionalInformationPage, true).success.value
+          .set(AdditionalInformationPage, "foo").success.value
+
       val section = new AdditionalInfoSection(applicantSection, partnerSection, childSection, paymentSection)
 
       section.progress(answers) mustEqual Completed

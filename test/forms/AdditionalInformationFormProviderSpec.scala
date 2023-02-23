@@ -17,7 +17,6 @@
 package forms
 
 import forms.behaviours.StringFieldBehaviours
-import models.AdditionalInformation.{Information, NoInformation}
 import play.api.data.FormError
 
 class AdditionalInformationFormProviderSpec extends StringFieldBehaviours {
@@ -29,18 +28,12 @@ class AdditionalInformationFormProviderSpec extends StringFieldBehaviours {
 
   val fieldName = "value"
 
-  "must bind when an empty string is submitted" in {
-
-    val result = form.bind(Map(fieldName -> ""))
-    result.value.value mustEqual NoInformation
-  }
-
   "must bind strings up to 1000 characters" in {
 
     forAll(stringsWithMaxLength(1000).map(_.trim)) {
       str =>
         val result = form.bind(Map(fieldName -> str))
-        result.value.value mustEqual Information(str)
+        result.value.value mustEqual str
     }
   }
 
