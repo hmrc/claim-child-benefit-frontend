@@ -1,0 +1,110 @@
+@import views.xml.xml.sections._
+
+@this(
+    mainHeader: MainHeader,
+    mainFooter: MainFooter
+)
+
+@(model: JourneyModel)(implicit messages: Messages)
+
+<fo:page-sequence master-reference="documents">
+
+    @mainHeader()
+
+    @mainFooter()
+
+    <fo:flow flow-name="xsl-region-body" font-size="12pt" text-align="left">
+        <fo:block role="H2" id="documents" margin-bottom="1cm" font-weight="bold" font-size="18pt">@messages("pdf.declaration")</fo:block>
+        <fo:block font-weight="bold" font-size="14pt" margin-bottom="0.5cm">@messages("pdf.documents.title")</fo:block>
+
+        @if(model.allRequiredDocuments.size == 1) {
+            <fo:block margin-bottom="1cm">
+                @messages(
+                    "pdf.documents.single",
+                    model.allRequiredDocuments.head.childName.firstName,
+                    messages(s"pdf.documents.single.${model.allRequiredDocuments.head.documentType.toString}")
+                )
+            </fo:block>
+        } else {
+            <fo:block margin-bottom="2mm">@messages("pdf.documents.multiple")</fo:block>
+            @model.allRequiredDocuments.map { requiredDoc =>
+                <fo:block margin-bottom="1mm">
+                    @messages(s"pdf.documents.multiple.${requiredDoc.documentType.toString}", requiredDoc.childName.firstName)
+                </fo:block>
+            }
+        }
+
+        <fo:block margin-top="8mm" />
+
+        <fo:block margin-bottom="2mm">@messages("pdf.documents.p1")</fo:block>
+        <fo:block margin-bottom="2mm">@messages("pdf.documents.p2")</fo:block>
+        <fo:block margin-bottom="2mm">@messages("pdf.documents.p3")</fo:block>
+
+        <fo:table width="100%" table-layout="fixed" role="artifact" margin-top="1cm" border-collapse="separate" border-separation="3mm">
+            <fo:table-column column-number="1" column-width="5cm" />
+            <fo:table-column column-number="2" column-width="3cm" />
+            <fo:table-column column-number="3" column-width="8cm" />
+
+            <fo:table-body>
+                <fo:table-row height="8mm">
+                    <fo:table-cell padding-top="2mm">
+                        <fo:block>@messages("pdf.documents.birthCertificates")</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="0.4mm solid black">
+                        <fo:block/>
+                    </fo:table-cell>
+                    <fo:table-cell>
+                        <fo:block />
+                    </fo:table-cell>
+                </fo:table-row>
+
+                <fo:table-row height="8mm">
+                    <fo:table-cell padding-top="2mm">
+                        <fo:block>@messages("pdf.documents.adoptionCertificates")</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="0.4mm solid black">
+                        <fo:block/>
+                    </fo:table-cell>
+                    <fo:table-cell>
+                        <fo:block />
+                    </fo:table-cell>
+                </fo:table-row>
+
+                <fo:table-row height="8mm">
+                    <fo:table-cell padding-top="2mm">
+                        <fo:block>@messages("pdf.documents.passports")</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="0.4mm solid black">
+                        <fo:block/>
+                    </fo:table-cell>
+                    <fo:table-cell>
+                        <fo:block />
+                    </fo:table-cell>
+                </fo:table-row>
+
+                <fo:table-row height="8mm">
+                    <fo:table-cell padding-top="2mm">
+                        <fo:block>@messages("pdf.documents.travelDocuments")</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="0.4mm solid black">
+                        <fo:block/>
+                    </fo:table-cell>
+                    <fo:table-cell>
+                        <fo:block />
+                    </fo:table-cell>
+                </fo:table-row>
+
+                <fo:table-row height="2cm">
+                    <fo:table-cell padding-top="2mm">
+                        <fo:block>@messages("pdf.documents.other")</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="0.4mm solid black" number-columns-spanned="2">
+                        <fo:block/>
+                    </fo:table-cell>
+                </fo:table-row>
+            </fo:table-body>
+        </fo:table>
+
+    </fo:flow>
+
+</fo:page-sequence>

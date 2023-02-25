@@ -10,7 +10,8 @@
     declaration: Declaration,
     instructions: Instructions,
     addressLabel: AddressLabel,
-    additionalInfoPage: AdditionalInfoPage
+    additionalInfoPage: AdditionalInfoPage,
+    documents: Documents
 )
 
 @(model: JourneyModel)(implicit messages: Messages)
@@ -43,6 +44,10 @@
     @model.additionalInformation.map { info =>
         @additionalInfoPage(info)
     }
+
+    @{if(model.anyDocumentsRequired) {
+        documents(model)
+    }}
 
     @declaration(model)
 
