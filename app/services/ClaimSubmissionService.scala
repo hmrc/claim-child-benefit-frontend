@@ -19,7 +19,7 @@ package services
 import config.FeatureFlags
 import connectors.ClaimChildBenefitConnector
 import models.requests.DataRequest
-import models.{JourneyModel, JourneyModelProvider}
+import models.{Done, JourneyModel, JourneyModelProvider}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.RequestOps._
 
@@ -58,4 +58,7 @@ class ClaimSubmissionService @Inject()(
     } else {
       Future.successful(false)
     }
+
+  def submit(request: DataRequest[_])(implicit ec: ExecutionContext): Future[Done] =
+    ???
 }

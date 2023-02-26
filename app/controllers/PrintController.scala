@@ -47,8 +47,7 @@ class PrintController @Inject()(
                                  featureFlags: FeatureFlags,
                                  journeyModelProvider: JourneyModelProvider
                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
-
-
+  
   private val userAgentBlock: FOUserAgent => Unit = { foUserAgent: FOUserAgent =>
     foUserAgent.setAccessibility(true)
     foUserAgent.setPdfUAEnabled(true)

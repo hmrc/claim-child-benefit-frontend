@@ -47,6 +47,8 @@ POST        /relationship-status-change              controllers.partner.Relatio
 GET         /receiving-child-benefit-change              controllers.applicant.CurrentlyReceivingChangesTaskListController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST        /receiving-child-benefit-change              controllers.applicant.CurrentlyReceivingChangesTaskListController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
+GET         /submit-claim                               controllers.ClaimSubmissionController.submit
+
 GET         /claim-submitted                            controllers.SubmittedController.onPageLoad
 
 # Initial section
