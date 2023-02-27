@@ -26,6 +26,11 @@
                     <fo:bookmark-title>@messages("pdf.additionalInformation")</fo:bookmark-title>
                 </fo:bookmark>
             }
+            @if(model.anyDocumentsRequired) {
+                <fo:bookmark internal-destination="documents">
+                    <fo:bookmark-title>@messages("pdf.documents")</fo:bookmark-title>
+                </fo:bookmark>
+            }
             <fo:bookmark internal-destination="declaration">
                 <fo:bookmark-title>@messages("pdf.declaration")</fo:bookmark-title>
             </fo:bookmark>
