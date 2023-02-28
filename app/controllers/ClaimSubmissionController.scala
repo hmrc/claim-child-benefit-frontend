@@ -17,6 +17,7 @@
 package controllers
 
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import logging.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.ClaimSubmissionService
@@ -31,16 +32,19 @@ class ClaimSubmissionController @Inject()(
                                            getData: DataRetrievalAction,
                                            requireData: DataRequiredAction,
                                            claimSubmissionService: ClaimSubmissionService
-                                         )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                         )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   def submit: Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
       claimSubmissionService.canSubmit(request).flatMap {
         case true =>
-          claimSubmissionService.submit(request).map {
-            _ =>
+          claimSubmissionService.submit(request).map { _ =>
               Redirect(routes.SubmittedController.onPageLoad)
+          }.recover {
+            case e: Exception =>
+              logger.warn("Submission to CBS failed: " + e.getMessage)
+              Redirect(routes.PrintController.onPageLoad)
           }
 
         case false =>
