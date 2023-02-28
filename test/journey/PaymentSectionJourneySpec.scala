@@ -95,16 +95,14 @@ class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
 
       "who do not receive qualifying benefits" - {
 
-        "who are currently claiming Child Benefit" - {
+        "who are currently getting paid child benefit" - {
 
           "must not be asked how often they want to be paid, and be asked if they want to be paid to their existing account" in {
-
-            val currentlyReceiving = Gen.oneOf(GettingPayments, NotGettingPayments).sample.value
 
             startingFrom(ApplicantOrPartnerIncomePage)
               .run(
                 setUserAnswerTo(RelationshipStatusPage, relationship),
-                setUserAnswerTo(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
+                setUserAnswerTo(CurrentlyReceivingChildBenefitPage, GettingPayments),
                 submitAnswer(ApplicantOrPartnerIncomePage, income),
                 submitAnswer(WantToBePaidPage, true),
                 submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
@@ -113,6 +111,22 @@ class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
                 pageMustBe(CheckPaymentDetailsPage),
                 next,
                 pageMustBe(TaskListPage)
+              )
+          }
+        }
+
+        "who are claiming Child Benefit but not getting paid" - {
+
+          "must not be asked how often they want to be paid, and be asked if they have a suitable bank account" in {
+
+            startingFrom(ApplicantOrPartnerIncomePage)
+              .run(
+                setUserAnswerTo(RelationshipStatusPage, relationship),
+                setUserAnswerTo(CurrentlyReceivingChildBenefitPage, NotGettingPayments),
+                submitAnswer(ApplicantOrPartnerIncomePage, income),
+                submitAnswer(WantToBePaidPage, true),
+                submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
+                pageMustBe(ApplicantHasSuitableAccountPage)
               )
           }
         }

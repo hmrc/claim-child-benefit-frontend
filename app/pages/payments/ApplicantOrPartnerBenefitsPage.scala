@@ -17,7 +17,7 @@
 package pages.payments
 
 import controllers.payments.routes
-import models.CurrentlyReceivingChildBenefit.NotClaiming
+import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming}
 import models.PaymentFrequency.{EveryFourWeeks, Weekly}
 import models.{Benefits, UserAnswers}
 import pages.applicant.CurrentlyReceivingChildBenefitPage
@@ -43,8 +43,8 @@ case object ApplicantOrPartnerBenefitsPage extends QuestionPage[Set[Benefits]] {
 
       case _ =>
         answers.get(CurrentlyReceivingChildBenefitPage).map {
-          case NotClaiming => ApplicantHasSuitableAccountPage
-          case _           => WantToBePaidToExistingAccountPage
+          case GettingPayments => WantToBePaidToExistingAccountPage
+          case _ => ApplicantHasSuitableAccountPage
         }.orRecover
     }.orRecover
 
