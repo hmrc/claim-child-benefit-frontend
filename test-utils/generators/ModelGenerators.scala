@@ -24,7 +24,16 @@ import uk.gov.hmrc.domain.Nino
 import java.time.LocalDate
 
 trait ModelGenerators {
-  
+
+  def ukPostcode: Gen[String] =
+    for {
+      firstChars <- Gen.choose(1, 2)
+      first <- Gen.listOfN(firstChars, Gen.alphaUpperChar).map(_.mkString)
+      second <- Gen.numChar.map(_.toString)
+      third <- Gen.oneOf(Gen.alphaUpperChar, Gen.numChar).map(_.toString)
+      fourth <- Gen.numChar.map(_.toString)
+      fifth <- Gen.listOfN(2, Gen.alphaUpperChar).map(_.mkString)
+    } yield s"$first$second$third$fourth$fifth"
 
   def genUkCtaNationality: Gen[Nationality] =
     Gen.oneOf(Nationality.allNationalities.filter(_.group == NationalityGroup.UkCta))
@@ -129,7 +138,7 @@ trait ModelGenerators {
         line2    <- Gen.option(Gen.listOfN(35, Gen.alphaChar).map(_.mkString))
         town     <- Gen.listOfN(35, Gen.alphaChar).map(_.mkString)
         county   <- Gen.option(Gen.listOfN(35, Gen.alphaChar).map(_.mkString))
-        postcode <- Gen.listOfN(8, Gen.alphaChar).map(_.mkString)
+        postcode <- ukPostcode
       } yield UkAddress(line1, line2, town, county, postcode)
     }
 

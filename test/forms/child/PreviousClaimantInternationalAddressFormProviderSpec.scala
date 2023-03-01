@@ -39,14 +39,14 @@ class PreviousClaimantInternationalAddressFormProviderSpec extends StringFieldBe
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      safeInputWithMaxLength(maxLength)
+      safeAddressInputsWithMaxLength(maxLength)
     )
 
     behave like fieldThatDoesNotBindInvalidData(
       form,
       fieldName,
       unsafeInputsWithMaxLength(maxLength),
-      FormError(fieldName, invalidKey, Seq(Validation.safeInputPattern.toString, name.firstName))
+      FormError(fieldName, invalidKey, Seq(Validation.addressInputPattern.toString, name.firstName))
     )
 
     behave like fieldWithMaxLength(
@@ -73,14 +73,14 @@ class PreviousClaimantInternationalAddressFormProviderSpec extends StringFieldBe
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      safeInputWithMaxLength(maxLength)
+      safeAddressInputsWithMaxLength(maxLength)
     )
 
     behave like fieldThatDoesNotBindInvalidData(
       form,
       fieldName,
       unsafeInputsWithMaxLength(maxLength),
-      FormError(fieldName, invalidKey, Seq(Validation.safeInputPattern.toString, name.firstName))
+      FormError(fieldName, invalidKey, Seq(Validation.addressInputPattern.toString, name.firstName))
     )
 
     behave like fieldWithMaxLength(
@@ -102,14 +102,14 @@ class PreviousClaimantInternationalAddressFormProviderSpec extends StringFieldBe
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      safeInputWithMaxLength(maxLength)
+      safeAddressInputsWithMaxLength(maxLength)
     )
 
     behave like fieldThatDoesNotBindInvalidData(
       form,
       fieldName,
       unsafeInputsWithMaxLength(maxLength),
-      FormError(fieldName, invalidKey, Seq(Validation.safeInputPattern.toString, name.firstName))
+      FormError(fieldName, invalidKey, Seq(Validation.addressInputPattern.toString, name.firstName))
     )
 
     behave like fieldWithMaxLength(
@@ -136,14 +136,14 @@ class PreviousClaimantInternationalAddressFormProviderSpec extends StringFieldBe
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      safeInputWithMaxLength(maxLength)
+      safeAddressInputsWithMaxLength(maxLength)
     )
 
     behave like fieldThatDoesNotBindInvalidData(
       form,
       fieldName,
       unsafeInputsWithMaxLength(maxLength),
-      FormError(fieldName, invalidKey, Seq(Validation.safeInputPattern.toString, name.firstName))
+      FormError(fieldName, invalidKey, Seq(Validation.addressInputPattern.toString, name.firstName))
     )
 
     behave like fieldWithMaxLength(
@@ -164,14 +164,14 @@ class PreviousClaimantInternationalAddressFormProviderSpec extends StringFieldBe
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      safeInputWithMaxLength(maxLength)
+      safeAddressInputsWithMaxLength(maxLength)
     )
 
     behave like fieldThatDoesNotBindInvalidData(
       form,
       fieldName,
       unsafeInputsWithMaxLength(maxLength),
-      FormError(fieldName, invalidKey, Seq(Validation.safeInputPattern.toString, name.firstName))
+      FormError(fieldName, invalidKey, Seq(Validation.addressInputPattern.toString, name.firstName))
     )
 
     behave like fieldWithMaxLength(

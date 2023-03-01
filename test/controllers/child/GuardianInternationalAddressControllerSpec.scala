@@ -45,7 +45,7 @@ class GuardianInternationalAddressControllerSpec extends SpecBase with MockitoSu
   lazy val guardianInternationalAddressRoute = routes.GuardianInternationalAddressController.onPageLoad(waypoints, index).url
 
   private val country     = Country.internationalCountries.head
-  private val validAnswer = InternationalAddress("line 1", None, "town", None, Some("postcode"), country)
+  private val validAnswer = InternationalAddress("line 1", None, "town", None, Some("AA11 1AA"), country)
   private val userAnswers = baseAnswers.set(GuardianInternationalAddressPage(index), validAnswer).success.value
 
   "GuardianInternationalAddress Controller" - {
@@ -98,7 +98,7 @@ class GuardianInternationalAddressControllerSpec extends SpecBase with MockitoSu
       running(application) {
         val request =
           FakeRequest(POST, guardianInternationalAddressRoute)
-            .withFormUrlEncodedBody(("line1", "line 1"), ("town" -> "town"), ("postcode", "postcode"), ("country", country.code))
+            .withFormUrlEncodedBody(("line1", "line 1"), ("town" -> "town"), ("postcode", "AA11 1AA"), ("country", country.code))
 
         val result = route(application, request).value
         val expectedAnswers = baseAnswers.set(child.GuardianInternationalAddressPage(index), validAnswer).success.value
@@ -150,7 +150,7 @@ class GuardianInternationalAddressControllerSpec extends SpecBase with MockitoSu
       running(application) {
         val request =
           FakeRequest(POST, guardianInternationalAddressRoute)
-            .withFormUrlEncodedBody(("line1", "line 1"), ("town" -> "town"), ("postcode", "postcode"), ("country", country.code))
+            .withFormUrlEncodedBody(("line1", "line 1"), ("town" -> "town"), ("postcode", "AA11 1AA"), ("country", country.code))
 
         val result = route(application, request).value
 

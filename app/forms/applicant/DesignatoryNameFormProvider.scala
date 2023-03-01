@@ -31,22 +31,22 @@ class DesignatoryNameFormProvider @Inject() extends Mappings {
       "title" -> optional(text("designatoryName.error.title.required")
         .verifying(firstError(
           maxLength(35, "designatoryName.error.title.length"),
-          regexp(Validation.safeInputPattern, "designatoryName.error.title.invalid")
+          regexp(Validation.nameInputPattern, "designatoryName.error.title.invalid")
         ))),
       "firstName" -> text("designatoryName.error.firstName.required")
         .verifying(firstError(
           maxLength(35, "designatoryName.error.firstName.length"),
-          regexp(Validation.safeInputPattern, "designatoryName.error.firstName.invalid")
+          regexp(Validation.nameInputPattern, "designatoryName.error.firstName.invalid")
         )),
       "middleNames" -> optional(text("designatoryName.error.middleNames.required")
         .verifying(firstError(
           maxLength(35, "designatoryName.error.middleNames.length"),
-          regexp(Validation.safeInputPattern, "designatoryName.error.middleNames.invalid")
+          regexp(Validation.nameInputPattern, "designatoryName.error.middleNames.invalid")
         ))),
       "lastName" -> text("designatoryName.error.lastName.required")
         .verifying(firstError(
           maxLength(35, "designatoryName.error.lastName.length"),
-          regexp(Validation.safeInputPattern, "designatoryName.error.lastName.invalid")
+          regexp(Validation.nameInputPattern, "designatoryName.error.lastName.invalid")
         ))
     )(AdultName.apply)(AdultName.unapply)
   )

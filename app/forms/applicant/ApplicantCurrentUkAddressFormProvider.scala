@@ -31,27 +31,27 @@ class ApplicantCurrentUkAddressFormProvider @Inject() extends Mappings {
       "line1" -> text("applicantCurrentUkAddress.error.line1.required")
         .verifying(firstError(
           maxLength(35, "applicantCurrentUkAddress.error.line1.length"),
-          regexp(Validation.safeInputPattern, "applicantCurrentUkAddress.error.line1.invalid")
+          regexp(Validation.addressInputPattern, "applicantCurrentUkAddress.error.line1.invalid")
         )),
       "line2" -> optional(text("applicantCurrentUkAddress.error.line2.required")
         .verifying(firstError(
           maxLength(35, "applicantCurrentUkAddress.error.line2.length"),
-          regexp(Validation.safeInputPattern, "applicantCurrentUkAddress.error.line2.invalid")
+          regexp(Validation.addressInputPattern, "applicantCurrentUkAddress.error.line2.invalid")
         ))),
       "town" -> text("applicantCurrentUkAddress.error.town.required")
         .verifying(firstError(
           maxLength(35, "applicantCurrentUkAddress.error.town.length"),
-          regexp(Validation.safeInputPattern, "applicantCurrentUkAddress.error.town.invalid")
+          regexp(Validation.addressInputPattern, "applicantCurrentUkAddress.error.town.invalid")
         )),
       "county" -> optional(text("applicantCurrentUkAddress.error.county.required")
         .verifying(firstError(
           maxLength(35, "applicantCurrentUkAddress.error.county.length"),
-          regexp(Validation.safeInputPattern, "applicantCurrentUkAddress.error.county.invalid")
+          regexp(Validation.addressInputPattern, "applicantCurrentUkAddress.error.county.invalid")
         ))),
       "postcode" -> text("applicantCurrentUkAddress.error.postcode.required")
         .verifying(firstError(
           maxLength(8, "applicantCurrentUkAddress.error.postcode.length"),
-          regexp(Validation.safeInputPattern, "applicantCurrentUkAddress.error.postcode.invalid")
+          regexp(Validation.ukPostcodePattern, "applicantCurrentUkAddress.error.postcode.invalid")
         ))
     )(UkAddress.apply)(UkAddress.unapply)
   )

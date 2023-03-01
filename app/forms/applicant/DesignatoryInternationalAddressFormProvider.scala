@@ -31,27 +31,27 @@ class DesignatoryInternationalAddressFormProvider @Inject() extends Mappings {
       "line1" -> text("designatoryInternationalAddress.error.line1.required")
         .verifying(firstError(
           maxLength(35, "designatoryInternationalAddress.error.line1.length"),
-          regexp(Validation.safeInputPattern, "designatoryInternationalAddress.error.line1.invalid")
+          regexp(Validation.addressInputPattern, "designatoryInternationalAddress.error.line1.invalid")
         )),
       "line2" -> optional(text("designatoryInternationalAddress.error.line2.required")
         .verifying(firstError(
           maxLength(35, "designatoryInternationalAddress.error.line2.length"),
-          regexp(Validation.safeInputPattern, "designatoryInternationalAddress.error.line2.invalid")
+          regexp(Validation.addressInputPattern, "designatoryInternationalAddress.error.line2.invalid")
         ))),
       "town" -> text("designatoryInternationalAddress.error.town.required")
         .verifying(firstError(
           maxLength(35, "designatoryInternationalAddress.error.town.length"),
-          regexp(Validation.safeInputPattern, "designatoryInternationalAddress.error.town.invalid")
+          regexp(Validation.addressInputPattern, "designatoryInternationalAddress.error.town.invalid")
         )),
       "state" -> optional(text("designatoryInternationalAddress.error.state.required")
         .verifying(firstError(
           maxLength(35, "designatoryInternationalAddress.error.state.length"),
-          regexp(Validation.safeInputPattern, "designatoryInternationalAddress.error.state.invalid")
+          regexp(Validation.addressInputPattern, "designatoryInternationalAddress.error.state.invalid")
         ))),
       "postcode" -> optional(text("designatoryInternationalAddress.error.postcode.required")
         .verifying(firstError(
           maxLength(8, "designatoryInternationalAddress.error.postcode.length"),
-          regexp(Validation.safeInputPattern, "designatoryInternationalAddress.error.postcode.invalid")
+          regexp(Validation.addressInputPattern, "designatoryInternationalAddress.error.postcode.invalid")
         ))),
       "country" -> text("designatoryInternationalAddress.error.country.required")
         .verifying("designatoryInternationalAddress.error.country.required", value => Country.internationalCountries.exists(_.code == value))

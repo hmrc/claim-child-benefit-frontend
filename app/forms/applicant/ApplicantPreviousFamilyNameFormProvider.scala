@@ -30,7 +30,7 @@ class ApplicantPreviousFamilyNameFormProvider @Inject() extends Mappings {
       "value" -> text("applicantPreviousFamilyName.error.required")
         .verifying(firstError(
           maxLength(35, "applicantPreviousFamilyName.error.length"),
-          regexp(Validation.safeInputPattern, "applicantPreviousFamilyName.error.invalid")
+          regexp(Validation.nameInputPattern, "applicantPreviousFamilyName.error.invalid")
         ))
         .transform[ApplicantPreviousName](ApplicantPreviousName.apply, x => x.lastName)
     )

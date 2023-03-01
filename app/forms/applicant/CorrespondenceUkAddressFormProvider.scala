@@ -31,27 +31,27 @@ class CorrespondenceUkAddressFormProvider @Inject() extends Mappings {
       "line1" -> text("correspondenceUkAddress.error.line1.required")
         .verifying(firstError(
           maxLength(35, "correspondenceUkAddress.error.line1.length"),
-          regexp(Validation.safeInputPattern, "correspondenceUkAddress.error.line1.invalid")
+          regexp(Validation.addressInputPattern, "correspondenceUkAddress.error.line1.invalid")
         )),
       "line2" -> optional(text("correspondenceUkAddress.error.line2.required")
         .verifying(firstError(
           maxLength(35, "correspondenceUkAddress.error.line2.length"),
-          regexp(Validation.safeInputPattern, "correspondenceUkAddress.error.line2.invalid")
+          regexp(Validation.addressInputPattern, "correspondenceUkAddress.error.line2.invalid")
         ))),
       "town" -> text("correspondenceUkAddress.error.town.required")
         .verifying(firstError(
           maxLength(35, "correspondenceUkAddress.error.town.length"),
-          regexp(Validation.safeInputPattern, "correspondenceUkAddress.error.town.invalid")
+          regexp(Validation.addressInputPattern, "correspondenceUkAddress.error.town.invalid")
         )),
       "county" -> optional(text("correspondenceUkAddress.error.county.required")
         .verifying(firstError(
           maxLength(35, "correspondenceUkAddress.error.county.length"),
-          regexp(Validation.safeInputPattern, "correspondenceUkAddress.error.county.invalid")
+          regexp(Validation.addressInputPattern, "correspondenceUkAddress.error.county.invalid")
         ))),
       "postcode" -> text("correspondenceUkAddress.error.postcode.required")
         .verifying(firstError(
           maxLength(8, "correspondenceUkAddress.error.postcode.length"),
-          regexp(Validation.safeInputPattern, "correspondenceUkAddress.error.postcode.invalid")
+          regexp(Validation.ukPostcodePattern, "correspondenceUkAddress.error.postcode.invalid")
         ))
     )(UkAddress.apply)(UkAddress.unapply)
   )

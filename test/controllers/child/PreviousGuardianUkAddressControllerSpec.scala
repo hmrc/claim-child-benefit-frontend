@@ -44,7 +44,7 @@ class PreviousGuardianUkAddressControllerSpec extends SpecBase with MockitoSugar
 
   lazy val previousGuardianUkAddressRoute = routes.PreviousGuardianUkAddressController.onPageLoad(waypoints, index).url
 
-  private val validAnswer = UkAddress("line 1", None, "town", None, "postcode")
+  private val validAnswer = UkAddress("line 1", None, "town", None, "AA11 1AA")
   private val userAnswers = baseAnswers.set(PreviousGuardianUkAddressPage(index), validAnswer).success.value
 
   "PreviousGuardianUkAddress Controller" - {
@@ -97,7 +97,7 @@ class PreviousGuardianUkAddressControllerSpec extends SpecBase with MockitoSugar
       running(application) {
         val request =
           FakeRequest(POST, previousGuardianUkAddressRoute)
-            .withFormUrlEncodedBody(("line1", "line 1"), ("town" -> "town"), ("postcode", "postcode"))
+            .withFormUrlEncodedBody(("line1", "line 1"), ("town" -> "town"), ("postcode", "AA11 1AA"))
 
         val result = route(application, request).value
         val expectedAnswers = baseAnswers.set(child.PreviousGuardianUkAddressPage(index), validAnswer).success.value
@@ -149,7 +149,7 @@ class PreviousGuardianUkAddressControllerSpec extends SpecBase with MockitoSugar
       running(application) {
         val request =
           FakeRequest(POST, previousGuardianUkAddressRoute)
-            .withFormUrlEncodedBody(("line1", "line 1"), ("town" -> "town"), ("postcode", "postcode"))
+            .withFormUrlEncodedBody(("line1", "line 1"), ("town" -> "town"), ("postcode", "AA11 1AA"))
 
         val result = route(application, request).value
 

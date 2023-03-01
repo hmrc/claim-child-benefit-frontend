@@ -37,14 +37,14 @@ class PreviousClaimantNameFormProviderSpec extends StringFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      safeInputWithMaxLength(maxLength)
+      safeNameInputsWithMaxLength(maxLength)
     )
 
     behave like fieldThatDoesNotBindInvalidData(
       form,
       fieldName,
       unsafeInputsWithMaxLength(maxLength),
-      FormError(fieldName, invalidKey, Seq(Validation.safeInputPattern.toString, name.firstName))
+      FormError(fieldName, invalidKey, Seq(Validation.nameInputPattern.toString, name.firstName))
     )
 
     behave like fieldWithMaxLength(
@@ -71,14 +71,14 @@ class PreviousClaimantNameFormProviderSpec extends StringFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      safeInputWithMaxLength(maxLength)
+      safeNameInputsWithMaxLength(maxLength)
     )
 
     behave like fieldThatDoesNotBindInvalidData(
       form,
       fieldName,
       unsafeInputsWithMaxLength(maxLength),
-      FormError(fieldName, invalidKey, Seq(Validation.safeInputPattern.toString, name.firstName))
+      FormError(fieldName, invalidKey, Seq(Validation.nameInputPattern.toString, name.firstName))
     )
 
     behave like fieldWithMaxLength(
@@ -100,14 +100,14 @@ class PreviousClaimantNameFormProviderSpec extends StringFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      safeInputWithMaxLength(maxLength)
+      safeNameInputsWithMaxLength(maxLength)
     )
 
     behave like fieldThatDoesNotBindInvalidData(
       form,
       fieldName,
       unsafeInputsWithMaxLength(maxLength),
-      FormError(fieldName, invalidKey, Seq(Validation.safeInputPattern.toString, name.firstName))
+      FormError(fieldName, invalidKey, Seq(Validation.nameInputPattern.toString, name.firstName))
     )
 
     behave like fieldWithMaxLength(

@@ -34,14 +34,14 @@ class ApplicantNameFormProviderSpec extends StringFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      safeInputWithMaxLength(maxLength)
+      safeNameInputsWithMaxLength(maxLength)
     )
 
     behave like fieldThatDoesNotBindInvalidData(
       form,
       fieldName,
       unsafeInputsWithMaxLength(maxLength),
-      FormError(fieldName, invalidKey, Seq(Validation.safeInputPattern.toString))
+      FormError(fieldName, invalidKey, Seq(Validation.nameInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(
@@ -63,14 +63,14 @@ class ApplicantNameFormProviderSpec extends StringFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      safeInputWithMaxLength(maxLength)
+      safeNameInputsWithMaxLength(maxLength)
     )
 
     behave like fieldThatDoesNotBindInvalidData(
       form,
       fieldName,
       unsafeInputsWithMaxLength(maxLength),
-      FormError(fieldName, invalidKey, Seq(Validation.safeInputPattern.toString))
+      FormError(fieldName, invalidKey, Seq(Validation.nameInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(
@@ -97,14 +97,14 @@ class ApplicantNameFormProviderSpec extends StringFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      safeInputWithMaxLength(maxLength)
+      safeNameInputsWithMaxLength(maxLength)
     )
 
     behave like fieldThatDoesNotBindInvalidData(
       form,
       fieldName,
       unsafeInputsWithMaxLength(maxLength),
-      FormError(fieldName, invalidKey, Seq(Validation.safeInputPattern.toString))
+      FormError(fieldName, invalidKey, Seq(Validation.nameInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(
@@ -126,14 +126,14 @@ class ApplicantNameFormProviderSpec extends StringFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      safeInputWithMaxLength(maxLength)
+      safeNameInputsWithMaxLength(maxLength)
     )
 
     behave like fieldThatDoesNotBindInvalidData(
       form,
       fieldName,
       unsafeInputsWithMaxLength(maxLength),
-      FormError(fieldName, invalidKey, Seq(Validation.safeInputPattern.toString))
+      FormError(fieldName, invalidKey, Seq(Validation.nameInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(

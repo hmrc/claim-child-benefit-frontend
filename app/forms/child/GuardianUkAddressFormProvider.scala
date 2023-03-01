@@ -31,27 +31,27 @@ class GuardianUkAddressFormProvider @Inject() extends Mappings {
       "line1" -> text("guardianUkAddress.error.line1.required", args = Seq(guardian.firstName))
         .verifying(firstError(
           maxLength(35, "guardianUkAddress.error.line1.length", guardian.firstName),
-          regexp(Validation.safeInputPattern, "guardianUkAddress.error.line1.invalid", guardian.firstName)
+          regexp(Validation.addressInputPattern, "guardianUkAddress.error.line1.invalid", guardian.firstName)
         )),
       "line2" -> optional(text("guardianUkAddress.error.line2.required", args = Seq(guardian.firstName))
         .verifying(firstError(
           maxLength(35, "guardianUkAddress.error.line2.length", guardian.firstName),
-          regexp(Validation.safeInputPattern, "guardianUkAddress.error.line2.invalid", guardian.firstName)
+          regexp(Validation.addressInputPattern, "guardianUkAddress.error.line2.invalid", guardian.firstName)
         ))),
       "town" -> text("guardianUkAddress.error.town.required", args = Seq(guardian.firstName))
         .verifying(firstError(
           maxLength(35, "guardianUkAddress.error.town.length", guardian.firstName),
-          regexp(Validation.safeInputPattern, "guardianUkAddress.error.town.invalid", guardian.firstName)
+          regexp(Validation.addressInputPattern, "guardianUkAddress.error.town.invalid", guardian.firstName)
         )),
       "county" -> optional(text("guardianUkAddress.error.county.required", args = Seq(guardian.firstName))
         .verifying(firstError(
           maxLength(35, "guardianUkAddress.error.county.length", guardian.firstName),
-          regexp(Validation.safeInputPattern, "guardianUkAddress.error.county.invalid", guardian.firstName)
+          regexp(Validation.addressInputPattern, "guardianUkAddress.error.county.invalid", guardian.firstName)
         ))),
       "postcode" -> text("guardianUkAddress.error.postcode.required", args = Seq(guardian.firstName))
         .verifying(firstError(
           maxLength(8, "guardianUkAddress.error.postcode.length", guardian.firstName),
-          regexp(Validation.safeInputPattern, "guardianUkAddress.error.postcode.invalid", guardian.firstName)
+          regexp(Validation.ukPostcodePattern, "guardianUkAddress.error.postcode.invalid", guardian.firstName)
         ))
     )(UkAddress.apply)(UkAddress.unapply)
   )

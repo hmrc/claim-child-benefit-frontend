@@ -31,22 +31,22 @@ class ApplicantNameFormProvider @Inject() extends Mappings {
        "title" -> optional(text("applicantName.error.title.required")
          .verifying(firstError(
            maxLength(35, "applicantName.error.title.length"),
-           regexp(Validation.safeInputPattern, "applicantName.error.title.invalid")
+           regexp(Validation.nameInputPattern, "applicantName.error.title.invalid")
          ))),
        "firstName" -> text("applicantName.error.firstName.required")
          .verifying(firstError(
            maxLength(35, "applicantName.error.firstName.length"),
-           regexp(Validation.safeInputPattern, "applicantName.error.firstName.invalid")
+           regexp(Validation.nameInputPattern, "applicantName.error.firstName.invalid")
          )),
        "middleNames" -> optional(text("applicantName.error.middleNames.required")
          .verifying(firstError(
            maxLength(35, "applicantName.error.middleNames.length"),
-           regexp(Validation.safeInputPattern, "applicantName.error.middleNames.invalid")
+           regexp(Validation.nameInputPattern, "applicantName.error.middleNames.invalid")
          ))),
        "lastName" -> text("applicantName.error.lastName.required")
          .verifying(firstError(
            maxLength(35, "applicantName.error.lastName.length"),
-           regexp(Validation.safeInputPattern, "applicantName.error.lastName.invalid")
+           regexp(Validation.nameInputPattern, "applicantName.error.lastName.invalid")
          ))
     )(AdultName.apply)(AdultName.unapply)
    )

@@ -44,7 +44,7 @@ class GuardianNameControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val guardianNameRoute = routes.GuardianNameController.onPageLoad(waypoints, index).url
 
-  private val validAnswer = AdultName(None, "value 1", None, "value 2")
+  private val validAnswer = AdultName(None, "first", None, "last")
   private val userAnswers = baseAnswers.set(GuardianNamePage(index), validAnswer).success.value
 
   "GuardianName Controller" - {
@@ -97,7 +97,7 @@ class GuardianNameControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, guardianNameRoute)
-            .withFormUrlEncodedBody(("firstName", "value 1"), ("lastName", "value 2"))
+            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"))
 
         val result = route(application, request).value
         val expectedAnswers = baseAnswers.set(child.GuardianNamePage(index), validAnswer).success.value
@@ -149,7 +149,7 @@ class GuardianNameControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, guardianNameRoute)
-            .withFormUrlEncodedBody(("firstName", "value 1"), ("lastName", "value 2"))
+            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"))
 
         val result = route(application, request).value
 

@@ -41,7 +41,7 @@ class PartnerNameControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val partnerNameRoute = routes.PartnerNameController.onPageLoad(waypoints).url
 
-  private val validAnswer = AdultName(None, "value 1", None, "value 2")
+  private val validAnswer = AdultName(None, "first", None, "last")
   private val userAnswers = emptyUserAnswers.set(PartnerNamePage, validAnswer).success.value
 
   "PartnerName Controller" - {
@@ -94,7 +94,7 @@ class PartnerNameControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, partnerNameRoute)
-            .withFormUrlEncodedBody(("firstName", "value 1"), ("lastName", "value 2"))
+            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"))
 
         val result = route(application, request).value
         val expectedAnswers = emptyUserAnswers.set(PartnerNamePage, validAnswer).success.value
@@ -146,7 +146,7 @@ class PartnerNameControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, partnerNameRoute)
-            .withFormUrlEncodedBody(("firstName", "value 1"), ("lastName", "value 2"))
+            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"))
 
         val result = route(application, request).value
 

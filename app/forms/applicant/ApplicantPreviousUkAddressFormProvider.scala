@@ -31,27 +31,27 @@ class ApplicantPreviousUkAddressFormProvider @Inject() extends Mappings {
        "line1" -> text("applicantPreviousUkAddress.error.line1.required")
          .verifying(firstError(
            maxLength(35, "applicantPreviousUkAddress.error.line1.length"),
-           regexp(Validation.safeInputPattern, "applicantPreviousUkAddress.error.line1.invalid")
+           regexp(Validation.addressInputPattern, "applicantPreviousUkAddress.error.line1.invalid")
          )),
        "line2" -> optional(text("applicantPreviousUkAddress.error.line2.required")
          .verifying(firstError(
            maxLength(35, "applicantPreviousUkAddress.error.line2.length"),
-           regexp(Validation.safeInputPattern, "applicantPreviousUkAddress.error.line2.invalid")
+           regexp(Validation.addressInputPattern, "applicantPreviousUkAddress.error.line2.invalid")
          ))),
        "town" -> text("applicantPreviousUkAddress.error.town.required")
          .verifying(firstError(
            maxLength(35, "applicantPreviousUkAddress.error.town.length"),
-           regexp(Validation.safeInputPattern, "applicantPreviousUkAddress.error.town.invalid")
+           regexp(Validation.addressInputPattern, "applicantPreviousUkAddress.error.town.invalid")
          )),
        "county" -> optional(text("applicantPreviousUkAddress.error.county.required")
          .verifying(firstError(
            maxLength(35, "applicantPreviousUkAddress.error.county.length"),
-           regexp(Validation.safeInputPattern, "applicantPreviousUkAddress.error.county.invalid")
+           regexp(Validation.addressInputPattern, "applicantPreviousUkAddress.error.county.invalid")
          ))),
        "postcode" -> text("applicantPreviousUkAddress.error.postcode.required")
          .verifying(firstError(
            maxLength(8, "applicantPreviousUkAddress.error.postcode.length"),
-           regexp(Validation.safeInputPattern, "applicantPreviousUkAddress.error.postcode.invalid")
+           regexp(Validation.ukPostcodePattern, "applicantPreviousUkAddress.error.postcode.invalid")
          ))
     )(UkAddress.apply)(UkAddress.unapply)
    )

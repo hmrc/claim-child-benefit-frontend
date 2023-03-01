@@ -31,27 +31,27 @@ class PreviousGuardianUkAddressFormProvider @Inject() extends Mappings {
       "line1" -> text("previousGuardianUkAddress.error.line1.required", args = Seq(previousGuardian.firstName))
         .verifying(firstError(
           maxLength(35, "previousGuardianUkAddress.error.line1.length", previousGuardian.firstName),
-          regexp(Validation.safeInputPattern, "previousGuardianUkAddress.error.line1.invalid", previousGuardian.firstName)
+          regexp(Validation.addressInputPattern, "previousGuardianUkAddress.error.line1.invalid", previousGuardian.firstName)
         )),
       "line2" -> optional(text("previousGuardianUkAddress.error.line2.required", args = Seq(previousGuardian.firstName))
         .verifying(firstError(
           maxLength(35, "previousGuardianUkAddress.error.line2.length", previousGuardian.firstName),
-          regexp(Validation.safeInputPattern, "previousGuardianUkAddress.error.line2.invalid", previousGuardian.firstName)
+          regexp(Validation.addressInputPattern, "previousGuardianUkAddress.error.line2.invalid", previousGuardian.firstName)
         ))),
       "town" -> text("previousGuardianUkAddress.error.town.required", args = Seq(previousGuardian.firstName))
         .verifying(firstError(
           maxLength(35, "previousGuardianUkAddress.error.town.length", previousGuardian.firstName),
-          regexp(Validation.safeInputPattern, "previousGuardianUkAddress.error.town.invalid", previousGuardian.firstName)
+          regexp(Validation.addressInputPattern, "previousGuardianUkAddress.error.town.invalid", previousGuardian.firstName)
         )),
       "county" -> optional(text("previousGuardianUkAddress.error.county.required", args = Seq(previousGuardian.firstName))
         .verifying(firstError(
           maxLength(35, "previousGuardianUkAddress.error.county.length", previousGuardian.firstName),
-          regexp(Validation.safeInputPattern, "previousGuardianUkAddress.error.county.invalid", previousGuardian.firstName)
+          regexp(Validation.addressInputPattern, "previousGuardianUkAddress.error.county.invalid", previousGuardian.firstName)
         ))),
       "postcode" -> text("previousGuardianUkAddress.error.postcode.required", args = Seq(previousGuardian.firstName))
         .verifying(firstError(
           maxLength(8, "previousGuardianUkAddress.error.postcode.length", previousGuardian.firstName),
-          regexp(Validation.safeInputPattern, "previousGuardianUkAddress.error.postcode.invalid", previousGuardian.firstName)
+          regexp(Validation.ukPostcodePattern, "previousGuardianUkAddress.error.postcode.invalid", previousGuardian.firstName)
         ))
     )(UkAddress.apply)(UkAddress.unapply)
   )

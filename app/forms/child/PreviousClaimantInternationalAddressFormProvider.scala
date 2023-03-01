@@ -31,27 +31,27 @@ class PreviousClaimantInternationalAddressFormProvider @Inject() extends Mapping
       "line1" -> text("previousClaimantInternationalAddress.error.line1.required", args = Seq(previousClaimant.firstName))
         .verifying(firstError(
           maxLength(35, "previousClaimantInternationalAddress.error.line1.length", args = previousClaimant.firstName),
-          regexp(Validation.safeInputPattern, "previousClaimantInternationalAddress.error.line1.invalid", previousClaimant.firstName)
+          regexp(Validation.addressInputPattern, "previousClaimantInternationalAddress.error.line1.invalid", previousClaimant.firstName)
         )),
       "line2" -> optional(text("previousClaimantInternationalAddress.error.line2.required", args = Seq(previousClaimant.firstName))
         .verifying(firstError(
           maxLength(35, "previousClaimantInternationalAddress.error.line2.length", args = previousClaimant.firstName),
-          regexp(Validation.safeInputPattern, "previousClaimantInternationalAddress.error.line2.invalid", previousClaimant.firstName)
+          regexp(Validation.addressInputPattern, "previousClaimantInternationalAddress.error.line2.invalid", previousClaimant.firstName)
         ))),
       "town" -> text("previousClaimantInternationalAddress.error.town.required", args = Seq(previousClaimant.firstName))
         .verifying(firstError(
           maxLength(35, "previousClaimantInternationalAddress.error.town.length", args = previousClaimant.firstName),
-          regexp(Validation.safeInputPattern, "previousClaimantInternationalAddress.error.town.invalid", previousClaimant.firstName)
+          regexp(Validation.addressInputPattern, "previousClaimantInternationalAddress.error.town.invalid", previousClaimant.firstName)
         )),
       "state" -> optional(text("previousClaimantInternationalAddress.error.state.required", args = Seq(previousClaimant.firstName))
         .verifying(firstError(
           maxLength(35, "previousClaimantInternationalAddress.error.state.length", args = previousClaimant.firstName),
-          regexp(Validation.safeInputPattern, "previousClaimantInternationalAddress.error.state.invalid", previousClaimant.firstName)
+          regexp(Validation.addressInputPattern, "previousClaimantInternationalAddress.error.state.invalid", previousClaimant.firstName)
         ))),
       "postcode" -> optional(text("previousClaimantInternationalAddress.error.postcode.required", args = Seq(previousClaimant.firstName))
         .verifying(firstError(
           maxLength(8, "previousClaimantInternationalAddress.error.postcode.length", args = previousClaimant.firstName),
-          regexp(Validation.safeInputPattern, "previousClaimantInternationalAddress.error.postcode.invalid", previousClaimant.firstName)
+          regexp(Validation.addressInputPattern, "previousClaimantInternationalAddress.error.postcode.invalid", previousClaimant.firstName)
         ))),
       "country" -> text("previousClaimantInternationalAddress.error.country.required", args = Seq(previousClaimant.firstName))
         .verifying("previousClaimantInternationalAddress.error.country.required", value => Country.internationalCountries.exists(_.code == value))

@@ -31,27 +31,27 @@ class ApplicantCurrentInternationalAddressFormProvider @Inject() extends Mapping
       "line1" -> text("applicantCurrentInternationalAddress.error.line1.required")
         .verifying(firstError(
           maxLength(35, "applicantCurrentInternationalAddress.error.line1.length"),
-          regexp(Validation.safeInputPattern, "applicantCurrentInternationalAddress.error.line1.invalid")
+          regexp(Validation.addressInputPattern, "applicantCurrentInternationalAddress.error.line1.invalid")
         )),
       "line2" -> optional(text("applicantCurrentInternationalAddress.error.line2.required")
         .verifying(firstError(
           maxLength(35, "applicantCurrentInternationalAddress.error.line2.length"),
-          regexp(Validation.safeInputPattern, "applicantCurrentInternationalAddress.error.line2.invalid")
+          regexp(Validation.addressInputPattern, "applicantCurrentInternationalAddress.error.line2.invalid")
         ))),
       "town" -> text("applicantCurrentInternationalAddress.error.town.required")
         .verifying(firstError(
           maxLength(35, "applicantCurrentInternationalAddress.error.town.length"),
-          regexp(Validation.safeInputPattern, "applicantCurrentInternationalAddress.error.town.invalid")
+          regexp(Validation.addressInputPattern, "applicantCurrentInternationalAddress.error.town.invalid")
         )),
       "state" -> optional(text("applicantCurrentInternationalAddress.error.state.required")
         .verifying(firstError(
           maxLength(35, "applicantCurrentInternationalAddress.error.state.length"),
-          regexp(Validation.safeInputPattern, "applicantCurrentInternationalAddress.error.state.invalid")
+          regexp(Validation.addressInputPattern, "applicantCurrentInternationalAddress.error.state.invalid")
         ))),
       "postcode" -> optional(text("applicantCurrentInternationalAddress.error.postcode.required")
         .verifying(firstError(
           maxLength(8, "applicantCurrentInternationalAddress.error.postcode.length"),
-          regexp(Validation.safeInputPattern, "applicantCurrentInternationalAddress.error.postcode.invalid")
+          regexp(Validation.addressInputPattern, "applicantCurrentInternationalAddress.error.postcode.invalid")
         ))),
       "country" -> text("applicantCurrentInternationalAddress.error.country.required")
         .verifying("applicantCurrentInternationalAddress.error.country.required", value => Country.internationalCountries.exists(_.code == value))

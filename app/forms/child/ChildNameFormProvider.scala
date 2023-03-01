@@ -31,17 +31,17 @@ class ChildNameFormProvider @Inject() extends Mappings {
      "firstName" -> text("childName.error.firstName.required")
        .verifying(firstError(
          maxLength(35, "childName.error.firstName.length"),
-         regexp(Validation.safeInputPattern, "childName.error.firstName.invalid")
+         regexp(Validation.nameInputPattern, "childName.error.firstName.invalid")
        )),
      "middleNames" -> optional(text("childName.error.middleNames.required")
        .verifying(firstError(
          maxLength(35, "childName.error.middleNames.length"),
-         regexp(Validation.safeInputPattern, "childName.error.middleNames.invalid")
+         regexp(Validation.nameInputPattern, "childName.error.middleNames.invalid")
        ))),
      "lastName" -> text("childName.error.lastName.required")
        .verifying(firstError(
          maxLength(35, "childName.error.lastName.length"),
-         regexp(Validation.safeInputPattern, "childName.error.lastName.invalid")
+         regexp(Validation.nameInputPattern, "childName.error.lastName.invalid")
        ))
     )(ChildName.apply)(ChildName.unapply)
   )

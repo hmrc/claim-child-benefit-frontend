@@ -46,7 +46,7 @@ class ApplicantPreviousUkAddressControllerSpec extends SpecBase with MockitoSuga
 
   lazy val applicantPreviousUkAddressRoute = routes.ApplicantPreviousUkAddressController.onPageLoad(waypoints).url
 
-  private val validAnswer = UkAddress("line 1", None, "town", None, "postcode")
+  private val validAnswer = UkAddress("line 1", None, "town", None, "AA11 1AA")
   private val userAnswers = baseAnswers.set(ApplicantPreviousUkAddressPage, validAnswer).success.value
 
   "ApplicantPreviousUkAddress Controller" - {
@@ -99,7 +99,7 @@ class ApplicantPreviousUkAddressControllerSpec extends SpecBase with MockitoSuga
       running(application) {
         val request =
           FakeRequest(POST, applicantPreviousUkAddressRoute)
-            .withFormUrlEncodedBody(("line1", "line 1"), ("town", "town"), ("postcode", "postcode"))
+            .withFormUrlEncodedBody(("line1", "line 1"), ("town", "town"), ("postcode", "AA11 1AA"))
 
         val result = route(application, request).value
         val expectedAnswers = baseAnswers.set(ApplicantPreviousUkAddressPage, validAnswer).success.value
@@ -151,7 +151,7 @@ class ApplicantPreviousUkAddressControllerSpec extends SpecBase with MockitoSuga
       running(application) {
         val request =
           FakeRequest(POST, applicantPreviousUkAddressRoute)
-            .withFormUrlEncodedBody(("line1", "line 1"), ("town", "town"), ("postcode", "postcode"))
+            .withFormUrlEncodedBody(("line1", "line 1"), ("town", "town"), ("postcode", "AA11 1AA"))
 
         val result = route(application, request).value
 

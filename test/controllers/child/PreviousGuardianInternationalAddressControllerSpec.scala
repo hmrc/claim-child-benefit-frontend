@@ -45,7 +45,7 @@ class PreviousGuardianInternationalAddressControllerSpec extends SpecBase with M
   lazy val previousGuardianInternationalAddressRoute = routes.PreviousGuardianInternationalAddressController.onPageLoad(waypoints, index).url
 
   private val country     = Country.internationalCountries.head
-  private val validAnswer = InternationalAddress("line 1", None, "town", None, Some("postcode"), country)
+  private val validAnswer = InternationalAddress("line 1", None, "town", None, Some("AA11 1AA"), country)
   private val userAnswers = baseAnswers.set(PreviousGuardianInternationalAddressPage(index), validAnswer).success.value
 
   "PreviousGuardianInternationalAddress Controller" - {
@@ -98,7 +98,7 @@ class PreviousGuardianInternationalAddressControllerSpec extends SpecBase with M
       running(application) {
         val request =
           FakeRequest(POST, previousGuardianInternationalAddressRoute)
-            .withFormUrlEncodedBody(("line1", "line 1"), ("town" -> "town"), ("postcode", "postcode"), ("country", country.code))
+            .withFormUrlEncodedBody(("line1", "line 1"), ("town" -> "town"), ("postcode", "AA11 1AA"), ("country", country.code))
 
         val result = route(application, request).value
         val expectedAnswers = baseAnswers.set(child.PreviousGuardianInternationalAddressPage(index), validAnswer).success.value
@@ -150,7 +150,7 @@ class PreviousGuardianInternationalAddressControllerSpec extends SpecBase with M
       running(application) {
         val request =
           FakeRequest(POST, previousGuardianInternationalAddressRoute)
-            .withFormUrlEncodedBody(("line1", "line 1"), ("town" -> "town"), ("postcode", "postcode"), ("country", country.code))
+            .withFormUrlEncodedBody(("line1", "line 1"), ("town" -> "town"), ("postcode", "AA11 1AA"), ("country", country.code))
 
         val result = route(application, request).value
 

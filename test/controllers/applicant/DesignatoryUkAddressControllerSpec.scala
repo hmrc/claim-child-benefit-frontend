@@ -41,7 +41,7 @@ class DesignatoryUkAddressControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val designatoryUkAddressRoute = routes.DesignatoryUkAddressController.onPageLoad(waypoints).url
 
-  private val validAnswer = UkAddress("line 1", None, "town", None, "postcode")
+  private val validAnswer = UkAddress("line 1", None, "town", None, "AA11 1AA")
   private val userAnswers = emptyUserAnswers.set(DesignatoryUkAddressPage, validAnswer).success.value
 
   "DesignatoryAddress Controller" - {
@@ -94,7 +94,7 @@ class DesignatoryUkAddressControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, designatoryUkAddressRoute)
-            .withFormUrlEncodedBody(("line1", "line 1"), ("town", "town"), ("postcode", "postcode"))
+            .withFormUrlEncodedBody(("line1", "line 1"), ("town", "town"), ("postcode", "AA11 1AA"))
 
         val result = route(application, request).value
         val expectedAnswers = emptyUserAnswers.set(DesignatoryUkAddressPage, validAnswer).success.value
@@ -146,7 +146,7 @@ class DesignatoryUkAddressControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, designatoryUkAddressRoute)
-            .withFormUrlEncodedBody(("line1", "line 1"), ("town", "town"), ("postcode", "postcode"))
+            .withFormUrlEncodedBody(("line1", "line 1"), ("town", "town"), ("postcode", "AA11 1AA"))
 
         val result = route(application, request).value
 

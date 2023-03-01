@@ -31,27 +31,27 @@ class CorrespondenceInternationalAddressFormProvider @Inject() extends Mappings 
       "line1" -> text("correspondenceInternationalAddress.error.line1.required")
         .verifying(firstError(
           maxLength(35, "correspondenceInternationalAddress.error.line1.length"),
-          regexp(Validation.safeInputPattern, "correspondenceInternationalAddress.error.line1.invalid")
+          regexp(Validation.addressInputPattern, "correspondenceInternationalAddress.error.line1.invalid")
         )),
       "line2" -> optional(text("correspondenceInternationalAddress.error.line2.required")
         .verifying(firstError(
           maxLength(35, "correspondenceInternationalAddress.error.line2.length"),
-          regexp(Validation.safeInputPattern, "correspondenceInternationalAddress.error.line2.invalid")
+          regexp(Validation.addressInputPattern, "correspondenceInternationalAddress.error.line2.invalid")
         ))),
       "town" -> text("correspondenceInternationalAddress.error.town.required")
         .verifying(firstError(
           maxLength(35, "correspondenceInternationalAddress.error.town.length"),
-          regexp(Validation.safeInputPattern, "correspondenceInternationalAddress.error.town.invalid")
+          regexp(Validation.addressInputPattern, "correspondenceInternationalAddress.error.town.invalid")
         )),
       "state" -> optional(text("correspondenceInternationalAddress.error.state.required")
         .verifying(firstError(
           maxLength(35, "correspondenceInternationalAddress.error.state.length"),
-          regexp(Validation.safeInputPattern, "correspondenceInternationalAddress.error.state.invalid")
+          regexp(Validation.addressInputPattern, "correspondenceInternationalAddress.error.state.invalid")
         ))),
       "postcode" -> optional(text("correspondenceInternationalAddress.error.postcode.required")
         .verifying(firstError(
           maxLength(8, "correspondenceInternationalAddress.error.postcode.length"),
-          regexp(Validation.safeInputPattern, "correspondenceInternationalAddress.error.postcode.invalid")
+          regexp(Validation.addressInputPattern, "correspondenceInternationalAddress.error.postcode.invalid")
         ))),
       "country" -> text("correspondenceInternationalAddress.error.country.required")
         .verifying("correspondenceInternationalAddress.error.country.required", value => Country.internationalCountries.exists(_.code == value))

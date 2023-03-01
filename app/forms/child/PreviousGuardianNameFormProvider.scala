@@ -31,17 +31,17 @@ class PreviousGuardianNameFormProvider @Inject() extends Mappings {
       "firstName" -> text("previousGuardianName.error.firstName.required", args = Seq(childName.firstName))
         .verifying(firstError(
           maxLength(35, "previousGuardianName.error.firstName.length", childName.firstName),
-          regexp(Validation.safeInputPattern, "previousGuardianName.error.firstName.invalid", childName.firstName)
+          regexp(Validation.nameInputPattern, "previousGuardianName.error.firstName.invalid", childName.firstName)
         )),
       "middleNames" -> optional(text("previousGuardianName.error.middleNames.required", args = Seq(childName.firstName))
         .verifying(firstError(
           maxLength(35, "previousGuardianName.error.middleNames.length", childName.firstName),
-          regexp(Validation.safeInputPattern, "previousGuardianName.error.middleNames.invalid", childName.firstName)
+          regexp(Validation.nameInputPattern, "previousGuardianName.error.middleNames.invalid", childName.firstName)
         ))),
       "lastName" -> text("previousGuardianName.error.lastName.required", args = Seq(childName.firstName))
         .verifying(firstError(
           maxLength(35, "previousGuardianName.error.lastName.length", childName.firstName),
-          regexp(Validation.safeInputPattern, "previousGuardianName.error.lastName.invalid", childName.firstName)
+          regexp(Validation.nameInputPattern, "previousGuardianName.error.lastName.invalid", childName.firstName)
         ))
     )(AdultName.apply(None, _, _, _))(name => Some(name.firstName, name.middleNames, name.lastName))
   )

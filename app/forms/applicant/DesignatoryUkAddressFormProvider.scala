@@ -31,27 +31,27 @@ class DesignatoryUkAddressFormProvider @Inject() extends Mappings {
       "line1" -> text("designatoryUkAddress.error.line1.required")
         .verifying(firstError(
           maxLength(35, "designatoryUkAddress.error.line1.length"),
-          regexp(Validation.safeInputPattern, "designatoryUkAddress.error.line1.invalid")
+          regexp(Validation.addressInputPattern, "designatoryUkAddress.error.line1.invalid")
         )),
       "line2" -> optional(text("designatoryUkAddress.error.line2.required")
         .verifying(firstError(
           maxLength(35, "designatoryUkAddress.error.line2.length"),
-          regexp(Validation.safeInputPattern, "designatoryUkAddress.error.line2.invalid")
+          regexp(Validation.addressInputPattern, "designatoryUkAddress.error.line2.invalid")
         ))),
       "town" -> text("designatoryUkAddress.error.town.required")
         .verifying(firstError(
           maxLength(35, "designatoryUkAddress.error.town.length"),
-          regexp(Validation.safeInputPattern, "designatoryUkAddress.error.town.invalid")
+          regexp(Validation.addressInputPattern, "designatoryUkAddress.error.town.invalid")
         )),
       "county" -> optional(text("designatoryUkAddress.error.county.required")
         .verifying(firstError(
           maxLength(35, "designatoryUkAddress.error.county.length"),
-          regexp(Validation.safeInputPattern, "designatoryUkAddress.error.county.invalid")
+          regexp(Validation.addressInputPattern, "designatoryUkAddress.error.county.invalid")
         ))),
       "postcode" -> text("designatoryUkAddress.error.postcode.required")
         .verifying(firstError(
           maxLength(8, "designatoryUkAddress.error.postcode.length"),
-          regexp(Validation.safeInputPattern, "designatoryUkAddress.error.postcode.invalid")
+          regexp(Validation.ukPostcodePattern, "designatoryUkAddress.error.postcode.invalid")
         ))
     )(UkAddress.apply)(UkAddress.unapply)
   )
