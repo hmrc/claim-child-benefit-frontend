@@ -16,6 +16,7 @@
 
 package forms.applicant
 
+import forms.Validation
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
 
@@ -28,12 +29,20 @@ class DesignatoryUkAddressFormProviderSpec extends StringFieldBehaviours {
     val fieldName = "line1"
     val requiredKey = "designatoryUkAddress.error.line1.required"
     val lengthKey = "designatoryUkAddress.error.line1.length"
-    val maxLength = 100
+    val invalidKey = "designatoryUkAddress.error.line1.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeInputWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.safeInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(
@@ -54,12 +63,20 @@ class DesignatoryUkAddressFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName = "line2"
     val lengthKey = "designatoryUkAddress.error.line2.length"
-    val maxLength = 100
+    val invalidKey = "designatoryUkAddress.error.line2.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeInputWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.safeInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(
@@ -75,12 +92,20 @@ class DesignatoryUkAddressFormProviderSpec extends StringFieldBehaviours {
     val fieldName = "town"
     val requiredKey = "designatoryUkAddress.error.town.required"
     val lengthKey = "designatoryUkAddress.error.town.length"
-    val maxLength = 100
+    val invalidKey = "designatoryUkAddress.error.town.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeInputWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.safeInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(
@@ -101,12 +126,20 @@ class DesignatoryUkAddressFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName = "county"
     val lengthKey = "designatoryUkAddress.error.county.length"
-    val maxLength = 100
+    val invalidKey = "designatoryUkAddress.error.county.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeInputWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.safeInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(
@@ -122,12 +155,20 @@ class DesignatoryUkAddressFormProviderSpec extends StringFieldBehaviours {
     val fieldName = "postcode"
     val requiredKey = "designatoryUkAddress.error.postcode.required"
     val lengthKey = "designatoryUkAddress.error.postcode.length"
-    val maxLength = 100
+    val invalidKey = "designatoryUkAddress.error.postcode.invalid"
+    val maxLength = 8
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeInputWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.safeInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(
@@ -143,5 +184,4 @@ class DesignatoryUkAddressFormProviderSpec extends StringFieldBehaviours {
       requiredError = FormError(fieldName, requiredKey)
     )
   }
-
 }

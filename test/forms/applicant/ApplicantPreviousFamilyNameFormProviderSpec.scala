@@ -16,6 +16,7 @@
 
 package forms.applicant
 
+import forms.Validation
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
 
@@ -23,7 +24,8 @@ class ApplicantPreviousFamilyNameFormProviderSpec extends StringFieldBehaviours 
 
   val requiredKey = "applicantPreviousFamilyName.error.required"
   val lengthKey = "applicantPreviousFamilyName.error.length"
-  val maxLength = 100
+  val invalidKey = "applicantPreviousFamilyName.error.invalid"
+  val maxLength = 35
 
   val form = new ApplicantPreviousFamilyNameFormProvider()()
 
@@ -34,7 +36,14 @@ class ApplicantPreviousFamilyNameFormProviderSpec extends StringFieldBehaviours 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeInputWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.safeInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(

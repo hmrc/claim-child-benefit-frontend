@@ -20,9 +20,9 @@ import scala.util.matching.Regex
 
 object Validation {
 
-  val accountNumberPattern: Regex                  = "[ -]*(?:\\d[ -]*){6,8}".r.anchored
-  val sortCodePattern: Regex                       = "[ -]*(?:\\d[ -]*){6}".r.anchored
-  val rollNumberPattern: Regex                     = """[a-zA-Z0-9- ./]{1,18}""".r.anchored
-  val systemNumberPattern: Regex                   = "(?:\\d[ -]*){9}".r.anchored
-  val scottishBirthCertificateNumberPattern: Regex = "[ -]*(?:\\d[ -]*){10}".r.anchored
+  val accountNumberPattern: Regex = "[ -]*(?:\\d[ -]*){6,8}".r.anchored
+  val sortCodePattern: Regex      = "[ -]*(?:\\d[ -]*){6}".r.anchored
+  val rollNumberPattern: Regex    = """[a-zA-Z0-9- ./]{1,18}""".r.anchored
+  val systemNumberPattern: Regex  = "(?:\\d[ -]*){9}".r.anchored
+  val safeInputPattern: Regex     = "[a-zA-ZÀ-ÿ'’ -]{1,35}".r.anchored
 }

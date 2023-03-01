@@ -16,6 +16,7 @@
 
 package forms.applicant
 
+import forms.Validation
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
 
@@ -28,12 +29,20 @@ class ApplicantPreviousUkAddressFormProviderSpec extends StringFieldBehaviours {
     val fieldName = "line1"
     val requiredKey = "applicantPreviousUkAddress.error.line1.required"
     val lengthKey = "applicantPreviousUkAddress.error.line1.length"
-    val maxLength = 100
+    val invalidKey = "applicantPreviousUkAddress.error.line1.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeInputWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.safeInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(
@@ -54,12 +63,20 @@ class ApplicantPreviousUkAddressFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName = "line2"
     val lengthKey = "applicantPreviousUkAddress.error.line2.length"
-    val maxLength = 100
+    val invalidKey = "applicantPreviousUkAddress.error.line2.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeInputWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.safeInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(
@@ -75,12 +92,20 @@ class ApplicantPreviousUkAddressFormProviderSpec extends StringFieldBehaviours {
     val fieldName = "town"
     val requiredKey = "applicantPreviousUkAddress.error.town.required"
     val lengthKey = "applicantPreviousUkAddress.error.town.length"
-    val maxLength = 100
+    val invalidKey = "applicantPreviousUkAddress.error.town.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeInputWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.safeInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(
@@ -101,12 +126,20 @@ class ApplicantPreviousUkAddressFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName = "county"
     val lengthKey = "applicantPreviousUkAddress.error.county.length"
-    val maxLength = 100
+    val invalidKey = "applicantPreviousUkAddress.error.county.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeInputWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.safeInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(
@@ -122,12 +155,20 @@ class ApplicantPreviousUkAddressFormProviderSpec extends StringFieldBehaviours {
     val fieldName = "postcode"
     val requiredKey = "applicantPreviousUkAddress.error.postcode.required"
     val lengthKey = "applicantPreviousUkAddress.error.postcode.length"
-    val maxLength = 100
+    val invalidKey = "applicantPreviousUkAddress.error.postcode.invalid"
+    val maxLength = 8
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeInputWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.safeInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(
@@ -143,5 +184,4 @@ class ApplicantPreviousUkAddressFormProviderSpec extends StringFieldBehaviours {
       requiredError = FormError(fieldName, requiredKey)
     )
   }
-
 }

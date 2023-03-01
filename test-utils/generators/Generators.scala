@@ -46,6 +46,34 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
     }
   }
 
+  def safeInputs: Gen[Char] = Gen.oneOf(
+    Gen.alphaChar,
+    Gen.const('-'),
+    Gen.const(' '),
+    Gen.const('’'),
+    Gen.const('\''),
+    Gen.oneOf('À' to 'ÿ')
+  )
+
+  def unsafeInputs: Gen[Char] = Gen.oneOf(
+    Gen.const('<'),
+    Gen.const('>'),
+    Gen.const('='),
+    Gen.const('|')
+  )
+
+  def safeInputWithMaxLength(length: Int): Gen[String] =
+    (for {
+      length <- Gen.choose(1, length)
+      chars <- Gen.listOfN(length, safeInputs)
+    } yield chars.mkString).suchThat(_.trim.nonEmpty)
+
+  def unsafeInputsWithMaxLength(maxLength: Int): Gen[String] = (for {
+    length <- choose(2, maxLength)
+    invalidChar <- unsafeInputs
+    validChars <- listOfN(length - 1, unsafeInputs)
+  } yield (validChars :+ invalidChar).mkString).suchThat(_.trim.nonEmpty)
+
   def intsInRangeWithCommas(min: Int, max: Int): Gen[String] = {
     val numberGen = choose[Int](min, max).map(_.toString)
     genIntersperseString(numberGen, ",")

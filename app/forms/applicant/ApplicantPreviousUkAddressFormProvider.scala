@@ -16,6 +16,7 @@
 
 package forms.applicant
 
+import forms.Validation
 import forms.mappings.Mappings
 import models.UkAddress
 import play.api.data.Form
@@ -28,15 +29,30 @@ class ApplicantPreviousUkAddressFormProvider @Inject() extends Mappings {
    def apply(): Form[UkAddress] = Form(
      mapping(
        "line1" -> text("applicantPreviousUkAddress.error.line1.required")
-         .verifying(maxLength(100, "applicantPreviousUkAddress.error.line1.length")),
+         .verifying(firstError(
+           maxLength(35, "applicantPreviousUkAddress.error.line1.length"),
+           regexp(Validation.safeInputPattern, "applicantPreviousUkAddress.error.line1.invalid")
+         )),
        "line2" -> optional(text("applicantPreviousUkAddress.error.line2.required")
-         .verifying(maxLength(100, "applicantPreviousUkAddress.error.line2.length"))),
+         .verifying(firstError(
+           maxLength(35, "applicantPreviousUkAddress.error.line2.length"),
+           regexp(Validation.safeInputPattern, "applicantPreviousUkAddress.error.line2.invalid")
+         ))),
        "town" -> text("applicantPreviousUkAddress.error.town.required")
-         .verifying(maxLength(100, "applicantPreviousUkAddress.error.town.length")),
+         .verifying(firstError(
+           maxLength(35, "applicantPreviousUkAddress.error.town.length"),
+           regexp(Validation.safeInputPattern, "applicantPreviousUkAddress.error.town.invalid")
+         )),
        "county" -> optional(text("applicantPreviousUkAddress.error.county.required")
-         .verifying(maxLength(100, "applicantPreviousUkAddress.error.county.length"))),
+         .verifying(firstError(
+           maxLength(35, "applicantPreviousUkAddress.error.county.length"),
+           regexp(Validation.safeInputPattern, "applicantPreviousUkAddress.error.county.invalid")
+         ))),
        "postcode" -> text("applicantPreviousUkAddress.error.postcode.required")
-         .verifying(maxLength(100, "applicantPreviousUkAddress.error.postcode.length"))
+         .verifying(firstError(
+           maxLength(8, "applicantPreviousUkAddress.error.postcode.length"),
+           regexp(Validation.safeInputPattern, "applicantPreviousUkAddress.error.postcode.invalid")
+         ))
     )(UkAddress.apply)(UkAddress.unapply)
    )
  }
