@@ -38,7 +38,7 @@ class BuildingSocietyDetailsFormProvider @Inject() extends Mappings {
       "rollNumber" -> text("buildingSocietyDetails.error.rollNumber.required")
         .verifying(firstError(
           maxLength(18, "buildingSocietyDetails.error.rollNumber.length"),
-          regexp(Validation.rollNumberPattern.toString, "buildingSocietyDetails.error.rollNumber.invalid")
+          regexp(Validation.rollNumberPattern, "buildingSocietyDetails.error.rollNumber.invalid")
         ))
     )(BuildingSocietyDetails.apply)(BuildingSocietyDetails.unapply)
   )

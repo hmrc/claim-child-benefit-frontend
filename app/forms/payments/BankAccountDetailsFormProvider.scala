@@ -33,9 +33,9 @@ class BankAccountDetailsFormProvider @Inject() extends Mappings {
       "lastName" -> text("bankAccountDetails.error.lastName.required")
         .verifying(maxLength(35, "bankAccountDetails.error.lastName.length")),
       "sortCode" -> text("bankAccountDetails.error.sortCode.required")
-        .verifying(regexp(Validation.sortCodePattern.toString, "bankAccountDetails.error.sortCode.invalid")),
+        .verifying(regexp(Validation.sortCodePattern, "bankAccountDetails.error.sortCode.invalid")),
       "accountNumber" -> text("bankAccountDetails.error.accountNumber.required")
-        .verifying(regexp(Validation.accountNumberPattern.toString, "bankAccountDetails.error.accountNumber.invalid"))
+        .verifying(regexp(Validation.accountNumberPattern, "bankAccountDetails.error.accountNumber.invalid"))
     )(BankAccountDetails.apply)(BankAccountDetails.unapply)
   )
 }

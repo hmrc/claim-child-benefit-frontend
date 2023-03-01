@@ -16,6 +16,7 @@
 
 package forms.child
 
+import forms.Validation
 import forms.mappings.Mappings
 import models.{AdultName, Country, InternationalAddress}
 import play.api.data.Form
@@ -28,15 +29,30 @@ class PreviousGuardianInternationalAddressFormProvider @Inject() extends Mapping
   def apply(previousGuardian: AdultName): Form[InternationalAddress] = Form(
     mapping(
       "line1" -> text("previousGuardianInternationalAddress.error.line1.required", args = Seq(previousGuardian.firstName))
-        .verifying(maxLength(100, "previousGuardianInternationalAddress.error.line1.length", args = previousGuardian.firstName)),
+        .verifying(firstError(
+          maxLength(35, "previousGuardianInternationalAddress.error.line1.length", args = previousGuardian.firstName),
+          regexp(Validation.safeInputPattern, "previousGuardianInternationalAddress.error.line1.invalid", previousGuardian.firstName)
+        )),
       "line2" -> optional(text("previousGuardianInternationalAddress.error.line2.required", args = Seq(previousGuardian.firstName))
-        .verifying(maxLength(100, "previousGuardianInternationalAddress.error.line2.length", args = previousGuardian.firstName))),
+        .verifying(firstError(
+          maxLength(35, "previousGuardianInternationalAddress.error.line2.length", args = previousGuardian.firstName),
+          regexp(Validation.safeInputPattern, "previousGuardianInternationalAddress.error.line2.invalid", previousGuardian.firstName)
+        ))),
       "town" -> text("previousGuardianInternationalAddress.error.town.required", args = Seq(previousGuardian.firstName))
-        .verifying(maxLength(100, "previousGuardianInternationalAddress.error.town.length", args = previousGuardian.firstName)),
+        .verifying(firstError(
+          maxLength(35, "previousGuardianInternationalAddress.error.town.length", args = previousGuardian.firstName),
+          regexp(Validation.safeInputPattern, "previousGuardianInternationalAddress.error.town.invalid", previousGuardian.firstName)
+        )),
       "state" -> optional(text("previousGuardianInternationalAddress.error.state.required", args = Seq(previousGuardian.firstName))
-        .verifying(maxLength(100, "previousGuardianInternationalAddress.error.state.length", args = previousGuardian.firstName))),
+        .verifying(firstError(
+          maxLength(35, "previousGuardianInternationalAddress.error.state.length", args = previousGuardian.firstName),
+          regexp(Validation.safeInputPattern, "previousGuardianInternationalAddress.error.state.invalid", previousGuardian.firstName)
+        ))),
       "postcode" -> optional(text("previousGuardianInternationalAddress.error.postcode.required", args = Seq(previousGuardian.firstName))
-        .verifying(maxLength(100, "previousGuardianInternationalAddress.error.postcode.length", args = previousGuardian.firstName))),
+        .verifying(firstError(
+          maxLength(8, "previousGuardianInternationalAddress.error.postcode.length", args = previousGuardian.firstName),
+          regexp(Validation.safeInputPattern, "previousGuardianInternationalAddress.error.postcode.invalid", previousGuardian.firstName)
+        ))),
       "country" -> text("previousGuardianInternationalAddress.error.country.required", args = Seq(previousGuardian.firstName))
         .verifying("previousGuardianInternationalAddress.error.country.required", value => Country.internationalCountries.exists(_.code == value))
         .transform[Country](value => Country.internationalCountries.find(_.code == value).get, _.code)

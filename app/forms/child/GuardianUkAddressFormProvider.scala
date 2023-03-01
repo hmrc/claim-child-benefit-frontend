@@ -16,6 +16,7 @@
 
 package forms.child
 
+import forms.Validation
 import forms.mappings.Mappings
 import models.{AdultName, UkAddress}
 import play.api.data.Form
@@ -28,15 +29,30 @@ class GuardianUkAddressFormProvider @Inject() extends Mappings {
   def apply(guardian: AdultName): Form[UkAddress] = Form(
     mapping(
       "line1" -> text("guardianUkAddress.error.line1.required", args = Seq(guardian.firstName))
-        .verifying(maxLength(100, "guardianUkAddress.error.line1.length", guardian.firstName)),
+        .verifying(firstError(
+          maxLength(35, "guardianUkAddress.error.line1.length", guardian.firstName),
+          regexp(Validation.safeInputPattern, "guardianUkAddress.error.line1.invalid", guardian.firstName)
+        )),
       "line2" -> optional(text("guardianUkAddress.error.line2.required", args = Seq(guardian.firstName))
-        .verifying(maxLength(100, "guardianUkAddress.error.line2.length", guardian.firstName))),
+        .verifying(firstError(
+          maxLength(35, "guardianUkAddress.error.line2.length", guardian.firstName),
+          regexp(Validation.safeInputPattern, "guardianUkAddress.error.line2.invalid", guardian.firstName)
+        ))),
       "town" -> text("guardianUkAddress.error.town.required", args = Seq(guardian.firstName))
-        .verifying(maxLength(100, "guardianUkAddress.error.town.length", guardian.firstName)),
+        .verifying(firstError(
+          maxLength(35, "guardianUkAddress.error.town.length", guardian.firstName),
+          regexp(Validation.safeInputPattern, "guardianUkAddress.error.town.invalid", guardian.firstName)
+        )),
       "county" -> optional(text("guardianUkAddress.error.county.required", args = Seq(guardian.firstName))
-        .verifying(maxLength(100, "guardianUkAddress.error.county.length", guardian.firstName))),
+        .verifying(firstError(
+          maxLength(35, "guardianUkAddress.error.county.length", guardian.firstName),
+          regexp(Validation.safeInputPattern, "guardianUkAddress.error.county.invalid", guardian.firstName)
+        ))),
       "postcode" -> text("guardianUkAddress.error.postcode.required", args = Seq(guardian.firstName))
-        .verifying(maxLength(100, "guardianUkAddress.error.postcode.length", guardian.firstName))
+        .verifying(firstError(
+          maxLength(8, "guardianUkAddress.error.postcode.length", guardian.firstName),
+          regexp(Validation.safeInputPattern, "guardianUkAddress.error.postcode.invalid", guardian.firstName)
+        ))
     )(UkAddress.apply)(UkAddress.unapply)
   )
 }

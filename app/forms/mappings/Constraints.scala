@@ -71,16 +71,13 @@ trait Constraints {
         }
     }
 
-  protected def regexp(regex: String, errorKey: String, args: Any*): Constraint[String] =
+  protected def regexp(regex: Regex, errorKey: String, args: Any*): Constraint[String] =
     Constraint {
-      case str if str.matches(regex) =>
+      case str if str.matches(regex.toString) =>
         Valid
       case _ =>
-        Invalid(errorKey, regex +: args: _*)
+        Invalid(errorKey, regex.toString +: args: _*)
     }
-
-  protected def regexp(regex: Regex, errorKey: String): Constraint[String] =
-    regexp(regex.toString, errorKey)
 
   protected def maxLength(maximum: Int, errorKey: String, args: Any*): Constraint[String] =
     Constraint {

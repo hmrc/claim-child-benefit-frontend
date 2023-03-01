@@ -16,6 +16,7 @@
 
 package forms.child
 
+import forms.Validation
 import forms.mappings.Mappings
 import models.{AdultName, UkAddress}
 import play.api.data.Form
@@ -28,15 +29,30 @@ class PreviousClaimantUkAddressFormProvider @Inject() extends Mappings {
   def apply(previousClaimant: AdultName): Form[UkAddress] = Form(
     mapping(
       "line1" -> text("previousClaimantUkAddress.error.line1.required", args = Seq(previousClaimant.firstName))
-        .verifying(maxLength(100, "previousClaimantUkAddress.error.line1.length", previousClaimant.firstName)),
+        .verifying(firstError(
+          maxLength(35, "previousClaimantUkAddress.error.line1.length", previousClaimant.firstName),
+          regexp(Validation.safeInputPattern, "previousClaimantUkAddress.error.line1.invalid", previousClaimant.firstName)
+        )),
       "line2" -> optional(text("previousClaimantUkAddress.error.line2.required", args = Seq(previousClaimant.firstName))
-        .verifying(maxLength(100, "previousClaimantUkAddress.error.line2.length", previousClaimant.firstName))),
+        .verifying(firstError(
+          maxLength(35, "previousClaimantUkAddress.error.line2.length", previousClaimant.firstName),
+          regexp(Validation.safeInputPattern, "previousClaimantUkAddress.error.line2.invalid", previousClaimant.firstName)
+        ))),
       "town" -> text("previousClaimantUkAddress.error.town.required", args = Seq(previousClaimant.firstName))
-        .verifying(maxLength(100, "previousClaimantUkAddress.error.town.length", previousClaimant.firstName)),
+        .verifying(firstError(
+          maxLength(35, "previousClaimantUkAddress.error.town.length", previousClaimant.firstName),
+          regexp(Validation.safeInputPattern, "previousClaimantUkAddress.error.town.invalid", previousClaimant.firstName)
+        )),
       "county" -> optional(text("previousClaimantUkAddress.error.county.required", args = Seq(previousClaimant.firstName))
-        .verifying(maxLength(100, "previousClaimantUkAddress.error.county.length", previousClaimant.firstName))),
+        .verifying(firstError(
+          maxLength(35, "previousClaimantUkAddress.error.county.length", previousClaimant.firstName),
+          regexp(Validation.safeInputPattern, "previousClaimantUkAddress.error.county.invalid", previousClaimant.firstName)
+        ))),
       "postcode" -> text("previousClaimantUkAddress.error.postcode.required", args = Seq(previousClaimant.firstName))
-        .verifying(maxLength(100, "previousClaimantUkAddress.error.postcode.length", previousClaimant.firstName))
+        .verifying(firstError(
+          maxLength(8, "previousClaimantUkAddress.error.postcode.length", previousClaimant.firstName),
+          regexp(Validation.safeInputPattern, "previousClaimantUkAddress.error.postcode.invalid", previousClaimant.firstName)
+        ))
     )(UkAddress.apply)(UkAddress.unapply)
   )
 }
