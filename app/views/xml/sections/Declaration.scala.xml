@@ -135,6 +135,13 @@
                     </fo:inline>
                     <fo:block margin-left="1.4cm" margin-top="-1cm">@messages("pdf.sendingDocuments")</fo:block>
                 </fo:block>
+            } else {
+                <fo:block margin-bottom="1.5cm">
+                    <fo:inline border="0.4mm solid black" padding-top="0.5cm" padding-left="0.8cm">
+                        <fo:wrapper role="artifact"> </fo:wrapper>
+                    </fo:inline>
+                    <fo:block margin-left="1.4cm" margin-top="-1cm">@messages("pdf.notSendingDocuments")</fo:block>
+                </fo:block>
             }
 
             <fo:block margin-bottom="1.5cm">
