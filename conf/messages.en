@@ -1505,6 +1505,7 @@ pdf.declaration.recorded = Recorded
 pdf.declaration.registered = Registered
 pdf.signature = Signature
 pdf.sendingDocuments = I am sending the birth certificate(s) or other documents that you need with this form. I understand if I do not send the documents that you need with this claim form, a decision on my claim will be delayed.  I am not sending photocopies.
+pdf.notSendingDocuments = I understand that I do not need to send documents with this claim form. I will not be sending any birth certificates or other documents with this form to HMRC.
 pdf.informationCorrect = I declare that the information I’ve given on this form is correct and complete. If I give information which I know is not correct or complete, you may take action against me. I’ll tell you about changes to my circumstances when they happen and understand I could be overpaid and may have to pay money back if I do not.
 pdf.whatToDoNow = What to do now
 pdf.whatToDoNow.p1.documentsRequired = After you have printed this form and signed and dated the Declaration, return the form with any documents we need to:
