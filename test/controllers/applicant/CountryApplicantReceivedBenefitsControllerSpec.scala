@@ -38,7 +38,7 @@ class CountryApplicantReceivedBenefitsControllerSpec extends SpecBase with Mocki
   private val waypoints = EmptyWaypoints
 
   private val formProvider = new CountryApplicantReceivedBenefitsFormProvider()
-  private val form = formProvider()
+  private val form = formProvider(index, Seq.empty[Country])
   private val validAnswer = Country.internationalCountries.head
 
   lazy val countryApplicantReceivedBenefitsRoute = routes.CountryApplicantReceivedBenefitsController.onPageLoad(waypoints, index).url

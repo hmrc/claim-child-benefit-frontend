@@ -17,6 +17,7 @@
 package forms.mappings
 
 import generators.Generators
+import models.Index
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -26,7 +27,6 @@ import play.api.data.validation.{Invalid, Valid}
 import java.time.LocalDate
 
 class ConstraintsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with Generators  with Constraints {
-
 
   "firstError" - {
 
@@ -213,6 +213,39 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
     "must return Invalid if the data contains items from both exclusive sets" in {
 
       noMutuallyExclusiveAnswers(set1, set2, "error", "foo")(Set(A, B)) mustEqual Invalid("error", "foo")
+    }
+  }
+
+  "notADuplicate" - {
+
+    "must return Valid when there is not another entry in the existing answers with the same value" in {
+
+      val answer = "foo"
+      val existingAnswers = Seq("bar", "baz")
+      val index = Index(0)
+
+      val result = notADuplicate(index, existingAnswers, "error.duplicate", "foo")(answer)
+      result mustEqual Valid
+    }
+
+    "must return Valid when this answer is in the existing answers at the same index position, but nowhere else" in {
+
+      val answer = "foo"
+      val existingAnswers = Seq("bar", "foo", "baz")
+      val index = Index(1)
+
+      val result = notADuplicate(index, existingAnswers, "error.duplicate", "foo")(answer)
+      result mustEqual Valid
+    }
+
+    "must return Invalid when this answer is in the existing answers at a different index position" in {
+
+      val answer = "foo"
+      val existingAnswers = Seq("bar", "foo", "baz")
+      val index = Index(0)
+
+      val result = notADuplicate(index, existingAnswers, "error.duplicate", "foo")(answer)
+      result mustEqual Invalid("error.duplicate", "foo")
     }
   }
 }

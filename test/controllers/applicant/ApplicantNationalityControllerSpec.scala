@@ -38,7 +38,7 @@ class ApplicantNationalityControllerSpec extends SpecBase with MockitoSugar {
   private val waypoints = EmptyWaypoints
 
   val formProvider = new ApplicantNationalityFormProvider()
-  val form = formProvider()
+  val form = formProvider(index, Seq.empty[Nationality])
   val validAnswer = Nationality.allNationalities.head
 
   lazy val applicantNationalityRoute = routes.ApplicantNationalityController.onPageLoad(waypoints, index).url

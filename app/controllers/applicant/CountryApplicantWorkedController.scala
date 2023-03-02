@@ -23,6 +23,7 @@ import pages.Waypoints
 import pages.applicant.CountryApplicantWorkedPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import queries.AllCountriesApplicantWorked
 import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.applicant.CountryApplicantWorkedView
@@ -41,10 +42,13 @@ class CountryApplicantWorkedController @Inject()(
                                                             view: CountryApplicantWorkedView
                                                           )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form = formProvider()
 
   def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
+
+      val countries = request.userAnswers.get(AllCountriesApplicantWorked).getOrElse(Nil)
+
+      val form = formProvider(index, countries)
 
       val preparedForm = request.userAnswers.get(CountryApplicantWorkedPage(index)) match {
         case None => form
@@ -57,6 +61,10 @@ class CountryApplicantWorkedController @Inject()(
   def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
+      val countries = request.userAnswers.get(AllCountriesApplicantWorked).getOrElse(Nil)
+
+      val form = formProvider(index, countries)
+
       form.bindFromRequest().fold(
         formWithErrors =>
           Future.successful(BadRequest(view(formWithErrors, waypoints, index))),
@@ -64,7 +72,7 @@ class CountryApplicantWorkedController @Inject()(
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(CountryApplicantWorkedPage(index), value))
-            _              <- userDataService.set(updatedAnswers)
+            _ <- userDataService.set(updatedAnswers)
           } yield Redirect(CountryApplicantWorkedPage(index).navigate(waypoints, request.userAnswers, updatedAnswers).route)
       )
   }

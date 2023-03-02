@@ -17,17 +17,18 @@
 package forms.partner
 
 import forms.mappings.Mappings
-import models.Country
+import models.{Country, Index}
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class CountryPartnerWorkedFormProvider @Inject() extends Mappings {
 
-  def apply(partnerFirstName: String): Form[Country] =
+  def apply(partnerFirstName: String, thisIndex: Index, existingAnswers: Seq[Country]): Form[Country] =
     Form(
       "value" -> text("countryPartnerWorked.error.required", args = Seq(partnerFirstName))
         .verifying("countryPartnerWorked.error.required", value => Country.internationalCountries.exists(_.code == value))
         .transform[Country](value => Country.internationalCountries.find(_.code == value).get, _.code)
+        .verifying(notADuplicate(thisIndex, existingAnswers, "countryPartnerWorked.error.duplicate", partnerFirstName))
     )
 }

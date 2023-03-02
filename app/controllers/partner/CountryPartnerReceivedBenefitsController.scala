@@ -24,6 +24,7 @@ import pages.Waypoints
 import pages.partner.{CountryPartnerReceivedBenefitsPage, PartnerNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import queries.AllCountriesPartnerReceivedBenefits
 import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.partner.CountryPartnerReceivedBenefitsView
@@ -50,7 +51,8 @@ class CountryPartnerReceivedBenefitsController @Inject()(
       getAnswer(PartnerNamePage) {
         partnerName =>
 
-          val form = formProvider(partnerName.firstName)
+          val countries = request.userAnswers.get(AllCountriesPartnerReceivedBenefits).getOrElse(Nil)
+          val form = formProvider(partnerName.firstName, index, countries)
 
           val preparedForm = request.userAnswers.get(CountryPartnerReceivedBenefitsPage(index)) match {
             case None => form
@@ -66,7 +68,8 @@ class CountryPartnerReceivedBenefitsController @Inject()(
       getAnswerAsync(PartnerNamePage) {
         partnerName =>
 
-          val form = formProvider(partnerName.firstName)
+          val countries = request.userAnswers.get(AllCountriesPartnerReceivedBenefits).getOrElse(Nil)
+          val form = formProvider(partnerName.firstName, index, countries)
 
           form.bindFromRequest().fold(
           formWithErrors =>

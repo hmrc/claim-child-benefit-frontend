@@ -40,7 +40,7 @@ class CountryPartnerReceivedBenefitsControllerSpec extends SpecBase with Mockito
   private val baseAnswers = emptyUserAnswers.set(PartnerNamePage, name).success.value
 
   val formProvider = new CountryPartnerReceivedBenefitsFormProvider()
-  val form = formProvider(name.firstName)
+  val form = formProvider(name.firstName, index, Seq.empty[Country])
   val validAnswer = Country.internationalCountries.head
 
   lazy val countryPartnerReceivedBenefitsRoute = routes.CountryPartnerReceivedBenefitsController.onPageLoad(waypoints, index).url
