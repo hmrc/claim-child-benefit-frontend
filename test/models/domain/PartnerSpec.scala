@@ -98,5 +98,28 @@ class PartnerSpec extends AnyFreeSpec with Matchers with ModelGenerators with Op
       val result = Partner.build(partner)
       result must not be defined
     }
+
+    "must normalise accented characters and replace ’ with ' in the partner's surname" in {
+
+      val surname = "À’ēîůŷ"
+      val nino = arbitrary[Nino].sample.value.nino
+      val claiming = Gen.oneOf(GettingPayments, NotGettingPayments, WaitingToHear).sample.value
+
+      val partner = JourneyModel.Partner(
+        name = AdultName(None, "first", None, surname),
+        nationalInsuranceNumber = Some(nino),
+        dateOfBirth = LocalDate.now,
+        nationalities = NonEmptyList.fromListUnsafe(Gen.nonEmptyListOf(arbitrary[models.Nationality]).sample.value),
+        memberOfHMForcesOrCivilServantAbroad = true,
+        currentlyClaimingChildBenefit = claiming,
+        eldestChild = None,
+        countriesWorked = Nil,
+        countriesReceivedBenefits = Nil,
+        employmentStatus = Set[EmploymentStatus](EmploymentStatus.NoneOfThese)
+      )
+
+      val result = Partner.build(partner)
+      result.value mustEqual Partner(nino, "A'eiuy")
+    }
   }
 }

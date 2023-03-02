@@ -16,18 +16,13 @@
 
 package models.domain
 
-import play.api.libs.json.{Json, OWrites}
+import java.text.Normalizer
 
-final case class ChildName(forenames: String, middleNames: Option[String], surname: String)
+trait StringNormaliser {
 
-object ChildName extends StringNormaliser {
-
-  def build(name: models.ChildName): ChildName =
-    ChildName(
-      normalise(name.firstName),
-      name.middleNames.map(normalise),
-      normalise(name.lastName)
-    )
-
-  implicit lazy val writes: OWrites[ChildName] = Json.writes
+  def normalise(input: String): String =
+    Normalizer
+      .normalize(input, Normalizer.Form.NFKD)
+      .replaceAll("\\p{M}", "")
+      .replaceAll("’", "'")
 }
