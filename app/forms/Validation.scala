@@ -24,7 +24,7 @@ object Validation {
   val sortCodePattern: Regex      = "[ -]*(?:\\d[ -]*){6}".r.anchored
   val rollNumberPattern: Regex    = """[a-zA-Z0-9- ./]{1,18}""".r.anchored
   val systemNumberPattern: Regex  = "(?:\\d[ -]*){9}".r.anchored
-  val nameInputPattern: Regex     = "[A-Za-zÀ-ÖØ-öø-ÿ'’ -]{1,35}".r.anchored
-  val addressInputPattern: Regex  = """[0-9A-Za-zÀ-ÖØ-öø-ÿ'’ -]{1,35}""".r.anchored
+  val nameInputPattern: Regex     = "[A-Za-zÀ-ÖØ-öø-ÿ'’ -]+".r.anchored
+  val addressInputPattern: Regex  = """[0-9A-Za-zÀ-ÖØ-öø-ÿ'’ -]+""".r.anchored
   val ukPostcodePattern: Regex    = """[a-zA-Z]{1,2}[0-9][0-9a-zA-Z]? ?[0-9][a-zA-Z]{2}""".r.anchored
 }
