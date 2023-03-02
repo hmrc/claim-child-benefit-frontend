@@ -23,8 +23,8 @@ import javax.inject.Inject
 
 class RemoveCountryPartnerWorkedFormProvider @Inject() extends Mappings {
 
-  def apply(partnerFirstName: String, nationality: String): Form[Boolean] =
+  def apply(partnerFirstName: String, country: String): Form[Boolean] =
     Form(
-      "value" -> boolean("removeCountryPartnerWorked.error.required", args = Seq(partnerFirstName, nationality))
+      "value" -> boolean("removeCountryPartnerWorked.error.required", args = Seq(partnerFirstName, country))
     )
 }
