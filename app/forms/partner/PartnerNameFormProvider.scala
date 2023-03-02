@@ -16,6 +16,7 @@
 
 package forms.partner
 
+import forms.Validation
 import forms.mappings.Mappings
 import models.AdultName
 import play.api.data.Form
@@ -28,13 +29,25 @@ class PartnerNameFormProvider @Inject() extends Mappings {
   def apply(): Form[AdultName] = Form(
     mapping(
       "title" -> optional(text("partnerName.error.title.required")
-        .verifying(maxLength(100, "partnerName.error.title.length"))),
+        .verifying(firstError(
+          maxLength(35, "partnerName.error.title.length"),
+          regexp(Validation.nameInputPattern, "partnerName.error.title.invalid")
+        ))),
       "firstName" -> text("partnerName.error.firstName.required")
-        .verifying(maxLength(100, "partnerName.error.firstName.length")),
+        .verifying(firstError(
+          maxLength(35, "partnerName.error.firstName.length"),
+          regexp(Validation.nameInputPattern, "partnerName.error.firstName.invalid")
+        )),
       "middleNames" -> optional(text("partnerName.error.middleNames.required")
-        .verifying(maxLength(100, "partnerName.error.middleNames.length"))),
+        .verifying(firstError(
+          maxLength(35, "partnerName.error.middleNames.length"),
+          regexp(Validation.nameInputPattern, "partnerName.error.middleNames.invalid")
+        ))),
       "lastName" -> text("partnerName.error.lastName.required")
-        .verifying(maxLength(100, "partnerName.error.lastName.length"))
+        .verifying(firstError(
+          maxLength(35, "partnerName.error.lastName.length"),
+          regexp(Validation.nameInputPattern, "partnerName.error.lastName.invalid")
+        ))
     )(AdultName.apply)(AdultName.unapply)
   )
 }
