@@ -53,7 +53,9 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
     Gen.const('\''),
     Gen.oneOf('À' to 'Ö'),
     Gen.oneOf('Ø' to 'ö'),
-    Gen.oneOf('ø' to 'ÿ')
+    Gen.oneOf('ø' to 'ÿ'),
+    Gen.oneOf('Ā' to 'ň'),
+    Gen.oneOf('Ŋ' to 'ſ')
   )
 
   def safeAddressInputs: Gen[Char] = Gen.oneOf(
@@ -64,7 +66,9 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
     Gen.const('\''),
     Gen.oneOf('À' to 'Ö'),
     Gen.oneOf('Ø' to 'ö'),
-    Gen.oneOf('ø' to 'ÿ')
+    Gen.oneOf('ø' to 'ÿ'),
+    Gen.oneOf('Ā' to 'ň'),
+    Gen.oneOf('Ŋ' to 'ſ')
   )
 
   def unsafeInputs: Gen[Char] = Gen.oneOf(
