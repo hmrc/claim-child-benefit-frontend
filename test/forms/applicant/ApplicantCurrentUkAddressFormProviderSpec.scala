@@ -16,6 +16,7 @@
 
 package forms.applicant
 
+import forms.Validation
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
 
@@ -28,12 +29,20 @@ class ApplicantCurrentUkAddressFormProviderSpec extends StringFieldBehaviours {
     val fieldName = "line1"
     val requiredKey = "applicantCurrentUkAddress.error.line1.required"
     val lengthKey = "applicantCurrentUkAddress.error.line1.length"
-    val maxLength = 100
+    val invalidKey = "applicantCurrentUkAddress.error.line1.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeAddressInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.addressInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(
@@ -54,13 +63,22 @@ class ApplicantCurrentUkAddressFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName = "line2"
     val lengthKey = "applicantCurrentUkAddress.error.line2.length"
-    val maxLength = 100
+    val invalidKey = "applicantCurrentUkAddress.error.line2.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeAddressInputsWithMaxLength(maxLength)
     )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.addressInputPattern.toString))
+    )
+
 
     behave like fieldWithMaxLength(
       form,
@@ -75,13 +93,22 @@ class ApplicantCurrentUkAddressFormProviderSpec extends StringFieldBehaviours {
     val fieldName = "town"
     val requiredKey = "applicantCurrentUkAddress.error.town.required"
     val lengthKey = "applicantCurrentUkAddress.error.town.length"
-    val maxLength = 100
+    val invalidKey = "applicantCurrentUkAddress.error.town.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeAddressInputsWithMaxLength(maxLength)
     )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.addressInputPattern.toString))
+    )
+
 
     behave like fieldWithMaxLength(
       form,
@@ -101,12 +128,20 @@ class ApplicantCurrentUkAddressFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName = "county"
     val lengthKey = "applicantCurrentUkAddress.error.county.length"
-    val maxLength = 100
+    val invalidKey = "applicantCurrentUkAddress.error.county.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeAddressInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.addressInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(
@@ -122,12 +157,20 @@ class ApplicantCurrentUkAddressFormProviderSpec extends StringFieldBehaviours {
     val fieldName = "postcode"
     val requiredKey = "applicantCurrentUkAddress.error.postcode.required"
     val lengthKey = "applicantCurrentUkAddress.error.postcode.length"
-    val maxLength = 100
+    val invalidKey = "applicantCurrentUkAddress.error.postcode.invalid"
+    val maxLength = 8
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      ukPostcode
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.ukPostcodePattern.toString))
     )
 
     behave like fieldWithMaxLength(

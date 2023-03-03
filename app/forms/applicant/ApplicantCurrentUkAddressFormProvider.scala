@@ -16,6 +16,7 @@
 
 package forms.applicant
 
+import forms.Validation
 import forms.mappings.Mappings
 import models.UkAddress
 import play.api.data.Form
@@ -28,15 +29,30 @@ class ApplicantCurrentUkAddressFormProvider @Inject() extends Mappings {
   def apply(): Form[UkAddress] = Form(
     mapping(
       "line1" -> text("applicantCurrentUkAddress.error.line1.required")
-        .verifying(maxLength(100, "applicantCurrentUkAddress.error.line1.length")),
+        .verifying(firstError(
+          maxLength(35, "applicantCurrentUkAddress.error.line1.length"),
+          regexp(Validation.addressInputPattern, "applicantCurrentUkAddress.error.line1.invalid")
+        )),
       "line2" -> optional(text("applicantCurrentUkAddress.error.line2.required")
-        .verifying(maxLength(100, "applicantCurrentUkAddress.error.line2.length"))),
+        .verifying(firstError(
+          maxLength(35, "applicantCurrentUkAddress.error.line2.length"),
+          regexp(Validation.addressInputPattern, "applicantCurrentUkAddress.error.line2.invalid")
+        ))),
       "town" -> text("applicantCurrentUkAddress.error.town.required")
-        .verifying(maxLength(100, "applicantCurrentUkAddress.error.town.length")),
+        .verifying(firstError(
+          maxLength(35, "applicantCurrentUkAddress.error.town.length"),
+          regexp(Validation.addressInputPattern, "applicantCurrentUkAddress.error.town.invalid")
+        )),
       "county" -> optional(text("applicantCurrentUkAddress.error.county.required")
-        .verifying(maxLength(100, "applicantCurrentUkAddress.error.county.length"))),
+        .verifying(firstError(
+          maxLength(35, "applicantCurrentUkAddress.error.county.length"),
+          regexp(Validation.addressInputPattern, "applicantCurrentUkAddress.error.county.invalid")
+        ))),
       "postcode" -> text("applicantCurrentUkAddress.error.postcode.required")
-        .verifying(maxLength(100, "applicantCurrentUkAddress.error.postcode.length"))
+        .verifying(firstError(
+          maxLength(8, "applicantCurrentUkAddress.error.postcode.length"),
+          regexp(Validation.ukPostcodePattern, "applicantCurrentUkAddress.error.postcode.invalid")
+        ))
     )(UkAddress.apply)(UkAddress.unapply)
   )
 }

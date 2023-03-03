@@ -17,6 +17,7 @@
 package forms.mappings
 
 import generators.Generators
+import models.Index
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -27,26 +28,25 @@ import java.time.LocalDate
 
 class ConstraintsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with Generators  with Constraints {
 
-
   "firstError" - {
 
     "must return Valid when all constraints pass" in {
-      val result = firstError(maxLength(10, "error.length"), regexp("""^\w+$""", "error.regexp"))("foo")
+      val result = firstError(maxLength(10, "error.length"), regexp("""^\w+$""".r, "error.regexp"))("foo")
       result mustEqual Valid
     }
 
     "must return Invalid when the first constraint fails" in {
-      val result = firstError(maxLength(10, "error.length"), regexp("""^\w+$""", "error.regexp"))("a" * 11)
+      val result = firstError(maxLength(10, "error.length"), regexp("""^\w+$""".r, "error.regexp"))("a" * 11)
       result mustEqual Invalid("error.length", 10)
     }
 
     "must return Invalid when the second constraint fails" in {
-      val result = firstError(maxLength(10, "error.length"), regexp("""^\w+$""", "error.regexp"))("")
+      val result = firstError(maxLength(10, "error.length"), regexp("""^\w+$""".r, "error.regexp"))("")
       result mustEqual Invalid("error.regexp", """^\w+$""")
     }
 
     "must return Invalid for the first error when both constraints fail" in {
-      val result = firstError(maxLength(-1, "error.length"), regexp("""^\w+$""", "error.regexp"))("")
+      val result = firstError(maxLength(-1, "error.length"), regexp("""^\w+$""".r, "error.regexp"))("")
       result mustEqual Invalid("error.length", -1)
     }
   }
@@ -90,12 +90,12 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
   "regexp" - {
 
     "must return Valid for an input that matches the expression" in {
-      val result = regexp("""^\w+$""", "error.invalid")("foo")
+      val result = regexp("""^\w+$""".r, "error.invalid")("foo")
       result mustEqual Valid
     }
 
     "must return Invalid for an input that does not match the expression" in {
-      val result = regexp("""^\d+$""", "error.invalid")("foo")
+      val result = regexp("""^\d+$""".r, "error.invalid")("foo")
       result mustEqual Invalid("error.invalid", """^\d+$""")
     }
   }
@@ -213,6 +213,39 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
     "must return Invalid if the data contains items from both exclusive sets" in {
 
       noMutuallyExclusiveAnswers(set1, set2, "error", "foo")(Set(A, B)) mustEqual Invalid("error", "foo")
+    }
+  }
+
+  "notADuplicate" - {
+
+    "must return Valid when there is not another entry in the existing answers with the same value" in {
+
+      val answer = "foo"
+      val existingAnswers = Seq("bar", "baz")
+      val index = Index(0)
+
+      val result = notADuplicate(index, existingAnswers, "error.duplicate", "foo")(answer)
+      result mustEqual Valid
+    }
+
+    "must return Valid when this answer is in the existing answers at the same index position, but nowhere else" in {
+
+      val answer = "foo"
+      val existingAnswers = Seq("bar", "foo", "baz")
+      val index = Index(1)
+
+      val result = notADuplicate(index, existingAnswers, "error.duplicate", "foo")(answer)
+      result mustEqual Valid
+    }
+
+    "must return Invalid when this answer is in the existing answers at a different index position" in {
+
+      val answer = "foo"
+      val existingAnswers = Seq("bar", "foo", "baz")
+      val index = Index(0)
+
+      val result = notADuplicate(index, existingAnswers, "error.duplicate", "foo")(answer)
+      result mustEqual Invalid("error.duplicate", "foo")
     }
   }
 }

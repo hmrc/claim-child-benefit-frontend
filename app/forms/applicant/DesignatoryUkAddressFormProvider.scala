@@ -16,6 +16,7 @@
 
 package forms.applicant
 
+import forms.Validation
 import forms.mappings.Mappings
 import models.UkAddress
 import play.api.data.Form
@@ -28,15 +29,30 @@ class DesignatoryUkAddressFormProvider @Inject() extends Mappings {
   def apply(): Form[UkAddress] = Form(
     mapping(
       "line1" -> text("designatoryUkAddress.error.line1.required")
-        .verifying(maxLength(100, "designatoryUkAddress.error.line1.length")),
+        .verifying(firstError(
+          maxLength(35, "designatoryUkAddress.error.line1.length"),
+          regexp(Validation.addressInputPattern, "designatoryUkAddress.error.line1.invalid")
+        )),
       "line2" -> optional(text("designatoryUkAddress.error.line2.required")
-        .verifying(maxLength(100, "designatoryUkAddress.error.line2.length"))),
+        .verifying(firstError(
+          maxLength(35, "designatoryUkAddress.error.line2.length"),
+          regexp(Validation.addressInputPattern, "designatoryUkAddress.error.line2.invalid")
+        ))),
       "town" -> text("designatoryUkAddress.error.town.required")
-        .verifying(maxLength(100, "designatoryUkAddress.error.town.length")),
+        .verifying(firstError(
+          maxLength(35, "designatoryUkAddress.error.town.length"),
+          regexp(Validation.addressInputPattern, "designatoryUkAddress.error.town.invalid")
+        )),
       "county" -> optional(text("designatoryUkAddress.error.county.required")
-        .verifying(maxLength(100, "designatoryUkAddress.error.county.length"))),
+        .verifying(firstError(
+          maxLength(35, "designatoryUkAddress.error.county.length"),
+          regexp(Validation.addressInputPattern, "designatoryUkAddress.error.county.invalid")
+        ))),
       "postcode" -> text("designatoryUkAddress.error.postcode.required")
-        .verifying(maxLength(100, "designatoryUkAddress.error.postcode.length"))
+        .verifying(firstError(
+          maxLength(8, "designatoryUkAddress.error.postcode.length"),
+          regexp(Validation.ukPostcodePattern, "designatoryUkAddress.error.postcode.invalid")
+        ))
     )(UkAddress.apply)(UkAddress.unapply)
   )
 }

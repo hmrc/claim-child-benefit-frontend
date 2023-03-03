@@ -16,6 +16,7 @@
 
 package forms.applicant
 
+import forms.Validation
 import forms.mappings.Mappings
 import models.{Country, InternationalAddress}
 import play.api.data.Form
@@ -28,15 +29,30 @@ class DesignatoryInternationalAddressFormProvider @Inject() extends Mappings {
   def apply(): Form[InternationalAddress] = Form(
     mapping(
       "line1" -> text("designatoryInternationalAddress.error.line1.required")
-        .verifying(maxLength(100, "designatoryInternationalAddress.error.line1.length")),
+        .verifying(firstError(
+          maxLength(35, "designatoryInternationalAddress.error.line1.length"),
+          regexp(Validation.addressInputPattern, "designatoryInternationalAddress.error.line1.invalid")
+        )),
       "line2" -> optional(text("designatoryInternationalAddress.error.line2.required")
-        .verifying(maxLength(100, "designatoryInternationalAddress.error.line2.length"))),
+        .verifying(firstError(
+          maxLength(35, "designatoryInternationalAddress.error.line2.length"),
+          regexp(Validation.addressInputPattern, "designatoryInternationalAddress.error.line2.invalid")
+        ))),
       "town" -> text("designatoryInternationalAddress.error.town.required")
-        .verifying(maxLength(100, "designatoryInternationalAddress.error.town.length")),
+        .verifying(firstError(
+          maxLength(35, "designatoryInternationalAddress.error.town.length"),
+          regexp(Validation.addressInputPattern, "designatoryInternationalAddress.error.town.invalid")
+        )),
       "state" -> optional(text("designatoryInternationalAddress.error.state.required")
-        .verifying(maxLength(100, "designatoryInternationalAddress.error.state.length"))),
+        .verifying(firstError(
+          maxLength(35, "designatoryInternationalAddress.error.state.length"),
+          regexp(Validation.addressInputPattern, "designatoryInternationalAddress.error.state.invalid")
+        ))),
       "postcode" -> optional(text("designatoryInternationalAddress.error.postcode.required")
-        .verifying(maxLength(100, "designatoryInternationalAddress.error.postcode.length"))),
+        .verifying(firstError(
+          maxLength(8, "designatoryInternationalAddress.error.postcode.length"),
+          regexp(Validation.addressInputPattern, "designatoryInternationalAddress.error.postcode.invalid")
+        ))),
       "country" -> text("designatoryInternationalAddress.error.country.required")
         .verifying("designatoryInternationalAddress.error.country.required", value => Country.internationalCountries.exists(_.code == value))
         .transform[Country](value => Country.internationalCountries.find(_.code == value).get, _.code)

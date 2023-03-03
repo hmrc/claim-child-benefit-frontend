@@ -16,6 +16,7 @@
 
 package forms.partner
 
+import forms.Validation
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
 
@@ -27,12 +28,20 @@ class PartnerNameFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName = "title"
     val lengthKey = "partnerName.error.title.length"
-    val maxLength = 100
+    val invalidKey = "partnerName.error.title.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeNameInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.nameInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(
@@ -48,12 +57,20 @@ class PartnerNameFormProviderSpec extends StringFieldBehaviours {
     val fieldName = "firstName"
     val requiredKey = "partnerName.error.firstName.required"
     val lengthKey = "partnerName.error.firstName.length"
-    val maxLength = 100
+    val invalidKey = "partnerName.error.firstName.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeNameInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.nameInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(
@@ -74,12 +91,20 @@ class PartnerNameFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName = "middleNames"
     val lengthKey = "partnerName.error.middleNames.length"
-    val maxLength = 100
+    val invalidKey = "partnerName.error.middleNames.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeNameInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.nameInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(
@@ -95,12 +120,20 @@ class PartnerNameFormProviderSpec extends StringFieldBehaviours {
     val fieldName = "lastName"
     val requiredKey = "partnerName.error.lastName.required"
     val lengthKey = "partnerName.error.lastName.length"
-    val maxLength = 100
+    val invalidKey = "partnerName.error.lastName.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeNameInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.nameInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(

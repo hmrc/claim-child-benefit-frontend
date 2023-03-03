@@ -16,7 +16,6 @@
 
 package models.domain
 
-import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -26,9 +25,11 @@ class ChildNameSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChe
 
   ".build" - {
 
+    val alphaString = Gen.nonEmptyListOf(Gen.alphaChar).map(_.mkString)
+
     "must create a ChildName" in {
 
-      forAll(arbitrary[String], Gen.option(arbitrary[String]), arbitrary[String]) {
+      forAll(alphaString, Gen.option(alphaString), alphaString) {
         case (first, middle, last) =>
 
           val name = models.ChildName(first, middle, last)
@@ -36,6 +37,22 @@ class ChildNameSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChe
 
           result mustEqual ChildName(first, middle, last)
       }
+    }
+
+    "must normalise accented characters in first name, middle names and last name fields" in {
+
+      val name = models.ChildName("āăą", Some("îïĩí"), "šŝś")
+      val result = ChildName.build(name)
+
+      result mustEqual ChildName("aaa", Some("iiii"), "sss")
+    }
+
+    "must replace ’ with ' in first name, middle names and last name fields" in {
+
+      val name = models.ChildName("a’b", Some("c’d"), "e’f")
+      val result = ChildName.build(name)
+
+      result mustEqual ChildName("a'b", Some("c'd"), "e'f")
     }
   }
 }

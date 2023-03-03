@@ -42,7 +42,7 @@ class DesignatoryInternationalAddressControllerSpec extends SpecBase with Mockit
   lazy val designatoryInternationalAddressRoute = routes.DesignatoryInternationalAddressController.onPageLoad(waypoints).url
 
   private val country     = Country.internationalCountries.head
-  private val validAnswer = InternationalAddress("line 1", None, "town", None, Some("postcode"), country)
+  private val validAnswer = InternationalAddress("line 1", None, "town", None, Some("AA11 1AA"), country)
   private val userAnswers = emptyUserAnswers.set(DesignatoryInternationalAddressPage, validAnswer).success.value
 
   "DesignatoryAddress Controller" - {
@@ -95,7 +95,7 @@ class DesignatoryInternationalAddressControllerSpec extends SpecBase with Mockit
       running(application) {
         val request =
           FakeRequest(POST, designatoryInternationalAddressRoute)
-            .withFormUrlEncodedBody(("line1", "line 1"), ("town", "town"), ("postcode", "postcode"), ("country", country.code))
+            .withFormUrlEncodedBody(("line1", "line 1"), ("town", "town"), ("postcode", "AA11 1AA"), ("country", country.code))
 
         val result = route(application, request).value
         val expectedAnswers = emptyUserAnswers.set(DesignatoryInternationalAddressPage, validAnswer).success.value
@@ -147,7 +147,7 @@ class DesignatoryInternationalAddressControllerSpec extends SpecBase with Mockit
       running(application) {
         val request =
           FakeRequest(POST, designatoryInternationalAddressRoute)
-            .withFormUrlEncodedBody(("line1", "line 1"), ("town", "town"), ("postcode", "postcode"), ("country", country.code))
+            .withFormUrlEncodedBody(("line1", "line 1"), ("town", "town"), ("postcode", "AA11 1AA"), ("country", country.code))
 
         val result = route(application, request).value
 

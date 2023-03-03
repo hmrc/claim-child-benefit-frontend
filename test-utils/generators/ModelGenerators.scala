@@ -25,6 +25,16 @@ import java.time.LocalDate
 
 trait ModelGenerators {
 
+  def ukPostcode: Gen[String] =
+    for {
+      firstChars <- Gen.choose(1, 2)
+      first <- Gen.listOfN(firstChars, Gen.alphaUpperChar).map(_.mkString)
+      second <- Gen.numChar.map(_.toString)
+      third <- Gen.oneOf(Gen.alphaUpperChar, Gen.numChar).map(_.toString)
+      fourth <- Gen.numChar.map(_.toString)
+      fifth <- Gen.listOfN(2, Gen.alphaUpperChar).map(_.mkString)
+    } yield s"$first$second$third$fourth$fifth"
+
   def genUkCtaNationality: Gen[Nationality] =
     Gen.oneOf(Nationality.allNationalities.filter(_.group == NationalityGroup.UkCta))
 
@@ -81,9 +91,9 @@ trait ModelGenerators {
   implicit lazy val arbitraryChildName: Arbitrary[ChildName] =
     Arbitrary {
       for {
-        firstName <- arbitrary[String]
-        middleNames <- Gen.option(arbitrary[String])
-        lastName <- arbitrary[String]
+        firstName <- Gen.listOfN(35, Gen.alphaChar).map(_.mkString)
+        middleNames <- Gen.option(Gen.listOfN(35, Gen.alphaChar).map(_.mkString))
+        lastName <- Gen.listOfN(35, Gen.alphaChar).map(_.mkString)
       } yield ChildName(firstName, middleNames, lastName)
     }
 
@@ -114,32 +124,32 @@ trait ModelGenerators {
   implicit lazy val arbitraryAdultName: Arbitrary[AdultName] =
     Arbitrary {
       for {
-        title <- Gen.option(arbitrary[String])
-        firstName <- arbitrary[String]
-        middleNames <- Gen.option(arbitrary[String])
-        lastName <- arbitrary[String]
+        title <- Gen.option(Gen.listOfN(35, Gen.alphaChar).map(_.mkString))
+        firstName <- Gen.listOfN(35, Gen.alphaChar).map(_.mkString)
+        middleNames <- Gen.option(Gen.listOfN(35, Gen.alphaChar).map(_.mkString))
+        lastName <- Gen.listOfN(35, Gen.alphaChar).map(_.mkString)
       } yield AdultName(title, firstName, middleNames, lastName)
     }
 
   implicit lazy val arbitraryUkAddress: Arbitrary[UkAddress] =
     Arbitrary {
       for {
-        line1    <- arbitrary[String]
-        line2    <- Gen.option(arbitrary[String])
-        town     <- arbitrary[String]
-        county   <- Gen.option(arbitrary[String])
-        postcode <- arbitrary[String]
+        line1    <- Gen.listOfN(35, Gen.alphaChar).map(_.mkString)
+        line2    <- Gen.option(Gen.listOfN(35, Gen.alphaChar).map(_.mkString))
+        town     <- Gen.listOfN(35, Gen.alphaChar).map(_.mkString)
+        county   <- Gen.option(Gen.listOfN(35, Gen.alphaChar).map(_.mkString))
+        postcode <- ukPostcode
       } yield UkAddress(line1, line2, town, county, postcode)
     }
 
   implicit lazy val arbitraryInternationalAddress: Arbitrary[InternationalAddress] =
     Arbitrary {
       for {
-        line1    <- arbitrary[String]
-        line2    <- Gen.option(arbitrary[String])
-        town     <- arbitrary[String]
-        state    <- Gen.option(arbitrary[String])
-        postcode <- Gen.option(arbitrary[String])
+        line1    <- Gen.listOfN(35, Gen.alphaChar).map(_.mkString)
+        line2    <- Gen.option(Gen.listOfN(35, Gen.alphaChar).map(_.mkString))
+        town     <- Gen.listOfN(35, Gen.alphaChar).map(_.mkString)
+        state    <- Gen.option(Gen.listOfN(35, Gen.alphaChar).map(_.mkString))
+        postcode <- Gen.option(Gen.listOfN(8, Gen.alphaChar).map(_.mkString))
         country  <- Gen.oneOf(Country.internationalCountries)
       } yield InternationalAddress(line1, line2, town, state, postcode, country)
     }

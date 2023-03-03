@@ -42,7 +42,7 @@ class CorrespondenceInternationalAddressControllerSpec extends SpecBase with Moc
   lazy val correspondenceInternationalAddressRoute = routes.CorrespondenceInternationalAddressController.onPageLoad(waypoints).url
 
   private val country     = Country.internationalCountries.head
-  private val validAnswer = InternationalAddress("line 1", None, "town", None, Some("postcode"), country)
+  private val validAnswer = InternationalAddress("line 1", None, "town", None, Some("AA11 1AA"), country)
   private val userAnswers = emptyUserAnswers.set(CorrespondenceInternationalAddressPage, validAnswer).success.value
 
   "CorrespondenceAddress Controller" - {
@@ -95,7 +95,7 @@ class CorrespondenceInternationalAddressControllerSpec extends SpecBase with Moc
       running(application) {
         val request =
           FakeRequest(POST, correspondenceInternationalAddressRoute)
-            .withFormUrlEncodedBody(("line1", "line 1"), ("town", "town"), ("postcode", "postcode"), ("country", country.code))
+            .withFormUrlEncodedBody(("line1", "line 1"), ("town", "town"), ("postcode", "AA11 1AA"), ("country", country.code))
 
         val result = route(application, request).value
         val expectedAnswers = emptyUserAnswers.set(CorrespondenceInternationalAddressPage, validAnswer).success.value
@@ -147,7 +147,7 @@ class CorrespondenceInternationalAddressControllerSpec extends SpecBase with Moc
       running(application) {
         val request =
           FakeRequest(POST, correspondenceInternationalAddressRoute)
-            .withFormUrlEncodedBody(("line1", "line 1"), ("town", "town"), ("postcode", "postcode"), ("country", country.code))
+            .withFormUrlEncodedBody(("line1", "line 1"), ("town", "town"), ("postcode", "AA11 1AA"), ("country", country.code))
 
         val result = route(application, request).value
 

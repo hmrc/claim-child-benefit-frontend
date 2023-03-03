@@ -16,6 +16,7 @@
 
 package forms.applicant
 
+import forms.Validation
 import forms.mappings.Mappings
 import models.ApplicantPreviousName
 import play.api.data.Form
@@ -27,7 +28,10 @@ class ApplicantPreviousFamilyNameFormProvider @Inject() extends Mappings {
   def apply(): Form[ApplicantPreviousName] =
     Form(
       "value" -> text("applicantPreviousFamilyName.error.required")
-        .verifying(maxLength(100, "applicantPreviousFamilyName.error.length"))
+        .verifying(firstError(
+          maxLength(35, "applicantPreviousFamilyName.error.length"),
+          regexp(Validation.nameInputPattern, "applicantPreviousFamilyName.error.invalid")
+        ))
         .transform[ApplicantPreviousName](ApplicantPreviousName.apply, x => x.lastName)
     )
 }

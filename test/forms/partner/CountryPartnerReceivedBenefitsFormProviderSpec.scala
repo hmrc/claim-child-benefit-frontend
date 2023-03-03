@@ -17,17 +17,19 @@
 package forms.partner
 
 import forms.behaviours.StringFieldBehaviours
-import models.Country
+import models.{Country, Index}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import play.api.data.FormError
 
 class CountryPartnerReceivedBenefitsFormProviderSpec extends StringFieldBehaviours {
 
+  val index = Index(0)
+  val emptyExistingAnswers = Seq.empty[Country]
   val name = "name"
   val requiredKey = "countryPartnerReceivedBenefits.error.required"
 
-  val form = new CountryPartnerReceivedBenefitsFormProvider()(name)
+  val form = new CountryPartnerReceivedBenefitsFormProvider()(name, index, emptyExistingAnswers)
 
   ".value" - {
 
@@ -54,6 +56,15 @@ class CountryPartnerReceivedBenefitsFormProviderSpec extends StringFieldBehaviou
           val result = form.bind(Map("value" -> answer)).apply(fieldName)
           result.errors must contain only FormError(fieldName, requiredKey)
       }
+    }
+
+    "must fail to bind when given a duplicate value" in {
+      val existingAnswers = Seq(Country.internationalCountries.head, Country.internationalCountries.tail.head)
+      val answer = Country.internationalCountries.tail.head
+      val form = new CountryPartnerReceivedBenefitsFormProvider()(name, index, existingAnswers)
+
+      val result = form.bind(Map(fieldName -> answer.code)).apply(fieldName)
+      result.errors must contain only FormError(fieldName, "countryPartnerReceivedBenefits.error.duplicate", Seq(name))
     }
   }
 }

@@ -23,6 +23,7 @@ import pages.Waypoints
 import pages.applicant.CountryApplicantReceivedBenefitsPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import queries.AllCountriesApplicantReceivedBenefits
 import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.applicant.CountryApplicantReceivedBenefitsView
@@ -41,10 +42,13 @@ class CountryApplicantReceivedBenefitsController @Inject()(
                                                             view: CountryApplicantReceivedBenefitsView
                                                           )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form = formProvider()
 
   def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
+
+      val countries = request.userAnswers.get(AllCountriesApplicantReceivedBenefits).getOrElse(Nil)
+
+      val form = formProvider(index, countries)
 
       val preparedForm = request.userAnswers.get(CountryApplicantReceivedBenefitsPage(index)) match {
         case None => form
@@ -57,6 +61,10 @@ class CountryApplicantReceivedBenefitsController @Inject()(
   def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
+      val countries = request.userAnswers.get(AllCountriesApplicantReceivedBenefits).getOrElse(Nil)
+
+      val form = formProvider(index, countries)
+
       form.bindFromRequest().fold(
         formWithErrors =>
           Future.successful(BadRequest(view(formWithErrors, waypoints, index))),
@@ -64,7 +72,7 @@ class CountryApplicantReceivedBenefitsController @Inject()(
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(CountryApplicantReceivedBenefitsPage(index), value))
-            _              <- userDataService.set(updatedAnswers)
+            _ <- userDataService.set(updatedAnswers)
           } yield Redirect(CountryApplicantReceivedBenefitsPage(index).navigate(waypoints, request.userAnswers, updatedAnswers).route)
       )
   }

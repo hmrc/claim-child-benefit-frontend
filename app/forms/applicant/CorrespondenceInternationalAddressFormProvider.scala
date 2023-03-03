@@ -16,6 +16,7 @@
 
 package forms.applicant
 
+import forms.Validation
 import forms.mappings.Mappings
 import models.{Country, InternationalAddress}
 import play.api.data.Form
@@ -28,15 +29,30 @@ class CorrespondenceInternationalAddressFormProvider @Inject() extends Mappings 
   def apply(): Form[InternationalAddress] = Form(
     mapping(
       "line1" -> text("correspondenceInternationalAddress.error.line1.required")
-        .verifying(maxLength(100, "correspondenceInternationalAddress.error.line1.length")),
+        .verifying(firstError(
+          maxLength(35, "correspondenceInternationalAddress.error.line1.length"),
+          regexp(Validation.addressInputPattern, "correspondenceInternationalAddress.error.line1.invalid")
+        )),
       "line2" -> optional(text("correspondenceInternationalAddress.error.line2.required")
-        .verifying(maxLength(100, "correspondenceInternationalAddress.error.line2.length"))),
+        .verifying(firstError(
+          maxLength(35, "correspondenceInternationalAddress.error.line2.length"),
+          regexp(Validation.addressInputPattern, "correspondenceInternationalAddress.error.line2.invalid")
+        ))),
       "town" -> text("correspondenceInternationalAddress.error.town.required")
-        .verifying(maxLength(100, "correspondenceInternationalAddress.error.town.length")),
+        .verifying(firstError(
+          maxLength(35, "correspondenceInternationalAddress.error.town.length"),
+          regexp(Validation.addressInputPattern, "correspondenceInternationalAddress.error.town.invalid")
+        )),
       "state" -> optional(text("correspondenceInternationalAddress.error.state.required")
-        .verifying(maxLength(100, "correspondenceInternationalAddress.error.state.length"))),
+        .verifying(firstError(
+          maxLength(35, "correspondenceInternationalAddress.error.state.length"),
+          regexp(Validation.addressInputPattern, "correspondenceInternationalAddress.error.state.invalid")
+        ))),
       "postcode" -> optional(text("correspondenceInternationalAddress.error.postcode.required")
-        .verifying(maxLength(100, "correspondenceInternationalAddress.error.postcode.length"))),
+        .verifying(firstError(
+          maxLength(8, "correspondenceInternationalAddress.error.postcode.length"),
+          regexp(Validation.addressInputPattern, "correspondenceInternationalAddress.error.postcode.invalid")
+        ))),
       "country" -> text("correspondenceInternationalAddress.error.country.required")
         .verifying("correspondenceInternationalAddress.error.country.required", value => Country.internationalCountries.exists(_.code == value))
         .transform[Country](value => Country.internationalCountries.find(_.code == value).get, _.code)

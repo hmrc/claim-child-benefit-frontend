@@ -21,7 +21,7 @@ import play.api.libs.json.{Json, OWrites}
 
 final case class Partner(nino: String, surname: String)
 
-object Partner {
+object Partner extends StringNormaliser {
 
   def build(partner: JourneyModel.Partner): Option[Partner] =
     partner.currentlyClaimingChildBenefit match {
@@ -31,7 +31,10 @@ object Partner {
       case _ =>
         partner.nationalInsuranceNumber.map {
           nino =>
-            Partner (nino, partner.name.lastName)
+            Partner(
+              nino,
+              normalise(partner.name.lastName)
+            )
         }
     }
 

@@ -41,7 +41,7 @@ class ChildNameControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val childNameRoute = routes.ChildNameController.onPageLoad(waypoints, index).url
 
-  private val validAnswer = ChildName("value 1", None, "value 2")
+  private val validAnswer = ChildName("first", None, "last")
   private val userAnswers = emptyUserAnswers.set(ChildNamePage(index), validAnswer).success.value
 
   "ChildName Controller" - {
@@ -94,7 +94,7 @@ class ChildNameControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, childNameRoute)
-            .withFormUrlEncodedBody(("firstName", "value 1"), ("lastName", "value 2"))
+            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"))
 
         val result = route(application, request).value
         val expectedAnswers = emptyUserAnswers.set(child.ChildNamePage(index), validAnswer).success.value
@@ -146,7 +146,7 @@ class ChildNameControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, childNameRoute)
-            .withFormUrlEncodedBody(("firstName", "value 1"), ("lastName", "value 2"))
+            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"))
 
         val result = route(application, request).value
 

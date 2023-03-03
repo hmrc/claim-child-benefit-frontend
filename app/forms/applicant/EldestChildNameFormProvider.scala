@@ -16,6 +16,7 @@
 
 package forms.applicant
 
+import forms.Validation
 import forms.mappings.Mappings
 import models.ChildName
 import play.api.data.Form
@@ -28,11 +29,20 @@ class EldestChildNameFormProvider @Inject() extends Mappings {
    def apply(): Form[ChildName] = Form(
      mapping(
       "firstName" -> text("eldestChildName.error.firstName.required")
-        .verifying(maxLength(100, "eldestChildName.error.firstName.length")),
+        .verifying(firstError(
+          maxLength(35, "eldestChildName.error.firstName.length"),
+          regexp(Validation.nameInputPattern, "eldestChildName.error.firstName.invalid")
+        )),
       "middleNames" -> optional(text("eldestChildName.error.middleNames.required")
-        .verifying(maxLength(100, "eldestChildName.error.middleNames.length"))),
+        .verifying(firstError(
+          maxLength(35, "eldestChildName.error.middleNames.length"),
+          regexp(Validation.nameInputPattern, "eldestChildName.error.middleNames.invalid")
+        ))),
        "lastName" -> text("eldestChildName.error.lastName.required")
-         .verifying(maxLength(100, "eldestChildName.error.lastName.length"))
+         .verifying(firstError(
+           maxLength(35, "eldestChildName.error.lastName.length"),
+           regexp(Validation.nameInputPattern, "eldestChildName.error.lastName.invalid")
+         ))
     )(ChildName.apply)(ChildName.unapply)
    )
  }

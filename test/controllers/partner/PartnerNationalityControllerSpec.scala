@@ -40,7 +40,7 @@ class PartnerNationalityControllerSpec extends SpecBase with MockitoSugar {
   private val baseAnswers = emptyUserAnswers.set(PartnerNamePage, name).success.value
 
   val formProvider = new PartnerNationalityFormProvider()
-  val form = formProvider(name.firstName)
+  val form = formProvider(name.firstName, index, Seq.empty[Nationality])
   val validAnswer = Nationality.allNationalities.head
 
   lazy val partnerNationalityRoute = routes.PartnerNationalityController.onPageLoad(waypoints, index).url

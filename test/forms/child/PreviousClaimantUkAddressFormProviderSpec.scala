@@ -16,6 +16,7 @@
 
 package forms.child
 
+import forms.Validation
 import forms.behaviours.StringFieldBehaviours
 import models.AdultName
 import play.api.data.FormError
@@ -30,12 +31,20 @@ class PreviousClaimantUkAddressFormProviderSpec extends StringFieldBehaviours {
     val fieldName = "line1"
     val requiredKey = "previousClaimantUkAddress.error.line1.required"
     val lengthKey = "previousClaimantUkAddress.error.line1.length"
-    val maxLength = 100
+    val invalidKey = "previousClaimantUkAddress.error.line1.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeAddressInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.addressInputPattern.toString, name.firstName))
     )
 
     behave like fieldWithMaxLength(
@@ -56,12 +65,20 @@ class PreviousClaimantUkAddressFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName = "line2"
     val lengthKey = "previousClaimantUkAddress.error.line2.length"
-    val maxLength = 100
+    val invalidKey = "previousClaimantUkAddress.error.line2.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeAddressInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.addressInputPattern.toString, name.firstName))
     )
 
     behave like fieldWithMaxLength(
@@ -77,12 +94,20 @@ class PreviousClaimantUkAddressFormProviderSpec extends StringFieldBehaviours {
     val fieldName = "town"
     val requiredKey = "previousClaimantUkAddress.error.town.required"
     val lengthKey = "previousClaimantUkAddress.error.town.length"
-    val maxLength = 100
+    val invalidKey = "previousClaimantUkAddress.error.town.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeAddressInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.addressInputPattern.toString, name.firstName))
     )
 
     behave like fieldWithMaxLength(
@@ -103,12 +128,20 @@ class PreviousClaimantUkAddressFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName = "county"
     val lengthKey = "previousClaimantUkAddress.error.county.length"
-    val maxLength = 100
+    val invalidKey = "previousClaimantUkAddress.error.county.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeAddressInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.addressInputPattern.toString, name.firstName))
     )
 
     behave like fieldWithMaxLength(
@@ -124,12 +157,20 @@ class PreviousClaimantUkAddressFormProviderSpec extends StringFieldBehaviours {
     val fieldName = "postcode"
     val requiredKey = "previousClaimantUkAddress.error.postcode.required"
     val lengthKey = "previousClaimantUkAddress.error.postcode.length"
-    val maxLength = 100
+    val invalidKey = "previousClaimantUkAddress.error.postcode.invalid"
+    val maxLength = 8
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      ukPostcode
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.ukPostcodePattern.toString, name.firstName))
     )
 
     behave like fieldWithMaxLength(

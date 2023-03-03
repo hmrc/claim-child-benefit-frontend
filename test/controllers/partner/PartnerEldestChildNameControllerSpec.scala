@@ -44,7 +44,7 @@ class PartnerEldestChildNameControllerSpec extends SpecBase with MockitoSugar {
 
   private val name = AdultName(None, "first", None, "last")
   private val baseAnswers = emptyUserAnswers.set(PartnerNamePage, name).success.value
-  private val validAnswer = ChildName("value 1", None, "value 2")
+  private val validAnswer = ChildName("first", None, "last")
   private val userAnswers =
     baseAnswers
       .set(PartnerNamePage, partnerName).success.value
@@ -100,7 +100,7 @@ class PartnerEldestChildNameControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, partnerEldestChildNameRoute)
-            .withFormUrlEncodedBody(("firstName", "value 1"), ("lastName", "value 2"))
+            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"))
 
         val result = route(application, request).value
         val expectedAnswers = baseAnswers.set(PartnerEldestChildNamePage, validAnswer).success.value
@@ -152,7 +152,7 @@ class PartnerEldestChildNameControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, partnerEldestChildNameRoute)
-            .withFormUrlEncodedBody(("firstName", "value 1"), ("lastName", "value 2"))
+            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"))
 
         val result = route(application, request).value
 

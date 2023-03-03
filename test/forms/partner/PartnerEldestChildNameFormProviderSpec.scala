@@ -16,6 +16,7 @@
 
 package forms.partner
 
+import forms.Validation
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
 
@@ -29,12 +30,20 @@ class PartnerEldestChildNameFormProviderSpec extends StringFieldBehaviours {
     val fieldName = "firstName"
     val requiredKey = "partnerEldestChildName.error.firstName.required"
     val lengthKey = "partnerEldestChildName.error.firstName.length"
-    val maxLength = 100
+    val invalidKey = "partnerEldestChildName.error.firstName.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeNameInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.nameInputPattern.toString, name))
     )
 
     behave like fieldWithMaxLength(
@@ -55,12 +64,20 @@ class PartnerEldestChildNameFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName = "middleNames"
     val lengthKey = "partnerEldestChildName.error.middleNames.length"
-    val maxLength = 100
+    val invalidKey = "partnerEldestChildName.error.middleNames.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeNameInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.nameInputPattern.toString, name))
     )
 
     behave like fieldWithMaxLength(
@@ -76,12 +93,20 @@ class PartnerEldestChildNameFormProviderSpec extends StringFieldBehaviours {
     val fieldName = "lastName"
     val requiredKey = "partnerEldestChildName.error.lastName.required"
     val lengthKey = "partnerEldestChildName.error.lastName.length"
-    val maxLength = 100
+    val invalidKey = "partnerEldestChildName.error.lastName.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeNameInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.nameInputPattern.toString, name))
     )
 
     behave like fieldWithMaxLength(

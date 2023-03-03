@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package forms.partner
+package models.domain
 
-import forms.mappings.Mappings
-import play.api.data.Form
+import java.text.Normalizer
 
-import javax.inject.Inject
+trait StringNormaliser {
 
-class RemoveCountryPartnerReceivedBenefitsFormProvider @Inject() extends Mappings {
-
-  def apply(partnerFirstName: String, country: String): Form[Boolean] =
-    Form(
-      "value" -> boolean("removeCountryPartnerReceivedBenefits.error.required", args = Seq(partnerFirstName, country))
-    )
+  def normalise(input: String): String =
+    Normalizer
+      .normalize(input, Normalizer.Form.NFKD)
+      .replaceAll("\\p{M}", "")
+      .replaceAll("’", "'")
 }

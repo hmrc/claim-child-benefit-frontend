@@ -16,6 +16,7 @@
 
 package forms.child
 
+import forms.Validation
 import forms.behaviours.StringFieldBehaviours
 import models.{AdultName, Country}
 import org.scalacheck.Arbitrary.arbitrary
@@ -32,12 +33,20 @@ class GuardianInternationalAddressFormProviderSpec extends StringFieldBehaviours
     val fieldName = "line1"
     val requiredKey = "guardianInternationalAddress.error.line1.required"
     val lengthKey = "guardianInternationalAddress.error.line1.length"
-    val maxLength = 100
+    val invalidKey = "guardianInternationalAddress.error.line1.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeAddressInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.addressInputPattern.toString, name.firstName))
     )
 
     behave like fieldWithMaxLength(
@@ -58,12 +67,20 @@ class GuardianInternationalAddressFormProviderSpec extends StringFieldBehaviours
 
     val fieldName = "line2"
     val lengthKey = "guardianInternationalAddress.error.line2.length"
-    val maxLength = 100
+    val invalidKey = "guardianInternationalAddress.error.line2.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeAddressInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.addressInputPattern.toString, name.firstName))
     )
 
     behave like fieldWithMaxLength(
@@ -79,12 +96,20 @@ class GuardianInternationalAddressFormProviderSpec extends StringFieldBehaviours
     val fieldName = "town"
     val requiredKey = "guardianInternationalAddress.error.town.required"
     val lengthKey = "guardianInternationalAddress.error.town.length"
-    val maxLength = 100
+    val invalidKey = "guardianInternationalAddress.error.town.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeAddressInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.addressInputPattern.toString, name.firstName))
     )
 
     behave like fieldWithMaxLength(
@@ -105,12 +130,20 @@ class GuardianInternationalAddressFormProviderSpec extends StringFieldBehaviours
 
     val fieldName = "state"
     val lengthKey = "guardianInternationalAddress.error.state.length"
-    val maxLength = 100
+    val invalidKey = "guardianInternationalAddress.error.state.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeAddressInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.addressInputPattern.toString, name.firstName))
     )
 
     behave like fieldWithMaxLength(
@@ -125,12 +158,20 @@ class GuardianInternationalAddressFormProviderSpec extends StringFieldBehaviours
 
     val fieldName = "postcode"
     val lengthKey = "guardianInternationalAddress.error.postcode.length"
-    val maxLength = 100
+    val invalidKey = "guardianInternationalAddress.error.postcode.invalid"
+    val maxLength = 8
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      ukPostcode
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.addressInputPattern.toString, name.firstName))
     )
 
     behave like fieldWithMaxLength(

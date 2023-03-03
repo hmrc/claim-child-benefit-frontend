@@ -17,7 +17,6 @@
 package generators
 
 import java.time.{Instant, LocalDate, ZoneOffset}
-
 import org.scalacheck.Arbitrary._
 import org.scalacheck.Gen._
 import org.scalacheck.{Gen, Shrink}
@@ -45,6 +44,57 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
       }
     }
   }
+
+  def safeNameInputs: Gen[Char] = Gen.oneOf(
+    Gen.alphaChar,
+    Gen.const('-'),
+    Gen.const(' '),
+    Gen.const('’'),
+    Gen.const('\''),
+    Gen.oneOf('À' to 'Ö'),
+    Gen.oneOf('Ø' to 'ö'),
+    Gen.oneOf('ø' to 'ÿ'),
+    Gen.oneOf('Ā' to 'ň'),
+    Gen.oneOf('Ŋ' to 'ſ')
+  )
+
+  def safeAddressInputs: Gen[Char] = Gen.oneOf(
+    Gen.alphaNumChar,
+    Gen.const('-'),
+    Gen.const(' '),
+    Gen.const('’'),
+    Gen.const('\''),
+    Gen.oneOf('À' to 'Ö'),
+    Gen.oneOf('Ø' to 'ö'),
+    Gen.oneOf('ø' to 'ÿ'),
+    Gen.oneOf('Ā' to 'ň'),
+    Gen.oneOf('Ŋ' to 'ſ')
+  )
+
+  def unsafeInputs: Gen[Char] = Gen.oneOf(
+    Gen.const('<'),
+    Gen.const('>'),
+    Gen.const('='),
+    Gen.const('|')
+  )
+
+  def safeNameInputsWithMaxLength(length: Int): Gen[String] =
+    (for {
+      length <- Gen.choose(1, length)
+      chars <- Gen.listOfN(length, safeNameInputs)
+    } yield chars.mkString).suchThat(_.trim.nonEmpty)
+
+  def safeAddressInputsWithMaxLength(length: Int): Gen[String] =
+    (for {
+      length <- Gen.choose(1, length)
+      chars <- Gen.listOfN(length, safeAddressInputs)
+    } yield chars.mkString).suchThat(_.trim.nonEmpty)
+
+  def unsafeInputsWithMaxLength(maxLength: Int): Gen[String] = (for {
+    length <- choose(2, maxLength)
+    invalidChar <- unsafeInputs
+    validChars <- listOfN(length - 1, unsafeInputs)
+  } yield (validChars :+ invalidChar).mkString).suchThat(_.trim.nonEmpty)
 
   def intsInRangeWithCommas(min: Int, max: Int): Gen[String] = {
     val numberGen = choose[Int](min, max).map(_.toString)

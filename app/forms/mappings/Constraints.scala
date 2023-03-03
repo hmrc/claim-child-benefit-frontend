@@ -16,6 +16,7 @@
 
 package forms.mappings
 
+import models.Index
 import play.api.data.validation.{Constraint, Invalid, Valid}
 
 import java.time.LocalDate
@@ -71,16 +72,13 @@ trait Constraints {
         }
     }
 
-  protected def regexp(regex: String, errorKey: String, args: Any*): Constraint[String] =
+  protected def regexp(regex: Regex, errorKey: String, args: Any*): Constraint[String] =
     Constraint {
-      case str if str.matches(regex) =>
+      case str if str.matches(regex.toString) =>
         Valid
       case _ =>
-        Invalid(errorKey, regex +: args: _*)
+        Invalid(errorKey, regex.toString +: args: _*)
     }
-
-  protected def regexp(regex: Regex, errorKey: String): Constraint[String] =
-    regexp(regex.toString, errorKey)
 
   protected def maxLength(maximum: Int, errorKey: String, args: Any*): Constraint[String] =
     Constraint {
@@ -121,4 +119,17 @@ trait Constraints {
       case _ =>
         Valid
     }
+
+  protected def notADuplicate[A](index: Index, existingAnswers: Seq[A], errorKey: String, args: Any*): Constraint[A] = {
+
+    val indexedAnswers = existingAnswers.zipWithIndex
+    val filteredAnswers = indexedAnswers.filter(_._2 != index.position)
+
+    Constraint {
+      case answer if filteredAnswers.map(_._1) contains answer =>
+        Invalid(errorKey, args: _*)
+      case _ =>
+        Valid
+    }
+  }
 }

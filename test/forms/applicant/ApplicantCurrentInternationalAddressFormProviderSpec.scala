@@ -16,6 +16,7 @@
 
 package forms.applicant
 
+import forms.Validation
 import forms.behaviours.StringFieldBehaviours
 import models.Country
 import org.scalacheck.Arbitrary.arbitrary
@@ -31,12 +32,20 @@ class ApplicantCurrentInternationalAddressFormProviderSpec extends StringFieldBe
     val fieldName = "line1"
     val requiredKey = "applicantCurrentInternationalAddress.error.line1.required"
     val lengthKey = "applicantCurrentInternationalAddress.error.line1.length"
-    val maxLength = 100
+    val invalidKey = "applicantCurrentInternationalAddress.error.line1.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeAddressInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.addressInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(
@@ -57,12 +66,20 @@ class ApplicantCurrentInternationalAddressFormProviderSpec extends StringFieldBe
 
     val fieldName = "line2"
     val lengthKey = "applicantCurrentInternationalAddress.error.line2.length"
-    val maxLength = 100
+    val invalidKey = "applicantCurrentInternationalAddress.error.line2.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeAddressInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.addressInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(
@@ -78,12 +95,20 @@ class ApplicantCurrentInternationalAddressFormProviderSpec extends StringFieldBe
     val fieldName = "town"
     val requiredKey = "applicantCurrentInternationalAddress.error.town.required"
     val lengthKey = "applicantCurrentInternationalAddress.error.town.length"
-    val maxLength = 100
+    val invalidKey = "applicantCurrentInternationalAddress.error.town.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeAddressInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.addressInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(
@@ -104,12 +129,20 @@ class ApplicantCurrentInternationalAddressFormProviderSpec extends StringFieldBe
 
     val fieldName = "state"
     val lengthKey = "applicantCurrentInternationalAddress.error.state.length"
-    val maxLength = 100
+    val invalidKey = "applicantCurrentInternationalAddress.error.state.invalid"
+    val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeAddressInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.addressInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(
@@ -124,12 +157,20 @@ class ApplicantCurrentInternationalAddressFormProviderSpec extends StringFieldBe
 
     val fieldName = "postcode"
     val lengthKey = "applicantCurrentInternationalAddress.error.postcode.length"
-    val maxLength = 100
+    val invalidKey = "applicantCurrentInternationalAddress.error.postcode.invalid"
+    val maxLength = 8
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeAddressInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.addressInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(

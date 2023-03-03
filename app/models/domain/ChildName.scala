@@ -20,13 +20,13 @@ import play.api.libs.json.{Json, OWrites}
 
 final case class ChildName(forenames: String, middleNames: Option[String], surname: String)
 
-object ChildName {
+object ChildName extends StringNormaliser {
 
   def build(name: models.ChildName): ChildName =
     ChildName(
-      name.firstName,
-      name.middleNames,
-      name.lastName
+      normalise(name.firstName),
+      name.middleNames.map(normalise),
+      normalise(name.lastName)
     )
 
   implicit lazy val writes: OWrites[ChildName] = Json.writes
