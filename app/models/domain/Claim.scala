@@ -41,6 +41,6 @@ object Claim extends CbsDateFormats {
       partner = model.relationship.partner.flatMap(Partner.build),
       payment = Payment.build(model.paymentPreference),
       children = model.children.toList.map(Child.build),
-      otherEligibilityFailure = false
+      otherEligibilityFailure = model.additionalInformation.nonEmpty
     )
 }

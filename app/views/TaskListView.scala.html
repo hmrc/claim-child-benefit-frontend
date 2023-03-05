@@ -68,7 +68,7 @@
                 <li class="app-task-list__item">
                     <span class="app-task-list__task-name">
                         @if(completedSections == numberOfSections) {
-                            <a href="@routes.PrintController.onPageLoad" class="govuk-link">@messages("taskList.submit")</a>
+                            <a href="@routes.ClaimSubmissionController.submit" class="govuk-link">@messages("taskList.submit")</a>
                         } else {
                             @messages("taskList.submit")
                         }

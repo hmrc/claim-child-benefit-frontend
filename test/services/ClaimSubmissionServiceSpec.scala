@@ -18,6 +18,7 @@ package services
 
 import base.SpecBase
 import config.FeatureFlags
+import ClaimSubmissionService._
 import connectors.ClaimChildBenefitConnector
 import generators.Generators
 import models.PartnerClaimingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments, WaitingToHear}
@@ -25,7 +26,7 @@ import models._
 import models.requests.{AuthenticatedIdentifierRequest, DataRequest, UnauthenticatedIdentifierRequest}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
-import org.mockito.Mockito.when
+import org.mockito.Mockito.{times, verify, when}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.BeforeAndAfterEach
@@ -56,7 +57,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
   }
 
   private val journeyModelProvider = new JourneyModelProvider(mockBrmsService)
-  private val submissionService = new ClaimSubmissionService(mockFeatureFlags, mockConnector, journeyModelProvider, clockAtFixedInstant)
+  private val submissionService = new ClaimSubmissionService(mockFeatureFlags, mockConnector, journeyModelProvider)
 
   private val nino = arbitrary[Nino].sample.value
   private val userId = "user id"
@@ -73,7 +74,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
   private val relationshipToChild = ApplicantRelationshipToChild.BirthChild
   private val systemNumber = BirthCertificateSystemNumber("000000000")
 
-  val designatoryDetails = DesignatoryDetails(
+  private val designatoryDetails = DesignatoryDetails(
     Some(adultName),
     None,
     Some(NPSAddress("1", None, None, None, None, None, None)),
@@ -346,6 +347,58 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
             }
           }
         }
+      }
+    }
+  }
+
+  ".submit" - {
+
+    "when the user is authenticated" - {
+
+      "and their answers can produce a valid Journey Model" - {
+
+        "must submit a claim" in {
+
+          val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
+          val request = DataRequest(identifierRequest, userId, basicUserAnswers)
+
+          when(mockConnector.submitClaim(any())(any())) thenReturn Future.successful(Done)
+
+          submissionService.submit(request).futureValue
+
+          verify(mockConnector, times(1)).submitClaim(any())(any())
+        }
+      }
+
+      "and their answers cannot produce a valid Journey Model" - {
+
+        "must return a failed future (Cannot Build Journey Model)" in {
+
+          val answers = basicUserAnswers.remove(ApplicantPhoneNumberPage).success.value
+
+          val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
+          val request = DataRequest(identifierRequest, userId, answers)
+
+          when(mockConnector.submitClaim(any())(any())) thenReturn Future.successful(Done)
+
+          val result = submissionService.submit(request).failed.futureValue
+          result.getMessage mustEqual CannotBuildJourneyModelException.getMessage
+        }
+      }
+    }
+
+    "when the user is unauthenticated" - {
+
+      "must return a failed future (Not Authenticated)" in {
+
+        val answers = basicUserAnswers.copy(nino = None, designatoryDetails = None)
+        val identifierRequest = UnauthenticatedIdentifierRequest(baseRequest, userId)
+        val request = DataRequest(identifierRequest, userId, answers)
+
+        when(mockConnector.submitClaim(any())(any())) thenReturn Future.successful(Done)
+
+        val result = submissionService.submit(request).failed.futureValue
+        result.getMessage mustEqual NotAuthenticatedException.getMessage
       }
     }
   }
