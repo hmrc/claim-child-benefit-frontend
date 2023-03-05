@@ -101,13 +101,6 @@ class ClaimSpec extends AnyFreeSpec with Matchers with Generators with OptionVal
       userAuthenticated = true
     )
 
-    "must set `other eligibility fail` to false when there is no additional information" in {
-
-      val claim = Claim.build(nino, basicJourneyModel)
-
-      claim.otherEligibilityFailure mustBe false
-    }
-
     "must set `other eligibility fail` to true when there is any additional information" in {
 
       val model = basicJourneyModel.copy(additionalInformation = Some("info"))
@@ -115,6 +108,34 @@ class ClaimSpec extends AnyFreeSpec with Matchers with Generators with OptionVal
       val claim = Claim.build(nino, model)
 
       claim.otherEligibilityFailure mustBe true
+    }
+
+    "must set 'other eligibility fail` to true when a child came to live with the applicant after they arrived in the UK" in {
+
+      val arrivedDate = LocalDate.now.minusMonths(3)
+      val childLivedDate = arrivedDate.plusDays(1)
+      val residency = JourneyModel.Residency.LivedInUkAndAbroad(None, Some(arrivedDate), EmploymentStatus.activeStatuses, Nil, Nil)
+      val previousGuardian = JourneyModel.PreviousGuardian(None, None, None)
+      val child = basicJourneyModel.children.head.copy(
+        previousGuardian = Some(previousGuardian),
+        dateChildStartedLivingWithApplicant = Some(childLivedDate)
+      )
+
+      val model = basicJourneyModel.copy(
+        applicant = basicJourneyModel.applicant.copy(residency = residency),
+        children = basicJourneyModel.children.copy(head = child)
+      )
+
+      val claim = Claim.build(nino, model)
+
+      claim.otherEligibilityFailure mustBe true
+    }
+
+    "must set `other eligibility fail` to false when there is no additional information or children coming to live with the applicant after they arrived in the UK" in {
+
+      val claim = Claim.build(nino, basicJourneyModel)
+
+      claim.otherEligibilityFailure mustBe false
     }
   }
 }

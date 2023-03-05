@@ -17,7 +17,7 @@
 package models.domain
 
 import models.JourneyModel
-import play.api.libs.json.{Json, OWrites, Writes}
+import play.api.libs.json.{Json, OWrites}
 
 import java.time.LocalDate
 
@@ -41,6 +41,24 @@ object Claim extends CbsDateFormats {
       partner = model.relationship.partner.flatMap(Partner.build),
       payment = Payment.build(model.paymentPreference),
       children = model.children.toList.map(Child.build),
-      otherEligibilityFailure = model.additionalInformation.nonEmpty
+      otherEligibilityFailure = otherEligibilityFail(model)
     )
+
+  private def failForDates(model: JourneyModel): Boolean =
+    model.applicant.residency match {
+      case JourneyModel.Residency.LivedInUkAndAbroad(_, Some(arrivedInUk), _, _, _) =>
+        model.children
+          .toList
+          .flatMap(_.dateChildStartedLivingWithApplicant)
+          .exists(_.isAfter(arrivedInUk))
+
+      case _ => false
+    }
+
+  private def failForAdditionalInformation(model: JourneyModel): Boolean =
+    model.additionalInformation.nonEmpty
+
+  private def otherEligibilityFail(model: JourneyModel): Boolean =
+    failForDates(model) ||
+      failForAdditionalInformation(model)
 }
