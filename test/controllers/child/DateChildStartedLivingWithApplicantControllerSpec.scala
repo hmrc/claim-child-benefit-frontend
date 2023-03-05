@@ -19,11 +19,13 @@ package controllers.child
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.child.DateChildStartedLivingWithApplicantFormProvider
-import models.{AdultName, ChildName}
+import generators.ModelGenerators
+import models.{AdultName, ChildName, DesignatoryDetails}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
+import org.scalacheck.Arbitrary.arbitrary
 import org.scalatestplus.mockito.MockitoSugar
-import pages.applicant.ApplicantNamePage
+import pages.applicant.{ApplicantNamePage, DesignatoryNamePage}
 import pages.child.{ChildNamePage, DateChildStartedLivingWithApplicantPage}
 import pages.{EmptyWaypoints, child}
 import play.api.inject.bind
@@ -31,12 +33,13 @@ import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserDataService
+import uk.gov.hmrc.domain.Nino
 import views.html.child.DateChildStartedLivingWithApplicantView
 
 import java.time.LocalDate
 import scala.concurrent.Future
 
-class DateChildStartedLivingWithApplicantControllerSpec extends SpecBase with MockitoSugar {
+class DateChildStartedLivingWithApplicantControllerSpec extends SpecBase with MockitoSugar with ModelGenerators {
 
   private val childName = ChildName("first", None, "last")
   private val adultName = AdultName(None, "first", None, "last")
@@ -66,17 +69,67 @@ class DateChildStartedLivingWithApplicantControllerSpec extends SpecBase with Mo
 
   "DateChildStartedLivingWithApplicant Controller" - {
 
-    "must return OK and the correct view for a GET" in {
+    "must return OK and the correct view for a GET" - {
 
-      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
+      "when the user is unauthenticated" in {
 
-      running(application) {
-        val result = route(application, getRequest).value
+        val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
-        val view = application.injector.instanceOf[DateChildStartedLivingWithApplicantView]
+        running(application) {
+          val result = route(application, getRequest).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, index, childName, adultName)(getRequest, messages(application)).toString
+          val view = application.injector.instanceOf[DateChildStartedLivingWithApplicantView]
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(form, waypoints, index, childName, adultName)(getRequest, messages(application)).toString
+        }
+      }
+
+      "when the user is authenticated" - {
+
+        val nino = arbitrary[Nino].sample.value.nino
+        val npsName = AdultName(None, "original first", None, "original last")
+        val designatoryDetails = DesignatoryDetails(Some(npsName), None, None, None, LocalDate.now)
+
+        "and has given a new designatory name" in {
+
+          val newName = AdultName(None, "new first", None, "new last")
+          val answers =
+            emptyUserAnswers
+              .copy(nino = Some(nino), designatoryDetails = Some(designatoryDetails))
+              .set(ChildNamePage(index), childName).success.value
+              .set(DesignatoryNamePage, newName).success.value
+
+          val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+          running(application) {
+            val result = route(application, getRequest).value
+
+            val view = application.injector.instanceOf[DateChildStartedLivingWithApplicantView]
+
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual view(form, waypoints, index, childName, newName)(getRequest, messages(application)).toString
+          }
+        }
+
+        "and has not given a new designatory name" in {
+
+          val answers =
+            emptyUserAnswers
+              .copy(nino = Some(nino), designatoryDetails = Some(designatoryDetails))
+              .set(ChildNamePage(index), childName).success.value
+
+          val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+          running(application) {
+            val result = route(application, getRequest).value
+
+            val view = application.injector.instanceOf[DateChildStartedLivingWithApplicantView]
+
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual view(form, waypoints, index, childName, npsName)(getRequest, messages(application)).toString
+          }
+        }
       }
     }
 

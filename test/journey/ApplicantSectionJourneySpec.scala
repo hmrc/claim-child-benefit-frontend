@@ -40,7 +40,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
   private val internationalAddress = InternationalAddress("line1", None, "town", None, None, country)
   private val previousName = ApplicantPreviousName("name")
   private val ukNpsAddress = NPSAddress("line 1", None, None, None, None, None, Country.allCountries.find(_.code == "GB"))
-  private val nonUkNpsAddress = NPSAddress("line 1", None, None, None, None, None, None)
+  private val nonUkNpsAddress = NPSAddress("line 1", None, None, None, None, None, Some(country))
 
   "users who don't know their NINO, with no previous names or addresses, who have always lived in the UK and are not claiming right now must proceed to the task list" in {
 

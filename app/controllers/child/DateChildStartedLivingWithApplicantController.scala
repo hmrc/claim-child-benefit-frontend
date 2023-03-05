@@ -16,15 +16,16 @@
 
 package controllers.child
 
-import controllers.AnswerExtractor
 import controllers.actions._
+import controllers.{routes => baseRoutes}
 import forms.child.DateChildStartedLivingWithApplicantFormProvider
-import models.Index
+import models.requests.DataRequest
+import models.{AdultName, ChildName, Index}
 import pages.Waypoints
-import pages.applicant.ApplicantNamePage
+import pages.applicant.{ApplicantNamePage, DesignatoryNamePage}
 import pages.child.{ChildNamePage, DateChildStartedLivingWithApplicantPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.child.DateChildStartedLivingWithApplicantView
@@ -42,12 +43,11 @@ class DateChildStartedLivingWithApplicantController @Inject()(
                                             val controllerComponents: MessagesControllerComponents,
                                             view: DateChildStartedLivingWithApplicantView
                                           )(implicit ec: ExecutionContext)
-  extends FrontendBaseController
-    with I18nSupport with AnswerExtractor {
+  extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      getAnswers(ChildNamePage(index), ApplicantNamePage) {
+      getNames(index) {
         case (childName, applicantName) =>
 
           val form = formProvider(childName)
@@ -57,13 +57,13 @@ class DateChildStartedLivingWithApplicantController @Inject()(
             case Some(value) => form.fill(value)
           }
 
-          Ok(view(preparedForm, waypoints, index, childName, applicantName))
+          Future.successful(Ok(view(preparedForm, waypoints, index, childName, applicantName)))
       }
   }
 
   def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      getAnswersAsync(ChildNamePage(index), ApplicantNamePage) {
+      getNames(index) {
         case (childName, applicantName) =>
 
           val form = formProvider(childName)
@@ -80,4 +80,24 @@ class DateChildStartedLivingWithApplicantController @Inject()(
           )
       }
   }
+
+  private def getNames(index: Index)
+                      (block: (ChildName, AdultName) => Future[Result])
+                      (implicit request: DataRequest[AnyContent]): Future[Result] =
+    request.userAnswers
+      .get(ChildNamePage(index))
+      .flatMap {
+        childName =>
+          if (request.userAnswers.isAuthenticated) {
+            request.userAnswers
+              .get(DesignatoryNamePage)
+              .orElse(request.userAnswers.designatoryDetails.flatMap(_.preferredName))
+              .map(block(childName, _))
+          } else {
+            request.userAnswers
+              .get(ApplicantNamePage)
+              .map(block(childName, _))
+          }
+      }.getOrElse(Future.successful(Redirect(baseRoutes.JourneyRecoveryController.onPageLoad())))
+
 }
