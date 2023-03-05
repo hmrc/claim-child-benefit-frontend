@@ -30,7 +30,7 @@ final case class NPSAddress(
                              country: Option[Country]
                            ) extends Address {
 
-  lazy val isUkAddress: Boolean = country.exists(_.code == "GB")
+  lazy val isUkAddress: Boolean = country.exists(_.code == "GB") || country.isEmpty
 
   val lines: Seq[String] =
     Seq(

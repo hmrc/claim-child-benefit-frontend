@@ -436,9 +436,24 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
             case false => answers.getIor(ApplicantUsualCountryOfResidencePage).map(Some(_))
           }
 
-          def getArrivalDate = answers.getIor(ApplicantCurrentAddressInUkPage).flatMap {
-            case true => answers.getIor(ApplicantArrivedInUkPage).map(Some(_))
-            case false => Ior.Right(None)
+          def getArrivalDate: IorNec[Query, Option[LocalDate]] = {
+            if (answers.isAuthenticated) {
+              answers.get(DesignatoryAddressInUkPage).map {
+                case true => answers.getIor(ApplicantArrivedInUkPage).map(Some(_))
+                case false => Ior.Right(None)
+              }.getOrElse {
+                if (answers.designatoryDetails.exists(x => x.residentialAddress.exists(_.isUkAddress))) {
+                  answers.getIor(ApplicantArrivedInUkPage).map(Some(_))
+                } else {
+                  Ior.Right(None)
+                }
+              }
+            } else {
+              answers.getIor(ApplicantCurrentAddressInUkPage).flatMap {
+                case true => answers.getIor(ApplicantArrivedInUkPage).map(Some(_))
+                case false => Ior.Right(None)
+              }
+            }
           }
 
           (
