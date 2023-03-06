@@ -20,6 +20,7 @@ import audit.DownloadAuditEvent._
 import cats.data.NonEmptyList
 import generators.ModelGenerators
 import models.BirthRegistrationMatchingResult.NotAttempted
+import models.OtherEligibilityFailReason.{ApplicantReceivedBenefitsAbroad, ApplicantWorkedAbroad, ChildRecentlyLivedElsewhere, PartnerReceivedBenefitsAbroad, PartnerWorkedAbroad}
 import models.{ApplicantPreviousName, BirthCertificateSystemNumber, Country, CurrentlyReceivingChildBenefit, EmploymentStatus, JourneyModel, Nationality, PartnerClaimingChildBenefit}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
@@ -205,7 +206,14 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
         ),
         Some("info"),
         userAuthenticated = true,
-        reasonsNotToSubmit = List("designatoryDetailsChanged", "additionalInformationPresent")
+        reasonsNotToSubmit = List("designatoryDetailsChanged", "additionalInformationPresent"),
+        otherEligibilityFailReasons = List(
+          ApplicantWorkedAbroad.toString,
+          ApplicantReceivedBenefitsAbroad.toString,
+          PartnerWorkedAbroad.toString,
+          PartnerReceivedBenefitsAbroad.toString,
+          ChildRecentlyLivedElsewhere.toString
+        )
       )
 
       val hc = HeaderCarrier()
