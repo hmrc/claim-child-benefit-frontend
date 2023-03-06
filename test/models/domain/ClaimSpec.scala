@@ -37,29 +37,6 @@ class ClaimSpec extends AnyFreeSpec with Matchers with Generators with OptionVal
     val hmfAbroad = arbitrary[Boolean].sample.value
     val nino = arbitrary[Nino].sample.value.nino
 
-    def paymentPreference: JourneyModel.PaymentPreference = {
-      Gen.oneOf(
-        Gen.const(JourneyModel.PaymentPreference.Weekly(None, None)),
-        Gen.const(JourneyModel.PaymentPreference.EveryFourWeeks(None, None)),
-        Gen.const(JourneyModel.PaymentPreference.ExistingAccount(
-          JourneyModel.EldestChild(
-            arbitrary[models.ChildName].sample.value,
-            LocalDate.now
-          ),
-          Gen.oneOf(models.PaymentFrequency.values).sample.value
-        ))
-      )
-    }.sample.value
-
-    def alwaysAbroad: JourneyModel.Residency.AlwaysLivedAbroad = {
-      for {
-        country <- arbitrary[Country]
-        employment <- Gen.listOf(arbitrary[EmploymentStatus])
-        countriesWorked <- Gen.listOf(arbitrary[Country])
-        countriesReceivedBenefits <- Gen.listOf(arbitrary[Country])
-      } yield JourneyModel.Residency.AlwaysLivedAbroad(country, employment.toSet, countriesWorked, countriesReceivedBenefits)
-    }.sample.value
-
     val basicJourneyModel = JourneyModel(
       applicant = JourneyModel.Applicant(
         name = arbitrary[AdultName].sample.value,
@@ -101,41 +78,14 @@ class ClaimSpec extends AnyFreeSpec with Matchers with Generators with OptionVal
       userAuthenticated = true
     )
 
-    "must set `other eligibility fail` to true when there is any additional information" in {
+    "must set `other eligibility fail` to true when the journey model has any other eligibility fail reasons" in {
 
-      val model = basicJourneyModel.copy(additionalInformation = Some("info"))
-
-      val claim = Claim.build(nino, model)
-
-      claim.otherEligibilityFailure mustBe true
-    }
-
-    "must set 'other eligibility fail` to true when a child came to live with the applicant after they arrived in the UK" in {
-
-      val arrivedDate = LocalDate.now.minusMonths(3)
-      val childLivedDate = arrivedDate.plusDays(1)
-      val residency = JourneyModel.Residency.LivedInUkAndAbroad(None, Some(arrivedDate), EmploymentStatus.activeStatuses, Nil, Nil)
-      val previousGuardian = JourneyModel.PreviousGuardian(None, None, None)
-      val child = basicJourneyModel.children.head.copy(
-        previousGuardian = Some(previousGuardian),
-        dateChildStartedLivingWithApplicant = Some(childLivedDate)
-      )
-
-      val model = basicJourneyModel.copy(
-        applicant = basicJourneyModel.applicant.copy(residency = residency),
-        children = basicJourneyModel.children.copy(head = child)
-      )
+      val residency = JourneyModel.Residency.LivedInUkAndAbroad(None, None, EmploymentStatus.activeStatuses, List(Country.internationalCountries.head), Nil)
+      val model = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(residency = residency))
 
       val claim = Claim.build(nino, model)
 
       claim.otherEligibilityFailure mustBe true
-    }
-
-    "must set `other eligibility fail` to false when there is no additional information or children coming to live with the applicant after they arrived in the UK" in {
-
-      val claim = Claim.build(nino, basicJourneyModel)
-
-      claim.otherEligibilityFailure mustBe false
     }
   }
 }

@@ -17,6 +17,7 @@
 package models
 
 import generators.ModelGenerators
+import models.OtherEligibilityFailReason._
 import models.PartnerClaimingChildBenefit.{GettingPayments, NotGettingPayments, WaitingToHear}
 import models.ReasonNotToSubmit._
 import models.RelationshipStatus._
@@ -292,5 +293,147 @@ class JourneyModelSpec
       data.value.reasonsNotToSubmit must contain only AdditionalInformationPresent
       data.value.userAuthenticated mustBe true
     }
+  }
+
+  ".otherEligibilityFailureReasons" - {
+
+    val nino = arbitrary[Nino].sample.value
+    val country = Gen.oneOf(Country.internationalCountries).sample.value
+    val designatoryDetails =
+      DesignatoryDetails(
+        Some(applicantName),
+        None,
+        Some(NPSAddress("1", None, None, None, None, None, None)),
+        None,
+        LocalDate.now
+      )
+
+    val basicAnswers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
+      .set(ApplicantNinoKnownPage, false).success.value
+      .set(ApplicantNamePage, applicantName).success.value
+      .set(ApplicantHasPreviousFamilyNamePage, false).success.value
+      .set(ApplicantDateOfBirthPage, now).success.value
+      .set(ApplicantPhoneNumberPage, phoneNumber).success.value
+      .set(ApplicantNationalityPage(Index(0)), applicantNationality).success.value
+      .set(ApplicantIsHmfOrCivilServantPage, false).success.value
+      .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
+      .set(ApplicantCurrentUkAddressPage, currentUkAddress).success.value
+      .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+      .set(ApplicantIsHmfOrCivilServantPage, false).success.value
+      .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
+      .set(RelationshipStatusPage, Single).success.value
+      .set(ChildNamePage(Index(0)), childName).success.value
+      .set(ChildHasPreviousNamePage(Index(0)), false).success.value
+      .set(ChildBiologicalSexPage(Index(0)), biologicalSex).success.value
+      .set(ChildDateOfBirthPage(Index(0)), now).success.value
+      .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.England).success.value
+      .set(BirthCertificateHasSystemNumberPage(Index(0)), true).success.value
+      .set(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber).success.value
+      .set(ApplicantRelationshipToChildPage(Index(0)), relationshipToChild).success.value
+      .set(AdoptingThroughLocalAuthorityPage(Index(0)), false).success.value
+      .set(AnyoneClaimedForChildBeforePage(Index(0)), false).success.value
+      .set(ChildLivesWithApplicantPage(Index(0)), true).success.value
+      .set(ChildLivedWithAnyoneElsePage(Index(0)), false).success.value
+      .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
+      .set(WantToBePaidPage, false).success.value
+      .set(IncludeAdditionalInformationPage, false).success.value
+
+    "must include Applicant Worked Abroad when the applicant has worked abroad" in {
+
+      val answers =
+        basicAnswers
+          .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
+          .set(ApplicantUsuallyLivesInUkPage, true).success.value
+          .set(ApplicantArrivedInUkPage, LocalDate.now.minusYears(1)).success.value
+          .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
+          .set(ApplicantWorkedAbroadPage, true).success.value
+          .set(CountryApplicantWorkedPage(Index(0)), country).success.value
+          .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
+
+      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+      errors mustBe empty
+      data.value.otherEligibilityFailureReasons must contain only ApplicantWorkedAbroad
+    }
+
+    "must include Applicant Received Benefits Abroad when the applicant has received benefits abroad" in {
+
+      val answers =
+        basicAnswers
+          .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
+          .set(ApplicantUsuallyLivesInUkPage, true).success.value
+          .set(ApplicantArrivedInUkPage, LocalDate.now.minusYears(1)).success.value
+          .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
+          .set(ApplicantWorkedAbroadPage, false).success.value
+          .set(ApplicantReceivedBenefitsAbroadPage, true).success.value
+          .set(CountryApplicantReceivedBenefitsPage(Index(0)), country).success.value
+
+      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+      errors mustBe empty
+      data.value.otherEligibilityFailureReasons must contain only ApplicantReceivedBenefitsAbroad
+    }
+
+    "must include Partner Worked Abroad when the applicant's partner has worked abroad" in {
+
+      val answers =
+        basicAnswers
+          .set(RelationshipStatusPage, Married).success.value
+          .set(PartnerNamePage, AdultName(None, "first", None, "last")).success.value
+          .set(PartnerNinoKnownPage, false).success.value
+          .set(PartnerDateOfBirthPage, now).success.value
+          .set(PartnerNationalityPage(Index(0)), Nationality.allNationalities.head).success.value
+          .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
+          .set(PartnerIsHmfOrCivilServantPage, false).success.value
+          .set(PartnerWorkedAbroadPage, true).success.value
+          .set(CountryPartnerWorkedPage(Index(0)), country).success.value
+          .set(PartnerReceivedBenefitsAbroadPage, false).success.value
+          .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming).success.value
+          .set(WantToBePaidPage, false).success.value
+
+      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+      errors mustBe empty
+      data.value.otherEligibilityFailureReasons must contain only PartnerWorkedAbroad
+    }
+
+    "must include Partner Received Benefits Abroad when the applicant's partner has received benefits abroad" in {
+
+      val answers =
+        basicAnswers
+          .set(RelationshipStatusPage, Married).success.value
+          .set(PartnerNamePage, AdultName(None, "first", None, "last")).success.value
+          .set(PartnerNinoKnownPage, false).success.value
+          .set(PartnerDateOfBirthPage, now).success.value
+          .set(PartnerNationalityPage(Index(0)), Nationality.allNationalities.head).success.value
+          .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
+          .set(PartnerIsHmfOrCivilServantPage, false).success.value
+          .set(PartnerWorkedAbroadPage, false).success.value
+          .set(PartnerReceivedBenefitsAbroadPage, true).success.value
+          .set(CountryPartnerReceivedBenefitsPage(Index(0)), country).success.value
+          .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming).success.value
+          .set(WantToBePaidPage, false).success.value
+
+      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+      errors mustBe empty
+      data.value.otherEligibilityFailureReasons must contain only PartnerReceivedBenefitsAbroad
+    }
+
+    "must include Child recently Lived Elsewhere when a child came to live with the applicant less than 3 months ago" in {
+
+      val answers =
+        basicAnswers
+          .set(ChildLivedWithAnyoneElsePage(Index(0)), true).success.value
+          .set(PreviousGuardianNameKnownPage(Index(0)), false).success.value
+          .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now.minusMonths(3).plusDays(1)).success.value
+
+      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+      errors mustBe empty
+      data.value.otherEligibilityFailureReasons must contain only ChildRecentlyLivedElsewhere
+    }
+
+    "must include "
   }
 }

@@ -60,6 +60,42 @@ final case class JourneyModel(
       additionalInformationPresent
     ).flatten
   }
+
+  lazy val otherEligibilityFailureReasons: Seq[OtherEligibilityFailReason] = {
+
+    import OtherEligibilityFailReason._
+
+    val applicantWorkedAbroad = applicant.residency match {
+      case Residency.LivedInUkAndAbroad(_, _, _, countries, _) if countries.nonEmpty => Some(ApplicantWorkedAbroad)
+      case _ => None
+    }
+
+    val applicantReceivedBenefitsAbroad = applicant.residency match {
+      case Residency.LivedInUkAndAbroad(_, _, _, _, countries) if countries.nonEmpty => Some(ApplicantReceivedBenefitsAbroad)
+      case _ => None
+    }
+
+    val partnerWorkedAbroad = relationship.partner.flatMap { partner =>
+      if (partner.countriesWorked.nonEmpty) Some(PartnerWorkedAbroad) else None
+    }
+
+    val partnerReceivedBenefitsAbroad = relationship.partner.flatMap { partner =>
+      if (partner.countriesReceivedBenefits.nonEmpty) Some(PartnerReceivedBenefitsAbroad) else None
+    }
+
+    val childRecentlyLivedElsewhere = children match {
+      case x if x.exists(_.dateChildStartedLivingWithApplicant.exists(_.isAfter(LocalDate.now.minusMonths(3)))) => Some(ChildRecentlyLivedElsewhere)
+      case _ => None
+    }
+
+    Seq(
+      applicantWorkedAbroad,
+      applicantReceivedBenefitsAbroad,
+      partnerWorkedAbroad,
+      partnerReceivedBenefitsAbroad,
+      childRecentlyLivedElsewhere
+    ).flatten
+  }
 }
 
 object JourneyModel {
