@@ -928,7 +928,8 @@ partnerNino.change.hidden = {0}’s National Insurance number
 
 partnerNinoKnown.title = Do you know your partner’s National Insurance number?
 partnerNinoKnown.heading = Do you know {0}’s National Insurance number?
-partnerNinoKnown.hint = It’s on their National Insurance card, benefit letter, payslip or P60.  For example, ‘QQ 12 34 56 C’.
+partnerNinoKnown.p1 = It’s on their National Insurance card, benefit letter, payslip or P60.  For example, ‘QQ 12 34 56 C’.
+partnerNinoKnown.p2 = Your application will be delayed if your partner has a National Insurance number but you do not provide it.
 partnerNinoKnown.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
 partnerNinoKnown.error.required = Select yes if you know {0}’s National Insurance number
 partnerNinoKnown.change.hidden = if you know {0}’s National Insurance number

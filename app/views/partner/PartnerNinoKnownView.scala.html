@@ -21,7 +21,8 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    govukWarningText: GovukWarningText
 )
 
 @(form: Form[_], waypoints: Waypoints, partnerFirstName: String)(implicit request: Request[_], messages: Messages)
@@ -34,12 +35,17 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">@messages("partnerNinoKnown.heading", partnerFirstName)</h1>
+
+        <p class="govuk-body">@messages("partnerNinoKnown.p1")</p>
+
+        @govukWarningText(WarningText(content = messages("partnerNinoKnown.p2")))
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("partnerNinoKnown.heading", partnerFirstName)).asPageHeading()
+                legend = LegendViewModel(messages("partnerNinoKnown.heading", partnerFirstName)).visuallyHidden()
             )
-            .withHint(HintViewModel(messages("partnerNinoKnown.hint")))
         )
 
         @govukButton(
