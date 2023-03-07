@@ -30,7 +30,8 @@ final case class DownloadAuditEvent(
                                      paymentPreference: PaymentPreference,
                                      additionalInformation: Option[String],
                                      userAuthenticated: Boolean,
-                                     reasonsNotToSubmit: List[String]
+                                     reasonsNotToSubmit: List[String],
+                                     otherEligibilityFailReasons: List[String]
                                    )
 
 object DownloadAuditEvent {
@@ -126,7 +127,8 @@ object DownloadAuditEvent {
       },
       additionalInformation = model.additionalInformation,
       userAuthenticated = model.userAuthenticated,
-      reasonsNotToSubmit = model.reasonsNotToSubmit.map(_.toString).toList
+      reasonsNotToSubmit = model.reasonsNotToSubmit.map(_.toString).toList,
+      otherEligibilityFailReasons = model.otherEligibilityFailureReasons.map(_.toString).toList
     )
 
   private def convertUkAddress(address: models.UkAddress): UkAddress =
