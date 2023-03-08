@@ -4,7 +4,7 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 import connectors.ClaimChildBenefitConnector._
 import generators.ModelGenerators
 import models.domain._
-import models.{AdultName, DesignatoryDetails, Done, NPSAddress}
+import models.{AdultName, CheckLimitResponse, DesignatoryDetails, Done, NPSAddress}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -386,6 +386,80 @@ class ClaimChildBenefitConnectorSpec
         )
 
         connector.checkAllowlist().futureValue mustEqual false
+      }
+    }
+  }
+
+  ".checkThrottleLimit" - {
+
+    "must return a result when the server returns one" in {
+
+      val app = application
+
+      running(app) {
+
+        val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
+        val response = CheckLimitResponse(limitReached = true)
+
+        server.stubFor(
+          get(urlEqualTo("/claim-child-benefit/throttle/check"))
+            .willReturn(aResponse().withStatus(OK).withBody(Json.toJson(response).toString))
+        )
+
+        connector.checkThrottleLimit().futureValue mustEqual response
+      }
+    }
+
+    "must fail when the server returns an error" in {
+
+      val app = application
+
+      running(app) {
+
+        val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
+
+        server.stubFor(
+          get(urlEqualTo("/claim-child-benefit/throttle/check"))
+            .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
+        )
+
+        connector.checkThrottleLimit().failed.futureValue
+      }
+    }
+  }
+
+  ".incrementThrottleCount" - {
+
+    "must return Done when the server responds with OK" in {
+
+      val app = application
+      running(app) {
+
+        val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
+
+        server.stubFor(
+          post(urlEqualTo("/claim-child-benefit/throttle/increment"))
+            .willReturn(aResponse().withStatus(OK))
+        )
+
+        connector.incrementThrottleCount().futureValue mustEqual Done
+      }
+    }
+
+    "must fail when the server returns an error" in {
+
+      val app = application
+
+      running(app) {
+
+        val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
+
+        server.stubFor(
+          get(urlEqualTo("/claim-child-benefit/throttle/incremnt"))
+            .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
+        )
+
+        connector.incrementThrottleCount().failed.futureValue
       }
     }
   }
