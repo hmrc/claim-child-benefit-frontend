@@ -126,7 +126,7 @@ class ClaimChildBenefitConnectorSpec
       otherEligibilityFailure = false
     )
 
-    "must return Done when the server returns OK" in {
+    "must return Done when the server returns CREATED" in {
 
       val app = application
 
@@ -137,7 +137,7 @@ class ClaimChildBenefitConnectorSpec
         server.stubFor(
           post(urlEqualTo("/claim-child-benefit/submit"))
             .withHeader("CorrelationId", equalTo(correlationId.toString))
-            .willReturn(ok())
+            .willReturn(created())
         )
 
         val result = connector.submitClaim(claim, correlationId).futureValue
