@@ -18,6 +18,7 @@ package services
 
 import config.FeatureFlags
 import connectors.ClaimChildBenefitConnector
+import logging.Logging
 import models.domain.Claim
 import models.requests.DataRequest
 import models.{Done, JourneyModelProvider}
@@ -31,8 +32,9 @@ import scala.concurrent.{ExecutionContext, Future}
 class ClaimSubmissionService @Inject()(
                                         featureFlags: FeatureFlags,
                                         connector: ClaimChildBenefitConnector,
-                                        journeyModelProvider: JourneyModelProvider
-                                      ) {
+                                        journeyModelProvider: JourneyModelProvider,
+                                        submissionLimiter: SubmissionLimiter
+                                      ) extends Logging {
 
   def canSubmit(request: DataRequest[_])(implicit ec: ExecutionContext): Future[Boolean] =
     if (featureFlags.allowSubmissionToCbs) {
@@ -40,7 +42,7 @@ class ClaimSubmissionService @Inject()(
 
           val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-          connector.checkAllowlist()(hc).flatMap {
+          submissionLimiter.allowedToSubmit(hc).flatMap {
             case true =>
               journeyModelProvider.buildFromUserAnswers(request.userAnswers)(hc).flatMap {
                 result =>
@@ -69,7 +71,17 @@ class ClaimSubmissionService @Inject()(
         result.right.map { model =>
           val claim = Claim.build(nino, model)
 
-          connector.submitClaim(claim)(hc)
+          connector
+            .submitClaim(claim)(hc)
+            .flatMap { _ =>
+              submissionLimiter
+                .recordSubmission(claim)(hc)
+                .recover {
+                  case e: Exception =>
+                    logger.error("Failed to record submission: " + e.getMessage)
+                    Done
+                }
+            }
 
         }.getOrElse(Future.failed(CannotBuildJourneyModelException))
       }

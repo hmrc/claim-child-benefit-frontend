@@ -21,11 +21,11 @@ import connectors.AllowlistHttpParser._
 import connectors.ClaimChildBenefitConnector._
 import connectors.SubmitClaimHttpParser._
 import models.domain.Claim
-import models.{DesignatoryDetails, Done}
+import models.{CheckLimitResponse, DesignatoryDetails, Done}
 import play.api.Configuration
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -37,6 +37,8 @@ class ClaimChildBenefitConnector @Inject()(config: Configuration, httpClient: Ht
   private val designatoryDetailsUrl = url"$baseUrl/claim-child-benefit/designatory-details"
   private val submitClaimUrl = url"$baseUrl/claim-child-benefit/claim"
   private val allowlistUrl = url"$baseUrl/claim-child-benefit/allow-list"
+  private val checkThrottleUrl = url"$baseUrl/claim-child-benefit/throttle/check"
+  private val incrementThrottleCountUrl = url"$baseUrl/claim-child-benefit/throttle/increment"
 
   def designatoryDetails()(implicit hc: HeaderCarrier): Future[DesignatoryDetails] = {
     httpClient
@@ -58,6 +60,17 @@ class ClaimChildBenefitConnector @Inject()(config: Configuration, httpClient: Ht
         case Right(_)        => Future.successful(Done)
         case Left(exception) => Future.failed(exception)
       }
+
+  def checkThrottleLimit()(implicit hc: HeaderCarrier): Future[CheckLimitResponse] =
+    httpClient
+      .get(checkThrottleUrl)
+      .execute[CheckLimitResponse]
+
+  def incrementThrottleCount()(implicit hc: HeaderCarrier): Future[Done] =
+    httpClient
+      .post(incrementThrottleCountUrl)
+      .execute[HttpResponse]
+      .map(_ => Done)
 }
 
 object ClaimChildBenefitConnector {
