@@ -47,17 +47,19 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
 
   private val mockFeatureFlags = mock[FeatureFlags]
   private val mockConnector = mock[ClaimChildBenefitConnector]
+  private val mockSubmissionLimiter = mock[SubmissionLimiter]
   private val mockBrmsService = mock[BrmsService]
   when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(BirthRegistrationMatchingResult.Matched)
 
   override def beforeEach(): Unit = {
     Mockito.reset(mockFeatureFlags)
     Mockito.reset(mockConnector)
+    Mockito.reset(mockSubmissionLimiter)
     super.beforeEach()
   }
 
   private val journeyModelProvider = new JourneyModelProvider(mockBrmsService)
-  private val submissionService = new ClaimSubmissionService(mockFeatureFlags, mockConnector, journeyModelProvider)
+  private val submissionService = new ClaimSubmissionService(mockFeatureFlags, mockConnector, journeyModelProvider, mockSubmissionLimiter)
 
   private val nino = arbitrary[Nino].sample.value
   private val userId = "user id"
@@ -144,13 +146,13 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
 
       "and the user is authenticated" - {
 
-        "must be false when the user's NINO is not on the allowlist" in {
+        "must be false when the submission limiter returns false" in {
 
           val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
           val request = DataRequest(identifierRequest, userId, basicUserAnswers)
 
           when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
-          when(mockConnector.checkAllowlist()(any())) thenReturn Future.successful(false)
+          when(mockSubmissionLimiter.allowedToSubmit(any())) thenReturn Future.successful(false)
 
           submissionService.canSubmit(request).futureValue mustEqual false
         }
@@ -162,7 +164,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val request = DataRequest(identifierRequest, userId, answers)
 
           when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
-          when(mockConnector.checkAllowlist()(any())) thenReturn Future.successful(true)
+          when(mockSubmissionLimiter.allowedToSubmit(any())) thenReturn Future.successful(true)
 
           submissionService.canSubmit(request).futureValue mustEqual false
         }
@@ -176,7 +178,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val request = DataRequest(identifierRequest, userId, answers)
 
           when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
-          when(mockConnector.checkAllowlist()(any())) thenReturn Future.successful(true)
+          when(mockSubmissionLimiter.allowedToSubmit(any())) thenReturn Future.successful(true)
 
           submissionService.canSubmit(request).futureValue mustEqual false
         }
@@ -189,7 +191,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val request = DataRequest(identifierRequest, userId, answers)
 
           when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
-          when(mockConnector.checkAllowlist()(any())) thenReturn Future.successful(true)
+          when(mockSubmissionLimiter.allowedToSubmit(any())) thenReturn Future.successful(true)
 
           submissionService.canSubmit(request).futureValue mustEqual false
         }
@@ -202,7 +204,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val request = DataRequest(identifierRequest, userId, answers)
 
           when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
-          when(mockConnector.checkAllowlist()(any())) thenReturn Future.successful(true)
+          when(mockSubmissionLimiter.allowedToSubmit(any())) thenReturn Future.successful(true)
 
           submissionService.canSubmit(request).futureValue mustEqual false
         }
@@ -215,7 +217,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val request = DataRequest(identifierRequest, userId, answers)
 
           when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
-          when(mockConnector.checkAllowlist()(any())) thenReturn Future.successful(true)
+          when(mockSubmissionLimiter.allowedToSubmit(any())) thenReturn Future.successful(true)
 
           submissionService.canSubmit(request).futureValue mustEqual false
         }
@@ -228,7 +230,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val request = DataRequest(identifierRequest, userId, answers)
 
           when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
-          when(mockConnector.checkAllowlist()(any())) thenReturn Future.successful(true)
+          when(mockSubmissionLimiter.allowedToSubmit(any())) thenReturn Future.successful(true)
 
           submissionService.canSubmit(request).futureValue mustEqual false
         }
@@ -256,7 +258,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val request = DataRequest(identifierRequest, userId, answers)
 
           when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
-          when(mockConnector.checkAllowlist()(any())) thenReturn Future.successful(true)
+          when(mockSubmissionLimiter.allowedToSubmit(any())) thenReturn Future.successful(true)
 
           submissionService.canSubmit(request).futureValue mustEqual false
         }
@@ -272,12 +274,12 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val request = DataRequest(identifierRequest, userId, answers)
 
           when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
-          when(mockConnector.checkAllowlist()(any())) thenReturn Future.successful(true)
+          when(mockSubmissionLimiter.allowedToSubmit(any())) thenReturn Future.successful(true)
 
           submissionService.canSubmit(request).futureValue mustEqual false
         }
 
-        "must be true when the user's NINO is on the allowlist, they have not changed designatory details or added information, no children are over 6 or need to send documents" - {
+        "must be true when the submission limiter allows submission, they have not changed designatory details or added information, no children are over 6 or need to send documents" - {
 
           "and the user does not have a partner" in {
 
@@ -285,7 +287,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
             val request = DataRequest(identifierRequest, userId, basicUserAnswers)
 
             when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
-            when(mockConnector.checkAllowlist()(any())) thenReturn Future.successful(true)
+            when(mockSubmissionLimiter.allowedToSubmit(any())) thenReturn Future.successful(true)
 
             submissionService.canSubmit(request).futureValue mustEqual true
           }
@@ -312,7 +314,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
               val request = DataRequest(identifierRequest, userId, answers)
 
               when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
-              when(mockConnector.checkAllowlist()(any())) thenReturn Future.successful(true)
+              when(mockSubmissionLimiter.allowedToSubmit(any())) thenReturn Future.successful(true)
 
               submissionService.canSubmit(request).futureValue mustEqual true
             }
@@ -341,7 +343,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
               val request = DataRequest(identifierRequest, userId, answers)
 
               when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
-              when(mockConnector.checkAllowlist()(any())) thenReturn Future.successful(true)
+              when(mockSubmissionLimiter.allowedToSubmit(any())) thenReturn Future.successful(true)
 
               submissionService.canSubmit(request).futureValue mustEqual true
             }
@@ -357,12 +359,27 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
 
       "and their answers can produce a valid Journey Model" - {
 
-        "must submit a claim" in {
+        "must submit a claim and record the submission" in {
 
           val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
           val request = DataRequest(identifierRequest, userId, basicUserAnswers)
 
           when(mockConnector.submitClaim(any())(any())) thenReturn Future.successful(Done)
+          when(mockSubmissionLimiter.recordSubmission(any())(any())) thenReturn Future.successful(Done)
+
+          submissionService.submit(request).futureValue
+
+          verify(mockConnector, times(1)).submitClaim(any())(any())
+          verify(mockSubmissionLimiter, times(1)).recordSubmission(any())(any())
+        }
+
+        "must submit a claim and return Done when recording the submission fails" in {
+
+          val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
+          val request = DataRequest(identifierRequest, userId, basicUserAnswers)
+
+          when(mockConnector.submitClaim(any())(any())) thenReturn Future.successful(Done)
+          when(mockSubmissionLimiter.recordSubmission(any())(any())) thenReturn Future.failed(new Exception("foo"))
 
           submissionService.submit(request).futureValue
 
