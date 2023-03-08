@@ -20,6 +20,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.LocalDate
+import java.util.UUID
 
 class ClaimChildBenefitConnectorSpec
   extends AnyFreeSpec
@@ -102,26 +103,28 @@ class ClaimChildBenefitConnectorSpec
 
   ".submitClaim" - {
 
-      val nino = arbitrary[Nino].sample.value.nino
-      val claim = Claim(
-        dateOfClaim = LocalDate.now,
-        claimant = UkCtaClaimantAlwaysResident(nino = nino, hmfAbroad = false, hicbcOptOut = true),
-        partner = None,
-        payment = None,
-        children = List(Child(
-          name = ChildName("first", None, "last"),
-          gender = BiologicalSex.Female,
-          dateOfBirth = LocalDate.now,
-          birthRegistrationNumber = None,
-          crn = None,
-          countryOfRegistration = CountryOfRegistration.EnglandWales,
-          dateOfBirthVerified = None,
-          livingWithClaimant = true,
-          claimantIsParent = true,
-          adoptionStatus = false
-        )),
-        otherEligibilityFailure = false
-      )
+    val correlationId = UUID.randomUUID()
+
+    val nino = arbitrary[Nino].sample.value.nino
+    val claim = Claim(
+      dateOfClaim = LocalDate.now,
+      claimant = UkCtaClaimantAlwaysResident(nino = nino, hmfAbroad = false, hicbcOptOut = true),
+      partner = None,
+      payment = None,
+      children = List(Child(
+        name = ChildName("first", None, "last"),
+        gender = BiologicalSex.Female,
+        dateOfBirth = LocalDate.now,
+        birthRegistrationNumber = None,
+        crn = None,
+        countryOfRegistration = CountryOfRegistration.EnglandWales,
+        dateOfBirthVerified = None,
+        livingWithClaimant = true,
+        claimantIsParent = true,
+        adoptionStatus = false
+      )),
+      otherEligibilityFailure = false
+    )
 
     "must return Done when the server returns OK" in {
 
@@ -132,11 +135,12 @@ class ClaimChildBenefitConnectorSpec
         val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
 
         server.stubFor(
-          post(urlEqualTo("/claim-child-benefit/claim"))
+          post(urlEqualTo("/claim-child-benefit/submit"))
+            .withHeader("CorrelationId", equalTo(correlationId.toString))
             .willReturn(ok())
         )
 
-        val result = connector.submitClaim(claim).futureValue
+        val result = connector.submitClaim(claim, correlationId).futureValue
 
         result mustEqual Done
       }
@@ -151,11 +155,11 @@ class ClaimChildBenefitConnectorSpec
         val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
 
         server.stubFor(
-          post(urlEqualTo("/claim-child-benefit/claim"))
+          post(urlEqualTo("/claim-child-benefit/submit"))
             .willReturn(aResponse().withStatus(BAD_REQUEST))
         )
 
-        val result = connector.submitClaim(claim).failed.futureValue
+        val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
         result mustBe a[BadRequestException]
       }
@@ -179,7 +183,7 @@ class ClaimChildBenefitConnectorSpec
         val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
 
         server.stubFor(
-          post(urlEqualTo("/claim-child-benefit/claim"))
+          post(urlEqualTo("/claim-child-benefit/submit"))
             .willReturn(
               aResponse()
                 .withStatus(UNPROCESSABLE_ENTITY)
@@ -187,7 +191,7 @@ class ClaimChildBenefitConnectorSpec
             )
         )
 
-        val result = connector.submitClaim(claim).failed.futureValue
+        val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
         result mustBe an[InvalidClaimStateException]
       }
@@ -211,7 +215,7 @@ class ClaimChildBenefitConnectorSpec
         val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
 
         server.stubFor(
-          post(urlEqualTo("/claim-child-benefit/claim"))
+          post(urlEqualTo("/claim-child-benefit/submit"))
             .willReturn(
               aResponse()
                 .withStatus(UNPROCESSABLE_ENTITY)
@@ -219,7 +223,7 @@ class ClaimChildBenefitConnectorSpec
             )
         )
 
-        val result = connector.submitClaim(claim).failed.futureValue
+        val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
         result mustBe an[InvalidAccountStateException]
       }
@@ -243,7 +247,7 @@ class ClaimChildBenefitConnectorSpec
         val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
 
         server.stubFor(
-          post(urlEqualTo("/claim-child-benefit/claim"))
+          post(urlEqualTo("/claim-child-benefit/submit"))
             .willReturn(
               aResponse()
                 .withStatus(UNPROCESSABLE_ENTITY)
@@ -251,7 +255,7 @@ class ClaimChildBenefitConnectorSpec
             )
         )
 
-        val result = connector.submitClaim(claim).failed.futureValue
+        val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
         result mustBe an[UnprocessableEntityException]
       }
@@ -270,7 +274,7 @@ class ClaimChildBenefitConnectorSpec
         val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
 
         server.stubFor(
-          post(urlEqualTo("/claim-child-benefit/claim"))
+          post(urlEqualTo("/claim-child-benefit/submit"))
             .willReturn(
               aResponse()
                 .withStatus(UNPROCESSABLE_ENTITY)
@@ -278,7 +282,7 @@ class ClaimChildBenefitConnectorSpec
             )
         )
 
-        val result = connector.submitClaim(claim).failed.futureValue
+        val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
         result mustBe an[UnprocessableEntityException]
       }
@@ -293,14 +297,14 @@ class ClaimChildBenefitConnectorSpec
         val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
 
         server.stubFor(
-          post(urlEqualTo("/claim-child-benefit/claim"))
+          post(urlEqualTo("/claim-child-benefit/submit"))
             .willReturn(
               aResponse()
                 .withStatus(INTERNAL_SERVER_ERROR)
             )
         )
 
-        val result = connector.submitClaim(claim).failed.futureValue
+        val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
         result mustBe a[ServerErrorException]
       }
@@ -315,14 +319,14 @@ class ClaimChildBenefitConnectorSpec
         val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
 
         server.stubFor(
-          post(urlEqualTo("/claim-child-benefit/claim"))
+          post(urlEqualTo("/claim-child-benefit/submit"))
             .willReturn(
               aResponse()
                 .withStatus(SERVICE_UNAVAILABLE)
             )
         )
 
-        val result = connector.submitClaim(claim).failed.futureValue
+        val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
         result mustBe a[ServiceUnavailableException]
       }
@@ -339,14 +343,14 @@ class ClaimChildBenefitConnectorSpec
         val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
 
         server.stubFor(
-          post(urlEqualTo("/claim-child-benefit/claim"))
+          post(urlEqualTo("/claim-child-benefit/submit"))
             .willReturn(
               aResponse()
                 .withStatus(status)
             )
         )
 
-        val result = connector.submitClaim(claim).failed.futureValue
+        val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
         result mustBe an[UnrecognisedResponseException]
       }
