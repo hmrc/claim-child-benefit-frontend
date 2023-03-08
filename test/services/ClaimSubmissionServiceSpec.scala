@@ -364,12 +364,12 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
           val request = DataRequest(identifierRequest, userId, basicUserAnswers)
 
-          when(mockConnector.submitClaim(any())(any())) thenReturn Future.successful(Done)
+          when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
           when(mockSubmissionLimiter.recordSubmission(any())(any())) thenReturn Future.successful(Done)
 
           submissionService.submit(request).futureValue
 
-          verify(mockConnector, times(1)).submitClaim(any())(any())
+          verify(mockConnector, times(1)).submitClaim(any(), any())(any())
           verify(mockSubmissionLimiter, times(1)).recordSubmission(any())(any())
         }
 
@@ -378,12 +378,12 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
           val request = DataRequest(identifierRequest, userId, basicUserAnswers)
 
-          when(mockConnector.submitClaim(any())(any())) thenReturn Future.successful(Done)
+          when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
           when(mockSubmissionLimiter.recordSubmission(any())(any())) thenReturn Future.failed(new Exception("foo"))
 
           submissionService.submit(request).futureValue
 
-          verify(mockConnector, times(1)).submitClaim(any())(any())
+          verify(mockConnector, times(1)).submitClaim(any(), any())(any())
         }
       }
 
@@ -396,7 +396,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
           val request = DataRequest(identifierRequest, userId, answers)
 
-          when(mockConnector.submitClaim(any())(any())) thenReturn Future.successful(Done)
+          when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
 
           val result = submissionService.submit(request).failed.futureValue
           result.getMessage mustEqual CannotBuildJourneyModelException.getMessage
@@ -412,7 +412,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
         val identifierRequest = UnauthenticatedIdentifierRequest(baseRequest, userId)
         val request = DataRequest(identifierRequest, userId, answers)
 
-        when(mockConnector.submitClaim(any())(any())) thenReturn Future.successful(Done)
+        when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
 
         val result = submissionService.submit(request).failed.futureValue
         result.getMessage mustEqual NotAuthenticatedException.getMessage

@@ -26,6 +26,7 @@ import services.ClaimSubmissionService.{CannotBuildJourneyModelException, NotAut
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.RequestOps._
 
+import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -70,9 +71,10 @@ class ClaimSubmissionService @Inject()(
       journeyModelProvider.buildFromUserAnswers(request.userAnswers)(hc).flatMap { result =>
         result.right.map { model =>
           val claim = Claim.build(nino, model)
+          val correlationId = UUID.randomUUID()
 
           connector
-            .submitClaim(claim)(hc)
+            .submitClaim(claim, correlationId)(hc)
             .flatMap { _ =>
               submissionLimiter
                 .recordSubmission(claim)(hc)

@@ -27,6 +27,7 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 
+import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -35,7 +36,7 @@ class ClaimChildBenefitConnector @Inject()(config: Configuration, httpClient: Ht
 
   private val baseUrl = config.get[Service]("microservice.services.claim-child-benefit")
   private val designatoryDetailsUrl = url"$baseUrl/claim-child-benefit/designatory-details"
-  private val submitClaimUrl = url"$baseUrl/claim-child-benefit/claim"
+  private val submitClaimUrl = url"$baseUrl/claim-child-benefit/submit"
   private val allowlistUrl = url"$baseUrl/claim-child-benefit/allow-list"
   private val checkThrottleUrl = url"$baseUrl/claim-child-benefit/throttle/check"
   private val incrementThrottleCountUrl = url"$baseUrl/claim-child-benefit/throttle/increment"
@@ -51,10 +52,11 @@ class ClaimChildBenefitConnector @Inject()(config: Configuration, httpClient: Ht
       .get(allowlistUrl)
       .execute[Boolean]
 
-  def submitClaim(claim: Claim)(implicit hc: HeaderCarrier): Future[Done] =
+  def submitClaim(claim: Claim, correlationId: UUID)(implicit hc: HeaderCarrier): Future[Done] =
     httpClient
       .post(submitClaimUrl)
       .withBody(Json.toJson(claim))
+      .setHeader("CorrelationId" -> correlationId.toString)
       .execute[Either[SubmitClaimException, Done]]
       .flatMap {
         case Right(_)        => Future.successful(Done)
