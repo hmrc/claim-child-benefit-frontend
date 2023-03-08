@@ -19,6 +19,7 @@ package config
 import controllers.actions._
 import play.api.inject.Binding
 import play.api.{Configuration, Environment}
+import services.{SubmissionsLimitedByAllowList, SubmissionsLimitedByThrottle, SubmissionLimiter, SubmissionsNotLimited}
 import uk.gov.hmrc.crypto.{Decrypter, Encrypter}
 
 import java.time.Clock
@@ -30,7 +31,9 @@ class Module extends play.api.inject.Module {
     val authTokenInitialiserBindings: Seq[Binding[_]] =
       if (configuration.get[Boolean]("create-internal-auth-token-on-start")) {
         Seq(bind[InternalAuthTokenInitialiser].to[InternalAuthTokenInitialiserImpl].eagerly())
-      } else Seq(bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser].eagerly())
+      } else {
+        Seq(bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser].eagerly())
+      }
 
     val identifierActionBinding: Binding[_] =
       if (configuration.get[Boolean]("features.allow-authenticated-sessions")) {
@@ -39,13 +42,23 @@ class Module extends play.api.inject.Module {
         bind[IdentifierAction].to[SessionIdentifierAction].eagerly
       }
 
+    val submissionLimiterBinding: Binding[_] =
+      if (configuration.get[String]("features.submission-limiter") == "allow-list") {
+        bind[SubmissionLimiter].to[SubmissionsLimitedByAllowList]
+      } else if (configuration.get[String]("features.submission-limiter") == "throttle") {
+        bind[SubmissionLimiter].to[SubmissionsLimitedByThrottle]
+      } else {
+        bind[SubmissionLimiter].to[SubmissionsNotLimited]
+      }
+
     Seq(
       bind[DataRetrievalAction].to[DataRetrievalActionImpl].eagerly,
       bind[DataRequiredAction].to[DataRequiredActionImpl].eagerly,
       bind[Clock].toInstance(Clock.systemUTC()),
       bind[FeatureFlags].toSelf.eagerly,
       bind[Encrypter with Decrypter].toProvider[CryptoProvider].eagerly,
-      identifierActionBinding
+      identifierActionBinding,
+      submissionLimiterBinding
     ) ++ authTokenInitialiserBindings
   }
 }
