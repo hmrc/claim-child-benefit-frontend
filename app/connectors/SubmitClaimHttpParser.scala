@@ -29,7 +29,7 @@ object SubmitClaimHttpParser extends Logging {
 
     override def read(method: String, url: String, response: HttpResponse): Either[SubmitClaimException, Done] =
       response.status match {
-        case OK =>
+        case CREATED =>
           Right(Done)
 
         case BAD_REQUEST =>
