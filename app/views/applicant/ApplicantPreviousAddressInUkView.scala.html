@@ -15,13 +15,15 @@
  *@
 
 @import controllers.applicant.routes
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.newtablinkhelper.NewTabLinkHelper
 
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukErrorSummary: GovukErrorSummary,
         govukRadios: GovukRadios,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        newTabLink: HmrcNewTabLinkHelper
 )
 
 @(form: Form[_], waypoints: Waypoints, addressLine1: String)(implicit request: Request[_], messages: Messages)
@@ -37,6 +39,11 @@
         <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">@messages("applicantPreviousAddressInUk.heading")</h1>
 
         <p class="govuk-body govuk-!-margin-bottom-6">@messages("applicantPreviousAddressInUk.p1", addressLine1)</p>
+
+        <p class="govuk-body">
+            @messages("applicantPreviousAddressInUk.p2")
+            @{newTabLink(NewTabLinkHelper(text = messages("applicantPreviousAddressInUk.p2.link.text"), href = Some(messages("applicantPreviousAddressInUk.p2.link.href"))))}.
+        </p>
 
         @govukRadios(
             RadiosViewModel.yesNo(
