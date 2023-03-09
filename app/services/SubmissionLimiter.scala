@@ -16,11 +16,13 @@
 
 package services
 
+import audit.AuditService
 import connectors.ClaimChildBenefitConnector
-import models.Done
+import models.{Done, JourneyModel}
 import models.domain.Claim
 import uk.gov.hmrc.http.HeaderCarrier
 
+import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -28,20 +30,22 @@ trait SubmissionLimiter {
 
   def allowedToSubmit(hc: HeaderCarrier): Future[Boolean]
 
-  def recordSubmission(claim: Claim)(hc: HeaderCarrier): Future[Done]
+  def recordSubmission(model: JourneyModel, claim: Claim, correlationId: UUID)(hc: HeaderCarrier): Future[Done]
 }
 
-class SubmissionsLimitedByAllowList @Inject()(connector: ClaimChildBenefitConnector)
+class SubmissionsLimitedByAllowList @Inject()(connector: ClaimChildBenefitConnector, auditService: AuditService)
                                              (implicit ec: ExecutionContext) extends SubmissionLimiter {
 
   override def allowedToSubmit(hc: HeaderCarrier): Future[Boolean] =
     connector.checkAllowlist()(hc)
 
-  override def recordSubmission(claim: Claim)(hc: HeaderCarrier): Future[Done] =
+  override def recordSubmission(model: JourneyModel, claim: Claim, correlationId: UUID)(hc: HeaderCarrier): Future[Done] = {
+    auditService.auditSubmissionToCbs(model, claim, correlationId)(hc)
     Future.successful(Done)
+  }
 }
 
-class SubmissionsLimitedByThrottle @Inject()(connector: ClaimChildBenefitConnector)
+class SubmissionsLimitedByThrottle @Inject()(connector: ClaimChildBenefitConnector, auditService: AuditService)
                                             (implicit ec: ExecutionContext)extends SubmissionLimiter {
 
   override def allowedToSubmit(hc: HeaderCarrier): Future[Boolean] =
@@ -49,15 +53,22 @@ class SubmissionsLimitedByThrottle @Inject()(connector: ClaimChildBenefitConnect
       .checkThrottleLimit()(hc)
       .map(response => !response.limitReached)
 
-  override def recordSubmission(claim: Claim)(hc: HeaderCarrier): Future[Done] =
-    connector.incrementThrottleCount()(hc)
+  override def recordSubmission(model: JourneyModel, claim: Claim, correlationId: UUID)(hc: HeaderCarrier): Future[Done] =
+    connector
+      .incrementThrottleCount()(hc)
+      .map { _ =>
+        auditService.auditSubmissionToCbs(model, claim, correlationId)(hc)
+        Done
+      }
 }
 
-class SubmissionsNotLimited @Inject() extends SubmissionLimiter {
+class SubmissionsNotLimited @Inject()(auditService: AuditService) extends SubmissionLimiter {
 
   override def allowedToSubmit(hc: HeaderCarrier): Future[Boolean] =
     Future.successful(true)
 
-  override def recordSubmission(claim: Claim)(hc: HeaderCarrier): Future[Done] =
+  override def recordSubmission(model: JourneyModel, claim: Claim, correlationId: UUID)(hc: HeaderCarrier): Future[Done] = {
+    auditService.auditSubmissionToCbs(model, claim, correlationId)(hc)
     Future.successful(Done)
+  }
 }
