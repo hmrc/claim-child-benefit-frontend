@@ -18,11 +18,12 @@ package audit
 
 import com.google.inject.{Inject, Singleton}
 import models.JourneyModel
-import play.api.libs.json.JsValue
+import models.domain.Claim
 import play.api.{Configuration, Logging}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
+import java.util.UUID
 import scala.concurrent.ExecutionContext
 
 @Singleton
@@ -30,6 +31,7 @@ class AuditService @Inject() (connector: AuditConnector, configuration: Configur
 
   private val downloadEventName            = configuration.get[String]("auditing.downloadEventName")
   private val validateBankDetailsEventName = configuration.get[String]("auditing.validateBankDetailsEventName")
+  private val submitToCbsAuditEventName    = configuration.get[String]("auditing.submitToCbsEventName")
 
   def auditDownload(model: JourneyModel)(implicit hc: HeaderCarrier): Unit = {
     val data = DownloadAuditEvent.from(model)
@@ -38,4 +40,9 @@ class AuditService @Inject() (connector: AuditConnector, configuration: Configur
 
   def auditValidateBankDetails(auditEvent: ValidateBankDetailsAuditEvent)(implicit hc: HeaderCarrier): Unit =
     connector.sendExplicitAudit(validateBankDetailsEventName, auditEvent)
+
+  def auditSubmissionToCbs(model: JourneyModel, claim: Claim, correlationId: UUID)(implicit hc: HeaderCarrier): Unit = {
+    val data = SubmitToCbsAuditEvent.from(model, claim, correlationId)
+    connector.sendExplicitAudit(submitToCbsAuditEventName, data)
+  }
 }

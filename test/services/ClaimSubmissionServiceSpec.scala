@@ -365,12 +365,12 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val request = DataRequest(identifierRequest, userId, basicUserAnswers)
 
           when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
-          when(mockSubmissionLimiter.recordSubmission(any())(any())) thenReturn Future.successful(Done)
+          when(mockSubmissionLimiter.recordSubmission(any(), any(), any())(any())) thenReturn Future.successful(Done)
 
           submissionService.submit(request).futureValue
 
           verify(mockConnector, times(1)).submitClaim(any(), any())(any())
-          verify(mockSubmissionLimiter, times(1)).recordSubmission(any())(any())
+          verify(mockSubmissionLimiter, times(1)).recordSubmission(any(), any(), any())(any())
         }
 
         "must submit a claim and return Done when recording the submission fails" in {
@@ -379,7 +379,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val request = DataRequest(identifierRequest, userId, basicUserAnswers)
 
           when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
-          when(mockSubmissionLimiter.recordSubmission(any())(any())) thenReturn Future.failed(new Exception("foo"))
+          when(mockSubmissionLimiter.recordSubmission(any(), any(), any())(any())) thenReturn Future.failed(new Exception("foo"))
 
           submissionService.submit(request).futureValue
 

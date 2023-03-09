@@ -16,12 +16,14 @@
 
 package services
 
+import audit.AuditService
 import cats.data.NonEmptyList
 import connectors.ClaimChildBenefitConnector
 import generators.Generators
 import models._
 import models.domain.Claim
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.{Mockito, MockitoSugar}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
@@ -33,8 +35,8 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.LocalDate
+import java.util.UUID
 import scala.concurrent.Future
-
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class SubmissionLimiterSpec
@@ -47,14 +49,17 @@ class SubmissionLimiterSpec
     with OptionValues {
 
   private val mockConnector = mock[ClaimChildBenefitConnector]
+  private val mockAuditService = mock[AuditService]
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 
   override def beforeEach(): Unit = {
     Mockito.reset(mockConnector)
+    Mockito.reset(mockAuditService)
     super.beforeEach()
   }
 
   private val nino = arbitrary[Nino].sample.value.nino
+  private val correlationId = UUID.randomUUID()
 
   private val basicJourneyModel = JourneyModel(
     applicant = JourneyModel.Applicant(
@@ -101,7 +106,7 @@ class SubmissionLimiterSpec
 
   "SubmissionsLimitedByAllowList" - {
 
-    val limiter = new SubmissionsLimitedByAllowList(mockConnector)
+    val limiter = new SubmissionsLimitedByAllowList(mockConnector, mockAuditService)
 
     ".allowedToSubmit" - {
 
@@ -122,16 +127,17 @@ class SubmissionLimiterSpec
 
     "recordSubmission" - {
 
-      "must return Done" in {
+      "must audit the submission and return Done" in {
 
-        limiter.recordSubmission(claim)(hc).futureValue mustEqual Done
+        limiter.recordSubmission(basicJourneyModel, claim, correlationId)(hc).futureValue mustEqual Done
+        verify(mockAuditService, times(1)).auditSubmissionToCbs(eqTo(basicJourneyModel), eqTo(claim), any())(any())
       }
     }
   }
 
   "SubmissionsNotLimited" - {
 
-    val limiter = new SubmissionsNotLimited
+    val limiter = new SubmissionsNotLimited(mockAuditService)
 
     ".allowedToSubmit" - {
 
@@ -143,16 +149,17 @@ class SubmissionLimiterSpec
 
     ".recordSubmission" - {
 
-      "must return Done" in {
+      "must audit the submission and return Done" in {
 
-        limiter.recordSubmission(claim)(hc).futureValue mustEqual Done
+        limiter.recordSubmission(basicJourneyModel, claim, correlationId)(hc).futureValue mustEqual Done
+        verify(mockAuditService, times(1)).auditSubmissionToCbs(eqTo(basicJourneyModel), eqTo(claim), any())(any())
       }
     }
   }
 
   "SubmissionsLimitedByThrottle" - {
 
-    val limiter = new SubmissionsLimitedByThrottle(mockConnector)
+    val limiter = new SubmissionsLimitedByThrottle(mockConnector, mockAuditService)
 
     ".allowedToSubmit" - {
 
@@ -175,12 +182,13 @@ class SubmissionLimiterSpec
 
     ".recordSubmission" - {
 
-      "must increment the throttle counter and return Done" in {
+      "must increment the throttle counter, audit the submission and  and return Done" in {
 
         when(mockConnector.incrementThrottleCount()(any())) thenReturn Future.successful(Done)
 
-        limiter.recordSubmission(claim)(hc).futureValue
+        limiter.recordSubmission(basicJourneyModel, claim, correlationId)(hc).futureValue
         verify(mockConnector, times(1)).incrementThrottleCount()(any())
+        verify(mockAuditService, times(1)).auditSubmissionToCbs(eqTo(basicJourneyModel), eqTo(claim), any())(any())
       }
     }
   }
