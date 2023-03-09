@@ -42,8 +42,8 @@ class ClaimSubmissionController @Inject()(
           claimSubmissionService.submit(request).map { _ =>
               Redirect(routes.SubmittedController.onPageLoad)
           }.recover {
-            case e: Exception =>
-              logger.warn("Submission to CBS failed: " + e.getMessage)
+            case _: Exception =>
+              logger.warn("Submission to CBS failed")
               Redirect(routes.PrintController.onPageLoad)
           }
 
