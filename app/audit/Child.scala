@@ -21,22 +21,22 @@ import play.api.libs.json.{Json, Writes}
 
 import java.time.LocalDate
 
-private[audit] final case class Child(
-                                       name: ChildName,
-                                       nameChangedByDeedPoll: Option[Boolean],
-                                       previousNames: List[ChildName],
-                                       biologicalSex: String,
-                                       dateOfBirth: LocalDate,
-                                       birthRegistrationCountry: String,
-                                       birthCertificateNumber: Option[String],
-                                       birthCertificateDetailsMatched: String,
-                                       relationshipToApplicant: String,
-                                       adoptingThroughLocalAuthority: Boolean,
-                                       previousClaimant: Option[PreviousClaimant],
-                                       guardian: Option[Guardian],
-                                       previousGuardian: Option[PreviousGuardian],
-                                       dateChildStartedLivingWithApplicant: Option[LocalDate]
-                                     )
+final case class Child(
+                        name: ChildName,
+                        nameChangedByDeedPoll: Option[Boolean],
+                        previousNames: List[ChildName],
+                        biologicalSex: String,
+                        dateOfBirth: LocalDate,
+                        birthRegistrationCountry: String,
+                        birthCertificateNumber: Option[String],
+                        birthCertificateDetailsMatched: String,
+                        relationshipToApplicant: String,
+                        adoptingThroughLocalAuthority: Boolean,
+                        previousClaimant: Option[PreviousClaimant],
+                        guardian: Option[Guardian],
+                        previousGuardian: Option[PreviousGuardian],
+                        dateChildStartedLivingWithApplicant: Option[LocalDate]
+                      )
 
 object Child {
 

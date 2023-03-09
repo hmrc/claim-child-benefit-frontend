@@ -19,7 +19,7 @@ package audit
 import models.JourneyModel
 import play.api.libs.json.{Json, Writes}
 
-private[audit] final case class Guardian(name: Option[AdultName], address: Option[Address])
+final case class Guardian(name: Option[AdultName], address: Option[Address])
 
 object Guardian {
 

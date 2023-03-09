@@ -21,7 +21,7 @@ import play.api.libs.json.{Json, Writes}
 
 import java.time.LocalDate
 
-private[audit] final case class Relationship(status: String, since: Option[LocalDate], partner: Option[Partner])
+final case class Relationship(status: String, since: Option[LocalDate], partner: Option[Partner])
 
 object Relationship {
 
