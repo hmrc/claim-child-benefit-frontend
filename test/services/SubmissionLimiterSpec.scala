@@ -17,32 +17,28 @@
 package services
 
 import audit.AuditService
-import audit.AuditService
 import cats.data.NonEmptyList
 import connectors.{ClaimChildBenefitConnector, UserAllowListConnector}
 import generators.Generators
 import models._
 import models.domain.Claim
-import models.requests.AuthenticatedIdentifierRequest
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.{Mockito, MockitoSugar}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
-import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import play.api.Configuration
-import play.api.test.FakeRequest
+import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import play.api.Configuration
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.LocalDate
 import java.util.UUID
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class SubmissionLimiterSpec
   extends AnyFreeSpec
@@ -115,20 +111,22 @@ class SubmissionLimiterSpec
 
   "SubmissionsLimitedByAllowList" - {
 
-    val limiter = new SubmissionsLimitedByAllowList(configuration, mockClaimChildBenefitConnector, mockUserAllowListConnector, mockAuditService)
+    val limiter = new SubmissionsLimitedByAllowList(configuration, mockUserAllowListConnector, mockAuditService)
 
     ".allowedToSubmit" - {
 
       "must return true when the connector's checkAllowlist returns true" in {
 
-        when(mockClaimChildBenefitConnector.checkAllowlist()(any())) thenReturn Future.successful(true)
+        when(mockUserAllowListConnector.check(any(), any())(any())) thenReturn Future.successful(true)
 
         limiter.allowedToSubmit(nino).futureValue mustEqual true
+
+        verify(mockUserAllowListConnector, times(1)).check(eqTo("Submission"), eqTo(nino))(any())
       }
 
       "must return false when the connector's checkAllowlist returns false" in {
 
-        when(mockClaimChildBenefitConnector.checkAllowlist()(any())) thenReturn Future.successful(false)
+        when(mockUserAllowListConnector.check(any(), any())(any())) thenReturn Future.successful(false)
 
         limiter.allowedToSubmit(nino).futureValue mustEqual false
       }

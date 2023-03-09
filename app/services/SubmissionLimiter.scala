@@ -16,10 +16,8 @@
 
 package services
 
-import connectors.{ClaimChildBenefitConnector, UserAllowListConnector}
-import models.Done
 import audit.AuditService
-import connectors.ClaimChildBenefitConnector
+import connectors.{ClaimChildBenefitConnector, UserAllowListConnector}
 import models.{Done, JourneyModel}
 import models.domain.Claim
 import play.api.Configuration
@@ -39,13 +37,14 @@ trait SubmissionLimiter {
 
 class SubmissionsLimitedByAllowList @Inject()(
                                                configuration: Configuration,
-                                               claimChildBenefitConnector: ClaimChildBenefitConnector,
                                                userAllowListConnector: UserAllowListConnector,
                                                auditService: AuditService
                                              )(implicit ec: ExecutionContext) extends SubmissionLimiter {
 
+  private val submissionFeature: String = configuration.get[String]("allow-list-features.submission")
+
   override def allowedToSubmit(nino: String)(implicit hc: HeaderCarrier): Future[Boolean] =
-    claimChildBenefitConnector.checkAllowlist()
+    userAllowListConnector.check(submissionFeature, nino)
 
   override def recordSubmission(model: JourneyModel, claim: Claim, correlationId: UUID)(implicit hc: HeaderCarrier): Future[Done] = {
     auditService.auditSubmissionToCbs(model, claim, correlationId)
