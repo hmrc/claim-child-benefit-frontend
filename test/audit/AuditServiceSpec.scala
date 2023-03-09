@@ -20,7 +20,7 @@ import audit.DownloadAuditEvent._
 import cats.data.NonEmptyList
 import generators.ModelGenerators
 import models.BirthRegistrationMatchingResult.NotAttempted
-import models.OtherEligibilityFailReason.{ApplicantReceivedBenefitsAbroad, ApplicantWorkedAbroad, ChildRecentlyLivedElsewhere, PartnerReceivedBenefitsAbroad, PartnerWorkedAbroad}
+import models.OtherEligibilityFailReason.{ApplicantReceivedBenefitsAbroad, ApplicantWorkedAbroad, PartnerReceivedBenefitsAbroad, PartnerWorkedAbroad}
 import models.{ApplicantPreviousName, BirthCertificateSystemNumber, Country, CurrentlyReceivingChildBenefit, EmploymentStatus, JourneyModel, Nationality, PartnerClaimingChildBenefit}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
