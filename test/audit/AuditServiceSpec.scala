@@ -211,8 +211,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           ApplicantWorkedAbroad.toString,
           ApplicantReceivedBenefitsAbroad.toString,
           PartnerWorkedAbroad.toString,
-          PartnerReceivedBenefitsAbroad.toString,
-          ChildRecentlyLivedElsewhere.toString
+          PartnerReceivedBenefitsAbroad.toString
         )
       )
 
