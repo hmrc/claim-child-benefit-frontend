@@ -84,7 +84,7 @@ final case class JourneyModel(
     }
 
     val childRecentlyLivedElsewhere = children match {
-      case x if x.exists(_.dateChildStartedLivingWithApplicant.exists(_.isAfter(LocalDate.now.minusMonths(3)))) => Some(ChildRecentlyLivedElsewhere)
+      case x if x.exists(_.possiblyLivedAbroadSeparately) => Some(ChildRecentlyLivedElsewhere)
       case _ => None
     }
 
@@ -183,6 +183,19 @@ object JourneyModel {
 
     val requiredDocuments: Seq[DocumentType] =
       Seq(birthCertificate, travelDocument, adoptionCertificate).flatten
+
+    val possiblyLivedAbroadSeparately: Boolean = {
+      if (dateChildStartedLivingWithApplicant.exists(_.isAfter(LocalDate.now.minusMonths(3)))) {
+        previousGuardian.exists { previousGuardian =>
+          previousGuardian.address.forall {
+            case _: InternationalAddress => true
+            case _ => false
+          }
+        }
+      } else {
+        false
+      }
+    }
   }
 
   final case class PreviousClaimant(name: Option[AdultName], address: Option[Address])

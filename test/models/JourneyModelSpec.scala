@@ -420,20 +420,84 @@ class JourneyModelSpec
       data.value.otherEligibilityFailureReasons must contain only PartnerReceivedBenefitsAbroad
     }
 
-    "must include Child recently Lived Elsewhere when a child came to live with the applicant less than 3 months ago" in {
+    "must include Child recently Lived Elsewhere when a child came to live with the applicant less than 3 months ago" - {
 
-      val answers =
-        basicAnswers
-          .set(ChildLivedWithAnyoneElsePage(Index(0)), true).success.value
-          .set(PreviousGuardianNameKnownPage(Index(0)), false).success.value
-          .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now.minusMonths(3).plusDays(1)).success.value
+      "and the previous guardian lived abroad" in {
 
-      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+        val answers =
+          basicAnswers
+            .set(ChildLivedWithAnyoneElsePage(Index(0)), true).success.value
+            .set(PreviousGuardianNameKnownPage(Index(0)), true).success.value
+            .set(PreviousGuardianNamePage(Index(0)), AdultName(None, "first", None, "last")).success.value
+            .set(PreviousGuardianAddressKnownPage(Index(0)), true).success.value
+            .set(PreviousGuardianAddressInUkPage(Index(0)), false).success.value
+            .set(PreviousGuardianInternationalAddressPage(Index(0)), arbitrary[InternationalAddress].sample.value).success.value
+            .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), false).success.value
+            .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now.minusMonths(3).plusDays(1)).success.value
 
-      errors mustBe empty
-      data.value.otherEligibilityFailureReasons must contain only ChildRecentlyLivedElsewhere
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors mustBe empty
+        data.value.otherEligibilityFailureReasons must contain only ChildRecentlyLivedElsewhere
+      }
+
+      "and the previous guardian's address is unknown" in {
+
+        val answers =
+          basicAnswers
+            .set(ChildLivedWithAnyoneElsePage(Index(0)), true).success.value
+            .set(PreviousGuardianNameKnownPage(Index(0)), true).success.value
+            .set(PreviousGuardianNamePage(Index(0)), AdultName(None, "first", None, "last")).success.value
+            .set(PreviousGuardianAddressKnownPage(Index(0)), false).success.value
+            .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), false).success.value
+            .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now.minusMonths(3).plusDays(1)).success.value
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors mustBe empty
+        data.value.otherEligibilityFailureReasons must contain only ChildRecentlyLivedElsewhere
+      }
     }
 
-    "must include "
+    "must not include Child Recently Lived Elsewhere" - {
+
+      "when a child came to live with the applicant less than three months ago, and the previous guardian lived in the UK" in {
+
+        val answers =
+          basicAnswers
+            .set(ChildLivedWithAnyoneElsePage(Index(0)), true).success.value
+            .set(PreviousGuardianNameKnownPage(Index(0)), true).success.value
+            .set(PreviousGuardianNamePage(Index(0)), AdultName(None, "first", None, "last")).success.value
+            .set(PreviousGuardianAddressKnownPage(Index(0)), true).success.value
+            .set(PreviousGuardianAddressInUkPage(Index(0)), true).success.value
+            .set(PreviousGuardianUkAddressPage(Index(0)), arbitrary[UkAddress].sample.value).success.value
+            .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), false).success.value
+            .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now.minusMonths(3).plusDays(1)).success.value
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors mustBe empty
+        data.value.otherEligibilityFailureReasons mustBe empty
+      }
+
+      "when a child came to live with the applicant 3 months ago or more" in {
+
+        val answers =
+          basicAnswers
+            .set(ChildLivedWithAnyoneElsePage(Index(0)), true).success.value
+            .set(PreviousGuardianNameKnownPage(Index(0)), true).success.value
+            .set(PreviousGuardianNamePage(Index(0)), AdultName(None, "first", None, "last")).success.value
+            .set(PreviousGuardianAddressKnownPage(Index(0)), true).success.value
+            .set(PreviousGuardianAddressInUkPage(Index(0)), false).success.value
+            .set(PreviousGuardianInternationalAddressPage(Index(0)), arbitrary[InternationalAddress].sample.value).success.value
+            .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), false).success.value
+            .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now.minusMonths(3)).success.value
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors mustBe empty
+        data.value.otherEligibilityFailureReasons mustBe empty
+      }
+    }
   }
 }
