@@ -47,7 +47,7 @@ error.summary.title = There is a problem
 
 thisSectionIs = This section is
 section.income = Income details
-section.payments = Payment details
+section.payments = Income details
 section.applicant = About you
 section.partner = About your partner
 section.child = Children you want to claim for
@@ -1729,21 +1729,21 @@ ivError.title = Sorry, there is a problem with the service
 ivError.heading = Sorry, there is a problem with the service
 ivError.p1 = Try again later.
 
-checkApplicantDetails.title = Check your answers
-checkApplicantDetails.heading = Check your answers
+checkApplicantDetails.title = Check your answers for this section
+checkApplicantDetails.heading = Check your answers for this section
 checkApplicantDetails.yourDetails = Your details
 
 checkDesignatoryDetails.title = Check your details
 checkDesignatoryDetails.heading = Check your details
 checkDesignatoryDetails.yourDetails = Your details
 
-checkPartnerDetails.title = Check your answers
-checkPartnerDetails.heading = Check your answers
-checkPartnerDetails.yourDetails = Partner details
+checkPartnerDetails.title = Check your answers for this section
+checkPartnerDetails.heading = Check your answers for this section
+checkPartnerDetails.yourDetails = Relationship details
 
-checkPaymentDetails.title = Check your answers
-checkPaymentDetails.heading = Check your answers
-checkPaymentDetails.yourDetails = Payment details
+checkPaymentDetails.title = Check your answers for this section
+checkPaymentDetails.heading = Check your answers for this section
+checkPaymentDetails.yourDetails = Income details
 
 taskList.title = Claim Child Benefit
 taskList.heading = Claim Child Benefit
@@ -1756,23 +1756,23 @@ taskList.status.completed = Completed
 taskList.status.cannotStart = Cannot start yet
 taskList.relationshipDetails = Check eligibility
 taskList.applicantDetails = Your details
-taskList.partnerDetails = Partner details
+taskList.partnerDetails = Relationship details
 taskList.childDetails = Child details
-taskList.paymentDetails = Payment details
-taskList.additionalInfo = Further details to share
+taskList.paymentDetails = Income details
+taskList.additionalInfo = Additional information
 taskList.submit = Submit claim
 taskList.completedSections = You’ve completed {0} of {1} sections.
 
 relationshipStatusChangesTaskList.title = Answers on your payment details have been reset
 relationshipStatusChangesTaskList.heading = Answers on your payment details have been reset
-relationshipStatusChangesTaskList.p1 = The ”Payment details“ section will now show as ”not started“.
-relationshipStatusChangesTaskList.p2 = Sorry, you have changed your marital or civil partnership status, so you will have to answer questions on your payment details again.
+relationshipStatusChangesTaskList.p1 = The ”Income details“ section will now show as ”not started“.
+relationshipStatusChangesTaskList.p2 = Sorry, you have changed your marital or civil partnership status, so you will have to answer questions on your income details again.
 relationshipStatusChangesTaskList.p3 = Check over all your answers before submitting your claim, in case you need to update any information you have provided.
 
 currentlyReceivingChangesTaskList.title = Answers on your payment details have been reset
 currentlyReceivingChangesTaskList.heading = Answers on your payment details have been reset
-currentlyReceivingChangesTaskList.p1 = The ”Payment details“ section will now show as ”not started“.
-currentlyReceivingChangesTaskList.p2 = Sorry, you have changed answers on if you receive Child Benefit right now, so you will have to answer questions on your payment details again.
+currentlyReceivingChangesTaskList.p1 = The ”income details“ section will now show as ”not started“.
+currentlyReceivingChangesTaskList.p2 = Sorry, you have changed answers on if you receive Child Benefit right now, so you will have to answer questions on your income details again.
 currentlyReceivingChangesTaskList.p3 = Check over all your answers before submitting your claim, in case you need to update any information you have provided.
 
 applicantResidence.title = Where have you lived?
