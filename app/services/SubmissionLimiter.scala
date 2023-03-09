@@ -26,7 +26,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
-import scala.language.implicitConversions
 
 trait SubmissionLimiter {
 

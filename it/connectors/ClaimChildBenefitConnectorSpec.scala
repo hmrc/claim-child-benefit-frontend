@@ -357,43 +357,6 @@ class ClaimChildBenefitConnectorSpec
     }
   }
 
-  ".checkAllowlist" - {
-
-    "must return true when the server responds with NoContent" in {
-
-      val app = application
-
-      running(app) {
-
-        val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
-
-        server.stubFor(
-          get(urlEqualTo("/claim-child-benefit/allow-list"))
-            .willReturn(aResponse().withStatus(NO_CONTENT))
-        )
-
-        connector.checkAllowlist().futureValue mustEqual true
-      }
-    }
-
-    "must return false when the server responds with NotFound" in {
-
-      val app = application
-
-      running(app) {
-
-        val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
-
-        server.stubFor(
-          get(urlEqualTo("/claim-child-benefit/allow-list"))
-            .willReturn(aResponse().withStatus(NOT_FOUND))
-        )
-
-        connector.checkAllowlist().futureValue mustEqual false
-      }
-    }
-  }
-
   ".checkThrottleLimit" - {
 
     "must return a result when the server returns one" in {
