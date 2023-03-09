@@ -25,17 +25,20 @@ trait Address extends Product with Serializable {
 
 object Address {
   def reads: Reads[Address] =
-    UkAddress.format.widen[Address] orElse InternationalAddress.format.widen[Address]
+    UkAddress.format.widen[Address] orElse
+      InternationalAddress.format.widen[Address] orElse
+      NPSAddress.format.widen[Address]
 
   def writes: Writes[Address] = Writes {
     case u: UkAddress            => Json.toJson(u)(UkAddress.format)
     case i: InternationalAddress => Json.toJson(i)(InternationalAddress.format)
+    case n: NPSAddress           => Json.toJson(n)(NPSAddress.format)
   }
 
   implicit def format: Format[Address] = Format(reads, writes)
 }
 
-case class UkAddress(
+final case class UkAddress(
                       line1: String,
                       line2: Option[String],
                       townOrCity: String,
@@ -58,7 +61,7 @@ object UkAddress {
   implicit val format: OFormat[UkAddress] = Json.format
 }
 
-case class InternationalAddress (
+final case class InternationalAddress (
                                   line1: String,
                                   line2: Option[String],
                                   townOrCity: String,
@@ -82,3 +85,4 @@ object InternationalAddress {
 
   implicit val format: OFormat[InternationalAddress] = Json.format
 }
+

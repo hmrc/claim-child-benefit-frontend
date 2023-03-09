@@ -26,12 +26,14 @@ object Address {
   implicit val writes: Writes[Address] = Writes {
     case u: UkAddress => Json.toJson(u)(UkAddress.writes)
     case i: InternationalAddress => Json.toJson(i)(InternationalAddress.writes)
+    case n: NPSAddress => Json.toJson(n)(NPSAddress.writes)
   }
 
   def build(address: models.Address): Address = {
     address match {
       case u: models.UkAddress => UkAddress.build(u)
       case i: models.InternationalAddress => InternationalAddress.build(i)
+      case n: models.NPSAddress => NPSAddress.build(n)
     }
   }
 }
@@ -64,6 +66,24 @@ object InternationalAddress {
       line2 = address.line2,
       townOrCity = address.townOrCity,
       stateOrRegion = address.stateOrRegion,
+      postcode = address.postcode,
+      country = address.country
+    )
+}
+
+final case class NPSAddress(line1: String, line2: Option[String], line3: Option[String], line4: Option[String], line5: Option[String], postcode: Option[String], country: Option[Country]) extends Address
+
+object NPSAddress {
+
+  implicit lazy val writes: Writes[NPSAddress] = Json.writes
+
+  def build(address: models.NPSAddress): NPSAddress =
+    NPSAddress(
+      line1 = address.line1,
+      line2 = address.line2,
+      line3 = address.line3,
+      line4 = address.line4,
+      line5 = address.line5,
       postcode = address.postcode,
       country = address.country
     )
