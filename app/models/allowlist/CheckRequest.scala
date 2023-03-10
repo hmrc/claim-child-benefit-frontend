@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-package connectors
+package models.allowlist
 
-import play.api.http.Status.NO_CONTENT
-import uk.gov.hmrc.http.{HttpReads, HttpResponse}
+import play.api.libs.json.{Json, OFormat}
 
-object AllowlistHttpParser {
+final case class CheckRequest(value: String)
 
-  implicit object CheckAllowlistReads extends HttpReads[Boolean] {
+object CheckRequest {
 
-    override def read(method: String, url: String, response: HttpResponse): Boolean =
-      response.status == NO_CONTENT
-  }
-
+  implicit lazy val format: OFormat[CheckRequest] = Json.format
 }

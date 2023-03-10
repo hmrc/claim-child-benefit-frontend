@@ -17,9 +17,10 @@
 package services
 
 import audit.AuditService
-import connectors.ClaimChildBenefitConnector
+import connectors.{ClaimChildBenefitConnector, UserAllowListConnector}
 import models.{Done, JourneyModel}
 import models.domain.Claim
+import play.api.Configuration
 import uk.gov.hmrc.http.HeaderCarrier
 
 import java.util.UUID
@@ -28,19 +29,24 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait SubmissionLimiter {
 
-  def allowedToSubmit(hc: HeaderCarrier): Future[Boolean]
+  def allowedToSubmit(nino: String)(implicit hc: HeaderCarrier): Future[Boolean]
 
-  def recordSubmission(model: JourneyModel, claim: Claim, correlationId: UUID)(hc: HeaderCarrier): Future[Done]
+  def recordSubmission(model: JourneyModel, claim: Claim, correlationId: UUID)(implicit hc: HeaderCarrier): Future[Done]
 }
 
-class SubmissionsLimitedByAllowList @Inject()(connector: ClaimChildBenefitConnector, auditService: AuditService)
-                                             (implicit ec: ExecutionContext) extends SubmissionLimiter {
+class SubmissionsLimitedByAllowList @Inject()(
+                                               configuration: Configuration,
+                                               userAllowListConnector: UserAllowListConnector,
+                                               auditService: AuditService
+                                             )(implicit ec: ExecutionContext) extends SubmissionLimiter {
 
-  override def allowedToSubmit(hc: HeaderCarrier): Future[Boolean] =
-    connector.checkAllowlist()(hc)
+  private val submissionFeature: String = configuration.get[String]("allow-list-features.submission")
 
-  override def recordSubmission(model: JourneyModel, claim: Claim, correlationId: UUID)(hc: HeaderCarrier): Future[Done] = {
-    auditService.auditSubmissionToCbs(model, claim, correlationId)(hc)
+  override def allowedToSubmit(nino: String)(implicit hc: HeaderCarrier): Future[Boolean] =
+    userAllowListConnector.check(submissionFeature, nino)
+
+  override def recordSubmission(model: JourneyModel, claim: Claim, correlationId: UUID)(implicit hc: HeaderCarrier): Future[Done] = {
+    auditService.auditSubmissionToCbs(model, claim, correlationId)
     Future.successful(Done)
   }
 }
@@ -48,27 +54,27 @@ class SubmissionsLimitedByAllowList @Inject()(connector: ClaimChildBenefitConnec
 class SubmissionsLimitedByThrottle @Inject()(connector: ClaimChildBenefitConnector, auditService: AuditService)
                                             (implicit ec: ExecutionContext)extends SubmissionLimiter {
 
-  override def allowedToSubmit(hc: HeaderCarrier): Future[Boolean] =
+  override def allowedToSubmit(nino: String)(implicit hc: HeaderCarrier): Future[Boolean] =
     connector
-      .checkThrottleLimit()(hc)
+      .checkThrottleLimit()
       .map(response => !response.limitReached)
 
-  override def recordSubmission(model: JourneyModel, claim: Claim, correlationId: UUID)(hc: HeaderCarrier): Future[Done] =
+  override def recordSubmission(model: JourneyModel, claim: Claim, correlationId: UUID)(implicit hc: HeaderCarrier): Future[Done] =
     connector
-      .incrementThrottleCount()(hc)
+      .incrementThrottleCount()
       .map { _ =>
-        auditService.auditSubmissionToCbs(model, claim, correlationId)(hc)
+        auditService.auditSubmissionToCbs(model, claim, correlationId)
         Done
       }
 }
 
 class SubmissionsNotLimited @Inject()(auditService: AuditService) extends SubmissionLimiter {
 
-  override def allowedToSubmit(hc: HeaderCarrier): Future[Boolean] =
+  override def allowedToSubmit(nino: String)(implicit hc: HeaderCarrier): Future[Boolean] =
     Future.successful(true)
 
-  override def recordSubmission(model: JourneyModel, claim: Claim, correlationId: UUID)(hc: HeaderCarrier): Future[Done] = {
-    auditService.auditSubmissionToCbs(model, claim, correlationId)(hc)
+  override def recordSubmission(model: JourneyModel, claim: Claim, correlationId: UUID)(implicit hc: HeaderCarrier): Future[Done] = {
+    auditService.auditSubmissionToCbs(model, claim, correlationId)
     Future.successful(Done)
   }
 }

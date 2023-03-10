@@ -20,7 +20,7 @@ import config.FeatureFlags
 import connectors.ClaimChildBenefitConnector
 import logging.Logging
 import models.domain.Claim
-import models.requests.DataRequest
+import models.requests.{AuthenticatedIdentifierRequest, DataRequest}
 import models.{Done, JourneyModelProvider}
 import services.ClaimSubmissionService.{CannotBuildJourneyModelException, NotAuthenticatedException}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
@@ -41,21 +41,22 @@ class ClaimSubmissionService @Inject()(
     if (featureFlags.allowSubmissionToCbs) {
       if (request.signedIn) {
 
-          val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+        val nino = request.request.asInstanceOf[AuthenticatedIdentifierRequest[_]].nino // TODO tidy this
+        val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-          submissionLimiter.allowedToSubmit(hc).flatMap {
-            case true =>
-              journeyModelProvider.buildFromUserAnswers(request.userAnswers)(hc).flatMap {
-                result =>
-                  result.right.map {
-                    journeyModel =>
-                      Future.successful(journeyModel.reasonsNotToSubmit.isEmpty)
-                  }.getOrElse(Future.successful(false))
-              }
-              
-            case false =>
-              Future.successful(false)
-          }
+        submissionLimiter.allowedToSubmit(nino)(hc).flatMap {
+          case true =>
+            journeyModelProvider.buildFromUserAnswers(request.userAnswers)(hc).flatMap {
+              result =>
+                result.right.map {
+                  journeyModel =>
+                    Future.successful(journeyModel.reasonsNotToSubmit.isEmpty)
+                }.getOrElse(Future.successful(false))
+            }
+
+          case false =>
+            Future.successful(false)
+        }
       } else {
         Future.successful(false)
       }
