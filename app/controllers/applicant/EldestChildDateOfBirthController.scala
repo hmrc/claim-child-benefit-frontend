@@ -50,15 +50,14 @@ class EldestChildDateOfBirthController @Inject()(
       getAnswer(EldestChildNamePage) {
         eldestChildName =>
 
-          val firstName = HtmlFormat.escape(eldestChildName.firstName).toString
-          val form = formProvider(firstName)
+          val form = formProvider(eldestChildName.firstName)
 
           val preparedForm = request.userAnswers.get(EldestChildDateOfBirthPage) match {
             case None => form
             case Some(value) => form.fill(value)
           }
 
-          Ok(view(preparedForm, waypoints, firstName))
+          Ok(view(preparedForm, waypoints, eldestChildName.firstName))
       }
   }
 
@@ -67,12 +66,11 @@ class EldestChildDateOfBirthController @Inject()(
       getAnswerAsync(EldestChildNamePage) {
         eldestChildName =>
 
-          val firstName = HtmlFormat.escape(eldestChildName.firstName).toString
-          val form = formProvider(firstName)
+          val form = formProvider(eldestChildName.firstName)
 
           form.bindFromRequest().fold(
             formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, waypoints, firstName))),
+              Future.successful(BadRequest(view(formWithErrors, waypoints, eldestChildName.firstName))),
 
             value =>
               for {
