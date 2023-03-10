@@ -17,6 +17,7 @@
 package models.domain
 
 import play.api.libs.json.{Json, OWrites}
+import utils.StringNormaliser
 
 final case class ChildName(forenames: String, middleNames: Option[String], surname: String)
 

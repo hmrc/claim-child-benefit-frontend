@@ -16,11 +16,11 @@
 
 package audit
 
-import models.ValidateBankDetailsRequest
+import models.VerifyBankDetailsRequest
 import play.api.libs.json.{JsValue, Json, OWrites}
 
 final case class ValidateBankDetailsAuditEvent(
-                                                request: ValidateBankDetailsRequest,
+                                                request: VerifyBankDetailsRequest,
                                                 response: JsValue
                                               )
 

@@ -3,7 +3,7 @@ package connectors
 import audit.{AuditService, ValidateBankDetailsAuditEvent}
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, ok, post, serverError, urlEqualTo}
 import com.github.tomakehurst.wiremock.http.Fault
-import models.{Account, InvalidJson, ReputationResponseEnum, UnexpectedException, UnexpectedResponseStatus, ValidateBankDetailsRequest, ValidateBankDetailsResponseModel}
+import models.{Account, InvalidJson, ReputationResponseEnum, Subject, UnexpectedException, UnexpectedResponseStatus, VerifyBankDetailsRequest, VerifyBankDetailsResponseModel}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -44,11 +44,13 @@ class BarsConnectorSpec
        |  "sortCodeBankName": "Lloyds",
        |  "sortCodeSupportsDirectDebit": "yes",
        |  "sortCodeSupportsDirectCredit": "yes",
-       |  "iban": "GB59 HBUK 1234 5678"
+       |  "iban": "GB59 HBUK 1234 5678",
+       |  "accountExists": "yes",
+       |  "nameMatches": "partial"
        |}
        |""".stripMargin
 
-  ".validateBankDetails" - {
+  ".verifyBankDetails" - {
 
     "when valid json is returned" - {
 
@@ -62,19 +64,21 @@ class BarsConnectorSpec
           val auditService = app.injector.instanceOf[AuditService]
 
           server.stubFor(
-            post(urlEqualTo("/validate/bank-details"))
+            post(urlEqualTo("/verify/personal"))
               .willReturn(ok(happyResponseJson))
           )
 
-          val request = ValidateBankDetailsRequest(Account("123456", "12345678"))
+          val request = VerifyBankDetailsRequest(Account("123456", "12345678"), Subject("first", "last"))
 
-          val result = connector.validate(request).futureValue
+          val result = connector.verify(request).futureValue
           
-          result.value mustEqual ValidateBankDetailsResponseModel(
+          result.value mustEqual VerifyBankDetailsResponseModel(
             accountNumberIsWellFormatted = ReputationResponseEnum.Yes,
             nonStandardAccountDetailsRequiredForBacs = ReputationResponseEnum.No,
             sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes,
-            sortCodeSupportsDirectCredit = Some(ReputationResponseEnum.Yes)
+            sortCodeSupportsDirectCredit = ReputationResponseEnum.Yes,
+            accountExists = ReputationResponseEnum.Yes,
+            nameMatches = ReputationResponseEnum.Partial
           )
 
           verify(auditService, times(1)).auditValidateBankDetails(
@@ -101,13 +105,13 @@ class BarsConnectorSpec
           val invalidJson = """{"foo": "bar"}"""
 
           server.stubFor(
-            post(urlEqualTo("/validate/bank-details"))
+            post(urlEqualTo("/verify/personal"))
               .willReturn(ok(invalidJson))
           )
 
-          val request = ValidateBankDetailsRequest(Account("123456", "12345678"))
+          val request = VerifyBankDetailsRequest(Account("123456", "12345678"), Subject("first", "last"))
 
-          val result = connector.validate(request).futureValue
+          val result = connector.verify(request).futureValue
 
           result.left.value mustEqual InvalidJson
 
@@ -133,13 +137,13 @@ class BarsConnectorSpec
           val auditService = app.injector.instanceOf[AuditService]
 
           server.stubFor(
-            post(urlEqualTo("/validate/bank-details"))
+            post(urlEqualTo("/verify/personal"))
               .willReturn(serverError)
           )
 
-          val request = ValidateBankDetailsRequest(Account("123456", "12345678"))
+          val request = VerifyBankDetailsRequest(Account("123456", "12345678"), Subject("first", "last"))
 
-          val result = connector.validate(request).futureValue
+          val result = connector.verify(request).futureValue
 
           result.left.value mustEqual UnexpectedResponseStatus(500)
 
@@ -162,13 +166,13 @@ class BarsConnectorSpec
         val connector = app.injector.instanceOf[BarsConnector]
 
         server.stubFor(
-          post(urlEqualTo("/validate/bank-details"))
+          post(urlEqualTo("/verify/personal"))
             .willReturn(aResponse().withFault(Fault.MALFORMED_RESPONSE_CHUNK))
         )
 
-        val request = ValidateBankDetailsRequest(Account("123456", "12345678"))
+        val request = VerifyBankDetailsRequest(Account("123456", "12345678"), Subject("first", "last"))
 
-        val result = connector.validate(request).futureValue
+        val result = connector.verify(request).futureValue
 
         result.left.value mustEqual UnexpectedException
       }

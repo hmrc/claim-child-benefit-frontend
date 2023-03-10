@@ -16,7 +16,7 @@
 
 package connectors
 
-import models.{ErrorResponse, InvalidJson, UnexpectedResponseStatus, ValidateBankDetailsResponseModel}
+import models.{ErrorResponse, InvalidJson, UnexpectedResponseStatus, VerifyBankDetailsResponseModel}
 import org.slf4j.LoggerFactory
 import play.api.http.Status.OK
 import play.api.libs.json.JsSuccess
@@ -24,14 +24,14 @@ import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
 object BarsHttpParser {
 
-  type ValidateBankDetailsResponse = Either[ErrorResponse, ValidateBankDetailsResponseModel]
+  type VerifyBankDetailsResponse = Either[ErrorResponse, VerifyBankDetailsResponseModel]
 
-  implicit object BarsReads extends HttpReads[(ValidateBankDetailsResponse, HttpResponse)] {
+  implicit object BarsReads extends HttpReads[(VerifyBankDetailsResponse, HttpResponse)] {
 
-    override def read(method: String, url: String, response: HttpResponse): (ValidateBankDetailsResponse, HttpResponse) = {
+    override def read(method: String, url: String, response: HttpResponse): (VerifyBankDetailsResponse, HttpResponse) = {
       (response.status match {
         case OK =>
-          response.json.validate[ValidateBankDetailsResponseModel] match {
+          response.json.validate[VerifyBankDetailsResponseModel] match {
             case JsSuccess(model, _) =>
               Right(model)
 

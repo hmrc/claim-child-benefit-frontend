@@ -20,7 +20,7 @@ import config.FeatureFlags
 import controllers.AnswerExtractor
 import controllers.actions._
 import forms.payments.BankAccountDetailsFormProvider
-import models.{BankAccountDetails, BankAccountHolder, ReputationResponseEnum, ValidateBankDetailsResponseModel}
+import models.{BankAccountDetails, BankAccountHolder, ReputationResponseEnum, VerifyBankDetailsResponseModel}
 import pages.Waypoints
 import pages.payments.{BankAccountDetailsPage, BankAccountHolderPage}
 import play.api.data.FormError
@@ -86,8 +86,8 @@ class BankAccountDetailsController @Inject()(
                   _ <- userDataService.set(updatedAnswers)
                 } yield Redirect(BankAccountDetailsPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
 
-              if (featureFlags.validateBankDetails) {
-                barsService.validateBankDetails(value).flatMap {
+              if (featureFlags.verifyBankDetails) {
+                barsService.verifyBankDetails(value).flatMap {
                   getBarsError(value, _).map { error =>
                     Future.successful(BadRequest(view(form.fill(value).withError(error), waypoints, maybeGuidance)))
                   }.getOrElse(saveAndRedirect)
@@ -100,7 +100,7 @@ class BankAccountDetailsController @Inject()(
       }
   }
 
-  private def getBarsError(submittedDetails: BankAccountDetails, validationResult: Option[ValidateBankDetailsResponseModel]): Option[FormError] =
+  private def getBarsError(submittedDetails: BankAccountDetails, validationResult: Option[VerifyBankDetailsResponseModel]): Option[FormError] =
     validationResult.flatMap { result =>
       if (result.sortCodeIsPresentOnEISCD == ReputationResponseEnum.No) {
         Some(FormError("sortCode", "bankAccountDetails.error.sortCode.doesNotExist"))
@@ -108,7 +108,7 @@ class BankAccountDetailsController @Inject()(
         Some(FormError("sortCode", "bankAccountDetails.error.sortCode.failedModulusCheck"))
       } else if (result.nonStandardAccountDetailsRequiredForBacs == ReputationResponseEnum.Yes) {
         Some(FormError("sortCode", "bankAccountDetails.error.sortCode.nonStandardDetailsRequired"))
-      } else if (result.sortCodeSupportsDirectCredit.contains(ReputationResponseEnum.No)) {
+      } else if (result.sortCodeSupportsDirectCredit == ReputationResponseEnum.No) {
         Some(FormError("sortCode", "bankAccountDetails.error.sortCode.doesNotSupportDirectCredit"))
       } else {
         None
