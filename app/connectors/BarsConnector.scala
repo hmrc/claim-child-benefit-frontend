@@ -18,9 +18,9 @@ package connectors
 
 import audit.{AuditService, ValidateBankDetailsAuditEvent}
 import config.Service
-import connectors.BarsHttpParser.{BarsReads, ValidateBankDetailsResponse}
+import connectors.BarsHttpParser.{BarsReads, VerifyBankDetailsResponse}
 import logging.Logging
-import models.{InvalidJson, UnexpectedException, ValidateBankDetailsRequest}
+import models.{InvalidJson, UnexpectedException, VerifyBankDetailsRequest}
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.client.HttpClientV2
@@ -33,15 +33,15 @@ import scala.util.Try
 class BarsConnector @Inject()(config: Configuration, httpClient: HttpClientV2, auditService: AuditService)
                              (implicit ec: ExecutionContext) extends Logging {
 
-  private val baseUrl     = config.get[Service]("microservice.services.bank-account-reputation")
-  private val validateUrl = url"$baseUrl/validate/bank-details"
+  private val baseUrl   = config.get[Service]("microservice.services.bank-account-reputation")
+  private val verifyUrl = url"$baseUrl/verify/personal"
 
-  def validate(barsRequest: ValidateBankDetailsRequest)
-              (implicit hc: HeaderCarrier): Future[ValidateBankDetailsResponse] = {
+  def verify(barsRequest: VerifyBankDetailsRequest)
+            (implicit hc: HeaderCarrier): Future[VerifyBankDetailsResponse] = {
 
     val json = Json.toJson(barsRequest)
 
-    httpClient.post(validateUrl).withBody(json).execute.map {
+    httpClient.post(verifyUrl).withBody(json).execute.map {
       case (connectorResponse, httpResponse) =>
         auditService.auditValidateBankDetails(
           ValidateBankDetailsAuditEvent(
@@ -53,7 +53,7 @@ class BarsConnector @Inject()(config: Configuration, httpClient: HttpClientV2, a
         connectorResponse
     }.recover {
       case e =>
-        logger.error(s"Error calling validate-bank-details: ${e.getMessage}")
+        logger.error(s"Error calling verify personal: ${e.getMessage}")
         Left(UnexpectedException)
     }
   }

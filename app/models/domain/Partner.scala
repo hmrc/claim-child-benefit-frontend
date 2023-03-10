@@ -18,6 +18,7 @@ package models.domain
 
 import models.{JourneyModel, PartnerClaimingChildBenefit}
 import play.api.libs.json.{Json, OWrites}
+import utils.StringNormaliser
 
 final case class Partner(nino: String, surname: String)
 

@@ -18,23 +18,33 @@ package models
 
 import play.api.libs.json.{Json, OWrites}
 
-final case class ValidateBankDetailsRequest(account: Account)
+final case class VerifyBankDetailsRequest(account: Account, subject: Subject)
 
-object ValidateBankDetailsRequest {
+object VerifyBankDetailsRequest {
 
-  def from(bankAccountDetails: BankAccountDetails): ValidateBankDetailsRequest =
-    ValidateBankDetailsRequest(
+  def from(bankAccountDetails: BankAccountDetails): VerifyBankDetailsRequest =
+    VerifyBankDetailsRequest(
       Account(
         sortCode      = bankAccountDetails.sortCodeTrimmed,
         accountNumber = bankAccountDetails.accountNumberPadded
+      ),
+      Subject(
+        firstName = bankAccountDetails.firstName,
+        lastName = bankAccountDetails.lastName
       )
     )
 
-  implicit val writes: OWrites[ValidateBankDetailsRequest] = Json.writes
+  implicit val writes: OWrites[VerifyBankDetailsRequest] = Json.writes
 }
 
 final case class Account(sortCode: String, accountNumber: String)
 
 object Account {
   implicit val writes: OWrites[Account] = Json.writes
+}
+
+final case class Subject(firstName: String, lastName: String)
+
+object Subject {
+  implicit val writes: OWrites[Subject] = Json.writes
 }
