@@ -16,7 +16,7 @@
 
 package audit
 
-import models.PaymentFrequency
+import models.{BankAccountInsightsResponseModel, PaymentFrequency}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import play.api.libs.json.Json
@@ -32,7 +32,7 @@ class PaymentPreferencesSpec extends AnyFreeSpec with Matchers {
     "when bank account details and eldest child are present" in {
 
       val preference = Weekly(
-        Some(BankAccount("applicant", "first", "last", "000000", "00000000")),
+        Some(BankAccount("applicant", "first", "last", "000000", "00000000", Some(BankAccountInsightsResponseModel("correlation", 0, "foo")))),
         Some(EldestChild(ChildName("first", None, "last"), dateOfBirth))
       )
       val json = Json.toJson(preference)
@@ -45,7 +45,12 @@ class PaymentPreferencesSpec extends AnyFreeSpec with Matchers {
           "firstName" -> "first",
           "lastName" -> "last",
           "sortCode" -> "000000",
-          "accountNumber" -> "00000000"
+          "accountNumber" -> "00000000",
+          "bankAccountInsightsResult" -> Json.obj(
+            "bankAccountInsightsCorrelationId" -> "correlation",
+            "riskScore" -> 0,
+            "reason" -> "foo"
+          )
         ),
         "eldestChild" -> Json.obj(
           "name" -> Json.obj(
@@ -75,7 +80,7 @@ class PaymentPreferencesSpec extends AnyFreeSpec with Matchers {
     "when bank account details and eldest child are present" in {
 
       val preference = EveryFourWeeks(
-        Some(BankAccount("applicant", "first", "last", "000000", "00000000")),
+        Some(BankAccount("applicant", "first", "last", "000000", "00000000", Some(BankAccountInsightsResponseModel("correlation", 0, "foo")))),
         Some(EldestChild(ChildName("first", None, "last"), dateOfBirth))
       )
       val json = Json.toJson(preference)
@@ -88,7 +93,12 @@ class PaymentPreferencesSpec extends AnyFreeSpec with Matchers {
           "firstName" -> "first",
           "lastName" -> "last",
           "sortCode" -> "000000",
-          "accountNumber" -> "00000000"
+          "accountNumber" -> "00000000",
+          "bankAccountInsightsResult" -> Json.obj(
+            "bankAccountInsightsCorrelationId" -> "correlation",
+            "riskScore" -> 0,
+            "reason" -> "foo"
+          )
         ),
         "eldestChild" -> Json.obj(
           "name" -> Json.obj(

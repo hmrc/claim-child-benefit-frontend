@@ -18,7 +18,7 @@ package models.domain
 
 import generators.ModelGenerators
 import models.JourneyModel.EldestChild
-import models.{BankAccountDetails, BankAccountHolder, BuildingSociety, JourneyModel}
+import models.{BankAccountDetails, BankAccountHolder, BankAccountInsightsResponseModel, BuildingSociety, JourneyModel}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.OptionValues
@@ -61,7 +61,8 @@ class PaymentDetailsSpec extends AnyFreeSpec with Matchers with OptionValues wit
         val paymentPreference = JourneyModel.PaymentPreference.Weekly(
           Some(JourneyModel.BankAccountWithHolder(
             holder = BankAccountHolder.Applicant,
-            details = BankAccountDetails("first", "last", "12-34 56", "123456")
+            details = BankAccountDetails("first", "last", "12-34 56", "123456"),
+            risk = Some(BankAccountInsightsResponseModel("correlation", 0, "foo"))
           )),
           None
         )
@@ -109,7 +110,8 @@ class PaymentDetailsSpec extends AnyFreeSpec with Matchers with OptionValues wit
         val paymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(
           Some(JourneyModel.BankAccountWithHolder(
             holder = BankAccountHolder.Applicant,
-            details = BankAccountDetails("first", "last", "12-34 56", "123456")
+            details = BankAccountDetails("first", "last", "12-34 56", "123456"),
+            risk = None
           )),
           None
         )

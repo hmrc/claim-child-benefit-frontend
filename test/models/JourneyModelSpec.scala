@@ -35,6 +35,7 @@ import pages.applicant._
 import pages.child._
 import pages.partner._
 import pages.payments._
+import queries.BankAccountInsightsResultQuery
 import services.BrmsService
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
@@ -498,6 +499,44 @@ class JourneyModelSpec
         errors mustBe empty
         data.value.otherEligibilityFailureReasons mustBe empty
       }
+    }
+
+    "must include Bank Account Risk when there is a risk score of 100" in {
+
+      val bankDetails = arbitrary[BankAccountDetails].sample.value
+      val answers =
+        basicAnswers
+          .set(WantToBePaidPage, true).success.value
+          .set(ApplicantBenefitsPage, Benefits.qualifyingBenefits).success.value
+          .set(ApplicantHasSuitableAccountPage, true).success.value
+          .set(AccountTypePage, AccountType.SortCodeAccountNumber).success.value
+          .set(BankAccountHolderPage, BankAccountHolder.Applicant).success.value
+          .set(BankAccountDetailsPage, bankDetails).success.value
+          .set(BankAccountInsightsResultQuery, BankAccountInsightsResponseModel("a", 100, "b")).success.value
+
+      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+      errors mustBe empty
+      data.value.otherEligibilityFailureReasons must contain only BankAccountInsightsRisk
+    }
+
+    "must not include Bank Account Risk when there is a risk score of less than 100" in {
+
+      val bankDetails = arbitrary[BankAccountDetails].sample.value
+      val answers =
+        basicAnswers
+          .set(WantToBePaidPage, true).success.value
+          .set(ApplicantBenefitsPage, Benefits.qualifyingBenefits).success.value
+          .set(ApplicantHasSuitableAccountPage, true).success.value
+          .set(AccountTypePage, AccountType.SortCodeAccountNumber).success.value
+          .set(BankAccountHolderPage, BankAccountHolder.Applicant).success.value
+          .set(BankAccountDetailsPage, bankDetails).success.value
+          .set(BankAccountInsightsResultQuery, BankAccountInsightsResponseModel("a", 99, "b")).success.value
+
+      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+      errors mustBe empty
+      data.value.otherEligibilityFailureReasons mustBe empty
     }
   }
 }

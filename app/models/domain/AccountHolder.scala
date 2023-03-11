@@ -30,7 +30,7 @@ object AccountHolder {
   }
 
   def build(accountDetailsWithHolder: AccountDetailsWithHolder): AccountHolder = accountDetailsWithHolder match {
-    case models.JourneyModel.BankAccountWithHolder(holder, details) =>
+    case models.JourneyModel.BankAccountWithHolder(holder, details, _) =>
       holder match {
         case BankAccountHolder.Applicant =>
           ClaimantAccountHolder

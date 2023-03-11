@@ -16,7 +16,7 @@
 
 package models.domain
 
-import models.{BankAccountDetails, BankAccountHolder, JourneyModel}
+import models.{BankAccountDetails, BankAccountHolder, BankAccountInsightsResponseModel, JourneyModel}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import play.api.libs.json.Json
@@ -31,7 +31,8 @@ class AccountHolderSpec extends AnyFreeSpec with Matchers {
 
         val bankDetails = JourneyModel.BankAccountWithHolder(
           holder = BankAccountHolder.Applicant,
-          details = BankAccountDetails("first", "last", "123456", "12345678")
+          details = BankAccountDetails("first", "last", "123456", "12345678"),
+          risk = Some(BankAccountInsightsResponseModel("correlation", 0, "foo"))
         )
 
         val result = AccountHolder.build(bankDetails)
@@ -43,7 +44,8 @@ class AccountHolderSpec extends AnyFreeSpec with Matchers {
 
         val bankDetails = JourneyModel.BankAccountWithHolder(
           holder = BankAccountHolder.JointNames,
-          details = BankAccountDetails("first", "last", "123456", "12345678")
+          details = BankAccountDetails("first", "last", "123456", "12345678"),
+          risk = None
         )
 
         val result = AccountHolder.build(bankDetails)
@@ -58,7 +60,8 @@ class AccountHolderSpec extends AnyFreeSpec with Matchers {
 
         val bankDetails = JourneyModel.BankAccountWithHolder(
           holder = BankAccountHolder.SomeoneElse,
-          details = BankAccountDetails("first", "last", "123456", "12345678")
+          details = BankAccountDetails("first", "last", "123456", "12345678"),
+          risk = Some(BankAccountInsightsResponseModel("correlation", 0, "foo"))
         )
 
         val result = AccountHolder.build(bankDetails)
