@@ -17,16 +17,20 @@
 package controllers.payments
 
 import config.FeatureFlags
+import connectors.BankAccountInsightsConnector
 import controllers.AnswerExtractor
 import controllers.actions._
 import forms.payments.{BankAccountDetailsFormModel, BankAccountDetailsFormProvider}
-import models.{BankAccountHolder, ReputationResponseEnum, VerifyBankDetailsResponseModel}
+import models.requests.DataRequest
+import models.{BankAccountDetails, BankAccountHolder, BankAccountInsightsRequest, ReputationResponseEnum, VerifyBankDetailsResponseModel}
 import pages.Waypoints
 import pages.payments.{BankAccountDetailsPage, BankAccountHolderPage}
 import play.api.data.FormError
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import queries.BankAccountInsightsResultQuery
 import services.{BarsService, UserDataService}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.payments.BankAccountDetailsView
 
@@ -43,7 +47,8 @@ class BankAccountDetailsController @Inject()(
                                       val controllerComponents: MessagesControllerComponents,
                                       view: BankAccountDetailsView,
                                       barsService: BarsService,
-                                      featureFlags: FeatureFlags
+                                      featureFlags: FeatureFlags,
+                                      bankAccountInsightsConnector: BankAccountInsightsConnector
                                      )(implicit ec: ExecutionContext)
   extends FrontendBaseController
     with I18nSupport
@@ -78,31 +83,36 @@ class BankAccountDetailsController @Inject()(
               Future.successful(BadRequest(view(formWithErrors, waypoints, maybeGuidance))),
 
             value => {
-
-              def saveAndRedirect: Future[Result] =
-                for {
-                  updatedAnswers <- Future.fromTry(request.userAnswers.set(BankAccountDetailsPage, value.details))
-                  _ <- userDataService.set(updatedAnswers)
-                } yield Redirect(BankAccountDetailsPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
-
               if (featureFlags.verifyBankDetails) {
                 barsService.verifyBankDetails(value.details).flatMap {
                   getBarsError(_).map { barsError =>
-
                     if (barsError.softError && value.softError.getOrElse(false)) {
-                      saveAndRedirect
+                      saveAndRedirect(value.details, request, waypoints)
                     } else {
                       val updatedValue = value.copy(softError = Some(barsError.softError))
                       Future.successful(BadRequest(view(form.fill(updatedValue).withError(barsError.error), waypoints, maybeGuidance)))
                     }
-                  }.getOrElse(saveAndRedirect)
+                  }.getOrElse(saveAndRedirect(value.details, request, waypoints))
                 }
               } else {
-                saveAndRedirect
+                saveAndRedirect(value.details, request, waypoints)
               }
             }
         )
       }
+  }
+
+  private def saveAndRedirect(details: BankAccountDetails, request: DataRequest[_], waypoints: Waypoints)(implicit hc: HeaderCarrier): Future[Result] = {
+    val bankAccountInsightsRequest = BankAccountInsightsRequest.from(details)
+
+    for {
+      baseAnswers         <- Future.fromTry(request.userAnswers.set(BankAccountDetailsPage, details))
+      maybeInsightsResult <- bankAccountInsightsConnector.check(bankAccountInsightsRequest).map(_.toOption)
+      finalAnswers        <- maybeInsightsResult
+                              .map(x => Future.fromTry(baseAnswers.set(BankAccountInsightsResultQuery, x)))
+                              .getOrElse(Future.successful(baseAnswers))
+      _                   <- userDataService.set(finalAnswers)
+    } yield Redirect(BankAccountDetailsPage.navigate(waypoints, request.userAnswers, finalAnswers).route)
   }
 
   private def getBarsError(validationResult: Option[VerifyBankDetailsResponseModel]): Option[BarsError] =
