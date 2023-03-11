@@ -117,21 +117,13 @@ class BankAccountDetailsController @Inject()(
 
   private def getBarsError(validationResult: Option[VerifyBankDetailsResponseModel]): Option[BarsError] =
     validationResult.flatMap { result =>
-      if (result.sortCodeIsPresentOnEISCD == ReputationResponseEnum.No) {
-        Some(BarsError.SortCodeNotPresent)
-      } else if (result.accountNumberIsWellFormatted == ReputationResponseEnum.No) {
-        Some(BarsError.AccountNumberNotWellFormed)
-      } else if (result.nonStandardAccountDetailsRequiredForBacs == ReputationResponseEnum.Yes) {
-        Some(BarsError.NonStandardDetailsRequired)
-      } else if (result.sortCodeSupportsDirectCredit == ReputationResponseEnum.No) {
-        Some(BarsError.AccountDoesNotSupportDirectCredit)
-      } else if (result.accountExists == ReputationResponseEnum.No) {
-        Some(BarsError.AccountDoesNotExist)
-      } else if (result.nameMatches == ReputationResponseEnum.No) {
-        Some(BarsError.NameDoesNotMatch)
-      }  else {
-        None
-      }
+      if      (result.sortCodeIsPresentOnEISCD == ReputationResponseEnum.No)                  { Some(BarsError.SortCodeNotPresent) }
+      else if (result.accountNumberIsWellFormatted == ReputationResponseEnum.No)              { Some(BarsError.AccountNumberNotWellFormed) }
+      else if (result.nonStandardAccountDetailsRequiredForBacs == ReputationResponseEnum.Yes) { Some(BarsError.NonStandardDetailsRequired) }
+      else if (result.sortCodeSupportsDirectCredit == ReputationResponseEnum.No)              { Some(BarsError.AccountDoesNotSupportDirectCredit) }
+      else if (result.accountExists == ReputationResponseEnum.No)                             { Some(BarsError.AccountDoesNotExist) }
+      else if (result.nameMatches == ReputationResponseEnum.No)                               { Some(BarsError.NameDoesNotMatch) }
+      else                                                                                    { None }
     }
 
   private def guidance(accountHolder: BankAccountHolder)(implicit messages: Messages): Option[String] =

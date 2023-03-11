@@ -145,7 +145,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
       }
 
 
-      "must save the answer and redirect to the next page when valid data is submitted and the BARS response is successful and the call to bank account inisights fails" in {
+      "must save the answer and redirect to the next page when valid data is submitted and the BARS response is successful but the call to bank account insights fails" in {
 
         val happyBarsResponse = VerifyBankDetailsResponseModel(
           accountNumberIsWellFormatted = ReputationResponseEnum.Yes,
