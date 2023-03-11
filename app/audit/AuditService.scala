@@ -29,20 +29,24 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class AuditService @Inject() (connector: AuditConnector, configuration: Configuration)(implicit ec: ExecutionContext) extends Logging {
 
-  private val downloadEventName            = configuration.get[String]("auditing.downloadEventName")
-  private val validateBankDetailsEventName = configuration.get[String]("auditing.validateBankDetailsEventName")
-  private val submitToCbsAuditEventName    = configuration.get[String]("auditing.submitToCbsEventName")
+  private val downloadEventName                 = configuration.get[String]("auditing.downloadEventName")
+  private val verifyBankDetailsEventName        = configuration.get[String]("auditing.verifyBankDetailsEventName")
+  private val submitToCbsAuditEventName         = configuration.get[String]("auditing.submitToCbsEventName")
+  private val checkBankAccountInsightsEventName = configuration.get[String]("auditing.checkBankAccountInsightsEventName")
 
   def auditDownload(model: JourneyModel)(implicit hc: HeaderCarrier): Unit = {
     val data = DownloadAuditEvent.from(model)
     connector.sendExplicitAudit(downloadEventName, data)
   }
 
-  def auditValidateBankDetails(auditEvent: ValidateBankDetailsAuditEvent)(implicit hc: HeaderCarrier): Unit =
-    connector.sendExplicitAudit(validateBankDetailsEventName, auditEvent)
+  def auditVerifyBankDetails(auditEvent: VerifyBankDetailsAuditEvent)(implicit hc: HeaderCarrier): Unit =
+    connector.sendExplicitAudit(verifyBankDetailsEventName, auditEvent)
 
   def auditSubmissionToCbs(model: JourneyModel, claim: Claim, correlationId: UUID)(implicit hc: HeaderCarrier): Unit = {
     val data = SubmitToCbsAuditEvent.from(model, claim, correlationId)
     connector.sendExplicitAudit(submitToCbsAuditEventName, data)
   }
+
+  def auditCheckBankAccountInsights(auditEvent: CheckBankAccountInsightsAuditEvent)(implicit headerCarrier: HeaderCarrier): Unit =
+    connector.sendExplicitAudit(checkBankAccountInsightsEventName, auditEvent)
 }

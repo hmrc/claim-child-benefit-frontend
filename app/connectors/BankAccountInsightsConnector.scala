@@ -16,18 +16,19 @@
 
 package connectors
 
-import audit.AuditService
+import audit.{AuditService, CheckBankAccountInsightsAuditEvent}
 import config.Service
 import connectors.BankAccountInsightsHttpParser.{BankAccountInsightsReads, BankAccountInsightsResponse}
 import logging.Logging
 import models.{BankAccountInsightsRequest, UnexpectedException}
 import play.api.Configuration
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 class BankAccountInsightsConnector @Inject()(config: Configuration, httpClient: HttpClientV2, auditService: AuditService)
                                             (implicit ec: ExecutionContext) extends Logging {
@@ -43,7 +44,12 @@ class BankAccountInsightsConnector @Inject()(config: Configuration, httpClient: 
 
     httpClient.post(verifyUrl).withBody(json).execute.map {
       case (connectorResponse, httpResponse) =>
-        // TODO: audit the event
+        auditService.auditCheckBankAccountInsights(
+          CheckBankAccountInsightsAuditEvent(
+            request = request,
+            response = getResponseJson(httpResponse)
+          )
+        )
         connectorResponse
     }.recover {
       case e =>
@@ -51,4 +57,7 @@ class BankAccountInsightsConnector @Inject()(config: Configuration, httpClient: 
         Left(UnexpectedException)
     }
   }
+
+  private def getResponseJson(response: HttpResponse): JsValue =
+    Try(response.json).getOrElse(Json.obj())
 }

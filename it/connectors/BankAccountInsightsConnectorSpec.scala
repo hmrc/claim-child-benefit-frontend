@@ -1,9 +1,12 @@
 package connectors
 
-import audit.AuditService
+import audit.{AuditService, CheckBankAccountInsightsAuditEvent}
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, ok, post, serverError, urlEqualTo}
 import com.github.tomakehurst.wiremock.http.Fault
 import models.{BankAccountInsightsRequest, BankAccountInsightsResponseModel, InvalidJson, UnexpectedException, UnexpectedResponseStatus}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.Mockito.{times, verify}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -12,6 +15,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json.Json
 import play.api.test.Helpers.{INTERNAL_SERVER_ERROR, running}
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -62,7 +66,12 @@ class BankAccountInsightsConnectorSpec
 
         result.value mustEqual BankAccountInsightsResponseModel("ab8514f3-0f3c-4823-aba6-58f2222c33f1", 0, "foo")
 
-        // TODO: Check audit event is emitted
+        verify(auditService, times(1)).auditCheckBankAccountInsights(
+          eqTo(CheckBankAccountInsightsAuditEvent(
+            request = request,
+            response = Json.parse(jsonResponse)
+          ))
+        )(any())
       }
     }
 
@@ -89,13 +98,16 @@ class BankAccountInsightsConnectorSpec
 
         result.left.value mustEqual InvalidJson
 
-        // TODO: Check audit event is emitted
+        verify(auditService, times(1)).auditCheckBankAccountInsights(
+          eqTo(CheckBankAccountInsightsAuditEvent(
+            request = request,
+            response = Json.parse(jsonResponse)
+          ))
+        )(any())
       }
     }
 
     "must return a Left(UnexpectedResponseStatus) when an error is returned" in {
-
-
 
       val app = application
 
@@ -115,11 +127,15 @@ class BankAccountInsightsConnectorSpec
 
         result.left.value mustEqual UnexpectedResponseStatus(INTERNAL_SERVER_ERROR)
 
-        // TODO: Check audit event is emitted
+        verify(auditService, times(1)).auditCheckBankAccountInsights(
+          eqTo(CheckBankAccountInsightsAuditEvent(
+            request = request,
+            response = Json.obj()
+          ))
+        )(any())
       }
 
     }
-
 
     "must return Left(UnexpectedException) when the server response with a fault" in {
 
