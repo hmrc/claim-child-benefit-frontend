@@ -22,7 +22,10 @@ final case class BankAccountInsightsResponseModel(
                                                    bankAccountInsightsCorrelationId: String,
                                                    riskScore: Int,
                                                    reason: String
-                                                 )
+                                                 ) {
+
+  lazy val riskAboveTolerance: Boolean = riskScore >= 100
+}
 
 object BankAccountInsightsResponseModel {
 

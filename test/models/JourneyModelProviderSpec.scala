@@ -413,7 +413,7 @@ class JourneyModelProviderSpec
               .set(IncludeAdditionalInformationPage, false).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(
-              accountDetails = Some(JourneyModel.BankAccountWithHolder(bankAccountHolder, bankAccountDetails)),
+              accountDetails = Some(JourneyModel.BankAccountWithHolder(bankAccountHolder, bankAccountDetails, None)),
               eldestChild = Some(JourneyModel.EldestChild(eldestChildName, now))
             )
 
@@ -500,6 +500,7 @@ class JourneyModelProviderSpec
           "and has a suitable account" in {
 
             when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+            val bankAccountInsightsResponse = BankAccountInsightsResponseModel("correlation", 0, "reason")
 
             val answers = baseAnswers
               .set(WantToBePaidPage, true).success.value
@@ -509,9 +510,10 @@ class JourneyModelProviderSpec
               .set(BankAccountHolderPage, bankAccountHolder).success.value
               .set(AccountTypePage, AccountType.SortCodeAccountNumber).success.value
               .set(BankAccountDetailsPage, bankAccountDetails).success.value
+              .set(BankAccountInsightsResultQuery, bankAccountInsightsResponse).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(
-              accountDetails = Some(JourneyModel.BankAccountWithHolder(bankAccountHolder, bankAccountDetails)),
+              accountDetails = Some(JourneyModel.BankAccountWithHolder(bankAccountHolder, bankAccountDetails, Some(bankAccountInsightsResponse))),
               eldestChild = Some(JourneyModel.EldestChild(eldestChildName, now))
             )
 
@@ -635,7 +637,7 @@ class JourneyModelProviderSpec
               .set(BankAccountDetailsPage, bankAccountDetails).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(
-              accountDetails = Some(JourneyModel.BankAccountWithHolder(bankAccountHolder, bankAccountDetails)),
+              accountDetails = Some(JourneyModel.BankAccountWithHolder(bankAccountHolder, bankAccountDetails, None)),
               eldestChild = None
             )
 
@@ -682,7 +684,7 @@ class JourneyModelProviderSpec
               .set(BankAccountDetailsPage, bankAccountDetails).success.value
 
             val expectedPaymentPreference = JourneyModel.PaymentPreference.Weekly(
-              accountDetails = Some(JourneyModel.BankAccountWithHolder(bankAccountHolder, bankAccountDetails)),
+              accountDetails = Some(JourneyModel.BankAccountWithHolder(bankAccountHolder, bankAccountDetails, None)),
               eldestChild = None
             )
 

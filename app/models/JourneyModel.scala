@@ -88,12 +88,18 @@ final case class JourneyModel(
       case _ => None
     }
 
+    val bankAccountRisk = paymentPreference.accountDetails match {
+      case Some(x: BankAccountWithHolder) if x.risk.exists(_.riskAboveTolerance) => Some(BankAccountInsightsRisk)
+      case _ => None
+    }
+
     Seq(
       applicantWorkedAbroad,
       applicantReceivedBenefitsAbroad,
       partnerWorkedAbroad,
       partnerReceivedBenefitsAbroad,
-      childRecentlyLivedElsewhere
+      childRecentlyLivedElsewhere,
+      bankAccountRisk
     ).flatten
   }
 }
@@ -104,17 +110,23 @@ object JourneyModel {
   final case class EldestChild(name: ChildName, dateOfBirth: LocalDate)
 
   sealed trait AccountDetailsWithHolder
-  final case class BankAccountWithHolder(holder: BankAccountHolder, details: BankAccountDetails) extends AccountDetailsWithHolder
+  final case class BankAccountWithHolder(holder: BankAccountHolder, details: BankAccountDetails, risk: Option[BankAccountInsightsResponseModel]) extends AccountDetailsWithHolder
   final case class BuildingSocietyWithHolder(holder: BankAccountHolder, details: BuildingSocietyDetails) extends AccountDetailsWithHolder
 
-  sealed trait PaymentPreference
+  sealed trait PaymentPreference {
+    val accountDetails: Option[AccountDetailsWithHolder]
+  }
 
   object PaymentPreference {
 
     final case class Weekly(accountDetails: Option[AccountDetailsWithHolder], eldestChild: Option[EldestChild]) extends PaymentPreference
     final case class EveryFourWeeks(accountDetails: Option[AccountDetailsWithHolder], eldestChild: Option[EldestChild]) extends PaymentPreference
-    final case class ExistingAccount(eldestChild: EldestChild, frequency: PaymentFrequency) extends PaymentPreference
-    final case class DoNotPay(eldestChild: Option[EldestChild]) extends PaymentPreference
+    final case class ExistingAccount(eldestChild: EldestChild, frequency: PaymentFrequency) extends PaymentPreference {
+      override val accountDetails: Option[AccountDetailsWithHolder] = None
+    }
+    final case class DoNotPay(eldestChild: Option[EldestChild]) extends PaymentPreference {
+      override val accountDetails: Option[AccountDetailsWithHolder] = None
+    }
   }
 
   sealed trait Residency
