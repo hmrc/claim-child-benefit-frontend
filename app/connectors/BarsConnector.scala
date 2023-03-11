@@ -16,7 +16,7 @@
 
 package connectors
 
-import audit.{AuditService, ValidateBankDetailsAuditEvent}
+import audit.{AuditService, VerifyBankDetailsAuditEvent}
 import config.Service
 import connectors.BarsHttpParser.{BarsReads, VerifyBankDetailsResponse}
 import logging.Logging
@@ -43,8 +43,8 @@ class BarsConnector @Inject()(config: Configuration, httpClient: HttpClientV2, a
 
     httpClient.post(verifyUrl).withBody(json).execute.map {
       case (connectorResponse, httpResponse) =>
-        auditService.auditValidateBankDetails(
-          ValidateBankDetailsAuditEvent(
+        auditService.auditVerifyBankDetails(
+          VerifyBankDetailsAuditEvent(
             request  = barsRequest,
             response = getResponseJson(httpResponse)
           )

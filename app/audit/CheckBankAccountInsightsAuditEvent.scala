@@ -16,14 +16,15 @@
 
 package audit
 
-import models.VerifyBankDetailsRequest
+import models.BankAccountInsightsRequest
 import play.api.libs.json.{JsValue, Json, OWrites}
 
-final case class ValidateBankDetailsAuditEvent(
-                                                request: VerifyBankDetailsRequest,
-                                                response: JsValue
-                                              )
+final case class CheckBankAccountInsightsAuditEvent(
+                                                     request: BankAccountInsightsRequest,
+                                                     response: JsValue
+                                                   )
 
-object ValidateBankDetailsAuditEvent {
-  implicit lazy val writes: OWrites[ValidateBankDetailsAuditEvent] = Json.writes
+object CheckBankAccountInsightsAuditEvent {
+
+  implicit lazy val writes: OWrites[CheckBankAccountInsightsAuditEvent] = Json.writes
 }

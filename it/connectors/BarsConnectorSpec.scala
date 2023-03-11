@@ -1,6 +1,6 @@
 package connectors
 
-import audit.{AuditService, ValidateBankDetailsAuditEvent}
+import audit.{AuditService, VerifyBankDetailsAuditEvent}
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, ok, post, serverError, urlEqualTo}
 import com.github.tomakehurst.wiremock.http.Fault
 import models.{Account, InvalidJson, ReputationResponseEnum, Subject, UnexpectedException, UnexpectedResponseStatus, VerifyBankDetailsRequest, VerifyBankDetailsResponseModel}
@@ -81,8 +81,8 @@ class BarsConnectorSpec
             nameMatches = ReputationResponseEnum.Partial
           )
 
-          verify(auditService, times(1)).auditValidateBankDetails(
-            eqTo(ValidateBankDetailsAuditEvent(
+          verify(auditService, times(1)).auditVerifyBankDetails(
+            eqTo(VerifyBankDetailsAuditEvent(
               request  = request,
               response = Json.parse(happyResponseJson)
             ))
@@ -115,8 +115,8 @@ class BarsConnectorSpec
 
           result.left.value mustEqual InvalidJson
 
-          verify(auditService, times(1)).auditValidateBankDetails(
-            eqTo(ValidateBankDetailsAuditEvent(
+          verify(auditService, times(1)).auditVerifyBankDetails(
+            eqTo(VerifyBankDetailsAuditEvent(
               request  = request,
               response = Json.parse(invalidJson)
             ))
@@ -147,8 +147,8 @@ class BarsConnectorSpec
 
           result.left.value mustEqual UnexpectedResponseStatus(500)
 
-          verify(auditService, times(1)).auditValidateBankDetails(
-            eqTo(ValidateBankDetailsAuditEvent(
+          verify(auditService, times(1)).auditVerifyBankDetails(
+            eqTo(VerifyBankDetailsAuditEvent(
               request  = request,
               response = Json.obj()
             ))
