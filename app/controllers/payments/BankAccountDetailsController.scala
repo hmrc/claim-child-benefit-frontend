@@ -19,15 +19,14 @@ package controllers.payments
 import config.FeatureFlags
 import controllers.AnswerExtractor
 import controllers.actions._
-import forms.payments.BankAccountDetailsFormProvider
-import models.{BankAccountDetails, BankAccountHolder, ReputationResponseEnum, VerifyBankDetailsResponseModel}
+import forms.payments.{BankAccountDetailsFormModel, BankAccountDetailsFormProvider}
+import models.{BankAccountHolder, ReputationResponseEnum, VerifyBankDetailsResponseModel}
 import pages.Waypoints
 import pages.payments.{BankAccountDetailsPage, BankAccountHolderPage}
 import play.api.data.FormError
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.UserDataService
-import services.BarsService
+import services.{BarsService, UserDataService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.payments.BankAccountDetailsView
 
@@ -50,7 +49,7 @@ class BankAccountDetailsController @Inject()(
     with I18nSupport
     with AnswerExtractor {
 
-  val form = formProvider()
+  private val form = formProvider()
 
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
@@ -60,7 +59,7 @@ class BankAccountDetailsController @Inject()(
           val maybeGuidance = guidance(accountHolder)
           val preparedForm = request.userAnswers.get(BankAccountDetailsPage) match {
             case None => form
-            case Some(value) => form.fill(value)
+            case Some(value) => form.fill(BankAccountDetailsFormModel(value, None))
           }
 
           Ok(view(preparedForm, waypoints, maybeGuidance))
@@ -82,14 +81,20 @@ class BankAccountDetailsController @Inject()(
 
               def saveAndRedirect: Future[Result] =
                 for {
-                  updatedAnswers <- Future.fromTry(request.userAnswers.set(BankAccountDetailsPage, value))
+                  updatedAnswers <- Future.fromTry(request.userAnswers.set(BankAccountDetailsPage, value.details))
                   _ <- userDataService.set(updatedAnswers)
                 } yield Redirect(BankAccountDetailsPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
 
               if (featureFlags.verifyBankDetails) {
-                barsService.verifyBankDetails(value).flatMap {
-                  getBarsError(value, _).map { error =>
-                    Future.successful(BadRequest(view(form.fill(value).withError(error), waypoints, maybeGuidance)))
+                barsService.verifyBankDetails(value.details).flatMap {
+                  getBarsError(_).map { barsError =>
+
+                    if (barsError.softError && value.softError.getOrElse(false)) {
+                      saveAndRedirect
+                    } else {
+                      val updatedValue = value.copy(softError = Some(barsError.softError))
+                      Future.successful(BadRequest(view(form.fill(updatedValue).withError(barsError.error), waypoints, maybeGuidance)))
+                    }
                   }.getOrElse(saveAndRedirect)
                 }
               } else {
@@ -100,17 +105,21 @@ class BankAccountDetailsController @Inject()(
       }
   }
 
-  private def getBarsError(submittedDetails: BankAccountDetails, validationResult: Option[VerifyBankDetailsResponseModel]): Option[FormError] =
+  private def getBarsError(validationResult: Option[VerifyBankDetailsResponseModel]): Option[BarsError] =
     validationResult.flatMap { result =>
       if (result.sortCodeIsPresentOnEISCD == ReputationResponseEnum.No) {
-        Some(FormError("sortCode", "bankAccountDetails.error.sortCode.doesNotExist"))
+        Some(BarsError.SortCodeNotPresent)
       } else if (result.accountNumberIsWellFormatted == ReputationResponseEnum.No) {
-        Some(FormError("sortCode", "bankAccountDetails.error.sortCode.failedModulusCheck"))
+        Some(BarsError.AccountNumberNotWellFormed)
       } else if (result.nonStandardAccountDetailsRequiredForBacs == ReputationResponseEnum.Yes) {
-        Some(FormError("sortCode", "bankAccountDetails.error.sortCode.nonStandardDetailsRequired"))
+        Some(BarsError.NonStandardDetailsRequired)
       } else if (result.sortCodeSupportsDirectCredit == ReputationResponseEnum.No) {
-        Some(FormError("sortCode", "bankAccountDetails.error.sortCode.doesNotSupportDirectCredit"))
-      } else {
+        Some(BarsError.AccountDoesNotSupportDirectCredit)
+      } else if (result.accountExists == ReputationResponseEnum.No) {
+        Some(BarsError.AccountDoesNotExist)
+      } else if (result.nameMatches == ReputationResponseEnum.No) {
+        Some(BarsError.NameDoesNotMatch)
+      }  else {
         None
       }
     }
@@ -121,4 +130,41 @@ class BankAccountDetailsController @Inject()(
       case BankAccountHolder.JointNames => Some(messages("bankAccountDetails.jointNames.p1"))
       case BankAccountHolder.SomeoneElse => Some(messages("bankAccountDetails.someoneElse.p1"))
     }
+}
+
+sealed trait BarsError {
+  val softError: Boolean
+  val error: FormError
+}
+
+object BarsError {
+  object SortCodeNotPresent extends BarsError {
+    override val softError: Boolean = false
+    override val error: FormError = FormError("sortCode", "bankAccountDetails.error.sortCode.doesNotExist")
+  }
+
+  object AccountNumberNotWellFormed extends BarsError {
+    override val softError: Boolean = false
+    override val error: FormError = FormError("sortCode", "bankAccountDetails.error.sortCode.failedModulusCheck")
+  }
+
+  object NonStandardDetailsRequired extends BarsError {
+    override val softError: Boolean = false
+    override val error: FormError = FormError("sortCode", "bankAccountDetails.error.sortCode.nonStandardDetailsRequired")
+  }
+
+  object AccountDoesNotSupportDirectCredit extends BarsError {
+    override val softError: Boolean = false
+    override val error: FormError = FormError("sortCode", "bankAccountDetails.error.sortCode.doesNotSupportDirectCredit")
+  }
+
+  object AccountDoesNotExist extends BarsError {
+    override val softError: Boolean = false
+    override val error: FormError = FormError("accountNumber", "bankAccountDetails.error.accountNumber.accountDoesNotExist")
+  }
+
+  object NameDoesNotMatch extends BarsError {
+    override val softError: Boolean = true
+    override val error: FormError = FormError("firstName", "bankAccountDetails.error.firstName.nameDoesNotMatch")
+  }
 }

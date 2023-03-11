@@ -26,7 +26,7 @@ import javax.inject.Inject
 
 class BankAccountDetailsFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[BankAccountDetails] = Form(
+  def apply(): Form[BankAccountDetailsFormModel] = Form(
     mapping(
       "firstName" -> text("bankAccountDetails.error.firstName.required")
         .verifying(maxLength(35, "bankAccountDetails.error.firstName.length")),
@@ -35,7 +35,12 @@ class BankAccountDetailsFormProvider @Inject() extends Mappings {
       "sortCode" -> text("bankAccountDetails.error.sortCode.required")
         .verifying(regexp(Validation.sortCodePattern, "bankAccountDetails.error.sortCode.invalid")),
       "accountNumber" -> text("bankAccountDetails.error.accountNumber.required")
-        .verifying(regexp(Validation.accountNumberPattern, "bankAccountDetails.error.accountNumber.invalid"))
-    )(BankAccountDetails.apply)(BankAccountDetails.unapply)
+        .verifying(regexp(Validation.accountNumberPattern, "bankAccountDetails.error.accountNumber.invalid")),
+      "softError" -> optional(boolean())
+    )
+    ((f, l, s, a, e) => BankAccountDetailsFormModel(BankAccountDetails(f, l, s, a), e))
+    (f => Some(f.details.firstName, f.details.lastName, f.details.sortCode, f.details.accountNumber, f.softError))
   )
 }
+
+final case class BankAccountDetailsFormModel(details: BankAccountDetails, softError: Option[Boolean])
