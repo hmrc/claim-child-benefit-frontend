@@ -3,7 +3,7 @@ package connectors
 import audit.{AuditService, ValidateBankDetailsAuditEvent}
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, ok, post, serverError, urlEqualTo}
 import com.github.tomakehurst.wiremock.http.Fault
-import models.{Account, InvalidJson, ReputationResponseEnum, UnexpectedException, UnexpectedResponseStatus, VerifyBankDetailsRequest, VerifyBankDetailsResponseModel}
+import models.{Account, InvalidJson, ReputationResponseEnum, Subject, UnexpectedException, UnexpectedResponseStatus, VerifyBankDetailsRequest, VerifyBankDetailsResponseModel}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -68,7 +68,7 @@ class BarsConnectorSpec
               .willReturn(ok(happyResponseJson))
           )
 
-          val request = VerifyBankDetailsRequest(Account("123456", "12345678"))
+          val request = VerifyBankDetailsRequest(Account("123456", "12345678"), Subject("first", "last"))
 
           val result = connector.verify(request).futureValue
           
@@ -77,7 +77,7 @@ class BarsConnectorSpec
             nonStandardAccountDetailsRequiredForBacs = ReputationResponseEnum.No,
             sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes,
             sortCodeSupportsDirectCredit = ReputationResponseEnum.Yes,
-            accountExits = ReputationResponseEnum.Yes,
+            accountExists = ReputationResponseEnum.Yes,
             nameMatches = ReputationResponseEnum.Partial
           )
 
@@ -109,7 +109,7 @@ class BarsConnectorSpec
               .willReturn(ok(invalidJson))
           )
 
-          val request = VerifyBankDetailsRequest(Account("123456", "12345678"))
+          val request = VerifyBankDetailsRequest(Account("123456", "12345678"), Subject("first", "last"))
 
           val result = connector.verify(request).futureValue
 
@@ -141,7 +141,7 @@ class BarsConnectorSpec
               .willReturn(serverError)
           )
 
-          val request = VerifyBankDetailsRequest(Account("123456", "12345678"))
+          val request = VerifyBankDetailsRequest(Account("123456", "12345678"), Subject("first", "last"))
 
           val result = connector.verify(request).futureValue
 
@@ -170,7 +170,7 @@ class BarsConnectorSpec
             .willReturn(aResponse().withFault(Fault.MALFORMED_RESPONSE_CHUNK))
         )
 
-        val request = VerifyBankDetailsRequest(Account("123456", "12345678"))
+        val request = VerifyBankDetailsRequest(Account("123456", "12345678"), Subject("first", "last"))
 
         val result = connector.verify(request).futureValue
 
