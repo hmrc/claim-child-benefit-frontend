@@ -17,11 +17,11 @@
 package forms.payments
 
 import forms.Validation
-import forms.behaviours.StringFieldBehaviours
+import forms.behaviours.{BooleanFieldBehaviours, StringFieldBehaviours}
 import org.scalacheck.Gen
 import play.api.data.FormError
 
-class BankAccountDetailsFormProviderSpec extends StringFieldBehaviours {
+class BankAccountDetailsFormProviderSpec extends StringFieldBehaviours with BooleanFieldBehaviours {
 
   val form = new BankAccountDetailsFormProvider()()
 
@@ -175,5 +175,17 @@ class BankAccountDetailsFormProviderSpec extends StringFieldBehaviours {
       val expectedError = FormError(fieldName, "bankAccountDetails.error.sortCode.invalid", Seq(Validation.sortCodePattern.toString))
       result.errors must contain only expectedError
     }
+  }
+
+  ".softError" - {
+
+    val invalidKey = "error.boolean"
+    val fieldName = "softError"
+
+    behave like booleanField(
+      form,
+      fieldName,
+      invalidError = FormError(fieldName, invalidKey)
+    )
   }
 }
