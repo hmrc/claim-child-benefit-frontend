@@ -42,6 +42,16 @@ final case class NPSAddress(
       postcode,
       country.map(_.name)
     ).flatten
+
+  override def possibleLocalAuthorityAddress: Boolean =
+    isUkAddress &&
+    lines
+      .mkString(" ")
+      .replaceAll("\\s", " ")
+      .split(" ")
+      .map(_.toUpperCase)
+      .intersect(localAuthorityKeywords)
+      .nonEmpty
 }
 
 object NPSAddress {

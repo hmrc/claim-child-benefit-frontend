@@ -501,6 +501,112 @@ class JourneyModelSpec
       }
     }
 
+    "must include Child possibly recently cared for by Local Authority when a child came to live with the applicant less than 3 months ago" - {
+
+      "and the previous guardian's address is the UK and may have been a local authority" in {
+
+        val laAddress = UkAddress("Some Borough Council", None, "town", None, "AA11AA")
+        val answers =
+          basicAnswers
+            .set(ChildLivedWithAnyoneElsePage(Index(0)), true).success.value
+            .set(PreviousGuardianNameKnownPage(Index(0)), true).success.value
+            .set(PreviousGuardianNamePage(Index(0)), AdultName(None, "first", None, "last")).success.value
+            .set(PreviousGuardianAddressKnownPage(Index(0)), true).success.value
+            .set(PreviousGuardianAddressInUkPage(Index(0)), true).success.value
+            .set(PreviousGuardianUkAddressPage(Index(0)), laAddress).success.value
+            .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), false).success.value
+            .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now.minusMonths(3).plusDays(1)).success.value
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors mustBe empty
+        data.value.otherEligibilityFailureReasons must contain only ChildPossiblyRecentlyUnderLocalAuthorityCare
+      }
+    }
+
+    "must not include Child possibly recently cared for by Local Authority" - {
+
+      "when a child came to live with the applicant less than 3 months ago" - {
+
+        "and the previous guardian's address is in the UK but was not a local authority" in {
+
+          val nonLaAddress = UkAddress("line 1", None, "town", None, "AA11AA")
+          val answers =
+            basicAnswers
+              .set(ChildLivedWithAnyoneElsePage(Index(0)), true).success.value
+              .set(PreviousGuardianNameKnownPage(Index(0)), true).success.value
+              .set(PreviousGuardianNamePage(Index(0)), AdultName(None, "first", None, "last")).success.value
+              .set(PreviousGuardianAddressKnownPage(Index(0)), true).success.value
+              .set(PreviousGuardianAddressInUkPage(Index(0)), true).success.value
+              .set(PreviousGuardianUkAddressPage(Index(0)), nonLaAddress).success.value
+              .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), false).success.value
+              .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now.minusMonths(3).plusDays(1)).success.value
+
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+          errors mustBe empty
+          data.value.otherEligibilityFailureReasons mustBe empty
+        }
+
+        "and the previous guardian's address is unknown" in {
+
+          val answers =
+            basicAnswers
+              .set(ChildLivedWithAnyoneElsePage(Index(0)), true).success.value
+              .set(PreviousGuardianNameKnownPage(Index(0)), true).success.value
+              .set(PreviousGuardianNamePage(Index(0)), AdultName(None, "first", None, "last")).success.value
+              .set(PreviousGuardianAddressKnownPage(Index(0)), false).success.value
+              .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), false).success.value
+              .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now.minusMonths(3).plusDays(1)).success.value
+
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+          errors mustBe empty
+          data.value.otherEligibilityFailureReasons must not contain ChildPossiblyRecentlyUnderLocalAuthorityCare
+        }
+
+        "and the previous guardian's address is international" in {
+
+          val address = InternationalAddress("Some Borough Council", None, "town", None, None, Country("ES", "Spain"))
+          val answers =
+            basicAnswers
+              .set(ChildLivedWithAnyoneElsePage(Index(0)), true).success.value
+              .set(PreviousGuardianNameKnownPage(Index(0)), true).success.value
+              .set(PreviousGuardianNamePage(Index(0)), AdultName(None, "first", None, "last")).success.value
+              .set(PreviousGuardianAddressKnownPage(Index(0)), true).success.value
+              .set(PreviousGuardianAddressInUkPage(Index(0)), false).success.value
+              .set(PreviousGuardianInternationalAddressPage(Index(0)), address).success.value
+              .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), false).success.value
+              .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now.minusMonths(3).plusDays(1)).success.value
+
+          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+          errors mustBe empty
+          data.value.otherEligibilityFailureReasons must not contain ChildPossiblyRecentlyUnderLocalAuthorityCare
+        }
+      }
+
+      "when a child came to live with the applicant more than 3 months ago and the previous guardian's address is the UK and may have been a local authority" in {
+
+        val laAddress = UkAddress("Some Borough Council", None, "town", None, "AA11AA")
+        val answers =
+          basicAnswers
+            .set(ChildLivedWithAnyoneElsePage(Index(0)), true).success.value
+            .set(PreviousGuardianNameKnownPage(Index(0)), true).success.value
+            .set(PreviousGuardianNamePage(Index(0)), AdultName(None, "first", None, "last")).success.value
+            .set(PreviousGuardianAddressKnownPage(Index(0)), true).success.value
+            .set(PreviousGuardianAddressInUkPage(Index(0)), true).success.value
+            .set(PreviousGuardianUkAddressPage(Index(0)), laAddress).success.value
+            .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), false).success.value
+            .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now.minusMonths(3)).success.value
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors mustBe empty
+        data.value.otherEligibilityFailureReasons mustBe empty
+      }
+    }
+
     "must include Bank Account Risk when there is a risk score of 100" in {
 
       val bankDetails = arbitrary[BankAccountDetails].sample.value

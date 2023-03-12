@@ -21,6 +21,10 @@ import play.api.libs.json.{Format, Json, OFormat, Reads, Writes}
 trait Address extends Product with Serializable {
   val line1: String
   def lines: Seq[String]
+
+  protected val localAuthorityKeywords: Seq[String] = Seq("COUNCIL", "CIVIC", "AUTHORITY", "DISTRICT", "METROPOLITAN", "BOROUGH")
+
+  def possibleLocalAuthorityAddress: Boolean
 }
 
 object Address {
@@ -54,6 +58,15 @@ final case class UkAddress(
       county,
       Some(postcode)
     ).flatten
+
+  override def possibleLocalAuthorityAddress: Boolean =
+    lines
+      .mkString(" ")
+      .replaceAll("\\s", " ")
+      .split(" ")
+      .map(_.toUpperCase)
+      .intersect(localAuthorityKeywords)
+      .nonEmpty
 }
 
 object UkAddress {
@@ -79,6 +92,8 @@ final case class InternationalAddress (
       postcode,
       Some(country.name)
     ).flatten
+
+  override def possibleLocalAuthorityAddress: Boolean = false
 }
 
 object InternationalAddress {
