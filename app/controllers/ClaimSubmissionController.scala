@@ -16,6 +16,7 @@
 
 package controllers
 
+import connectors.ClaimChildBenefitConnector.InvalidClaimStateException
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import logging.Logging
 import play.api.i18n.I18nSupport
@@ -42,6 +43,9 @@ class ClaimSubmissionController @Inject()(
           claimSubmissionService.submit(request).map { _ =>
               Redirect(routes.SubmittedController.onPageLoad)
           }.recover {
+            case _: InvalidClaimStateException =>
+              logger.warn("Submission for existing claim")
+              Redirect(routes.SubmissionFailedExistingClaimController.onPageLoad())
             case _: Exception =>
               logger.warn("Submission to CBS failed")
               Redirect(routes.PrintController.onPageLoad)
