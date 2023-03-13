@@ -93,13 +93,19 @@ final case class JourneyModel(
       case _ => None
     }
 
+    val childPossiblyRecentlyUnderLocalAuthorityCare = children match {
+      case x if x.exists(_.possiblyRecentlyCaredForByLocalAuthority) => Some(ChildPossiblyRecentlyUnderLocalAuthorityCare)
+      case _ => None
+    }
+
     Seq(
       applicantWorkedAbroad,
       applicantReceivedBenefitsAbroad,
       partnerWorkedAbroad,
       partnerReceivedBenefitsAbroad,
       childRecentlyLivedElsewhere,
-      bankAccountRisk
+      bankAccountRisk,
+      childPossiblyRecentlyUnderLocalAuthorityCare
     ).flatten
   }
 }
@@ -196,7 +202,7 @@ object JourneyModel {
     val requiredDocuments: Seq[DocumentType] =
       Seq(birthCertificate, travelDocument, adoptionCertificate).flatten
 
-    val possiblyLivedAbroadSeparately: Boolean = {
+    val possiblyLivedAbroadSeparately: Boolean =
       if (dateChildStartedLivingWithApplicant.exists(_.isAfter(LocalDate.now.minusMonths(3)))) {
         previousGuardian.exists { previousGuardian =>
           previousGuardian.address.forall {
@@ -207,7 +213,13 @@ object JourneyModel {
       } else {
         false
       }
-    }
+
+    val possiblyRecentlyCaredForByLocalAuthority: Boolean =
+      if (dateChildStartedLivingWithApplicant.exists(_.isAfter(LocalDate.now.minusMonths(3)))) {
+        previousGuardian.exists(_.address.exists(_.possibleLocalAuthorityAddress))
+      } else {
+        false
+      }
   }
 
   final case class PreviousClaimant(name: Option[AdultName], address: Option[Address])
