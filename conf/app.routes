@@ -450,3 +450,5 @@ POST       /additional-information                         controllers.Additiona
 
 GET        /have-additional-information                         controllers.IncludeAdditionalInformationController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /have-additional-information                         controllers.IncludeAdditionalInformationController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
+GET        /there-is-an-existing-claim                          controllers.SubmissionFailedExistingClaimController.onPageLoad()

@@ -1965,3 +1965,14 @@ submitted.p4.link.href = https://www.gov.uk/mandatory-reconsideration
 submitted.p5 = If you require further assistance with your claim, contact the
 submitted.p5.link.text = Child Benefit helpline
 submitted.p5.link.href = https://www.gov.uk/government/organisations/hm-revenue-customs/contact/child-benefit
+
+submissionFailedExistingClaim.title = You have already made a Child Benefit claim
+submissionFailedExistingClaim.heading = You have already made a Child Benefit claim
+submissionFailedExistingClaim.p1 = You have already applied for Child Benefit by making a claim.
+submissionFailedExistingClaim.p2.1 = You can
+submissionFailedExistingClaim.p2.link.text = check when you can expect a reply from HMRC
+submissionFailedExistingClaim.p2.link.href = https://www.gov.uk/guidance/check-when-you-can-expect-a-reply-from-hmrc
+submissionFailedExistingClaim.p2.2 = where you can report a change of circumstances and request a proof of entitlement letter as well.
+submissionFailedExistingClaim.p3 = Find out more about
+submissionFailedExistingClaim.p3.link.text = claiming Child Benefit
+submissionFailedExistingClaim.p3.link.href = https://www.gov.uk/child-benefit
