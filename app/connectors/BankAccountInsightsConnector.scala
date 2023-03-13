@@ -16,11 +16,11 @@
 
 package connectors
 
-import audit.{AuditService, VerifyBankDetailsAuditEvent}
+import audit.{AuditService, CheckBankAccountInsightsAuditEvent}
 import config.Service
-import connectors.BarsHttpParser.{BarsReads, VerifyBankDetailsResponse}
+import connectors.BankAccountInsightsHttpParser.{BankAccountInsightsReads, BankAccountInsightsResponse}
 import logging.Logging
-import models.{InvalidJson, UnexpectedException, VerifyBankDetailsRequest}
+import models.{BankAccountInsightsRequest, UnexpectedException}
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.client.HttpClientV2
@@ -30,30 +30,30 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
-class BarsConnector @Inject()(config: Configuration, httpClient: HttpClientV2, auditService: AuditService)
-                             (implicit ec: ExecutionContext) extends Logging {
+class BankAccountInsightsConnector @Inject()(config: Configuration, httpClient: HttpClientV2, auditService: AuditService)
+                                            (implicit ec: ExecutionContext) extends Logging {
 
-  private val baseUrl   = config.get[Service]("microservice.services.bank-account-reputation")
-  private val verifyUrl = url"$baseUrl/verify/personal"
 
-  def verify(barsRequest: VerifyBankDetailsRequest)
-            (implicit hc: HeaderCarrier): Future[VerifyBankDetailsResponse] = {
+  private val baseUrl = config.get[Service]("microservice.services.bank-account-insights")
+  private val verifyUrl = url"$baseUrl/check/insights"
 
-    val json = Json.toJson(barsRequest)
+  def check(request: BankAccountInsightsRequest)
+           (implicit hc: HeaderCarrier): Future[BankAccountInsightsResponse] = {
+
+    val json = Json.toJson(request)
 
     httpClient.post(verifyUrl).withBody(json).execute.map {
       case (connectorResponse, httpResponse) =>
-        auditService.auditVerifyBankDetails(
-          VerifyBankDetailsAuditEvent(
-            request  = barsRequest,
+        auditService.auditCheckBankAccountInsights(
+          CheckBankAccountInsightsAuditEvent(
+            request = request,
             response = getResponseJson(httpResponse)
           )
         )
-
         connectorResponse
     }.recover {
       case e =>
-        logger.error(s"Error calling verify personal: ${e.getMessage}")
+        logger.error(s"Error calling bank account insights: ${e.getMessage}")
         Left(UnexpectedException)
     }
   }

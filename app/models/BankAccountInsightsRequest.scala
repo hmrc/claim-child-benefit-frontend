@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-package models.domain
+package models
 
-import play.api.libs.json.{Json, OWrites}
-import utils.StringNormaliser
+import play.api.libs.json.{Json, OFormat}
 
-final case class ChildName(forenames: String, middleNames: Option[String], surname: String)
+final case class BankAccountInsightsRequest(sortCode: String, accountNumber: String)
 
-object ChildName extends StringNormaliser {
+object BankAccountInsightsRequest {
 
-  def build(name: models.ChildName): ChildName =
-    ChildName(
-      normalise(name.firstName),
-      name.middleNames.map(normalise),
-      normalise(name.lastName)
+  implicit lazy val format: OFormat[BankAccountInsightsRequest] = Json.format
+
+  def from(bankAccountDetails: BankAccountDetails): BankAccountInsightsRequest =
+    BankAccountInsightsRequest(
+      sortCode = bankAccountDetails.sortCodeTrimmed,
+      accountNumber = bankAccountDetails.accountNumberPadded
     )
-
-  implicit lazy val writes: OWrites[ChildName] = Json.writes
 }

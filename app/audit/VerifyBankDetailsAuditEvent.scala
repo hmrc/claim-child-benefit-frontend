@@ -14,21 +14,16 @@
  * limitations under the License.
  */
 
-package models.domain
+package audit
 
-import play.api.libs.json.{Json, OWrites}
-import utils.StringNormaliser
+import models.VerifyBankDetailsRequest
+import play.api.libs.json.{JsValue, Json, OWrites}
 
-final case class ChildName(forenames: String, middleNames: Option[String], surname: String)
+final case class VerifyBankDetailsAuditEvent(
+                                                request: VerifyBankDetailsRequest,
+                                                response: JsValue
+                                              )
 
-object ChildName extends StringNormaliser {
-
-  def build(name: models.ChildName): ChildName =
-    ChildName(
-      normalise(name.firstName),
-      name.middleNames.map(normalise),
-      normalise(name.lastName)
-    )
-
-  implicit lazy val writes: OWrites[ChildName] = Json.writes
+object VerifyBankDetailsAuditEvent {
+  implicit lazy val writes: OWrites[VerifyBankDetailsAuditEvent] = Json.writes
 }

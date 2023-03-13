@@ -18,13 +18,15 @@ package models
 
 import play.api.libs.json.{Format, Json}
 
-final case class ValidateBankDetailsResponseModel(
+final case class VerifyBankDetailsResponseModel(
                                                    accountNumberIsWellFormatted: ReputationResponseEnum,
                                                    nonStandardAccountDetailsRequiredForBacs: ReputationResponseEnum,
                                                    sortCodeIsPresentOnEISCD: ReputationResponseEnum,
-                                                   sortCodeSupportsDirectCredit: Option[ReputationResponseEnum]
+                                                   sortCodeSupportsDirectCredit: ReputationResponseEnum,
+                                                   accountExists: ReputationResponseEnum,
+                                                   nameMatches: ReputationResponseEnum
                                                  )
 
-object ValidateBankDetailsResponseModel {
-  implicit val format: Format[ValidateBankDetailsResponseModel] = Json.format
+object VerifyBankDetailsResponseModel {
+  implicit val format: Format[VerifyBankDetailsResponseModel] = Json.format
 }

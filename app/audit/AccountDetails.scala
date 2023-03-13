@@ -16,7 +16,7 @@
 
 package audit
 
-import models.JourneyModel
+import models.{BankAccountInsightsResponseModel, JourneyModel}
 import play.api.libs.json.{Json, Writes}
 
 
@@ -36,7 +36,8 @@ object AccountDetails {
           firstName = bankAccount.details.firstName,
           lastName = bankAccount.details.lastName,
           sortCode = bankAccount.details.sortCode,
-          accountNumber = bankAccount.details.accountNumber
+          accountNumber = bankAccount.details.accountNumber,
+          bankAccountInsightsResult = bankAccount.risk
         )
 
       case buildingSociety: JourneyModel.BuildingSocietyWithHolder =>
@@ -57,7 +58,14 @@ object BuildingSociety {
   implicit lazy val writes: Writes[BuildingSociety] = Json.writes
 }
 
-final case class BankAccount(holder: String, firstName: String, lastName: String, sortCode: String, accountNumber: String) extends AccountDetails
+final case class BankAccount(
+                              holder: String,
+                              firstName: String,
+                              lastName: String,
+                              sortCode: String,
+                              accountNumber: String,
+                              bankAccountInsightsResult: Option[BankAccountInsightsResponseModel]
+                            ) extends AccountDetails
 
 object BankAccount {
 

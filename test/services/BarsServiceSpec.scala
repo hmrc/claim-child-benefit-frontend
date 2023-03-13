@@ -17,7 +17,7 @@
 package services
 
 import connectors.BarsConnector
-import models.{BankAccountDetails, InvalidJson, ReputationResponseEnum, ValidateBankDetailsResponseModel}
+import models.{BankAccountDetails, InvalidJson, ReputationResponseEnum, VerifyBankDetailsResponseModel}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.OptionValues
@@ -40,21 +40,23 @@ class BarsServiceSpec
     with OptionValues
     with ScalaFutures{
 
-  ".validate" - {
+  ".verify" - {
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
     "must return the BARS response when the connector returns them" in {
 
-      val barsResponse = ValidateBankDetailsResponseModel(
+      val barsResponse = VerifyBankDetailsResponseModel(
         accountNumberIsWellFormatted = ReputationResponseEnum.Yes,
         nonStandardAccountDetailsRequiredForBacs = ReputationResponseEnum.Yes,
         sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes,
-        sortCodeSupportsDirectCredit = None
+        sortCodeSupportsDirectCredit = ReputationResponseEnum.Yes,
+        nameMatches = ReputationResponseEnum.Partial,
+        accountExists = ReputationResponseEnum.Yes
       )
 
       val mockConnector = mock[BarsConnector]
-      when(mockConnector.validate(any())(any())) thenReturn Future.successful(Right(barsResponse))
+      when(mockConnector.verify(any())(any())) thenReturn Future.successful(Right(barsResponse))
 
 
       val app =
@@ -68,7 +70,7 @@ class BarsServiceSpec
 
         val bankDetails = BankAccountDetails("first", "last", "123456", "00123456")
 
-        val result = service.validateBankDetails(bankDetails).futureValue
+        val result = service.verifyBankDetails(bankDetails).futureValue
 
         result.value mustEqual barsResponse
       }
@@ -77,7 +79,7 @@ class BarsServiceSpec
     "must return None when the connector returns an error response" in {
 
       val mockConnector = mock[BarsConnector]
-      when(mockConnector.validate(any())(any())) thenReturn Future.successful(Left(InvalidJson))
+      when(mockConnector.verify(any())(any())) thenReturn Future.successful(Left(InvalidJson))
 
 
       val app =
@@ -91,7 +93,7 @@ class BarsServiceSpec
 
         val bankDetails = BankAccountDetails("first", "last", "123456", "00123456")
 
-        val result = service.validateBankDetails(bankDetails).futureValue
+        val result = service.verifyBankDetails(bankDetails).futureValue
 
         result must not be defined
       }

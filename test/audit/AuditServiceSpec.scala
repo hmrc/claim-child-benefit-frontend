@@ -16,13 +16,12 @@
 
 package audit
 
-import audit.DownloadAuditEvent._
 import cats.data.NonEmptyList
 import generators.ModelGenerators
 import models.BirthRegistrationMatchingResult.NotAttempted
 import models.OtherEligibilityFailReason.{ApplicantReceivedBenefitsAbroad, ApplicantWorkedAbroad, PartnerReceivedBenefitsAbroad, PartnerWorkedAbroad}
 import models.domain.Claim
-import models.{ApplicantPreviousName, BirthCertificateSystemNumber, Country, CurrentlyReceivingChildBenefit, EmploymentStatus, JourneyModel, Nationality, PartnerClaimingChildBenefit}
+import models.{ApplicantPreviousName, BankAccountInsightsResponseModel, BirthCertificateSystemNumber, Country, CurrentlyReceivingChildBenefit, EmploymentStatus, JourneyModel, Nationality, PartnerClaimingChildBenefit}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
 import org.scalacheck.Arbitrary.arbitrary
@@ -44,8 +43,9 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
   val configuration: Configuration = Configuration(
     "auditing.downloadEventName" -> "downloadAuditEvent",
-    "auditing.validateBankDetailsEventName" -> "validateBankDetailsEventName",
-    "auditing.submitToCbsEventName" -> "submitToCbsAuditEvent"
+    "auditing.verifyBankDetailsEventName" -> "verifyBankDetailsEventName",
+    "auditing.submitToCbsEventName" -> "submitToCbsAuditEvent",
+    "auditing.checkBankAccountInsightsEventName" -> "checkBankAccountInsightsEventName"
   )
   val service = new AuditService(mockAuditConnector, configuration)
 
@@ -121,7 +121,8 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
     paymentPreference = JourneyModel.PaymentPreference.Weekly(
       accountDetails = Some(JourneyModel.BankAccountWithHolder(
         holder = models.BankAccountHolder.Applicant,
-        details = models.BankAccountDetails("first", "last", "000000", "00000000")
+        details = models.BankAccountDetails("first", "last", "000000", "00000000"),
+        risk = Some(BankAccountInsightsResponseModel("correlation", 0, "reason"))
       )),
       eldestChild = Some(JourneyModel.EldestChild(
         name = models.ChildName("applicant eldest first", Some("applicant eldest middle"), "applicant eldest last"),
@@ -201,7 +202,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
         ),
         benefits = Some(Set("incomeSupport", "jobseekersAllowance")),
         paymentPreference = Weekly(
-          bankAccount = Some(BankAccount("applicant", "first", "last", "000000", "00000000")),
+          bankAccount = Some(BankAccount("applicant", "first", "last", "000000", "00000000", Some(BankAccountInsightsResponseModel("correlation", 0, "reason")))),
           eldestChild = Some(EldestChild(
             name        = ChildName("applicant eldest first", Some("applicant eldest middle"), "applicant eldest last"),
             dateOfBirth = now
@@ -297,7 +298,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
         ),
         benefits = Some(Set("incomeSupport", "jobseekersAllowance")),
         paymentPreference = Weekly(
-          bankAccount = Some(BankAccount("applicant", "first", "last", "000000", "00000000")),
+          bankAccount = Some(BankAccount("applicant", "first", "last", "000000", "00000000",Some(BankAccountInsightsResponseModel("correlation", 0, "reason")))),
           eldestChild = Some(EldestChild(
             name = ChildName("applicant eldest first", Some("applicant eldest middle"), "applicant eldest last"),
             dateOfBirth = now

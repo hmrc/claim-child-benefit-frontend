@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package models.domain
+package audit
 
-import java.text.Normalizer
+import models.BankAccountInsightsRequest
+import play.api.libs.json.{JsValue, Json, OWrites}
 
-trait StringNormaliser {
+final case class CheckBankAccountInsightsAuditEvent(
+                                                     request: BankAccountInsightsRequest,
+                                                     response: JsValue
+                                                   )
 
-  def normalise(input: String): String =
-    Normalizer
-      .normalize(input, Normalizer.Form.NFKD)
-      .replaceAll("\\p{M}", "")
-      .replaceAll("’", "'")
+object CheckBankAccountInsightsAuditEvent {
+
+  implicit lazy val writes: OWrites[CheckBankAccountInsightsAuditEvent] = Json.writes
 }

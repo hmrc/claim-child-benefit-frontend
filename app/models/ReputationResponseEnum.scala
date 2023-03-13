@@ -16,8 +16,6 @@
 
 package models
 
-import models.{Enumerable, WithName}
-
 sealed trait ReputationResponseEnum
 
 object ReputationResponseEnum extends Enumerable.Implicits {
@@ -27,8 +25,9 @@ object ReputationResponseEnum extends Enumerable.Implicits {
   case object Indeterminate extends WithName("indeterminate") with ReputationResponseEnum
   case object Inapplicable extends WithName("inapplicable") with ReputationResponseEnum
   case object Error extends WithName("error") with ReputationResponseEnum
+  case object Partial extends WithName("partial") with ReputationResponseEnum
 
-  val values: Seq[ReputationResponseEnum] = Seq(Yes, No, Indeterminate, Inapplicable, Error)
+  val values: Seq[ReputationResponseEnum] = Seq(Yes, No, Indeterminate, Inapplicable, Error, Partial)
 
   implicit val enumerable: Enumerable[ReputationResponseEnum] =
     Enumerable(values.map(v => v.toString -> v): _*)

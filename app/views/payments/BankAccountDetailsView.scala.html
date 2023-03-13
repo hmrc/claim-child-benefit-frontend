@@ -35,7 +35,6 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-
         @guidance.map { x =>
             <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">@messages("bankAccountDetails.heading")</h1>
             <p class="govuk-body">@x</p>
@@ -75,6 +74,10 @@
             .withWidth(Fixed10)
             .withHint(HintViewModel("bankAccountDetails.accountNumber.hint"))
         )
+
+        @form("softError").value.map { value =>
+            <input type="hidden" name="softError" value="@value" />
+        }
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))

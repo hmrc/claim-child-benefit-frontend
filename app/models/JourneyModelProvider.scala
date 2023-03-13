@@ -594,7 +594,11 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
     def getBank: IorNec[Query, BankAccountWithHolder] =
       (
         answers.getIor(BankAccountHolderPage),
-        answers.getIor(BankAccountDetailsPage)
+        answers.getIor(BankAccountDetailsPage),
+        answers
+          .get(BankAccountInsightsResultQuery)
+          .map(x => Ior.Right(Some(x)))
+          .getOrElse(Ior.Right(None))
       ).parMapN(BankAccountWithHolder.apply)
 
     def getBuildingSociety: IorNec[Query, BuildingSocietyWithHolder] =

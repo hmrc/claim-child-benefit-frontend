@@ -25,13 +25,15 @@ object OtherEligibilityFailReason extends Enumerable.Implicits {
   case object PartnerWorkedAbroad extends WithName("partnerWorkedAbroadInLast3Months") with OtherEligibilityFailReason
   case object PartnerReceivedBenefitsAbroad extends WithName("partnerReceivedBenefitsAbroadInLast3Months") with OtherEligibilityFailReason
   case object ChildRecentlyLivedElsewhere extends WithName("childRecentlyLivedWithSomeoneElse") with OtherEligibilityFailReason
+  case object BankAccountInsightsRisk extends WithName("bankAccountInsightsIndicatesPossibleRisk") with OtherEligibilityFailReason
 
   val values: Seq[OtherEligibilityFailReason] = Seq(
     ApplicantWorkedAbroad,
     ApplicantReceivedBenefitsAbroad,
     PartnerWorkedAbroad,
     PartnerReceivedBenefitsAbroad,
-    ChildRecentlyLivedElsewhere
+    ChildRecentlyLivedElsewhere,
+    BankAccountInsightsRisk
   )
 
   implicit val enumerable: Enumerable[OtherEligibilityFailReason] =

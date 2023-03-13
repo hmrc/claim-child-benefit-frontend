@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package audit
+package utils
 
-import models.ValidateBankDetailsRequest
-import play.api.libs.json.{JsValue, Json, OWrites}
+import java.text.Normalizer
 
-final case class ValidateBankDetailsAuditEvent(
-                                                request: ValidateBankDetailsRequest,
-                                                response: JsValue
-                                              )
+trait StringNormaliser {
 
-object ValidateBankDetailsAuditEvent {
-  implicit lazy val writes: OWrites[ValidateBankDetailsAuditEvent] = Json.writes
+  def normalise(input: String): String =
+    Normalizer
+      .normalize(input, Normalizer.Form.NFKD)
+      .replaceAll("\\p{M}", "")
+      .replaceAll("’", "'")
 }

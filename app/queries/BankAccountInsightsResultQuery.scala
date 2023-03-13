@@ -14,21 +14,12 @@
  * limitations under the License.
  */
 
-package models.domain
+package queries
 
-import play.api.libs.json.{Json, OWrites}
-import utils.StringNormaliser
+import models.BankAccountInsightsResponseModel
+import play.api.libs.json.JsPath
 
-final case class ChildName(forenames: String, middleNames: Option[String], surname: String)
+object BankAccountInsightsResultQuery extends Settable[BankAccountInsightsResponseModel] with Gettable[BankAccountInsightsResponseModel] {
 
-object ChildName extends StringNormaliser {
-
-  def build(name: models.ChildName): ChildName =
-    ChildName(
-      normalise(name.firstName),
-      name.middleNames.map(normalise),
-      normalise(name.lastName)
-    )
-
-  implicit lazy val writes: OWrites[ChildName] = Json.writes
+  override def path: JsPath = JsPath \ "bankAccountInsightsResult"
 }

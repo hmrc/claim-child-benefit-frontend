@@ -17,7 +17,7 @@
 package services
 
 import connectors.BarsConnector
-import models.{BankAccountDetails, ValidateBankDetailsRequest, ValidateBankDetailsResponseModel}
+import models.{BankAccountDetails, VerifyBankDetailsRequest, VerifyBankDetailsResponseModel}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Inject
@@ -25,11 +25,11 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class BarsService @Inject()(connector: BarsConnector) {
 
-  def validateBankDetails(bankAccountDetails: BankAccountDetails)
-                         (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[ValidateBankDetailsResponseModel]] = {
+  def verifyBankDetails(bankAccountDetails: BankAccountDetails)
+                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[VerifyBankDetailsResponseModel]] = {
 
-    val request = ValidateBankDetailsRequest.from(bankAccountDetails)
+    val request = VerifyBankDetailsRequest.from(bankAccountDetails)
 
-    connector.validate(request).map(_.toOption)
+    connector.verify(request).map(_.toOption)
   }
 }

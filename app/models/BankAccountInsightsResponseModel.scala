@@ -16,25 +16,18 @@
 
 package models
 
-import play.api.libs.json.{Json, OWrites}
+import play.api.libs.json.{Json, OFormat}
 
-final case class ValidateBankDetailsRequest(account: Account)
+final case class BankAccountInsightsResponseModel(
+                                                   bankAccountInsightsCorrelationId: String,
+                                                   riskScore: Int,
+                                                   reason: String
+                                                 ) {
 
-object ValidateBankDetailsRequest {
-
-  def from(bankAccountDetails: BankAccountDetails): ValidateBankDetailsRequest =
-    ValidateBankDetailsRequest(
-      Account(
-        sortCode      = bankAccountDetails.sortCodeTrimmed,
-        accountNumber = bankAccountDetails.accountNumberPadded
-      )
-    )
-
-  implicit val writes: OWrites[ValidateBankDetailsRequest] = Json.writes
+  lazy val riskAboveTolerance: Boolean = riskScore >= 100
 }
 
-final case class Account(sortCode: String, accountNumber: String)
+object BankAccountInsightsResponseModel {
 
-object Account {
-  implicit val writes: OWrites[Account] = Json.writes
+  implicit lazy val format: OFormat[BankAccountInsightsResponseModel] = Json.format
 }
