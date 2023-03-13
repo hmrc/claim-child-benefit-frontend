@@ -17,6 +17,7 @@
 package controllers
 
 import base.SpecBase
+import connectors.ClaimChildBenefitConnector.InvalidClaimStateException
 import models.Done
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
@@ -89,7 +90,27 @@ class ClaimSubmissionControllerSpec extends SpecBase with MockitoSugar with Befo
           }
         }
 
-        "and redirect to Print when the submission fails" in {
+        "and redirect to SubmissionFailedExistingClaim when there is an existing claim for the user in CBS" in {
+
+          when(mockSubmissionService.canSubmit(any())(any())) thenReturn Future.successful(true)
+          when(mockSubmissionService.submit(any())(any())) thenReturn Future.failed(new InvalidClaimStateException)
+
+          val app =
+            applicationBuilder(Some(emptyUserAnswers))
+              .overrides(bind[ClaimSubmissionService].toInstance(mockSubmissionService))
+              .build()
+
+          running(app) {
+            val request = FakeRequest(GET, routes.ClaimSubmissionController.submit.url)
+            val result = route(app, request).value
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual routes.SubmissionFailedExistingClaimController.onPageLoad().url
+            verify(mockSubmissionService, times(1)).submit(any())(any())
+          }
+        }
+
+        "and redirect to Print when the submission fails for another reason" in {
 
           when(mockSubmissionService.canSubmit(any())(any())) thenReturn Future.successful(true)
           when(mockSubmissionService.submit(any())(any())) thenReturn Future.failed(new Exception("foo"))
