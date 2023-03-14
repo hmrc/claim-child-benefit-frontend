@@ -17,13 +17,30 @@
 package controllers
 
 import base.SpecBase
+import connectors.ClaimChildBenefitConnector.InvalidClaimStateException
+import models.Done
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+import org.mockito.{Mockito, MockitoSugar}
+import org.scalatest.BeforeAndAfterEach
+import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import services.ClaimSubmissionService
 import views.html.DeclarationView
 
-class DeclarationControllerSpec extends SpecBase {
+import scala.concurrent.Future
+
+class DeclarationControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
 
   private lazy val declarationRoute = routes.DeclarationController.onPageLoad.url
+
+  private val mockSubmissionService = mock[ClaimSubmissionService]
+
+  override def beforeEach(): Unit = {
+    Mockito.reset(mockSubmissionService)
+    super.beforeEach()
+  }
 
   "Declaration Controller" - {
 
@@ -40,6 +57,98 @@ class DeclarationControllerSpec extends SpecBase {
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view()(request, messages(application)).toString
+      }
+    }
+
+    "when the user's claim cannot be submitted to CBS" - {
+
+      "must redirect to Print" in {
+
+        when(mockSubmissionService.canSubmit(any())(any())) thenReturn Future.successful(false)
+
+        val app =
+          applicationBuilder(Some(emptyUserAnswers))
+            .overrides(bind[ClaimSubmissionService].toInstance(mockSubmissionService))
+            .build()
+
+        running(app) {
+          val request = FakeRequest(POST, routes.DeclarationController.onSubmit.url)
+
+          val result = route(app, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual routes.PrintController.onPageLoad.url
+        }
+      }
+    }
+
+    "when the user's claim can be submitted to CBS" - {
+
+      "must submit the claim" - {
+
+        "and redirect to Submitted when the submission is successful" in {
+
+          when(mockSubmissionService.canSubmit(any())(any())) thenReturn Future.successful(true)
+          when(mockSubmissionService.submit(any())(any())) thenReturn Future.successful(Done)
+
+          val app =
+            applicationBuilder(Some(emptyUserAnswers))
+              .overrides(bind[ClaimSubmissionService].toInstance(mockSubmissionService))
+              .build()
+
+          running(app) {
+
+            val request = FakeRequest(POST, routes.DeclarationController.onSubmit.url)
+
+            val result = route(app, request).value
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual routes.SubmittedController.onPageLoad.url
+            verify(mockSubmissionService, times(1)).submit(any())(any())
+          }
+        }
+
+        "and redirect to SubmissionFailedExistingClaim when there is an existing claim for the user in CBS" in {
+
+          when(mockSubmissionService.canSubmit(any())(any())) thenReturn Future.successful(true)
+          when(mockSubmissionService.submit(any())(any())) thenReturn Future.failed(new InvalidClaimStateException)
+
+          val app =
+            applicationBuilder(Some(emptyUserAnswers))
+              .overrides(bind[ClaimSubmissionService].toInstance(mockSubmissionService))
+              .build()
+
+          running(app) {
+            val request = FakeRequest(POST, routes.DeclarationController.onSubmit.url)
+            val result = route(app, request).value
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual routes.SubmissionFailedExistingClaimController.onPageLoad().url
+            verify(mockSubmissionService, times(1)).submit(any())(any())
+          }
+        }
+
+        "and redirect to Print when the submission fails for another reason" in {
+
+          when(mockSubmissionService.canSubmit(any())(any())) thenReturn Future.successful(true)
+          when(mockSubmissionService.submit(any())(any())) thenReturn Future.failed(new Exception("foo"))
+
+          val app =
+            applicationBuilder(Some(emptyUserAnswers))
+              .overrides(bind[ClaimSubmissionService].toInstance(mockSubmissionService))
+              .build()
+
+          running(app) {
+
+            val request = FakeRequest(POST, routes.DeclarationController.onSubmit.url)
+
+            val result = route(app, request).value
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual routes.PrintController.onPageLoad.url
+            verify(mockSubmissionService, times(1)).submit(any())(any())
+          }
+        }
       }
     }
   }

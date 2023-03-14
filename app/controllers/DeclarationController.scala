@@ -16,14 +16,18 @@
 
 package controllers
 
+import connectors.ClaimChildBenefitConnector.InvalidClaimStateException
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import logging.Logging
 import pages.Waypoints
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.ClaimSubmissionService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.DeclarationView
 
 import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class DeclarationController @Inject()(
                                        override val messagesApi: MessagesApi,
@@ -32,7 +36,8 @@ class DeclarationController @Inject()(
                                        requireData: DataRequiredAction,
                                        val controllerComponents: MessagesControllerComponents,
                                        view: DeclarationView,
-                                     ) extends FrontendBaseController with I18nSupport {
+                                       claimSubmissionService: ClaimSubmissionService
+                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
@@ -40,9 +45,24 @@ class DeclarationController @Inject()(
       Ok(view())
   }
 
-  def onSubmit: Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onSubmit: Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
-      ???
+      claimSubmissionService.canSubmit(request).flatMap {
+        case true =>
+          claimSubmissionService.submit(request).map { _ =>
+            Redirect(routes.SubmittedController.onPageLoad)
+          }.recover {
+            case _: InvalidClaimStateException =>
+              logger.warn("Submission for existing claim")
+              Redirect(routes.SubmissionFailedExistingClaimController.onPageLoad())
+            case _: Exception =>
+              logger.warn("Submission to CBS failed")
+              Redirect(routes.PrintController.onPageLoad)
+          }
+
+        case false =>
+          Future.successful(Redirect(routes.PrintController.onPageLoad))
+      }
   }
 }
