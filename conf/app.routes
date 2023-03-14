@@ -51,6 +51,9 @@ GET         /submit-claim                               controllers.ClaimSubmiss
 
 GET         /claim-submitted                            controllers.SubmittedController.onPageLoad
 
+GET         /declaration                                controllers.DeclarationController.onPageLoad
+POST        /declaration                                controllers.DeclarationController.onSubmit
+
 # Initial section
 
 

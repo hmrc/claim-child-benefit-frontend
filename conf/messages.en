@@ -15,6 +15,7 @@ site.warning = Warning
 site.returnToGovuk = Return to GOV.UK
 site.govUk.link.href = https://gov.uk
 site.tryAgain = Try again
+site.acceptAndSend = Accept and send
 
 date.day = Day
 date.month = Month
@@ -1984,3 +1985,11 @@ submissionFailedExistingClaim.p2.2 = where you can report a change of circumstan
 submissionFailedExistingClaim.p3 = Find out more about
 submissionFailedExistingClaim.p3.link.text = claiming Child Benefit
 submissionFailedExistingClaim.p3.link.href = https://www.gov.uk/child-benefit
+
+declaration.title = Declaration
+declaration.heading = Declaration
+declaration.p1 = By sending this application you confirm that the information you have given is correct and complete. You also confirm that you will tell us about changes in your circumstances when they happen.
+declaration.p2 = We may take action towards you or ask you to pay money back if you give information which you know is not correct or complete.
+declaration.p3.1 = You can
+declaration.p3.link.text = check your answers
+declaration.p3.2 = before sending your application.
