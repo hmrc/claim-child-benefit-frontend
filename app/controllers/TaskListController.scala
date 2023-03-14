@@ -38,7 +38,14 @@ class TaskListController@Inject()(
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
+
       val sections = taskListService.sections(request.userAnswers)
       Ok(view(sections))
+  }
+
+  def onSubmit(): Action[AnyContent]=  (identify andThen getData andThen requireData) {
+    implicit request =>
+
+      Redirect(TaskListPage.navigate(EmptyWaypoints, request.userAnswers, request.userAnswers).route)
   }
 }

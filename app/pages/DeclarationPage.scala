@@ -17,12 +17,9 @@
 package pages
 
 import controllers.routes
-import models.UserAnswers
 import play.api.mvc.Call
 
-object TaskListPage extends Page {
-  override def route(waypoints: Waypoints): Call = routes.TaskListController.onPageLoad
+object DeclarationPage extends Page {
 
-  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    DeclarationPage
+  override def route(waypoints: Waypoints): Call = routes.DeclarationController.onPageLoad
 }
