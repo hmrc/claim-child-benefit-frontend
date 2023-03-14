@@ -16,9 +16,10 @@ GET         /there-is-a-problem                          controllers.JourneyReco
 
 GET         /reset-application-form                      controllers.auth.AuthController.signOut
 GET         /application-form-has-been-reset             controllers.auth.SignedOutController.onPageLoad
+GET         /sign-out-and-apply                          controllers.auth.AuthController.signOutAndApplyUnauthenticated()
 
 GET         /unauthorised                               controllers.UnauthorisedController.onPageLoad
-GET         /agent-unsupported                          controllers.auth.AuthController.unsupportedAffinityGroupAgent
+GET         /agent-unsupported                          controllers.auth.AuthController.unsupportedAffinityGroupAgent(continueUrl: String)
 GET         /organisation-unsupported                   controllers.auth.AuthController.unsupportedAffinityGroupOrganisation(continueUrl: String)
 GET         /register                                   controllers.auth.AuthController.redirectToRegister(continueUrl: String)
 GET         /sign-in                                    controllers.auth.AuthController.redirectToLogin(continueUrl: String)
@@ -29,7 +30,7 @@ GET         /signed-in                                  controllers.auth.AuthCon
 
 GET         /identity-verification/complete                          controllers.auth.IvController.handleIvFailure(continueUrl: String, journeyId: Option[String])
 GET         /identity-verification/incomplete                        controllers.auth.IvController.ivIncomplete
-GET         /identity-verification/failed-matching                   controllers.auth.IvController.ivFailedMatching(continueUrl: String)
+GET         /identity-verification/failed-matching                   controllers.auth.IvController.ivFailedMatching
 GET         /identity-verification/failed-identity-verification      controllers.auth.IvController.ivFailedIdentityVerification(continueUrl: String)
 GET         /identity-verification/insufficient-evidence             controllers.auth.IvController.ivInsufficientEvidence
 GET         /identity-verification/user-aborted                      controllers.auth.IvController.ivUserAborted(continueUrl: String)

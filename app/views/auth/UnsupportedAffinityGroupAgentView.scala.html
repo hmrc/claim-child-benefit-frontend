@@ -14,12 +14,14 @@
  * limitations under the License.
  *@
 
+@import controllers.auth.routes
+
 @this(
         layout: templates.Layout,
         govukButton: GovukButton
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(continueUrl: String)(implicit request: Request[_], messages: Messages)
 
 @layout(
     pageTitle    = titleNoForm(messages("unsupportedAffinityGroupAgent.title")),
@@ -32,4 +34,12 @@
     <p class="govuk-body">@messages("unsupportedAffinityGroupAgent.p1")</p>
 
     <p class="govuk-body">@messages("unsupportedAffinityGroupAgent.p2")</p>
+
+    <p class="govuk-body"><a href="@routes.AuthController.redirectToLogin(continueUrl)" class="govuk-button">@messages("site.signIn")</a></p>
+
+    <p class="govuk-body">
+        @messages("unsupportedAffinityGroupAgent.p3.1")
+        <a href="@routes.AuthController.signOutAndApplyUnauthenticated()" class="govuk-link">@messages("unsupportedAffinityGroupAgent.p3.link.text")</a>
+        @messages("unsupportedAffinityGroupAgent.p3.2")
+    </p>
 }

@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import controllers.auth.routes
+
 @this(
         layout: templates.Layout
 )
@@ -30,5 +32,9 @@
 
     <p class="govuk-body">@messages("ivLockedOut.p1")</p>
 
-    <a href="@messages("site.govuk.link.href")" class="govuk-link">@messages("site.returnToGovuk")</a>
+    <p class="govuk-body">
+        @messages("ivLockedOut.p2.1")
+        <a href="@routes.AuthController.signOutAndApplyUnauthenticated()" class="govuk-link">@messages("ivLockedOut.p2.link.text")</a>
+        @messages("ivLockedOut.p2.2")
+    </p>
 }

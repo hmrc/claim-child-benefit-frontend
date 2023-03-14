@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import controllers.auth.routes
+
 @this(
         layout: templates.Layout
 )
@@ -29,8 +31,9 @@
     <h1 class="govuk-heading-xl">@messages("ivFailedIdentityVerification.heading")</h1>
 
     <p class="govuk-body">@messages("ivFailedIdentityVerification.p1")</p>
+    <p class="govuk-body">@messages("ivFailedIdentityVerification.p2")</p>
 
-    <a href="@continueUrl" class="govuk-button" data-module="govuk-button" role="button" draggable="false">
-        @messages("site.tryAgain")
+    <a href="@routes.AuthController.signOutAndApplyUnauthenticated().url" class="govuk-button" data-module="govuk-button" role="button" draggable="false">
+        @messages("site.continue")
     </a>
 }

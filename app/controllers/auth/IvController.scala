@@ -46,7 +46,7 @@ class IvController @Inject()(
       ivConnector.getJourneyStatus(id).map {
         case Success                    => Redirect(continueUrl)
         case Incomplete                 => Redirect(routes.IvController.ivIncomplete)
-        case FailedMatching             => Redirect(routes.IvController.ivFailedMatching(continueUrl))
+        case FailedMatching             => Redirect(routes.IvController.ivFailedMatching)
         case FailedIdentityVerification => Redirect(routes.IvController.ivFailedIdentityVerification(continueUrl))
         case InsufficientEvidence       => Redirect(routes.IvController.ivInsufficientEvidence)
         case UserAborted                => Redirect(routes.IvController.ivUserAborted(continueUrl))
@@ -64,8 +64,8 @@ class IvController @Inject()(
     Ok(ivIncompleteView())
   }
 
-  def ivFailedMatching(continueUrl: String): Action[AnyContent] = Action { implicit request =>
-    Ok(ivFailedMatchingView(continueUrl))
+  def ivFailedMatching: Action[AnyContent] = Action { implicit request =>
+    Ok(ivFailedMatchingView())
   }
 
   def ivFailedIdentityVerification(continueUrl: String): Action[AnyContent] = Action { implicit request =>

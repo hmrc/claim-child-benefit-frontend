@@ -51,7 +51,7 @@ class OptionalAuthIdentifierAction @Inject()(
           Retrievals.nino
       ) {
         case Some(Agent) ~ _ ~ _ ~ _ ~ _ =>
-          redirectTo(authRoutes.AuthController.unsupportedAffinityGroupAgent)
+          redirectTo(authRoutes.AuthController.unsupportedAffinityGroupAgent(config.loginContinueUrl + request.path))
 
         case Some(Organisation) ~ _ ~ _ ~ _ ~ _ =>
           redirectTo(authRoutes.AuthController.unsupportedAffinityGroupOrganisation(config.loginContinueUrl + request.path))
