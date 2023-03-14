@@ -20,18 +20,20 @@ import base.SpecBase
 import connectors.ClaimChildBenefitConnector.InvalidClaimStateException
 import models.Done
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito
-import org.mockito.Mockito.{times, verify, when}
+import org.mockito.Mockito.when
+import org.mockito.{Mockito, MockitoSugar}
 import org.scalatest.BeforeAndAfterEach
-import org.scalatestplus.mockito.MockitoSugar
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.ClaimSubmissionService
+import views.html.DeclarationView
 
 import scala.concurrent.Future
 
-class ClaimSubmissionControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
+class DeclarationControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
+
+  private lazy val declarationRoute = routes.DeclarationController.onPageLoad.url
 
   private val mockSubmissionService = mock[ClaimSubmissionService]
 
@@ -40,7 +42,23 @@ class ClaimSubmissionControllerSpec extends SpecBase with MockitoSugar with Befo
     super.beforeEach()
   }
 
-  "ClaimSubmission controller" - {
+  "Declaration Controller" - {
+
+    "must return OK and the correct view for a GET" in {
+
+      val application = applicationBuilder(Some(emptyUserAnswers)).build()
+
+      running(application) {
+
+        val request = FakeRequest(GET, declarationRoute)
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[DeclarationView]
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view()(request, messages(application)).toString
+      }
+    }
 
     "when the user's claim cannot be submitted to CBS" - {
 
@@ -54,7 +72,7 @@ class ClaimSubmissionControllerSpec extends SpecBase with MockitoSugar with Befo
             .build()
 
         running(app) {
-          val request = FakeRequest(GET, routes.ClaimSubmissionController.submit.url)
+          val request = FakeRequest(POST, routes.DeclarationController.onSubmit.url)
 
           val result = route(app, request).value
 
@@ -80,7 +98,7 @@ class ClaimSubmissionControllerSpec extends SpecBase with MockitoSugar with Befo
 
           running(app) {
 
-            val request = FakeRequest(GET, routes.ClaimSubmissionController.submit.url)
+            val request = FakeRequest(POST, routes.DeclarationController.onSubmit.url)
 
             val result = route(app, request).value
 
@@ -101,7 +119,7 @@ class ClaimSubmissionControllerSpec extends SpecBase with MockitoSugar with Befo
               .build()
 
           running(app) {
-            val request = FakeRequest(GET, routes.ClaimSubmissionController.submit.url)
+            val request = FakeRequest(POST, routes.DeclarationController.onSubmit.url)
             val result = route(app, request).value
 
             status(result) mustEqual SEE_OTHER
@@ -122,7 +140,7 @@ class ClaimSubmissionControllerSpec extends SpecBase with MockitoSugar with Befo
 
           running(app) {
 
-            val request = FakeRequest(GET, routes.ClaimSubmissionController.submit.url)
+            val request = FakeRequest(POST, routes.DeclarationController.onSubmit.url)
 
             val result = route(app, request).value
 

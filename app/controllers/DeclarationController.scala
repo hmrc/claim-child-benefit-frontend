@@ -19,29 +19,39 @@ package controllers
 import connectors.ClaimChildBenefitConnector.InvalidClaimStateException
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import logging.Logging
-import play.api.i18n.I18nSupport
+import pages.Waypoints
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.ClaimSubmissionService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import views.html.DeclarationView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class ClaimSubmissionController @Inject()(
-                                           val controllerComponents: MessagesControllerComponents,
-                                           identify: IdentifierAction,
-                                           getData: DataRetrievalAction,
-                                           requireData: DataRequiredAction,
-                                           claimSubmissionService: ClaimSubmissionService
-                                         )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
+class DeclarationController @Inject()(
+                                       override val messagesApi: MessagesApi,
+                                       identify: IdentifierAction,
+                                       getData: DataRetrievalAction,
+                                       requireData: DataRequiredAction,
+                                       val controllerComponents: MessagesControllerComponents,
+                                       view: DeclarationView,
+                                       claimSubmissionService: ClaimSubmissionService
+                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
-  def submit: Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
+    implicit request =>
+
+      Ok(view())
+  }
+
+  def onSubmit: Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
       claimSubmissionService.canSubmit(request).flatMap {
         case true =>
           claimSubmissionService.submit(request).map { _ =>
-              Redirect(routes.SubmittedController.onPageLoad)
+            Redirect(routes.SubmittedController.onPageLoad)
           }.recover {
             case _: InvalidClaimStateException =>
               logger.warn("Submission for existing claim")

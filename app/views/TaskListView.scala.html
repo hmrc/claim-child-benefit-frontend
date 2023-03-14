@@ -19,29 +19,38 @@
 
 @this(
         layout: templates.Layout,
-        govukTag: GovukTag
+        formHelper: FormWithCSRF,
+        govukTag: GovukTag,
+        govukButton: GovukButton
 )
 
 @(sections: Seq[SectionViewModel])(implicit request: Request[_], messages: Messages)
 
 @numberOfSections = @{sections.size}
 @completedSections = @{sections.count(_.status == Completed)}
+@headingSuffix = @{
+    if(numberOfSections == completedSections) {
+        "readyToSend"
+    } else {
+        "incomplete"
+    }
+}
 
-@layout(pageTitle = titleNoForm(messages("taskList.title")), showBackLink = false) {
+@layout(pageTitle = titleNoForm(messages(s"taskList.title.$headingSuffix")), showBackLink = false) {
 
-    <h1 class="govuk-heading-xl">@messages("taskList.heading")</h1>
+    @if(numberOfSections == completedSections) {
+        <h1 class="govuk-heading-xl">@messages("taskList.heading.readyToSend")</h1>
+    } else {
+        <h1 class="govuk-heading-xl">@messages("taskList.heading.incomplete")</h1>
 
-    <h2 class="govuk-heading-m">@messages("taskList.incomplete")</h2>
+        <h2 class="govuk-heading-m">@messages("taskList.incomplete")</h2>
 
-    <p class="govuk-body">@messages("taskList.completedSections", completedSections, numberOfSections)</p>
+        <p class="govuk-body">@messages("taskList.completedSections", completedSections, numberOfSections)</p>
+
+    }
 
     <ol class="app-task-list">
         <li>
-            <h2 class="app-task-list__section">
-                <span class="app-task-list__section-number">1. </span>
-                @messages("taskList.section.prepare")
-            </h2>
-
             <ul class="app-task-list__items">
             @sections.map { section =>
                 <li class="app-task-list__item">
@@ -59,29 +68,15 @@
             }
             </ul>
         </li>
-        <li>
-            <h2 class="app-task-list__section">
-                <span class="app-task-list__section-number">2. </span>
-                @messages("taskList.section.submit")
-            </h2>
-            <ul class="app-task-list__items">
-                <li class="app-task-list__item">
-                    <span class="app-task-list__task-name">
-                        @if(completedSections == numberOfSections) {
-                            <a href="@routes.ClaimSubmissionController.submit" class="govuk-link">@messages("taskList.submit")</a>
-                        } else {
-                            @messages("taskList.submit")
-                        }
-                    </span>
-                    <span class="hmrc-status-tag">
-                        @if(completedSections == numberOfSections) {
-                            @govukTag(TagViewModel(messages("taskList.status.notStarted")).grey())
-                        } else {
-                            @govukTag(TagViewModel(messages("taskList.status.cannotStart")).grey())
-                        }
-                    </span>
-                </li>
-            </ul>
-        </li>
+
+        @if(numberOfSections == completedSections) {
+            <p class="govuk-body">@messages("taskList.declaration")</p>
+
+            @formHelper(action = routes.TaskListController.onSubmit, 'autoComplete -> "off") {
+                @govukButton(
+                    ButtonViewModel(messages("site.acceptAndContinue"))
+                )
+            }
+        }
     </ol>
 }

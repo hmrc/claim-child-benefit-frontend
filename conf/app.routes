@@ -40,6 +40,7 @@ GET         /identity-verification/timeout                           controllers
 GET         /identity-verification/error                             controllers.auth.IvController.ivError
 
 GET         /task-list                                      controllers.TaskListController.onPageLoad
+POST        /task-list                                      controllers.TaskListController.onSubmit
 
 GET         /relationship-status-change              controllers.partner.RelationshipStatusChangesTaskListController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST        /relationship-status-change              controllers.partner.RelationshipStatusChangesTaskListController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
@@ -47,9 +48,10 @@ POST        /relationship-status-change              controllers.partner.Relatio
 GET         /receiving-child-benefit-change              controllers.applicant.CurrentlyReceivingChangesTaskListController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST        /receiving-child-benefit-change              controllers.applicant.CurrentlyReceivingChangesTaskListController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET         /submit-claim                               controllers.ClaimSubmissionController.submit
-
 GET         /claim-submitted                            controllers.SubmittedController.onPageLoad
+
+GET         /declaration                                controllers.DeclarationController.onPageLoad
+POST        /declaration                                controllers.DeclarationController.onSubmit
 
 # Initial section
 
