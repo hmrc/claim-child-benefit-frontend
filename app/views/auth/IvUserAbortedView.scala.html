@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import controllers.auth.routes
+
 @this(
         layout: templates.Layout
 )
@@ -28,9 +30,7 @@
 
     <h1 class="govuk-heading-xl">@messages("ivUserAborted.heading")</h1>
 
-    <p class="govuk-body">@messages("ivUserAborted.p1")</p>
-
-    <a href="@continueUrl" class="govuk-button" data-module="govuk-button" role="button" draggable="false">
-        @messages("site.tryAgain")
-    </a>
+    <p class="govuk-body">
+        @messages("ivUserAborted.p1")<a href="@routes.AuthController.redirectToLogin(continueUrl)" class="govuk-link">@messages("ivUserAborted.p1.link.text")</a>.
+    </p>
 }

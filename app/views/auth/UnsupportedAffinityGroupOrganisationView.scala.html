@@ -35,5 +35,11 @@
 
     <p class="govuk-body">@messages("unsupportedAffinityGroupOrganisation.p2")</p>
 
-    <p class="govuk-body"><a href="@routes.AuthController.redirectToRegister(continueUrl)" class="govuk-link">@messages("unsupportedAffinityGroupOrganisation.link.text")</a></p>
+    <p class="govuk-body"><a href="@routes.AuthController.redirectToLogin(continueUrl)" class="govuk-button">@messages("site.signIn")</a></p>
+
+    <p class="govuk-body">
+        @messages("unsupportedAffinityGroupOrganisation.p3.1")
+        <a href="@routes.AuthController.signOutAndApplyUnauthenticated()" class="govuk-link">@messages("unsupportedAffinityGroupOrganisation.p3.link.text")</a>
+        @messages("unsupportedAffinityGroupOrganisation.p3.2")
+    </p>
 }

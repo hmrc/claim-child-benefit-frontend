@@ -97,13 +97,13 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(None).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.AuthController.unsupportedAffinityGroupAgent.url)
+        val request = FakeRequest(GET, routes.AuthController.unsupportedAffinityGroupAgent("continueUrl").url)
 
         val result = route(application, request).value
         val view = application.injector.instanceOf[UnsupportedAffinityGroupAgentView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+        contentAsString(result) mustEqual view("continueUrl")(request, messages(application)).toString
       }
     }
   }
@@ -143,7 +143,7 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
     }
   }
 
-  "redirectToRegister" - {
+  "redirectToLogin" - {
 
     "must Redirect to bas-gateway login" in {
 
@@ -194,6 +194,23 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual TaskListPage.route(EmptyWaypoints).url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+      }
+    }
+  }
+
+  "signOutAndApplyUnauthenticated" - {
+
+    "must sign a user out and continue at the start of the service" in {
+
+      val application = applicationBuilder(None).build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.AuthController.signOutAndApplyUnauthenticated().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual "http://localhost:9553/bas-gateway/sign-out-without-state?continue=http%3A%2F%2Flocalhost%3A11303%2Ffill-online%2Fclaim-child-benefit%2Frecently-claimed-child-benefit"
       }
     }
   }

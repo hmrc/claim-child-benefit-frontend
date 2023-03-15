@@ -1682,16 +1682,21 @@ partnerIsHmfOrCivilServant.checkYourAnswersLabel = Is {0} a member of HM Forces 
 partnerIsHmfOrCivilServant.error.required = Select yes if {0} is a member of HM Forces or a civil servant working abroad
 partnerIsHmfOrCivilServant.change.hidden = if {0} is a member of HM Forces or a civil servant working abroad
 
-unsupportedAffinityGroupAgent.title = You cannot use this service
-unsupportedAffinityGroupAgent.heading = You cannot use this service
-unsupportedAffinityGroupAgent.p1 = Agents cannot make a claim through this scheme on behalf of their client.
-unsupportedAffinityGroupAgent.p2 = You should tell your clients that they will need to make the claim themselves.
+unsupportedAffinityGroupOrganisation.title = You cannot use the service with this account
+unsupportedAffinityGroupOrganisation.heading = You cannot use the service with this account
+unsupportedAffinityGroupOrganisation.p1 = An agent Government Gateway account cannot be used to make a Child Benefit claim.
+unsupportedAffinityGroupOrganisation.p2 = Use a personal Government Gateway user ID and password.
+unsupportedAffinityGroupOrganisation.p3.1 = You can also
+unsupportedAffinityGroupOrganisation.p3.link.text = claim Child Benefit
+unsupportedAffinityGroupOrganisation.p3.2 = without signing in to Government Gateway.
 
-unsupportedAffinityGroupOrganisation.title = You cannot use this service
-unsupportedAffinityGroupOrganisation.heading = You cannot use this service
-unsupportedAffinityGroupOrganisation.p1 = You must sign in using a Government Gateway account that is not associated with a business.
-unsupportedAffinityGroupOrganisation.p2 = If you do not have a Government Gateway account you can register for one.
-unsupportedAffinityGroupOrganisation.link.text = Register or sign in to Government Gateway
+unsupportedAffinityGroupOrganisation.title = You cannot use the service with this account
+unsupportedAffinityGroupOrganisation.heading = You cannot use the service with this account
+unsupportedAffinityGroupOrganisation.p1 = An organisation Government Gateway account cannot be used to make a Child Benefit claim.
+unsupportedAffinityGroupOrganisation.p2 = Use a personal Government Gateway user ID and password.
+unsupportedAffinityGroupOrganisation.p3.1 = You can also
+unsupportedAffinityGroupOrganisation.p3.link.text = claim Child Benefit
+unsupportedAffinityGroupOrganisation.p3.2 = without signing in to Government Gateway.
 
 ivIncomplete.title = Sorry, there is a problem with the service
 ivIncomplete.heading = Sorry, there is a problem with the service
@@ -1699,35 +1704,42 @@ ivIncomplete.p = Try again later.
 
 ivFailedMatching.title = We could not confirm your identity
 ivFailedMatching.heading = We could not confirm your identity
-ivFailedMatching.p1 = We could not confirm your identity
+ivFailedMatching.p1 = The information you have entered does not match our records.
+ivFailedMatching.p2 = You will be signed out and will not be able to send your Child Benefit claim digitally. This means that you will need to print and post your claim to HMRC.
 
 ivFailedIdentityVerification.title = We could not confirm your identity
 ivFailedIdentityVerification.heading = We could not confirm your identity
-ivFailedIdentityVerification.p1 = We could not confirm your identity
+ivFailedIdentityVerification.p1 = You have not answered enough questions correctly to prove your identity.
+ivFailedIdentityVerification.p2 = You will be signed out and will not be able to send your Child Benefit claim digitally. This means that you will need to print and post your claim to HMRC.
 
 ivInsufficientEvidence.title = We could not confirm your identity online
 ivInsufficientEvidence.heading = We could not confirm your identity online
-ivInsufficientEvidence.p1 = We could not confirm your identity online
+ivInsufficientEvidence.p1 = You have not given us enough information to prove your identity.
+ivInsufficientEvidence.p2 = You will be signed out and will not be able to send your Child Benefit claim digitally. This means that you will need to print and post your claim to HMRC.
 
-ivUserAborted.title = Sorry, there is a problem with the service
-ivUserAborted.heading = Sorry, there is a problem with the service
-ivUserAborted.p1 = We are unable to validate your details at the moment. Select another method of verification or try again later.
+ivUserAborted.title = Your session has ended as you closed the application
+ivUserAborted.heading = Your session has ended as you closed the application
+ivUserAborted.p1 = You can
+ivUserAborted.p1.link.text = try signing in again
 
 ivLockedOut.title = We could not confirm your identity
 ivLockedOut.heading = We could not confirm your identity
-ivLockedOut.p1 = You have entered information that does not match our records too many times. For security reasons, you must wait 24 hours and then sign in to try again.
+ivLockedOut.p1 = You have entered information that does not match our records too many times. For security reasons, you must wait 24 hours and then try to sign in again.
+ivLockedOut.p2.1 = You can also
+ivLockedOut.p2.link.text = claim Child Benefit
+ivLockedOut.p2.2 = without signing in to Government Gateway.
 
-ivPreconditionFailed.title = Sorry, there is a problem
-ivPreconditionFailed.heading = Sorry, there is a problem
+ivPreconditionFailed.title = Sorry, there is a problem with the service
+ivPreconditionFailed.heading = Sorry, there is a problem with the service
 ivPreconditionFailed.p1 = Try again later.
 
 ivTechnicalIssue.title = Sorry, there is a problem with the service
 ivTechnicalIssue.heading = Sorry, there is a problem with the service
 ivTechnicalIssue.p1 = Try again later.
 
-ivTimeout.title = Sorry, there is a problem with the service
-ivTimeout.heading = Sorry, there is a problem with the service
-ivTimeout.p1 = Try again later.
+ivTimeout.title = Your session has ended due to inactivity
+ivTimeout.heading = Your session has ended due to inactivity
+ivTimeout.p1 = The session has ended as you were inactive for over 15 minutes.
 
 ivError.title = Sorry, there is a problem with the service
 ivError.heading = Sorry, there is a problem with the service

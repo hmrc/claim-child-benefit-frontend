@@ -18,6 +18,7 @@ package controllers.auth
 
 import config.FrontendAppConfig
 import controllers.actions.{DataRetrievalAction, IdentifierAction}
+import controllers.{routes => baseRoutes}
 import models.UserAnswers
 import models.requests.AuthenticatedIdentifierRequest
 import pages.{EmptyWaypoints, TaskListPage}
@@ -76,12 +77,17 @@ class AuthController @Inject()(
               case _ =>
                 Redirect(routes.SignedOutController.onPageLoad)
             }
-
       }
   }
 
-  def unsupportedAffinityGroupAgent: Action[AnyContent] = Action { implicit request =>
-    Ok(unsupportedAffinityGroupAgentView())
+  def signOutAndApplyUnauthenticated(): Action[AnyContent] = Action { _ =>
+      Redirect(
+        config.signOutUrl,
+        Map("continue" -> Seq(config.host + baseRoutes.RecentlyClaimedController.onPageLoad().url)))
+  }
+
+  def unsupportedAffinityGroupAgent(continueUrl: String): Action[AnyContent] = Action { implicit request =>
+    Ok(unsupportedAffinityGroupAgentView(continueUrl))
   }
 
   def unsupportedAffinityGroupOrganisation(continueUrl: String): Action[AnyContent] = Action { implicit request =>

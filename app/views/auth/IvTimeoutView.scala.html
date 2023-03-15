@@ -14,6 +14,9 @@
  * limitations under the License.
  *@
 
+@import controllers.routes
+@import pages.EmptyWaypoints
+
 @this(
         layout: templates.Layout
 )
@@ -30,5 +33,5 @@
 
     <p class="govuk-body">@messages("ivTimeout.p1")</p>
 
-    <a href="@messages("site.govuk.link.href")" class="govuk-link">@messages("site.returnToGovuk")</a>
+    <a href="@routes.RecentlyClaimedController.onPageLoad(EmptyWaypoints)" class="govuk-button" data-module="govuk-button" role="button" draggable="false">@messages("site.startAgain")</a>
 }

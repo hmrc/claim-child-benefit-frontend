@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import controllers.auth.routes
+
 @this(
         layout: templates.Layout
 )
@@ -29,6 +31,9 @@
     <h1 class="govuk-heading-xl">@messages("ivInsufficientEvidence.heading")</h1>
 
     <p class="govuk-body">@messages("ivInsufficientEvidence.p1")</p>
+    <p class="govuk-body">@messages("ivInsufficientEvidence.p2")</p>
 
-    <a href="@messages("site.govuk.link.href")" class="govuk-link">@messages("site.returnToGovuk")</a>
+    <a href="@routes.AuthController.signOutAndApplyUnauthenticated().url" class="govuk-button" data-module="govuk-button" role="button" draggable="false">
+        @messages("site.continue")
+    </a>
 }

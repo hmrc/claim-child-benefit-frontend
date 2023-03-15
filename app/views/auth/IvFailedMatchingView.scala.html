@@ -14,11 +14,13 @@
  * limitations under the License.
  *@
 
+@import controllers.auth.routes
+
 @this(
         layout: templates.Layout
 )
 
-@(continueUrl: String)(implicit request: Request[_], messages: Messages)
+@()(implicit request: Request[_], messages: Messages)
 
 @layout(
     pageTitle    = titleNoForm(messages("ivFailedMatching.title")),
@@ -29,8 +31,9 @@
     <h1 class="govuk-heading-xl">@messages("ivFailedMatching.heading")</h1>
 
     <p class="govuk-body">@messages("ivFailedMatching.p1")</p>
+    <p class="govuk-body">@messages("ivFailedMatching.p2")</p>
 
-    <a href="@continueUrl" class="govuk-button" data-module="govuk-button" role="button" draggable="false">
-        @messages("site.tryAgain")
+    <a href="@routes.AuthController.signOutAndApplyUnauthenticated().url" class="govuk-button" data-module="govuk-button" role="button" draggable="false">
+        @messages("site.continue")
     </a>
 }

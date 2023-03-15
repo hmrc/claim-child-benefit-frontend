@@ -83,7 +83,7 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
             val result = authAction(a => Ok(a.userId))(request)
 
             status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual authRoutes.AuthController.unsupportedAffinityGroupAgent.url
+            redirectLocation(result).value mustEqual authRoutes.AuthController.unsupportedAffinityGroupAgent("http://localhost:11303/").url
           }
         }
 
