@@ -39,7 +39,7 @@ class RecentlyClaimedPage @Inject()(featureFlags: FeatureFlags) extends Question
         AlreadyClaimedPage
 
       case false =>
-        if (featureFlags.allowAuthenticatedSessions && !answers.isAuthenticated) {
+        if (featureFlags.showSignInPage && !answers.isAuthenticated) {
           SignInPage
         } else {
           TaskListPage
