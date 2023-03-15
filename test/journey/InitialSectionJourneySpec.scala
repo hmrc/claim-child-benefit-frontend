@@ -49,9 +49,9 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
 
   "users who have not recently claimed" - {
 
-    "when the auth feature flag is disabled" - {
+    "when the sign in feature flag is disabled" - {
 
-      when(mockFeatureFlags.allowAuthenticatedSessions) thenReturn false
+      when(mockFeatureFlags.showSignInPage) thenReturn false
 
       "must go to the task list" in {
 
@@ -63,11 +63,11 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
       }
     }
 
-    "when the auth feature flag is enabled" - {
+    "when the sign in feature flag is enabled" - {
 
       "who are already authenticated must go to the task list" in {
 
-        when(mockFeatureFlags.allowAuthenticatedSessions) thenReturn true
+        when(mockFeatureFlags.showSignInPage) thenReturn true
 
         val nino = arbitrary[Nino].sample.value
         val authenticatedAnswers = UserAnswers("id", nino = Some(nino.nino))
@@ -81,7 +81,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
 
       "who are not already authenticated must go to Sign In" in {
 
-        when(mockFeatureFlags.allowAuthenticatedSessions) thenReturn true
+        when(mockFeatureFlags.showSignInPage) thenReturn true
 
         startingFrom(recentlyClaimedPage)
           .run(
