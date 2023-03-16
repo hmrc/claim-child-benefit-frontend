@@ -18,11 +18,12 @@ package controllers.payments
 
 import config.FeatureFlags
 import connectors.BankAccountInsightsConnector
+import connectors.BankAccountInsightsHttpParser.BankAccountInsightsResponse
 import controllers.AnswerExtractor
 import controllers.actions._
 import forms.payments.{BankAccountDetailsFormModel, BankAccountDetailsFormProvider}
 import models.requests.DataRequest
-import models.{BankAccountDetails, BankAccountHolder, BankAccountInsightsRequest, ReputationResponseEnum, VerifyBankDetailsResponseModel}
+import models.{BankAccountDetails, BankAccountHolder, BankAccountInsightsRequest, BankAccountInsightsResponseModel, ReputationResponseEnum, VerifyBankDetailsResponseModel}
 import pages.Waypoints
 import pages.payments.{BankAccountDetailsPage, BankAccountHolderPage}
 import play.api.data.FormError
@@ -105,9 +106,16 @@ class BankAccountDetailsController @Inject()(
   private def saveAndRedirect(details: BankAccountDetails, request: DataRequest[_], waypoints: Waypoints)(implicit hc: HeaderCarrier): Future[Result] = {
     val bankAccountInsightsRequest = BankAccountInsightsRequest.from(details)
 
+    def getInsights: Future[Option[BankAccountInsightsResponseModel]] =
+      if(featureFlags.callBankAccountInsights) {
+        bankAccountInsightsConnector.check(bankAccountInsightsRequest).map(_.toOption)
+      } else {
+        Future.successful(None)
+      }
+
     for {
       baseAnswers         <- Future.fromTry(request.userAnswers.set(BankAccountDetailsPage, details))
-      maybeInsightsResult <- bankAccountInsightsConnector.check(bankAccountInsightsRequest).map(_.toOption)
+      maybeInsightsResult <- getInsights
       finalAnswers        <- maybeInsightsResult
                               .map(x => Future.fromTry(baseAnswers.set(BankAccountInsightsResultQuery, x)))
                               .getOrElse(Future.successful(baseAnswers))
