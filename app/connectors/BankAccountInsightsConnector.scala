@@ -36,26 +36,32 @@ class BankAccountInsightsConnector @Inject()(config: Configuration, httpClient: 
 
   private val baseUrl = config.get[Service]("microservice.services.bank-account-insights")
   private val verifyUrl = url"$baseUrl/check/insights"
+  private val internalAuthToken: String = config.get[String]("internal-auth.token")
 
   def check(request: BankAccountInsightsRequest)
            (implicit hc: HeaderCarrier): Future[BankAccountInsightsResponse] = {
 
     val json = Json.toJson(request)
 
-    httpClient.post(verifyUrl).withBody(json).execute.map {
-      case (connectorResponse, httpResponse) =>
-        auditService.auditCheckBankAccountInsights(
-          CheckBankAccountInsightsAuditEvent(
-            request = request,
-            response = getResponseJson(httpResponse)
+    httpClient
+      .post(verifyUrl)
+      .setHeader("Authorization" -> internalAuthToken)
+      .withBody(json)
+      .execute
+      .map {
+        case (connectorResponse, httpResponse) =>
+          auditService.auditCheckBankAccountInsights(
+            CheckBankAccountInsightsAuditEvent(
+              request = request,
+              response = getResponseJson(httpResponse)
+            )
           )
-        )
-        connectorResponse
-    }.recover {
-      case e =>
-        logger.error(s"Error calling bank account insights: ${e.getMessage}")
-        Left(UnexpectedException)
-    }
+          connectorResponse
+      }.recover {
+        case e =>
+          logger.error(s"Error calling bank account insights: ${e.getMessage}")
+          Left(UnexpectedException)
+      }
   }
 
   private def getResponseJson(response: HttpResponse): JsValue =

@@ -1,7 +1,7 @@
 package connectors
 
 import audit.{AuditService, CheckBankAccountInsightsAuditEvent}
-import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, ok, post, serverError, urlEqualTo}
+import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, equalTo, ok, post, serverError, urlEqualTo}
 import com.github.tomakehurst.wiremock.http.Fault
 import models.{BankAccountInsightsRequest, BankAccountInsightsResponseModel, InvalidJson, UnexpectedException, UnexpectedResponseStatus}
 import org.mockito.ArgumentMatchers.any
@@ -16,7 +16,7 @@ import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import play.api.test.Helpers.{INTERNAL_SERVER_ERROR, running}
+import play.api.test.Helpers.{AUTHORIZATION, INTERNAL_SERVER_ERROR, running}
 import uk.gov.hmrc.http.HeaderCarrier
 
 class BankAccountInsightsConnectorSpec
@@ -33,7 +33,10 @@ class BankAccountInsightsConnectorSpec
 
   private def application: Application =
     new GuiceApplicationBuilder()
-      .configure("microservice.services.bank-account-insights.port" -> server.port)
+      .configure(
+        "microservice.services.bank-account-insights.port" -> server.port,
+        "internal-auth.token" -> "token"
+      )
       .bindings(bind[AuditService].toInstance(mock[AuditService]))
       .build()
 
@@ -57,6 +60,7 @@ class BankAccountInsightsConnectorSpec
 
         server.stubFor(
           post(urlEqualTo("/check/insights"))
+            .withHeader(AUTHORIZATION, equalTo("token"))
             .willReturn(ok(jsonResponse))
         )
 
@@ -89,6 +93,7 @@ class BankAccountInsightsConnectorSpec
 
         server.stubFor(
           post(urlEqualTo("/check/insights"))
+            .withHeader(AUTHORIZATION, equalTo("token"))
             .willReturn(ok(jsonResponse))
         )
 
@@ -118,6 +123,7 @@ class BankAccountInsightsConnectorSpec
 
         server.stubFor(
           post(urlEqualTo("/check/insights"))
+            .withHeader(AUTHORIZATION, equalTo("token"))
             .willReturn(serverError)
         )
 
@@ -147,6 +153,7 @@ class BankAccountInsightsConnectorSpec
 
         server.stubFor(
           post(urlEqualTo("/check/insights"))
+            .withHeader(AUTHORIZATION, equalTo("token"))
             .willReturn(aResponse().withFault(Fault.MALFORMED_RESPONSE_CHUNK))
         )
 
