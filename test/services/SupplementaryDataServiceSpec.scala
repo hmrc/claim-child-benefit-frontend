@@ -23,7 +23,7 @@ import play.api.mvc.RequestHeader
 import play.api.test.FakeRequest
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import views.xml.xml.PrintTemplate
+import views.xml.xml.archive.ArchiveTemplate
 
 import java.time.{Clock, Instant, LocalDate, ZoneOffset}
 import java.util.UUID
@@ -115,7 +115,7 @@ class SupplementaryDataServiceSpec extends AnyFreeSpec with Matchers with Option
           correlationId = uuid.toString
         )
 
-        val template = app.injector.instanceOf[PrintTemplate]
+        val template = app.injector.instanceOf[ArchiveTemplate]
         val expectedView = template(model)(app.injector.instanceOf[MessagesApi].preferred(FakeRequest()))
         val expectedPdf = "hello".getBytes
 

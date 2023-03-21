@@ -24,7 +24,7 @@ import org.apache.xmlgraphics.util.MimeConstants
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
-import views.xml.xml.PrintTemplate
+import views.xml.xml.archive.ArchiveTemplate
 
 import java.time.Clock
 import java.util.UUID
@@ -40,7 +40,7 @@ trait SupplementaryDataService {
 class SupplementaryDataServiceImpl @Inject() (
                                                clock: Clock,
                                                connector: ClaimChildBenefitConnector,
-                                               template: PrintTemplate,
+                                               template: ArchiveTemplate,
                                                fop: PlayFop,
                                                override val messagesApi: MessagesApi
                                              ) extends SupplementaryDataService with I18nSupport {
