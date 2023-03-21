@@ -1993,6 +1993,12 @@ submissionFailedExistingClaim.p3 = Find out more about
 submissionFailedExistingClaim.p3.link.text = claiming Child Benefit
 submissionFailedExistingClaim.p3.link.href = https://www.gov.uk/child-benefit
 
+submissionFailedAlreadyInPayment.title = The information you have given does not match our records
+submissionFailedAlreadyInPayment.heading = The information you have given does not match our records
+submissionFailedAlreadyInPayment.p1 = You have indicated that you are not receiving Child Benefit payments. This may be incorrect as we have your bank account details from a previous claim.
+submissionFailedAlreadyInPayment.cya-link = Check your answers
+submissionFailedAlreadyInPayment.p2 = to confirm that the information you have given is correct.
+
 declaration.title = Declaration
 declaration.heading = Declaration
 declaration.p1 = By sending this application you confirm that the information you have given is correct and complete. You also confirm that you will tell us about changes in your circumstances when they happen.

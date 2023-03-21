@@ -14,32 +14,24 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.newtablinkhelper.NewTabLinkHelper
-
 @this(
-        layout: templates.Layout,
-        govukButton: GovukButton,
-        newTabLink: HmrcNewTabLinkHelper
+        layout: templates.Layout
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("submissionFailedExistingClaim.title")), showBackLink = false) {
+@layout(pageTitle = titleNoForm(messages("submissionFailedAlreadyInPayment.title")), showBackLink = false) {
 
-  <h1 class="govuk-heading-xl">@messages("submissionFailedExistingClaim.heading")</h1>
+  <h1 class="govuk-heading-xl">@messages("submissionFailedAlreadyInPayment.heading")</h1>
 
   <p class="govuk-body">
-  @messages("submissionFailedExistingClaim.p1")
+    @messages("submissionFailedAlreadyInPayment.p1")
   </p>
 
   <p class="govuk-body">
-    @messages("submissionFailedExistingClaim.p2.1")
-    @{newTabLink(NewTabLinkHelper(text = messages("submissionFailedExistingClaim.p2.link.text"), href = Some(messages("submissionFailedExistingClaim.p2.link.href"))))},
-    @messages("submissionFailedExistingClaim.p2.2")
-  </p>
-
-  <p class="govuk-body">
-    @messages("submissionFailedExistingClaim.p3")
-    @{newTabLink(NewTabLinkHelper(text = messages("submissionFailedExistingClaim.p3.link.text"), href = Some(messages("submissionFailedExistingClaim.p3.link.href"))))}.
+    <a href="@routes.TaskListController.onPageLoad.url" class="govuk-link">
+      @messages("submissionFailedAlreadyInPayment.cya-link")
+    </a>
+    @messages("submissionFailedAlreadyInPayment.p2")
   </p>
 }
