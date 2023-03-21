@@ -51,8 +51,8 @@ class SupplementaryDataServiceImpl @Inject() (
     foUserAgent.setAuthor("HMRC forms service")
     foUserAgent.setProducer("HMRC forms services")
     foUserAgent.setCreator("HMRC forms services")
-    foUserAgent.setSubject("Claim Child Benefit by post form")
-    foUserAgent.setTitle("Claim Child Benefit by post form")
+    foUserAgent.setSubject("Claim Child Benefit submission")
+    foUserAgent.setTitle("Claim Child Benefit submission")
   }
 
   override def submit(nino: String, model: JourneyModel, correlationId: UUID)(implicit request: RequestHeader): Future[Done] = {
