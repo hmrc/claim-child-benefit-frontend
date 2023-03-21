@@ -17,10 +17,9 @@
 package controllers
 
 import base.SpecBase
-import connectors.ClaimChildBenefitConnector.InvalidClaimStateException
+import connectors.ClaimChildBenefitConnector.{AlreadyInPaymentException, InvalidClaimStateException}
 import models.Done
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
 import org.mockito.{Mockito, MockitoSugar}
 import org.scalatest.BeforeAndAfterEach
 import play.api.inject.bind
@@ -124,6 +123,26 @@ class DeclarationControllerSpec extends SpecBase with MockitoSugar with BeforeAn
 
             status(result) mustEqual SEE_OTHER
             redirectLocation(result).value mustEqual routes.SubmissionFailedExistingClaimController.onPageLoad().url
+            verify(mockSubmissionService, times(1)).submit(any())(any())
+          }
+        }
+
+        "and redirect to SubmissionFailedAlreadyInPayment when the user has an existing claim which is already in payment" in {
+
+          when(mockSubmissionService.canSubmit(any())(any())) thenReturn Future.successful(true)
+          when(mockSubmissionService.submit(any())(any())) thenReturn Future.failed(new AlreadyInPaymentException)
+
+          val app =
+            applicationBuilder(Some(emptyUserAnswers))
+              .overrides(bind[ClaimSubmissionService].toInstance(mockSubmissionService))
+              .build()
+
+          running(app) {
+            val request = FakeRequest(POST, routes.DeclarationController.onSubmit.url)
+            val result = route(app, request).value
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual routes.SubmissionFailedAlreadyInPaymentController.onPageLoad().url
             verify(mockSubmissionService, times(1)).submit(any())(any())
           }
         }
