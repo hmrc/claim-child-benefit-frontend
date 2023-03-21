@@ -103,7 +103,6 @@ case object CurrentlyReceivingChildBenefitPage extends QuestionPage[CurrentlyRec
     ApplicantBenefitsPage,
     ApplicantOrPartnerBenefitsPage,
     PaymentFrequencyPage,
-    WantToBePaidToExistingAccountPage,
     ApplicantHasSuitableAccountPage,
     BankAccountHolderPage,
     BankAccountDetailsPage

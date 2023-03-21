@@ -65,7 +65,6 @@ trait UserAnswersGenerator extends TryValues {
     arbitrary[(ApplicantDateOfBirthPage.type, JsValue)] ::
     arbitrary[(ApplicantCurrentUkAddressPage.type, JsValue)] ::
     arbitrary[(PaymentFrequencyPage.type, JsValue)] ::
-    arbitrary[(WantToBePaidToExistingAccountPage.type, JsValue)] ::
     arbitrary[(WantToBePaidPage.type, JsValue)] ::
     arbitrary[(EldestChildNamePage.type, JsValue)] ::
     arbitrary[(EldestChildDateOfBirthPage.type, JsValue)] ::

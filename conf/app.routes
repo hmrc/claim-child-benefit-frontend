@@ -121,9 +121,6 @@ POST       /eldest-child-name                        controllers.applicant.Eldes
 GET        /want-to-be-paid-child-benefit                        controllers.payments.WantToBePaidController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /want-to-be-paid-child-benefit                        controllers.payments.WantToBePaidController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /want-to-be-paid-to-existing-account                        controllers.payments.WantToBePaidToExistingAccountController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
-POST       /want-to-be-paid-to-existing-account                        controllers.payments.WantToBePaidToExistingAccountController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
-
 GET        /how-often-want-to-be-paid                        controllers.payments.PaymentFrequencyController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /how-often-want-to-be-paid                        controllers.payments.PaymentFrequencyController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 

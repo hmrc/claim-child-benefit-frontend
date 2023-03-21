@@ -24,8 +24,6 @@ import org.scalacheck.Gen
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import play.api.libs.json.Json
 import uk.gov.hmrc.domain.Nino
 
 import java.time.LocalDate

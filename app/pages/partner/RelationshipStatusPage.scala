@@ -164,7 +164,6 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
     ApplicantBenefitsPage,
     ApplicantOrPartnerBenefitsPage,
     PaymentFrequencyPage,
-    WantToBePaidToExistingAccountPage,
     ApplicantHasSuitableAccountPage,
     BankAccountHolderPage,
     BankAccountDetailsPage

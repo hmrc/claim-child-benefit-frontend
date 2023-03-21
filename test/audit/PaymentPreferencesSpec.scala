@@ -157,7 +157,7 @@ class PaymentPreferencesSpec extends AnyFreeSpec with Matchers {
 
   "Existing account payment preference must serialise to JSON" in {
 
-    val preference = ExistingAccount(EldestChild(ChildName("first", None, "last"), dateOfBirth), PaymentFrequency.Weekly.toString)
+    val preference = ExistingAccount(EldestChild(ChildName("first", None, "last"), dateOfBirth))
     val json = Json.toJson(preference)
 
     json mustEqual Json.obj(
@@ -169,7 +169,6 @@ class PaymentPreferencesSpec extends AnyFreeSpec with Matchers {
         ),
         "dateOfBirth" -> "2020-12-31"
       ),
-      "frequency" -> PaymentFrequency.Weekly.toString,
       "account" -> "use existing account"
     )
   }

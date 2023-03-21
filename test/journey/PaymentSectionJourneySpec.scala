@@ -37,44 +37,41 @@ class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
 
     "who want to be paid" - {
 
-      "must be asked for their income and benefits details" in {
+      "who are getting paid Child Benefit now" - {
 
-        startingFrom(ApplicantOrPartnerIncomePage)
-          .run(
-            setUserAnswerTo(RelationshipStatusPage, relationship),
-            submitAnswer(ApplicantOrPartnerIncomePage, income),
-            submitAnswer(WantToBePaidPage, true),
-            pageMustBe(ApplicantOrPartnerBenefitsPage)
-          )
+        "must be asked for their income and if they want to be paid, then go to Check Details" in {
+
+          startingFrom(ApplicantOrPartnerIncomePage)
+            .run(
+              setUserAnswerTo(RelationshipStatusPage, relationship),
+              setUserAnswerTo(CurrentlyReceivingChildBenefitPage, GettingPayments),
+              submitAnswer(ApplicantOrPartnerIncomePage, income),
+              submitAnswer(WantToBePaidPage, true),
+              pageMustBe(CheckPaymentDetailsPage)
+            )
+        }
       }
 
-      "who receive qualifying benefits" - {
+      "who are not getting paid Child Benefit now" - {
 
-        "who are currently receiving Child Benefit" - {
+        val currentlyReceiving = Gen.oneOf(NotClaiming, NotGettingPayments).sample.value
+        val benefits = Set(Gen.oneOf(Benefits.qualifyingBenefits).sample.value)
 
-          "must be asked how often they want to be paid, then be asked if they want to be paid to their existing account" in {
+        "must be asked for their income and benefits details" in {
 
-            val benefits = Set(Gen.oneOf(Benefits.qualifyingBenefits).sample.value)
-
-            startingFrom(ApplicantOrPartnerIncomePage)
-              .run(
-                setUserAnswerTo(RelationshipStatusPage, relationship),
-                setUserAnswerTo(CurrentlyReceivingChildBenefitPage, GettingPayments),
-                submitAnswer(ApplicantOrPartnerIncomePage, income),
-                submitAnswer(WantToBePaidPage, true),
-                submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
-                submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
-                pageMustBe(WantToBePaidToExistingAccountPage)
-              )
-          }
+          startingFrom(ApplicantOrPartnerIncomePage)
+            .run(
+              setUserAnswerTo(RelationshipStatusPage, relationship),
+              setUserAnswerTo(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
+              submitAnswer(ApplicantOrPartnerIncomePage, income),
+              submitAnswer(WantToBePaidPage, true),
+              pageMustBe(ApplicantOrPartnerBenefitsPage)
+            )
         }
 
-        "who are not currently receiving Child Benefit" - {
+        "who receive qualifying benefits" - {
 
           "must be asked how often they want to be paid, then be asked if they have a suitable bank account" in {
-
-            val currentlyReceiving = Gen.oneOf(NotClaiming, NotGettingPayments).sample.value
-            val benefits = Set(Gen.oneOf(Benefits.qualifyingBenefits).sample.value)
 
             startingFrom(ApplicantOrPartnerIncomePage)
               .run(
@@ -91,54 +88,15 @@ class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
               )
           }
         }
-      }
 
-      "who do not receive qualifying benefits" - {
-
-        "who are currently getting paid child benefit" - {
-
-          "must not be asked how often they want to be paid, and be asked if they want to be paid to their existing account" in {
-
-            startingFrom(ApplicantOrPartnerIncomePage)
-              .run(
-                setUserAnswerTo(RelationshipStatusPage, relationship),
-                setUserAnswerTo(CurrentlyReceivingChildBenefitPage, GettingPayments),
-                submitAnswer(ApplicantOrPartnerIncomePage, income),
-                submitAnswer(WantToBePaidPage, true),
-                submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
-                submitAnswer(WantToBePaidToExistingAccountPage, false),
-                submitAnswer(ApplicantHasSuitableAccountPage, false),
-                pageMustBe(CheckPaymentDetailsPage),
-                next,
-                pageMustBe(TaskListPage)
-              )
-          }
-        }
-
-        "who are claiming Child Benefit but not getting paid" - {
+        "who do not receive qualifying benefits" - {
 
           "must not be asked how often they want to be paid, and be asked if they have a suitable bank account" in {
 
             startingFrom(ApplicantOrPartnerIncomePage)
               .run(
                 setUserAnswerTo(RelationshipStatusPage, relationship),
-                setUserAnswerTo(CurrentlyReceivingChildBenefitPage, NotGettingPayments),
-                submitAnswer(ApplicantOrPartnerIncomePage, income),
-                submitAnswer(WantToBePaidPage, true),
-                submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
-                pageMustBe(ApplicantHasSuitableAccountPage)
-              )
-          }
-        }
-
-        "who are not currently claiming Child Benefit" - {
-
-          "must not be asked how often they want to be paid, and be asked if they have a suitable bank account" in {
-
-            startingFrom(ApplicantOrPartnerIncomePage)
-              .run(
-                setUserAnswerTo(RelationshipStatusPage, relationship),
-                setUserAnswerTo(CurrentlyReceivingChildBenefitPage, NotClaiming),
+                setUserAnswerTo(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
                 submitAnswer(ApplicantOrPartnerIncomePage, income),
                 submitAnswer(WantToBePaidPage, true),
                 submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
@@ -171,22 +129,9 @@ class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
 
     "who want to be paid" - {
 
-      "must be asked for their income and benefits details" in {
+      "who are getting paid Child Benefit now" - {
 
-        startingFrom(ApplicantIncomePage)
-          .run(
-            setUserAnswerTo(RelationshipStatusPage, relationship),
-            submitAnswer(ApplicantIncomePage, income),
-            submitAnswer(WantToBePaidPage, true),
-            pageMustBe(ApplicantBenefitsPage)
-          )
-      }
-
-      "who are currently receiving Child Benefit" - {
-
-        "must be asked how often they want to be paid, then be asked if they want to be paid to their existing account" in {
-
-          val benefits = Set(Gen.oneOf(Benefits.qualifyingBenefits).sample.value)
+        "must be asked for their income and if they want to be paid, then go to Check Details" in {
 
           startingFrom(ApplicantIncomePage)
             .run(
@@ -194,18 +139,29 @@ class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
               setUserAnswerTo(CurrentlyReceivingChildBenefitPage, GettingPayments),
               submitAnswer(ApplicantIncomePage, income),
               submitAnswer(WantToBePaidPage, true),
-              submitAnswer(ApplicantBenefitsPage, benefits),
-              submitAnswer(PaymentFrequencyPage, PaymentFrequency.Weekly),
-              pageMustBe(WantToBePaidToExistingAccountPage)
+              pageMustBe(CheckPaymentDetailsPage)
             )
         }
       }
 
-      "who are not currently receiving Child Benefit" - {
+      "who are not getting paid Child Benefit now" - {
+
+        val currentlyReceiving = Gen.oneOf(NotClaiming, NotGettingPayments).sample.value
+
+        "must be asked for their income and benefits details" in {
+
+          startingFrom(ApplicantIncomePage)
+            .run(
+              setUserAnswerTo(RelationshipStatusPage, relationship),
+              setUserAnswerTo(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
+              submitAnswer(ApplicantIncomePage, income),
+              submitAnswer(WantToBePaidPage, true),
+              pageMustBe(ApplicantBenefitsPage)
+            )
+        }
 
         "must be asked how often they want to be paid, then be asked if they have a suitable bank account" in {
 
-          val currentlyReceiving = Gen.oneOf(NotClaiming, NotGettingPayments).sample.value
           val benefits = Set(Gen.oneOf(Benefits.qualifyingBenefits).sample.value)
 
           startingFrom(ApplicantIncomePage)
@@ -273,24 +229,6 @@ class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
       .run(
         submitAnswer(ApplicantHasSuitableAccountPage, false),
         pageMustBe(CheckPaymentDetailsPage)
-      )
-  }
-
-  "users who want to be paid into their existing account must go to Check Payment" in {
-
-    startingFrom(WantToBePaidToExistingAccountPage)
-      .run(
-        submitAnswer(WantToBePaidToExistingAccountPage, true),
-        pageMustBe(CheckPaymentDetailsPage)
-      )
-  }
-
-  "users who don't want to be paid into their existing account must be asked if they have a suitable bank account" in {
-
-    startingFrom(WantToBePaidToExistingAccountPage)
-      .run(
-        submitAnswer(WantToBePaidToExistingAccountPage, false),
-        pageMustBe(ApplicantHasSuitableAccountPage)
       )
   }
 }

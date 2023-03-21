@@ -31,8 +31,8 @@ object Payment {
     case JourneyModel.PaymentPreference.DoNotPay(_) =>
       None
 
-    case JourneyModel.PaymentPreference.ExistingAccount(_, frequency) =>
-      Some(Payment(PaymentFrequency.build(frequency), None))
+    case JourneyModel.PaymentPreference.ExistingAccount(_) =>
+      None
 
     case x: JourneyModel.PaymentPreference.Weekly =>
       Some(Payment(PaymentFrequency.Weekly, PaymentDetails.build(x)))

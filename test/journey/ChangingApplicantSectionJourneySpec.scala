@@ -48,7 +48,6 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
     setUserAnswerTo(WantToBePaidPage, true),
     setUserAnswerTo(ApplicantBenefitsPage, Benefits.qualifyingBenefits),
     setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
-    setUserAnswerTo(WantToBePaidToExistingAccountPage, false),
     setUserAnswerTo(ApplicantHasSuitableAccountPage, true),
     setUserAnswerTo(BankAccountHolderPage, BankAccountHolder.Applicant),
     setUserAnswerTo(BankAccountDetailsPage, bankDetails)
@@ -59,7 +58,6 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
     setUserAnswerTo(WantToBePaidPage, true),
     setUserAnswerTo(ApplicantOrPartnerBenefitsPage, Benefits.qualifyingBenefits),
     setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
-    setUserAnswerTo(WantToBePaidToExistingAccountPage, false),
     setUserAnswerTo(ApplicantHasSuitableAccountPage, true),
     setUserAnswerTo(BankAccountHolderPage, BankAccountHolder.Applicant),
     setUserAnswerTo(BankAccountDetailsPage, bankDetails)
@@ -72,7 +70,6 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
     answersMustNotContain(ApplicantBenefitsPage),
     answersMustNotContain(ApplicantOrPartnerBenefitsPage),
     answersMustNotContain(PaymentFrequencyPage),
-    answersMustNotContain(WantToBePaidToExistingAccountPage),
     answersMustNotContain(ApplicantHasSuitableAccountPage),
     answersMustNotContain(BankAccountHolderPage),
     answersMustNotContain(BankAccountDetailsPage)
