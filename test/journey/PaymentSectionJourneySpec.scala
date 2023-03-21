@@ -47,6 +47,8 @@ class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
               setUserAnswerTo(CurrentlyReceivingChildBenefitPage, GettingPayments),
               submitAnswer(ApplicantOrPartnerIncomePage, income),
               submitAnswer(WantToBePaidPage, true),
+              pageMustBe(PaidToExistingAccountPage),
+              next,
               pageMustBe(CheckPaymentDetailsPage)
             )
         }
@@ -139,6 +141,8 @@ class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
               setUserAnswerTo(CurrentlyReceivingChildBenefitPage, GettingPayments),
               submitAnswer(ApplicantIncomePage, income),
               submitAnswer(WantToBePaidPage, true),
+              pageMustBe(PaidToExistingAccountPage),
+              next,
               pageMustBe(CheckPaymentDetailsPage)
             )
         }
