@@ -27,6 +27,7 @@ object SubmitClaimHttpParser extends Logging {
 
   implicit object SubmitClaimReads extends HttpReads[Either[SubmitClaimException, Done]] {
 
+    // scalastyle:off
     override def read(method: String, url: String, response: HttpResponse): Either[SubmitClaimException, Done] =
       response.status match {
         case CREATED =>
@@ -42,6 +43,8 @@ object SubmitClaimHttpParser extends Logging {
                 Left(new InvalidClaimStateException)
               } else if (response.failures.exists(_.code == SubmitClaimFailure.InvalidAccountStateCode)) {
                 Left(new InvalidAccountStateException)
+              } else if (response.failures.exists(_.code == SubmitClaimFailure.PaymentPresentAfterFirstPaymentCode)) {
+                Left(new AlreadyInPaymentException)
               } else {
                 Left(new UnprocessableEntityException)
               }
@@ -61,6 +64,7 @@ object SubmitClaimHttpParser extends Logging {
           Left(new UnrecognisedResponseException(code))
       }
   }
+  // scalastyle: on
 }
 
 final case class SubmitClaimFailure(code: String, reason: String)
@@ -71,6 +75,7 @@ object SubmitClaimFailure {
 
   val InvalidClaimStateCode = "INVALID_CLAIM_STATE"
   val InvalidAccountStateCode = "INVALID_ACCOUNT_STATE"
+  val PaymentPresentAfterFirstPaymentCode = "PAYMENT_PRESENT_AFTER_FIRST_PAYMENT_INSTRUCTION"
 }
 
 final case class SubmitClaimFailureResponse(failures: List[SubmitClaimFailure])

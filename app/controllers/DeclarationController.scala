@@ -16,7 +16,7 @@
 
 package controllers
 
-import connectors.ClaimChildBenefitConnector.InvalidClaimStateException
+import connectors.ClaimChildBenefitConnector.{AlreadyInPaymentException, InvalidClaimStateException}
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import logging.Logging
 import pages.Waypoints
@@ -56,6 +56,9 @@ class DeclarationController @Inject()(
             case _: InvalidClaimStateException =>
               logger.warn("Submission for existing claim")
               Redirect(routes.SubmissionFailedExistingClaimController.onPageLoad())
+            case _: AlreadyInPaymentException =>
+              logger.warn("User already has a claim in payment")
+              Redirect(routes.SubmissionFailedAlreadyInPaymentController.onPageLoad())
             case _: Exception =>
               logger.warn("Submission to CBS failed")
               Redirect(routes.PrintController.onPageLoad)

@@ -78,6 +78,8 @@ object ClaimChildBenefitConnector {
 
   class InvalidAccountStateException extends SubmitClaimException(message = "Received INVALID_ACCOUNT_STATE when submitting a claim to CBS")
 
+  class AlreadyInPaymentException extends SubmitClaimException(message = "Received PAYMENT_PRESENT_AFTER_FIRST_PAYMENT_INSTRUCTION when submitting a claim to CBS")
+
   class UnprocessableEntityException extends SubmitClaimException(message = "Received UNPROCESSABLE_ENTITY when submitting a claim to CBS, with no recognised failure code")
 
   class UnrecognisedResponseException(code: Int) extends SubmitClaimException(message = s"Received an unrecognised response code $code when submitting a claim to CBS")

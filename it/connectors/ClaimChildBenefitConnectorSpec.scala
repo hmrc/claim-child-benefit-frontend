@@ -229,6 +229,38 @@ class ClaimChildBenefitConnectorSpec
       }
     }
 
+    "must return a failed future (Already In Payment Exception) when the server returns 422 with a code of PAYMENT_PRESENT_AFTER_FIRST_PAYMENT_INSTRUCTION" in {
+
+      val app = application
+
+      val responseJson = Json.obj(
+        "failures" -> Json.arr(
+          Json.obj(
+            "code" -> "PAYMENT_PRESENT_AFTER_FIRST_PAYMENT_INSTRUCTION",
+            "reason" -> "The remote endpoint has indicated that payment object should not be present if the first payment instruction has been sent."
+          )
+        )
+      )
+
+      running(app) {
+
+        val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
+
+        server.stubFor(
+          post(urlEqualTo("/claim-child-benefit/submit"))
+            .willReturn(
+              aResponse()
+                .withStatus(UNPROCESSABLE_ENTITY)
+                .withBody(responseJson.toString)
+            )
+        )
+
+        val result = connector.submitClaim(claim, correlationId).failed.futureValue
+
+        result mustBe an[AlreadyInPaymentException]
+      }
+    }
+
     "must return a failed future (Unprocessable Entity Exception) when the server returns 422 with no recognised code" in {
 
       val app = application
