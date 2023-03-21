@@ -2000,3 +2000,7 @@ declaration.p2 = We may take action towards you or ask you to pay money back if 
 declaration.p3.1 = You can
 declaration.p3.link.text = check your answers
 declaration.p3.2 = before sending your application.
+
+paidToExistingAccount.title = Your Child Benefit claim will be paid to your existing bank account
+paidToExistingAccount.heading = Your Child Benefit claim will be paid to your existing bank account
+paidToExistingAccount.p1 = All Child Benefit payments are paid into the same account. You are currently receiving Child Benefit payments so this new claim will be paid into the same account.
