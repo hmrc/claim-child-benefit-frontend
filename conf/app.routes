@@ -455,3 +455,4 @@ GET        /have-additional-information                         controllers.Incl
 POST       /have-additional-information                         controllers.IncludeAdditionalInformationController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /there-is-an-existing-claim                          controllers.SubmissionFailedExistingClaimController.onPageLoad()
+GET        /already-being-paid                                  controllers.SubmissionFailedAlreadyInPaymentController.onPageLoad()
