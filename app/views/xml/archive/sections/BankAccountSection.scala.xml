@@ -1,0 +1,13 @@
+@this(
+    line: Line
+)
+
+@(holder: BankAccountHolder, details: BankAccountDetails)(implicit messages: Messages)
+
+@line("pdf.sortCode", details.sortCode)
+
+@line("pdf.accountNumber", details.accountNumber)
+
+@line("pdf.accountHolder", messages(s"pdf.accountHolder.${holder.toString}"))
+
+@line("pdf.accountName", s"${details.firstName} ${details.lastName}")

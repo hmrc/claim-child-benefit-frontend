@@ -1,0 +1,138 @@
+
+@import views.xml.xml.archive.sections._
+
+@this(
+    mainHeader: MainHeader,
+    mainFooter: MainFooter,
+    line: Line,
+    eldestChildSection: EldestChildSection,
+    alwaysLivedInUk: AlwaysLivedInUk,
+    livedInUkAndAbroad: LivedInUkAndAbroad,
+    alwaysLivedAbroad: AlwaysLivedAbroad
+)
+
+@(model: JourneyModel)(implicit messages: Messages)
+
+<fo:page-sequence master-reference="main">
+
+    @mainHeader(isH1 = true)
+
+    @mainFooter()
+
+    <fo:flow flow-name="xsl-region-body" font-size="12pt" text-align="left">
+
+        <fo:block-container width="90%">
+            <fo:block>
+
+                <fo:block-container margin-bottom="1cm" wrap-option="wrap" page-break-after="always">
+
+                    <fo:block role="H2" id="personal-details" font-size="18pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.personalDetails")</fo:block>
+
+                    @line("pdf.nino", model.applicant.nationalInsuranceNumber.getOrElse(messages("pdf.notKnown")))
+
+                    @model.applicant.name.title.map { title =>
+                        @line("pdf.name.title", title.toUpperCase)
+                    }
+
+                    @line("pdf.name.last", model.applicant.name.lastName.toUpperCase)
+
+                    @line("pdf.name.first", model.applicant.name.firstName.toUpperCase)
+
+                    @model.applicant.name.middleNames.map { middleNames =>
+                        @line("pdf.name.middle", middleNames.toUpperCase)
+                    }
+
+                    @line("pdf.dateOfBirth", date(model.applicant.dateOfBirth))
+
+                    <fo:block margin-bottom="3mm">
+                        <fo:block font-weight="bold">@messages("pdf.currentAddress")</fo:block>
+                            @model.applicant.currentAddress.lines.map { line =>
+                                <fo:block width="8cm" wrap-option="wrap">@(line.toUpperCase)</fo:block>
+                            }
+                    </fo:block>
+
+                    @model.applicant.correspondenceAddress.map { address =>
+                        <fo:block margin-bottom="3mm">
+                            <fo:block font-weight="bold">@messages("pdf.correspondenceAddress")</fo:block>
+                                @address.lines.map { line =>
+                                    <fo:block width="8cm" wrap-option="wrap">@(line.toUpperCase)</fo:block>
+                                }
+                        </fo:block>
+                    }
+
+                    @line("pdf.nationality", model.applicant.nationalities.toList.map(_.name).mkString(" - "))
+
+                    @{model.applicant.residency match {
+                        case JourneyModel.Residency.AlwaysLivedInUk =>
+                            alwaysLivedInUk()
+
+                        case x: JourneyModel.Residency.LivedInUkAndAbroad =>
+                            livedInUkAndAbroad(x)
+
+                        case x: JourneyModel.Residency.AlwaysLivedAbroad =>
+                            alwaysLivedAbroad(x)
+                    }}
+
+                    @line("pdf.hmfOrCivilServant", booleanToYesNo(model.applicant.memberOfHMForcesOrCivilServantAbroad))
+
+                    @if(model.applicant.previousFamilyNames.nonEmpty) {
+                        <fo:block margin-bottom="3mm">
+                            <fo:block font-weight="bold">@messages("pdf.previousNames")</fo:block>
+                            @model.applicant.previousFamilyNames.map { name =>
+                                <fo:block width="8cm" wrap-option="wrap">@(name.lastName)</fo:block>
+                            }
+                        </fo:block>
+                    }
+
+                    @line("pdf.relationshipStatus", messages(s"pdf.relationshipStatus.${model.relationship.status.toString}"))
+
+                    @model.relationship.since.map { since =>
+                        @line(s"pdf.relationshipStatusDate.${model.relationship.status.toString}", date(since))
+                    }
+
+                    @model.benefits.map { benefits =>
+                        <fo:block margin-bottom="3mm">
+                            <fo:block font-weight="bold">@messages("pdf.benefits")</fo:block>
+                            @benefits.map { x =>
+                                <fo:block width="8cm" wrap-option="wrap">@messages(s"benefits.${x.toString}")</fo:block>
+                            }
+                        </fo:block>
+                    }
+
+                    @model.applicant.previousAddress.map { address =>
+                        @line("pdf.livedAtAddressOneYear", messages("site.no"))
+                        <fo:block margin-bottom="3mm">
+                            <fo:block font-weight="bold">@messages("pdf.previousAddress")</fo:block>
+                            @address.lines.map { x =>
+                                <fo:block width="8cm" wrap-option="wrap">@(x)</fo:block>
+                            }
+                        </fo:block>
+                    }.getOrElse {
+                        @if(model.applicant.nationalInsuranceNumber.isEmpty) {
+                            @line("pdf.livedAtAddressOneYear", messages("site.yes"))
+                        }
+                    }
+
+                    @line("pdf.phoneNumber", model.applicant.telephoneNumber)
+
+                    @line("pdf.currentlyReceiving", messages(s"pdf.currentlyReceiving.${model.applicant.currentlyReceivingChildBenefit.toString}"))
+
+                    @{model.paymentPreference match {
+                        case JourneyModel.PaymentPreference.DoNotPay(maybeEldestChild) =>
+                            maybeEldestChild.map(x => eldestChildSection(x))
+
+                        case JourneyModel.PaymentPreference.Weekly(_, maybeEldestChild) =>
+                            maybeEldestChild.map(x => eldestChildSection(x))
+
+                        case JourneyModel.PaymentPreference.EveryFourWeeks(_, maybeEldestChild) =>
+                            maybeEldestChild.map(x => eldestChildSection(x))
+
+                        case JourneyModel.PaymentPreference.ExistingAccount(eldestChild) =>
+                            eldestChildSection(eldestChild)
+                    }}
+                </fo:block-container>
+            </fo:block>
+        </fo:block-container>
+    </fo:flow>
+</fo:page-sequence>
+

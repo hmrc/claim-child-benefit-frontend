@@ -1,0 +1,7 @@
+@this(
+    line: Line
+)
+
+@(eldestChild: JourneyModel.EldestChild)(implicit messages: Messages)
+
+@line("pdf.wantToBePaid", messages("site.yes"))

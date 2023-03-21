@@ -1,0 +1,5 @@
+@this(line: Line)
+
+@()(implicit messages: Messages)
+
+@line("pdf.wantToBePaid", messages("site.no"))

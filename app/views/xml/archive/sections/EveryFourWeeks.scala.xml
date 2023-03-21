@@ -1,0 +1,17 @@
+@this(
+    line: Line,
+    bankAccountSection: BankAccountSection,
+    buildingSocietySection: BuildingSocietySection
+)
+
+@(accountDetails: Option[JourneyModel.AccountDetailsWithHolder])(implicit messages: Messages)
+
+@line("pdf.wantToBePaid", messages("site.yes"))
+
+@line("pdf.paymentFrequency", messages("pdf.paymentFrequency.everyFourWeeks"))
+
+@{accountDetails.map { details => details match {
+    case JourneyModel.BankAccountWithHolder(holder, details, _) => bankAccountSection(holder, details)
+    case JourneyModel.BuildingSocietyWithHolder(holder, details) => buildingSocietySection(holder, details)
+}}.getOrElse(line("pdf.applicantHasSuitableAccount", messages("site.no")))
+}
