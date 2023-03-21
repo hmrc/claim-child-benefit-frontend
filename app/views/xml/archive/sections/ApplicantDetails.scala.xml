@@ -3,7 +3,6 @@
 
 @this(
     mainHeader: MainHeader,
-    mainFooter: MainFooter,
     line: Line,
     eldestChildSection: EldestChildSection,
     alwaysLivedInUk: AlwaysLivedInUk,
@@ -17,8 +16,6 @@
 
     @mainHeader(isH1 = true)
 
-    @mainFooter()
-
     <fo:flow flow-name="xsl-region-body" font-size="12pt" text-align="left">
 
         <fo:block-container width="90%">
@@ -29,36 +26,6 @@
                     <fo:block role="H2" id="personal-details" font-size="18pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.personalDetails")</fo:block>
 
                     @line("pdf.nino", model.applicant.nationalInsuranceNumber.getOrElse(messages("pdf.notKnown")))
-
-                    @model.applicant.name.title.map { title =>
-                        @line("pdf.name.title", title.toUpperCase)
-                    }
-
-                    @line("pdf.name.last", model.applicant.name.lastName.toUpperCase)
-
-                    @line("pdf.name.first", model.applicant.name.firstName.toUpperCase)
-
-                    @model.applicant.name.middleNames.map { middleNames =>
-                        @line("pdf.name.middle", middleNames.toUpperCase)
-                    }
-
-                    @line("pdf.dateOfBirth", date(model.applicant.dateOfBirth))
-
-                    <fo:block margin-bottom="3mm">
-                        <fo:block font-weight="bold">@messages("pdf.currentAddress")</fo:block>
-                            @model.applicant.currentAddress.lines.map { line =>
-                                <fo:block width="8cm" wrap-option="wrap">@(line.toUpperCase)</fo:block>
-                            }
-                    </fo:block>
-
-                    @model.applicant.correspondenceAddress.map { address =>
-                        <fo:block margin-bottom="3mm">
-                            <fo:block font-weight="bold">@messages("pdf.correspondenceAddress")</fo:block>
-                                @address.lines.map { line =>
-                                    <fo:block width="8cm" wrap-option="wrap">@(line.toUpperCase)</fo:block>
-                                }
-                        </fo:block>
-                    }
 
                     @line("pdf.nationality", model.applicant.nationalities.toList.map(_.name).mkString(" - "))
 

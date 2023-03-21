@@ -26,22 +26,6 @@
                     <fo:bookmark-title>@messages("pdf.additionalInformation")</fo:bookmark-title>
                 </fo:bookmark>
             }
-            @if(model.anyDocumentsRequired) {
-                <fo:bookmark internal-destination="documents">
-                    <fo:bookmark-title>@messages("pdf.documents")</fo:bookmark-title>
-                </fo:bookmark>
-            }
-            <fo:bookmark internal-destination="declaration">
-                <fo:bookmark-title>@messages("pdf.declaration")</fo:bookmark-title>
-            </fo:bookmark>
         </fo:bookmark>
-        <fo:bookmark internal-destination="what-to-do-now">
-            <fo:bookmark-title>@messages("pdf.whatToDoNow")</fo:bookmark-title>
-        </fo:bookmark>
-        @if(model.anyDocumentsRequired) {
-            <fo:bookmark internal-destination="address-label">
-                <fo:bookmark-title>@messages("pdf.addressLabelSection")</fo:bookmark-title>
-            </fo:bookmark>
-        }
     </fo:bookmark>
 </fo:bookmark-tree>

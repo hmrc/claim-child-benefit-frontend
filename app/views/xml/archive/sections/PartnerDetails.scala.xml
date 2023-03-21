@@ -3,7 +3,6 @@
 
 @this(
     mainHeader: MainHeader,
-    mainFooter: MainFooter,
     line: Line
 )
 
@@ -12,8 +11,6 @@
 <fo:page-sequence master-reference="main">
 
     @mainHeader()
-
-    @mainFooter()
 
     <fo:flow flow-name="xsl-region-body" font-size="12pt" text-align="left">
 
