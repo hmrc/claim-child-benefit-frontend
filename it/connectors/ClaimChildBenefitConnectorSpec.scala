@@ -1,10 +1,11 @@
 package connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock._
+import com.github.tomakehurst.wiremock.http.Fault
 import connectors.ClaimChildBenefitConnector._
 import generators.ModelGenerators
 import models.domain._
-import models.{AdultName, CheckLimitResponse, DesignatoryDetails, Done, NPSAddress}
+import models.{AdultName, CheckLimitResponse, DesignatoryDetails, Done, NPSAddress, SupplementaryMetadata}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -19,7 +20,9 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 
-import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
+import java.time.{LocalDate, LocalDateTime, ZoneOffset}
 import java.util.UUID
 
 class ClaimChildBenefitConnectorSpec
@@ -35,11 +38,13 @@ class ClaimChildBenefitConnectorSpec
 
   implicit private lazy val hc: HeaderCarrier = HeaderCarrier()
 
-  private def application: Application =
+  private lazy val app: Application =
     new GuiceApplicationBuilder()
-      .configure("microservice.services.claim-child-benefit.port" -> server.port)
+      .configure(
+        "microservice.services.claim-child-benefit.port" -> server.port,
+        "internal-auth.token" -> "authKey"
+      )
       .build()
-
 
   private val happyDesignatoryDetailsJson ="""{
       |"realName": {"title": "Mrs", "firstName": "foo", "middleNames": "baz", "lastName": "bar"},
@@ -54,27 +59,22 @@ class ClaimChildBenefitConnectorSpec
     dateOfBirth = LocalDate.of(2000, 2, 1)
   )
 
+  private lazy val connector: ClaimChildBenefitConnector = app.injector.instanceOf[ClaimChildBenefitConnector]
+
   ".designatoryDetails" - {
 
     "when valid json is returned" - {
 
       "must return a designatory details model" in {
 
-        val app = application
+        server.stubFor(
+          get(urlEqualTo("/claim-child-benefit/designatory-details"))
+            .willReturn(ok(happyDesignatoryDetailsJson))
+        )
 
-        running(app) {
+        val result = connector.designatoryDetails().futureValue
 
-          val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
-
-          server.stubFor(
-            get(urlEqualTo("/claim-child-benefit/designatory-details"))
-              .willReturn(ok(happyDesignatoryDetailsJson))
-          )
-
-          val result = connector.designatoryDetails().futureValue
-
-          result mustEqual happyDesignatoryDetailsModel
-        }
+        result mustEqual happyDesignatoryDetailsModel
       }
     }
 
@@ -82,21 +82,14 @@ class ClaimChildBenefitConnectorSpec
 
       "must return a failed future" in {
 
-        val app = application
+        server.stubFor(
+          get(urlEqualTo("/claim-child-benefit/designatory-details"))
+            .willReturn(aResponse().withStatus(500))
+        )
 
-        running(app) {
+        val result = connector.designatoryDetails()
 
-          val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
-
-          server.stubFor(
-            get(urlEqualTo("/claim-child-benefit/designatory-details"))
-              .willReturn(aResponse().withStatus(500))
-          )
-
-          val result = connector.designatoryDetails()
-
-          result.failed.futureValue mustBe an[Exception]
-        }
+        result.failed.futureValue mustBe an[Exception]
       }
     }
   }
@@ -128,46 +121,30 @@ class ClaimChildBenefitConnectorSpec
 
     "must return Done when the server returns CREATED" in {
 
-      val app = application
+      server.stubFor(
+        post(urlEqualTo("/claim-child-benefit/submit"))
+          .withHeader("CorrelationId", equalTo(correlationId.toString))
+          .willReturn(created())
+      )
 
-      running(app) {
+      val result = connector.submitClaim(claim, correlationId).futureValue
 
-        val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
-
-        server.stubFor(
-          post(urlEqualTo("/claim-child-benefit/submit"))
-            .withHeader("CorrelationId", equalTo(correlationId.toString))
-            .willReturn(created())
-        )
-
-        val result = connector.submitClaim(claim, correlationId).futureValue
-
-        result mustEqual Done
-      }
+      result mustEqual Done
     }
 
     "must return a failed future (Bad Request Exception) when the server returns 400" in {
 
-      val app = application
+      server.stubFor(
+        post(urlEqualTo("/claim-child-benefit/submit"))
+          .willReturn(aResponse().withStatus(BAD_REQUEST))
+      )
 
-      running(app) {
+      val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
-        val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
-
-        server.stubFor(
-          post(urlEqualTo("/claim-child-benefit/submit"))
-            .willReturn(aResponse().withStatus(BAD_REQUEST))
-        )
-
-        val result = connector.submitClaim(claim, correlationId).failed.futureValue
-
-        result mustBe a[BadRequestException]
-      }
+      result mustBe a[BadRequestException]
     }
 
     "must return a failed future (Invalid Claim State Exception) when the server returns 422 with a code of INVALID_CLAIM_STATE" in {
-
-      val app = application
 
       val responseJson = Json.obj(
         "failures" -> Json.arr(
@@ -178,28 +155,21 @@ class ClaimChildBenefitConnectorSpec
         )
       )
 
-      running(app) {
+      server.stubFor(
+        post(urlEqualTo("/claim-child-benefit/submit"))
+          .willReturn(
+            aResponse()
+              .withStatus(UNPROCESSABLE_ENTITY)
+              .withBody(responseJson.toString)
+          )
+      )
 
-        val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
+      val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
-        server.stubFor(
-          post(urlEqualTo("/claim-child-benefit/submit"))
-            .willReturn(
-              aResponse()
-                .withStatus(UNPROCESSABLE_ENTITY)
-                .withBody(responseJson.toString)
-            )
-        )
-
-        val result = connector.submitClaim(claim, correlationId).failed.futureValue
-
-        result mustBe an[InvalidClaimStateException]
-      }
+      result mustBe an[InvalidClaimStateException]
     }
 
     "must return a failed future (Invalid Account State Exception) when the server returns 422 with a code of INVALID_ACCOUNT_STATE" in {
-
-      val app = application
 
       val responseJson = Json.obj(
         "failures" -> Json.arr(
@@ -210,28 +180,21 @@ class ClaimChildBenefitConnectorSpec
         )
       )
 
-      running(app) {
+      server.stubFor(
+        post(urlEqualTo("/claim-child-benefit/submit"))
+          .willReturn(
+            aResponse()
+              .withStatus(UNPROCESSABLE_ENTITY)
+              .withBody(responseJson.toString)
+          )
+      )
 
-        val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
+      val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
-        server.stubFor(
-          post(urlEqualTo("/claim-child-benefit/submit"))
-            .willReturn(
-              aResponse()
-                .withStatus(UNPROCESSABLE_ENTITY)
-                .withBody(responseJson.toString)
-            )
-        )
-
-        val result = connector.submitClaim(claim, correlationId).failed.futureValue
-
-        result mustBe an[InvalidAccountStateException]
-      }
+      result mustBe an[InvalidAccountStateException]
     }
 
     "must return a failed future (Already In Payment Exception) when the server returns 422 with a code of PAYMENT_PRESENT_AFTER_FIRST_PAYMENT_INSTRUCTION" in {
-
-      val app = application
 
       val responseJson = Json.obj(
         "failures" -> Json.arr(
@@ -242,28 +205,21 @@ class ClaimChildBenefitConnectorSpec
         )
       )
 
-      running(app) {
+      server.stubFor(
+        post(urlEqualTo("/claim-child-benefit/submit"))
+          .willReturn(
+            aResponse()
+              .withStatus(UNPROCESSABLE_ENTITY)
+              .withBody(responseJson.toString)
+          )
+      )
 
-        val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
+      val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
-        server.stubFor(
-          post(urlEqualTo("/claim-child-benefit/submit"))
-            .willReturn(
-              aResponse()
-                .withStatus(UNPROCESSABLE_ENTITY)
-                .withBody(responseJson.toString)
-            )
-        )
-
-        val result = connector.submitClaim(claim, correlationId).failed.futureValue
-
-        result mustBe an[AlreadyInPaymentException]
-      }
+      result mustBe an[AlreadyInPaymentException]
     }
 
     "must return a failed future (Unprocessable Entity Exception) when the server returns 422 with no recognised code" in {
-
-      val app = application
 
       val responseJson = Json.obj(
         "failures" -> Json.arr(
@@ -274,118 +230,133 @@ class ClaimChildBenefitConnectorSpec
         )
       )
 
-      running(app) {
+      server.stubFor(
+        post(urlEqualTo("/claim-child-benefit/submit"))
+          .willReturn(
+            aResponse()
+              .withStatus(UNPROCESSABLE_ENTITY)
+              .withBody(responseJson.toString)
+          )
+      )
 
-        val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
+      val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
-        server.stubFor(
-          post(urlEqualTo("/claim-child-benefit/submit"))
-            .willReturn(
-              aResponse()
-                .withStatus(UNPROCESSABLE_ENTITY)
-                .withBody(responseJson.toString)
-            )
-        )
-
-        val result = connector.submitClaim(claim, correlationId).failed.futureValue
-
-        result mustBe an[UnprocessableEntityException]
-      }
+      result mustBe an[UnprocessableEntityException]
     }
 
     "must return a failed future (Unrecognised Response Exception) when the server returns 422 but we cannon parse the response body" in {
-
-      val app = application
 
       val responseJson = Json.obj(
         "foo" -> "bar"
       )
 
-      running(app) {
+      server.stubFor(
+        post(urlEqualTo("/claim-child-benefit/submit"))
+          .willReturn(
+            aResponse()
+              .withStatus(UNPROCESSABLE_ENTITY)
+              .withBody(responseJson.toString)
+          )
+      )
 
-        val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
+      val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
-        server.stubFor(
-          post(urlEqualTo("/claim-child-benefit/submit"))
-            .willReturn(
-              aResponse()
-                .withStatus(UNPROCESSABLE_ENTITY)
-                .withBody(responseJson.toString)
-            )
-        )
-
-        val result = connector.submitClaim(claim, correlationId).failed.futureValue
-
-        result mustBe an[UnprocessableEntityException]
-      }
+      result mustBe an[UnprocessableEntityException]
     }
 
     "must return a failed future (Server Error) when the server returns 500" in {
 
-      val app = application
+      server.stubFor(
+        post(urlEqualTo("/claim-child-benefit/submit"))
+          .willReturn(
+            aResponse()
+              .withStatus(INTERNAL_SERVER_ERROR)
+          )
+      )
 
-      running(app) {
+      val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
-        val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
-
-        server.stubFor(
-          post(urlEqualTo("/claim-child-benefit/submit"))
-            .willReturn(
-              aResponse()
-                .withStatus(INTERNAL_SERVER_ERROR)
-            )
-        )
-
-        val result = connector.submitClaim(claim, correlationId).failed.futureValue
-
-        result mustBe a[ServerErrorException]
-      }
+      result mustBe a[ServerErrorException]
     }
 
     "must return a failed future (Service Unavailable) when the server returns 503" in {
 
-      val app = application
+      server.stubFor(
+        post(urlEqualTo("/claim-child-benefit/submit"))
+          .willReturn(
+            aResponse()
+              .withStatus(SERVICE_UNAVAILABLE)
+          )
+      )
 
-      running(app) {
+      val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
-        val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
-
-        server.stubFor(
-          post(urlEqualTo("/claim-child-benefit/submit"))
-            .willReturn(
-              aResponse()
-                .withStatus(SERVICE_UNAVAILABLE)
-            )
-        )
-
-        val result = connector.submitClaim(claim, correlationId).failed.futureValue
-
-        result mustBe a[ServiceUnavailableException]
-      }
+      result mustBe a[ServiceUnavailableException]
     }
 
     "must return a failed future (Unrecognised Response) when the server returns an unexpected code" in {
 
-      val app = application
-
       val status = Gen.oneOf(UNAUTHORIZED, FORBIDDEN, REQUEST_TIMEOUT, CONFLICT, BAD_GATEWAY).sample.value
 
-      running(app) {
+      server.stubFor(
+        post(urlEqualTo("/claim-child-benefit/submit"))
+          .willReturn(
+            aResponse()
+              .withStatus(status)
+          )
+      )
 
-        val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
+      val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
-        server.stubFor(
-          post(urlEqualTo("/claim-child-benefit/submit"))
-            .willReturn(
-              aResponse()
-                .withStatus(status)
-            )
-        )
+      result mustBe an[UnrecognisedResponseException]
+    }
+  }
 
-        val result = connector.submitClaim(claim, correlationId).failed.futureValue
+  ".submitSupplementaryData" - {
 
-        result mustBe an[UnrecognisedResponseException]
-      }
+    val submissionDate = LocalDateTime.of(2022, 3, 2, 12, 30, 45, 123456)
+    val expectedSubmissionDate = DateTimeFormatter.ISO_DATE_TIME.format(submissionDate.truncatedTo(ChronoUnit.MILLIS))
+    val nino = arbitrary[Nino].sample.value
+    val correlationId = "correlationId"
+    val hc = HeaderCarrier()
+    val pdf = "asdf".getBytes("UTF-8")
+    val metadata = SupplementaryMetadata(
+      nino = nino.value,
+      correlationId = correlationId,
+      submissionDate = submissionDate.toInstant(ZoneOffset.UTC)
+    )
+
+    "must return Done when the server returns ACCEPTED" in {
+
+      server.stubFor(
+        post(urlEqualTo("/claim-child-benefit/supplementary-data"))
+          .withHeader(AUTHORIZATION, equalTo("authKey"))
+          .withHeader(USER_AGENT, equalTo("claim-child-benefit-frontend"))
+          .withMultipartRequestBody(aMultipart().withName("metadata.nino").withBody(equalTo(nino.value)))
+          .withMultipartRequestBody(aMultipart().withName("metadata.submissionDate").withBody(equalTo(expectedSubmissionDate)))
+          .withMultipartRequestBody(aMultipart().withName("metadata.correlationId").withBody(equalTo(correlationId)))
+          .withMultipartRequestBody(aMultipart().withName("file").withBody(binaryEqualTo(pdf)))
+          .willReturn(
+            aResponse()
+              .withStatus(ACCEPTED)
+              .withBody(Json.stringify(Json.obj("id" -> "foobar")))
+          )
+      )
+
+      connector.submitSupplementaryData(pdf, metadata)(hc).futureValue
+    }
+
+    "must fail when the server returns another status" in {
+
+      server.stubFor(
+        post(urlEqualTo("/claim-child-benefit/supplementary-data"))
+          .willReturn(
+            aResponse()
+              .withStatus(INTERNAL_SERVER_ERROR)
+          )
+      )
+
+      connector.submitSupplementaryData(pdf, metadata)(hc).failed.futureValue
     }
   }
 
@@ -393,37 +364,24 @@ class ClaimChildBenefitConnectorSpec
 
     "must return a result when the server returns one" in {
 
-      val app = application
+      val response = CheckLimitResponse(limitReached = true)
 
-      running(app) {
+      server.stubFor(
+        get(urlEqualTo("/claim-child-benefit/throttle/check"))
+          .willReturn(aResponse().withStatus(OK).withBody(Json.toJson(response).toString))
+      )
 
-        val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
-        val response = CheckLimitResponse(limitReached = true)
-
-        server.stubFor(
-          get(urlEqualTo("/claim-child-benefit/throttle/check"))
-            .willReturn(aResponse().withStatus(OK).withBody(Json.toJson(response).toString))
-        )
-
-        connector.checkThrottleLimit().futureValue mustEqual response
-      }
+      connector.checkThrottleLimit().futureValue mustEqual response
     }
 
     "must fail when the server returns an error" in {
 
-      val app = application
+      server.stubFor(
+        get(urlEqualTo("/claim-child-benefit/throttle/check"))
+          .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
+      )
 
-      running(app) {
-
-        val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
-
-        server.stubFor(
-          get(urlEqualTo("/claim-child-benefit/throttle/check"))
-            .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
-        )
-
-        connector.checkThrottleLimit().failed.futureValue
-      }
+      connector.checkThrottleLimit().failed.futureValue
     }
   }
 
@@ -431,35 +389,22 @@ class ClaimChildBenefitConnectorSpec
 
     "must return Done when the server responds with OK" in {
 
-      val app = application
-      running(app) {
+      server.stubFor(
+        post(urlEqualTo("/claim-child-benefit/throttle/increment"))
+          .willReturn(aResponse().withStatus(OK))
+      )
 
-        val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
-
-        server.stubFor(
-          post(urlEqualTo("/claim-child-benefit/throttle/increment"))
-            .willReturn(aResponse().withStatus(OK))
-        )
-
-        connector.incrementThrottleCount().futureValue mustEqual Done
-      }
+      connector.incrementThrottleCount().futureValue mustEqual Done
     }
 
     "must fail when the server returns an error" in {
 
-      val app = application
+      server.stubFor(
+        get(urlEqualTo("/claim-child-benefit/throttle/incremnt"))
+          .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
+      )
 
-      running(app) {
-
-        val connector = app.injector.instanceOf[ClaimChildBenefitConnector]
-
-        server.stubFor(
-          get(urlEqualTo("/claim-child-benefit/throttle/incremnt"))
-            .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
-        )
-
-        connector.incrementThrottleCount().failed.futureValue
-      }
+      connector.incrementThrottleCount().failed.futureValue
     }
   }
 }
