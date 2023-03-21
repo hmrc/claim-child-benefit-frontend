@@ -315,7 +315,7 @@ class ClaimChildBenefitConnectorSpec
   ".submitSupplementaryData" - {
 
     val submissionDate = LocalDateTime.of(2022, 3, 2, 12, 30, 45, 123456)
-    val expectedSubmissionDate = DateTimeFormatter.ISO_DATE_TIME.format(submissionDate.truncatedTo(ChronoUnit.MILLIS))
+    val expectedSubmissionDate = DateTimeFormatter.ISO_DATE_TIME.format(submissionDate.truncatedTo(ChronoUnit.SECONDS))
     val nino = arbitrary[Nino].sample.value
     val correlationId = "correlationId"
     val hc = HeaderCarrier()

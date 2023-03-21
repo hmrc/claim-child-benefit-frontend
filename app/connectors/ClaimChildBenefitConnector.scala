@@ -72,7 +72,7 @@ class ClaimChildBenefitConnector @Inject()(
     val formattedSubmissionDate =
       DateTimeFormatter.ISO_DATE_TIME.format(
         LocalDateTime.ofInstant(
-          metadata.submissionDate.truncatedTo(ChronoUnit.MILLIS),
+          metadata.submissionDate.truncatedTo(ChronoUnit.SECONDS),
           ZoneOffset.UTC
         )
       )
