@@ -10,8 +10,6 @@
 
 @line("pdf.paymentFrequency", messages("pdf.paymentFrequency.everyFourWeeks"))
 
-@line("pdf.wantToBePaidToExistingAccount", messages("site.no"))
-
 @{accountDetails.map { details => details match {
     case JourneyModel.BankAccountWithHolder(holder, details, _) => bankAccountSection(holder, details)
     case JourneyModel.BuildingSocietyWithHolder(holder, details) => buildingSocietySection(holder, details)

@@ -5,6 +5,3 @@
 @(eldestChild: JourneyModel.EldestChild)(implicit messages: Messages)
 
 @line("pdf.wantToBePaid", messages("site.yes"))
-
-
-@line("pdf.wantToBePaidToExistingAccount", messages("site.yes"))
