@@ -45,8 +45,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
           JourneyModel.EldestChild(
             arbitrary[models.ChildName].sample.value,
             LocalDate.now
-          ),
-          Gen.oneOf(models.PaymentFrequency.values).sample.value
+          )
         ))
       )
     }.sample.value

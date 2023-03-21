@@ -63,14 +63,13 @@ object EveryFourWeeks {
   }
 }
 
-final case class ExistingAccount(eldestChild: EldestChild, frequency: String) extends PaymentPreference
+final case class ExistingAccount(eldestChild: EldestChild) extends PaymentPreference
 
 object ExistingAccount {
   implicit lazy val writes: Writes[ExistingAccount] = Writes {
     x =>
       Json.obj(
         "wantsToBePaid" -> true,
-        "frequency" -> x.frequency,
         "account" -> "use existing account",
         "eldestChild" -> Json.toJson(x.eldestChild)
       )
@@ -114,8 +113,8 @@ object PaymentPreference {
           eldestChild.map(EldestChild.build)
         )
 
-      case JourneyModel.PaymentPreference.ExistingAccount(eldestChild, frequency) =>
-        ExistingAccount(EldestChild.build(eldestChild), frequency.toString)
+      case JourneyModel.PaymentPreference.ExistingAccount(eldestChild) =>
+        ExistingAccount(EldestChild.build(eldestChild))
 
       case JourneyModel.PaymentPreference.DoNotPay(eldestChild) =>
         DoNotPay(eldestChild.map(EldestChild.build))

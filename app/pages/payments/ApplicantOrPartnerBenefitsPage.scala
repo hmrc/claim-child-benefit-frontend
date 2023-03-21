@@ -42,10 +42,7 @@ case object ApplicantOrPartnerBenefitsPage extends QuestionPage[Set[Benefits]] {
         PaymentFrequencyPage
 
       case _ =>
-        answers.get(CurrentlyReceivingChildBenefitPage).map {
-          case GettingPayments => WantToBePaidToExistingAccountPage
-          case _ => ApplicantHasSuitableAccountPage
-        }.orRecover
+        ApplicantHasSuitableAccountPage
     }.orRecover
 
   override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, originalAnswers: UserAnswers, updatedAnswers: UserAnswers): Page = {

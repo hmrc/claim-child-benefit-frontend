@@ -34,8 +34,5 @@ case object PaymentFrequencyPage extends QuestionPage[PaymentFrequency] {
     routes.PaymentFrequencyController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    answers.get(CurrentlyReceivingChildBenefitPage).map {
-      case GettingPayments                  => WantToBePaidToExistingAccountPage
-      case NotGettingPayments | NotClaiming => ApplicantHasSuitableAccountPage
-    }.orRecover
+    ApplicantHasSuitableAccountPage
 }

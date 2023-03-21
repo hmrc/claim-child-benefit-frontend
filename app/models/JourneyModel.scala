@@ -127,7 +127,7 @@ object JourneyModel {
 
     final case class Weekly(accountDetails: Option[AccountDetailsWithHolder], eldestChild: Option[EldestChild]) extends PaymentPreference
     final case class EveryFourWeeks(accountDetails: Option[AccountDetailsWithHolder], eldestChild: Option[EldestChild]) extends PaymentPreference
-    final case class ExistingAccount(eldestChild: EldestChild, frequency: PaymentFrequency) extends PaymentPreference {
+    final case class ExistingAccount(eldestChild: EldestChild) extends PaymentPreference {
       override val accountDetails: Option[AccountDetailsWithHolder] = None
     }
     final case class DoNotPay(eldestChild: Option[EldestChild]) extends PaymentPreference {

@@ -356,9 +356,7 @@ class JourneyModelProviderSpec
         data.value mustEqual expectedModel
       }
 
-      "when the applicant is already receiving child benefit" - {
-
-        "and wants to be paid to their existing account" in {
+      "when the applicant is already receiving child benefit" in {
 
           when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
 
@@ -366,121 +364,20 @@ class JourneyModelProviderSpec
             .withMinimalApplicantDetails
             .withOneChild
             .set(RelationshipStatusPage, Single).success.value
-            .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
-            .set(ApplicantBenefitsPage, applicantBenefits).success.value
             .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
             .set(EldestChildNamePage, eldestChildName).success.value
             .set(EldestChildDateOfBirthPage, now).success.value
+            .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
             .set(WantToBePaidPage, true).success.value
-            .set(ApplicantBenefitsPage, applicantBenefits).success.value
-            .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
-            .set(WantToBePaidToExistingAccountPage, true).success.value
             .set(IncludeAdditionalInformationPage, false).success.value
 
           val expectedPaymentPreference = JourneyModel.PaymentPreference.ExistingAccount(
-            JourneyModel.EldestChild(eldestChildName, now),
-            PaymentFrequency.Weekly
+            JourneyModel.EldestChild(eldestChildName, now)
           )
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
           errors mustBe empty
           data.value.paymentPreference mustEqual expectedPaymentPreference
-        }
-
-        "and does not want to be paid into their existing account" - {
-
-          "and has a suitable account" in {
-
-            when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
-
-            val answers = UserAnswers("id")
-              .withMinimalApplicantDetails
-              .withOneChild
-              .set(RelationshipStatusPage, Single).success.value
-              .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
-              .set(ApplicantBenefitsPage, applicantBenefits).success.value
-              .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
-              .set(EldestChildNamePage, eldestChildName).success.value
-              .set(EldestChildDateOfBirthPage, now).success.value
-              .set(WantToBePaidPage, true).success.value
-              .set(ApplicantBenefitsPage, applicantBenefits).success.value
-              .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks).success.value
-              .set(WantToBePaidToExistingAccountPage, false).success.value
-              .set(ApplicantHasSuitableAccountPage, true).success.value
-              .set(BankAccountHolderPage, bankAccountHolder).success.value
-              .set(AccountTypePage, AccountType.SortCodeAccountNumber).success.value
-              .set(BankAccountDetailsPage, bankAccountDetails).success.value
-              .set(IncludeAdditionalInformationPage, false).success.value
-
-            val expectedPaymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(
-              accountDetails = Some(JourneyModel.BankAccountWithHolder(bankAccountHolder, bankAccountDetails, None)),
-              eldestChild = Some(JourneyModel.EldestChild(eldestChildName, now))
-            )
-
-            val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
-
-            errors mustBe empty
-            data.value.paymentPreference mustEqual expectedPaymentPreference
-            data.value.benefits.value mustEqual applicantBenefits
-          }
-
-          "and does not have a suitable account" in {
-
-            when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
-
-            val answers = UserAnswers("id")
-              .withMinimalApplicantDetails
-              .withOneChild
-              .set(RelationshipStatusPage, Single).success.value
-              .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
-              .set(ApplicantBenefitsPage, applicantBenefits).success.value
-              .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
-              .set(EldestChildNamePage, eldestChildName).success.value
-              .set(EldestChildDateOfBirthPage, now).success.value
-              .set(WantToBePaidPage, true).success.value
-              .set(ApplicantBenefitsPage, applicantBenefits).success.value
-              .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
-              .set(WantToBePaidToExistingAccountPage, false).success.value
-              .set(ApplicantHasSuitableAccountPage, false).success.value
-              .set(IncludeAdditionalInformationPage, false).success.value
-
-            val expectedPaymentPreference = JourneyModel.PaymentPreference.Weekly(
-              accountDetails = None,
-              eldestChild = Some(JourneyModel.EldestChild(eldestChildName, now))
-            )
-
-            val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
-
-            errors mustBe empty
-            data.value.paymentPreference mustEqual expectedPaymentPreference
-          }
-
-          "and does not want to be paid" in {
-
-            when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
-
-            val answers = UserAnswers("id")
-              .withMinimalApplicantDetails
-              .withOneChild
-              .set(RelationshipStatusPage, Single).success.value
-              .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
-              .set(ApplicantBenefitsPage, applicantBenefits).success.value
-              .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
-              .set(EldestChildNamePage, eldestChildName).success.value
-              .set(EldestChildDateOfBirthPage, now).success.value
-              .set(WantToBePaidPage, false).success.value
-              .set(IncludeAdditionalInformationPage, false).success.value
-
-            val expectedPaymentPreference = JourneyModel.PaymentPreference.DoNotPay(
-              Some(JourneyModel.EldestChild(eldestChildName, now))
-            )
-
-            val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
-
-            errors mustBe empty
-            data.value.paymentPreference mustEqual expectedPaymentPreference
-          }
-        }
       }
 
       "when the applicant is claiming Child Benefit but not getting payments" - {
@@ -2664,71 +2561,6 @@ class JourneyModelProviderSpec
           data mustBe empty
         }
 
-        "and they want to be paid but their benefits details are missing" in {
-
-          when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
-
-          val answers = UserAnswers("id")
-            .withMinimalApplicantDetails
-            .withOneChild
-            .withMinimalSingleIncomeDetails
-            .set(RelationshipStatusPage, Single).success.value
-            .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
-            .set(EldestChildNamePage, eldestChildName).success.value
-            .set(EldestChildDateOfBirthPage, now).success.value
-            .set(WantToBePaidPage, true).success.value
-            .set(IncludeAdditionalInformationPage, false).success.value
-
-          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
-
-          errors.value.toChain.toList must contain theSameElementsAs Seq(ApplicantBenefitsPage, WantToBePaidToExistingAccountPage)
-          data mustBe empty
-        }
-
-        "and they want to be paid but their or their partner's benefits details are missing" in {
-
-          when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
-
-          val answers = UserAnswers("id")
-            .withMinimalApplicantDetails
-            .withOneChild
-            .withMinimalCoupleIncomeDetails
-            .withMinimalPartnerDetails
-            .set(RelationshipStatusPage, Married).success.value
-            .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
-            .set(EldestChildNamePage, eldestChildName).success.value
-            .set(EldestChildDateOfBirthPage, now).success.value
-            .set(WantToBePaidPage, true).success.value
-            .set(IncludeAdditionalInformationPage, false).success.value
-
-          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
-
-          errors.value.toChain.toList must contain theSameElementsAs Seq(ApplicantOrPartnerBenefitsPage, WantToBePaidToExistingAccountPage)
-          data mustBe empty
-        }
-
-        "and whether they want to be paid to their existing account is missing" in {
-
-          when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
-
-          val answers = UserAnswers("id")
-            .withMinimalApplicantDetails
-            .withOneChild
-            .withMinimalSingleIncomeDetails
-            .set(RelationshipStatusPage, Single).success.value
-            .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
-            .set(EldestChildNamePage, eldestChildName).success.value
-            .set(EldestChildDateOfBirthPage, now).success.value
-            .set(WantToBePaidPage, true).success.value
-            .set(ApplicantBenefitsPage, applicantBenefits).success.value
-            .set(IncludeAdditionalInformationPage, false).success.value
-
-          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
-
-          errors.value.toChain.toList must contain only WantToBePaidToExistingAccountPage
-          data mustBe empty
-        }
-
         "and their eldest child's details are missing" in {
 
           when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
@@ -2740,8 +2572,6 @@ class JourneyModelProviderSpec
             .set(RelationshipStatusPage, Single).success.value
             .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
             .set(WantToBePaidPage, true).success.value
-            .set(ApplicantBenefitsPage, applicantBenefits).success.value
-            .set(WantToBePaidToExistingAccountPage, true).success.value
             .set(IncludeAdditionalInformationPage, false).success.value
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -2751,53 +2581,6 @@ class JourneyModelProviderSpec
             EldestChildDateOfBirthPage
           )
 
-          data mustBe empty
-        }
-
-        "and they do not want to be paid to their existing account but whether they have a suitable account is missing" in {
-
-          when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
-
-          val answers = UserAnswers("id")
-            .withMinimalApplicantDetails
-            .withOneChild
-            .withMinimalSingleIncomeDetails
-            .set(RelationshipStatusPage, Single).success.value
-            .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
-            .set(EldestChildNamePage, eldestChildName).success.value
-            .set(EldestChildDateOfBirthPage, now).success.value
-            .set(WantToBePaidPage, true).success.value
-            .set(ApplicantBenefitsPage, applicantBenefits).success.value
-            .set(WantToBePaidToExistingAccountPage, false).success.value
-            .set(IncludeAdditionalInformationPage, false).success.value
-
-          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
-
-          errors.value.toChain.toList must contain only ApplicantHasSuitableAccountPage
-          data mustBe empty
-        }
-
-        "and they do not want to be paid to their existing account but the account details are missing" in {
-
-          when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
-
-          val answers = UserAnswers("id")
-            .withMinimalApplicantDetails
-            .withOneChild
-            .withMinimalSingleIncomeDetails
-            .set(RelationshipStatusPage, Single).success.value
-            .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
-            .set(EldestChildNamePage, eldestChildName).success.value
-            .set(EldestChildDateOfBirthPage, now).success.value
-            .set(WantToBePaidPage, true).success.value
-            .set(ApplicantBenefitsPage, applicantBenefits).success.value
-            .set(WantToBePaidToExistingAccountPage, false).success.value
-            .set(ApplicantHasSuitableAccountPage, true).success.value
-            .set(IncludeAdditionalInformationPage, false).success.value
-
-          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
-
-          errors.value.toChain.toList must contain only AccountTypePage
           data mustBe empty
         }
       }

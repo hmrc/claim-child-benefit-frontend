@@ -36,63 +36,70 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
   private def adultName = arbitrary[AdultName].sample.value
   private def nationality = Gen.oneOf(Nationality.allNationalities).sample.value
   private def bankDetails = arbitrary[BankAccountDetails].sample.value
+  private def buildingSocietyDetails = arbitrary[BuildingSocietyDetails].sample.value
   private def country = Gen.oneOf(Country.internationalCountries).sample.value
+  private def accountType = Gen.oneOf(AccountType.values).sample.value
 
   private val setFullPaymentDetailsSingle: JourneyStep[Unit] = journeyOf(
+    setUserAnswerTo(AccountTypePage, accountType),
     setUserAnswerTo(ApplicantIncomePage, Income.BetweenThresholds),
     setUserAnswerTo(WantToBePaidPage, true),
     setUserAnswerTo(ApplicantBenefitsPage, Benefits.qualifyingBenefits),
     setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
-    setUserAnswerTo(WantToBePaidToExistingAccountPage, false),
     setUserAnswerTo(ApplicantHasSuitableAccountPage, true),
     setUserAnswerTo(BankAccountHolderPage, BankAccountHolder.Applicant),
-    setUserAnswerTo(BankAccountDetailsPage, bankDetails)
+    setUserAnswerTo(BankAccountDetailsPage, bankDetails),
+    setUserAnswerTo(BuildingSocietyDetailsPage, buildingSocietyDetails)
   )
 
   private val setFullPaymentDetailsPartner: JourneyStep[Unit] = journeyOf(
+    setUserAnswerTo(AccountTypePage, accountType),
     setUserAnswerTo(ApplicantOrPartnerIncomePage, Income.BetweenThresholds),
     setUserAnswerTo(WantToBePaidPage, true),
     setUserAnswerTo(ApplicantOrPartnerBenefitsPage, Benefits.qualifyingBenefits),
     setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
-    setUserAnswerTo(WantToBePaidToExistingAccountPage, false),
     setUserAnswerTo(ApplicantHasSuitableAccountPage, true),
     setUserAnswerTo(BankAccountHolderPage, BankAccountHolder.Applicant),
-    setUserAnswerTo(BankAccountDetailsPage, bankDetails)
+    setUserAnswerTo(BankAccountDetailsPage, bankDetails),
+    setUserAnswerTo(BuildingSocietyDetailsPage, buildingSocietyDetails)
   )
 
   private val paymentDetailsMustHaveBeenRemoved: JourneyStep[Unit] = journeyOf(
+    answersMustNotContain(AccountTypePage),
     answersMustNotContain(ApplicantIncomePage),
     answersMustNotContain(ApplicantOrPartnerIncomePage),
     answersMustNotContain(WantToBePaidPage),
     answersMustNotContain(ApplicantBenefitsPage),
     answersMustNotContain(ApplicantOrPartnerBenefitsPage),
     answersMustNotContain(PaymentFrequencyPage),
-    answersMustNotContain(WantToBePaidToExistingAccountPage),
     answersMustNotContain(ApplicantHasSuitableAccountPage),
     answersMustNotContain(BankAccountHolderPage),
-    answersMustNotContain(BankAccountDetailsPage)
+    answersMustNotContain(BankAccountDetailsPage),
+    answersMustNotContain(BuildingSocietyDetailsPage)
   )
 
   private val paymentDetailsMustRemainSingle: JourneyStep[Unit] = journeyOf(
+    answersMustContain(AccountTypePage),
     answersMustContain(ApplicantIncomePage),
     answersMustContain(WantToBePaidPage),
     answersMustContain(ApplicantBenefitsPage),
     answersMustContain(PaymentFrequencyPage),
-    answersMustContain(WantToBePaidToExistingAccountPage),
     answersMustContain(ApplicantHasSuitableAccountPage),
     answersMustContain(BankAccountHolderPage),
-    answersMustContain(BankAccountDetailsPage)
+    answersMustContain(BankAccountDetailsPage),
+    answersMustContain(BuildingSocietyDetailsPage)
   )
 
   private val paymentDetailsMustRemainPartner: JourneyStep[Unit] = journeyOf(
+    answersMustContain(AccountTypePage),
     answersMustContain(ApplicantOrPartnerIncomePage),
     answersMustContain(WantToBePaidPage),
     answersMustContain(ApplicantOrPartnerBenefitsPage),
     answersMustContain(PaymentFrequencyPage),
-    answersMustContain(WantToBePaidToExistingAccountPage),
     answersMustContain(ApplicantHasSuitableAccountPage),
     answersMustContain(BankAccountHolderPage),
-    answersMustContain(BankAccountDetailsPage)
+    answersMustContain(BankAccountDetailsPage),
+    answersMustContain(BuildingSocietyDetailsPage)
   )
 
   private val partnerDetailsMustHaveBeenRemoved: JourneyStep[Unit] = journeyOf(

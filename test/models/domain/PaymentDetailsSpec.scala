@@ -20,7 +20,6 @@ import generators.ModelGenerators
 import models.JourneyModel.EldestChild
 import models.{BankAccountDetails, BankAccountHolder, BankAccountInsightsResponseModel, BuildingSociety, JourneyModel}
 import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.Gen
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -43,10 +42,8 @@ class PaymentDetailsSpec extends AnyFreeSpec with Matchers with OptionValues wit
 
     "must return None when the payment preference is `existing account`" in {
 
-      val paymentFrequency = Gen.oneOf(models.PaymentFrequency.values).sample.value
       val paymentPreference = JourneyModel.PaymentPreference.ExistingAccount(
-        eldestChild = EldestChild(arbitrary[models.ChildName].sample.value, LocalDate.now),
-        frequency = paymentFrequency
+        eldestChild = EldestChild(arbitrary[models.ChildName].sample.value, LocalDate.now)
       )
 
       val result = PaymentDetails.build(paymentPreference)

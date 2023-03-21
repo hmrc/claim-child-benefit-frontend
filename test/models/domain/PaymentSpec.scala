@@ -39,17 +39,17 @@ class PaymentSpec extends AnyFreeSpec with Matchers with OptionValues with Model
       result must not be defined
     }
 
+    "must return None when the user wants to be paid to an existing account" in {
+
+      val eldestChild = EldestChild(models.ChildName("first", None, "last"), LocalDate.now)
+      val paymentPreference = JourneyModel.PaymentPreference.ExistingAccount(eldestChild)
+
+      val result = Payment.build(paymentPreference)
+
+      result must not be defined
+    }
+
     "must return a Payment with no payment details" - {
-
-      "when the user wants to be paid to an existing account" in {
-
-        val eldestChild = EldestChild(models.ChildName("first", None, "last"), LocalDate.now)
-        val paymentPreference = JourneyModel.PaymentPreference.ExistingAccount(eldestChild, models.PaymentFrequency.EveryFourWeeks)
-
-        val result = Payment.build(paymentPreference)
-
-        result.value mustEqual Payment(PaymentFrequency.EveryFourWeeks, None)
-      }
 
       "when the user wants to be paid weekly but has no suitable account" in {
 

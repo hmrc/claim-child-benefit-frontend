@@ -17,8 +17,10 @@
 package pages.payments
 
 import controllers.payments.routes
+import models.CurrentlyReceivingChildBenefit.GettingPayments
 import models.RelationshipStatus._
 import models.UserAnswers
+import pages.applicant.CurrentlyReceivingChildBenefitPage
 import pages.partner.RelationshipStatusPage
 import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
@@ -38,9 +40,15 @@ case object WantToBePaidPage extends QuestionPage[Boolean] {
   override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case true =>
-        answers.get(RelationshipStatusPage).map {
-          case Married | Cohabiting => ApplicantOrPartnerBenefitsPage
-          case _                    => ApplicantBenefitsPage
+        answers.get(CurrentlyReceivingChildBenefitPage).map {
+          case GettingPayments =>
+            CheckPaymentDetailsPage
+
+          case _ =>
+            answers.get(RelationshipStatusPage).map {
+              case Married | Cohabiting => ApplicantOrPartnerBenefitsPage
+              case _ => ApplicantBenefitsPage
+            }.orRecover
         }.orRecover
 
       case false =>
@@ -52,7 +60,6 @@ case object WantToBePaidPage extends QuestionPage[Boolean] {
       userAnswers.remove(PaymentFrequencyPage)
         .flatMap(_.remove(ApplicantBenefitsPage))
         .flatMap(_.remove(ApplicantOrPartnerBenefitsPage))
-        .flatMap(_.remove(WantToBePaidToExistingAccountPage))
         .flatMap(_.remove(ApplicantHasSuitableAccountPage))
         .flatMap(_.remove(BankAccountHolderPage))
         .flatMap(_.remove(AccountTypePage))

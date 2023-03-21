@@ -33,7 +33,7 @@ object PaymentDetails {
     case DoNotPay(_) =>
       None
 
-    case ExistingAccount(_, _) =>
+    case ExistingAccount(_) =>
       None
 
     case Weekly(accountDetails, _) =>

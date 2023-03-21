@@ -464,14 +464,6 @@ wantToBePaid.single.over60k.p4.link.text = Child Benefit tax calculator
 wantToBePaid.single.over60k.p4.2 = to estimate how much tax you may have to pay.
 wantToBePaid.single.over60k.p5 = It’s important to fill in this form even if you decide not to get Child Benefit payments. It will help to protect your State Pension, and your child will get their National Insurance number automatically at 16.
 
-wantToBePaidToExistingAccount.title = Do you want your Child Benefit claim to be paid to your existing bank account?
-wantToBePaidToExistingAccount.heading = Do you want your Child Benefit claim to be paid to your existing bank account?
-wantToBePaidToExistingAccount.p1 = All Child Benefit payments are paid into the same account. If you are currently receiving Child Benefit and want this new claim to be paid into a different account, your current payments will move to this account as well.
-wantToBePaidToExistingAccount.p2 = Check which bank account your current Child Benefit payments are being paid into before continuing, if you are unsure.
-wantToBePaidToExistingAccount.checkYourAnswersLabel = Do you want your Child Benefit claim to be paid to your existing bank account?
-wantToBePaidToExistingAccount.error.required = Select yes if you want your Child Benefit claim to be paid to your existing bank account
-wantToBePaidToExistingAccount.change.hidden = if you want your Child Benefit claim to be paid to your existing bank account
-
 paymentFrequency.title = How often do you want to be paid Child Benefit?
 paymentFrequency.heading = How often do you want to be paid Child Benefit?
 paymentFrequency.checkYourAnswersLabel = How often you want to be paid Child Benefit
@@ -1561,7 +1553,6 @@ pdf.paymentFrequency = Child Benefit payment frequency
 pdf.paymentFrequency.weekly = Weekly
 pdf.paymentFrequency.everyFourWeeks = 4 weekly
 pdf.paymentFrequency.existing = Existing frequency
-pdf.wantToBePaidToExistingAccount = Paid into existing bank account
 pdf.accountHolder = Account holder
 pdf.accountHolder.applicant = Applicant
 pdf.accountHolder.jointNames = Joint names

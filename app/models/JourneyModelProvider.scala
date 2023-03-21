@@ -67,8 +67,17 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
 
       case Single | Separated | Divorced | Widowed =>
         answers.getIor(WantToBePaidPage).flatMap {
-          case true => answers.getIor(ApplicantBenefitsPage).map(Some(_))
-          case false => Ior.Right(None)
+          case true =>
+            answers.getIor(CurrentlyReceivingChildBenefitPage).flatMap {
+              case CurrentlyReceivingChildBenefit.GettingPayments =>
+                Ior.Right(None)
+
+              case _ =>
+                answers.getIor(ApplicantBenefitsPage).map(Some(_))
+            }
+
+          case false =>
+            Ior.Right(None)
         }
     }
   }
@@ -646,20 +655,8 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
       case GettingPayments =>
         answers.getIor(WantToBePaidPage).flatMap {
           case true =>
-            answers.getIor(WantToBePaidToExistingAccountPage).flatMap {
-              case true =>
-                getEldestChild
-                  .map {
-                    child =>
-                      ExistingAccount(
-                        child,
-                        answers.get(PaymentFrequencyPage)
-                          .getOrElse(PaymentFrequency.EveryFourWeeks))
-                  }
-
-              case false =>
-                getWeeklyOrEveryFourWeeksWithChild
-            }
+            getEldestChild
+              .map(ExistingAccount)
 
           case false =>
             getEldestChild.map(x => DoNotPay(Some(x)))

@@ -61,7 +61,6 @@ class CheckPaymentDetailsController  @Inject()(
           ApplicantBenefitsSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantOrPartnerBenefitsSummary.row(request.userAnswers, waypoints, thisPage),
           PaymentFrequencySummary.row(request.userAnswers, waypoints, thisPage),
-          WantToBePaidToExistingAccountSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantHasSuitableAccountSummary.row(request.userAnswers, waypoints, thisPage),
           BankAccountHolderSummary.row(request.userAnswers, waypoints, thisPage),
           AccountTypeSummary.row(request.userAnswers, waypoints, thisPage),
