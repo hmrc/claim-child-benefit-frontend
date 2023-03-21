@@ -1,4 +1,4 @@
-@import views.xml.xml.sections._
+@import views.xml.xml.download.sections._
 
 @this(
     mainHeader: MainHeader,
