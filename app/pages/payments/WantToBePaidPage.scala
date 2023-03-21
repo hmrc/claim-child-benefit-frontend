@@ -42,7 +42,7 @@ case object WantToBePaidPage extends QuestionPage[Boolean] {
       case true =>
         answers.get(CurrentlyReceivingChildBenefitPage).map {
           case GettingPayments =>
-            CheckPaymentDetailsPage
+            PaidToExistingAccountPage
 
           case _ =>
             answers.get(RelationshipStatusPage).map {

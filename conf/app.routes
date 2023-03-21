@@ -127,6 +127,9 @@ POST       /how-often-want-to-be-paid                        controllers.payment
 GET        /check-payment-details                              controllers.payments.CheckPaymentDetailsController.onPageLoad
 POST       /check-payment-details                              controllers.payments.CheckPaymentDetailsController.onSubmit
 
+GET         /paid-to-existing-account                       controllers.payments.PaidToExistingAccountController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST        /paid-to-existing-account                       controllers.payments.PaidToExistingAccountController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 # Applicant section
 GET        /always-lived-in-uk                        controllers.applicant.AlwaysLivedInUkController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /always-lived-in-uk                        controllers.applicant.AlwaysLivedInUkController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
