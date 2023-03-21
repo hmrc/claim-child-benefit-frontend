@@ -1,0 +1,31 @@
+@this()
+
+@(model: JourneyModel)(implicit messages: Messages)
+
+<fo:bookmark-tree>
+    <fo:bookmark internal-destination="title">
+        <fo:bookmark-title>@messages("pdf.title")</fo:bookmark-title>
+        <fo:bookmark internal-destination="application">
+            <fo:bookmark-title>@messages("pdf.application")</fo:bookmark-title>
+            <fo:bookmark internal-destination="personal-details">
+                <fo:bookmark-title>@messages("pdf.personalDetails")</fo:bookmark-title>
+            </fo:bookmark>
+            @if(model.relationship.partner.nonEmpty) {
+                <fo:bookmark internal-destination="partner-details">
+                    <fo:bookmark-title>@messages("pdf.partnerDetails")</fo:bookmark-title>
+                </fo:bookmark>
+            }
+            <fo:bookmark internal-destination="child-details">
+                <fo:bookmark-title>@messages("pdf.childrenDetails")</fo:bookmark-title>
+            </fo:bookmark>
+            <fo:bookmark internal-destination="payment-details">
+                <fo:bookmark-title>@messages("pdf.paymentDetails")</fo:bookmark-title>
+            </fo:bookmark>
+            @if(model.additionalInformation.nonEmpty) {
+                <fo:bookmark internal-destination="additional-information">
+                    <fo:bookmark-title>@messages("pdf.additionalInformation")</fo:bookmark-title>
+                </fo:bookmark>
+            }
+        </fo:bookmark>
+    </fo:bookmark>
+</fo:bookmark-tree>

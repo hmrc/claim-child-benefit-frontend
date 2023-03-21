@@ -1,0 +1,47 @@
+@import views.xml.xml.download.sections._
+
+@this(
+    mainHeader: MainHeader,
+    mainFooter: MainFooter,
+    line: Line,
+    doNotPay: DoNotPay,
+    weekly: Weekly,
+    everyFourWeeks: EveryFourWeeks,
+    existingAccount: ExistingAccount
+)
+
+@(model: JourneyModel)(implicit messages: Messages)
+
+<fo:page-sequence master-reference="main">
+
+    @mainHeader()
+
+    @mainFooter()
+
+    <fo:flow flow-name="xsl-region-body" font-size="12pt" text-align="left">
+
+        <fo:block-container width="90%">
+            <fo:block>
+
+                <fo:block-container margin-bottom="1cm" keep-together.within-column="always" wrap-option="wrap">
+
+                    <fo:block role="H2" id="payment-details" font-size="18pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.paymentDetails")</fo:block>
+
+                    @{model.paymentPreference match {
+                        case JourneyModel.PaymentPreference.DoNotPay(_) =>
+                            doNotPay()
+
+                        case JourneyModel.PaymentPreference.Weekly(bankAccount, _) =>
+                            weekly(bankAccount)
+
+                        case JourneyModel.PaymentPreference.EveryFourWeeks(bankAccount, _) =>
+                            everyFourWeeks(bankAccount)
+
+                        case JourneyModel.PaymentPreference.ExistingAccount(eldestChild) =>
+                            existingAccount(eldestChild)
+                    }}
+                </fo:block-container>
+            </fo:block>
+        </fo:block-container>
+    </fo:flow>
+</fo:page-sequence>

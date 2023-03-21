@@ -1,8 +1,7 @@
-@import views.xml.xml.sections._
+@import views.xml.xml.archive.sections._
 
 @this(
     mainHeader: MainHeader,
-    mainFooter: MainFooter,
     line: Line,
     doNotPay: DoNotPay,
     weekly: Weekly,
@@ -15,8 +14,6 @@
 <fo:page-sequence master-reference="main">
 
     @mainHeader()
-
-    @mainFooter()
 
     <fo:flow flow-name="xsl-region-body" font-size="12pt" text-align="left">
 

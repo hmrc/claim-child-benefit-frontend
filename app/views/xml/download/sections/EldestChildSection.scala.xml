@@ -1,0 +1,7 @@
+@this(line: Line)
+
+@(eldestChild: JourneyModel.EldestChild)(implicit messages: Messages)
+
+@line("pdf.eldestChildName", eldestChild.name.fullName)
+
+@line("pdf.eldestChildDateOfBirth", date(eldestChild.dateOfBirth))

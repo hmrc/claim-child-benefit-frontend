@@ -29,7 +29,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.{PrintDocumentsRequiredView, PrintNoDocumentsRequiredView}
-import views.xml.xml.PrintTemplate
+import views.xml.xml.download.PrintTemplate
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}

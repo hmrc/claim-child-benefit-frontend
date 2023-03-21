@@ -1,4 +1,4 @@
-@import views.xml.xml.sections._
+@import views.xml.xml.archive.sections._
 
 @this(
     layout: Layout,
@@ -7,11 +7,7 @@
     paymentDetails: PaymentDetails,
     partnerDetails: PartnerDetails,
     childDetails: ChildDetails,
-    declaration: Declaration,
-    instructions: Instructions,
-    addressLabel: AddressLabel,
-    additionalInfoPage: AdditionalInfoPage,
-    documents: Documents
+    additionalInfoPage: AdditionalInfoPage
 )
 
 @(model: JourneyModel)(implicit messages: Messages)
@@ -45,16 +41,5 @@
         @additionalInfoPage(info)
     }
 
-    @{if(model.anyDocumentsRequired) {
-        documents(model)
-    }}
-
-    @declaration(model)
-
-    @instructions(model)
-
-    @{if(model.anyDocumentsRequired) {
-        addressLabel(model)
-    }}
 
 </fo:root>
