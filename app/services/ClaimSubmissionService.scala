@@ -34,7 +34,8 @@ class ClaimSubmissionService @Inject()(
                                         featureFlags: FeatureFlags,
                                         connector: ClaimChildBenefitConnector,
                                         journeyModelProvider: JourneyModelProvider,
-                                        submissionLimiter: SubmissionLimiter
+                                        submissionLimiter: SubmissionLimiter,
+                                        supplementaryDataService: SupplementaryDataService
                                       ) extends Logging {
 
   def canSubmit(request: DataRequest[_])(implicit ec: ExecutionContext): Future[Boolean] =
@@ -84,6 +85,8 @@ class ClaimSubmissionService @Inject()(
                     logger.error("Failed to record submission: " + e.getMessage)
                     Done
                 }
+            }.flatMap { _ =>
+              supplementaryDataService.submit(nino, model, correlationId)(request)
             }
 
         }.getOrElse(Future.failed(CannotBuildJourneyModelException))

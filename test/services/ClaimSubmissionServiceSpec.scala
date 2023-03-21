@@ -50,17 +50,19 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
   private val mockConnector = mock[ClaimChildBenefitConnector]
   private val mockSubmissionLimiter = mock[SubmissionLimiter]
   private val mockBrmsService = mock[BrmsService]
+  private val mockSupplementaryDataService = mock[SupplementaryDataService]
   when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(BirthRegistrationMatchingResult.Matched)
 
   override def beforeEach(): Unit = {
     Mockito.reset(mockFeatureFlags)
     Mockito.reset(mockConnector)
     Mockito.reset(mockSubmissionLimiter)
+    Mockito.reset(mockSupplementaryDataService)
     super.beforeEach()
   }
 
   private val journeyModelProvider = new JourneyModelProvider(mockBrmsService)
-  private val submissionService = new ClaimSubmissionService(mockFeatureFlags, mockConnector, journeyModelProvider, mockSubmissionLimiter)
+  private val submissionService = new ClaimSubmissionService(mockFeatureFlags, mockConnector, journeyModelProvider, mockSubmissionLimiter, mockSupplementaryDataService)
 
   private val nino = arbitrary[Nino].sample.value
   private val userId = "user id"
@@ -369,11 +371,13 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
 
           when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
           when(mockSubmissionLimiter.recordSubmission(any(), any(), any())(any())) thenReturn Future.successful(Done)
+          when(mockSupplementaryDataService.submit(any(), any(), any())(any())) thenReturn Future.successful(Done)
 
           submissionService.submit(request).futureValue
 
           verify(mockConnector, times(1)).submitClaim(any(), any())(any())
           verify(mockSubmissionLimiter, times(1)).recordSubmission(any(), any(), any())(any())
+          verify(mockSupplementaryDataService, times(1)).submit(eqTo(nino.nino), any(), any())(any())
         }
 
         "must submit a claim and return Done when recording the submission fails" in {
@@ -383,10 +387,12 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
 
           when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
           when(mockSubmissionLimiter.recordSubmission(any(), any(), any())(any())) thenReturn Future.failed(new Exception("foo"))
+          when(mockSupplementaryDataService.submit(any(), any(), any())(any())) thenReturn Future.successful(Done)
 
           submissionService.submit(request).futureValue
 
           verify(mockConnector, times(1)).submitClaim(any(), any())(any())
+          verify(mockSupplementaryDataService, times(1)).submit(eqTo(nino.nino), any(), any())(any())
         }
       }
 

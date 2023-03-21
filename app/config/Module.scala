@@ -19,7 +19,7 @@ package config
 import controllers.actions._
 import play.api.inject.Binding
 import play.api.{Configuration, Environment}
-import services.{SubmissionsLimitedByAllowList, SubmissionsLimitedByThrottle, SubmissionLimiter, SubmissionsNotLimited}
+import services.{NoOpSupplementaryDataService, SubmissionLimiter, SubmissionsLimitedByAllowList, SubmissionsLimitedByThrottle, SubmissionsNotLimited, SupplementaryDataService, SupplementaryDataServiceImpl}
 import uk.gov.hmrc.crypto.{Decrypter, Encrypter}
 
 import java.time.Clock
@@ -51,6 +51,13 @@ class Module extends play.api.inject.Module {
         bind[SubmissionLimiter].to[SubmissionsNotLimited]
       }
 
+    val supplementaryDataServiceBinding: Binding[_] =
+      if (configuration.get[Boolean]("features.dmsa-submission")) {
+        bind[SupplementaryDataService].to[SupplementaryDataServiceImpl].eagerly
+      } else {
+        bind[SupplementaryDataService].to[NoOpSupplementaryDataService].eagerly
+      }
+
     Seq(
       bind[DataRetrievalAction].to[DataRetrievalActionImpl].eagerly,
       bind[DataRequiredAction].to[DataRequiredActionImpl].eagerly,
@@ -58,7 +65,8 @@ class Module extends play.api.inject.Module {
       bind[FeatureFlags].toSelf.eagerly,
       bind[Encrypter with Decrypter].toProvider[CryptoProvider].eagerly,
       identifierActionBinding,
-      submissionLimiterBinding
+      submissionLimiterBinding,
+      supplementaryDataServiceBinding
     ) ++ authTokenInitialiserBindings
   }
 }
