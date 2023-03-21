@@ -26,7 +26,7 @@ case object BuildingSocietyDetailsPage extends QuestionPage[BuildingSocietyDetai
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "bankAccountDetails"
+  override def toString: String = "buildingSocietyDetails"
 
   override def route(waypoints: Waypoints): Call =
     routes.BuildingSocietyDetailsController.onPageLoad(waypoints)

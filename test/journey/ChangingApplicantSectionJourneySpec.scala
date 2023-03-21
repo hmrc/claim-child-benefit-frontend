@@ -32,38 +32,45 @@ import java.time.LocalDate
 
 class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
-  private val ukAddress = UkAddress("line 1", None, "town", None, "postcode")
-  private val adultName = AdultName(None, "first", None, "last")
-  private val childName = ChildName("first", None, "last")
-  private val nino = arbitrary[Nino].sample.value
-  private val country = Gen.oneOf(Country.internationalCountries).sample.value
-  private val internationalAddress = InternationalAddress("line1", None, "town", None, None, country)
-  private val bankDetails = arbitrary[BankAccountDetails].sample.value
-  private val previousName = ApplicantPreviousName("name")
-  private val phoneNumber = "07777 777777"
+  private def ukAddress = UkAddress("line 1", None, "town", None, "postcode")
+  private def adultName = AdultName(None, "first", None, "last")
+  private def childName = ChildName("first", None, "last")
+  private def nino = arbitrary[Nino].sample.value
+  private def country = Gen.oneOf(Country.internationalCountries).sample.value
+  private def internationalAddress = InternationalAddress("line1", None, "town", None, None, country)
+  private def bankDetails = arbitrary[BankAccountDetails].sample.value
+  private def buildingSociety = arbitrary[BuildingSocietyDetails].sample.value
+  private def accountType = Gen.oneOf(AccountType.values).sample.value
+  private def previousName = ApplicantPreviousName("name")
+  private def phoneNumber = "07777 777777"
   private def nationality = Gen.oneOf(Nationality.allNationalities).sample.value
 
   private val setFullPaymentDetailsSingle: JourneyStep[Unit] = journeyOf(
+    setUserAnswerTo(AccountTypePage, accountType),
     setUserAnswerTo(ApplicantIncomePage, Income.BetweenThresholds),
     setUserAnswerTo(WantToBePaidPage, true),
     setUserAnswerTo(ApplicantBenefitsPage, Benefits.qualifyingBenefits),
     setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
     setUserAnswerTo(ApplicantHasSuitableAccountPage, true),
     setUserAnswerTo(BankAccountHolderPage, BankAccountHolder.Applicant),
-    setUserAnswerTo(BankAccountDetailsPage, bankDetails)
+    setUserAnswerTo(BankAccountDetailsPage, bankDetails),
+    setUserAnswerTo(BuildingSocietyDetailsPage, buildingSociety)
   )
 
   private val setFullPaymentDetailsPartner: JourneyStep[Unit] = journeyOf(
+    setUserAnswerTo(AccountTypePage, accountType),
     setUserAnswerTo(ApplicantOrPartnerIncomePage, Income.BetweenThresholds),
     setUserAnswerTo(WantToBePaidPage, true),
     setUserAnswerTo(ApplicantOrPartnerBenefitsPage, Benefits.qualifyingBenefits),
     setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
     setUserAnswerTo(ApplicantHasSuitableAccountPage, true),
     setUserAnswerTo(BankAccountHolderPage, BankAccountHolder.Applicant),
-    setUserAnswerTo(BankAccountDetailsPage, bankDetails)
+    setUserAnswerTo(BankAccountDetailsPage, bankDetails),
+    setUserAnswerTo(BuildingSocietyDetailsPage, buildingSociety)
   )
 
   private val paymentDetailsMustHaveBeenRemoved: JourneyStep[Unit] = journeyOf(
+    answersMustNotContain(AccountTypePage),
     answersMustNotContain(ApplicantIncomePage),
     answersMustNotContain(ApplicantOrPartnerIncomePage),
     answersMustNotContain(WantToBePaidPage),
@@ -72,7 +79,8 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
     answersMustNotContain(PaymentFrequencyPage),
     answersMustNotContain(ApplicantHasSuitableAccountPage),
     answersMustNotContain(BankAccountHolderPage),
-    answersMustNotContain(BankAccountDetailsPage)
+    answersMustNotContain(BankAccountDetailsPage),
+    answersMustNotContain(BuildingSocietyDetailsPage)
   )
 
   "when the user originally said they knew their NINO" - {

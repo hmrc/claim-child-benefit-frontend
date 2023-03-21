@@ -158,6 +158,7 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
   )
 
   private val paymentPages: Seq[Settable[_]] = Seq(
+    AccountTypePage,
     ApplicantOrPartnerIncomePage,
     ApplicantIncomePage,
     WantToBePaidPage,
@@ -166,7 +167,8 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
     PaymentFrequencyPage,
     ApplicantHasSuitableAccountPage,
     BankAccountHolderPage,
-    BankAccountDetailsPage
+    BankAccountDetailsPage,
+    BuildingSocietyDetailsPage
   )
 
   private def removePages(answers: UserAnswers, pages: Seq[Settable[_]]): Try[UserAnswers] =
