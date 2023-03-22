@@ -43,7 +43,7 @@ object Partner {
       name = AdultName.build(partner.name),
       dateOfBirth = partner.dateOfBirth,
       nationalities = partner.nationalities.toList.map(_.name),
-      nationalInsuranceNumber = partner.nationalInsuranceNumber,
+      nationalInsuranceNumber = partner.nationalInsuranceNumber.map(_.value),
       currentlyClaimingChildBenefit = partner.currentlyClaimingChildBenefit.toString,
       memberOfHMForcesOrCivilServantAbroad = partner.memberOfHMForcesOrCivilServantAbroad,
       eldestChild = partner.eldestChild.map(EldestChild.build),

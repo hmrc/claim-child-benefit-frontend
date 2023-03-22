@@ -21,7 +21,7 @@
 
                     <fo:block role="H2" id="partner-details" font-size="18pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.partnerDetails")</fo:block>
 
-                    @line("pdf.partnerNino", model.nationalInsuranceNumber.getOrElse(messages("pdf.notKnown")))
+                    @line("pdf.partnerNino", model.nationalInsuranceNumber.map(_.nino).getOrElse(messages("pdf.notKnown")))
 
                     @line("pdf.name.last", model.name.lastName)
 

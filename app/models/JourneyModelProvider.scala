@@ -29,6 +29,7 @@ import pages.partner._
 import pages.payments._
 import queries._
 import services.BrmsService
+import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.LocalDate
@@ -510,9 +511,9 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
 
     import models.PartnerClaimingChildBenefit._
 
-    def getPartnerNino: IorNec[Query, Option[String]] =
+    def getPartnerNino: IorNec[Query, Option[Nino]] =
       answers.getIor(PartnerNinoKnownPage).flatMap {
-        case true => answers.getIor(PartnerNinoPage).map(nino => Some(nino.value))
+        case true => answers.getIor(PartnerNinoPage).map(nino => Some(nino))
         case false => Ior.Right(None)
       }
 

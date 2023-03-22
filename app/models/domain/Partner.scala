@@ -33,7 +33,7 @@ object Partner extends StringNormaliser {
         partner.nationalInsuranceNumber.map {
           nino =>
             Partner(
-              nino,
+              nino.withoutSuffix,
               normalise(partner.name.lastName)
             )
         }

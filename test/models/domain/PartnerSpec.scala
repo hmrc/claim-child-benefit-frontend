@@ -36,7 +36,7 @@ class PartnerSpec extends AnyFreeSpec with Matchers with ModelGenerators with Op
     "must return a Partner when the given model has a NINO and is claiming Child Benefit or waiting to hear" in {
 
       val surname = "surname"
-      val nino = arbitrary[Nino].sample.value.nino
+      val nino = arbitrary[Nino].sample.value
       val claiming = Gen.oneOf(GettingPayments, NotGettingPayments, WaitingToHear).sample.value
 
       val partner = JourneyModel.Partner(
@@ -53,13 +53,13 @@ class PartnerSpec extends AnyFreeSpec with Matchers with ModelGenerators with Op
       )
 
       val result = Partner.build(partner)
-      result.value mustEqual Partner(nino, surname)
+      result.value mustEqual Partner(nino.withoutSuffix, surname)
     }
 
     "must return None when the given model has a NINO and is not claiming Child Benefit or waiting to hear about their eligibility" in {
 
       val surname = "surname"
-      val nino = arbitrary[Nino].sample.value.nino
+      val nino = arbitrary[Nino].sample.value
 
       val partner = JourneyModel.Partner(
         name = AdultName(None, "first", None, surname),
@@ -102,7 +102,7 @@ class PartnerSpec extends AnyFreeSpec with Matchers with ModelGenerators with Op
     "must normalise accented characters and replace ’ with ' in the partner's surname" in {
 
       val surname = "À’ēîůŷ"
-      val nino = arbitrary[Nino].sample.value.nino
+      val nino = arbitrary[Nino].sample.value
       val claiming = Gen.oneOf(GettingPayments, NotGettingPayments, WaitingToHear).sample.value
 
       val partner = JourneyModel.Partner(
@@ -119,7 +119,7 @@ class PartnerSpec extends AnyFreeSpec with Matchers with ModelGenerators with Op
       )
 
       val result = Partner.build(partner)
-      result.value mustEqual Partner(nino, "A'eiuy")
+      result.value mustEqual Partner(nino.withoutSuffix, "A'eiuy")
     }
   }
 }
