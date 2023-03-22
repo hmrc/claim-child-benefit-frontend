@@ -40,7 +40,7 @@
         </p>
 
         @govukButton(
-            ButtonViewModel(messages("site.acceptAndSend"))
+            ButtonViewModel(messages("site.acceptAndSend")).preventingDoubleClick()
         )
     }
 }
