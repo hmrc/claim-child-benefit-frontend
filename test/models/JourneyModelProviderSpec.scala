@@ -2761,6 +2761,47 @@ class JourneyModelProviderSpec
         data mustBe empty
       }
 
+      "when the applicant wants to be paid and does not have a partner, but their benefit details are missing" in {
+
+        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalSingleIncomeDetails
+          .set(RelationshipStatusPage, Single).success.value
+          .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
+          .set(WantToBePaidPage, true).success.value
+          .set(ApplicantHasSuitableAccountPage, false).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors.value.toChain.toList must contain only ApplicantBenefitsPage
+        data mustBe empty
+      }
+
+      "when the applicant wants to be paid and has a partner, but their benefit details are missing" in {
+
+        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .withMinimalCoupleIncomeDetails
+          .withMinimalPartnerDetails
+          .set(RelationshipStatusPage, Married).success.value
+          .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
+          .set(WantToBePaidPage, true).success.value
+          .set(ApplicantHasSuitableAccountPage, false).success.value
+          .set(IncludeAdditionalInformationPage, false).success.value
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors.value.toChain.toList must contain only ApplicantOrPartnerBenefitsPage
+        data mustBe empty
+      }
+
       "when the applicant says they have previous names but none are provided" in {
 
         when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
