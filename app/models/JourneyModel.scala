@@ -22,6 +22,7 @@ import models.ChildBirthRegistrationCountry._
 import models.DocumentType.{AdoptionCertificate, BirthCertificate, TravelDocument}
 import models.JourneyModel._
 import models.ReasonNotToSubmit._
+import uk.gov.hmrc.domain.Nino
 
 import java.time.LocalDate
 
@@ -163,7 +164,7 @@ object JourneyModel {
                             name: AdultName,
                             dateOfBirth: LocalDate,
                             nationalities: NonEmptyList[Nationality],
-                            nationalInsuranceNumber: Option[String],
+                            nationalInsuranceNumber: Option[Nino],
                             memberOfHMForcesOrCivilServantAbroad: Boolean,
                             currentlyClaimingChildBenefit: PartnerClaimingChildBenefit,
                             eldestChild: Option[EldestChild],

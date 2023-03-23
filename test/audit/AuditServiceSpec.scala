@@ -51,7 +51,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
 
   private val now = LocalDate.now
   private val applicantNino = arbitrary[Nino].sample.value.toString
-  private val partnerNino = arbitrary[Nino].sample.value.toString
+  private val partnerNino = arbitrary[Nino].sample.value
 
   private val model = JourneyModel(
     applicant = JourneyModel.Applicant(
@@ -160,7 +160,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             name = AdultName(title = Some("title"), firstName = "partner first", middleNames = Some("partner middle"), lastName = "partner last"),
             dateOfBirth = now,
             nationalities = Seq(Nationality.allNationalities.head.name),
-            nationalInsuranceNumber = Some(partnerNino),
+            nationalInsuranceNumber = Some(partnerNino.nino),
             memberOfHMForcesOrCivilServantAbroad = false,
             currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments.toString,
             eldestChild = Some(EldestChild(
@@ -256,7 +256,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             name = AdultName(title = Some("title"), firstName = "partner first", middleNames = Some("partner middle"), lastName = "partner last"),
             dateOfBirth = now,
             nationalities = Seq(Nationality.allNationalities.head.name),
-            nationalInsuranceNumber = Some(partnerNino),
+            nationalInsuranceNumber = Some(partnerNino.nino),
             memberOfHMForcesOrCivilServantAbroad = false,
             currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments.toString,
             eldestChild = Some(EldestChild(

@@ -1301,7 +1301,7 @@ class JourneyModelProviderSpec
           name = partnerName,
           dateOfBirth = now,
           nationalities = NonEmptyList(partnerNationality, Nil),
-          nationalInsuranceNumber = Some(partnerNino.value),
+          nationalInsuranceNumber = Some(partnerNino),
           memberOfHMForcesOrCivilServantAbroad = false,
           currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
           eldestChild = None,
