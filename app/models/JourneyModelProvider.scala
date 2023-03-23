@@ -62,8 +62,17 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
     answers.getIor(RelationshipStatusPage).flatMap {
       case Married | Cohabiting =>
         answers.getIor(WantToBePaidPage).flatMap {
-          case true => answers.getIor(ApplicantOrPartnerBenefitsPage).map(Some(_))
-          case false => Ior.Right(None)
+          case true =>
+            answers.getIor(CurrentlyReceivingChildBenefitPage).flatMap {
+              case CurrentlyReceivingChildBenefit.GettingPayments =>
+                Ior.Right(None)
+
+              case _ =>
+                answers.getIor(ApplicantOrPartnerBenefitsPage).map(Some(_))
+            }
+
+          case false =>
+            Ior.Right(None)
         }
 
       case Single | Separated | Divorced | Widowed =>

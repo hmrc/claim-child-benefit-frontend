@@ -19,6 +19,7 @@ package models
 import cats.data.NonEmptyList
 import generators.ModelGenerators
 import models.BirthRegistrationMatchingResult.{Matched, NotAttempted, NotMatched}
+import models.JourneyModel.EldestChild
 import models.JourneyModel.Residency._
 import models.RelationshipStatus._
 import models.{ChildBirthRegistrationCountry => BirthCountry}
@@ -239,6 +240,94 @@ class JourneyModelProviderSpec
           ),
           benefits = None,
           paymentPreference = JourneyModel.PaymentPreference.DoNotPay(None),
+          additionalInformation = Some("info"),
+          userAuthenticated = false
+        )
+
+        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+
+        errors mustBe empty
+        data.value mustEqual expectedModel
+      }
+
+      "from minimal answers when the applicant has a partner and the applicant is already getting payments" in {
+
+        when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(NotMatched)
+
+        val answers = UserAnswers("id")
+          .withMinimalApplicantDetails
+          .withOneChild
+          .set(RelationshipStatusPage, Married).success.value
+          .set(ApplicantOrPartnerIncomePage, Income.BelowLowerThreshold).success.value
+          .set(ApplicantOrPartnerBenefitsPage, applicantBenefits).success.value
+          .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
+          .set(EldestChildNamePage, childName).success.value
+          .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+          .set(WantToBePaidPage, true).success.value
+          .set(PartnerNamePage, partnerName).success.value
+          .set(PartnerNinoKnownPage, false).success.value
+          .set(PartnerDateOfBirthPage, now).success.value
+          .set(PartnerNationalityPage(Index(0)), partnerNationality).success.value
+          .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
+          .set(PartnerIsHmfOrCivilServantPage, false).success.value
+          .set(PartnerWorkedAbroadPage, false).success.value
+          .set(PartnerReceivedBenefitsAbroadPage, false).success.value
+          .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming).success.value
+          .set(IncludeAdditionalInformationPage, true).success.value
+          .set(AdditionalInformationPage, "info").success.value
+
+        val expectedModel = JourneyModel(
+          applicant = JourneyModel.Applicant(
+            name = applicantName,
+            previousFamilyNames = Nil,
+            dateOfBirth = now,
+            nationalInsuranceNumber = None,
+            currentAddress = ukAddress,
+            previousAddress = None,
+            telephoneNumber = phoneNumber,
+            nationalities = NonEmptyList(applicantNationality, Nil),
+            residency = AlwaysLivedInUk,
+            memberOfHMForcesOrCivilServantAbroad = false,
+            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.GettingPayments,
+            changedDesignatoryDetails = None,
+            correspondenceAddress = None
+          ),
+          relationship = JourneyModel.Relationship(
+            status = Married,
+            since = None,
+            partner = Some(JourneyModel.Partner(
+              name = partnerName,
+              dateOfBirth = now,
+              nationalities = NonEmptyList(partnerNationality, Nil),
+              nationalInsuranceNumber = None,
+              memberOfHMForcesOrCivilServantAbroad = false,
+              currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
+              eldestChild = None,
+              countriesWorked = Nil,
+              countriesReceivedBenefits = Nil,
+              employmentStatus = EmploymentStatus.activeStatuses
+            ))
+          ),
+          children = NonEmptyList(
+            JourneyModel.Child(
+              name = childName,
+              nameChangedByDeedPoll = None,
+              previousNames = Nil,
+              biologicalSex = biologicalSex,
+              dateOfBirth = now,
+              countryOfRegistration = ChildBirthRegistrationCountry.England,
+              birthCertificateNumber = Some(systemNumber),
+              birthCertificateDetailsMatched = NotMatched,
+              relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
+              adoptingThroughLocalAuthority = false,
+              previousClaimant = None,
+              guardian = None,
+              previousGuardian = None,
+              dateChildStartedLivingWithApplicant = None
+            ), Nil
+          ),
+          benefits = None,
+          paymentPreference = JourneyModel.PaymentPreference.ExistingAccount(EldestChild(childName, LocalDate.now)),
           additionalInformation = Some("info"),
           userAuthenticated = false
         )
