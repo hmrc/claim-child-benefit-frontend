@@ -33,11 +33,11 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <h1 class="govuk-heading-xl">@messages("signIn.heading")</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">@messages("signIn.heading")</h1>
 
         <p class="govuk-body">@messages("signIn.p1")</p>
 
-        @govukWarningText(WarningText(content = messages("signIn.p2")))
+        <p class="govuk-body">@messages("signIn.p2")</p>
 
         @govukRadios(
             RadiosViewModel.yesNo(
