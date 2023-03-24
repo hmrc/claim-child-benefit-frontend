@@ -18,14 +18,13 @@ package controllers.actions
 
 import base.SpecBase
 import connectors.ClaimChildBenefitConnector
-import models.{DesignatoryDetails, UserAnswers}
+import models.{DesignatoryDetails, RelationshipDetails, UserAnswers}
 import models.requests.{AuthenticatedIdentifierRequest, IdentifierRequest, OptionalDataRequest, UnauthenticatedIdentifierRequest}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.test.FakeRequest
 import services.UserDataService
-import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -80,21 +79,27 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
 
       "and the user is authenticated" - {
 
-        "must build a userAnswers object, including the NINO from the request and the designatory details, and add it to the request" in {
+        "must build a userAnswers object, including the NINO from the request, relationship and designatory details, and add it to the request" in {
 
           val sessionRepository = mock[UserDataService]
           val connector = mock[ClaimChildBenefitConnector]
           val cachedAnswers = UserAnswers(userId)
           val designatoryDetails = DesignatoryDetails(None, None, None, None, LocalDate.now)
+          val relationshipDetails = RelationshipDetails(hasClaimedChildBenefit = false)
 
-          when(sessionRepository.get(userId)) thenReturn Future(Some(cachedAnswers))
-          when(connector.designatoryDetails()(any())) thenReturn Future(designatoryDetails)
+          when(sessionRepository.get(userId)) thenReturn Future.successful(Some(cachedAnswers))
+          when(connector.designatoryDetails()(any())) thenReturn Future.successful(designatoryDetails)
+          when(connector.relationshipDetails()(any())) thenReturn Future.successful(relationshipDetails)
 
           val action = new Harness(sessionRepository, connector)
 
           val result = action.callTransform(AuthenticatedIdentifierRequest(FakeRequest(), userId, nino)).futureValue
 
-          val expectedAnswers = cachedAnswers.copy(nino = Some(nino), designatoryDetails = Some(designatoryDetails))
+          val expectedAnswers = cachedAnswers.copy(
+            nino = Some(nino),
+            designatoryDetails = Some(designatoryDetails),
+            relationshipDetails = Some(relationshipDetails)
+          )
           result.userAnswers.value mustEqual expectedAnswers
         }
       }

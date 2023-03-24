@@ -33,13 +33,20 @@ class DataRetrievalActionImpl @Inject()(
   override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = {
     request match {
       case a: AuthenticatedIdentifierRequest[_] =>
+        val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+
         for {
           maybeUserAnswers <- userDataService.get(request.userId)
-          designatoryDetails <- connector.designatoryDetails()(HeaderCarrierConverter.fromRequestAndSession(request, request.session))
+          designatoryDetails <- connector.designatoryDetails()(hc)
+          relationshipDetails <- connector.relationshipDetails()(hc)
         } yield OptionalDataRequest(
           request,
           request.userId,
-          maybeUserAnswers.map(_.copy(nino = Some(a.nino), designatoryDetails = Some(designatoryDetails)))
+          maybeUserAnswers.map(_.copy(
+            nino = Some(a.nino),
+            designatoryDetails = Some(designatoryDetails),
+            relationshipDetails = Some(relationshipDetails)
+          ))
         )
 
       case _: UnauthenticatedIdentifierRequest[_] =>
