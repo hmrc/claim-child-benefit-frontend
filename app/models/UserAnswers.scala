@@ -33,6 +33,7 @@ final case class UserAnswers(
                               data: JsObject = Json.obj(),
                               nino: Option[String] = None,
                               designatoryDetails: Option[DesignatoryDetails] = None,
+                              relationshipDetails: Option[RelationshipDetails] = None,
                               lastUpdated: Instant = Instant.now
                             ) {
 
@@ -105,7 +106,7 @@ object UserAnswers {
       (__ \ "_id").read[String] and
       (__ \ "data").read[JsObject] and
       (__ \ "lastUpdated").read(MongoJavatimeFormats.instantFormat)
-    ) ((id, data, lastUpdated) => UserAnswers(id, data, None, None, lastUpdated))
+    ) ((id, data, lastUpdated) => UserAnswers(id, data, None, None, None, lastUpdated))
   }
 
   private val writes: OWrites[UserAnswers] = {
@@ -133,7 +134,7 @@ object UserAnswers {
         (__ \ "_id").read[String] and
         (__ \ "data").read[SensitiveString] and
         (__ \ "lastUpdated").read(MongoJavatimeFormats.instantFormat)
-      )((id, data, lastUpdated) => UserAnswers(id, Json.parse(data.decryptedValue).as[JsObject], None, None, lastUpdated))
+      )((id, data, lastUpdated) => UserAnswers(id, Json.parse(data.decryptedValue).as[JsObject], None, None, None, lastUpdated))
 
     val encryptedWrites: OWrites[UserAnswers] =
       (
