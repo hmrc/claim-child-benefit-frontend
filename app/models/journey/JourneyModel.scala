@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package models
+package models.journey
 
 import cats.data.NonEmptyList
 import models.ApplicantRelationshipToChild.AdoptedChild
 import models.ChildBirthRegistrationCountry._
 import models.DocumentType.{AdoptionCertificate, BirthCertificate, TravelDocument}
-import models.JourneyModel._
 import models.ReasonNotToSubmit._
+import models.journey.JourneyModel._
+import models.{Address, AdultName, ApplicantPreviousName, ApplicantRelationshipToChild, BankAccountDetails, BankAccountHolder, BankAccountInsightsResponseModel, Benefits, BirthCertificateNumber, BirthRegistrationMatchingResult, BuildingSocietyDetails, ChildBiologicalSex, ChildBirthRegistrationCountry, ChildName, Country, CurrentlyReceivingChildBenefit, DocumentType, EmploymentStatus, InternationalAddress, Nationality, OtherEligibilityFailReason, PartnerClaimingChildBenefit, ReasonNotToSubmit, RelationshipStatus, RequiredDocument}
 import uk.gov.hmrc.domain.Nino
 
 import java.time.LocalDate

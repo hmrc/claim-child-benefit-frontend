@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package models
+package models.journey
 
 import cats.data._
 import cats.implicits._
 import logging.Logging
 import models.ApplicantResidence._
-import models.JourneyModel._
-import models.{ChildBirthRegistrationCountry => RegistrationCountry}
+import models.journey.JourneyModel._
+import models.{AccountType, Address, AdultName, ApplicantPreviousName, Benefits, BirthCertificateNumber, BirthRegistrationMatchingRequest, BirthRegistrationMatchingResult, ChildName, Country, CurrentlyReceivingChildBenefit, Index, Nationality, PaymentFrequency, UserAnswers, ChildBirthRegistrationCountry => RegistrationCountry}
 import pages._
 import pages.applicant._
 import pages.child._

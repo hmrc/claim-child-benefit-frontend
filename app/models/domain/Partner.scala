@@ -16,7 +16,8 @@
 
 package models.domain
 
-import models.{JourneyModel, PartnerClaimingChildBenefit}
+import models.{PartnerClaimingChildBenefit}
+import models.journey.JourneyModel
 import play.api.libs.json.{Json, OWrites}
 import utils.StringNormaliser
 

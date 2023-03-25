@@ -17,8 +17,9 @@
 package models.domain
 
 import generators.ModelGenerators
-import models.JourneyModel.EldestChild
-import models.{BankAccountDetails, BankAccountHolder, BankAccountInsightsResponseModel, BuildingSociety, JourneyModel}
+import models.journey.JourneyModel
+import models.journey.JourneyModel.EldestChild
+import models.{BankAccountDetails, BankAccountHolder, BankAccountInsightsResponseModel, BuildingSociety}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec

@@ -16,6 +16,7 @@
 
 package audit
 
+import models.journey.JourneyModel
 import play.api.libs.json.{Json, Writes}
 
 import java.time.LocalDate
@@ -26,7 +27,7 @@ object EldestChild {
 
   implicit lazy val writes: Writes[EldestChild] = Json.writes
 
-  def build(eldestChild: models.JourneyModel.EldestChild): EldestChild =
+  def build(eldestChild: JourneyModel.EldestChild): EldestChild =
     EldestChild(
       name = ChildName.build(eldestChild.name),
       dateOfBirth = eldestChild.dateOfBirth

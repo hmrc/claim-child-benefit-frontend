@@ -16,7 +16,7 @@
 
 package audit
 
-import models.JourneyModel
+import models.journey.JourneyModel
 import play.api.libs.json.{Json, Writes}
 
 final case class PreviousClaimant(name: Option[AdultName], address: Option[Address])

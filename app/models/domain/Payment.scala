@@ -16,8 +16,8 @@
 
 package models.domain
 
-import models.JourneyModel
-import models.JourneyModel.PaymentPreference
+import models.journey.JourneyModel
+import models.journey.JourneyModel.PaymentPreference
 import play.api.libs.json.{Json, OWrites}
 
 final case class Payment(

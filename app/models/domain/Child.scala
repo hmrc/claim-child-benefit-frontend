@@ -17,7 +17,7 @@
 package models.domain
 
 import models.ChildBirthRegistrationCountry.{England, Scotland, Wales}
-import models.JourneyModel
+import models.journey.JourneyModel
 import play.api.libs.json.{Json, OWrites, Writes}
 
 import java.time.LocalDate

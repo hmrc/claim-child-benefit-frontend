@@ -19,6 +19,7 @@ package models.domain
 import cats.data.NonEmptyList
 import generators.Generators
 import models._
+import models.journey.JourneyModel
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.OptionValues

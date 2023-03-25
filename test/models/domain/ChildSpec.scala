@@ -16,7 +16,8 @@
 
 package models.domain
 
-import models.{BirthRegistrationMatchingResult, JourneyModel}
+import models.{BirthRegistrationMatchingResult}
+import models.journey.JourneyModel
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers

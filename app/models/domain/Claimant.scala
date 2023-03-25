@@ -16,9 +16,10 @@
 
 package models.domain
 
-import models.{JourneyModel, NationalityGroupOrdering}
-import models.JourneyModel.Residency.{AlwaysLivedAbroad, AlwaysLivedInUk, LivedInUkAndAbroad}
+import models.NationalityGroupOrdering
+import models.journey.JourneyModel.Residency.{AlwaysLivedAbroad, AlwaysLivedInUk, LivedInUkAndAbroad}
 import models.domain.Nationality.UkCta
+import models.journey.JourneyModel
 import play.api.libs.json.{Json, OWrites}
 
 import java.time.LocalDate

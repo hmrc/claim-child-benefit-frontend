@@ -22,6 +22,7 @@ import com.dmanchester.playfop.sapi.PlayFop
 import config.FeatureFlags
 import generators.ModelGenerators
 import models._
+import models.journey.JourneyModelProvider
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{never, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar

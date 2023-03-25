@@ -16,8 +16,8 @@
 
 package audit
 
-import models.JourneyModel
 import models.domain.Claim
+import models.journey.JourneyModel
 import play.api.libs.json.{Json, OWrites}
 
 import java.util.UUID

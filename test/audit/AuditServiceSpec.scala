@@ -21,7 +21,8 @@ import generators.ModelGenerators
 import models.BirthRegistrationMatchingResult.NotAttempted
 import models.OtherEligibilityFailReason.{ApplicantReceivedBenefitsAbroad, ApplicantWorkedAbroad, PartnerReceivedBenefitsAbroad, PartnerWorkedAbroad}
 import models.domain.Claim
-import models.{ApplicantPreviousName, BankAccountInsightsResponseModel, BirthCertificateSystemNumber, Country, CurrentlyReceivingChildBenefit, EmploymentStatus, JourneyModel, Nationality, PartnerClaimingChildBenefit}
+import models.journey.JourneyModel
+import models.{ApplicantPreviousName, BankAccountInsightsResponseModel, BirthCertificateSystemNumber, Country, CurrentlyReceivingChildBenefit, EmploymentStatus, Nationality, PartnerClaimingChildBenefit}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
 import org.scalacheck.Arbitrary.arbitrary
@@ -72,7 +73,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
     relationship = JourneyModel.Relationship(
       status = models.RelationshipStatus.Cohabiting,
       since = Some(now),
-      partner = Some(models.JourneyModel.Partner(
+      partner = Some(JourneyModel.Partner(
         name = models.AdultName(title = Some("title"), firstName = "partner first", middleNames = Some("partner middle"), lastName = "partner last"),
         dateOfBirth = now,
         nationalities = NonEmptyList(Nationality.allNationalities.head, Nil),

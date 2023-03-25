@@ -21,6 +21,7 @@ import models.OtherEligibilityFailReason._
 import models.PartnerClaimingChildBenefit.{GettingPayments, NotGettingPayments, WaitingToHear}
 import models.ReasonNotToSubmit._
 import models.RelationshipStatus._
+import models.journey.JourneyModelProvider
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalacheck.Arbitrary.arbitrary

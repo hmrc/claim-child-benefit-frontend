@@ -22,6 +22,7 @@ import connectors.{ClaimChildBenefitConnector, UserAllowListConnector}
 import generators.Generators
 import models._
 import models.domain.Claim
+import models.journey.JourneyModel
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.{Mockito, MockitoSugar}

@@ -20,7 +20,8 @@ import cats.data.NonEmptyList
 import com.dmanchester.playfop.sapi.PlayFop
 import connectors.ClaimChildBenefitConnector
 import generators.ModelGenerators
-import models.{AdultName, CurrentlyReceivingChildBenefit, Done, JourneyModel, RelationshipStatus, SupplementaryMetadata}
+import models.journey.JourneyModel
+import models.{AdultName, CurrentlyReceivingChildBenefit, Done, RelationshipStatus, SupplementaryMetadata}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito

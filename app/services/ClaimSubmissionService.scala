@@ -21,7 +21,8 @@ import connectors.ClaimChildBenefitConnector
 import logging.Logging
 import models.domain.Claim
 import models.requests.{AuthenticatedIdentifierRequest, DataRequest}
-import models.{Done, JourneyModelProvider}
+import models.{Done}
+import models.journey.JourneyModelProvider
 import services.ClaimSubmissionService.{CannotBuildJourneyModelException, NotAuthenticatedException}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.RequestOps._

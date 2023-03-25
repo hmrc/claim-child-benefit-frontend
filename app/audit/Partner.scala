@@ -15,8 +15,7 @@
  */
 
 package audit
-
-import models.JourneyModel
+import models.journey.JourneyModel
 import play.api.libs.json.{Json, Writes}
 
 import java.time.LocalDate

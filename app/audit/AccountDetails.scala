@@ -16,7 +16,8 @@
 
 package audit
 
-import models.{BankAccountInsightsResponseModel, JourneyModel}
+import models.{BankAccountInsightsResponseModel}
+import models.journey.JourneyModel
 import play.api.libs.json.{Json, Writes}
 
 

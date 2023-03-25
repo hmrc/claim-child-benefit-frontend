@@ -16,7 +16,8 @@
 
 package models.domain
 
-import models.{BankAccountDetails, BankAccountHolder, BankAccountInsightsResponseModel, JourneyModel}
+import models.journey.JourneyModel
+import models.{BankAccountDetails, BankAccountHolder, BankAccountInsightsResponseModel}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import play.api.libs.json.Json

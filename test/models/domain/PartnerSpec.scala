@@ -19,7 +19,8 @@ package models.domain
 import cats.data.NonEmptyList
 import generators.ModelGenerators
 import models.PartnerClaimingChildBenefit._
-import models.{AdultName, EmploymentStatus, JourneyModel}
+import models.journey.JourneyModel
+import models.{AdultName, EmploymentStatus}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.OptionValues

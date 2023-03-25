@@ -19,9 +19,10 @@ package models
 import cats.data.NonEmptyList
 import generators.ModelGenerators
 import models.BirthRegistrationMatchingResult.{Matched, NotAttempted, NotMatched}
-import models.JourneyModel.EldestChild
-import models.JourneyModel.Residency._
+import models.journey.JourneyModel.EldestChild
+import models.journey.JourneyModel.Residency._
 import models.RelationshipStatus._
+import models.journey.{JourneyModel, JourneyModelProvider}
 import models.{ChildBirthRegistrationCountry => BirthCountry}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{reset, times, verify, when}

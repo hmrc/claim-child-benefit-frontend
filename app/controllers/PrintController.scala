@@ -21,7 +21,8 @@ import com.dmanchester.playfop.sapi.PlayFop
 import config.FeatureFlags
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import logging.Logging
-import models.{JourneyModel, JourneyModelProvider, UserAnswers}
+import models.journey.{JourneyModel, JourneyModelProvider}
+import models.{UserAnswers}
 import org.apache.fop.apps.FOUserAgent
 import org.apache.xmlgraphics.util.MimeConstants
 import play.api.i18n.I18nSupport

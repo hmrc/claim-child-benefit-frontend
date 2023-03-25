@@ -16,7 +16,8 @@
 
 package audit
 
-import models.{JourneyModel, PaymentFrequency}
+import models.{PaymentFrequency}
+import models.journey.JourneyModel
 import play.api.libs.json.{JsString, Json, Writes}
 
 sealed trait PaymentPreference

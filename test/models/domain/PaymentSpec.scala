@@ -17,8 +17,8 @@
 package models.domain
 
 import generators.ModelGenerators
-import models.JourneyModel
-import models.JourneyModel.EldestChild
+import models.journey.JourneyModel.EldestChild
+import models.journey.JourneyModel
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec

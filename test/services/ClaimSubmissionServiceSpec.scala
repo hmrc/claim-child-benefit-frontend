@@ -23,6 +23,7 @@ import connectors.ClaimChildBenefitConnector
 import generators.Generators
 import models.PartnerClaimingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments, WaitingToHear}
 import models._
+import models.journey.JourneyModelProvider
 import models.requests.{AuthenticatedIdentifierRequest, DataRequest, UnauthenticatedIdentifierRequest}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo

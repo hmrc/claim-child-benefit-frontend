@@ -18,7 +18,8 @@ package services
 
 import com.dmanchester.playfop.sapi.PlayFop
 import connectors.ClaimChildBenefitConnector
-import models.{Done, JourneyModel, SupplementaryMetadata}
+import models.journey.JourneyModel
+import models.{Done, SupplementaryMetadata}
 import org.apache.fop.apps.FOUserAgent
 import org.apache.xmlgraphics.util.MimeConstants
 import play.api.i18n.{I18nSupport, MessagesApi}
