@@ -1,11 +1,10 @@
 package connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock._
-import com.github.tomakehurst.wiremock.http.Fault
 import connectors.ClaimChildBenefitConnector._
 import generators.ModelGenerators
 import models.domain._
-import models.{AdultName, CheckLimitResponse, DesignatoryDetails, Done, NPSAddress, SupplementaryMetadata}
+import models.{AdultName, CheckLimitResponse, DesignatoryDetails, Done, NPSAddress, RelationshipDetails, SupplementaryMetadata}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -51,6 +50,7 @@ class ClaimChildBenefitConnectorSpec
       |"residentialAddress": {"line1": "123", "postcode": "NE98 1ZZ"},
       |"dateOfBirth": "2000-02-01"
       |}""".stripMargin
+
   private val happyDesignatoryDetailsModel = DesignatoryDetails(
     realName = Some(AdultName(Some("Mrs"), "foo", Some("baz"), "bar")),
     knownAsName = None,
@@ -405,6 +405,41 @@ class ClaimChildBenefitConnectorSpec
       )
 
       connector.incrementThrottleCount().failed.futureValue
+    }
+  }
+
+  ".relationshipDetails" - {
+
+    "when valid json is returned" - {
+
+      "must return a relationship details model" in {
+
+        val json = """{"hasClaimedChildBenefit": true}"""
+
+        server.stubFor(
+          get(urlEqualTo("/claim-child-benefit/relationship-details"))
+            .willReturn(ok(json))
+        )
+
+        val result = connector.relationshipDetails().futureValue
+
+        result mustEqual RelationshipDetails(hasClaimedChildBenefit = true)
+      }
+    }
+
+    "when an error is returned" - {
+
+      "must return a failed future" in {
+
+        server.stubFor(
+          get(urlEqualTo("/claim-child-benefit/relationship-details"))
+            .willReturn(aResponse().withStatus(500))
+        )
+
+        val result = connector.relationshipDetails()
+
+        result.failed.futureValue mustBe an[Exception]
+      }
     }
   }
 }

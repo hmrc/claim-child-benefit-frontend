@@ -22,7 +22,7 @@ import config.Service
 import connectors.ClaimChildBenefitConnector._
 import connectors.SubmitClaimHttpParser._
 import models.domain.Claim
-import models.{CheckLimitResponse, DesignatoryDetails, Done, SupplementaryMetadata}
+import models.{CheckLimitResponse, DesignatoryDetails, Done, RelationshipDetails, SupplementaryMetadata}
 import play.api.Configuration
 import play.api.libs.json.Json
 import play.api.mvc.MultipartFormData
@@ -47,6 +47,7 @@ class ClaimChildBenefitConnector @Inject()(
   private val supplementaryDataUrl = url"$baseUrl/claim-child-benefit/supplementary-data"
   private val checkThrottleUrl = url"$baseUrl/claim-child-benefit/throttle/check"
   private val incrementThrottleCountUrl = url"$baseUrl/claim-child-benefit/throttle/increment"
+  private val relationshipDetailsUrl = url"$baseUrl/claim-child-benefit/relationship-details"
 
   private val internalAuthToken = config.get[String]("internal-auth.token")
 
@@ -108,6 +109,12 @@ class ClaimChildBenefitConnector @Inject()(
       .post(incrementThrottleCountUrl)
       .execute[HttpResponse]
       .map(_ => Done)
+
+  def relationshipDetails()(implicit hc: HeaderCarrier): Future[RelationshipDetails] = {
+    httpClient
+      .get(relationshipDetailsUrl)
+      .execute[RelationshipDetails]
+  }
 }
 
 object ClaimChildBenefitConnector {
