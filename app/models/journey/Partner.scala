@@ -16,8 +16,11 @@
 
 package models.journey
 
-import cats.data.NonEmptyList
-import models.{AdultName, Country, EmploymentStatus, Nationality, PartnerClaimingChildBenefit}
+import cats.data._
+import cats.implicits._
+import models.{AdultName, Country, EmploymentStatus, Nationality, PartnerClaimingChildBenefit, UserAnswers}
+import pages.partner._
+import queries.{AllCountriesPartnerReceivedBenefits, AllCountriesPartnerWorked, AllPartnerNationalities, Query}
 import uk.gov.hmrc.domain.Nino
 
 import java.time.LocalDate
@@ -34,3 +37,50 @@ final case class Partner(
                           countriesReceivedBenefits: List[Country],
                           employmentStatus: Set[EmploymentStatus]
                         )
+
+object Partner {
+
+  def build(answers: UserAnswers): IorNec[Query, Partner] = {
+
+    import models.PartnerClaimingChildBenefit._
+
+    def getPartnerNino: IorNec[Query, Option[Nino]] =
+      answers.getIor(PartnerNinoKnownPage).flatMap {
+        case true => answers.getIor(PartnerNinoPage).map(nino => Some(nino))
+        case false => Ior.Right(None)
+      }
+
+    def getPartnerEldestChild: IorNec[Query, Option[EldestChild]] =
+      EldestChild.buildPartnerEldestChild(answers)
+
+    def getNationalities: IorNec[Query, NonEmptyList[Nationality]] = {
+      val nationalities = answers.get(AllPartnerNationalities).getOrElse(Nil)
+      NonEmptyList.fromList(nationalities).toRightIor(NonEmptyChain.one(AllPartnerNationalities))
+    }
+
+    def getCountriesWorked: IorNec[Query, List[Country]] =
+      answers.getIor(PartnerWorkedAbroadPage).flatMap {
+        case true => answers.getIor(AllCountriesPartnerWorked)
+        case false => Ior.Right(Nil)
+      }
+
+    def getCountriesReceivedBenefits: IorNec[Query, List[Country]] =
+      answers.getIor(PartnerReceivedBenefitsAbroadPage).flatMap {
+        case true => answers.getIor(AllCountriesPartnerReceivedBenefits)
+        case false => Ior.Right(Nil)
+      }
+
+    (
+      answers.getIor(PartnerNamePage),
+      answers.getIor(PartnerDateOfBirthPage),
+      getNationalities,
+      getPartnerNino,
+      answers.getIor(PartnerIsHmfOrCivilServantPage),
+      answers.getIor(PartnerClaimingChildBenefitPage),
+      getPartnerEldestChild,
+      getCountriesWorked,
+      getCountriesReceivedBenefits,
+      answers.getIor(PartnerEmploymentStatusPage)
+    ).parMapN(Partner.apply)
+  }
+}
