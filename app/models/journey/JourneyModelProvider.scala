@@ -483,35 +483,8 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
     import CurrentlyReceivingChildBenefit._
     import PaymentPreference._
 
-    def getBank: IorNec[Query, BankAccountWithHolder] =
-      (
-        answers.getIor(BankAccountHolderPage),
-        answers.getIor(BankAccountDetailsPage),
-        answers
-          .get(BankAccountInsightsResultQuery)
-          .map(x => Ior.Right(Some(x)))
-          .getOrElse(Ior.Right(None))
-      ).parMapN(BankAccountWithHolder.apply)
-
-    def getBuildingSociety: IorNec[Query, BuildingSocietyWithHolder] =
-      (
-        answers.getIor(BankAccountHolderPage),
-        answers.getIor(BuildingSocietyDetailsPage)
-      ).parMapN(BuildingSocietyWithHolder.apply)
-
-    def getAccountDetails: IorNec[Query, AccountDetailsWithHolder] =
-      answers.getIor(AccountTypePage).flatMap {
-        case AccountType.SortCodeAccountNumber     => getBank
-        case AccountType.BuildingSocietyRollNumber => getBuildingSociety
-      }
-
     def getBankAccount: IorNec[Query, Option[AccountDetailsWithHolder]] =
-      answers.getIor(ApplicantHasSuitableAccountPage).flatMap {
-        case true =>
-          getAccountDetails.map(Some(_))
-        case false =>
-          Ior.Right(None)
-      }
+      AccountDetailsWithHolder.build(answers)
 
     def getEldestChild: IorNec[Query, EldestChild] =
       EldestChild.buildApplicantEldestChild(answers)

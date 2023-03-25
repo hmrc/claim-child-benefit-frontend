@@ -16,10 +16,47 @@
 
 package models.journey
 
-import models.{BankAccountDetails, BankAccountHolder, BankAccountInsightsResponseModel, BuildingSocietyDetails}
+import cats.data._
+import cats.implicits._
+import models.{AccountType, BankAccountDetails, BankAccountHolder, BankAccountInsightsResponseModel, BuildingSocietyDetails, UserAnswers}
+import pages.payments._
+import queries.{BankAccountInsightsResultQuery, Query}
 
 sealed trait AccountDetailsWithHolder
 
 final case class BankAccountWithHolder(holder: BankAccountHolder, details: BankAccountDetails, risk: Option[BankAccountInsightsResponseModel]) extends AccountDetailsWithHolder
 
 final case class BuildingSocietyWithHolder(holder: BankAccountHolder, details: BuildingSocietyDetails) extends AccountDetailsWithHolder
+
+object AccountDetailsWithHolder {
+
+  def build(answers: UserAnswers): IorNec[Query, Option[AccountDetailsWithHolder]] =
+    answers.getIor(ApplicantHasSuitableAccountPage).flatMap {
+      case true =>
+        getAccountDetails(answers).map(Some(_))
+      case false =>
+        Ior.Right(None)
+    }
+
+  private def getBank(answers: UserAnswers): IorNec[Query, BankAccountWithHolder] =
+    (
+      answers.getIor(BankAccountHolderPage),
+      answers.getIor(BankAccountDetailsPage),
+      answers
+        .get(BankAccountInsightsResultQuery)
+        .map(x => Ior.Right(Some(x)))
+        .getOrElse(Ior.Right(None))
+    ).parMapN(BankAccountWithHolder.apply)
+
+  private def getBuildingSociety(answers: UserAnswers): IorNec[Query, BuildingSocietyWithHolder] =
+    (
+      answers.getIor(BankAccountHolderPage),
+      answers.getIor(BuildingSocietyDetailsPage)
+    ).parMapN(BuildingSocietyWithHolder.apply)
+
+  private def getAccountDetails(answers: UserAnswers): IorNec[Query, AccountDetailsWithHolder] =
+    answers.getIor(AccountTypePage).flatMap {
+      case AccountType.SortCodeAccountNumber     => getBank(answers)
+      case AccountType.BuildingSocietyRollNumber => getBuildingSociety(answers)
+    }
+}
