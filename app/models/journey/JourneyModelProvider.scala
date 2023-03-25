@@ -20,8 +20,7 @@ import cats.data._
 import cats.implicits._
 import logging.Logging
 import models.ApplicantResidence._
-import models.journey.JourneyModel._
-import models.{AccountType, Address, AdultName, ApplicantPreviousName, Benefits, BirthCertificateNumber, BirthRegistrationMatchingRequest, BirthRegistrationMatchingResult, ChildName, Country, CurrentlyReceivingChildBenefit, Index, Nationality, PaymentFrequency, UserAnswers, ChildBirthRegistrationCountry => RegistrationCountry}
+import models.{Address, AdultName, ApplicantPreviousName, Benefits, BirthCertificateNumber, BirthRegistrationMatchingRequest, BirthRegistrationMatchingResult, ChildName, Country, CurrentlyReceivingChildBenefit, Index, Nationality, PaymentFrequency, UserAnswers, ChildBirthRegistrationCountry => RegistrationCountry}
 import pages._
 import pages.applicant._
 import pages.child._
@@ -317,68 +316,8 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
         }
       }
 
-    def getResidency: IorNec[Query, Residency] = {
-
-      def getCountriesWorked: IorNec[Query, List[Country]] =
-        answers.getIor(ApplicantWorkedAbroadPage).flatMap {
-          case true => answers.getIor(AllCountriesApplicantWorked)
-          case false => Ior.Right(Nil)
-        }
-
-      def getCountriesReceivedBenefits: IorNec[Query, List[Country]] =
-        answers.getIor(ApplicantReceivedBenefitsAbroadPage).flatMap {
-          case true => answers.getIor(AllCountriesApplicantReceivedBenefits)
-          case false => Ior.Right(Nil)
-        }
-
-      answers.getIor(ApplicantResidencePage).flatMap {
-        case AlwaysUk =>
-          Ior.Right(Residency.AlwaysLivedInUk)
-
-        case UkAndAbroad =>
-          def getCountry = answers.getIor(ApplicantUsuallyLivesInUkPage).flatMap {
-            case true => Ior.Right(None)
-            case false => answers.getIor(ApplicantUsualCountryOfResidencePage).map(Some(_))
-          }
-
-          def getArrivalDate: IorNec[Query, Option[LocalDate]] = {
-            if (answers.isAuthenticated) {
-              answers.get(DesignatoryAddressInUkPage).map {
-                case true => answers.getIor(ApplicantArrivedInUkPage).map(Some(_))
-                case false => Ior.Right(None)
-              }.getOrElse {
-                if (answers.designatoryDetails.exists(x => x.residentialAddress.exists(_.isUkAddress))) {
-                  answers.getIor(ApplicantArrivedInUkPage).map(Some(_))
-                } else {
-                  Ior.Right(None)
-                }
-              }
-            } else {
-              answers.getIor(ApplicantCurrentAddressInUkPage).flatMap {
-                case true => answers.getIor(ApplicantArrivedInUkPage).map(Some(_))
-                case false => Ior.Right(None)
-              }
-            }
-          }
-
-          (
-            getCountry,
-            getArrivalDate,
-            answers.getIor(ApplicantEmploymentStatusPage),
-            getCountriesWorked,
-            getCountriesReceivedBenefits
-          ).parMapN(Residency.LivedInUkAndAbroad)
-
-        case AlwaysAbroad =>
-          (
-            answers.getIor(ApplicantUsualCountryOfResidencePage),
-            answers.getIor(ApplicantEmploymentStatusPage),
-            getCountriesWorked,
-            getCountriesReceivedBenefits
-          ).parMapN(Residency.AlwaysLivedAbroad)
-
-      }
-    }
+    def getResidency: IorNec[Query, Residency] =
+      Residency.build(answers)
 
     def getNationalities: IorNec[Query, NonEmptyList[Nationality]] = {
       val nationalities = answers.get(AllApplicantNationalities).getOrElse(Nil)
