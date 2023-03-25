@@ -211,60 +211,7 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
       }
 
       def getPreviousGuardian: IorNec[Query, Option[PreviousGuardian]] =
-        answers.getIor(ChildLivesWithApplicantPage(index)).flatMap {
-          case true =>
-            answers.getIor(ChildLivedWithAnyoneElsePage(index)).flatMap {
-              case true =>
-
-                val name = answers.getIor(PreviousGuardianNameKnownPage(index)).flatMap {
-                  case true => answers.getIor(PreviousGuardianNamePage(index)).map(Some(_))
-                  case false => Ior.Right(None)
-                }
-                val address = answers.getIor(PreviousGuardianNameKnownPage(index)).flatMap {
-                  case true  => getPreviousGuardianAddress
-                  case false => Ior.Right(None)
-                }
-                val phoneNumber = answers.getIor(PreviousGuardianNameKnownPage(index)).flatMap {
-                  case true  => getPreviousGuardianPhoneNumber
-                  case false => Ior.Right(None)
-                }
-
-                (
-                  name,
-                  address,
-                  phoneNumber
-                ).parMapN(PreviousGuardian.apply).map(Some(_))
-
-              case false =>
-                Ior.Right(None)
-            }
-
-          case false =>
-            Ior.Right(None)
-        }
-
-      def getPreviousGuardianAddress: IorNec[Query, Option[Address]] = {
-        answers.getIor(PreviousGuardianAddressKnownPage(index)).flatMap {
-          case true =>
-            answers.getIor(PreviousGuardianAddressInUkPage(index)).flatMap {
-              case true => answers.getIor(PreviousGuardianUkAddressPage(index)).map(Some(_))
-              case false => answers.getIor(PreviousGuardianInternationalAddressPage(index)).map(Some(_))
-            }
-
-          case false =>
-            Ior.Right(None)
-        }
-      }
-
-      def getPreviousGuardianPhoneNumber: IorNec[Query, Option[String]] = {
-        answers.getIor(PreviousGuardianPhoneNumberKnownPage(index)).flatMap {
-          case true =>
-              answers.getIor(PreviousGuardianPhoneNumberPage(index)).map(Some(_))
-
-          case false =>
-            Ior.Right(None)
-        }
-      }
+        PreviousGuardian.build(answers, index)
 
       def getDateChildStartedLivingWithApplicant: IorNec[Query, Option[LocalDate]] =
         answers.getIor(ChildLivesWithApplicantPage(index)).flatMap {
