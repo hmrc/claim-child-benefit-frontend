@@ -16,6 +16,47 @@
 
 package models.journey
 
-import models.{Address, AdultName}
+import cats.data._
+import cats.implicits._
+import models.{Address, AdultName, Index, UserAnswers}
+import pages.child._
+import queries.Query
 
 final case class PreviousClaimant(name: Option[AdultName], address: Option[Address])
+
+object PreviousClaimant {
+
+  def build(answers: UserAnswers, index: Index): IorNec[Query, Option[PreviousClaimant]] =
+    answers.getIor(AnyoneClaimedForChildBeforePage(index)).flatMap {
+      case true =>
+        val name = answers.getIor(PreviousClaimantNameKnownPage(index)).flatMap {
+          case true => answers.getIor(PreviousClaimantNamePage(index)).map(Some(_))
+          case false => Ior.Right(None)
+        }
+
+        val address = answers.getIor(PreviousClaimantNameKnownPage(index)).flatMap {
+          case true => getPreviousClaimantAddress(answers, index)
+          case false => Ior.Right(None)
+        }
+        (
+          name,
+          address
+        ).parMapN(PreviousClaimant.apply).map(Some(_))
+
+      case false =>
+        Ior.Right(None)
+    }
+
+  private def getPreviousClaimantAddress(answers: UserAnswers, index: Index): IorNec[Query, Option[Address]] = {
+    answers.getIor(PreviousClaimantAddressKnownPage(index)).flatMap {
+      case true =>
+        answers.getIor(PreviousClaimantAddressInUkPage(index)).flatMap {
+          case true => answers.getIor(PreviousClaimantUkAddressPage(index)).map(Some(_))
+          case false => answers.getIor(PreviousClaimantInternationalAddressPage(index)).map(Some(_))
+        }
+
+      case false =>
+        Ior.Right(None)
+    }
+  }
+}
