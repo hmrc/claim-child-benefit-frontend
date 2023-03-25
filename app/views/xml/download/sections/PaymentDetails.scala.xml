@@ -10,7 +10,7 @@
     existingAccount: ExistingAccount
 )
 
-@(model: JourneyModel)(implicit messages: Messages)
+@(model: journey.JourneyModel)(implicit messages: Messages)
 
 <fo:page-sequence master-reference="main">
 
@@ -28,16 +28,16 @@
                     <fo:block role="H2" id="payment-details" font-size="18pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.paymentDetails")</fo:block>
 
                     @{model.paymentPreference match {
-                        case JourneyModel.PaymentPreference.DoNotPay(_) =>
+                        case journey.PaymentPreference.DoNotPay(_) =>
                             doNotPay()
 
-                        case JourneyModel.PaymentPreference.Weekly(bankAccount, _) =>
+                        case journey.PaymentPreference.Weekly(bankAccount, _) =>
                             weekly(bankAccount)
 
-                        case JourneyModel.PaymentPreference.EveryFourWeeks(bankAccount, _) =>
+                        case journey.PaymentPreference.EveryFourWeeks(bankAccount, _) =>
                             everyFourWeeks(bankAccount)
 
-                        case JourneyModel.PaymentPreference.ExistingAccount(eldestChild) =>
+                        case journey.PaymentPreference.ExistingAccount(eldestChild) =>
                             existingAccount(eldestChild)
                     }}
                 </fo:block-container>

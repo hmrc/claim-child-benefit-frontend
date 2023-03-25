@@ -14,20 +14,8 @@
  * limitations under the License.
  */
 
-package audit
+package models.journey
 
-import models.journey
-import play.api.libs.json.{Json, Writes}
+import models.{Address, AdultName}
 
-final case class Guardian(name: Option[AdultName], address: Option[Address])
-
-object Guardian {
-
-  implicit lazy val writes: Writes[Guardian] = Json.writes
-
-  def build(guardian: journey.Guardian): Guardian =
-    Guardian(
-      name = guardian.name.map(AdultName.build),
-      address = guardian.address.map(Address.build)
-    )
-}
+final case class PreviousClaimant(name: Option[AdultName], address: Option[Address])

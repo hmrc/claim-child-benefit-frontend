@@ -1,6 +1,6 @@
 @this()
 
-@(model: JourneyModel)(implicit messages: Messages)
+@(model: journey.JourneyModel)(implicit messages: Messages)
 
 <fo:bookmark-tree>
     <fo:bookmark internal-destination="title">

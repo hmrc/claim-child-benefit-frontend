@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package models
+package models.journey
 
 import generators.ModelGenerators
 import models.OtherEligibilityFailReason._
 import models.PartnerClaimingChildBenefit.{GettingPayments, NotGettingPayments, WaitingToHear}
 import models.ReasonNotToSubmit._
 import models.RelationshipStatus._
-import models.journey.JourneyModelProvider
+import models.{AccountType, AdultName, ApplicantRelationshipToChild, ApplicantResidence, BankAccountDetails, BankAccountHolder, BankAccountInsightsResponseModel, Benefits, BirthCertificateSystemNumber, BirthRegistrationMatchingResult, ChildBiologicalSex, ChildBirthRegistrationCountry, ChildName, Country, CurrentlyReceivingChildBenefit, DesignatoryDetails, DocumentType, EmploymentStatus, Income, Index, InternationalAddress, NPSAddress, Nationality, PartnerClaimingChildBenefit, RelationshipStatus, RequiredDocument, UkAddress, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalacheck.Arbitrary.arbitrary

@@ -16,8 +16,8 @@
 
 package audit
 
-import models.{PaymentFrequency}
-import models.journey.JourneyModel
+import models.PaymentFrequency
+import models.journey
 import play.api.libs.json.{JsString, Json, Writes}
 
 sealed trait PaymentPreference
@@ -100,24 +100,24 @@ object PaymentPreference {
     case doNotPay: DoNotPay => Json.toJson(doNotPay)(DoNotPay.writes)
   }
 
-  def build(paymentPreference: JourneyModel.PaymentPreference): PaymentPreference =
+  def build(paymentPreference: journey.PaymentPreference): PaymentPreference =
     paymentPreference match {
-      case JourneyModel.PaymentPreference.Weekly(bankAccount, eldestChild) =>
+      case journey.PaymentPreference.Weekly(bankAccount, eldestChild) =>
         Weekly(
           bankAccount.map(AccountDetails.build),
           eldestChild.map(EldestChild.build)
         )
 
-      case JourneyModel.PaymentPreference.EveryFourWeeks(bankAccount, eldestChild) =>
+      case journey.PaymentPreference.EveryFourWeeks(bankAccount, eldestChild) =>
         EveryFourWeeks(
           bankAccount.map(AccountDetails.build),
           eldestChild.map(EldestChild.build)
         )
 
-      case JourneyModel.PaymentPreference.ExistingAccount(eldestChild) =>
+      case journey.PaymentPreference.ExistingAccount(eldestChild) =>
         ExistingAccount(EldestChild.build(eldestChild))
 
-      case JourneyModel.PaymentPreference.DoNotPay(eldestChild) =>
+      case journey.PaymentPreference.DoNotPay(eldestChild) =>
         DoNotPay(eldestChild.map(EldestChild.build))
     }
 }

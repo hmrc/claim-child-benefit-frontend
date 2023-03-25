@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package models
+package models.journey
 
 import cats.data.NonEmptyList
 import generators.ModelGenerators
 import models.BirthRegistrationMatchingResult.{Matched, NotAttempted, NotMatched}
-import models.journey.JourneyModel.EldestChild
-import models.journey.JourneyModel.Residency._
 import models.RelationshipStatus._
-import models.journey.{JourneyModel, JourneyModelProvider}
-import models.{ChildBirthRegistrationCountry => BirthCountry}
+import models.journey.Residency.{AlwaysLivedInUk, LivedInUkAndAbroad}
+import models._
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{reset, times, verify, when}
 import org.scalacheck.Arbitrary.arbitrary
@@ -119,7 +117,7 @@ class JourneyModelProviderSpec
           .set(IncludeAdditionalInformationPage, false).success.value
 
         val expectedModel = JourneyModel(
-          applicant = JourneyModel.Applicant(
+          applicant = Applicant(
             name = applicantName,
             previousFamilyNames = Nil,
             dateOfBirth = now,
@@ -134,9 +132,9 @@ class JourneyModelProviderSpec
             changedDesignatoryDetails = None,
             correspondenceAddress = None
           ),
-          relationship = JourneyModel.Relationship(Single, None, None),
+          relationship = Relationship(Single, None, None),
           children = NonEmptyList(
-            JourneyModel.Child(
+            Child(
               name = childName,
               nameChangedByDeedPoll = None,
               previousNames = Nil,
@@ -154,7 +152,7 @@ class JourneyModelProviderSpec
             ), Nil
           ),
           benefits = None,
-          paymentPreference = JourneyModel.PaymentPreference.DoNotPay(None),
+          paymentPreference = PaymentPreference.DoNotPay(None),
           additionalInformation = None,
           userAuthenticated = false
         )
@@ -190,7 +188,7 @@ class JourneyModelProviderSpec
           .set(AdditionalInformationPage, "info").success.value
 
         val expectedModel = JourneyModel(
-          applicant = JourneyModel.Applicant(
+          applicant = Applicant(
             name = applicantName,
             previousFamilyNames = Nil,
             dateOfBirth = now,
@@ -205,10 +203,10 @@ class JourneyModelProviderSpec
             changedDesignatoryDetails = None,
             correspondenceAddress = None
           ),
-          relationship = JourneyModel.Relationship(
+          relationship = Relationship(
             status = Married,
             since = None,
-            partner = Some(JourneyModel.Partner(
+            partner = Some(Partner(
               name = partnerName,
               dateOfBirth = now,
               nationalities = NonEmptyList(partnerNationality, Nil),
@@ -222,7 +220,7 @@ class JourneyModelProviderSpec
             ))
           ),
           children = NonEmptyList(
-            JourneyModel.Child(
+            Child(
               name = childName,
               nameChangedByDeedPoll = None,
               previousNames = Nil,
@@ -240,7 +238,7 @@ class JourneyModelProviderSpec
             ), Nil
           ),
           benefits = None,
-          paymentPreference = JourneyModel.PaymentPreference.DoNotPay(None),
+          paymentPreference = PaymentPreference.DoNotPay(None),
           additionalInformation = Some("info"),
           userAuthenticated = false
         )
@@ -278,7 +276,7 @@ class JourneyModelProviderSpec
           .set(AdditionalInformationPage, "info").success.value
 
         val expectedModel = JourneyModel(
-          applicant = JourneyModel.Applicant(
+          applicant = Applicant(
             name = applicantName,
             previousFamilyNames = Nil,
             dateOfBirth = now,
@@ -293,10 +291,10 @@ class JourneyModelProviderSpec
             changedDesignatoryDetails = None,
             correspondenceAddress = None
           ),
-          relationship = JourneyModel.Relationship(
+          relationship = Relationship(
             status = Married,
             since = None,
-            partner = Some(JourneyModel.Partner(
+            partner = Some(Partner(
               name = partnerName,
               dateOfBirth = now,
               nationalities = NonEmptyList(partnerNationality, Nil),
@@ -310,7 +308,7 @@ class JourneyModelProviderSpec
             ))
           ),
           children = NonEmptyList(
-            JourneyModel.Child(
+            Child(
               name = childName,
               nameChangedByDeedPoll = None,
               previousNames = Nil,
@@ -328,7 +326,7 @@ class JourneyModelProviderSpec
             ), Nil
           ),
           benefits = None,
-          paymentPreference = JourneyModel.PaymentPreference.ExistingAccount(EldestChild(childName, LocalDate.now)),
+          paymentPreference = PaymentPreference.ExistingAccount(EldestChild(childName, LocalDate.now)),
           additionalInformation = Some("info"),
           userAuthenticated = false
         )
@@ -367,7 +365,7 @@ class JourneyModelProviderSpec
           .set(IncludeAdditionalInformationPage, false).success.value
 
         val expectedModel = JourneyModel(
-          applicant = JourneyModel.Applicant(
+          applicant = Applicant(
             name = applicantName,
             previousFamilyNames = Nil,
             dateOfBirth = now,
@@ -382,10 +380,10 @@ class JourneyModelProviderSpec
             changedDesignatoryDetails = None,
             correspondenceAddress = None
           ),
-          relationship = JourneyModel.Relationship(
+          relationship = Relationship(
             status = Married,
             since = None,
-            partner = Some(JourneyModel.Partner(
+            partner = Some(Partner(
               name = partnerName,
               dateOfBirth = now,
               nationalities = NonEmptyList(partnerNationality, Nil),
@@ -399,7 +397,7 @@ class JourneyModelProviderSpec
             ))
           ),
           children = NonEmptyList(
-            JourneyModel.Child(
+            Child(
               name = childName,
               nameChangedByDeedPoll = None,
               previousNames = Nil,
@@ -415,7 +413,7 @@ class JourneyModelProviderSpec
               previousGuardian = None,
               dateChildStartedLivingWithApplicant = None
             ), List(
-              JourneyModel.Child(
+              Child(
                 name = childName2,
                 nameChangedByDeedPoll = None,
                 previousNames = Nil,
@@ -434,7 +432,7 @@ class JourneyModelProviderSpec
             )
           ),
           benefits = None,
-          paymentPreference = JourneyModel.PaymentPreference.DoNotPay(None),
+          paymentPreference = PaymentPreference.DoNotPay(None),
           additionalInformation = None,
           userAuthenticated = false
 
@@ -461,8 +459,8 @@ class JourneyModelProviderSpec
             .set(WantToBePaidPage, true).success.value
             .set(IncludeAdditionalInformationPage, false).success.value
 
-          val expectedPaymentPreference = JourneyModel.PaymentPreference.ExistingAccount(
-            JourneyModel.EldestChild(eldestChildName, now)
+          val expectedPaymentPreference = PaymentPreference.ExistingAccount(
+            EldestChild(eldestChildName, now)
           )
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -499,9 +497,9 @@ class JourneyModelProviderSpec
               .set(BankAccountDetailsPage, bankAccountDetails).success.value
               .set(BankAccountInsightsResultQuery, bankAccountInsightsResponse).success.value
 
-            val expectedPaymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(
-              accountDetails = Some(JourneyModel.BankAccountWithHolder(bankAccountHolder, bankAccountDetails, Some(bankAccountInsightsResponse))),
-              eldestChild = Some(JourneyModel.EldestChild(eldestChildName, now))
+            val expectedPaymentPreference = PaymentPreference.EveryFourWeeks(
+              accountDetails = Some(BankAccountWithHolder(bankAccountHolder, bankAccountDetails, Some(bankAccountInsightsResponse))),
+              eldestChild = Some(EldestChild(eldestChildName, now))
             )
 
             val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -520,9 +518,9 @@ class JourneyModelProviderSpec
               .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks).success.value
               .set(ApplicantHasSuitableAccountPage, false).success.value
 
-            val expectedPaymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(
+            val expectedPaymentPreference = PaymentPreference.EveryFourWeeks(
               accountDetails = None,
-              eldestChild = Some(JourneyModel.EldestChild(eldestChildName, now))
+              eldestChild = Some(EldestChild(eldestChildName, now))
             )
 
             val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -547,9 +545,9 @@ class JourneyModelProviderSpec
               .set(AccountTypePage, AccountType.BuildingSocietyRollNumber).success.value
               .set(BuildingSocietyDetailsPage, buildingSocietyDetails).success.value
 
-            val expectedPaymentPreference = JourneyModel.PaymentPreference.Weekly(
-              accountDetails = Some(JourneyModel.BuildingSocietyWithHolder(bankAccountHolder, buildingSocietyDetails)),
-              eldestChild = Some(JourneyModel.EldestChild(eldestChildName, now))
+            val expectedPaymentPreference = PaymentPreference.Weekly(
+              accountDetails = Some(BuildingSocietyWithHolder(bankAccountHolder, buildingSocietyDetails)),
+              eldestChild = Some(EldestChild(eldestChildName, now))
             )
 
             val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -568,9 +566,9 @@ class JourneyModelProviderSpec
               .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
               .set(ApplicantHasSuitableAccountPage, false).success.value
 
-            val expectedPaymentPreference = JourneyModel.PaymentPreference.Weekly(
+            val expectedPaymentPreference = PaymentPreference.Weekly(
               accountDetails = None,
-              eldestChild = Some(JourneyModel.EldestChild(eldestChildName, now))
+              eldestChild = Some(EldestChild(eldestChildName, now))
             )
 
             val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
@@ -587,7 +585,7 @@ class JourneyModelProviderSpec
           val answers = baseAnswers
             .set(WantToBePaidPage, false).success.value
 
-          val expectedPaymentPreference = JourneyModel.PaymentPreference.DoNotPay(Some(JourneyModel.EldestChild(eldestChildName, now)))
+          val expectedPaymentPreference = PaymentPreference.DoNotPay(Some(EldestChild(eldestChildName, now)))
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -623,8 +621,8 @@ class JourneyModelProviderSpec
               .set(AccountTypePage, AccountType.SortCodeAccountNumber).success.value
               .set(BankAccountDetailsPage, bankAccountDetails).success.value
 
-            val expectedPaymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(
-              accountDetails = Some(JourneyModel.BankAccountWithHolder(bankAccountHolder, bankAccountDetails, None)),
+            val expectedPaymentPreference = PaymentPreference.EveryFourWeeks(
+              accountDetails = Some(BankAccountWithHolder(bankAccountHolder, bankAccountDetails, None)),
               eldestChild = None
             )
 
@@ -644,7 +642,7 @@ class JourneyModelProviderSpec
               .set(BankAccountHolderPage, bankAccountHolder).success.value
               .set(ApplicantHasSuitableAccountPage, false).success.value
 
-            val expectedPaymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(
+            val expectedPaymentPreference = PaymentPreference.EveryFourWeeks(
               accountDetails = None,
               eldestChild = None
             )
@@ -670,8 +668,8 @@ class JourneyModelProviderSpec
               .set(AccountTypePage, AccountType.SortCodeAccountNumber).success.value
               .set(BankAccountDetailsPage, bankAccountDetails).success.value
 
-            val expectedPaymentPreference = JourneyModel.PaymentPreference.Weekly(
-              accountDetails = Some(JourneyModel.BankAccountWithHolder(bankAccountHolder, bankAccountDetails, None)),
+            val expectedPaymentPreference = PaymentPreference.Weekly(
+              accountDetails = Some(BankAccountWithHolder(bankAccountHolder, bankAccountDetails, None)),
               eldestChild = None
             )
 
@@ -690,7 +688,7 @@ class JourneyModelProviderSpec
               .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
               .set(ApplicantHasSuitableAccountPage, false).success.value
 
-            val expectedPaymentPreference = JourneyModel.PaymentPreference.Weekly(
+            val expectedPaymentPreference = PaymentPreference.Weekly(
               accountDetails = None,
               eldestChild = None
             )
@@ -709,7 +707,7 @@ class JourneyModelProviderSpec
           val answers = baseAnswers
             .set(WantToBePaidPage, false).success.value
 
-          val expectedPaymentPreference = JourneyModel.PaymentPreference.DoNotPay(None)
+          val expectedPaymentPreference = PaymentPreference.DoNotPay(None)
 
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
@@ -732,7 +730,7 @@ class JourneyModelProviderSpec
           .set(ApplicantNinoPage, applicantNino).success.value
           .set(IncludeAdditionalInformationPage, false).success.value
 
-        val expectedApplicant = JourneyModel.Applicant(
+        val expectedApplicant = Applicant(
           name = applicantName,
           previousFamilyNames = Nil,
           dateOfBirth = now,
@@ -769,7 +767,7 @@ class JourneyModelProviderSpec
           .set(ApplicantPreviousFamilyNamePage(Index(1)), previousName2).success.value
           .set(IncludeAdditionalInformationPage, false).success.value
 
-        val expectedApplicant = JourneyModel.Applicant(
+        val expectedApplicant = Applicant(
           name = applicantName,
           previousFamilyNames = List(previousName1, previousName2),
           dateOfBirth = now,
@@ -813,7 +811,7 @@ class JourneyModelProviderSpec
           .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
           .set(IncludeAdditionalInformationPage, false).success.value
 
-        val expectedApplicant = JourneyModel.Applicant(
+        val expectedApplicant = Applicant(
           name = applicantName,
           previousFamilyNames = Nil,
           dateOfBirth = now,
@@ -860,7 +858,7 @@ class JourneyModelProviderSpec
             .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
             .set(IncludeAdditionalInformationPage, false).success.value
 
-          val expectedApplicant = JourneyModel.Applicant(
+          val expectedApplicant = Applicant(
             name = applicantName,
             previousFamilyNames = Nil,
             dateOfBirth = now,
@@ -905,7 +903,7 @@ class JourneyModelProviderSpec
             .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
             .set(IncludeAdditionalInformationPage, false).success.value
 
-          val expectedApplicant = JourneyModel.Applicant(
+          val expectedApplicant = Applicant(
             name = applicantName,
             previousFamilyNames = Nil,
             dateOfBirth = now,
@@ -950,7 +948,7 @@ class JourneyModelProviderSpec
           .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
           .set(IncludeAdditionalInformationPage, false).success.value
 
-        val expectedApplicant = JourneyModel.Applicant(
+        val expectedApplicant = Applicant(
           name = applicantName,
           previousFamilyNames = Nil,
           dateOfBirth = now,
@@ -994,7 +992,7 @@ class JourneyModelProviderSpec
           .set(CountryApplicantReceivedBenefitsPage(Index(0)), country).success.value
           .set(IncludeAdditionalInformationPage, false).success.value
 
-        val expectedApplicant = JourneyModel.Applicant(
+        val expectedApplicant = Applicant(
           name = applicantName,
           previousFamilyNames = Nil,
           dateOfBirth = now,
@@ -1052,7 +1050,7 @@ class JourneyModelProviderSpec
             val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
             errors mustBe empty
-            data.value.applicant mustEqual JourneyModel.Applicant(
+            data.value.applicant mustEqual Applicant(
               name = AdultName(None, "designatory first", None, "designatory last"),
               previousFamilyNames = Nil,
               dateOfBirth = designatoryDateOfBirth,
@@ -1061,7 +1059,7 @@ class JourneyModelProviderSpec
               previousAddress = None,
               telephoneNumber = phoneNumber,
               nationalities = NonEmptyList(applicantNationality, Nil),
-              residency = JourneyModel.Residency.LivedInUkAndAbroad(None, Some(LocalDate.now), EmploymentStatus.activeStatuses, Nil, Nil),
+              residency = Residency.LivedInUkAndAbroad(None, Some(LocalDate.now), EmploymentStatus.activeStatuses, Nil, Nil),
               memberOfHMForcesOrCivilServantAbroad = false,
               currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
               changedDesignatoryDetails = Some(false),
@@ -1100,7 +1098,7 @@ class JourneyModelProviderSpec
             val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
             errors mustBe empty
-            data.value.applicant mustEqual JourneyModel.Applicant(
+            data.value.applicant mustEqual Applicant(
               name = AdultName(None, "designatory first", None, "designatory last"),
               previousFamilyNames = Nil,
               dateOfBirth = designatoryDateOfBirth,
@@ -1109,7 +1107,7 @@ class JourneyModelProviderSpec
               previousAddress = None,
               telephoneNumber = phoneNumber,
               nationalities = NonEmptyList(applicantNationality, Nil),
-              residency = JourneyModel.Residency.LivedInUkAndAbroad(None, None, EmploymentStatus.activeStatuses, Nil, Nil),
+              residency = Residency.LivedInUkAndAbroad(None, None, EmploymentStatus.activeStatuses, Nil, Nil),
               memberOfHMForcesOrCivilServantAbroad = false,
               currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
               changedDesignatoryDetails = Some(false),
@@ -1150,7 +1148,7 @@ class JourneyModelProviderSpec
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
           errors mustBe empty
-          data.value.applicant mustEqual JourneyModel.Applicant(
+          data.value.applicant mustEqual Applicant(
             name = newName,
             previousFamilyNames = Nil,
             dateOfBirth = designatoryDateOfBirth,
@@ -1159,7 +1157,7 @@ class JourneyModelProviderSpec
             previousAddress = None,
             telephoneNumber = phoneNumber,
             nationalities = NonEmptyList(applicantNationality, Nil),
-            residency = JourneyModel.Residency.AlwaysLivedInUk,
+            residency = Residency.AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = false,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
             changedDesignatoryDetails = Some(true),
@@ -1203,7 +1201,7 @@ class JourneyModelProviderSpec
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
           errors mustBe empty
-          data.value.applicant mustEqual JourneyModel.Applicant(
+          data.value.applicant mustEqual Applicant(
             name = AdultName(None, "designatory first", None, "designatory last"),
             previousFamilyNames = Nil,
             dateOfBirth = designatoryDateOfBirth,
@@ -1212,7 +1210,7 @@ class JourneyModelProviderSpec
             previousAddress = None,
             telephoneNumber = phoneNumber,
             nationalities = NonEmptyList(applicantNationality, Nil),
-            residency = JourneyModel.Residency.LivedInUkAndAbroad(None, Some(LocalDate.now), EmploymentStatus.activeStatuses, Nil, Nil),
+            residency = Residency.LivedInUkAndAbroad(None, Some(LocalDate.now), EmploymentStatus.activeStatuses, Nil, Nil),
             memberOfHMForcesOrCivilServantAbroad = false,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
             changedDesignatoryDetails = Some(true),
@@ -1254,7 +1252,7 @@ class JourneyModelProviderSpec
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
           errors mustBe empty
-          data.value.applicant mustEqual JourneyModel.Applicant(
+          data.value.applicant mustEqual Applicant(
             name = AdultName(None, "designatory first", None, "designatory last"),
             previousFamilyNames = Nil,
             dateOfBirth = designatoryDateOfBirth,
@@ -1263,7 +1261,7 @@ class JourneyModelProviderSpec
             previousAddress = None,
             telephoneNumber = phoneNumber,
             nationalities = NonEmptyList(applicantNationality, Nil),
-            residency = JourneyModel.Residency.LivedInUkAndAbroad(None, None, EmploymentStatus.activeStatuses, Nil, Nil),
+            residency = Residency.LivedInUkAndAbroad(None, None, EmploymentStatus.activeStatuses, Nil, Nil),
             memberOfHMForcesOrCivilServantAbroad = false,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
             changedDesignatoryDetails = Some(true),
@@ -1304,7 +1302,7 @@ class JourneyModelProviderSpec
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
           errors mustBe empty
-          data.value.applicant mustEqual JourneyModel.Applicant(
+          data.value.applicant mustEqual Applicant(
             name = AdultName(None, "designatory first", None, "designatory last"),
             previousFamilyNames = Nil,
             dateOfBirth = designatoryDateOfBirth,
@@ -1313,7 +1311,7 @@ class JourneyModelProviderSpec
             previousAddress = None,
             telephoneNumber = phoneNumber,
             nationalities = NonEmptyList(applicantNationality, Nil),
-            residency = JourneyModel.Residency.AlwaysLivedInUk,
+            residency = Residency.AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = false,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
             changedDesignatoryDetails = Some(true),
@@ -1354,7 +1352,7 @@ class JourneyModelProviderSpec
           val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 
           errors mustBe empty
-          data.value.applicant mustEqual JourneyModel.Applicant(
+          data.value.applicant mustEqual Applicant(
             name = AdultName(None, "designatory first", None, "designatory last"),
             previousFamilyNames = Nil,
             dateOfBirth = designatoryDateOfBirth,
@@ -1363,7 +1361,7 @@ class JourneyModelProviderSpec
             previousAddress = None,
             telephoneNumber = phoneNumber,
             nationalities = NonEmptyList(applicantNationality, Nil),
-            residency = JourneyModel.Residency.AlwaysLivedInUk,
+            residency = Residency.AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = false,
             currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
             changedDesignatoryDetails = Some(true),
@@ -1387,7 +1385,7 @@ class JourneyModelProviderSpec
           .set(PartnerNinoPage, partnerNino).success.value
           .set(IncludeAdditionalInformationPage, false).success.value
 
-        val expectedPartner = JourneyModel.Partner(
+        val expectedPartner = Partner(
           name = partnerName,
           dateOfBirth = now,
           nationalities = NonEmptyList(partnerNationality, Nil),
@@ -1422,14 +1420,14 @@ class JourneyModelProviderSpec
           .set(PartnerEldestChildDateOfBirthPage, now).success.value
           .set(IncludeAdditionalInformationPage, false).success.value
 
-        val expectedPartner = JourneyModel.Partner(
+        val expectedPartner = Partner(
           name = partnerName,
           dateOfBirth = now,
           nationalities = NonEmptyList(partnerNationality, Nil),
           nationalInsuranceNumber = None,
           memberOfHMForcesOrCivilServantAbroad = false,
           currentlyClaimingChildBenefit = partnerClaiming,
-          eldestChild = Some(JourneyModel.EldestChild(partnerEldestChildName, now)),
+          eldestChild = Some(EldestChild(partnerEldestChildName, now)),
           countriesWorked = Nil,
           countriesReceivedBenefits = Nil,
           employmentStatus = EmploymentStatus.activeStatuses
@@ -1457,14 +1455,14 @@ class JourneyModelProviderSpec
           .set(PartnerEldestChildDateOfBirthPage, now).success.value
           .set(IncludeAdditionalInformationPage, false).success.value
 
-        val expectedPartner = JourneyModel.Partner(
+        val expectedPartner = Partner(
           name = partnerName,
           dateOfBirth = now,
           nationalities = NonEmptyList(partnerNationality, Nil),
           nationalInsuranceNumber = None,
           memberOfHMForcesOrCivilServantAbroad = false,
           currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments,
-          eldestChild = Some(JourneyModel.EldestChild(partnerEldestChildName, now)),
+          eldestChild = Some(EldestChild(partnerEldestChildName, now)),
           countriesWorked = Nil,
           countriesReceivedBenefits = Nil,
           employmentStatus = EmploymentStatus.activeStatuses
@@ -1493,7 +1491,7 @@ class JourneyModelProviderSpec
           .set(CountryPartnerReceivedBenefitsPage(Index(0)), country).success.value
           .set(IncludeAdditionalInformationPage, false).success.value
 
-        val expectedPartner = JourneyModel.Partner(
+        val expectedPartner = Partner(
           name = partnerName,
           dateOfBirth = now,
           nationalities = NonEmptyList(partnerNationality, Nil),
@@ -1528,7 +1526,7 @@ class JourneyModelProviderSpec
           .set(ChildPreviousNamePage(Index(0), Index(1)), childPreviousName2).success.value
           .set(IncludeAdditionalInformationPage, false).success.value
 
-        val expectedChildDetails = JourneyModel.Child(
+        val expectedChildDetails = Child(
           name = childName,
           nameChangedByDeedPoll = Some(true),
           previousNames = List(childPreviousName1, childPreviousName2),
@@ -1565,7 +1563,7 @@ class JourneyModelProviderSpec
           .set(BirthCertificateHasSystemNumberPage(Index(0)), false).success.value
           .set(IncludeAdditionalInformationPage, false).success.value
 
-        val expectedChildDetails = JourneyModel.Child(
+        val expectedChildDetails = Child(
           name = childName,
           nameChangedByDeedPoll = None,
           previousNames = Nil,
@@ -1602,7 +1600,7 @@ class JourneyModelProviderSpec
           .set(BirthCertificateHasSystemNumberPage(Index(0)), false).success.value
           .set(IncludeAdditionalInformationPage, false).success.value
 
-        val expectedChildDetails = JourneyModel.Child(
+        val expectedChildDetails = Child(
           name = childName,
           nameChangedByDeedPoll = None,
           previousNames = Nil,
@@ -1642,7 +1640,7 @@ class JourneyModelProviderSpec
             .set(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBirthCertificateDetails).success.value
             .set(IncludeAdditionalInformationPage, false).success.value
 
-          val expectedChildDetails = JourneyModel.Child(
+          val expectedChildDetails = Child(
             name = childName,
             nameChangedByDeedPoll = None,
             previousNames = Nil,
@@ -1679,7 +1677,7 @@ class JourneyModelProviderSpec
             .set(ScottishBirthCertificateHasNumbersPage(Index(0)), false).success.value
             .set(IncludeAdditionalInformationPage, false).success.value
 
-          val expectedChildDetails = JourneyModel.Child(
+          val expectedChildDetails = Child(
             name = childName,
             nameChangedByDeedPoll = None,
             previousNames = Nil,
@@ -1717,7 +1715,7 @@ class JourneyModelProviderSpec
           .set(BirthCertificateHasSystemNumberPage(Index(0)), false).success.value
           .set(IncludeAdditionalInformationPage, false).success.value
 
-        val expectedChildDetails = JourneyModel.Child(
+        val expectedChildDetails = Child(
           name = childName,
           nameChangedByDeedPoll = None,
           previousNames = Nil,
@@ -1755,7 +1753,7 @@ class JourneyModelProviderSpec
           .set(BirthCertificateHasSystemNumberPage(Index(0)), false).success.value
           .set(IncludeAdditionalInformationPage, false).success.value
 
-        val expectedChildDetails = JourneyModel.Child(
+        val expectedChildDetails = Child(
           name = childName,
           nameChangedByDeedPoll = None,
           previousNames = Nil,
@@ -1795,7 +1793,7 @@ class JourneyModelProviderSpec
             .set(PreviousClaimantNameKnownPage(Index(0)), false).success.value
             .set(IncludeAdditionalInformationPage, false).success.value
 
-          val expectedChildDetails = JourneyModel.Child(
+          val expectedChildDetails = Child(
             name = childName,
             nameChangedByDeedPoll = None,
             previousNames = Nil,
@@ -1806,7 +1804,7 @@ class JourneyModelProviderSpec
             birthCertificateDetailsMatched = Matched,
             relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = false,
-            previousClaimant = Some(JourneyModel.PreviousClaimant(None, None)),
+            previousClaimant = Some(PreviousClaimant(None, None)),
             guardian = None,
             previousGuardian = None,
             dateChildStartedLivingWithApplicant = None
@@ -1834,7 +1832,7 @@ class JourneyModelProviderSpec
             .set(PreviousClaimantAddressKnownPage(Index(0)), false).success.value
             .set(IncludeAdditionalInformationPage, false).success.value
 
-          val expectedChildDetails = JourneyModel.Child(
+          val expectedChildDetails = Child(
             name = childName,
             nameChangedByDeedPoll = None,
             previousNames = Nil,
@@ -1845,7 +1843,7 @@ class JourneyModelProviderSpec
             birthCertificateDetailsMatched = Matched,
             relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = false,
-            previousClaimant = Some(JourneyModel.PreviousClaimant(Some(adultName), None)),
+            previousClaimant = Some(PreviousClaimant(Some(adultName), None)),
             guardian = None,
             previousGuardian = None,
             dateChildStartedLivingWithApplicant = None
@@ -1877,7 +1875,7 @@ class JourneyModelProviderSpec
               .set(PreviousClaimantUkAddressPage(Index(0)), ukAddress).success.value
               .set(IncludeAdditionalInformationPage, false).success.value
 
-            val expectedChildDetails = JourneyModel.Child(
+            val expectedChildDetails = Child(
               name = childName,
               nameChangedByDeedPoll = None,
               previousNames = Nil,
@@ -1888,7 +1886,7 @@ class JourneyModelProviderSpec
               birthCertificateDetailsMatched = Matched,
               relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
               adoptingThroughLocalAuthority = false,
-              previousClaimant = Some(JourneyModel.PreviousClaimant(Some(adultName), Some(ukAddress))),
+              previousClaimant = Some(PreviousClaimant(Some(adultName), Some(ukAddress))),
               guardian = None,
               previousGuardian = None,
               dateChildStartedLivingWithApplicant = None
@@ -1918,7 +1916,7 @@ class JourneyModelProviderSpec
               .set(PreviousClaimantInternationalAddressPage(Index(0)), internationalAddress).success.value
               .set(IncludeAdditionalInformationPage, false).success.value
 
-            val expectedChildDetails = JourneyModel.Child(
+            val expectedChildDetails = Child(
               name = childName,
               nameChangedByDeedPoll = None,
               previousNames = Nil,
@@ -1929,7 +1927,7 @@ class JourneyModelProviderSpec
               birthCertificateDetailsMatched = Matched,
               relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
               adoptingThroughLocalAuthority = false,
-              previousClaimant = Some(JourneyModel.PreviousClaimant(Some(adultName), Some(internationalAddress))),
+              previousClaimant = Some(PreviousClaimant(Some(adultName), Some(internationalAddress))),
               guardian = None,
               previousGuardian = None,
               dateChildStartedLivingWithApplicant = None
@@ -1959,7 +1957,7 @@ class JourneyModelProviderSpec
             .set(GuardianNameKnownPage(Index(0)), false).success.value
             .set(IncludeAdditionalInformationPage, false).success.value
 
-          val expectedChildDetails = JourneyModel.Child(
+          val expectedChildDetails = Child(
             name = childName,
             nameChangedByDeedPoll = None,
             previousNames = Nil,
@@ -1971,7 +1969,7 @@ class JourneyModelProviderSpec
             relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = false,
             previousClaimant = None,
-            guardian = Some(JourneyModel.Guardian(None, None)),
+            guardian = Some(Guardian(None, None)),
             previousGuardian = None,
             dateChildStartedLivingWithApplicant = None
           )
@@ -1998,7 +1996,7 @@ class JourneyModelProviderSpec
             .set(GuardianAddressKnownPage(Index(0)), false).success.value
             .set(IncludeAdditionalInformationPage, false).success.value
 
-          val expectedChildDetails = JourneyModel.Child(
+          val expectedChildDetails = Child(
             name = childName,
             nameChangedByDeedPoll = None,
             previousNames = Nil,
@@ -2010,7 +2008,7 @@ class JourneyModelProviderSpec
             relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
             adoptingThroughLocalAuthority = false,
             previousClaimant = None,
-            guardian = Some(JourneyModel.Guardian(Some(adultName), None)),
+            guardian = Some(Guardian(Some(adultName), None)),
             previousGuardian = None,
             dateChildStartedLivingWithApplicant = None
           )
@@ -2041,7 +2039,7 @@ class JourneyModelProviderSpec
               .set(GuardianUkAddressPage(Index(0)), ukAddress).success.value
               .set(IncludeAdditionalInformationPage, false).success.value
 
-            val expectedChildDetails = JourneyModel.Child(
+            val expectedChildDetails = Child(
               name = childName,
               nameChangedByDeedPoll = None,
               previousNames = Nil,
@@ -2053,7 +2051,7 @@ class JourneyModelProviderSpec
               relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
               adoptingThroughLocalAuthority = false,
               previousClaimant = None,
-              guardian = Some(JourneyModel.Guardian(Some(adultName), Some(ukAddress))),
+              guardian = Some(Guardian(Some(adultName), Some(ukAddress))),
               previousGuardian = None,
               dateChildStartedLivingWithApplicant = None
             )
@@ -2082,7 +2080,7 @@ class JourneyModelProviderSpec
               .set(GuardianInternationalAddressPage(Index(0)), internationalAddress).success.value
               .set(IncludeAdditionalInformationPage, false).success.value
 
-            val expectedChildDetails = JourneyModel.Child(
+            val expectedChildDetails = Child(
               name = childName,
               nameChangedByDeedPoll = None,
               previousNames = Nil,
@@ -2094,7 +2092,7 @@ class JourneyModelProviderSpec
               relationshipToApplicant = ApplicantRelationshipToChild.BirthChild,
               adoptingThroughLocalAuthority = false,
               previousClaimant = None,
-              guardian = Some(JourneyModel.Guardian(Some(adultName), Some(internationalAddress))),
+              guardian = Some(Guardian(Some(adultName), Some(internationalAddress))),
               previousGuardian = None,
               dateChildStartedLivingWithApplicant = None
             )
@@ -2124,7 +2122,7 @@ class JourneyModelProviderSpec
             .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now).success.value
             .set(IncludeAdditionalInformationPage, false).success.value
 
-          val expectedChildDetails = JourneyModel.Child(
+          val expectedChildDetails = Child(
             name = childName,
             nameChangedByDeedPoll = None,
             previousNames = Nil,
@@ -2137,7 +2135,7 @@ class JourneyModelProviderSpec
             adoptingThroughLocalAuthority = false,
             previousClaimant = None,
             guardian = None,
-            previousGuardian = Some(JourneyModel.PreviousGuardian(None, None, None)),
+            previousGuardian = Some(PreviousGuardian(None, None, None)),
             dateChildStartedLivingWithApplicant = Some(LocalDate.now)
           )
 
@@ -2165,7 +2163,7 @@ class JourneyModelProviderSpec
             .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now).success.value
             .set(IncludeAdditionalInformationPage, false).success.value
 
-          val expectedChildDetails = JourneyModel.Child(
+          val expectedChildDetails = Child(
             name = childName,
             nameChangedByDeedPoll = None,
             previousNames = Nil,
@@ -2178,7 +2176,7 @@ class JourneyModelProviderSpec
             adoptingThroughLocalAuthority = false,
             previousClaimant = None,
             guardian = None,
-            previousGuardian = Some(JourneyModel.PreviousGuardian(Some(adultName), None, None)),
+            previousGuardian = Some(PreviousGuardian(Some(adultName), None, None)),
             dateChildStartedLivingWithApplicant = Some(LocalDate.now)
           )
 
@@ -2210,7 +2208,7 @@ class JourneyModelProviderSpec
               .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now).success.value
               .set(IncludeAdditionalInformationPage, false).success.value
 
-            val expectedChildDetails = JourneyModel.Child(
+            val expectedChildDetails = Child(
               name = childName,
               nameChangedByDeedPoll = None,
               previousNames = Nil,
@@ -2223,7 +2221,7 @@ class JourneyModelProviderSpec
               adoptingThroughLocalAuthority = false,
               previousClaimant = None,
               guardian = None,
-              previousGuardian = Some(JourneyModel.PreviousGuardian(Some(adultName), Some(ukAddress), None)),
+              previousGuardian = Some(PreviousGuardian(Some(adultName), Some(ukAddress), None)),
               dateChildStartedLivingWithApplicant = Some(LocalDate.now)
             )
 
@@ -2253,7 +2251,7 @@ class JourneyModelProviderSpec
               .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now).success.value
               .set(IncludeAdditionalInformationPage, false).success.value
 
-            val expectedChildDetails = JourneyModel.Child(
+            val expectedChildDetails = Child(
               name = childName,
               nameChangedByDeedPoll = None,
               previousNames = Nil,
@@ -2266,7 +2264,7 @@ class JourneyModelProviderSpec
               adoptingThroughLocalAuthority = false,
               previousClaimant = None,
               guardian = None,
-              previousGuardian = Some(JourneyModel.PreviousGuardian(Some(adultName), Some(internationalAddress), None)),
+              previousGuardian = Some(PreviousGuardian(Some(adultName), Some(internationalAddress), None)),
               dateChildStartedLivingWithApplicant = Some(LocalDate.now)
             )
 
@@ -2296,7 +2294,7 @@ class JourneyModelProviderSpec
             .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now).success.value
             .set(IncludeAdditionalInformationPage, false).success.value
 
-          val expectedChildDetails = JourneyModel.Child(
+          val expectedChildDetails = Child(
             name = childName,
             nameChangedByDeedPoll = None,
             previousNames = Nil,
@@ -2309,7 +2307,7 @@ class JourneyModelProviderSpec
             adoptingThroughLocalAuthority = false,
             previousClaimant = None,
             guardian = None,
-            previousGuardian = Some(JourneyModel.PreviousGuardian(Some(adultName), None, Some(phoneNumber))),
+            previousGuardian = Some(PreviousGuardian(Some(adultName), None, Some(phoneNumber))),
             dateChildStartedLivingWithApplicant = Some(LocalDate.now)
           )
 
@@ -3205,7 +3203,7 @@ class JourneyModelProviderSpec
 
         when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(Matched)
 
-        val country = Gen.oneOf(BirthCountry.England, BirthCountry.Wales).sample.value
+        val country = Gen.oneOf(ChildBirthRegistrationCountry.England, ChildBirthRegistrationCountry.Wales).sample.value
 
         val answers = UserAnswers("id")
           .withMinimalApplicantDetails
@@ -3236,7 +3234,7 @@ class JourneyModelProviderSpec
           .withMinimalPaymentDetails
           .set(RelationshipStatusPage, Single).success.value
           .set(ScottishBirthCertificateHasNumbersPage(Index(0)), true).success.value
-          .set(ChildBirthRegistrationCountryPage(Index(0)), BirthCountry.Scotland).success.value
+          .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.Scotland).success.value
           .set(IncludeAdditionalInformationPage, false).success.value
 
         val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad

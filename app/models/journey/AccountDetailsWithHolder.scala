@@ -14,20 +14,12 @@
  * limitations under the License.
  */
 
-package audit
+package models.journey
 
-import models.journey
-import play.api.libs.json.{Json, Writes}
+import models.{BankAccountDetails, BankAccountHolder, BankAccountInsightsResponseModel, BuildingSocietyDetails}
 
-final case class Guardian(name: Option[AdultName], address: Option[Address])
+sealed trait AccountDetailsWithHolder
 
-object Guardian {
+final case class BankAccountWithHolder(holder: BankAccountHolder, details: BankAccountDetails, risk: Option[BankAccountInsightsResponseModel]) extends AccountDetailsWithHolder
 
-  implicit lazy val writes: Writes[Guardian] = Json.writes
-
-  def build(guardian: journey.Guardian): Guardian =
-    Guardian(
-      name = guardian.name.map(AdultName.build),
-      address = guardian.address.map(Address.build)
-    )
-}
+final case class BuildingSocietyWithHolder(holder: BankAccountHolder, details: BuildingSocietyDetails) extends AccountDetailsWithHolder

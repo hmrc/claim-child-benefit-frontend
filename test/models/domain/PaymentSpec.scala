@@ -17,8 +17,8 @@
 package models.domain
 
 import generators.ModelGenerators
-import models.journey.JourneyModel.EldestChild
-import models.journey.JourneyModel
+import models.journey
+import models.journey.EldestChild
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
@@ -32,7 +32,7 @@ class PaymentSpec extends AnyFreeSpec with Matchers with OptionValues with Model
 
     "must return None when the user does not want to be paid" in {
 
-      val paymentPreference = JourneyModel.PaymentPreference.DoNotPay(None)
+      val paymentPreference = journey.PaymentPreference.DoNotPay(None)
 
       val result = Payment.build(paymentPreference)
 
@@ -42,7 +42,7 @@ class PaymentSpec extends AnyFreeSpec with Matchers with OptionValues with Model
     "must return None when the user wants to be paid to an existing account" in {
 
       val eldestChild = EldestChild(models.ChildName("first", None, "last"), LocalDate.now)
-      val paymentPreference = JourneyModel.PaymentPreference.ExistingAccount(eldestChild)
+      val paymentPreference = journey.PaymentPreference.ExistingAccount(eldestChild)
 
       val result = Payment.build(paymentPreference)
 
@@ -53,7 +53,7 @@ class PaymentSpec extends AnyFreeSpec with Matchers with OptionValues with Model
 
       "when the user wants to be paid weekly but has no suitable account" in {
 
-        val paymentPreference = JourneyModel.PaymentPreference.Weekly(None, None)
+        val paymentPreference = journey.PaymentPreference.Weekly(None, None)
 
         val result = Payment.build(paymentPreference)
 
@@ -62,7 +62,7 @@ class PaymentSpec extends AnyFreeSpec with Matchers with OptionValues with Model
 
       "when the user wants to be paid every four weeks but has no suitable account" in {
 
-        val paymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(None, None)
+        val paymentPreference = journey.PaymentPreference.EveryFourWeeks(None, None)
 
         val result = Payment.build(paymentPreference)
 
@@ -77,8 +77,8 @@ class PaymentSpec extends AnyFreeSpec with Matchers with OptionValues with Model
         "and provides a bank account" in {
 
           val bankAccountDetails = arbitrary[models.BankAccountDetails].sample.value
-          val bankAccountWithHolder = JourneyModel.BankAccountWithHolder(models.BankAccountHolder.Applicant, bankAccountDetails, None)
-          val paymentPreference = JourneyModel.PaymentPreference.Weekly(Some(bankAccountWithHolder), None)
+          val bankAccountWithHolder = journey.BankAccountWithHolder(models.BankAccountHolder.Applicant, bankAccountDetails, None)
+          val paymentPreference = journey.PaymentPreference.Weekly(Some(bankAccountWithHolder), None)
 
           val result = Payment.build(paymentPreference)
 
@@ -93,8 +93,8 @@ class PaymentSpec extends AnyFreeSpec with Matchers with OptionValues with Model
         "and provides a building society account" in {
 
           val buildingSocietyDetails = arbitrary[models.BuildingSocietyDetails].sample.value
-          val buildingSocietyWithHolder = JourneyModel.BuildingSocietyWithHolder(models.BankAccountHolder.Applicant, buildingSocietyDetails)
-          val paymentPreference = JourneyModel.PaymentPreference.Weekly(Some(buildingSocietyWithHolder), None)
+          val buildingSocietyWithHolder = journey.BuildingSocietyWithHolder(models.BankAccountHolder.Applicant, buildingSocietyDetails)
+          val paymentPreference = journey.PaymentPreference.Weekly(Some(buildingSocietyWithHolder), None)
 
           val result = Payment.build(paymentPreference)
 
@@ -112,8 +112,8 @@ class PaymentSpec extends AnyFreeSpec with Matchers with OptionValues with Model
         "and provides a bank account" in {
 
           val bankAccountDetails = arbitrary[models.BankAccountDetails].sample.value
-          val bankAccountWithHolder = JourneyModel.BankAccountWithHolder(models.BankAccountHolder.Applicant, bankAccountDetails, None)
-          val paymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(Some(bankAccountWithHolder), None)
+          val bankAccountWithHolder = journey.BankAccountWithHolder(models.BankAccountHolder.Applicant, bankAccountDetails, None)
+          val paymentPreference = journey.PaymentPreference.EveryFourWeeks(Some(bankAccountWithHolder), None)
 
           val result = Payment.build(paymentPreference)
 
@@ -128,8 +128,8 @@ class PaymentSpec extends AnyFreeSpec with Matchers with OptionValues with Model
         "and provides a building society account" in {
 
           val buildingSocietyDetails = arbitrary[models.BuildingSocietyDetails].sample.value
-          val buildingSocietyWithHolder = JourneyModel.BuildingSocietyWithHolder(models.BankAccountHolder.Applicant, buildingSocietyDetails)
-          val paymentPreference = JourneyModel.PaymentPreference.EveryFourWeeks(Some(buildingSocietyWithHolder), None)
+          val buildingSocietyWithHolder = journey.BuildingSocietyWithHolder(models.BankAccountHolder.Applicant, buildingSocietyDetails)
+          val paymentPreference = journey.PaymentPreference.EveryFourWeeks(Some(buildingSocietyWithHolder), None)
 
           val result = Payment.build(paymentPreference)
 

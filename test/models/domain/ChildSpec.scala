@@ -16,8 +16,8 @@
 
 package models.domain
 
-import models.{BirthRegistrationMatchingResult}
-import models.journey.JourneyModel
+import models.BirthRegistrationMatchingResult
+import models.journey
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -29,7 +29,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
   ".build" - {
 
-      val basicChild = JourneyModel.Child(
+      val basicChild = journey.Child(
         name = models.ChildName("first", None, "last"),
         nameChangedByDeedPoll = None,
         previousNames = Nil,
@@ -66,7 +66,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
     "must set `living with claimant` to false when the child has a guardian" in {
 
-      val child = basicChild.copy(guardian = Some(JourneyModel.Guardian(None, None)))
+      val child = basicChild.copy(guardian = Some(journey.Guardian(None, None)))
 
       val result = Child.build(child)
 

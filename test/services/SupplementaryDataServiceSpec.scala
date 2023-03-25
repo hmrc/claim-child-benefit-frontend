@@ -20,6 +20,7 @@ import cats.data.NonEmptyList
 import com.dmanchester.playfop.sapi.PlayFop
 import connectors.ClaimChildBenefitConnector
 import generators.ModelGenerators
+import models.journey
 import models.journey.JourneyModel
 import models.{AdultName, CurrentlyReceivingChildBenefit, Done, RelationshipStatus, SupplementaryMetadata}
 import org.mockito.ArgumentMatchers.any
@@ -66,7 +67,7 @@ class SupplementaryDataServiceSpec extends AnyFreeSpec with Matchers with Option
   private val nino = arbitrary[Nino].sample.value.value
 
   private val model = JourneyModel(
-    applicant = JourneyModel.Applicant(
+    applicant = journey.Applicant(
       name = arbitrary[AdultName].sample.value,
       previousFamilyNames = Nil,
       dateOfBirth = LocalDate.now,
@@ -74,15 +75,15 @@ class SupplementaryDataServiceSpec extends AnyFreeSpec with Matchers with Option
       currentAddress = arbitrary[models.UkAddress].sample.value,
       previousAddress = None, telephoneNumber = "0777777777",
       nationalities = NonEmptyList(genUkCtaNationality.sample.value, Gen.listOf(arbitrary[models.Nationality]).sample.value),
-      residency = JourneyModel.Residency.AlwaysLivedInUk,
+      residency = journey.Residency.AlwaysLivedInUk,
       memberOfHMForcesOrCivilServantAbroad = false,
       currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
       changedDesignatoryDetails = Some(false),
       correspondenceAddress = None
     ),
-    relationship = JourneyModel.Relationship(RelationshipStatus.Single, None, None),
+    relationship = journey.Relationship(RelationshipStatus.Single, None, None),
     children = NonEmptyList(
-      JourneyModel.Child(
+      journey.Child(
         name = arbitrary[models.ChildName].sample.value,
         nameChangedByDeedPoll = None,
         previousNames = Nil,
@@ -101,7 +102,7 @@ class SupplementaryDataServiceSpec extends AnyFreeSpec with Matchers with Option
       Nil
     ),
     benefits = None,
-    paymentPreference = JourneyModel.PaymentPreference.DoNotPay(None),
+    paymentPreference = journey.PaymentPreference.DoNotPay(None),
     additionalInformation = None,
     userAuthenticated = true
   )

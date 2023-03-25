@@ -14,20 +14,10 @@
  * limitations under the License.
  */
 
-package audit
+package models.journey
 
-import models.journey
-import play.api.libs.json.{Json, Writes}
+import models.RelationshipStatus
 
-final case class Guardian(name: Option[AdultName], address: Option[Address])
+import java.time.LocalDate
 
-object Guardian {
-
-  implicit lazy val writes: Writes[Guardian] = Json.writes
-
-  def build(guardian: journey.Guardian): Guardian =
-    Guardian(
-      name = guardian.name.map(AdultName.build),
-      address = guardian.address.map(Address.build)
-    )
-}
+final case class Relationship(status: RelationshipStatus, since: Option[LocalDate], partner: Option[Partner])

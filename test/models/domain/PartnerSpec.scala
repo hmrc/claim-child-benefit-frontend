@@ -19,7 +19,7 @@ package models.domain
 import cats.data.NonEmptyList
 import generators.ModelGenerators
 import models.PartnerClaimingChildBenefit._
-import models.journey.JourneyModel
+import models.journey
 import models.{AdultName, EmploymentStatus}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
@@ -40,7 +40,7 @@ class PartnerSpec extends AnyFreeSpec with Matchers with ModelGenerators with Op
       val nino = arbitrary[Nino].sample.value
       val claiming = Gen.oneOf(GettingPayments, NotGettingPayments, WaitingToHear).sample.value
 
-      val partner = JourneyModel.Partner(
+      val partner = journey.Partner(
         name = AdultName(None, "first", None, surname),
         nationalInsuranceNumber = Some(nino),
         dateOfBirth = LocalDate.now,
@@ -62,7 +62,7 @@ class PartnerSpec extends AnyFreeSpec with Matchers with ModelGenerators with Op
       val surname = "surname"
       val nino = arbitrary[Nino].sample.value
 
-      val partner = JourneyModel.Partner(
+      val partner = journey.Partner(
         name = AdultName(None, "first", None, surname),
         nationalInsuranceNumber = Some(nino),
         dateOfBirth = LocalDate.now,
@@ -83,7 +83,7 @@ class PartnerSpec extends AnyFreeSpec with Matchers with ModelGenerators with Op
 
       val surname = "surname"
 
-      val partner = JourneyModel.Partner(
+      val partner = journey.Partner(
         name = AdultName(None, "first", None, surname),
         nationalInsuranceNumber = None,
         dateOfBirth = LocalDate.now,
@@ -106,7 +106,7 @@ class PartnerSpec extends AnyFreeSpec with Matchers with ModelGenerators with Op
       val nino = arbitrary[Nino].sample.value
       val claiming = Gen.oneOf(GettingPayments, NotGettingPayments, WaitingToHear).sample.value
 
-      val partner = JourneyModel.Partner(
+      val partner = journey.Partner(
         name = AdultName(None, "first", None, surname),
         nationalInsuranceNumber = Some(nino),
         dateOfBirth = LocalDate.now,

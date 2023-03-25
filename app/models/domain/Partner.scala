@@ -16,8 +16,8 @@
 
 package models.domain
 
-import models.{PartnerClaimingChildBenefit}
-import models.journey.JourneyModel
+import models.PartnerClaimingChildBenefit
+import models.journey
 import play.api.libs.json.{Json, OWrites}
 import utils.StringNormaliser
 
@@ -25,7 +25,7 @@ final case class Partner(nino: String, surname: String)
 
 object Partner extends StringNormaliser {
 
-  def build(partner: JourneyModel.Partner): Option[Partner] =
+  def build(partner: journey.Partner): Option[Partner] =
     partner.currentlyClaimingChildBenefit match {
       case PartnerClaimingChildBenefit.NotClaiming =>
         None

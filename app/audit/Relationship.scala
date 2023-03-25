@@ -16,7 +16,7 @@
 
 package audit
 
-import models.journey.JourneyModel
+import models.journey
 import play.api.libs.json.{Json, Writes}
 
 import java.time.LocalDate
@@ -27,7 +27,7 @@ object Relationship {
 
   implicit lazy val writes: Writes[Relationship] = Json.writes
 
-  def build(relationship: JourneyModel.Relationship): Relationship =
+  def build(relationship: journey.Relationship): Relationship =
     Relationship(
      status = relationship.status.toString,
      since = relationship.since,

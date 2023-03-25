@@ -17,13 +17,8 @@
 package models.journey
 
 import cats.data.NonEmptyList
-import models.ApplicantRelationshipToChild.AdoptedChild
-import models.ChildBirthRegistrationCountry._
-import models.DocumentType.{AdoptionCertificate, BirthCertificate, TravelDocument}
 import models.ReasonNotToSubmit._
-import models.journey.JourneyModel._
-import models.{Address, AdultName, ApplicantPreviousName, ApplicantRelationshipToChild, BankAccountDetails, BankAccountHolder, BankAccountInsightsResponseModel, Benefits, BirthCertificateNumber, BirthRegistrationMatchingResult, BuildingSocietyDetails, ChildBiologicalSex, ChildBirthRegistrationCountry, ChildName, Country, CurrentlyReceivingChildBenefit, DocumentType, EmploymentStatus, InternationalAddress, Nationality, OtherEligibilityFailReason, PartnerClaimingChildBenefit, ReasonNotToSubmit, RelationshipStatus, RequiredDocument}
-import uk.gov.hmrc.domain.Nino
+import models.{Benefits, OtherEligibilityFailReason, ReasonNotToSubmit, RequiredDocument}
 
 import java.time.LocalDate
 
@@ -110,123 +105,4 @@ final case class JourneyModel(
       childPossiblyRecentlyUnderLocalAuthorityCare
     ).flatten
   }
-}
-
-object JourneyModel {
-
-  final case class Relationship(status: RelationshipStatus, since: Option[LocalDate], partner: Option[Partner])
-  final case class EldestChild(name: ChildName, dateOfBirth: LocalDate)
-
-  sealed trait AccountDetailsWithHolder
-  final case class BankAccountWithHolder(holder: BankAccountHolder, details: BankAccountDetails, risk: Option[BankAccountInsightsResponseModel]) extends AccountDetailsWithHolder
-  final case class BuildingSocietyWithHolder(holder: BankAccountHolder, details: BuildingSocietyDetails) extends AccountDetailsWithHolder
-
-  sealed trait PaymentPreference {
-    val accountDetails: Option[AccountDetailsWithHolder]
-  }
-
-  object PaymentPreference {
-
-    final case class Weekly(accountDetails: Option[AccountDetailsWithHolder], eldestChild: Option[EldestChild]) extends PaymentPreference
-    final case class EveryFourWeeks(accountDetails: Option[AccountDetailsWithHolder], eldestChild: Option[EldestChild]) extends PaymentPreference
-    final case class ExistingAccount(eldestChild: EldestChild) extends PaymentPreference {
-      override val accountDetails: Option[AccountDetailsWithHolder] = None
-    }
-    final case class DoNotPay(eldestChild: Option[EldestChild]) extends PaymentPreference {
-      override val accountDetails: Option[AccountDetailsWithHolder] = None
-    }
-  }
-
-  sealed trait Residency
-
-  object Residency {
-    case object AlwaysLivedInUk extends Residency
-    final case class LivedInUkAndAbroad(usualCountryOfResidence: Option[Country], arrivalDate: Option[LocalDate], employmentStatus: Set[EmploymentStatus], countriesWorked: List[Country], countriesReceivedBenefits: List[Country]) extends Residency
-    final case class AlwaysLivedAbroad(usualCountryOfResidence: Country, employmentStatus: Set[EmploymentStatus], countriesWorked: List[Country], countriesReceivedBenefits: List[Country]) extends Residency
-  }
-
-  final case class Applicant(
-                              name: AdultName,
-                              previousFamilyNames: List[ApplicantPreviousName],
-                              dateOfBirth: LocalDate,
-                              nationalInsuranceNumber: Option[String],
-                              currentAddress: Address,
-                              previousAddress: Option[Address],
-                              telephoneNumber: String,
-                              nationalities: NonEmptyList[Nationality],
-                              residency: Residency,
-                              memberOfHMForcesOrCivilServantAbroad: Boolean,
-                              currentlyReceivingChildBenefit: CurrentlyReceivingChildBenefit,
-                              changedDesignatoryDetails: Option[Boolean],
-                              correspondenceAddress: Option[Address]
-                            )
-
-  final case class Partner(
-                            name: AdultName,
-                            dateOfBirth: LocalDate,
-                            nationalities: NonEmptyList[Nationality],
-                            nationalInsuranceNumber: Option[Nino],
-                            memberOfHMForcesOrCivilServantAbroad: Boolean,
-                            currentlyClaimingChildBenefit: PartnerClaimingChildBenefit,
-                            eldestChild: Option[EldestChild],
-                            countriesWorked: List[Country],
-                            countriesReceivedBenefits: List[Country],
-                            employmentStatus: Set[EmploymentStatus]
-                          )
-
-  final case class Child(
-                          name: ChildName,
-                          nameChangedByDeedPoll: Option[Boolean],
-                          previousNames: List[ChildName],
-                          biologicalSex: ChildBiologicalSex,
-                          dateOfBirth: LocalDate,
-                          countryOfRegistration: ChildBirthRegistrationCountry,
-                          birthCertificateNumber: Option[BirthCertificateNumber],
-                          birthCertificateDetailsMatched: BirthRegistrationMatchingResult,
-                          relationshipToApplicant: ApplicantRelationshipToChild,
-                          adoptingThroughLocalAuthority: Boolean,
-                          previousClaimant: Option[PreviousClaimant],
-                          guardian: Option[Guardian],
-                          previousGuardian: Option[PreviousGuardian],
-                          dateChildStartedLivingWithApplicant: Option[LocalDate]
-                        ) {
-
-    private val adoptionCertificate =
-      if (relationshipToApplicant == AdoptedChild) Some(AdoptionCertificate) else None
-
-    private val (birthCertificate, travelDocument) = countryOfRegistration match {
-      case England | Scotland | Wales      => (None, None)
-      case _ if previousClaimant.isDefined => (None, None)
-      case NorthernIreland                 => (Some(BirthCertificate), None)
-      case _                               => (Some(BirthCertificate), Some(TravelDocument))
-    }
-
-    val requiredDocuments: Seq[DocumentType] =
-      Seq(birthCertificate, travelDocument, adoptionCertificate).flatten
-
-    val possiblyLivedAbroadSeparately: Boolean =
-      if (dateChildStartedLivingWithApplicant.exists(_.isAfter(LocalDate.now.minusMonths(3)))) {
-        previousGuardian.exists { previousGuardian =>
-          previousGuardian.address.forall {
-            case _: InternationalAddress => true
-            case _ => false
-          }
-        }
-      } else {
-        false
-      }
-
-    val possiblyRecentlyCaredForByLocalAuthority: Boolean =
-      if (dateChildStartedLivingWithApplicant.exists(_.isAfter(LocalDate.now.minusMonths(3)))) {
-        previousGuardian.exists(_.address.exists(_.possibleLocalAuthorityAddress))
-      } else {
-        false
-      }
-  }
-
-  final case class PreviousClaimant(name: Option[AdultName], address: Option[Address])
-
-  final case class Guardian(name: Option[AdultName], address: Option[Address])
-
-  final case class PreviousGuardian(name: Option[AdultName], address: Option[Address], phoneNumber: Option[String])
 }

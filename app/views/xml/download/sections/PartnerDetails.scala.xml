@@ -7,7 +7,7 @@
     line: Line
 )
 
-@(model: JourneyModel.Partner)(implicit messages: Messages)
+@(model: journey.Partner)(implicit messages: Messages)
 
 <fo:page-sequence master-reference="main">
 
