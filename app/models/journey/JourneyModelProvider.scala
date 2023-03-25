@@ -147,37 +147,7 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
         PreviousClaimant.build(answers, index)
 
       def getGuardian: IorNec[Query, Option[Guardian]] =
-        answers.getIor(ChildLivesWithApplicantPage(index)).flatMap {
-          case true =>
-            Ior.Right(None)
-
-          case false =>
-            val name = answers.getIor(GuardianNameKnownPage(index)).flatMap {
-              case true => answers.getIor(GuardianNamePage(index)).map(Some(_))
-              case false => Ior.Right(None)
-            }
-            val address = answers.getIor(GuardianNameKnownPage(index)).flatMap {
-              case true => getGuardianAddress
-              case false => Ior.Right(None)
-            }
-            (
-              name,
-              address
-            ).parMapN(Guardian.apply).map(Some(_))
-        }
-
-      def getGuardianAddress: IorNec[Query, Option[Address]] = {
-        answers.getIor(GuardianAddressKnownPage(index)).flatMap {
-          case true =>
-            answers.getIor(GuardianAddressInUkPage(index)).flatMap {
-              case true => answers.getIor(GuardianUkAddressPage(index)).map(Some(_))
-              case false => answers.getIor(GuardianInternationalAddressPage(index)).map(Some(_))
-            }
-
-          case false =>
-            Ior.Right(None)
-        }
-      }
+        Guardian.build(answers, index)
 
       def getPreviousGuardian: IorNec[Query, Option[PreviousGuardian]] =
         PreviousGuardian.build(answers, index)

@@ -106,6 +106,7 @@ class PreviousClaimantSpec extends AnyFreeSpec with Matchers with TryValues with
           UserAnswers("id")
             .set(AnyoneClaimedForChildBeforePage(index), true).success.value
             .set(PreviousClaimantNameKnownPage(index), true).success.value
+
         val (errors, data) = PreviousClaimant.build(answers, index).pad
 
         data must not be defined
