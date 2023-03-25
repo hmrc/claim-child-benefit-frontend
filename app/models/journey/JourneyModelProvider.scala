@@ -412,21 +412,8 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
         case false => Ior.Right(None)
       }
 
-    def getPartnerEldestChild: IorNec[Query, Option[EldestChild]] = {
-
-      def getDetails: IorNec[Query, Some[EldestChild]] = (
-        answers.getIor(PartnerEldestChildNamePage),
-        answers.getIor(PartnerEldestChildDateOfBirthPage)
-        ).parMapN { (name, dateOfBirth) => Some(EldestChild(name, dateOfBirth)) }
-
-      answers.getIor(PartnerClaimingChildBenefitPage).flatMap {
-        case GettingPayments | NotGettingPayments | WaitingToHear =>
-          getDetails
-
-        case NotClaiming =>
-          Ior.Right(None)
-      }
-    }
+    def getPartnerEldestChild: IorNec[Query, Option[EldestChild]] =
+      EldestChild.buildPartnerEldestChild(answers)
 
     def getNationalities: IorNec[Query, NonEmptyList[Nationality]] = {
       val nationalities = answers.get(AllPartnerNationalities).getOrElse(Nil)
@@ -527,10 +514,7 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
       }
 
     def getEldestChild: IorNec[Query, EldestChild] =
-      (
-        answers.getIor(EldestChildNamePage),
-        answers.getIor(EldestChildDateOfBirthPage)
-      ).parMapN(EldestChild.apply)
+      EldestChild.buildApplicantEldestChild(answers)
 
     def getWeeklyOrEveryFourWeeksWithChild: IorNec[Query, PaymentPreference] =
       answers.get(PaymentFrequencyPage) match {
