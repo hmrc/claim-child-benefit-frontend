@@ -341,40 +341,8 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
       ).parMapN(Applicant.apply)
   }
 
-  private def getPartner(answers: UserAnswers): IorNec[Query, Partner] =
-    Partner.build(answers)
-
-  private def getRelationship(answers: UserAnswers): IorNec[Query, Relationship] = {
-
-    import models.RelationshipStatus._
-
-    answers.getIor(RelationshipStatusPage).flatMap {
-      case Married =>
-        getPartner(answers).flatMap { partner =>
-          Ior.Right(Relationship(Married, None, Some(partner)))
-        }
-
-      case Cohabiting =>
-        (
-          answers.getIor(CohabitationDatePage).map(Some(_)),
-          getPartner(answers).map(Some(_))
-          ).parMapN(Relationship(Cohabiting, _, _))
-
-      case Separated =>
-        answers.getIor(SeparationDatePage).flatMap { separationDate =>
-          Ior.Right(Relationship(Separated, Some(separationDate), None))
-        }
-
-      case Single =>
-        Ior.Right(Relationship(Single, None, None))
-
-      case Divorced =>
-        Ior.Right(Relationship(Divorced, None, None))
-
-      case Widowed =>
-        Ior.Right(Relationship(Widowed, None, None))
-    }
-  }
+  private def getRelationship(answers: UserAnswers): IorNec[Query, Relationship] =
+    Relationship.build(answers)
 
   private def getPaymentPreference(answers: UserAnswers): IorNec[Query, PaymentPreference] = {
 
