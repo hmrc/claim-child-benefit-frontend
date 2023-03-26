@@ -19,10 +19,10 @@ package services
 import config.FeatureFlags
 import connectors.ClaimChildBenefitConnector
 import logging.Logging
+import models.Done
 import models.domain.Claim
+import models.journey.JourneyModel
 import models.requests.{AuthenticatedIdentifierRequest, DataRequest}
-import models.{Done}
-import models.journey.JourneyModelProvider
 import services.ClaimSubmissionService.{CannotBuildJourneyModelException, NotAuthenticatedException}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.RequestOps._
@@ -34,7 +34,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class ClaimSubmissionService @Inject()(
                                         featureFlags: FeatureFlags,
                                         connector: ClaimChildBenefitConnector,
-                                        journeyModelProvider: JourneyModelProvider,
                                         submissionLimiter: SubmissionLimiter,
                                         supplementaryDataService: SupplementaryDataService
                                       ) extends Logging {
@@ -48,13 +47,10 @@ class ClaimSubmissionService @Inject()(
 
         submissionLimiter.allowedToSubmit(nino)(hc).flatMap {
           case true =>
-            journeyModelProvider.buildFromUserAnswers(request.userAnswers)(hc).flatMap {
-              result =>
-                result.right.map {
-                  journeyModel =>
-                    Future.successful(journeyModel.reasonsNotToSubmit.isEmpty)
-                }.getOrElse(Future.successful(false))
-            }
+            JourneyModel.build(request.userAnswers).right.map {
+              journeyModel =>
+                Future.successful(journeyModel.reasonsNotToSubmit.isEmpty)
+            }.getOrElse(Future.successful(false))
 
           case false =>
             Future.successful(false)
@@ -71,27 +67,25 @@ class ClaimSubmissionService @Inject()(
 
       val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-      journeyModelProvider.buildFromUserAnswers(request.userAnswers)(hc).flatMap { result =>
-        result.right.map { model =>
-          val claim = Claim.build(nino, model)
-          val correlationId = UUID.randomUUID()
+      JourneyModel.build(request.userAnswers).right.map { model =>
+        val claim = Claim.build(nino, model)
+        val correlationId = UUID.randomUUID()
 
-          connector
-            .submitClaim(claim, correlationId)(hc)
-            .flatMap { _ =>
-              submissionLimiter
-                .recordSubmission(model, claim, correlationId)(hc)
-                .recover {
-                  case e: Exception =>
-                    logger.error("Failed to record submission: " + e.getMessage)
-                    Done
-                }
-            }.flatMap { _ =>
-              supplementaryDataService.submit(nino, model, correlationId)(request)
-            }
+        connector
+          .submitClaim(claim, correlationId)(hc)
+          .flatMap { _ =>
+            submissionLimiter
+              .recordSubmission(model, claim, correlationId)(hc)
+              .recover {
+                case e: Exception =>
+                  logger.error("Failed to record submission: " + e.getMessage)
+                  Done
+              }
+          }.flatMap { _ =>
+            supplementaryDataService.submit(nino, model, correlationId)(request)
+          }
 
-        }.getOrElse(Future.failed(CannotBuildJourneyModelException))
-      }
+      }.getOrElse(Future.failed(CannotBuildJourneyModelException))
     }.getOrElse(Future.failed(NotAuthenticatedException))
   }
 }
