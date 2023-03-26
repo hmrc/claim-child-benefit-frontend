@@ -22,7 +22,7 @@ import com.dmanchester.playfop.sapi.PlayFop
 import config.FeatureFlags
 import generators.ModelGenerators
 import models._
-import models.journey.JourneyModelProvider
+import models.journey.JourneyModel
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{never, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -132,8 +132,7 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[PrintDocumentsRequiredView]
-        val journeyModelProvider = application.injector.instanceOf[JourneyModelProvider]
-        val journeyModel = journeyModelProvider.buildFromUserAnswers(answers).futureValue.right.value
+        val journeyModel = JourneyModel.build(answers).right.value
 
         status(result) mustEqual OK
 
