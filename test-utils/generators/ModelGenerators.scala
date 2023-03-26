@@ -154,6 +154,19 @@ trait ModelGenerators {
       } yield InternationalAddress(line1, line2, town, state, postcode, country)
     }
 
+  implicit lazy val arbitraruNPSAddress: Arbitrary[NPSAddress] =
+    Arbitrary {
+      for {
+        line1 <- Gen.listOfN(35, Gen.alphaChar).map(_.mkString)
+        line2 <- Gen.option(Gen.listOfN(35, Gen.alphaChar).map(_.mkString))
+        line3 <- Gen.option(Gen.listOfN(35, Gen.alphaChar).map(_.mkString))
+        line4 <- Gen.option(Gen.listOfN(35, Gen.alphaChar).map(_.mkString))
+        line5 <- Gen.option(Gen.listOfN(35, Gen.alphaChar).map(_.mkString))
+        postcode <- Gen.option(Gen.listOfN(8, Gen.alphaChar).map(_.mkString))
+        country <- Gen.option(Gen.oneOf(Country.internationalCountries))
+      } yield NPSAddress(line1, line2, line3, line4, line5, postcode, country)
+    }
+
   implicit lazy val arbitraryBankAccountDetails: Arbitrary[BankAccountDetails] =
     Arbitrary {
       for {
