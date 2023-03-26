@@ -19,19 +19,15 @@ package models.journey
 import cats.data._
 import cats.implicits._
 import logging.Logging
-import models.ApplicantResidence._
-import models.{Address, AdultName, ApplicantPreviousName, Benefits, BirthCertificateNumber, BirthRegistrationMatchingRequest, BirthRegistrationMatchingResult, ChildName, Country, CurrentlyReceivingChildBenefit, Index, Nationality, PaymentFrequency, UserAnswers, ChildBirthRegistrationCountry => RegistrationCountry}
+import models.{Benefits, CurrentlyReceivingChildBenefit, UserAnswers}
 import pages._
 import pages.applicant._
-import pages.child._
 import pages.partner._
 import pages.payments._
 import queries._
 import services.BrmsService
-import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 
-import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
