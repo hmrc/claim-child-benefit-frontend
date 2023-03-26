@@ -222,7 +222,7 @@ class ChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Model
 
       startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
         .run(
-          submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Other),
+          submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), OtherCountry),
           submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
           submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
           pageMustBe(AnyoneClaimedForChildBeforePage(Index(0)))
@@ -238,7 +238,7 @@ class ChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Model
 
       startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
         .run(
-          submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Unknown),
+          submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), UnknownCountry),
           submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
           submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
           pageMustBe(AnyoneClaimedForChildBeforePage(Index(0)))

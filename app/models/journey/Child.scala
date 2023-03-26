@@ -16,10 +16,14 @@
 
 package models.journey
 
+import cats.data._
+import cats.implicits._
 import models.ApplicantRelationshipToChild.AdoptedChild
 import models.ChildBirthRegistrationCountry._
 import models.DocumentType.{AdoptionCertificate, BirthCertificate, TravelDocument}
-import models.{ApplicantRelationshipToChild, BirthCertificateNumber, BirthRegistrationMatchingResult, ChildBiologicalSex, ChildBirthRegistrationCountry, ChildName, DocumentType, InternationalAddress}
+import models._
+import pages.child._
+import queries.{AllChildPreviousNames, AllChildSummaries, Query}
 
 import java.time.LocalDate
 
@@ -44,10 +48,10 @@ final case class Child(
     if (relationshipToApplicant == AdoptedChild) Some(AdoptionCertificate) else None
 
   private val (birthCertificate, travelDocument) = countryOfRegistration match {
-    case England | Scotland | Wales => (None, None)
+    case England | Scotland | Wales      => (None, None)
     case _ if previousClaimant.isDefined => (None, None)
-    case NorthernIreland => (Some(BirthCertificate), None)
-    case _ => (Some(BirthCertificate), Some(TravelDocument))
+    case NorthernIreland                 => (Some(BirthCertificate), None)
+    case _                               => (Some(BirthCertificate), Some(TravelDocument))
   }
 
   val requiredDocuments: Seq[DocumentType] =
@@ -70,5 +74,82 @@ final case class Child(
       previousGuardian.exists(_.address.exists(_.possibleLocalAuthorityAddress))
     } else {
       false
+    }
+}
+
+object Child {
+
+  def buildChildren(answers: UserAnswers): IorNec[Query, NonEmptyList[Child]] =
+    answers.getIor(AllChildSummaries).getOrElse(Nil).indices.toList.parTraverse { i =>
+      buildChild(answers, Index(i))
+    }.flatMap { children =>
+      NonEmptyList.fromList(children).toRightIor(NonEmptyChain.one(AllChildSummaries))
+    }
+
+  private def buildChild(answers: UserAnswers, index: Index): IorNec[Query, Child] =
+    (
+      answers.getIor(ChildNamePage(index)),
+      getNameChangedByDeedPoll(answers, index),
+      getPreviousNames(answers, index),
+      answers.getIor(ChildBiologicalSexPage(index)),
+      answers.getIor(ChildDateOfBirthPage(index)),
+      answers.getIor(ChildBirthRegistrationCountryPage(index)),
+      getBirthCertificateNumber(answers, index),
+      Ior.Right(BirthRegistrationMatchingResult.NotAttempted),
+      answers.getIor(ApplicantRelationshipToChildPage(index)),
+      answers.getIor(AdoptingThroughLocalAuthorityPage(index)),
+      PreviousClaimant.build(answers, index),
+      Guardian.build(answers, index),
+      PreviousGuardian.build(answers, index),
+      getDateChildStartedLivingWithApplicant(answers, index)
+    ).parMapN(Child.apply)
+
+  private def getNameChangedByDeedPoll(answers: UserAnswers, index: Index): IorNec[Query, Option[Boolean]] =
+    answers.getIor(ChildHasPreviousNamePage(index)).flatMap {
+      case true => answers.getIor(ChildNameChangedByDeedPollPage(index)).map(Some(_))
+      case false => Ior.Right(None)
+    }
+
+  private def getPreviousNames(answers: UserAnswers, index: Index): IorNec[Query, List[ChildName]] =
+    answers.getIor(ChildHasPreviousNamePage(index)).flatMap {
+      case true => answers.getIor(AllChildPreviousNames(index))
+      case false => Ior.Right(Nil)
+    }
+
+  private def getBirthCertificateNumber(answers: UserAnswers, index: Index): IorNec[Query, Option[BirthCertificateNumber]] =
+    answers.getIor(ChildBirthRegistrationCountryPage(index)).flatMap {
+      case England | Wales =>
+        answers.getIor(BirthCertificateHasSystemNumberPage(index)).flatMap {
+          case true =>
+            answers.getIor(ChildBirthCertificateSystemNumberPage(index)).map(Some(_))
+          case false =>
+            Ior.Right(None)
+        }
+
+      case Scotland =>
+        answers.getIor(ScottishBirthCertificateHasNumbersPage(index)).flatMap {
+          case true =>
+            answers.getIor(ChildScottishBirthCertificateDetailsPage(index)).map(x => Some(x))
+          case false =>
+            Ior.Right(None)
+        }
+
+      case _ =>
+        Ior.Right(None)
+    }
+
+  private def getDateChildStartedLivingWithApplicant(answers: UserAnswers, index: Index): IorNec[Query, Option[LocalDate]] =
+    answers.getIor(ChildLivesWithApplicantPage(index)).flatMap {
+      case true =>
+        answers.getIor(ChildLivedWithAnyoneElsePage(index)).flatMap {
+          case true =>
+            answers.getIor(DateChildStartedLivingWithApplicantPage(index)).map(Some(_))
+
+          case false =>
+            Ior.Right(None)
+        }
+
+      case false =>
+        Ior.Right(None)
     }
 }

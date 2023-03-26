@@ -27,10 +27,10 @@ object ApplicantRelationshipToChild extends Enumerable.Implicits {
   case object BirthChild extends WithName("birthChild") with ApplicantRelationshipToChild
   case object AdoptedChild extends WithName("adoptedChild") with ApplicantRelationshipToChild
   case object StepChild extends WithName("stepChild") with ApplicantRelationshipToChild
-  case object Other extends WithName("other") with ApplicantRelationshipToChild
+  case object OtherRelationship extends WithName("other") with ApplicantRelationshipToChild
 
   val values: Seq[ApplicantRelationshipToChild] = Seq(
-    BirthChild, AdoptedChild, StepChild, Other
+    BirthChild, AdoptedChild, StepChild, OtherRelationship
   )
 
   def options(implicit messages: Messages): Seq[RadioItem] = {

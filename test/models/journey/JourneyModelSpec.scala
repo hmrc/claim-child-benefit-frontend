@@ -106,7 +106,7 @@ class JourneyModelSpec
         .set(ChildHasPreviousNamePage(Index(1)), false).success.value
         .set(ChildBiologicalSexPage(Index(1)), biologicalSex).success.value
         .set(ChildDateOfBirthPage(Index(1)), now).success.value
-        .set(ChildBirthRegistrationCountryPage(Index(1)), ChildBirthRegistrationCountry.Other).success.value
+        .set(ChildBirthRegistrationCountryPage(Index(1)), ChildBirthRegistrationCountry.OtherCountry).success.value
         .set(ApplicantRelationshipToChildPage(Index(1)), relationshipToChild).success.value
         .set(AdoptingThroughLocalAuthorityPage(Index(1)), false).success.value
         .set(AnyoneClaimedForChildBeforePage(Index(1)), false).success.value
@@ -116,7 +116,7 @@ class JourneyModelSpec
         .set(ChildHasPreviousNamePage(Index(2)), false).success.value
         .set(ChildBiologicalSexPage(Index(2)), biologicalSex).success.value
         .set(ChildDateOfBirthPage(Index(2)), now).success.value
-        .set(ChildBirthRegistrationCountryPage(Index(2)), ChildBirthRegistrationCountry.Other).success.value
+        .set(ChildBirthRegistrationCountryPage(Index(2)), ChildBirthRegistrationCountry.OtherCountry).success.value
         .set(ApplicantRelationshipToChildPage(Index(2)), ApplicantRelationshipToChild.AdoptedChild).success.value
         .set(AdoptingThroughLocalAuthorityPage(Index(2)), false).success.value
         .set(AnyoneClaimedForChildBeforePage(Index(2)), false).success.value
@@ -208,7 +208,7 @@ class JourneyModelSpec
 
     "must contain `Documents Required` when any documents are required for a child" in {
 
-      val answers = basicAnswers.set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.Other).success.value
+      val answers = basicAnswers.set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.OtherCountry).success.value
 
       val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
 

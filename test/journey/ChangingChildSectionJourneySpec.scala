@@ -327,7 +327,7 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           .run(
             basicChildJourney,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
-            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Other),
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), OtherCountry),
             pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(BirthCertificateHasSystemNumberPage(Index(0))),
             answersMustNotContain(ChildBirthCertificateSystemNumberPage(Index(0)))
@@ -340,7 +340,7 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           .run(
             basicChildJourney,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
-            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Unknown),
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), UnknownCountry),
             pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(BirthCertificateHasSystemNumberPage(Index(0))),
             answersMustNotContain(ChildBirthCertificateSystemNumberPage(Index(0)))
@@ -401,7 +401,7 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           .run(
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
-            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Other),
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), OtherCountry),
             pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(BirthCertificateHasSystemNumberPage(Index(0))),
             answersMustNotContain(ChildBirthCertificateSystemNumberPage(Index(0)))
@@ -414,7 +414,7 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           .run(
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
-            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Unknown),
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), UnknownCountry),
             pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(BirthCertificateHasSystemNumberPage(Index(0))),
             answersMustNotContain(ChildBirthCertificateSystemNumberPage(Index(0)))
@@ -482,7 +482,7 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           .run(
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
-            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Other),
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), OtherCountry),
             pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(BirthCertificateHasSystemNumberPage(Index(0))),
             answersMustNotContain(ChildScottishBirthCertificateDetailsPage(Index(0)))
@@ -495,7 +495,7 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           .run(
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
-            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Unknown),
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), UnknownCountry),
             pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(BirthCertificateHasSystemNumberPage(Index(0))),
             answersMustNotContain(ChildScottishBirthCertificateDetailsPage(Index(0)))
@@ -508,7 +508,7 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
       val initialState =
         journeyOf(
           basicChildJourney,
-          setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), Other),
+          setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), OtherCountry),
           remove(BirthCertificateHasSystemNumberPage(Index(0))),
           remove(ChildBirthCertificateSystemNumberPage(Index(0)))
         )
@@ -569,7 +569,7 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           .run(
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
-            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Unknown),
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), UnknownCountry),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }
@@ -629,7 +629,7 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           .run(
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
-            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Other),
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), OtherCountry),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }
@@ -640,7 +640,7 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           .run(
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
-            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Unknown),
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), UnknownCountry),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }
@@ -651,7 +651,7 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
       val initialState =
         journeyOf(
           basicChildJourney,
-          setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), Unknown),
+          setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), UnknownCountry),
           remove(ChildBirthCertificateSystemNumberPage(Index(0)))
         )
 
@@ -711,7 +711,7 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           .run(
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
-            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Other),
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), OtherCountry),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }

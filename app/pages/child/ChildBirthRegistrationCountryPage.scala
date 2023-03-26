@@ -42,7 +42,7 @@ final case class ChildBirthRegistrationCountryPage(index: Index) extends ChildQu
       case Scotland =>
         ScottishBirthCertificateHasNumbersPage(index)
 
-      case NorthernIreland | Other | Unknown =>
+      case NorthernIreland | OtherCountry | UnknownCountry =>
         AdoptingThroughLocalAuthorityPage(index)
     }.orRecover
 
@@ -58,7 +58,7 @@ final case class ChildBirthRegistrationCountryPage(index: Index) extends ChildQu
           .map(_ => waypoints.next.page)
           .getOrElse(ScottishBirthCertificateHasNumbersPage(index))
 
-      case NorthernIreland | Other | Unknown =>
+      case NorthernIreland | OtherCountry | UnknownCountry =>
         waypoints.next.page
     }.orRecover
 
@@ -74,7 +74,7 @@ final case class ChildBirthRegistrationCountryPage(index: Index) extends ChildQu
           .remove(BirthCertificateHasSystemNumberPage(index))
           .flatMap(_.remove(ChildBirthCertificateSystemNumberPage(index)))
 
-      case NorthernIreland | Other | Unknown =>
+      case NorthernIreland | OtherCountry | UnknownCountry =>
         userAnswers
           .remove(BirthCertificateHasSystemNumberPage(index))
           .flatMap(_.remove(ChildBirthCertificateSystemNumberPage(index)))

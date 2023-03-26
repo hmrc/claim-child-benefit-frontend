@@ -57,7 +57,7 @@ object Child extends CbsDateFormats {
       countryOfRegistration = CountryOfRegistration.build(child.countryOfRegistration),
       dateOfBirthVerified = dateOfBirthVerified,
       livingWithClaimant = child.guardian.isEmpty,
-      claimantIsParent = child.relationshipToApplicant != models.ApplicantRelationshipToChild.Other,
+      claimantIsParent = child.relationshipToApplicant != models.ApplicantRelationshipToChild.OtherRelationship,
       adoptionStatus = adoptionStatus
     )
   }
