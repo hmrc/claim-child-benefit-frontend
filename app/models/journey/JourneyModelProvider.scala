@@ -344,63 +344,6 @@ class JourneyModelProvider @Inject()(brmsService: BrmsService)(implicit ec: Exec
   private def getRelationship(answers: UserAnswers): IorNec[Query, Relationship] =
     Relationship.build(answers)
 
-  private def getPaymentPreference(answers: UserAnswers): IorNec[Query, PaymentPreference] = {
-
-    import CurrentlyReceivingChildBenefit._
-    import PaymentPreference._
-
-    def getBankAccount: IorNec[Query, Option[AccountDetailsWithHolder]] =
-      AccountDetailsWithHolder.build(answers)
-
-    def getEldestChild: IorNec[Query, EldestChild] =
-      EldestChild.buildApplicantEldestChild(answers)
-
-    def getWeeklyOrEveryFourWeeksWithChild: IorNec[Query, PaymentPreference] =
-      answers.get(PaymentFrequencyPage) match {
-        case Some(PaymentFrequency.Weekly) =>
-          (
-            getBankAccount,
-            getEldestChild
-            ).parMapN((bank, child) => Weekly(bank, Some(child)))
-
-        case _ =>
-          (
-            getBankAccount,
-            getEldestChild
-            ).parMapN((bank, child) => EveryFourWeeks(bank, Some(child)))
-      }
-
-    answers.getIor(CurrentlyReceivingChildBenefitPage).flatMap {
-      case GettingPayments =>
-        answers.getIor(WantToBePaidPage).flatMap {
-          case true =>
-            getEldestChild
-              .map(ExistingAccount)
-
-          case false =>
-            getEldestChild.map(x => DoNotPay(Some(x)))
-        }
-
-      case NotClaiming =>
-        answers.getIor(WantToBePaidPage).flatMap {
-          case true =>
-            answers.get(PaymentFrequencyPage) match {
-              case Some(PaymentFrequency.Weekly) => getBankAccount.map(bank => Weekly(bank, None))
-              case _ => getBankAccount.map(bank => EveryFourWeeks(bank, None))
-            }
-
-          case false =>
-            Ior.Right(DoNotPay(None))
-        }
-
-      case NotGettingPayments =>
-        answers.getIor(WantToBePaidPage).flatMap {
-          case true =>
-            getWeeklyOrEveryFourWeeksWithChild
-
-          case false =>
-            getEldestChild.map(child => DoNotPay(Some(child)))
-        }
-    }
-  }
+  private def getPaymentPreference(answers: UserAnswers): IorNec[Query, PaymentPreference] =
+    PaymentPreference.build(answers)
 }
