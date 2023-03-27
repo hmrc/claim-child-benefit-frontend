@@ -16,7 +16,8 @@
 
 package models.domain
 
-import models.{BankAccountDetails, BankAccountHolder, BankAccountInsightsResponseModel, JourneyModel}
+import models.journey
+import models.{BankAccountDetails, BankAccountHolder, BankAccountInsightsResponseModel}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import play.api.libs.json.Json
@@ -29,7 +30,7 @@ class AccountHolderSpec extends AnyFreeSpec with Matchers {
 
       "where the account holder is the claimant" in {
 
-        val bankDetails = JourneyModel.BankAccountWithHolder(
+        val bankDetails = journey.BankAccountWithHolder(
           holder = BankAccountHolder.Applicant,
           details = BankAccountDetails("first", "last", "123456", "12345678"),
           risk = Some(BankAccountInsightsResponseModel("correlation", 0, "foo"))
@@ -42,7 +43,7 @@ class AccountHolderSpec extends AnyFreeSpec with Matchers {
 
       "where the account holder is joint" in {
 
-        val bankDetails = JourneyModel.BankAccountWithHolder(
+        val bankDetails = journey.BankAccountWithHolder(
           holder = BankAccountHolder.JointNames,
           details = BankAccountDetails("first", "last", "123456", "12345678"),
           risk = None
@@ -58,7 +59,7 @@ class AccountHolderSpec extends AnyFreeSpec with Matchers {
 
       "where the account holder is someone else" in {
 
-        val bankDetails = JourneyModel.BankAccountWithHolder(
+        val bankDetails = journey.BankAccountWithHolder(
           holder = BankAccountHolder.SomeoneElse,
           details = BankAccountDetails("first", "last", "123456", "12345678"),
           risk = Some(BankAccountInsightsResponseModel("correlation", 0, "foo"))
@@ -77,7 +78,7 @@ class AccountHolderSpec extends AnyFreeSpec with Matchers {
 
       "where the account holder is the claimant" in {
 
-        val buildingSocietyDetails = JourneyModel.BuildingSocietyWithHolder(
+        val buildingSocietyDetails = journey.BuildingSocietyWithHolder(
           holder = BankAccountHolder.Applicant,
           details = models.BuildingSocietyDetails("first", "last", models.BuildingSociety.allBuildingSocieties.head, "roll number")
         )
@@ -89,7 +90,7 @@ class AccountHolderSpec extends AnyFreeSpec with Matchers {
 
       "where the account holder is joint" in {
 
-        val buildingSocietyDetails = JourneyModel.BuildingSocietyWithHolder(
+        val buildingSocietyDetails = journey.BuildingSocietyWithHolder(
           holder = BankAccountHolder.JointNames,
           details = models.BuildingSocietyDetails("first", "last", models.BuildingSociety.allBuildingSocieties.head, "roll number")
         )
@@ -104,7 +105,7 @@ class AccountHolderSpec extends AnyFreeSpec with Matchers {
 
       "where the account holder is someone else" in {
 
-        val buildingSocietyDetails = JourneyModel.BuildingSocietyWithHolder(
+        val buildingSocietyDetails = journey.BuildingSocietyWithHolder(
           holder = BankAccountHolder.SomeoneElse,
           details = models.BuildingSocietyDetails("first", "last", models.BuildingSociety.allBuildingSocieties.head, "roll number")
         )

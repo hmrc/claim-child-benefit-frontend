@@ -17,8 +17,8 @@
 package audit
 
 import com.google.inject.{Inject, Singleton}
-import models.JourneyModel
 import models.domain.Claim
+import models.journey.JourneyModel
 import play.api.{Configuration, Logging}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector

@@ -16,6 +16,7 @@
 
 package audit
 
+import models.journey
 import play.api.libs.json.{Json, Writes}
 
 import java.time.LocalDate
@@ -26,15 +27,15 @@ object Residency {
 
   case object AlwaysLivedInUk extends Residency
 
-  def build(residency: models.JourneyModel.Residency): Residency =
+  def build(residency: journey.Residency): Residency =
     residency match {
-      case models.JourneyModel.Residency.AlwaysLivedInUk =>
+      case journey.Residency.AlwaysLivedInUk =>
         Residency.AlwaysLivedInUk
 
-      case models.JourneyModel.Residency.LivedInUkAndAbroad(usualCountry, arrivalDate, employmentStatus, countriesWorked, countriesReceivedBenefits) =>
+      case journey.Residency.LivedInUkAndAbroad(usualCountry, arrivalDate, employmentStatus, countriesWorked, countriesReceivedBenefits) =>
         Residency.LivedInUkAndAbroad(usualCountry.map(_.name), arrivalDate, employmentStatus.map(_.toString), countriesWorked.map(_.name), countriesReceivedBenefits.map(_.name))
 
-      case models.JourneyModel.Residency.AlwaysLivedAbroad(usualCountry, employmentStatus, countriesWorked, countriesReceivedBenefits) =>
+      case journey.Residency.AlwaysLivedAbroad(usualCountry, employmentStatus, countriesWorked, countriesReceivedBenefits) =>
         Residency.AlwaysLivedAbroad(usualCountry.name, employmentStatus.map(_.toString), countriesWorked.map(_.name), countriesReceivedBenefits.map(_.name))
     }
 

@@ -46,12 +46,12 @@ class CountryOfRegistrationSpec extends AnyFreeSpec with Matchers {
 
     "must return Abroad when given Other" in {
 
-      CountryOfRegistration.build(models.ChildBirthRegistrationCountry.Other) mustEqual CountryOfRegistration.Abroad
+      CountryOfRegistration.build(models.ChildBirthRegistrationCountry.OtherCountry) mustEqual CountryOfRegistration.Abroad
     }
 
     "must return Abroad when given Unknown" in {
 
-      CountryOfRegistration.build(models.ChildBirthRegistrationCountry.Unknown) mustEqual CountryOfRegistration.Abroad
+      CountryOfRegistration.build(models.ChildBirthRegistrationCountry.UnknownCountry) mustEqual CountryOfRegistration.Abroad
     }
   }
   

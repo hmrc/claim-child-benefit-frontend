@@ -10,7 +10,7 @@
     additionalInfoPage: AdditionalInfoPage
 )
 
-@(model: JourneyModel)(implicit messages: Messages)
+@(model: journey.JourneyModel)(implicit messages: Messages)
 
 <fo:root xml:lang="en" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:fox="http://xmlgraphics.apache.org/fop/extensions" font-family="sans-serif">
     @layout()

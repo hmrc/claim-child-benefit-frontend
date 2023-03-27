@@ -16,7 +16,7 @@
 
 package models.domain
 
-import models.JourneyModel
+import models.journey.JourneyModel
 import play.api.libs.json.{Json, OWrites}
 
 import java.time.LocalDate

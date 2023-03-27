@@ -18,7 +18,6 @@ package services
 
 import base.SpecBase
 import config.FeatureFlags
-import ClaimSubmissionService._
 import connectors.ClaimChildBenefitConnector
 import generators.Generators
 import models.PartnerClaimingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments, WaitingToHear}
@@ -38,6 +37,7 @@ import pages.child._
 import pages.partner._
 import pages.payments._
 import play.api.test.FakeRequest
+import services.ClaimSubmissionService._
 import uk.gov.hmrc.domain.Nino
 
 import java.time.LocalDate
@@ -49,9 +49,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
   private val mockFeatureFlags = mock[FeatureFlags]
   private val mockConnector = mock[ClaimChildBenefitConnector]
   private val mockSubmissionLimiter = mock[SubmissionLimiter]
-  private val mockBrmsService = mock[BrmsService]
   private val mockSupplementaryDataService = mock[SupplementaryDataService]
-  when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(BirthRegistrationMatchingResult.Matched)
 
   override def beforeEach(): Unit = {
     Mockito.reset(mockFeatureFlags)
@@ -61,8 +59,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
     super.beforeEach()
   }
 
-  private val journeyModelProvider = new JourneyModelProvider(mockBrmsService)
-  private val submissionService = new ClaimSubmissionService(mockFeatureFlags, mockConnector, journeyModelProvider, mockSubmissionLimiter, mockSupplementaryDataService)
+  private val submissionService = new ClaimSubmissionService(mockFeatureFlags, mockConnector, mockSubmissionLimiter, mockSupplementaryDataService)
 
   private val nino = arbitrary[Nino].sample.value
   private val userId = "user id"

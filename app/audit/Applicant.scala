@@ -16,7 +16,7 @@
 
 package audit
 
-import models.JourneyModel
+import models.journey
 import play.api.libs.json.{Json, Writes}
 
 import java.time.LocalDate
@@ -41,7 +41,7 @@ object Applicant {
 
   implicit lazy val writes: Writes[Applicant] = Json.writes
 
-  def build(applicant: JourneyModel.Applicant): Applicant =
+  def build(applicant: journey.Applicant): Applicant =
     Applicant(
       name = AdultName.build(applicant.name),
       previousFamilyNames = applicant.previousFamilyNames.map(_.lastName),

@@ -17,8 +17,8 @@
 package models.domain
 
 import models.ChildBirthRegistrationCountry.{England, Scotland, Wales}
-import models.JourneyModel
-import play.api.libs.json.{Json, OWrites, Writes}
+import models.journey
+import play.api.libs.json.{Json, OWrites}
 
 import java.time.LocalDate
 
@@ -37,7 +37,7 @@ final case class Child(
 
 object Child extends CbsDateFormats {
 
-  def build(child: JourneyModel.Child): Child = {
+  def build(child: journey.Child): Child = {
 
     val adoptionStatus =
       child.adoptingThroughLocalAuthority ||
@@ -57,7 +57,7 @@ object Child extends CbsDateFormats {
       countryOfRegistration = CountryOfRegistration.build(child.countryOfRegistration),
       dateOfBirthVerified = dateOfBirthVerified,
       livingWithClaimant = child.guardian.isEmpty,
-      claimantIsParent = child.relationshipToApplicant != models.ApplicantRelationshipToChild.Other,
+      claimantIsParent = child.relationshipToApplicant != models.ApplicantRelationshipToChild.OtherRelationship,
       adoptionStatus = adoptionStatus
     )
   }

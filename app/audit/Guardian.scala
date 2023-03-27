@@ -16,7 +16,7 @@
 
 package audit
 
-import models.JourneyModel
+import models.journey
 import play.api.libs.json.{Json, Writes}
 
 final case class Guardian(name: Option[AdultName], address: Option[Address])
@@ -25,7 +25,7 @@ object Guardian {
 
   implicit lazy val writes: Writes[Guardian] = Json.writes
 
-  def build(guardian: JourneyModel.Guardian): Guardian =
+  def build(guardian: journey.Guardian): Guardian =
     Guardian(
       name = guardian.name.map(AdultName.build),
       address = guardian.address.map(Address.build)

@@ -16,8 +16,8 @@
 
 package models.domain
 
-import models.JourneyModel.{AccountDetailsWithHolder, BankAccountWithHolder, BuildingSocietyWithHolder, PaymentPreference}
-import models.JourneyModel.PaymentPreference._
+import models.journey.{AccountDetailsWithHolder, BankAccountWithHolder, BuildingSocietyWithHolder, PaymentPreference}
+import models.journey.PaymentPreference._
 import play.api.libs.json.{Json, OWrites}
 
 sealed trait PaymentDetails

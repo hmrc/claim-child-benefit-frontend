@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package models
+package models.journey
 
 import generators.ModelGenerators
 import models.OtherEligibilityFailReason._
 import models.PartnerClaimingChildBenefit.{GettingPayments, NotGettingPayments, WaitingToHear}
 import models.ReasonNotToSubmit._
 import models.RelationshipStatus._
+import models.{AccountType, AdultName, ApplicantRelationshipToChild, ApplicantResidence, BankAccountDetails, BankAccountHolder, BankAccountInsightsResponseModel, Benefits, BirthCertificateSystemNumber, BirthRegistrationMatchingResult, ChildBiologicalSex, ChildBirthRegistrationCountry, ChildName, Country, CurrentlyReceivingChildBenefit, DesignatoryDetails, DocumentType, EmploymentStatus, Income, Index, InternationalAddress, NPSAddress, Nationality, PartnerClaimingChildBenefit, RelationshipStatus, RequiredDocument, UkAddress, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalacheck.Arbitrary.arbitrary
@@ -50,26 +51,18 @@ class JourneyModelSpec
     with TryValues
     with EitherValues
     with OptionValues
-    with ModelGenerators
-    with ScalaFutures
-    with MockitoSugar {
-
-  private implicit val hc: HeaderCarrier = HeaderCarrier()
-  private val mockBrmsService = mock[BrmsService]
-  when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(BirthRegistrationMatchingResult.Matched)
+    with ModelGenerators {
 
   private val now = LocalDate.now
-  private val applicantName = AdultName(None, "first", None, "last")
-  private val currentUkAddress = UkAddress("line 1", None, "town", None, "AA11 1AA")
+  private val adultName = AdultName(None, "first", None, "last")
+  private val ukAddress = UkAddress("line 1", None, "town", None, "AA11 1AA")
   private val phoneNumber = "07777 777777"
-  private val applicantNationality = Gen.oneOf(Nationality.allNationalities).sample.value
+  private val nationality = Gen.oneOf(Nationality.allNationalities).sample.value
 
   private val childName = ChildName("first", None, "last")
   private val biologicalSex = ChildBiologicalSex.Female
   private val relationshipToChild = ApplicantRelationshipToChild.BirthChild
   private val systemNumber = BirthCertificateSystemNumber("000000000")
-
-  private val journeyModelProvider = new JourneyModelProvider(mockBrmsService)
 
   ".allRequiredDocuments" - {
 
@@ -77,14 +70,14 @@ class JourneyModelSpec
 
       val answers = UserAnswers("id")
         .set(ApplicantNinoKnownPage, false).success.value
-        .set(ApplicantNamePage, applicantName).success.value
+        .set(ApplicantNamePage, adultName).success.value
         .set(ApplicantHasPreviousFamilyNamePage, false).success.value
         .set(ApplicantDateOfBirthPage, now).success.value
         .set(ApplicantPhoneNumberPage, phoneNumber).success.value
-        .set(ApplicantNationalityPage(Index(0)), applicantNationality).success.value
+        .set(ApplicantNationalityPage(Index(0)), nationality).success.value
         .set(ApplicantIsHmfOrCivilServantPage, false).success.value
         .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
-        .set(ApplicantCurrentUkAddressPage, currentUkAddress).success.value
+        .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
         .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
         .set(ApplicantIsHmfOrCivilServantPage, false).success.value
         .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
@@ -105,7 +98,7 @@ class JourneyModelSpec
         .set(ChildHasPreviousNamePage(Index(1)), false).success.value
         .set(ChildBiologicalSexPage(Index(1)), biologicalSex).success.value
         .set(ChildDateOfBirthPage(Index(1)), now).success.value
-        .set(ChildBirthRegistrationCountryPage(Index(1)), ChildBirthRegistrationCountry.Other).success.value
+        .set(ChildBirthRegistrationCountryPage(Index(1)), ChildBirthRegistrationCountry.OtherCountry).success.value
         .set(ApplicantRelationshipToChildPage(Index(1)), relationshipToChild).success.value
         .set(AdoptingThroughLocalAuthorityPage(Index(1)), false).success.value
         .set(AnyoneClaimedForChildBeforePage(Index(1)), false).success.value
@@ -115,7 +108,7 @@ class JourneyModelSpec
         .set(ChildHasPreviousNamePage(Index(2)), false).success.value
         .set(ChildBiologicalSexPage(Index(2)), biologicalSex).success.value
         .set(ChildDateOfBirthPage(Index(2)), now).success.value
-        .set(ChildBirthRegistrationCountryPage(Index(2)), ChildBirthRegistrationCountry.Other).success.value
+        .set(ChildBirthRegistrationCountryPage(Index(2)), ChildBirthRegistrationCountry.OtherCountry).success.value
         .set(ApplicantRelationshipToChildPage(Index(2)), ApplicantRelationshipToChild.AdoptedChild).success.value
         .set(AdoptingThroughLocalAuthorityPage(Index(2)), false).success.value
         .set(AnyoneClaimedForChildBeforePage(Index(2)), false).success.value
@@ -125,7 +118,7 @@ class JourneyModelSpec
         .set(WantToBePaidPage, false).success.value
         .set(IncludeAdditionalInformationPage, false).success.value
 
-      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+      val (errors, data) = JourneyModel.build(answers).pad
 
       errors mustBe empty
 
@@ -146,7 +139,7 @@ class JourneyModelSpec
     val nino = arbitrary[Nino].sample.value
     val designatoryDetails =
       DesignatoryDetails(
-        Some(applicantName),
+        Some(adultName),
         None,
         Some(NPSAddress("1", None, None, None, None, None, None)),
         None,
@@ -155,14 +148,14 @@ class JourneyModelSpec
 
     val basicAnswers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
       .set(ApplicantNinoKnownPage, false).success.value
-      .set(ApplicantNamePage, applicantName).success.value
+      .set(ApplicantNamePage, adultName).success.value
       .set(ApplicantHasPreviousFamilyNamePage, false).success.value
       .set(ApplicantDateOfBirthPage, now).success.value
       .set(ApplicantPhoneNumberPage, phoneNumber).success.value
-      .set(ApplicantNationalityPage(Index(0)), applicantNationality).success.value
+      .set(ApplicantNationalityPage(Index(0)), nationality).success.value
       .set(ApplicantIsHmfOrCivilServantPage, false).success.value
       .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
-      .set(ApplicantCurrentUkAddressPage, currentUkAddress).success.value
+      .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
       .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
       .set(ApplicantIsHmfOrCivilServantPage, false).success.value
       .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
@@ -187,7 +180,7 @@ class JourneyModelSpec
 
       val answers = basicAnswers.copy(nino = None, designatoryDetails = None)
 
-      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+      val (errors, data) = JourneyModel.build(answers).pad
 
       errors mustBe empty
       data.value.reasonsNotToSubmit must contain only UserUnauthenticated
@@ -198,7 +191,7 @@ class JourneyModelSpec
 
       val answers = basicAnswers.set(ChildDateOfBirthPage(Index(0)), LocalDate.now.minusMonths(6).minusDays(1)).success.value
 
-      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+      val (errors, data) = JourneyModel.build(answers).pad
 
       errors mustBe empty
       data.value.reasonsNotToSubmit must contain only ChildOverSixMonths
@@ -207,9 +200,9 @@ class JourneyModelSpec
 
     "must contain `Documents Required` when any documents are required for a child" in {
 
-      val answers = basicAnswers.set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.Other).success.value
+      val answers = basicAnswers.set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.OtherCountry).success.value
 
-      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+      val (errors, data) = JourneyModel.build(answers).pad
 
       errors mustBe empty
       data.value.reasonsNotToSubmit must contain only DocumentsRequired
@@ -220,7 +213,7 @@ class JourneyModelSpec
 
       val answers = basicAnswers.set(DesignatoryNamePage, AdultName(None, "new first", None, "new last")).success.value
 
-      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+      val (errors, data) = JourneyModel.build(answers).pad
 
       errors mustBe empty
       data.value.reasonsNotToSubmit must contain only DesignatoryDetailsChanged
@@ -234,7 +227,7 @@ class JourneyModelSpec
           .set(DesignatoryAddressInUkPage, true).success.value
           .set(DesignatoryUkAddressPage, UkAddress("new line 1", None, "new line 2", None, "new postcode")).success.value
 
-      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+      val (errors, data) = JourneyModel.build(answers).pad
 
       errors mustBe empty
       data.value.reasonsNotToSubmit must contain only DesignatoryDetailsChanged
@@ -248,7 +241,7 @@ class JourneyModelSpec
           .set(CorrespondenceAddressInUkPage, true).success.value
           .set(CorrespondenceUkAddressPage, UkAddress("new line 1", None, "new line 2", None, "new postcode")).success.value
 
-      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+      val (errors, data) = JourneyModel.build(answers).pad
 
       errors mustBe empty
       data.value.reasonsNotToSubmit must contain only DesignatoryDetailsChanged
@@ -274,7 +267,7 @@ class JourneyModelSpec
           .set(PartnerEldestChildNamePage, ChildName("first", None, "last")).success.value
           .set(PartnerEldestChildDateOfBirthPage, LocalDate.now).success.value
 
-      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+      val (errors, data) = JourneyModel.build(answers).pad
 
       errors mustBe empty
       data.value.reasonsNotToSubmit must contain only PartnerNinoMissing
@@ -288,7 +281,7 @@ class JourneyModelSpec
           .set(IncludeAdditionalInformationPage, true).success.value
           .set(AdditionalInformationPage, "foo").success.value
 
-      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+      val (errors, data) = JourneyModel.build(answers).pad
 
       errors mustBe empty
       data.value.reasonsNotToSubmit must contain only AdditionalInformationPresent
@@ -302,7 +295,7 @@ class JourneyModelSpec
     val country = Gen.oneOf(Country.internationalCountries).sample.value
     val designatoryDetails =
       DesignatoryDetails(
-        Some(applicantName),
+        Some(adultName),
         None,
         Some(NPSAddress("1", None, None, None, None, None, None)),
         None,
@@ -311,14 +304,14 @@ class JourneyModelSpec
 
     val basicAnswers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
       .set(ApplicantNinoKnownPage, false).success.value
-      .set(ApplicantNamePage, applicantName).success.value
+      .set(ApplicantNamePage, adultName).success.value
       .set(ApplicantHasPreviousFamilyNamePage, false).success.value
       .set(ApplicantDateOfBirthPage, now).success.value
       .set(ApplicantPhoneNumberPage, phoneNumber).success.value
-      .set(ApplicantNationalityPage(Index(0)), applicantNationality).success.value
+      .set(ApplicantNationalityPage(Index(0)), nationality).success.value
       .set(ApplicantIsHmfOrCivilServantPage, false).success.value
       .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
-      .set(ApplicantCurrentUkAddressPage, currentUkAddress).success.value
+      .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
       .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
       .set(ApplicantIsHmfOrCivilServantPage, false).success.value
       .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
@@ -351,7 +344,7 @@ class JourneyModelSpec
           .set(CountryApplicantWorkedPage(Index(0)), country).success.value
           .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
 
-      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+      val (errors, data) = JourneyModel.build(answers).pad
 
       errors mustBe empty
       data.value.otherEligibilityFailureReasons must contain only ApplicantWorkedAbroad
@@ -369,7 +362,7 @@ class JourneyModelSpec
           .set(ApplicantReceivedBenefitsAbroadPage, true).success.value
           .set(CountryApplicantReceivedBenefitsPage(Index(0)), country).success.value
 
-      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+      val (errors, data) = JourneyModel.build(answers).pad
 
       errors mustBe empty
       data.value.otherEligibilityFailureReasons must contain only ApplicantReceivedBenefitsAbroad
@@ -392,7 +385,7 @@ class JourneyModelSpec
           .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming).success.value
           .set(WantToBePaidPage, false).success.value
 
-      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+      val (errors, data) = JourneyModel.build(answers).pad
 
       errors mustBe empty
       data.value.otherEligibilityFailureReasons must contain only PartnerWorkedAbroad
@@ -415,7 +408,7 @@ class JourneyModelSpec
           .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming).success.value
           .set(WantToBePaidPage, false).success.value
 
-      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+      val (errors, data) = JourneyModel.build(answers).pad
 
       errors mustBe empty
       data.value.otherEligibilityFailureReasons must contain only PartnerReceivedBenefitsAbroad
@@ -436,7 +429,7 @@ class JourneyModelSpec
             .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), false).success.value
             .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now.minusMonths(3).plusDays(1)).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+        val (errors, data) = JourneyModel.build(answers).pad
 
         errors mustBe empty
         data.value.otherEligibilityFailureReasons must contain only ChildRecentlyLivedElsewhere
@@ -453,7 +446,7 @@ class JourneyModelSpec
             .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), false).success.value
             .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now.minusMonths(3).plusDays(1)).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+        val (errors, data) = JourneyModel.build(answers).pad
 
         errors mustBe empty
         data.value.otherEligibilityFailureReasons must contain only ChildRecentlyLivedElsewhere
@@ -475,7 +468,7 @@ class JourneyModelSpec
             .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), false).success.value
             .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now.minusMonths(3).plusDays(1)).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+        val (errors, data) = JourneyModel.build(answers).pad
 
         errors mustBe empty
         data.value.otherEligibilityFailureReasons mustBe empty
@@ -494,7 +487,7 @@ class JourneyModelSpec
             .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), false).success.value
             .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now.minusMonths(3)).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+        val (errors, data) = JourneyModel.build(answers).pad
 
         errors mustBe empty
         data.value.otherEligibilityFailureReasons mustBe empty
@@ -517,7 +510,7 @@ class JourneyModelSpec
             .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), false).success.value
             .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now.minusMonths(3).plusDays(1)).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+        val (errors, data) = JourneyModel.build(answers).pad
 
         errors mustBe empty
         data.value.otherEligibilityFailureReasons must contain only ChildPossiblyRecentlyUnderLocalAuthorityCare
@@ -542,7 +535,7 @@ class JourneyModelSpec
               .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), false).success.value
               .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now.minusMonths(3).plusDays(1)).success.value
 
-          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+          val (errors, data) = JourneyModel.build(answers).pad
 
           errors mustBe empty
           data.value.otherEligibilityFailureReasons mustBe empty
@@ -559,7 +552,7 @@ class JourneyModelSpec
               .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), false).success.value
               .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now.minusMonths(3).plusDays(1)).success.value
 
-          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+          val (errors, data) = JourneyModel.build(answers).pad
 
           errors mustBe empty
           data.value.otherEligibilityFailureReasons must not contain ChildPossiblyRecentlyUnderLocalAuthorityCare
@@ -579,7 +572,7 @@ class JourneyModelSpec
               .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), false).success.value
               .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now.minusMonths(3).plusDays(1)).success.value
 
-          val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+          val (errors, data) = JourneyModel.build(answers).pad
 
           errors mustBe empty
           data.value.otherEligibilityFailureReasons must not contain ChildPossiblyRecentlyUnderLocalAuthorityCare
@@ -600,7 +593,7 @@ class JourneyModelSpec
             .set(PreviousGuardianPhoneNumberKnownPage(Index(0)), false).success.value
             .set(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now.minusMonths(3)).success.value
 
-        val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+        val (errors, data) = JourneyModel.build(answers).pad
 
         errors mustBe empty
         data.value.otherEligibilityFailureReasons mustBe empty
@@ -620,7 +613,7 @@ class JourneyModelSpec
           .set(BankAccountDetailsPage, bankDetails).success.value
           .set(BankAccountInsightsResultQuery, BankAccountInsightsResponseModel("a", 100, "b")).success.value
 
-      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+      val (errors, data) = JourneyModel.build(answers).pad
 
       errors mustBe empty
       data.value.otherEligibilityFailureReasons must contain only BankAccountInsightsRisk
@@ -639,10 +632,302 @@ class JourneyModelSpec
           .set(BankAccountDetailsPage, bankDetails).success.value
           .set(BankAccountInsightsResultQuery, BankAccountInsightsResponseModel("a", 99, "b")).success.value
 
-      val (errors, data) = journeyModelProvider.buildFromUserAnswers(answers).futureValue.pad
+      val (errors, data) = JourneyModel.build(answers).pad
 
       errors mustBe empty
       data.value.otherEligibilityFailureReasons mustBe empty
+    }
+  }
+
+  ".build" - {
+
+    val minimalSingleAnswers =
+      UserAnswers("id")
+        .set(ApplicantNinoKnownPage, false).success.value
+        .set(ApplicantNamePage, adultName).success.value
+        .set(ApplicantHasPreviousFamilyNamePage, false).success.value
+        .set(ApplicantDateOfBirthPage, now).success.value
+        .set(ApplicantPhoneNumberPage, phoneNumber).success.value
+        .set(ApplicantNationalityPage(Index(0)), nationality).success.value
+        .set(ApplicantIsHmfOrCivilServantPage, false).success.value
+        .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
+        .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
+        .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+        .set(ApplicantIsHmfOrCivilServantPage, false).success.value
+        .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
+        .set(RelationshipStatusPage, Single).success.value
+        .set(ChildNamePage(Index(0)), childName).success.value
+        .set(ChildHasPreviousNamePage(Index(0)), false).success.value
+        .set(ChildBiologicalSexPage(Index(0)), biologicalSex).success.value
+        .set(ChildDateOfBirthPage(Index(0)), now).success.value
+        .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.England).success.value
+        .set(BirthCertificateHasSystemNumberPage(Index(0)), true).success.value
+        .set(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber).success.value
+        .set(ApplicantRelationshipToChildPage(Index(0)), relationshipToChild).success.value
+        .set(AdoptingThroughLocalAuthorityPage(Index(0)), false).success.value
+        .set(AnyoneClaimedForChildBeforePage(Index(0)), false).success.value
+        .set(ChildLivesWithApplicantPage(Index(0)), true).success.value
+        .set(ChildLivedWithAnyoneElsePage(Index(0)), false).success.value
+        .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
+        .set(WantToBePaidPage, false).success.value
+        .set(IncludeAdditionalInformationPage, false).success.value
+
+    val minimalCoupleAnswers =
+      UserAnswers("id")
+        .set(ApplicantNinoKnownPage, false).success.value
+        .set(ApplicantNamePage, adultName).success.value
+        .set(ApplicantHasPreviousFamilyNamePage, false).success.value
+        .set(ApplicantDateOfBirthPage, now).success.value
+        .set(ApplicantPhoneNumberPage, phoneNumber).success.value
+        .set(ApplicantNationalityPage(Index(0)), nationality).success.value
+        .set(ApplicantIsHmfOrCivilServantPage, false).success.value
+        .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
+        .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
+        .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+        .set(ApplicantIsHmfOrCivilServantPage, false).success.value
+        .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
+        .set(RelationshipStatusPage, Married).success.value
+        .set(PartnerNamePage, adultName).success.value
+        .set(PartnerNinoKnownPage, false).success.value
+        .set(PartnerDateOfBirthPage, LocalDate.now).success.value
+        .set(PartnerNationalityPage(Index(0)), nationality).success.value
+        .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
+        .set(PartnerIsHmfOrCivilServantPage, false).success.value
+        .set(PartnerWorkedAbroadPage, false).success.value
+        .set(PartnerReceivedBenefitsAbroadPage, false).success.value
+        .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming).success.value
+        .set(ChildNamePage(Index(0)), childName).success.value
+        .set(ChildHasPreviousNamePage(Index(0)), false).success.value
+        .set(ChildBiologicalSexPage(Index(0)), biologicalSex).success.value
+        .set(ChildDateOfBirthPage(Index(0)), now).success.value
+        .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.England).success.value
+        .set(BirthCertificateHasSystemNumberPage(Index(0)), true).success.value
+        .set(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber).success.value
+        .set(ApplicantRelationshipToChildPage(Index(0)), relationshipToChild).success.value
+        .set(AdoptingThroughLocalAuthorityPage(Index(0)), false).success.value
+        .set(AnyoneClaimedForChildBeforePage(Index(0)), false).success.value
+        .set(ChildLivesWithApplicantPage(Index(0)), true).success.value
+        .set(ChildLivedWithAnyoneElsePage(Index(0)), false).success.value
+        .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
+        .set(WantToBePaidPage, false).success.value
+        .set(IncludeAdditionalInformationPage, false).success.value
+
+    "when the user is Married or Cohabiting" - {
+
+      "and wants to be paid" - {
+
+        "and is currently receiving payments" - {
+
+          "must not include benefits" in {
+
+            val answers =
+              minimalCoupleAnswers
+                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
+                .set(EldestChildNamePage, childName).success.value
+                .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+                .set(WantToBePaidPage, true).success.value
+                .set(ApplicantHasSuitableAccountPage, false).success.value
+
+            val (errors, data) = JourneyModel.build(answers).pad
+
+            data.value.benefits must not be defined
+            errors must not be defined
+          }
+        }
+
+        "and is not currently receiving payments" - {
+
+          "must include benefits" in {
+
+            val answers =
+              minimalCoupleAnswers
+                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
+                .set(EldestChildNamePage, childName).success.value
+                .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+                .set(WantToBePaidPage, true).success.value
+                .set(ApplicantHasSuitableAccountPage, false).success.value
+                .set(ApplicantOrPartnerBenefitsPage, Benefits.qualifyingBenefits).success.value
+
+            val (errors, data) = JourneyModel.build(answers).pad
+
+            data.value.benefits.value mustEqual Benefits.qualifyingBenefits
+            errors must not be defined
+          }
+
+          "must return errors when benefits are not present" in {
+
+            val answers =
+              minimalCoupleAnswers
+                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
+                .set(EldestChildNamePage, childName).success.value
+                .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+                .set(WantToBePaidPage, true).success.value
+                .set(ApplicantHasSuitableAccountPage, false).success.value
+
+            val (errors, data) = JourneyModel.build(answers).pad
+
+            data must not be defined
+            errors.value.toChain.toList must contain only ApplicantOrPartnerBenefitsPage
+          }
+        }
+      }
+
+      "and does not want to be paid" - {
+
+        "must not include benefits" in {
+
+          val answers =
+            minimalCoupleAnswers
+              .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
+              .set(EldestChildNamePage, childName).success.value
+              .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+              .set(WantToBePaidPage, false).success.value
+
+          val (errors, data) = JourneyModel.build(answers).pad
+
+          data.value.benefits must not be defined
+          errors must not be defined
+        }
+      }
+
+      "must return errors when whether they want to be paid is missing" in {
+
+        val answers = minimalCoupleAnswers.remove(WantToBePaidPage).success.value
+
+        val (errors, data) = JourneyModel.build(answers).pad
+
+        data must not be defined
+        errors.value.toChain.toList must contain only WantToBePaidPage
+      }
+
+      "must return errors when whether they want to include additional information is included" in {
+
+        val answers = minimalCoupleAnswers.remove(IncludeAdditionalInformationPage).success.value
+
+        val (errors, data) = JourneyModel.build(answers).pad
+
+        data must not be defined
+        errors.value.toChain.toList must contain only IncludeAdditionalInformationPage
+      }
+
+      "must return errors when they want to include additional information, but it is missing" in {
+
+        val answers = minimalCoupleAnswers.set(IncludeAdditionalInformationPage, true).success.value
+
+        val (errors, data) = JourneyModel.build(answers).pad
+
+        data must not be defined
+        errors.value.toChain.toList must contain only AdditionalInformationPage
+      }
+    }
+
+    "when the applicant is Single, Separated, Divorced or Widowed" - {
+
+      "and wants to be paid" - {
+
+        "and is currently receiving payments" - {
+
+          "must not include benefits" in {
+
+            val answers =
+              minimalSingleAnswers
+                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
+                .set(EldestChildNamePage, childName).success.value
+                .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+                .set(WantToBePaidPage, true).success.value
+                .set(ApplicantHasSuitableAccountPage, false).success.value
+
+            val (errors, data) = JourneyModel.build(answers).pad
+
+            data.value.benefits must not be defined
+            errors must not be defined
+          }
+        }
+
+        "and is not currently receiving payments" - {
+
+          "must include benefits" in {
+
+            val answers =
+              minimalSingleAnswers
+                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
+                .set(EldestChildNamePage, childName).success.value
+                .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+                .set(WantToBePaidPage, true).success.value
+                .set(ApplicantHasSuitableAccountPage, false).success.value
+                .set(ApplicantBenefitsPage, Benefits.qualifyingBenefits).success.value
+
+            val (errors, data) = JourneyModel.build(answers).pad
+
+            data.value.benefits.value mustEqual Benefits.qualifyingBenefits
+            errors must not be defined
+          }
+
+          "must return errors when benefits are not present" in {
+
+            val answers =
+              minimalSingleAnswers
+                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
+                .set(EldestChildNamePage, childName).success.value
+                .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+                .set(WantToBePaidPage, true).success.value
+                .set(ApplicantHasSuitableAccountPage, false).success.value
+
+            val (errors, data) = JourneyModel.build(answers).pad
+
+            data must not be defined
+            errors.value.toChain.toList must contain only ApplicantBenefitsPage
+          }
+        }
+      }
+
+      "and does not want to be paid" - {
+
+        "must not include benefits" in {
+
+          val answers =
+            minimalSingleAnswers
+              .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
+              .set(EldestChildNamePage, childName).success.value
+              .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+              .set(WantToBePaidPage, false).success.value
+
+          val (errors, data) = JourneyModel.build(answers).pad
+
+          data.value.benefits must not be defined
+          errors must not be defined
+        }
+      }
+
+      "must return errors when whether they want to be paid is missing" in {
+
+        val answers = minimalSingleAnswers.remove(WantToBePaidPage).success.value
+
+        val (errors, data) = JourneyModel.build(answers).pad
+
+        data must not be defined
+        errors.value.toChain.toList must contain only WantToBePaidPage
+      }
+
+      "must return errors when whether they want to include additional information is included" in {
+
+        val answers = minimalSingleAnswers.remove(IncludeAdditionalInformationPage).success.value
+
+        val (errors, data) = JourneyModel.build(answers).pad
+
+        data must not be defined
+        errors.value.toChain.toList must contain only IncludeAdditionalInformationPage
+      }
+
+      "must return errors when they want to include additional information, but it is missing" in {
+
+        val answers = minimalSingleAnswers.set(IncludeAdditionalInformationPage, true).success.value
+
+        val (errors, data) = JourneyModel.build(answers).pad
+
+        data must not be defined
+        errors.value.toChain.toList must contain only AdditionalInformationPage
+      }
     }
   }
 }

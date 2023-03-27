@@ -18,8 +18,9 @@ package services
 
 import audit.AuditService
 import connectors.{ClaimChildBenefitConnector, UserAllowListConnector}
-import models.{Done, JourneyModel}
+import models.Done
 import models.domain.Claim
+import models.journey.JourneyModel
 import play.api.Configuration
 import uk.gov.hmrc.http.HeaderCarrier
 

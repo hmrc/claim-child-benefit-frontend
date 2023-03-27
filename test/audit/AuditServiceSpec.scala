@@ -21,7 +21,9 @@ import generators.ModelGenerators
 import models.BirthRegistrationMatchingResult.NotAttempted
 import models.OtherEligibilityFailReason.{ApplicantReceivedBenefitsAbroad, ApplicantWorkedAbroad, PartnerReceivedBenefitsAbroad, PartnerWorkedAbroad}
 import models.domain.Claim
-import models.{ApplicantPreviousName, BankAccountInsightsResponseModel, BirthCertificateSystemNumber, Country, CurrentlyReceivingChildBenefit, EmploymentStatus, JourneyModel, Nationality, PartnerClaimingChildBenefit}
+import models.journey
+import models.journey._
+import models.{ApplicantPreviousName, BankAccountInsightsResponseModel, BirthCertificateSystemNumber, Country, CurrentlyReceivingChildBenefit, EmploymentStatus, Nationality, PartnerClaimingChildBenefit}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
 import org.scalacheck.Arbitrary.arbitrary
@@ -54,7 +56,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
   private val partnerNino = arbitrary[Nino].sample.value
 
   private val model = JourneyModel(
-    applicant = JourneyModel.Applicant(
+    applicant = journey.Applicant(
       name = models.AdultName(title = Some("title"), firstName = "applicant first", middleNames = Some("applicant middle"), lastName = "applicant last"),
       previousFamilyNames = List(ApplicantPreviousName("previous family name")),
       dateOfBirth = now,
@@ -63,23 +65,23 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
       previousAddress = Some(models.UkAddress("previous line 1", Some("previous line 2"), "previous town", Some("previous county"), "previous postcode")),
       telephoneNumber = "07777 777777",
       nationalities = NonEmptyList(Nationality.allNationalities.head, Nil),
-      residency = JourneyModel.Residency.LivedInUkAndAbroad(Some(Country.internationalCountries.head), Some(LocalDate.now), EmploymentStatus.activeStatuses, List(Country("ES", "Spain")), List(Country("ES", "Spain"))),
+      residency = journey.Residency.LivedInUkAndAbroad(Some(Country.internationalCountries.head), Some(LocalDate.now), EmploymentStatus.activeStatuses, List(Country("ES", "Spain")), List(Country("ES", "Spain"))),
       memberOfHMForcesOrCivilServantAbroad = false,
       currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
       changedDesignatoryDetails = Some(true),
       correspondenceAddress = Some(models.UkAddress("corr 1", Some("corr 2"), "corr town", Some("corr county"), "corr postcode"))
     ),
-    relationship = JourneyModel.Relationship(
+    relationship = journey.Relationship(
       status = models.RelationshipStatus.Cohabiting,
       since = Some(now),
-      partner = Some(models.JourneyModel.Partner(
+      partner = Some(journey.Partner(
         name = models.AdultName(title = Some("title"), firstName = "partner first", middleNames = Some("partner middle"), lastName = "partner last"),
         dateOfBirth = now,
         nationalities = NonEmptyList(Nationality.allNationalities.head, Nil),
         nationalInsuranceNumber = Some(partnerNino),
         memberOfHMForcesOrCivilServantAbroad = false,
         currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments,
-        eldestChild = Some(JourneyModel.EldestChild(
+        eldestChild = Some(journey.EldestChild(
           name = models.ChildName("partner eldest child first", Some("partner eldest child middle"), "partner eldest child last"),
           dateOfBirth = now
         )),
@@ -89,7 +91,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
       ))
     ),
     children = NonEmptyList(
-      JourneyModel.Child(
+      journey.Child(
         name = models.ChildName("child 1 first", Some("child 1 middle"), "child 1 last"),
         nameChangedByDeedPoll = Some(true),
         previousNames = List(models.ChildName("child 1 previous first", Some("child 1 previous middle"), "child 1 previous last")),
@@ -100,16 +102,16 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
         birthCertificateDetailsMatched = NotAttempted,
         relationshipToApplicant = models.ApplicantRelationshipToChild.BirthChild,
         adoptingThroughLocalAuthority = true,
-        previousClaimant = Some(JourneyModel.PreviousClaimant(
+        previousClaimant = Some(journey.PreviousClaimant(
           name = Some(models.AdultName(title = Some("title"), "previous claimant first", Some("previous claimant middle"), "previous claimant last")),
           address = Some(models.UkAddress("previous claimant line 1", Some("previous claimant line 2"), "previous claimant town", Some("previous claimant county"), "previous claimant postcode"))
         ),
         ),
-        guardian = Some(JourneyModel.Guardian(
+        guardian = Some(journey.Guardian(
           name = Some(models.AdultName(title = Some("title"), "guardian first", Some("guardian middle"), "guardian last")),
           address = Some(models.UkAddress("guardian line 1", Some("guardian line 2"), "guardian town", Some("guardian county"), "guardian postcode"))
         )),
-        previousGuardian = Some(JourneyModel.PreviousGuardian(
+        previousGuardian = Some(journey.PreviousGuardian(
           name = Some(models.AdultName(title = Some("title"), "previous guardian first", Some("previous guardian middle"), "previous guardian last")),
           address = Some(models.UkAddress("previous guardian line 1", Some("previous guardian line 2"), "previous guardian town", Some("previous guardian county"), "previous guardian postcode")),
           phoneNumber = Some("previous guardian phone")
@@ -118,13 +120,13 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
       ), Nil
     ),
     benefits = Some(Set(models.Benefits.IncomeSupport, models.Benefits.JobseekersAllowance)),
-    paymentPreference = JourneyModel.PaymentPreference.Weekly(
-      accountDetails = Some(JourneyModel.BankAccountWithHolder(
+    paymentPreference = journey.PaymentPreference.Weekly(
+      accountDetails = Some(journey.BankAccountWithHolder(
         holder = models.BankAccountHolder.Applicant,
         details = models.BankAccountDetails("first", "last", "000000", "00000000"),
         risk = Some(BankAccountInsightsResponseModel("correlation", 0, "reason"))
       )),
-      eldestChild = Some(JourneyModel.EldestChild(
+      eldestChild = Some(journey.EldestChild(
         name = models.ChildName("applicant eldest first", Some("applicant eldest middle"), "applicant eldest last"),
         dateOfBirth = now
       ))

@@ -16,7 +16,8 @@
 
 package audit
 
-import models.{BankAccountInsightsResponseModel, JourneyModel}
+import models.BankAccountInsightsResponseModel
+import models.journey
 import play.api.libs.json.{Json, Writes}
 
 
@@ -28,9 +29,9 @@ object AccountDetails {
     case x: BuildingSociety => Json.toJson(x)(BuildingSociety.writes)
   }
 
-  def build(details: JourneyModel.AccountDetailsWithHolder): AccountDetails =
+  def build(details: journey.AccountDetailsWithHolder): AccountDetails =
     details match {
-      case bankAccount: JourneyModel.BankAccountWithHolder =>
+      case bankAccount: journey.BankAccountWithHolder =>
         BankAccount(
           holder = bankAccount.holder.toString,
           firstName = bankAccount.details.firstName,
@@ -40,7 +41,7 @@ object AccountDetails {
           bankAccountInsightsResult = bankAccount.risk
         )
 
-      case buildingSociety: JourneyModel.BuildingSocietyWithHolder =>
+      case buildingSociety: journey.BuildingSocietyWithHolder =>
         BuildingSociety(
           holder = buildingSociety.holder.toString,
           firstName = buildingSociety.details.firstName,

@@ -19,6 +19,8 @@ package models.domain
 import cats.data.NonEmptyList
 import generators.Generators
 import models._
+import models.journey
+import models.journey.JourneyModel
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.OptionValues
@@ -36,7 +38,7 @@ class ClaimSpec extends AnyFreeSpec with Matchers with Generators with OptionVal
     val nino = arbitrary[Nino].sample.value.nino
 
     val basicJourneyModel = JourneyModel(
-      applicant = JourneyModel.Applicant(
+      applicant = journey.Applicant(
         name = arbitrary[AdultName].sample.value,
         previousFamilyNames = Nil,
         dateOfBirth = LocalDate.now,
@@ -44,15 +46,15 @@ class ClaimSpec extends AnyFreeSpec with Matchers with Generators with OptionVal
         currentAddress = arbitrary[models.UkAddress].sample.value,
         previousAddress = None, telephoneNumber = "0777777777",
         nationalities = NonEmptyList(genUkCtaNationality.sample.value, Gen.listOf(arbitrary[models.Nationality]).sample.value),
-        residency = JourneyModel.Residency.AlwaysLivedInUk,
+        residency = journey.Residency.AlwaysLivedInUk,
         memberOfHMForcesOrCivilServantAbroad = hmfAbroad,
         currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
         changedDesignatoryDetails = Some(false),
         correspondenceAddress = None
       ),
-      relationship = JourneyModel.Relationship(RelationshipStatus.Single, None, None),
+      relationship = journey.Relationship(RelationshipStatus.Single, None, None),
       children = NonEmptyList(
-        JourneyModel.Child(
+        journey.Child(
           name = arbitrary[models.ChildName].sample.value,
           nameChangedByDeedPoll = None,
           previousNames = Nil,
@@ -71,14 +73,14 @@ class ClaimSpec extends AnyFreeSpec with Matchers with Generators with OptionVal
         Nil
       ),
       benefits = None,
-      paymentPreference = JourneyModel.PaymentPreference.DoNotPay(None),
+      paymentPreference = journey.PaymentPreference.DoNotPay(None),
       additionalInformation = None,
       userAuthenticated = true
     )
 
     "must set `other eligibility fail` to true when the journey model has any other eligibility fail reasons" in {
 
-      val residency = JourneyModel.Residency.LivedInUkAndAbroad(None, None, EmploymentStatus.activeStatuses, List(Country.internationalCountries.head), Nil)
+      val residency = journey.Residency.LivedInUkAndAbroad(None, None, EmploymentStatus.activeStatuses, List(Country.internationalCountries.head), Nil)
       val model = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(residency = residency))
 
       val claim = Claim.build(nino, model)

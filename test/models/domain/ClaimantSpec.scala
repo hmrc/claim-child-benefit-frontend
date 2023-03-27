@@ -19,6 +19,8 @@ package models.domain
 import cats.data.NonEmptyList
 import generators.Generators
 import models._
+import models.journey
+import models.journey.JourneyModel
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.OptionValues
@@ -37,12 +39,12 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
     val hmfAbroad = arbitrary[Boolean].sample.value
     val nino = arbitrary[Nino].sample.value.nino
 
-    def paymentPreference: JourneyModel.PaymentPreference = {
+    def paymentPreference: journey.PaymentPreference = {
       Gen.oneOf(
-        Gen.const(JourneyModel.PaymentPreference.Weekly(None, None)),
-        Gen.const(JourneyModel.PaymentPreference.EveryFourWeeks(None, None)),
-        Gen.const(JourneyModel.PaymentPreference.ExistingAccount(
-          JourneyModel.EldestChild(
+        Gen.const(journey.PaymentPreference.Weekly(None, None)),
+        Gen.const(journey.PaymentPreference.EveryFourWeeks(None, None)),
+        Gen.const(journey.PaymentPreference.ExistingAccount(
+          journey.EldestChild(
             arbitrary[models.ChildName].sample.value,
             LocalDate.now
           )
@@ -50,17 +52,17 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
       )
     }.sample.value
 
-    def alwaysAbroad: JourneyModel.Residency.AlwaysLivedAbroad = {
+    def alwaysAbroad: journey.Residency.AlwaysLivedAbroad = {
       for {
         country <- arbitrary[Country]
         employment <- Gen.listOf(arbitrary[EmploymentStatus])
         countriesWorked <- Gen.listOf(arbitrary[Country])
         countriesReceivedBenefits <- Gen.listOf(arbitrary[Country])
-      } yield JourneyModel.Residency.AlwaysLivedAbroad(country, employment.toSet, countriesWorked, countriesReceivedBenefits)
+      } yield journey.Residency.AlwaysLivedAbroad(country, employment.toSet, countriesWorked, countriesReceivedBenefits)
     }.sample.value
 
     val basicJourneyModel = JourneyModel(
-      applicant = JourneyModel.Applicant(
+      applicant = journey.Applicant(
         name = arbitrary[AdultName].sample.value,
         previousFamilyNames = Nil,
         dateOfBirth = LocalDate.now,
@@ -68,15 +70,15 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
         currentAddress = arbitrary[models.UkAddress].sample.value,
         previousAddress = None, telephoneNumber = "0777777777",
         nationalities = NonEmptyList(genUkCtaNationality.sample.value, Gen.listOf(arbitrary[models.Nationality]).sample.value),
-        residency = JourneyModel.Residency.AlwaysLivedInUk,
+        residency = journey.Residency.AlwaysLivedInUk,
         memberOfHMForcesOrCivilServantAbroad = hmfAbroad,
         currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
         changedDesignatoryDetails = Some(false),
         correspondenceAddress = None
       ),
-      relationship = JourneyModel.Relationship(RelationshipStatus.Single, None, None),
+      relationship = journey.Relationship(RelationshipStatus.Single, None, None),
       children = NonEmptyList(
-        JourneyModel.Child(
+        journey.Child(
           name = arbitrary[models.ChildName].sample.value,
           nameChangedByDeedPoll = None,
           previousNames = Nil,
@@ -95,7 +97,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
         Nil
       ),
       benefits = None,
-      paymentPreference = JourneyModel.PaymentPreference.DoNotPay(None),
+      paymentPreference = journey.PaymentPreference.DoNotPay(None),
       additionalInformation = None,
       userAuthenticated = true
     )
@@ -172,7 +174,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
               employment <- Gen.listOf(arbitrary[EmploymentStatus])
               countriesWorked <- Gen.listOf(arbitrary[Country])
               countriesReceivedBenefits <- Gen.listOf(arbitrary[Country])
-            } yield JourneyModel.Residency.LivedInUkAndAbroad(country, None, employment.toSet, countriesWorked, countriesReceivedBenefits)
+            } yield journey.Residency.LivedInUkAndAbroad(country, None, employment.toSet, countriesWorked, countriesReceivedBenefits)
           }.sample.value
 
           "and opts out of HICBC" in {
@@ -216,7 +218,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                 employment <- Gen.listOf(arbitrary[EmploymentStatus])
                 countriesWorked <- Gen.listOf(arbitrary[Country])
                 countriesReceivedBenefits <- Gen.listOf(arbitrary[Country])
-              } yield JourneyModel.Residency.LivedInUkAndAbroad(country, Some(arrival), employment.toSet, countriesWorked, countriesReceivedBenefits)
+              } yield journey.Residency.LivedInUkAndAbroad(country, Some(arrival), employment.toSet, countriesWorked, countriesReceivedBenefits)
             }.sample.value
 
             "and opts out of HICBC" in {
@@ -258,7 +260,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                 employment <- Gen.listOf(arbitrary[EmploymentStatus])
                 countriesWorked <- Gen.listOf(arbitrary[Country])
                 countriesReceivedBenefits <- Gen.listOf(arbitrary[Country])
-              } yield JourneyModel.Residency.LivedInUkAndAbroad(country, Some(arrival), employment.toSet, countriesWorked, countriesReceivedBenefits)
+              } yield journey.Residency.LivedInUkAndAbroad(country, Some(arrival), employment.toSet, countriesWorked, countriesReceivedBenefits)
             }.sample.value
 
             "and opts out of HICBC" in {
@@ -475,7 +477,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                 employment <- Gen.listOf(arbitrary[EmploymentStatus])
                 countriesWorked <- Gen.listOf(arbitrary[Country])
                 countriesReceivedBenefits <- Gen.listOf(arbitrary[Country])
-              } yield JourneyModel.Residency.LivedInUkAndAbroad(country, Some(arrival), employment.toSet, countriesWorked, countriesReceivedBenefits)
+              } yield journey.Residency.LivedInUkAndAbroad(country, Some(arrival), employment.toSet, countriesWorked, countriesReceivedBenefits)
             }.sample.value
 
             "and opts out of HICBC" in {
@@ -528,7 +530,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                 employment <- Gen.listOf(arbitrary[EmploymentStatus])
                 countriesWorked <- Gen.listOf(arbitrary[Country])
                 countriesReceivedBenefits <- Gen.listOf(arbitrary[Country])
-              } yield JourneyModel.Residency.LivedInUkAndAbroad(country, Some(arrival), employment.toSet, countriesWorked, countriesReceivedBenefits)
+              } yield journey.Residency.LivedInUkAndAbroad(country, Some(arrival), employment.toSet, countriesWorked, countriesReceivedBenefits)
             }.sample.value
 
             "and opts out of HICBC" in {
@@ -587,7 +589,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                 employment <- Gen.listOf(arbitrary[EmploymentStatus])
                 countriesWorked <- Gen.listOf(arbitrary[Country])
                 countriesReceivedBenefits <- Gen.listOf(arbitrary[Country])
-              } yield JourneyModel.Residency.LivedInUkAndAbroad(country, Some(arrival), employment.toSet, countriesWorked, countriesReceivedBenefits)
+              } yield journey.Residency.LivedInUkAndAbroad(country, Some(arrival), employment.toSet, countriesWorked, countriesReceivedBenefits)
             }.sample.value
 
             "and opts out of HICBC" in {
@@ -640,7 +642,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                 employment <- Gen.listOf(arbitrary[EmploymentStatus])
                 countriesWorked <- Gen.listOf(arbitrary[Country])
                 countriesReceivedBenefits <- Gen.listOf(arbitrary[Country])
-              } yield JourneyModel.Residency.LivedInUkAndAbroad(country, Some(arrival), employment.toSet, countriesWorked, countriesReceivedBenefits)
+              } yield journey.Residency.LivedInUkAndAbroad(country, Some(arrival), employment.toSet, countriesWorked, countriesReceivedBenefits)
             }.sample.value
 
             "and opts out of HICBC" in {

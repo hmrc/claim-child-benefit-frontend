@@ -113,14 +113,14 @@ class BirthRegistrationMatchingRequestSpec extends AnyFreeSpec with Matchers wit
 
       "for children born outside the UK" in {
 
-        val result = BirthRegistrationMatchingRequest(None, minimalChildName, dateOfBirth, Other)
+        val result = BirthRegistrationMatchingRequest(None, minimalChildName, dateOfBirth, OtherCountry)
 
         result must not be defined
       }
 
       "for children whose country of birth registration is unknown" in {
 
-        val result = BirthRegistrationMatchingRequest(None, minimalChildName, dateOfBirth, Unknown)
+        val result = BirthRegistrationMatchingRequest(None, minimalChildName, dateOfBirth, UnknownCountry)
 
         result must not be defined
       }

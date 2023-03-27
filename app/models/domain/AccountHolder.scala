@@ -17,7 +17,7 @@
 package models.domain
 
 import models.BankAccountHolder
-import models.JourneyModel.AccountDetailsWithHolder
+import models.journey
 import play.api.libs.json.{Json, OWrites}
 
 sealed trait AccountHolder
@@ -29,8 +29,8 @@ object AccountHolder {
     case ClaimantAccountHolder => Json.obj("accountHolderType" -> Json.toJson[AccountHolderType](AccountHolderType.Claimant))
   }
 
-  def build(accountDetailsWithHolder: AccountDetailsWithHolder): AccountHolder = accountDetailsWithHolder match {
-    case models.JourneyModel.BankAccountWithHolder(holder, details, _) =>
+  def build(accountDetailsWithHolder: journey.AccountDetailsWithHolder): AccountHolder = accountDetailsWithHolder match {
+    case journey.BankAccountWithHolder(holder, details, _) =>
       holder match {
         case BankAccountHolder.Applicant =>
           ClaimantAccountHolder
@@ -50,7 +50,7 @@ object AccountHolder {
           )
       }
 
-    case models.JourneyModel.BuildingSocietyWithHolder(holder, details) =>
+    case journey.BuildingSocietyWithHolder(holder, details) =>
       holder match {
         case BankAccountHolder.Applicant =>
           ClaimantAccountHolder

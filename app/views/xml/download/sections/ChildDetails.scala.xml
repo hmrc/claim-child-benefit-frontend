@@ -1,6 +1,6 @@
 @this(line: Line)
 
-@(child: JourneyModel.Child, index: Int)(implicit messages: Messages)
+@(child: journey.Child, index: Int)(implicit messages: Messages)
 
 <fo:page-sequence master-reference="child">
 

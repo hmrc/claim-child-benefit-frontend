@@ -16,7 +16,8 @@
 
 package models.domain
 
-import models.{BirthRegistrationMatchingResult, JourneyModel}
+import models.BirthRegistrationMatchingResult
+import models.journey
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -28,7 +29,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
   ".build" - {
 
-      val basicChild = JourneyModel.Child(
+      val basicChild = journey.Child(
         name = models.ChildName("first", None, "last"),
         nameChangedByDeedPoll = None,
         previousNames = Nil,
@@ -65,7 +66,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
     "must set `living with claimant` to false when the child has a guardian" in {
 
-      val child = basicChild.copy(guardian = Some(JourneyModel.Guardian(None, None)))
+      val child = basicChild.copy(guardian = Some(journey.Guardian(None, None)))
 
       val result = Child.build(child)
 
@@ -92,7 +93,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
     "must set `claimant is parent` to false when the relationship is `other`" in {
 
-      val child = basicChild.copy(relationshipToApplicant = models.ApplicantRelationshipToChild.Other)
+      val child = basicChild.copy(relationshipToApplicant = models.ApplicantRelationshipToChild.OtherRelationship)
 
       val result = Child.build(child)
 
@@ -164,7 +165,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
     "must set `date of birth verified` to `false` when the child is registered in another country" in {
 
-      val child = basicChild.copy(countryOfRegistration = models.ChildBirthRegistrationCountry.Other)
+      val child = basicChild.copy(countryOfRegistration = models.ChildBirthRegistrationCountry.OtherCountry)
 
       val result = Child.build(child)
 
@@ -173,7 +174,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
     "must set `date of birth verified` to `false` when the child's birth registration country is Unknown" in {
 
-      val child = basicChild.copy(countryOfRegistration = models.ChildBirthRegistrationCountry.Unknown)
+      val child = basicChild.copy(countryOfRegistration = models.ChildBirthRegistrationCountry.UnknownCountry)
 
       val result = Child.build(child)
 

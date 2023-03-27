@@ -28,11 +28,11 @@ object ChildBirthRegistrationCountry extends Enumerable.Implicits {
   case object Scotland extends WithName("scotland") with ChildBirthRegistrationCountry
   case object Wales extends WithName("wales") with ChildBirthRegistrationCountry
   case object NorthernIreland extends WithName("northernIreland") with ChildBirthRegistrationCountry
-  case object Other extends WithName("other") with ChildBirthRegistrationCountry
-  case object Unknown extends WithName("unknown") with ChildBirthRegistrationCountry
+  case object OtherCountry extends WithName("other") with ChildBirthRegistrationCountry
+  case object UnknownCountry extends WithName("unknown") with ChildBirthRegistrationCountry
 
   val values: Seq[ChildBirthRegistrationCountry] = Seq(
-    England, Scotland, Wales, NorthernIreland, Other, Unknown
+    England, Scotland, Wales, NorthernIreland, OtherCountry, UnknownCountry
   )
 
   def options(implicit messages: Messages): Seq[RadioItem] = {

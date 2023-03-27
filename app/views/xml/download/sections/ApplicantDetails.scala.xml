@@ -11,7 +11,7 @@
     alwaysLivedAbroad: AlwaysLivedAbroad
 )
 
-@(model: JourneyModel)(implicit messages: Messages)
+@(model: journey.JourneyModel)(implicit messages: Messages)
 
 <fo:page-sequence master-reference="main">
 
@@ -63,13 +63,13 @@
                     @line("pdf.nationality", model.applicant.nationalities.toList.map(_.name).mkString(" - "))
 
                     @{model.applicant.residency match {
-                        case JourneyModel.Residency.AlwaysLivedInUk =>
+                        case journey.Residency.AlwaysLivedInUk =>
                             alwaysLivedInUk()
 
-                        case x: JourneyModel.Residency.LivedInUkAndAbroad =>
+                        case x: journey.Residency.LivedInUkAndAbroad =>
                             livedInUkAndAbroad(x)
 
-                        case x: JourneyModel.Residency.AlwaysLivedAbroad =>
+                        case x: journey.Residency.AlwaysLivedAbroad =>
                             alwaysLivedAbroad(x)
                     }}
 
@@ -118,16 +118,16 @@
                     @line("pdf.currentlyReceiving", messages(s"pdf.currentlyReceiving.${model.applicant.currentlyReceivingChildBenefit.toString}"))
 
                     @{model.paymentPreference match {
-                        case JourneyModel.PaymentPreference.DoNotPay(maybeEldestChild) =>
+                        case journey.PaymentPreference.DoNotPay(maybeEldestChild) =>
                             maybeEldestChild.map(x => eldestChildSection(x))
 
-                        case JourneyModel.PaymentPreference.Weekly(_, maybeEldestChild) =>
+                        case journey.PaymentPreference.Weekly(_, maybeEldestChild) =>
                             maybeEldestChild.map(x => eldestChildSection(x))
 
-                        case JourneyModel.PaymentPreference.EveryFourWeeks(_, maybeEldestChild) =>
+                        case journey.PaymentPreference.EveryFourWeeks(_, maybeEldestChild) =>
                             maybeEldestChild.map(x => eldestChildSection(x))
 
-                        case JourneyModel.PaymentPreference.ExistingAccount(eldestChild) =>
+                        case journey.PaymentPreference.ExistingAccount(eldestChild) =>
                             eldestChildSection(eldestChild)
                     }}
                 </fo:block-container>

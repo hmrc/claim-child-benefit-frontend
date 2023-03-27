@@ -2,7 +2,7 @@
 
 @this()
 
-@(model: JourneyModel)(implicit messages: Messages)
+@(model: journey.JourneyModel)(implicit messages: Messages)
 
 <fo:page-sequence master-reference="address-label">
     <fo:static-content flow-name="xsl-region-before-address-label">

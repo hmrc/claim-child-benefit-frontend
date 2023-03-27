@@ -2,7 +2,7 @@
 
 @this(line: Line)
 
-@(model: JourneyModel.Residency.LivedInUkAndAbroad)(implicit messages: Messages)
+@(model: journey.Residency.LivedInUkAndAbroad)(implicit messages: Messages)
 
 @line("pdf.alwaysLivedInUk", messages("site.no"))
 

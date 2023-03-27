@@ -16,9 +16,10 @@
 
 package models.domain
 
-import models.{JourneyModel, NationalityGroupOrdering}
-import models.JourneyModel.Residency.{AlwaysLivedAbroad, AlwaysLivedInUk, LivedInUkAndAbroad}
+import models.NationalityGroupOrdering
+import models.journey.Residency.{AlwaysLivedAbroad, AlwaysLivedInUk, LivedInUkAndAbroad}
 import models.domain.Nationality.UkCta
+import models.journey
 import play.api.libs.json.{Json, OWrites}
 
 import java.time.LocalDate
@@ -34,7 +35,7 @@ object Claimant {
     case x: NonUkCtaClaimantNotAlwaysResident => Json.toJsObject(x)(NonUkCtaClaimantNotAlwaysResident.writes)
   }
 
-  def build(nino: String, journeyModel: JourneyModel): Claimant = {
+  def build(nino: String, journeyModel: journey.JourneyModel): Claimant = {
     val preferentialNationality: Nationality =
       Nationality.fromNationalityGroup(
         journeyModel.applicant
@@ -45,7 +46,7 @@ object Claimant {
         )
 
     val hicbcOptOut = journeyModel.paymentPreference match {
-      case _: JourneyModel.PaymentPreference.DoNotPay => true
+      case _: journey.PaymentPreference.DoNotPay => true
       case _ => false
     }
 
