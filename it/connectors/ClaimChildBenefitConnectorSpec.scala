@@ -124,6 +124,7 @@ class ClaimChildBenefitConnectorSpec
       server.stubFor(
         post(urlEqualTo("/claim-child-benefit/submit"))
           .withHeader("CorrelationId", equalTo(correlationId.toString))
+          .withHeader("Authorization", equalTo("authKey"))
           .willReturn(created())
       )
 
@@ -368,6 +369,7 @@ class ClaimChildBenefitConnectorSpec
 
       server.stubFor(
         get(urlEqualTo("/claim-child-benefit/throttle/check"))
+          .withHeader("Authorization", equalTo("authKey"))
           .willReturn(aResponse().withStatus(OK).withBody(Json.toJson(response).toString))
       )
 
@@ -391,6 +393,7 @@ class ClaimChildBenefitConnectorSpec
 
       server.stubFor(
         post(urlEqualTo("/claim-child-benefit/throttle/increment"))
+          .withHeader("Authorization", equalTo("authKey"))
           .willReturn(aResponse().withStatus(OK))
       )
 

@@ -61,6 +61,7 @@ class ClaimChildBenefitConnector @Inject()(
     httpClient
       .post(submitClaimUrl)
       .withBody(Json.toJson(claim))
+      .setHeader("Authorization" -> internalAuthToken)
       .setHeader("CorrelationId" -> correlationId.toString)
       .execute[Either[SubmitClaimException, Done]]
       .flatMap {
@@ -102,11 +103,13 @@ class ClaimChildBenefitConnector @Inject()(
   def checkThrottleLimit()(implicit hc: HeaderCarrier): Future[CheckLimitResponse] =
     httpClient
       .get(checkThrottleUrl)
+      .setHeader("Authorization" -> internalAuthToken)
       .execute[CheckLimitResponse]
 
   def incrementThrottleCount()(implicit hc: HeaderCarrier): Future[Done] =
     httpClient
       .post(incrementThrottleCountUrl)
+      .setHeader("Authorization" -> internalAuthToken)
       .execute[HttpResponse]
       .map(_ => Done)
 
