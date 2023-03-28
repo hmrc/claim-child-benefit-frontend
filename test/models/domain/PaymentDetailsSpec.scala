@@ -43,9 +43,7 @@ class PaymentDetailsSpec extends AnyFreeSpec with Matchers with OptionValues wit
 
     "must return None when the payment preference is `existing account`" in {
 
-      val paymentPreference = journey.PaymentPreference.ExistingAccount(
-        eldestChild = EldestChild(arbitrary[models.ChildName].sample.value, LocalDate.now)
-      )
+      val paymentPreference = journey.PaymentPreference.ExistingAccount(None)
 
       val result = PaymentDetails.build(paymentPreference)
 

@@ -18,127 +18,135 @@ package models.domain
 
 import generators.ModelGenerators
 import models.journey
-import models.journey.EldestChild
+import models.journey.PaymentPreference.ExistingAccount
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 
-import java.time.LocalDate
-
 class PaymentSpec extends AnyFreeSpec with Matchers with OptionValues with ModelGenerators {
 
   ".build" - {
 
-    "must return None when the user does not want to be paid" in {
+    "when the user has claimed Child Benefit" - {
 
-      val paymentPreference = journey.PaymentPreference.DoNotPay(None)
+      "must return None when the user wants to be paid" in {
 
-      val result = Payment.build(paymentPreference)
+        val paymentPreference = ExistingAccount(None)
 
-      result must not be defined
-    }
-
-    "must return None when the user wants to be paid to an existing account" in {
-
-      val eldestChild = EldestChild(models.ChildName("first", None, "last"), LocalDate.now)
-      val paymentPreference = journey.PaymentPreference.ExistingAccount(eldestChild)
-
-      val result = Payment.build(paymentPreference)
-
-      result must not be defined
-    }
-
-    "must return a Payment with no payment details" - {
-
-      "when the user wants to be paid weekly but has no suitable account" in {
-
-        val paymentPreference = journey.PaymentPreference.Weekly(None, None)
-
-        val result = Payment.build(paymentPreference)
-
-        result.value mustEqual Payment(PaymentFrequency.Weekly, None)
+        val result = Payment.build(paymentPreference, hasClaimedChildBenefit = true)
+        result must not be defined
       }
 
-      "when the user wants to be paid every four weeks but has no suitable account" in {
+      "must return None when the user does not want to be paid" in {
 
-        val paymentPreference = journey.PaymentPreference.EveryFourWeeks(None, None)
+        val paymentPreference = journey.PaymentPreference.DoNotPay(None)
 
-        val result = Payment.build(paymentPreference)
+        val result = Payment.build(paymentPreference, hasClaimedChildBenefit = true)
+        result must not be defined
+      }
+    }
 
+    "when the user has not claimed Child Benefit" - {
+
+      "must return a Payment with frequency of Every Four Weeks and no details when the user does not want to be paid" in {
+
+        val paymentPreference = journey.PaymentPreference.DoNotPay(None)
+        val result = Payment.build(paymentPreference, hasClaimedChildBenefit = false)
         result.value mustEqual Payment(PaymentFrequency.EveryFourWeeks, None)
       }
-    }
 
-    "must return a Payment with payment details" - {
+      "must return a Payment with no payment details" - {
 
-      "when the user wants to be paid weekly" - {
+        "when the user wants to be paid weekly but has no suitable account" in {
 
-        "and provides a bank account" in {
+          val paymentPreference = journey.PaymentPreference.Weekly(None, None)
 
-          val bankAccountDetails = arbitrary[models.BankAccountDetails].sample.value
-          val bankAccountWithHolder = journey.BankAccountWithHolder(models.BankAccountHolder.Applicant, bankAccountDetails, None)
-          val paymentPreference = journey.PaymentPreference.Weekly(Some(bankAccountWithHolder), None)
+          val result = Payment.build(paymentPreference, hasClaimedChildBenefit = false)
 
-          val result = Payment.build(paymentPreference)
-
-          val expectedResult = Payment(
-            PaymentFrequency.Weekly,
-            Some(BankDetails(ClaimantAccountHolder, BankAccount(bankAccountDetails.sortCodeTrimmed, bankAccountDetails.accountNumberPadded)))
-          )
-
-          result.value mustEqual expectedResult
+          result.value mustEqual Payment(PaymentFrequency.Weekly, None)
         }
 
-        "and provides a building society account" in {
+        "when the user wants to be paid every four weeks but has no suitable account" in {
 
-          val buildingSocietyDetails = arbitrary[models.BuildingSocietyDetails].sample.value
-          val buildingSocietyWithHolder = journey.BuildingSocietyWithHolder(models.BankAccountHolder.Applicant, buildingSocietyDetails)
-          val paymentPreference = journey.PaymentPreference.Weekly(Some(buildingSocietyWithHolder), None)
+          val paymentPreference = journey.PaymentPreference.EveryFourWeeks(None, None)
 
-          val result = Payment.build(paymentPreference)
+          val result = Payment.build(paymentPreference, hasClaimedChildBenefit = false)
 
-          val expectedResult = Payment(
-            PaymentFrequency.Weekly,
-            Some(BuildingSocietyDetails(ClaimantAccountHolder, BuildingSocietyAccount(buildingSocietyDetails.buildingSociety.id, buildingSocietyDetails.rollNumber)))
-          )
-
-          result.value mustEqual expectedResult
+          result.value mustEqual Payment(PaymentFrequency.EveryFourWeeks, None)
         }
       }
 
-      "when the user wants to be paid every four weeks" - {
+      "must return a Payment with payment details" - {
 
-        "and provides a bank account" in {
+        "when the user wants to be paid weekly" - {
 
-          val bankAccountDetails = arbitrary[models.BankAccountDetails].sample.value
-          val bankAccountWithHolder = journey.BankAccountWithHolder(models.BankAccountHolder.Applicant, bankAccountDetails, None)
-          val paymentPreference = journey.PaymentPreference.EveryFourWeeks(Some(bankAccountWithHolder), None)
+          "and provides a bank account" in {
 
-          val result = Payment.build(paymentPreference)
+            val bankAccountDetails = arbitrary[models.BankAccountDetails].sample.value
+            val bankAccountWithHolder = journey.BankAccountWithHolder(models.BankAccountHolder.Applicant, bankAccountDetails, None)
+            val paymentPreference = journey.PaymentPreference.Weekly(Some(bankAccountWithHolder), None)
 
-          val expectedResult = Payment(
-            PaymentFrequency.EveryFourWeeks,
-            Some(BankDetails(ClaimantAccountHolder, BankAccount(bankAccountDetails.sortCodeTrimmed, bankAccountDetails.accountNumberPadded)))
-          )
+            val result = Payment.build(paymentPreference, hasClaimedChildBenefit = false)
 
-          result.value mustEqual expectedResult
+            val expectedResult = Payment(
+              PaymentFrequency.Weekly,
+              Some(BankDetails(ClaimantAccountHolder, BankAccount(bankAccountDetails.sortCodeTrimmed, bankAccountDetails.accountNumberPadded)))
+            )
+
+            result.value mustEqual expectedResult
+          }
+
+          "and provides a building society account" in {
+
+            val buildingSocietyDetails = arbitrary[models.BuildingSocietyDetails].sample.value
+            val buildingSocietyWithHolder = journey.BuildingSocietyWithHolder(models.BankAccountHolder.Applicant, buildingSocietyDetails)
+            val paymentPreference = journey.PaymentPreference.Weekly(Some(buildingSocietyWithHolder), None)
+
+            val result = Payment.build(paymentPreference, hasClaimedChildBenefit = false)
+
+            val expectedResult = Payment(
+              PaymentFrequency.Weekly,
+              Some(BuildingSocietyDetails(ClaimantAccountHolder, BuildingSocietyAccount(buildingSocietyDetails.buildingSociety.id, buildingSocietyDetails.rollNumber)))
+            )
+
+            result.value mustEqual expectedResult
+          }
         }
 
-        "and provides a building society account" in {
+        "when the user wants to be paid every four weeks" - {
 
-          val buildingSocietyDetails = arbitrary[models.BuildingSocietyDetails].sample.value
-          val buildingSocietyWithHolder = journey.BuildingSocietyWithHolder(models.BankAccountHolder.Applicant, buildingSocietyDetails)
-          val paymentPreference = journey.PaymentPreference.EveryFourWeeks(Some(buildingSocietyWithHolder), None)
+          "and provides a bank account" in {
 
-          val result = Payment.build(paymentPreference)
+            val bankAccountDetails = arbitrary[models.BankAccountDetails].sample.value
+            val bankAccountWithHolder = journey.BankAccountWithHolder(models.BankAccountHolder.Applicant, bankAccountDetails, None)
+            val paymentPreference = journey.PaymentPreference.EveryFourWeeks(Some(bankAccountWithHolder), None)
 
-          val expectedResult = Payment(
-            PaymentFrequency.EveryFourWeeks,
-            Some(BuildingSocietyDetails(ClaimantAccountHolder, BuildingSocietyAccount(buildingSocietyDetails.buildingSociety.id, buildingSocietyDetails.rollNumber)))
-          )
+            val result = Payment.build(paymentPreference, hasClaimedChildBenefit = false)
 
-          result.value mustEqual expectedResult
+            val expectedResult = Payment(
+              PaymentFrequency.EveryFourWeeks,
+              Some(BankDetails(ClaimantAccountHolder, BankAccount(bankAccountDetails.sortCodeTrimmed, bankAccountDetails.accountNumberPadded)))
+            )
+
+            result.value mustEqual expectedResult
+          }
+
+          "and provides a building society account" in {
+
+            val buildingSocietyDetails = arbitrary[models.BuildingSocietyDetails].sample.value
+            val buildingSocietyWithHolder = journey.BuildingSocietyWithHolder(models.BankAccountHolder.Applicant, buildingSocietyDetails)
+            val paymentPreference = journey.PaymentPreference.EveryFourWeeks(Some(buildingSocietyWithHolder), None)
+
+            val result = Payment.build(paymentPreference, hasClaimedChildBenefit = false)
+
+            val expectedResult = Payment(
+              PaymentFrequency.EveryFourWeeks,
+              Some(BuildingSocietyDetails(ClaimantAccountHolder, BuildingSocietyAccount(buildingSocietyDetails.buildingSociety.id, buildingSocietyDetails.rollNumber)))
+            )
+
+            result.value mustEqual expectedResult
+          }
         }
       }
     }

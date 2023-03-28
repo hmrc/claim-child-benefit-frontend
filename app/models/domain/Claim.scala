@@ -34,12 +34,12 @@ object Claim extends CbsDateFormats {
 
   implicit lazy val writes: OWrites[Claim] = Json.writes
 
-  def build(nino: String, model: JourneyModel): Claim =
+  def build(nino: String, model: JourneyModel, hasClaimedChildBenefit: Boolean): Claim =
     Claim(
       dateOfClaim = LocalDate.now,
       claimant = Claimant.build(nino, model),
       partner = model.relationship.partner.flatMap(Partner.build),
-      payment = Payment.build(model.paymentPreference),
+      payment = Payment.build(model.paymentPreference, hasClaimedChildBenefit),
       children = model.children.toList.map(Child.build),
       otherEligibilityFailure = model.otherEligibilityFailureReasons.nonEmpty
     )

@@ -43,12 +43,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
       Gen.oneOf(
         Gen.const(journey.PaymentPreference.Weekly(None, None)),
         Gen.const(journey.PaymentPreference.EveryFourWeeks(None, None)),
-        Gen.const(journey.PaymentPreference.ExistingAccount(
-          journey.EldestChild(
-            arbitrary[models.ChildName].sample.value,
-            LocalDate.now
-          )
-        ))
+        Gen.const(journey.PaymentPreference.ExistingAccount(None))
       )
     }.sample.value
 

@@ -109,7 +109,7 @@ class SubmissionLimiterSpec
     userAuthenticated = true
   )
 
-  private val claim = Claim.build(nino, basicJourneyModel)
+  private val claim = Claim.build(nino, basicJourneyModel, hasClaimedChildBenefit = false)
 
   "SubmissionsLimitedByAllowList" - {
 

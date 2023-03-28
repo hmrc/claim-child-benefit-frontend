@@ -37,22 +37,43 @@ case object WantToBePaidPage extends QuestionPage[Boolean] {
   override def route(waypoints: Waypoints): Call =
     routes.WantToBePaidController.onPageLoad(waypoints)
 
-  override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    answers.get(this).map {
-      case true =>
-        answers.get(CurrentlyReceivingChildBenefitPage).map {
-          case GettingPayments =>
-            PaidToExistingAccountPage
-
-          case _ =>
-            answers.get(RelationshipStatusPage).map {
-              case Married | Cohabiting => ApplicantOrPartnerBenefitsPage
-              case _ => ApplicantBenefitsPage
-            }.orRecover
+  override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page = {
+    answers.relationshipDetails.map {
+      case x if x.hasClaimedChildBenefit =>
+        answers.get(this).map {
+          case true  => PaidToExistingAccountPage
+          case false => CheckPaymentDetailsPage
         }.orRecover
 
-      case false =>
-        CheckPaymentDetailsPage
+      case _ =>
+        answers.get(this).map {
+          case true =>
+            goToBenefits(answers)
+
+          case false =>
+            CheckPaymentDetailsPage
+        }.orRecover
+    }.getOrElse {
+      answers.get(this).map {
+        case true =>
+          answers.get(CurrentlyReceivingChildBenefitPage).map {
+            case GettingPayments =>
+              PaidToExistingAccountPage
+
+            case _ =>
+              goToBenefits(answers)
+          }.orRecover
+
+        case false =>
+          CheckPaymentDetailsPage
+      }.orRecover
+    }
+  }
+
+  private def goToBenefits(answers: UserAnswers): Page =
+    answers.get(RelationshipStatusPage).map {
+      case Married | Cohabiting => ApplicantOrPartnerBenefitsPage
+      case _                    => ApplicantBenefitsPage
     }.orRecover
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =

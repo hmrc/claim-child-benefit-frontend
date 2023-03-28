@@ -37,8 +37,8 @@
                         case journey.PaymentPreference.EveryFourWeeks(bankAccount, _) =>
                             everyFourWeeks(bankAccount)
 
-                        case journey.PaymentPreference.ExistingAccount(eldestChild) =>
-                            existingAccount(eldestChild)
+                        case journey.PaymentPreference.ExistingAccount(_) =>
+                            existingAccount()
                     }}
                 </fo:block-container>
             </fo:block>
