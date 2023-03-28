@@ -19,7 +19,7 @@ package journey
 import generators.ModelGenerators
 import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments}
 import models.RelationshipStatus._
-import models.{AccountType, BankAccountDetails, BankAccountHolder, Benefits, BuildingSocietyDetails, Income, PaymentFrequency}
+import models.{AccountType, BankAccountDetails, BankAccountHolder, Benefits, BuildingSocietyDetails, Income, PaymentFrequency, RelationshipDetails, UserAnswers}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
@@ -30,169 +30,405 @@ import pages.payments._
 
 class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
-  "users who are Married or Cohabiting" - {
+  "authenticated users" - {
 
-    val relationship = Gen.oneOf(Married, Cohabiting).sample.value
-    val income = Gen.oneOf(Income.values).sample.value
+    "who have claimed Child Benefit" - {
 
-    "who want to be paid" - {
+      val baseAnswers = UserAnswers("id", relationshipDetails = Some(RelationshipDetails(true)))
 
-      "who are getting paid Child Benefit now" - {
+      "who are Married or Cohabiting" - {
 
-        "must be asked for their income and if they want to be paid, then go to Check Details" in {
+        val relationship = Gen.oneOf(Married, Cohabiting).sample.value
+        val income = Gen.oneOf(Income.values).sample.value
+
+        "must be asked for their income and if they want to be paid" - {
+
+          "then go to Check Payment Details if they say no" in {
+
+            startingFrom(ApplicantOrPartnerIncomePage, answers = baseAnswers)
+              .run(
+                setUserAnswerTo(RelationshipStatusPage, relationship),
+                submitAnswer(ApplicantOrPartnerIncomePage, income),
+                submitAnswer(WantToBePaidPage, false),
+                pageMustBe(CheckPaymentDetailsPage)
+              )
+          }
+
+          "then be told they will be paid to their existing account then go to Check Payments if they say yes" in {
+
+            startingFrom(ApplicantOrPartnerIncomePage, answers = baseAnswers)
+              .run(
+                setUserAnswerTo(RelationshipStatusPage, relationship),
+                submitAnswer(ApplicantOrPartnerIncomePage, income),
+                submitAnswer(WantToBePaidPage, true),
+                pageMustBe(PaidToExistingAccountPage),
+                next,
+                pageMustBe(CheckPaymentDetailsPage)
+              )
+          }
+        }
+      }
+
+      "who are Single, Separated, Divorced or Widowed" - {
+
+        val relationship = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
+        val income = Gen.oneOf(Income.values).sample.value
+
+        "must be asked for their income and if they want to be paid" - {
+
+          "then go to Check Payment Details if they say no" in {
+
+            startingFrom(ApplicantIncomePage, answers = baseAnswers)
+              .run(
+                setUserAnswerTo(RelationshipStatusPage, relationship),
+                submitAnswer(ApplicantIncomePage, income),
+                submitAnswer(WantToBePaidPage, false),
+                pageMustBe(CheckPaymentDetailsPage)
+              )
+          }
+
+          "then be told they will be paid to their existing account then go to Check Payments if they say yes" in {
+
+            startingFrom(ApplicantIncomePage, answers = baseAnswers)
+              .run(
+                setUserAnswerTo(RelationshipStatusPage, relationship),
+                submitAnswer(ApplicantIncomePage, income),
+                submitAnswer(WantToBePaidPage, true),
+                pageMustBe(PaidToExistingAccountPage),
+                next,
+                pageMustBe(CheckPaymentDetailsPage)
+              )
+          }
+        }
+      }
+    }
+
+    "who have not claimed Child Benefit" - {
+
+      val baseAnswers = UserAnswers("id", relationshipDetails = Some(RelationshipDetails(false)))
+
+      "who are Married or Cohabiting" - {
+
+        val relationship = Gen.oneOf(Married, Cohabiting).sample.value
+        val income = Gen.oneOf(Income.values).sample.value
+
+        "who want to be paid" - {
+
+          "must be asked for their income and benefits details" in {
+
+            startingFrom(ApplicantOrPartnerIncomePage, answers = baseAnswers)
+              .run(
+                setUserAnswerTo(RelationshipStatusPage, relationship),
+                submitAnswer(ApplicantOrPartnerIncomePage, income),
+                submitAnswer(WantToBePaidPage, true),
+                pageMustBe(ApplicantOrPartnerBenefitsPage)
+              )
+          }
+
+          "who receive qualifying benefits" - {
+
+            "must be asked how often they want to be paid, then be asked if they have a suitable bank account" in {
+
+              val benefits = Set(Gen.oneOf(Benefits.qualifyingBenefits).sample.value)
+
+              startingFrom(ApplicantOrPartnerIncomePage, answers = baseAnswers)
+                .run(
+                  setUserAnswerTo(RelationshipStatusPage, relationship),
+                  submitAnswer(ApplicantOrPartnerIncomePage, income),
+                  submitAnswer(WantToBePaidPage, true),
+                  submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
+                  submitAnswer(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
+                  submitAnswer(ApplicantHasSuitableAccountPage, false),
+                  pageMustBe(CheckPaymentDetailsPage),
+                  next,
+                  pageMustBe(TaskListPage)
+                )
+            }
+          }
+
+          "who do not receive qualifying benefits" - {
+
+            "must not be asked how often they want to be paid, and be asked if they have a suitable bank account" in {
+
+              startingFrom(ApplicantOrPartnerIncomePage, answers = baseAnswers)
+                .run(
+                  setUserAnswerTo(RelationshipStatusPage, relationship),
+                  submitAnswer(ApplicantOrPartnerIncomePage, income),
+                  submitAnswer(WantToBePaidPage, true),
+                  submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
+                  pageMustBe(ApplicantHasSuitableAccountPage)
+                )
+            }
+          }
+        }
+
+        "who do not want to be paid" - {
+
+          "must be asked for their income then taken to the Check Payments page" in {
+
+            startingFrom(ApplicantOrPartnerIncomePage, answers = baseAnswers)
+              .run(
+                setUserAnswerTo(RelationshipStatusPage, relationship),
+                submitAnswer(ApplicantOrPartnerIncomePage, income),
+                submitAnswer(WantToBePaidPage, false),
+                pageMustBe(CheckPaymentDetailsPage)
+              )
+          }
+        }
+      }
+
+      "who are Single, Separated, Divorced or Widowed" - {
+
+        val relationship = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
+        val income = Gen.oneOf(Income.values).sample.value
+
+        "who want to be paid" - {
+
+          "must be asked for their income and benefits details" in {
+
+            startingFrom(ApplicantIncomePage, answers = baseAnswers)
+              .run(
+                setUserAnswerTo(RelationshipStatusPage, relationship),
+                submitAnswer(ApplicantIncomePage, income),
+                submitAnswer(WantToBePaidPage, true),
+                pageMustBe(ApplicantBenefitsPage)
+              )
+          }
+
+          "who receive qualifying benefits" - {
+
+            "must be asked how often they want to be paid, then be asked if they have a suitable bank account" in {
+
+              val benefits = Set(Gen.oneOf(Benefits.qualifyingBenefits).sample.value)
+
+              startingFrom(ApplicantIncomePage, answers = baseAnswers)
+                .run(
+                  setUserAnswerTo(RelationshipStatusPage, relationship),
+                  submitAnswer(ApplicantIncomePage, income),
+                  submitAnswer(WantToBePaidPage, true),
+                  submitAnswer(ApplicantBenefitsPage, benefits),
+                  submitAnswer(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
+                  submitAnswer(ApplicantHasSuitableAccountPage, false),
+                  pageMustBe(CheckPaymentDetailsPage),
+                  next,
+                  pageMustBe(TaskListPage)
+                )
+            }
+          }
+
+          "who do not receive qualifying benefits" - {
+
+            "must not be asked how often they want to be paid, and be asked if they have a suitable bank account" in {
+
+              startingFrom(ApplicantIncomePage, answers = baseAnswers)
+                .run(
+                  setUserAnswerTo(RelationshipStatusPage, relationship),
+                  submitAnswer(ApplicantIncomePage, income),
+                  submitAnswer(WantToBePaidPage, true),
+                  submitAnswer(ApplicantBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
+                  pageMustBe(PaymentFrequencyPage)
+                )
+            }
+          }
+        }
+
+        "who do not want to be paid" - {
+
+          "must be asked for their income then taken to the Check Payments page" in {
+
+            startingFrom(ApplicantIncomePage, answers = baseAnswers)
+              .run(
+                setUserAnswerTo(RelationshipStatusPage, relationship),
+                submitAnswer(ApplicantIncomePage, income),
+                submitAnswer(WantToBePaidPage, false),
+                pageMustBe(CheckPaymentDetailsPage)
+              )
+          }
+        }
+      }
+    }
+  }
+
+  "unauthenticated users" - {
+
+    "who are Married or Cohabiting" - {
+
+      val relationship = Gen.oneOf(Married, Cohabiting).sample.value
+      val income = Gen.oneOf(Income.values).sample.value
+
+      "who want to be paid" - {
+
+        "who are getting paid Child Benefit now" - {
+
+          "must be asked for their income and if they want to be paid" - {
+
+            "then go to Check Details if they say no" in {
+
+              startingFrom(ApplicantOrPartnerIncomePage)
+                .run(
+                  setUserAnswerTo(RelationshipStatusPage, relationship),
+                  setUserAnswerTo(CurrentlyReceivingChildBenefitPage, GettingPayments),
+                  submitAnswer(ApplicantOrPartnerIncomePage, income),
+                  submitAnswer(WantToBePaidPage, false),
+                  pageMustBe(CheckPaymentDetailsPage)
+                )
+            }
+
+            "then be told they will be paid to their existing account then go to Check Payments if they say yes" in {
+              startingFrom(ApplicantOrPartnerIncomePage)
+                .run(
+                  setUserAnswerTo(RelationshipStatusPage, relationship),
+                  setUserAnswerTo(CurrentlyReceivingChildBenefitPage, GettingPayments),
+                  submitAnswer(ApplicantOrPartnerIncomePage, income),
+                  submitAnswer(WantToBePaidPage, true),
+                  pageMustBe(PaidToExistingAccountPage),
+                  next,
+                  pageMustBe(CheckPaymentDetailsPage)
+                )
+            }
+          }
+        }
+
+        "who are not getting paid Child Benefit now" - {
+
+          val currentlyReceiving = Gen.oneOf(NotClaiming, NotGettingPayments).sample.value
+          val benefits = Set(Gen.oneOf(Benefits.qualifyingBenefits).sample.value)
+
+          "must be asked for their income and benefits details" in {
+
+            startingFrom(ApplicantOrPartnerIncomePage)
+              .run(
+                setUserAnswerTo(RelationshipStatusPage, relationship),
+                setUserAnswerTo(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
+                submitAnswer(ApplicantOrPartnerIncomePage, income),
+                submitAnswer(WantToBePaidPage, true),
+                pageMustBe(ApplicantOrPartnerBenefitsPage)
+              )
+          }
+
+          "who receive qualifying benefits" - {
+
+            "must be asked how often they want to be paid, then be asked if they have a suitable bank account" in {
+
+              startingFrom(ApplicantOrPartnerIncomePage)
+                .run(
+                  setUserAnswerTo(RelationshipStatusPage, relationship),
+                  setUserAnswerTo(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
+                  submitAnswer(ApplicantOrPartnerIncomePage, income),
+                  submitAnswer(WantToBePaidPage, true),
+                  submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
+                  submitAnswer(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
+                  submitAnswer(ApplicantHasSuitableAccountPage, false),
+                  pageMustBe(CheckPaymentDetailsPage),
+                  next,
+                  pageMustBe(TaskListPage)
+                )
+            }
+          }
+
+          "who do not receive qualifying benefits" - {
+
+            "must not be asked how often they want to be paid, and be asked if they have a suitable bank account" in {
+
+              startingFrom(ApplicantOrPartnerIncomePage)
+                .run(
+                  setUserAnswerTo(RelationshipStatusPage, relationship),
+                  setUserAnswerTo(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
+                  submitAnswer(ApplicantOrPartnerIncomePage, income),
+                  submitAnswer(WantToBePaidPage, true),
+                  submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
+                  pageMustBe(ApplicantHasSuitableAccountPage)
+                )
+            }
+          }
+        }
+      }
+
+      "who do not want to be paid" - {
+
+        "must be asked for their income then go to Check Payment Details" in {
 
           startingFrom(ApplicantOrPartnerIncomePage)
             .run(
               setUserAnswerTo(RelationshipStatusPage, relationship),
-              setUserAnswerTo(CurrentlyReceivingChildBenefitPage, GettingPayments),
               submitAnswer(ApplicantOrPartnerIncomePage, income),
-              submitAnswer(WantToBePaidPage, true),
-              pageMustBe(PaidToExistingAccountPage),
-              next,
+              submitAnswer(WantToBePaidPage, false),
               pageMustBe(CheckPaymentDetailsPage)
             )
         }
       }
+    }
 
-      "who are not getting paid Child Benefit now" - {
+    "who are Single, Separated, Divorced or Widowed" - {
 
-        val currentlyReceiving = Gen.oneOf(NotClaiming, NotGettingPayments).sample.value
-        val benefits = Set(Gen.oneOf(Benefits.qualifyingBenefits).sample.value)
+      val relationship = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
+      val income = Gen.oneOf(Income.values).sample.value
 
-        "must be asked for their income and benefits details" in {
+      "who want to be paid" - {
 
-          startingFrom(ApplicantOrPartnerIncomePage)
-            .run(
-              setUserAnswerTo(RelationshipStatusPage, relationship),
-              setUserAnswerTo(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
-              submitAnswer(ApplicantOrPartnerIncomePage, income),
-              submitAnswer(WantToBePaidPage, true),
-              pageMustBe(ApplicantOrPartnerBenefitsPage)
-            )
-        }
+        "who are getting paid Child Benefit now" - {
 
-        "who receive qualifying benefits" - {
+          "must be asked for their income and if they want to be paid, then go to Check Details" in {
 
-          "must be asked how often they want to be paid, then be asked if they have a suitable bank account" in {
-
-            startingFrom(ApplicantOrPartnerIncomePage)
+            startingFrom(ApplicantIncomePage)
               .run(
                 setUserAnswerTo(RelationshipStatusPage, relationship),
-                setUserAnswerTo(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
-                submitAnswer(ApplicantOrPartnerIncomePage, income),
+                setUserAnswerTo(CurrentlyReceivingChildBenefitPage, GettingPayments),
+                submitAnswer(ApplicantIncomePage, income),
                 submitAnswer(WantToBePaidPage, true),
-                submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
-                submitAnswer(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
-                submitAnswer(ApplicantHasSuitableAccountPage, false),
-                pageMustBe(CheckPaymentDetailsPage),
+                pageMustBe(PaidToExistingAccountPage),
                 next,
-                pageMustBe(TaskListPage)
+                pageMustBe(CheckPaymentDetailsPage)
               )
           }
         }
 
-        "who do not receive qualifying benefits" - {
+        "who are not getting paid Child Benefit now" - {
 
-          "must not be asked how often they want to be paid, and be asked if they have a suitable bank account" in {
+          val currentlyReceiving = Gen.oneOf(NotClaiming, NotGettingPayments).sample.value
 
-            startingFrom(ApplicantOrPartnerIncomePage)
+          "must be asked for their income and benefits details" in {
+
+            startingFrom(ApplicantIncomePage)
               .run(
                 setUserAnswerTo(RelationshipStatusPage, relationship),
                 setUserAnswerTo(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
-                submitAnswer(ApplicantOrPartnerIncomePage, income),
+                submitAnswer(ApplicantIncomePage, income),
                 submitAnswer(WantToBePaidPage, true),
-                submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
+                pageMustBe(ApplicantBenefitsPage)
+              )
+          }
+
+          "must be asked how often they want to be paid, then be asked if they have a suitable bank account" in {
+
+            val benefits = Set(Gen.oneOf(Benefits.qualifyingBenefits).sample.value)
+
+            startingFrom(ApplicantIncomePage)
+              .run(
+                setUserAnswerTo(RelationshipStatusPage, relationship),
+                setUserAnswerTo(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
+                submitAnswer(ApplicantIncomePage, income),
+                submitAnswer(WantToBePaidPage, true),
+                submitAnswer(ApplicantBenefitsPage, benefits),
+                submitAnswer(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
                 pageMustBe(ApplicantHasSuitableAccountPage)
               )
           }
         }
       }
-    }
 
-    "who do not want to be paid" - {
+      "who do not want to be paid" - {
 
-      "must be asked for their income then go to Check Payment Details" in {
-
-        startingFrom(ApplicantOrPartnerIncomePage)
-          .run(
-            setUserAnswerTo(RelationshipStatusPage, relationship),
-            submitAnswer(ApplicantOrPartnerIncomePage, income),
-            submitAnswer(WantToBePaidPage, false),
-            pageMustBe(CheckPaymentDetailsPage)
-          )
-      }
-    }
-  }
-
-  "users who are Single, Separated, Divorced or Widowed" - {
-
-    val relationship = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
-    val income = Gen.oneOf(Income.values).sample.value
-
-    "who want to be paid" - {
-
-      "who are getting paid Child Benefit now" - {
-
-        "must be asked for their income and if they want to be paid, then go to Check Details" in {
+        "must be asked for their income then go to Check Payment Details" in {
 
           startingFrom(ApplicantIncomePage)
             .run(
               setUserAnswerTo(RelationshipStatusPage, relationship),
-              setUserAnswerTo(CurrentlyReceivingChildBenefitPage, GettingPayments),
               submitAnswer(ApplicantIncomePage, income),
-              submitAnswer(WantToBePaidPage, true),
-              pageMustBe(PaidToExistingAccountPage),
-              next,
+              submitAnswer(WantToBePaidPage, false),
               pageMustBe(CheckPaymentDetailsPage)
             )
         }
-      }
-
-      "who are not getting paid Child Benefit now" - {
-
-        val currentlyReceiving = Gen.oneOf(NotClaiming, NotGettingPayments).sample.value
-
-        "must be asked for their income and benefits details" in {
-
-          startingFrom(ApplicantIncomePage)
-            .run(
-              setUserAnswerTo(RelationshipStatusPage, relationship),
-              setUserAnswerTo(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
-              submitAnswer(ApplicantIncomePage, income),
-              submitAnswer(WantToBePaidPage, true),
-              pageMustBe(ApplicantBenefitsPage)
-            )
-        }
-
-        "must be asked how often they want to be paid, then be asked if they have a suitable bank account" in {
-
-          val benefits = Set(Gen.oneOf(Benefits.qualifyingBenefits).sample.value)
-
-          startingFrom(ApplicantIncomePage)
-            .run(
-              setUserAnswerTo(RelationshipStatusPage, relationship),
-              setUserAnswerTo(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
-              submitAnswer(ApplicantIncomePage, income),
-              submitAnswer(WantToBePaidPage, true),
-              submitAnswer(ApplicantBenefitsPage, benefits),
-              submitAnswer(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
-              pageMustBe(ApplicantHasSuitableAccountPage)
-            )
-        }
-      }
-    }
-
-    "who do not want to be paid" - {
-
-      "must be asked for their income then go to Check Payment Details" in {
-
-        startingFrom(ApplicantIncomePage)
-          .run(
-            setUserAnswerTo(RelationshipStatusPage, relationship),
-            submitAnswer(ApplicantIncomePage, income),
-            submitAnswer(WantToBePaidPage, false),
-            pageMustBe(CheckPaymentDetailsPage)
-          )
       }
     }
   }
