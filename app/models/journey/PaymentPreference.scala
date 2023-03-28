@@ -34,7 +34,7 @@ object PaymentPreference {
 
   final case class EveryFourWeeks(accountDetails: Option[AccountDetailsWithHolder], eldestChild: Option[EldestChild]) extends PaymentPreference
 
-  final case class ExistingAccount(eldestChild: EldestChild) extends PaymentPreference {
+  final case class ExistingAccount(eldestChild: Option[EldestChild]) extends PaymentPreference {
     override val accountDetails: Option[AccountDetailsWithHolder] = None
   }
 
@@ -42,27 +42,41 @@ object PaymentPreference {
     override val accountDetails: Option[AccountDetailsWithHolder] = None
   }
 
-  def build(answers: UserAnswers): IorNec[Query, PaymentPreference] =
-    answers.getIor(CurrentlyReceivingChildBenefitPage).flatMap {
-      case GettingPayments =>
+  //scalastyle:off
+  def build(answers: UserAnswers): IorNec[Query, PaymentPreference] = {
+    answers.relationshipDetails.map {
+      case x if x.hasClaimedChildBenefit =>
         answers.getIor(WantToBePaidPage).flatMap {
           case true =>
-            EldestChild
-              .buildApplicantEldestChild(answers)
-              .map(ExistingAccount)
+            Ior.Right(ExistingAccount(None))
 
           case false =>
-            EldestChild
-              .buildApplicantEldestChild(answers)
-              .map(x => DoNotPay(Some(x)))
+            Ior.Right(DoNotPay(None))
         }
 
-      case NotGettingPayments =>
-        answers.getIor(WantToBePaidPage).flatMap {
-          case true =>
-            answers
-              .get(PaymentFrequencyPage)
-              .getOrElse(PaymentFrequency.EveryFourWeeks) match {
+      case _ =>
+        buildNotClaiming(answers)
+    }.getOrElse {
+      answers.getIor(CurrentlyReceivingChildBenefitPage).flatMap {
+        case GettingPayments =>
+          answers.getIor(WantToBePaidPage).flatMap {
+            case true =>
+              EldestChild
+                .buildApplicantEldestChild(answers)
+                .map(x => ExistingAccount(Some(x)))
+
+            case false =>
+              EldestChild
+                .buildApplicantEldestChild(answers)
+                .map(x => DoNotPay(Some(x)))
+          }
+
+        case NotGettingPayments =>
+          answers.getIor(WantToBePaidPage).flatMap {
+            case true =>
+              answers
+                .get(PaymentFrequencyPage)
+                .getOrElse(PaymentFrequency.EveryFourWeeks) match {
                 case PaymentFrequency.Weekly =>
                   (
                     AccountDetailsWithHolder.build(answers),
@@ -76,29 +90,34 @@ object PaymentPreference {
                   ).parMapN((bank, child) => EveryFourWeeks(bank, Some(child)))
               }
 
-          case false =>
-            EldestChild
-              .buildApplicantEldestChild(answers)
-              .map(child => DoNotPay(Some(child)))
+            case false =>
+              EldestChild
+                .buildApplicantEldestChild(answers)
+                .map(child => DoNotPay(Some(child)))
+          }
+
+        case _ =>
+          buildNotClaiming(answers)
+      }
+    }
+  }
+
+  private def buildNotClaiming(answers: UserAnswers): IorNec[Query, PaymentPreference] =
+    answers.getIor(WantToBePaidPage).flatMap {
+      case true =>
+        answers.get(PaymentFrequencyPage).getOrElse(PaymentFrequency.EveryFourWeeks) match {
+          case PaymentFrequency.Weekly =>
+            AccountDetailsWithHolder
+              .build(answers)
+              .map(bank => Weekly(bank, None))
+
+          case PaymentFrequency.EveryFourWeeks =>
+            AccountDetailsWithHolder
+              .build(answers)
+              .map(bank => EveryFourWeeks(bank, None))
         }
 
-      case _ =>
-        answers.getIor(WantToBePaidPage).flatMap {
-          case true =>
-            answers.get(PaymentFrequencyPage).getOrElse(PaymentFrequency.EveryFourWeeks) match {
-              case PaymentFrequency.Weekly =>
-                AccountDetailsWithHolder
-                  .build(answers)
-                  .map(bank => Weekly(bank, None))
-
-              case PaymentFrequency.EveryFourWeeks =>
-                AccountDetailsWithHolder
-                  .build(answers)
-                  .map(bank => EveryFourWeeks(bank, None))
-            }
-
-          case false =>
-            Ior.Right(DoNotPay(None))
-        }
+      case false =>
+        Ior.Right(DoNotPay(None))
     }
 }

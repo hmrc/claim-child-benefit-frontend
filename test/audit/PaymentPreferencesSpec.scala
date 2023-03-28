@@ -155,21 +155,35 @@ class PaymentPreferencesSpec extends AnyFreeSpec with Matchers {
     }
   }
 
-  "Existing account payment preference must serialise to JSON" in {
+  "Existing account payment preference must serialise to JSON" - {
 
-    val preference = ExistingAccount(EldestChild(ChildName("first", None, "last"), dateOfBirth))
-    val json = Json.toJson(preference)
+    "when eldest child details are present" in {
 
-    json mustEqual Json.obj(
-      "wantsToBePaid" -> true,
-      "eldestChild" -> Json.obj(
-        "name" -> Json.obj(
-          "firstName" -> "first",
-          "lastName" -> "last"
+      val preference = ExistingAccount(Some(EldestChild(ChildName("first", None, "last"), dateOfBirth)))
+      val json = Json.toJson(preference)
+
+      json mustEqual Json.obj(
+        "wantsToBePaid" -> true,
+        "eldestChild" -> Json.obj(
+          "name" -> Json.obj(
+            "firstName" -> "first",
+            "lastName" -> "last"
+          ),
+          "dateOfBirth" -> "2020-12-31"
         ),
-        "dateOfBirth" -> "2020-12-31"
-      ),
-      "account" -> "use existing account"
-    )
+        "account" -> "use existing account"
+      )
+    }
+
+    "when eldest child details are not present" in {
+
+      val preference = ExistingAccount(None)
+      val json = Json.toJson(preference)
+
+      json mustEqual Json.obj(
+        "wantsToBePaid" -> true,
+        "account" -> "use existing account"
+      )
+    }
   }
 }

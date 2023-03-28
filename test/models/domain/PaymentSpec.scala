@@ -18,14 +18,11 @@ package models.domain
 
 import generators.ModelGenerators
 import models.journey
-import models.journey.EldestChild
 import models.journey.PaymentPreference.ExistingAccount
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-
-import java.time.LocalDate
 
 class PaymentSpec extends AnyFreeSpec with Matchers with OptionValues with ModelGenerators {
 
@@ -33,11 +30,17 @@ class PaymentSpec extends AnyFreeSpec with Matchers with OptionValues with Model
 
     "when the user has claimed Child Benefit" - {
 
-      "must return None" in {
+      "must return None when the user wants to be paid" in {
 
-        val childName = arbitrary[models.ChildName].sample.value
-        val eldestChild = EldestChild(childName, LocalDate.now)
-        val paymentPreference = ExistingAccount(eldestChild)
+        val paymentPreference = ExistingAccount(None)
+
+        val result = Payment.build(paymentPreference, hasClaimedChildBenefit = true)
+        result must not be defined
+      }
+
+      "must return None when the user does not want to be paid" in {
+
+        val paymentPreference = journey.PaymentPreference.DoNotPay(None)
 
         val result = Payment.build(paymentPreference, hasClaimedChildBenefit = true)
         result must not be defined
@@ -46,7 +49,7 @@ class PaymentSpec extends AnyFreeSpec with Matchers with OptionValues with Model
 
     "when the user has not claimed Child Benefit" - {
 
-      "must return a Payment model with frequency of Every Four Weeks and no details when the user does not want to be paid" in {
+      "must return a Payment with frequency of Every Four Weeks and no details when the user does not want to be paid" in {
 
         val paymentPreference = journey.PaymentPreference.DoNotPay(None)
         val result = Payment.build(paymentPreference, hasClaimedChildBenefit = false)

@@ -2,6 +2,6 @@
     line: Line
 )
 
-@(eldestChild: journey.EldestChild)(implicit messages: Messages)
+@()(implicit messages: Messages)
 
 @line("pdf.wantToBePaid", messages("site.yes"))
