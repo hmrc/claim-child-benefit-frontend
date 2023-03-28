@@ -195,40 +195,22 @@ class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
               )
           }
 
-          "who receive qualifying benefits" - {
+          "must be asked how often they want to be paid, then be asked if they have a suitable bank account" in {
 
-            "must be asked how often they want to be paid, then be asked if they have a suitable bank account" in {
+            val benefits = Set(Gen.oneOf(Benefits.qualifyingBenefits).sample.value)
 
-              val benefits = Set(Gen.oneOf(Benefits.qualifyingBenefits).sample.value)
-
-              startingFrom(ApplicantIncomePage, answers = baseAnswers)
-                .run(
-                  setUserAnswerTo(RelationshipStatusPage, relationship),
-                  submitAnswer(ApplicantIncomePage, income),
-                  submitAnswer(WantToBePaidPage, true),
-                  submitAnswer(ApplicantBenefitsPage, benefits),
-                  submitAnswer(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
-                  submitAnswer(ApplicantHasSuitableAccountPage, false),
-                  pageMustBe(CheckPaymentDetailsPage),
-                  next,
-                  pageMustBe(TaskListPage)
-                )
-            }
-          }
-
-          "who do not receive qualifying benefits" - {
-
-            "must not be asked how often they want to be paid, and be asked if they have a suitable bank account" in {
-
-              startingFrom(ApplicantIncomePage, answers = baseAnswers)
-                .run(
-                  setUserAnswerTo(RelationshipStatusPage, relationship),
-                  submitAnswer(ApplicantIncomePage, income),
-                  submitAnswer(WantToBePaidPage, true),
-                  submitAnswer(ApplicantBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
-                  pageMustBe(PaymentFrequencyPage)
-                )
-            }
+            startingFrom(ApplicantIncomePage, answers = baseAnswers)
+              .run(
+                setUserAnswerTo(RelationshipStatusPage, relationship),
+                submitAnswer(ApplicantIncomePage, income),
+                submitAnswer(WantToBePaidPage, true),
+                submitAnswer(ApplicantBenefitsPage, benefits),
+                submitAnswer(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
+                submitAnswer(ApplicantHasSuitableAccountPage, false),
+                pageMustBe(CheckPaymentDetailsPage),
+                next,
+                pageMustBe(TaskListPage)
+              )
           }
         }
 
