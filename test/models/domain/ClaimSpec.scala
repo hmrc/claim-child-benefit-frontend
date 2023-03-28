@@ -83,7 +83,7 @@ class ClaimSpec extends AnyFreeSpec with Matchers with Generators with OptionVal
       val residency = journey.Residency.LivedInUkAndAbroad(None, None, EmploymentStatus.activeStatuses, List(Country.internationalCountries.head), Nil)
       val model = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(residency = residency))
 
-      val claim = Claim.build(nino, model)
+      val claim = Claim.build(nino, model, hasClaimedChildBenefit = false)
 
       claim.otherEligibilityFailure mustBe true
     }

@@ -63,12 +63,15 @@ class ClaimSubmissionService @Inject()(
     }
 
   def submit(request: DataRequest[_])(implicit ec: ExecutionContext): Future[Done] = {
-    request.userAnswers.nino.map { nino =>
+    for {
+      nino                <- request.userAnswers.nino
+      relationshipDetails <- request.userAnswers.relationshipDetails
+    } yield {
 
       val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
       JourneyModel.build(request.userAnswers).right.map { model =>
-        val claim = Claim.build(nino, model)
+        val claim = Claim.build(nino, model, relationshipDetails.hasClaimedChildBenefit)
         val correlationId = UUID.randomUUID()
 
         connector
@@ -86,8 +89,8 @@ class ClaimSubmissionService @Inject()(
           }
 
       }.getOrElse(Future.failed(CannotBuildJourneyModelException))
-    }.getOrElse(Future.failed(NotAuthenticatedException))
-  }
+    }
+  }.getOrElse(Future.failed(NotAuthenticatedException))
 }
 
 object ClaimSubmissionService {

@@ -83,36 +83,43 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
     None,
     LocalDate.now
   )
+  private val relationshipDetails = RelationshipDetails(hasClaimedChildBenefit = false)
 
-  private val basicUserAnswers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
-    .set(ApplicantNinoKnownPage, false).success.value
-    .set(ApplicantNamePage, adultName).success.value
-    .set(ApplicantHasPreviousFamilyNamePage, false).success.value
-    .set(ApplicantDateOfBirthPage, now).success.value
-    .set(ApplicantPhoneNumberPage, phoneNumber).success.value
-    .set(ApplicantNationalityPage(Index(0)), nationality).success.value
-    .set(ApplicantIsHmfOrCivilServantPage, false).success.value
-    .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
-    .set(ApplicantCurrentUkAddressPage, currentUkAddress).success.value
-    .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
-    .set(ApplicantIsHmfOrCivilServantPage, false).success.value
-    .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
-    .set(RelationshipStatusPage, RelationshipStatus.Single).success.value
-    .set(ChildNamePage(Index(0)), childName).success.value
-    .set(ChildHasPreviousNamePage(Index(0)), false).success.value
-    .set(ChildBiologicalSexPage(Index(0)), biologicalSex).success.value
-    .set(ChildDateOfBirthPage(Index(0)), now).success.value
-    .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.England).success.value
-    .set(BirthCertificateHasSystemNumberPage(Index(0)), true).success.value
-    .set(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber).success.value
-    .set(ApplicantRelationshipToChildPage(Index(0)), relationshipToChild).success.value
-    .set(AdoptingThroughLocalAuthorityPage(Index(0)), false).success.value
-    .set(AnyoneClaimedForChildBeforePage(Index(0)), false).success.value
-    .set(ChildLivesWithApplicantPage(Index(0)), true).success.value
-    .set(ChildLivedWithAnyoneElsePage(Index(0)), false).success.value
-    .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
-    .set(WantToBePaidPage, false).success.value
-    .set(IncludeAdditionalInformationPage, false).success.value
+  private val basicUserAnswers =
+    UserAnswers(
+      "id",
+      nino = Some(nino.nino),
+      designatoryDetails = Some(designatoryDetails),
+      relationshipDetails = Some(relationshipDetails)
+    )
+      .set(ApplicantNinoKnownPage, false).success.value
+      .set(ApplicantNamePage, adultName).success.value
+      .set(ApplicantHasPreviousFamilyNamePage, false).success.value
+      .set(ApplicantDateOfBirthPage, now).success.value
+      .set(ApplicantPhoneNumberPage, phoneNumber).success.value
+      .set(ApplicantNationalityPage(Index(0)), nationality).success.value
+      .set(ApplicantIsHmfOrCivilServantPage, false).success.value
+      .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
+      .set(ApplicantCurrentUkAddressPage, currentUkAddress).success.value
+      .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
+      .set(ApplicantIsHmfOrCivilServantPage, false).success.value
+      .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
+      .set(RelationshipStatusPage, RelationshipStatus.Single).success.value
+      .set(ChildNamePage(Index(0)), childName).success.value
+      .set(ChildHasPreviousNamePage(Index(0)), false).success.value
+      .set(ChildBiologicalSexPage(Index(0)), biologicalSex).success.value
+      .set(ChildDateOfBirthPage(Index(0)), now).success.value
+      .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.England).success.value
+      .set(BirthCertificateHasSystemNumberPage(Index(0)), true).success.value
+      .set(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber).success.value
+      .set(ApplicantRelationshipToChildPage(Index(0)), relationshipToChild).success.value
+      .set(AdoptingThroughLocalAuthorityPage(Index(0)), false).success.value
+      .set(AnyoneClaimedForChildBeforePage(Index(0)), false).success.value
+      .set(ChildLivesWithApplicantPage(Index(0)), true).success.value
+      .set(ChildLivedWithAnyoneElsePage(Index(0)), false).success.value
+      .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
+      .set(WantToBePaidPage, false).success.value
+      .set(IncludeAdditionalInformationPage, false).success.value
 
   ".canSubmit" - {
 
