@@ -21,29 +21,21 @@ import models.OtherEligibilityFailReason._
 import models.PartnerClaimingChildBenefit.{GettingPayments, NotGettingPayments, WaitingToHear}
 import models.ReasonNotToSubmit._
 import models.RelationshipStatus._
-import models.{AccountType, AdultName, ApplicantRelationshipToChild, ApplicantResidence, BankAccountDetails, BankAccountHolder, BankAccountInsightsResponseModel, Benefits, BirthCertificateSystemNumber, BirthRegistrationMatchingResult, ChildBiologicalSex, ChildBirthRegistrationCountry, ChildName, Country, CurrentlyReceivingChildBenefit, DesignatoryDetails, DocumentType, EmploymentStatus, Income, Index, InternationalAddress, NPSAddress, Nationality, PartnerClaimingChildBenefit, RelationshipStatus, RequiredDocument, UkAddress, UserAnswers}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import models._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
-import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{EitherValues, OptionValues, TryValues}
-import org.scalatestplus.mockito.MockitoSugar
 import pages._
 import pages.applicant._
 import pages.child._
 import pages.partner._
 import pages.payments._
 import queries.BankAccountInsightsResultQuery
-import services.BrmsService
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.LocalDate
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 
 class JourneyModelSpec
   extends AnyFreeSpec
@@ -63,6 +55,10 @@ class JourneyModelSpec
   private val biologicalSex = ChildBiologicalSex.Female
   private val relationshipToChild = ApplicantRelationshipToChild.BirthChild
   private val systemNumber = BirthCertificateSystemNumber("000000000")
+  private val npsAddress = NPSAddress("line 1", None, None, None, None, None, None)
+  private val designatoryDetails = DesignatoryDetails(Some(adultName), None, Some(npsAddress), None, LocalDate.now)
+
+  private val nino = arbitrary[Nino].sample.value
 
   ".allRequiredDocuments" - {
 
@@ -146,7 +142,7 @@ class JourneyModelSpec
         LocalDate.now
       )
 
-    val basicAnswers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
+    val basicAnswers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails), relationshipDetails = Some(RelationshipDetails(false)))
       .set(ApplicantNinoKnownPage, false).success.value
       .set(ApplicantNamePage, adultName).success.value
       .set(ApplicantHasPreviousFamilyNamePage, false).success.value
@@ -302,7 +298,7 @@ class JourneyModelSpec
         LocalDate.now
       )
 
-    val basicAnswers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
+    val basicAnswers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails), relationshipDetails = Some(RelationshipDetails(false)))
       .set(ApplicantNinoKnownPage, false).success.value
       .set(ApplicantNamePage, adultName).success.value
       .set(ApplicantHasPreviousFamilyNamePage, false).success.value
@@ -708,134 +704,235 @@ class JourneyModelSpec
         .set(AnyoneClaimedForChildBeforePage(Index(0)), false).success.value
         .set(ChildLivesWithApplicantPage(Index(0)), true).success.value
         .set(ChildLivedWithAnyoneElsePage(Index(0)), false).success.value
-        .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
+        .set(ApplicantOrPartnerIncomePage, Income.BelowLowerThreshold).success.value
         .set(WantToBePaidPage, false).success.value
         .set(IncludeAdditionalInformationPage, false).success.value
 
-    "when the user is Married or Cohabiting" - {
+    "when the user is authenticated" - {
 
-      "and wants to be paid" - {
-
-        "and is currently receiving payments" - {
-
-          "must not include benefits" in {
-
-            val answers =
-              minimalCoupleAnswers
-                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
-                .set(EldestChildNamePage, childName).success.value
-                .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
-                .set(WantToBePaidPage, true).success.value
-                .set(ApplicantHasSuitableAccountPage, false).success.value
-
-            val (errors, data) = JourneyModel.build(answers).pad
-
-            data.value.benefits must not be defined
-            errors must not be defined
-          }
-        }
-
-        "and is not currently receiving payments" - {
-
-          "must include benefits" in {
-
-            val answers =
-              minimalCoupleAnswers
-                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
-                .set(EldestChildNamePage, childName).success.value
-                .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
-                .set(WantToBePaidPage, true).success.value
-                .set(ApplicantHasSuitableAccountPage, false).success.value
-                .set(ApplicantOrPartnerBenefitsPage, Benefits.qualifyingBenefits).success.value
-
-            val (errors, data) = JourneyModel.build(answers).pad
-
-            data.value.benefits.value mustEqual Benefits.qualifyingBenefits
-            errors must not be defined
-          }
-
-          "must return errors when benefits are not present" in {
-
-            val answers =
-              minimalCoupleAnswers
-                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
-                .set(EldestChildNamePage, childName).success.value
-                .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
-                .set(WantToBePaidPage, true).success.value
-                .set(ApplicantHasSuitableAccountPage, false).success.value
-
-            val (errors, data) = JourneyModel.build(answers).pad
-
-            data must not be defined
-            errors.value.toChain.toList must contain only ApplicantOrPartnerBenefitsPage
-          }
-        }
-      }
-
-      "and does not want to be paid" - {
+      "and has claimed Child Benefit before" - {
 
         "must not include benefits" in {
 
           val answers =
-            minimalCoupleAnswers
-              .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
-              .set(EldestChildNamePage, childName).success.value
-              .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
-              .set(WantToBePaidPage, false).success.value
+            minimalCoupleAnswers.copy(nino = Some(nino.value), designatoryDetails = Some(designatoryDetails), relationshipDetails = Some(RelationshipDetails(true)))
+              .set(WantToBePaidPage, true).success.value
 
           val (errors, data) = JourneyModel.build(answers).pad
 
           data.value.benefits must not be defined
           errors must not be defined
         }
+
+        "must return errors when whether they want to be paid is missing" in {
+
+          val answers =
+            minimalCoupleAnswers.copy(nino = Some(nino.value), designatoryDetails = Some(designatoryDetails), relationshipDetails = Some(RelationshipDetails(true)))
+              .remove(WantToBePaidPage).success.value
+
+          val (errors, data) = JourneyModel.build(answers).pad
+
+          data must not be defined
+          errors.value.toChain.toList must contain only WantToBePaidPage
+        }
       }
 
-      "must return errors when whether they want to be paid is missing" in {
+      "and has not claimed Child Benefit before" - {
 
-        val answers = minimalCoupleAnswers.remove(WantToBePaidPage).success.value
+        "and is Married or Cohabiting" - {
 
-        val (errors, data) = JourneyModel.build(answers).pad
+          "and wants to be paid" - {
 
-        data must not be defined
-        errors.value.toChain.toList must contain only WantToBePaidPage
-      }
+            "must include benefits" in {
 
-      "must return errors when whether they want to include additional information is included" in {
+              val answers =
+                minimalCoupleAnswers.copy(nino = Some(nino.value), designatoryDetails = Some(designatoryDetails), relationshipDetails = Some(RelationshipDetails(false)))
+                  .set(WantToBePaidPage, true).success.value
+                  .set(ApplicantHasSuitableAccountPage, false).success.value
+                  .set(ApplicantOrPartnerBenefitsPage, Benefits.qualifyingBenefits).success.value
 
-        val answers = minimalCoupleAnswers.remove(IncludeAdditionalInformationPage).success.value
+              val (errors, data) = JourneyModel.build(answers).pad
 
-        val (errors, data) = JourneyModel.build(answers).pad
+              data.value.benefits.value mustEqual Benefits.qualifyingBenefits
+              errors must not be defined
+            }
 
-        data must not be defined
-        errors.value.toChain.toList must contain only IncludeAdditionalInformationPage
-      }
+            "must include errors when benefits are not present" in {
 
-      "must return errors when they want to include additional information, but it is missing" in {
+              val answers =
+                minimalCoupleAnswers.copy(nino = Some(nino.value), designatoryDetails = Some(designatoryDetails), relationshipDetails = Some(RelationshipDetails(false)))
+                  .set(WantToBePaidPage, true).success.value
+                  .set(ApplicantHasSuitableAccountPage, false).success.value
 
-        val answers = minimalCoupleAnswers.set(IncludeAdditionalInformationPage, true).success.value
+              val (errors, data) = JourneyModel.build(answers).pad
 
-        val (errors, data) = JourneyModel.build(answers).pad
+              data must not be defined
+              errors.value.toChain.toList must contain only ApplicantOrPartnerBenefitsPage
+            }
+          }
 
-        data must not be defined
-        errors.value.toChain.toList must contain only AdditionalInformationPage
+          "and does not want to be paid" - {
+
+            "must not include benefits" in {
+
+              val answers =
+                minimalCoupleAnswers.copy(nino = Some(nino.value), designatoryDetails = Some(designatoryDetails), relationshipDetails = Some(RelationshipDetails(false)))
+                  .set(WantToBePaidPage, false).success.value
+
+              val (errors, data) = JourneyModel.build(answers).pad
+
+              data.value.benefits must not be defined
+              errors must not be defined
+            }
+          }
+
+          "must include errors when whether they want to be paid is missing" in {
+
+            val answers =
+              minimalCoupleAnswers.copy(nino = Some(nino.value), designatoryDetails = Some(designatoryDetails), relationshipDetails = Some(RelationshipDetails(false)))
+                .remove(WantToBePaidPage).success.value
+
+            val (errors, data) = JourneyModel.build(answers).pad
+
+            data must not be defined
+            errors.value.toChain.toList must contain only WantToBePaidPage
+          }
+        }
+        
+        "and is Single, Separated, Divorced or Widowed" - {
+
+          "and wants to be paid" - {
+
+            "must include benefits" in {
+
+              val answers =
+                minimalSingleAnswers.copy(nino = Some(nino.value), designatoryDetails = Some(designatoryDetails), relationshipDetails = Some(RelationshipDetails(false)))
+                  .set(WantToBePaidPage, true).success.value
+                  .set(ApplicantHasSuitableAccountPage, false).success.value
+                  .set(ApplicantBenefitsPage, Benefits.qualifyingBenefits).success.value
+
+              val (errors, data) = JourneyModel.build(answers).pad
+
+              data.value.benefits.value mustEqual Benefits.qualifyingBenefits
+              errors must not be defined
+            }
+
+            "must include errors when benefits are not present" in {
+
+              val answers =
+                minimalSingleAnswers.copy(nino = Some(nino.value), designatoryDetails = Some(designatoryDetails), relationshipDetails = Some(RelationshipDetails(false)))
+                  .set(WantToBePaidPage, true).success.value
+                  .set(ApplicantHasSuitableAccountPage, false).success.value
+
+              val (errors, data) = JourneyModel.build(answers).pad
+
+              data must not be defined
+              errors.value.toChain.toList must contain only ApplicantBenefitsPage
+            }
+          }
+
+          "and does not want to be paid" - {
+
+            "must not include benefits" in {
+
+              val answers =
+                minimalSingleAnswers.copy(nino = Some(nino.value), designatoryDetails = Some(designatoryDetails), relationshipDetails = Some(RelationshipDetails(false)))
+                  .set(WantToBePaidPage, false).success.value
+
+              val (errors, data) = JourneyModel.build(answers).pad
+
+              data.value.benefits must not be defined
+              errors must not be defined
+            }
+          }
+
+          "must include errors when whether they want to be paid is missing" in {
+
+            val answers =
+              minimalSingleAnswers.copy(nino = Some(nino.value), designatoryDetails = Some(designatoryDetails), relationshipDetails = Some(RelationshipDetails(false)))
+                .remove(WantToBePaidPage).success.value
+
+            val (errors, data) = JourneyModel.build(answers).pad
+
+            data must not be defined
+            errors.value.toChain.toList must contain only WantToBePaidPage
+          }
+        }
       }
     }
 
-    "when the applicant is Single, Separated, Divorced or Widowed" - {
+    "when the user is unauthenticated" - {
 
-      "and wants to be paid" - {
+      "when the user is Married or Cohabiting" - {
 
-        "and is currently receiving payments" - {
+        "and wants to be paid" - {
+
+          "and is currently receiving payments" - {
+
+            "must not include benefits" in {
+
+              val answers =
+                minimalCoupleAnswers
+                  .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
+                  .set(EldestChildNamePage, childName).success.value
+                  .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+                  .set(WantToBePaidPage, true).success.value
+                  .set(ApplicantHasSuitableAccountPage, false).success.value
+
+              val (errors, data) = JourneyModel.build(answers).pad
+
+              data.value.benefits must not be defined
+              errors must not be defined
+            }
+          }
+
+          "and is not currently receiving payments" - {
+
+            "must include benefits" in {
+
+              val answers =
+                minimalCoupleAnswers
+                  .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
+                  .set(EldestChildNamePage, childName).success.value
+                  .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+                  .set(WantToBePaidPage, true).success.value
+                  .set(ApplicantHasSuitableAccountPage, false).success.value
+                  .set(ApplicantOrPartnerBenefitsPage, Benefits.qualifyingBenefits).success.value
+
+              val (errors, data) = JourneyModel.build(answers).pad
+
+              data.value.benefits.value mustEqual Benefits.qualifyingBenefits
+              errors must not be defined
+            }
+
+            "must return errors when benefits are not present" in {
+
+              val answers =
+                minimalCoupleAnswers
+                  .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
+                  .set(EldestChildNamePage, childName).success.value
+                  .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+                  .set(WantToBePaidPage, true).success.value
+                  .set(ApplicantHasSuitableAccountPage, false).success.value
+
+              val (errors, data) = JourneyModel.build(answers).pad
+
+              data must not be defined
+              errors.value.toChain.toList must contain only ApplicantOrPartnerBenefitsPage
+            }
+          }
+        }
+
+        "and does not want to be paid" - {
 
           "must not include benefits" in {
 
             val answers =
-              minimalSingleAnswers
-                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
+              minimalCoupleAnswers
+                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
                 .set(EldestChildNamePage, childName).success.value
                 .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
-                .set(WantToBePaidPage, true).success.value
-                .set(ApplicantHasSuitableAccountPage, false).success.value
+                .set(WantToBePaidPage, false).success.value
 
             val (errors, data) = JourneyModel.build(answers).pad
 
@@ -844,58 +941,113 @@ class JourneyModelSpec
           }
         }
 
-        "and is not currently receiving payments" - {
+        "must return errors when whether they want to be paid is missing" in {
 
-          "must include benefits" in {
-
-            val answers =
-              minimalSingleAnswers
-                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
-                .set(EldestChildNamePage, childName).success.value
-                .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
-                .set(WantToBePaidPage, true).success.value
-                .set(ApplicantHasSuitableAccountPage, false).success.value
-                .set(ApplicantBenefitsPage, Benefits.qualifyingBenefits).success.value
-
-            val (errors, data) = JourneyModel.build(answers).pad
-
-            data.value.benefits.value mustEqual Benefits.qualifyingBenefits
-            errors must not be defined
-          }
-
-          "must return errors when benefits are not present" in {
-
-            val answers =
-              minimalSingleAnswers
-                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
-                .set(EldestChildNamePage, childName).success.value
-                .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
-                .set(WantToBePaidPage, true).success.value
-                .set(ApplicantHasSuitableAccountPage, false).success.value
-
-            val (errors, data) = JourneyModel.build(answers).pad
-
-            data must not be defined
-            errors.value.toChain.toList must contain only ApplicantBenefitsPage
-          }
-        }
-      }
-
-      "and does not want to be paid" - {
-
-        "must not include benefits" in {
-
-          val answers =
-            minimalSingleAnswers
-              .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
-              .set(EldestChildNamePage, childName).success.value
-              .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
-              .set(WantToBePaidPage, false).success.value
+          val answers = minimalCoupleAnswers.remove(WantToBePaidPage).success.value
 
           val (errors, data) = JourneyModel.build(answers).pad
 
-          data.value.benefits must not be defined
-          errors must not be defined
+          data must not be defined
+          errors.value.toChain.toList must contain only WantToBePaidPage
+        }
+
+        "must return errors when whether they want to include additional information is included" in {
+
+          val answers = minimalCoupleAnswers.remove(IncludeAdditionalInformationPage).success.value
+
+          val (errors, data) = JourneyModel.build(answers).pad
+
+          data must not be defined
+          errors.value.toChain.toList must contain only IncludeAdditionalInformationPage
+        }
+
+        "must return errors when they want to include additional information, but it is missing" in {
+
+          val answers = minimalCoupleAnswers.set(IncludeAdditionalInformationPage, true).success.value
+
+          val (errors, data) = JourneyModel.build(answers).pad
+
+          data must not be defined
+          errors.value.toChain.toList must contain only AdditionalInformationPage
+        }
+      }
+
+      "when the applicant is Single, Separated, Divorced or Widowed" - {
+
+        "and wants to be paid" - {
+
+          "and is currently receiving payments" - {
+
+            "must not include benefits" in {
+
+              val answers =
+                minimalSingleAnswers
+                  .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
+                  .set(EldestChildNamePage, childName).success.value
+                  .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+                  .set(WantToBePaidPage, true).success.value
+                  .set(ApplicantHasSuitableAccountPage, false).success.value
+
+              val (errors, data) = JourneyModel.build(answers).pad
+
+              data.value.benefits must not be defined
+              errors must not be defined
+            }
+          }
+
+          "and is not currently receiving payments" - {
+
+            "must include benefits" in {
+
+              val answers =
+                minimalSingleAnswers
+                  .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
+                  .set(EldestChildNamePage, childName).success.value
+                  .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+                  .set(WantToBePaidPage, true).success.value
+                  .set(ApplicantHasSuitableAccountPage, false).success.value
+                  .set(ApplicantBenefitsPage, Benefits.qualifyingBenefits).success.value
+
+              val (errors, data) = JourneyModel.build(answers).pad
+
+              data.value.benefits.value mustEqual Benefits.qualifyingBenefits
+              errors must not be defined
+            }
+
+            "must return errors when benefits are not present" in {
+
+              val answers =
+                minimalSingleAnswers
+                  .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
+                  .set(EldestChildNamePage, childName).success.value
+                  .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+                  .set(WantToBePaidPage, true).success.value
+                  .set(ApplicantHasSuitableAccountPage, false).success.value
+
+              val (errors, data) = JourneyModel.build(answers).pad
+
+              data must not be defined
+              errors.value.toChain.toList must contain only ApplicantBenefitsPage
+            }
+          }
+        }
+
+        "and does not want to be paid" - {
+
+          "must not include benefits" in {
+
+            val answers =
+              minimalSingleAnswers
+                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
+                .set(EldestChildNamePage, childName).success.value
+                .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+                .set(WantToBePaidPage, false).success.value
+
+            val (errors, data) = JourneyModel.build(answers).pad
+
+            data.value.benefits must not be defined
+            errors must not be defined
+          }
         }
       }
 

@@ -20,6 +20,7 @@ import cats.data._
 import cats.implicits._
 import models.ReasonNotToSubmit._
 import models.{Benefits, CurrentlyReceivingChildBenefit, OtherEligibilityFailReason, ReasonNotToSubmit, RequiredDocument, UserAnswers}
+import models.RelationshipStatus._
 import pages.{AdditionalInformationPage, IncludeAdditionalInformationPage}
 import pages.applicant.CurrentlyReceivingChildBenefitPage
 import pages.partner.RelationshipStatusPage
@@ -132,34 +133,22 @@ object JourneyModel {
       case false => Ior.Right(None)
     }
 
-  private def getBenefits(answers: UserAnswers): IorNec[Query, Option[Set[Benefits]]] = {
+  private def getBenefits(answers: UserAnswers): IorNec[Query, Option[Set[Benefits]]] =
+    if (answers.isAuthenticated) authenticatedBenefits(answers) else unauthenticatedBenefits(answers)
 
-    import models.RelationshipStatus._
+  private def authenticatedBenefits(answers: UserAnswers): IorNec[Query, Option[Set[Benefits]]] = {
+    answers.relationshipDetails.map {
+      case x if x.hasClaimedChildBenefit =>
+        Ior.Right(None)
 
-    answers.getIor(RelationshipStatusPage).flatMap {
-      case Married | Cohabiting =>
+      case _ =>
         answers.getIor(WantToBePaidPage).flatMap {
           case true =>
-            answers.getIor(CurrentlyReceivingChildBenefitPage).flatMap {
-              case CurrentlyReceivingChildBenefit.GettingPayments =>
-                Ior.Right(None)
-
-              case _ =>
+            answers.getIor(RelationshipStatusPage).flatMap {
+              case Married | Cohabiting =>
                 answers.getIor(ApplicantOrPartnerBenefitsPage).map(Some(_))
-            }
 
-          case false =>
-            Ior.Right(None)
-        }
-
-      case Single | Separated | Divorced | Widowed =>
-        answers.getIor(WantToBePaidPage).flatMap {
-          case true =>
-            answers.getIor(CurrentlyReceivingChildBenefitPage).flatMap {
-              case CurrentlyReceivingChildBenefit.GettingPayments =>
-                Ior.Right(None)
-
-              case _ =>
+              case Single | Separated | Divorced | Widowed =>
                 answers.getIor(ApplicantBenefitsPage).map(Some(_))
             }
 
@@ -167,5 +156,26 @@ object JourneyModel {
             Ior.Right(None)
         }
     }
-  }
+  }.getOrElse(Ior.Left(NonEmptyChain.one(CurrentlyReceivingChildBenefitPage)))
+
+  private def unauthenticatedBenefits(answers: UserAnswers): IorNec[Query, Option[Set[Benefits]]] =
+    answers.getIor(WantToBePaidPage).flatMap {
+      case true =>
+        answers.getIor(CurrentlyReceivingChildBenefitPage).flatMap {
+          case CurrentlyReceivingChildBenefit.GettingPayments =>
+            Ior.Right(None)
+
+          case _ =>
+            answers.getIor(RelationshipStatusPage).flatMap {
+              case Married | Cohabiting =>
+                answers.getIor(ApplicantOrPartnerBenefitsPage).map(Some(_))
+
+              case Single | Separated | Widowed | Divorced =>
+                answers.getIor(ApplicantBenefitsPage).map(Some(_))
+            }
+        }
+
+      case false =>
+        Ior.Right(None)
+    }
 }
