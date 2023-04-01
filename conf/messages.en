@@ -549,8 +549,10 @@ correspondenceAddress.change.hidden = your correspondence address
 designatoryAddressInUk.title = Is your current address in the UK?
 designatoryAddressInUk.heading = Is your current address in the UK?
 designatoryAddressInUk.checkYourAnswersLabel = Is your current address in the UK?
-designatoryAddressInUk.p1 = This is the address you currently live at.
-designatoryAddressInUk.p2 = The UK includes England, Wales, Scotland and Northern Ireland. The UK does not include Isle of Man, Channel Islands or British overseas territories.
+designatoryAddressInUk.p1 = This is the address you live at now.
+designatoryAddressInUk.p2 = The UK includes England, Wales, Scotland and Northern Ireland. The UK does not include Isle of Man, Channel Islands or
+designatoryAddressInUk.p2.link.text = British overseas territories
+designatoryAddressInUk.p2.link.href = https://www.gov.uk/types-of-british-nationality/british-overseas-territories-citizen
 designatoryAddressInUk.error.required = Select yes if your current address is in the UK
 designatoryAddressInUk.change.hidden = if your current address is in the UK
 
