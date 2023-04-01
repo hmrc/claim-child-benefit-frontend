@@ -31,7 +31,6 @@ case object ApplicantIsHmfOrCivilServantPage extends QuestionPage[Boolean] {
   override def route(waypoints: Waypoints): Call =
     routes.ApplicantIsHmfOrCivilServantController.onPageLoad(waypoints)
 
-  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page = {
-    CurrentlyReceivingChildBenefitPage
-  }
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    if(answers.isAuthenticated) CheckApplicantDetailsPage else CurrentlyReceivingChildBenefitPage
 }
