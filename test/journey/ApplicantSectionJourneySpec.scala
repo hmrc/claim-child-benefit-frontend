@@ -669,4 +669,16 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
         pageMustBe(CheckApplicantDetailsPage)
       )
   }
+
+  "authenticated users must not be asked if they are currently receiving Child Benefit" in {
+
+    val designatoryDetails = DesignatoryDetails(None, None, Some(ukNpsAddress), None, LocalDate.now)
+    val answers = UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(designatoryDetails))
+
+    startingFrom(ApplicantIsHmfOrCivilServantPage, answers = answers)
+      .run(
+        submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
+        pageMustBe(CheckApplicantDetailsPage)
+      )
+  }
 }
