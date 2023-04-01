@@ -42,7 +42,7 @@
 
         <p class="govuk-body">
             @messages("designatoryAddressInUk.p2")
-            @{newTabLink(NewTabLinkHelper(text = messages("designatoryAddressInUk.p2.link.text"), href = Some(messages("designatoryAddressInUk.p2.link.href"))))}.
+            @newTabLink(NewTabLinkHelper(text = messages("designatoryAddressInUk.p2.link.text"), href = Some(messages("designatoryAddressInUk.p2.link.href")))).
         </p>
 
         @govukRadios(
