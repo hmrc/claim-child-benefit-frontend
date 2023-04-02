@@ -37,13 +37,7 @@ object Claimant {
 
   def build(nino: String, journeyModel: journey.JourneyModel): Claimant = {
     val preferentialNationality: Nationality =
-      Nationality.fromNationalityGroup(
-        journeyModel.applicant
-          .nationalities.map(_.group)
-          .toList
-          .sorted(NationalityGroupOrdering)
-          .head
-        )
+      Nationality.fromNationalityGroup(journeyModel.applicant.preferentialNationalityGroup)
 
     val hicbcOptOut = journeyModel.paymentPreference match {
       case _: journey.PaymentPreference.DoNotPay => true

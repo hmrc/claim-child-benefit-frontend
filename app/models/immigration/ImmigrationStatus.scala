@@ -16,7 +16,7 @@
 
 package models.immigration
 
-import ImmigrationStatus.eus
+import ImmigrationStatus.{eus, ilr}
 import play.api.libs.json.{Json, OFormat}
 
 import java.time.LocalDate
@@ -30,11 +30,15 @@ final case class ImmigrationStatus(
                                   ) {
 
   lazy val isEus: Boolean = productType.take(3) == eus
+  lazy val isExpired: Boolean = statusEndDate.exists(_.isBefore(LocalDate.now))
+
+  lazy val hasSettledStatus: Boolean = immigrationStatus.take(3) == ilr && isEus && !isExpired
 }
 
 object ImmigrationStatus {
 
   val eus = "EUS"
+  val ilr = "ILR"
 
   implicit lazy val format: OFormat[ImmigrationStatus] = Json.format
 }

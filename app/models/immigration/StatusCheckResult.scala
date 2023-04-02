@@ -25,7 +25,10 @@ final case class StatusCheckResult(
                                     dateOfBirth: LocalDate,
                                     nationality: String,
                                     statuses: List[ImmigrationStatus]
-                                  )
+                                  ) {
+
+  lazy val hasSettledStatus: Boolean = statuses.exists(_.hasSettledStatus)
+}
 
 object StatusCheckResult {
 
