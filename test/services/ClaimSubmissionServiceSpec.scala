@@ -50,16 +50,24 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
   private val mockConnector = mock[ClaimChildBenefitConnector]
   private val mockSubmissionLimiter = mock[SubmissionLimiter]
   private val mockSupplementaryDataService = mock[SupplementaryDataService]
+  private val mockImmigrationStatusService = mock[ImmigrationStatusService]
 
   override def beforeEach(): Unit = {
     Mockito.reset(mockFeatureFlags)
     Mockito.reset(mockConnector)
     Mockito.reset(mockSubmissionLimiter)
     Mockito.reset(mockSupplementaryDataService)
+    Mockito.reset(mockImmigrationStatusService)
     super.beforeEach()
   }
 
-  private val submissionService = new ClaimSubmissionService(mockFeatureFlags, mockConnector, mockSubmissionLimiter, mockSupplementaryDataService)
+  private val submissionService = new ClaimSubmissionService(
+    mockFeatureFlags,
+    mockConnector,
+    mockSubmissionLimiter,
+    mockSupplementaryDataService,
+    mockImmigrationStatusService
+  )
 
   private val nino = arbitrary[Nino].sample.value
   private val userId = "user id"
@@ -376,6 +384,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
           when(mockSubmissionLimiter.recordSubmission(any(), any(), any())(any())) thenReturn Future.successful(Done)
           when(mockSupplementaryDataService.submit(any(), any(), any())(any())) thenReturn Future.successful(Done)
+          when(mockImmigrationStatusService.hasSettledStatus(any(), any(), any())(any())) thenReturn Future.successful(None)
 
           submissionService.submit(request).futureValue
 
@@ -392,6 +401,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
           when(mockSubmissionLimiter.recordSubmission(any(), any(), any())(any())) thenReturn Future.failed(new Exception("foo"))
           when(mockSupplementaryDataService.submit(any(), any(), any())(any())) thenReturn Future.successful(Done)
+          when(mockImmigrationStatusService.hasSettledStatus(any(), any(), any())(any())) thenReturn Future.successful(None)
 
           submissionService.submit(request).futureValue
 

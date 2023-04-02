@@ -35,7 +35,8 @@ class ClaimSubmissionService @Inject()(
                                         featureFlags: FeatureFlags,
                                         connector: ClaimChildBenefitConnector,
                                         submissionLimiter: SubmissionLimiter,
-                                        supplementaryDataService: SupplementaryDataService
+                                        supplementaryDataService: SupplementaryDataService,
+                                        immigrationStatusService: ImmigrationStatusService
                                       ) extends Logging {
 
   def canSubmit(request: DataRequest[_])(implicit ec: ExecutionContext): Future[Boolean] =
@@ -69,24 +70,28 @@ class ClaimSubmissionService @Inject()(
     } yield {
 
       val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+      val correlationId = UUID.randomUUID()
 
       JourneyModel.build(request.userAnswers).right.map { model =>
-        val claim = Claim.build(nino, model, relationshipDetails.hasClaimedChildBenefit)
-        val correlationId = UUID.randomUUID()
+        immigrationStatusService.hasSettledStatus(nino, model, correlationId)(hc).flatMap {
+          hasSettledStatus =>
 
-        connector
-          .submitClaim(claim, correlationId)(hc)
-          .flatMap { _ =>
-            submissionLimiter
-              .recordSubmission(model, claim, correlationId)(hc)
-              .recover {
-                case e: Exception =>
-                  logger.error("Failed to record submission: " + e.getMessage)
-                  Done
-              }
-          }.flatMap { _ =>
-            supplementaryDataService.submit(nino, model, correlationId)(request)
-          }
+            val claim = Claim.build(nino, model, relationshipDetails.hasClaimedChildBenefit, hasSettledStatus)
+
+            connector
+              .submitClaim(claim, correlationId)(hc)
+              .flatMap { _ =>
+                submissionLimiter
+                  .recordSubmission(model, claim, correlationId)(hc)
+                  .recover {
+                    case e: Exception =>
+                      logger.error("Failed to record submission: " + e.getMessage)
+                      Done
+                  }
+              }.flatMap { _ =>
+              supplementaryDataService.submit(nino, model, correlationId)(request)
+            }
+        }
 
       }.getOrElse(Future.failed(CannotBuildJourneyModelException))
     }

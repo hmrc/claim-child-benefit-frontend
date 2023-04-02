@@ -101,7 +101,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
 
       "when the claimant opts out of HICBC" in {
 
-        val result = Claimant.build(nino, basicJourneyModel)
+        val result = Claimant.build(nino, basicJourneyModel, None)
 
         result mustEqual UkCtaClaimantAlwaysResident(
           nino = nino,
@@ -114,7 +114,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
 
         val journeyModel = basicJourneyModel.copy(paymentPreference = paymentPreference)
 
-        val result = Claimant.build(nino, journeyModel)
+        val result = Claimant.build(nino, journeyModel, None)
 
         result mustEqual UkCtaClaimantAlwaysResident(
           nino = nino,
@@ -132,7 +132,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
 
           val journeyModel = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(residency = alwaysAbroad))
 
-          val result = Claimant.build(nino, journeyModel)
+          val result = Claimant.build(nino, journeyModel, None)
 
           result mustEqual UkCtaClaimantNotAlwaysResident(
             nino = nino,
@@ -148,7 +148,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
             applicant = basicJourneyModel.applicant.copy(residency = alwaysAbroad),
             paymentPreference = paymentPreference
           )
-          val result = Claimant.build(nino, journeyModel)
+          val result = Claimant.build(nino, journeyModel, None)
 
           result mustEqual UkCtaClaimantNotAlwaysResident(
             nino = nino,
@@ -175,7 +175,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
           "and opts out of HICBC" in {
 
             val journeyModel = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(residency = residency))
-            val result = Claimant.build(nino, journeyModel)
+            val result = Claimant.build(nino, journeyModel, None)
 
             result mustEqual UkCtaClaimantNotAlwaysResident(
               nino = nino,
@@ -191,7 +191,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
               applicant = basicJourneyModel.applicant.copy(residency = residency),
               paymentPreference = paymentPreference
             )
-            val result = Claimant.build(nino, journeyModel)
+            val result = Claimant.build(nino, journeyModel, None)
 
             result mustEqual UkCtaClaimantNotAlwaysResident(
               nino = nino,
@@ -219,7 +219,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
             "and opts out of HICBC" in {
 
               val journeyModel = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(residency = residency))
-              val result = Claimant.build(nino, journeyModel)
+              val result = Claimant.build(nino, journeyModel, None)
 
               result mustEqual UkCtaClaimantNotAlwaysResident(
                 nino = nino,
@@ -235,7 +235,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                 applicant = basicJourneyModel.applicant.copy(residency = residency),
                 paymentPreference = paymentPreference
               )
-              val result = Claimant.build(nino, journeyModel)
+              val result = Claimant.build(nino, journeyModel, None)
 
               result mustEqual UkCtaClaimantNotAlwaysResident(
                 nino = nino,
@@ -261,7 +261,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
             "and opts out of HICBC" in {
 
               val journeyModel = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(residency = residency))
-              val result = Claimant.build(nino, journeyModel)
+              val result = Claimant.build(nino, journeyModel, None)
 
               result mustEqual UkCtaClaimantNotAlwaysResident(
                 nino = nino,
@@ -277,7 +277,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                 applicant = basicJourneyModel.applicant.copy(residency = residency),
                 paymentPreference = paymentPreference
               )
-              val result = Claimant.build(nino, journeyModel)
+              val result = Claimant.build(nino, journeyModel, None)
 
               result mustEqual UkCtaClaimantNotAlwaysResident(
                 nino = nino,
@@ -301,7 +301,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
         "and opts out of HICBC" in {
 
           val journeyModel = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(nationalities = nationalities))
-          val result = Claimant.build(nino, journeyModel)
+          val result = Claimant.build(nino, journeyModel, None)
 
           result mustEqual NonUkCtaClaimantAlwaysResident(
             nino = nino,
@@ -318,7 +318,41 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
             applicant = basicJourneyModel.applicant.copy(nationalities = nationalities),
             paymentPreference = paymentPreference
           )
-          val result = Claimant.build(nino, journeyModel)
+          val result = Claimant.build(nino, journeyModel, None)
+
+          result mustEqual NonUkCtaClaimantAlwaysResident(
+            nino = nino,
+            hmfAbroad = hmfAbroad,
+            hicbcOptOut = false,
+            nationality = Nationality.Eea,
+            rightToReside = false
+          )
+        }
+
+        "when they have settled status" in {
+
+          val journeyModel = basicJourneyModel.copy(
+            applicant = basicJourneyModel.applicant.copy(nationalities = nationalities),
+            paymentPreference = paymentPreference
+          )
+          val result = Claimant.build(nino, journeyModel, Some(true))
+
+          result mustEqual NonUkCtaClaimantAlwaysResident(
+            nino = nino,
+            hmfAbroad = hmfAbroad,
+            hicbcOptOut = false,
+            nationality = Nationality.Eea,
+            rightToReside = true
+          )
+        }
+
+        "when they do not have settled status" in {
+
+          val journeyModel = basicJourneyModel.copy(
+            applicant = basicJourneyModel.applicant.copy(nationalities = nationalities),
+            paymentPreference = paymentPreference
+          )
+          val result = Claimant.build(nino, journeyModel, Some(false))
 
           result mustEqual NonUkCtaClaimantAlwaysResident(
             nino = nino,
@@ -338,7 +372,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
         "and opts out of HICBC" in {
 
           val journeyModel = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(nationalities = nationalities))
-          val result = Claimant.build(nino, journeyModel)
+          val result = Claimant.build(nino, journeyModel, None)
 
           result mustEqual NonUkCtaClaimantAlwaysResident(
             nino = nino,
@@ -355,7 +389,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
             applicant = basicJourneyModel.applicant.copy(nationalities = nationalities),
             paymentPreference = paymentPreference
           )
-          val result = Claimant.build(nino, journeyModel)
+          val result = Claimant.build(nino, journeyModel, None)
 
           result mustEqual NonUkCtaClaimantAlwaysResident(
             nino = nino,
@@ -384,7 +418,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                 nationalities = nationalities,
                 residency = alwaysAbroad
               ))
-            val result = Claimant.build(nino, journeyModel)
+            val result = Claimant.build(nino, journeyModel, None)
 
             result mustEqual NonUkCtaClaimantNotAlwaysResident(
               nino = nino,
@@ -405,7 +439,49 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
               ),
               paymentPreference = paymentPreference
             )
-            val result = Claimant.build(nino, journeyModel)
+            val result = Claimant.build(nino, journeyModel, None)
+
+            result mustEqual NonUkCtaClaimantNotAlwaysResident(
+              nino = nino,
+              hmfAbroad = hmfAbroad,
+              hicbcOptOut = false,
+              nationality = Nationality.Eea,
+              rightToReside = false,
+              last3MonthsInUK = false
+            )
+          }
+
+          "and has settled status" in {
+
+            val journeyModel = basicJourneyModel.copy(
+              applicant = basicJourneyModel.applicant.copy(
+                nationalities = nationalities,
+                residency = alwaysAbroad
+              ),
+              paymentPreference = paymentPreference
+            )
+            val result = Claimant.build(nino, journeyModel, Some(true))
+
+            result mustEqual NonUkCtaClaimantNotAlwaysResident(
+              nino = nino,
+              hmfAbroad = hmfAbroad,
+              hicbcOptOut = false,
+              nationality = Nationality.Eea,
+              rightToReside = true,
+              last3MonthsInUK = false
+            )
+          }
+
+          "and does not have settled status" in {
+
+            val journeyModel = basicJourneyModel.copy(
+              applicant = basicJourneyModel.applicant.copy(
+                nationalities = nationalities,
+                residency = alwaysAbroad
+              ),
+              paymentPreference = paymentPreference
+            )
+            val result = Claimant.build(nino, journeyModel, Some(false))
 
             result mustEqual NonUkCtaClaimantNotAlwaysResident(
               nino = nino,
@@ -426,7 +502,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
           "and opts out of HICBC" in {
 
             val journeyModel = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(nationalities = nationalities))
-            val result = Claimant.build(nino, journeyModel)
+            val result = Claimant.build(nino, journeyModel, None)
 
             result mustEqual NonUkCtaClaimantAlwaysResident(
               nino = nino,
@@ -443,7 +519,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
               applicant = basicJourneyModel.applicant.copy(nationalities = nationalities),
               paymentPreference = paymentPreference
             )
-            val result = Claimant.build(nino, journeyModel)
+            val result = Claimant.build(nino, journeyModel, None)
 
             result mustEqual NonUkCtaClaimantAlwaysResident(
               nino = nino,
@@ -482,7 +558,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                   nationalities = nationalities,
                   residency = residency
                 ))
-              val result = Claimant.build(nino, journeyModel)
+              val result = Claimant.build(nino, journeyModel, None)
 
               result mustEqual NonUkCtaClaimantNotAlwaysResident(
                 nino = nino,
@@ -503,7 +579,49 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                 ),
                 paymentPreference = paymentPreference
               )
-              val result = Claimant.build(nino, journeyModel)
+              val result = Claimant.build(nino, journeyModel, None)
+
+              result mustEqual NonUkCtaClaimantNotAlwaysResident(
+                nino = nino,
+                hmfAbroad = hmfAbroad,
+                hicbcOptOut = false,
+                nationality = Nationality.Eea,
+                rightToReside = false,
+                last3MonthsInUK = false
+              )
+            }
+
+            "and has settled status" in {
+
+              val journeyModel = basicJourneyModel.copy(
+                applicant = basicJourneyModel.applicant.copy(
+                  nationalities = nationalities,
+                  residency = residency
+                ),
+                paymentPreference = paymentPreference
+              )
+              val result = Claimant.build(nino, journeyModel, Some(true))
+
+              result mustEqual NonUkCtaClaimantNotAlwaysResident(
+                nino = nino,
+                hmfAbroad = hmfAbroad,
+                hicbcOptOut = false,
+                nationality = Nationality.Eea,
+                rightToReside = true,
+                last3MonthsInUK = false
+              )
+            }
+
+            "and does not have settled status" in {
+
+              val journeyModel = basicJourneyModel.copy(
+                applicant = basicJourneyModel.applicant.copy(
+                  nationalities = nationalities,
+                  residency = residency
+                ),
+                paymentPreference = paymentPreference
+              )
+              val result = Claimant.build(nino, journeyModel, Some(false))
 
               result mustEqual NonUkCtaClaimantNotAlwaysResident(
                 nino = nino,
@@ -535,7 +653,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                   nationalities = nationalities,
                   residency = residency
                 ))
-              val result = Claimant.build(nino, journeyModel)
+              val result = Claimant.build(nino, journeyModel, None)
 
               result mustEqual NonUkCtaClaimantNotAlwaysResident(
                 nino = nino,
@@ -556,7 +674,49 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                 ),
                 paymentPreference = paymentPreference
               )
-              val result = Claimant.build(nino, journeyModel)
+              val result = Claimant.build(nino, journeyModel, None)
+
+              result mustEqual NonUkCtaClaimantNotAlwaysResident(
+                nino = nino,
+                hmfAbroad = hmfAbroad,
+                hicbcOptOut = false,
+                nationality = Nationality.Eea,
+                rightToReside = false,
+                last3MonthsInUK = true
+              )
+            }
+
+            "and has settled status" in {
+
+              val journeyModel = basicJourneyModel.copy(
+                applicant = basicJourneyModel.applicant.copy(
+                  nationalities = nationalities,
+                  residency = residency
+                ),
+                paymentPreference = paymentPreference
+              )
+              val result = Claimant.build(nino, journeyModel, Some(true))
+
+              result mustEqual NonUkCtaClaimantNotAlwaysResident(
+                nino = nino,
+                hmfAbroad = hmfAbroad,
+                hicbcOptOut = false,
+                nationality = Nationality.Eea,
+                rightToReside = true,
+                last3MonthsInUK = true
+              )
+            }
+
+            "and does not have settled status" in {
+
+              val journeyModel = basicJourneyModel.copy(
+                applicant = basicJourneyModel.applicant.copy(
+                  nationalities = nationalities,
+                  residency = residency
+                ),
+                paymentPreference = paymentPreference
+              )
+              val result = Claimant.build(nino, journeyModel, Some(false))
 
               result mustEqual NonUkCtaClaimantNotAlwaysResident(
                 nino = nino,
@@ -594,7 +754,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                   nationalities = nationalities,
                   residency = residency
                 ))
-              val result = Claimant.build(nino, journeyModel)
+              val result = Claimant.build(nino, journeyModel, None)
 
               result mustEqual NonUkCtaClaimantNotAlwaysResident(
                 nino = nino,
@@ -615,7 +775,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                 ),
                 paymentPreference = paymentPreference
               )
-              val result = Claimant.build(nino, journeyModel)
+              val result = Claimant.build(nino, journeyModel, None)
 
               result mustEqual NonUkCtaClaimantNotAlwaysResident(
                 nino = nino,
@@ -647,7 +807,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                   nationalities = nationalities,
                   residency = residency
                 ))
-              val result = Claimant.build(nino, journeyModel)
+              val result = Claimant.build(nino, journeyModel, None)
 
               result mustEqual NonUkCtaClaimantNotAlwaysResident(
                 nino = nino,
@@ -668,7 +828,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                 ),
                 paymentPreference = paymentPreference
               )
-              val result = Claimant.build(nino, journeyModel)
+              val result = Claimant.build(nino, journeyModel, None)
 
               result mustEqual NonUkCtaClaimantNotAlwaysResident(
                 nino = nino,
