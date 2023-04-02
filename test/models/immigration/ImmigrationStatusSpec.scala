@@ -39,7 +39,7 @@ class ImmigrationStatusSpec extends AnyFreeSpec with Matchers with Generators wi
       ).hasSettledStatus mustEqual true
     }
 
-    "must be true when product type is EUS, immigration status is ILR and there is and end date today or in the future" in {
+    "must be true when product type is EUS, immigration status is ILR and there is an end date of today or in the future" in {
 
       val endDate = datesBetween(LocalDate.now, LocalDate.now.plusYears(100)).sample.value
 
@@ -52,7 +52,7 @@ class ImmigrationStatusSpec extends AnyFreeSpec with Matchers with Generators wi
       ).hasSettledStatus mustEqual true
     }
 
-    "must be false when product type is EUS, immigration status is ILR and there is and end date in the past" in {
+    "must be false when product type is EUS, immigration status is ILR and there is an end date in the past" in {
 
       val endDate = datesBetween(LocalDate.now.minusYears(100), LocalDate.now.minusDays(1)).sample.value
 

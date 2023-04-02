@@ -117,29 +117,34 @@ class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with Befor
 
       "and the applicant is an EU national" - {
 
-        val nationality = Nationality.allNationalities.filter(_.group == NationalityGroup.Eea).head
-        val model = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(nationalities = NonEmptyList(nationality, Nil)))
+        "must return the result of the call to check immigration status" in {
 
-        val response = StatusCheckResult(
-          fullName = "name",
-          dateOfBirth = LocalDate.now,
-          nationality = nationality.name,
-          statuses = List(ImmigrationStatus(
+          val nationality = Nationality.allNationalities.filter(_.group == NationalityGroup.Eea).head
+          val model = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(nationalities = NonEmptyList(nationality, Nil)))
+
+          val immigrationStatusWithSettledStatus = ImmigrationStatus(
             statusStartDate = LocalDate.now,
             statusEndDate = None,
             productType = eus,
             immigrationStatus = ilr,
             noRecourseToPublicFunds = false
-          ))
-        )
+          )
 
-        when(mockFeatureFlags.checkImmigrationStatus).thenReturn(true)
-        when(mockConnector.checkStatus(any(), any())(any())).thenReturn(Future.successful(response))
+          val response = StatusCheckResult(
+            fullName = "name",
+            dateOfBirth = LocalDate.now,
+            nationality = nationality.name,
+            statuses = List(immigrationStatusWithSettledStatus)
+          )
 
-        val result = service.hasSettledStatus(nino, model, correlationId)(hc).futureValue
+          when(mockFeatureFlags.checkImmigrationStatus).thenReturn(true)
+          when(mockConnector.checkStatus(any(), any())(any())).thenReturn(Future.successful(response))
 
-        result.value mustEqual true
-        verify(mockConnector, times(1)).checkStatus(any(), any())(any())
+          val result = service.hasSettledStatus(nino, model, correlationId)(hc).futureValue
+
+          result.value mustEqual true
+          verify(mockConnector, times(1)).checkStatus(any(), any())(any())
+        }
       }
 
       "and the applicant is not an EU national" - {
