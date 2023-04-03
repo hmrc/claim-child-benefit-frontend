@@ -159,6 +159,22 @@ class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with Befor
           verify(mockConnector, never).checkStatus(any(), any())(any())
         }
       }
+
+      "and the connector call fails" - {
+
+        "must return None" in {
+
+          val nationality = Nationality.allNationalities.filter(_.group == NationalityGroup.Eea).head
+          val model = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(nationalities = NonEmptyList(nationality, Nil)))
+
+          when(mockFeatureFlags.checkImmigrationStatus).thenReturn(true)
+          when(mockConnector.checkStatus(any(), any())(any())).thenReturn(Future.failed(new RuntimeException("foo")))
+
+          val result = service.hasSettledStatus(nino, model, correlationId)(hc).futureValue
+
+          result must not be defined
+        }
+      }
     }
   }
 }

@@ -18,6 +18,7 @@ package services
 
 import config.FeatureFlags
 import connectors.ImmigrationStatusConnector
+import logging.Logging
 import models.NationalityGroup
 import models.immigration.{NinoSearchRequest, StatusCheckRange}
 import models.journey.JourneyModel
@@ -31,7 +32,7 @@ class ImmigrationStatusService @Inject()(
                                           featureFlags: FeatureFlags,
                                           connector: ImmigrationStatusConnector
                                         )
-                                        (implicit ec: ExecutionContext) {
+                                        (implicit ec: ExecutionContext) extends Logging {
 
   def hasSettledStatus(nino: String, model: JourneyModel, correlationId: UUID)(hc: HeaderCarrier): Future[Option[Boolean]] =
     if (featureFlags.checkImmigrationStatus) {
@@ -48,6 +49,11 @@ class ImmigrationStatusService @Inject()(
         connector
           .checkStatus(searchRequest, correlationId)(hc)
           .map(result => Some(result.hasSettledStatus))
+          .recover {
+            case e: Throwable =>
+              logger.warn("Call to home-office-immigration-status-proxy failed: " + e.getMessage)
+              None
+          }
       } else {
         Future.successful(None)
       }
