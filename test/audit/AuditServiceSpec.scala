@@ -67,7 +67,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
       nationalities = NonEmptyList(Nationality.allNationalities.head, Nil),
       residency = journey.Residency.LivedInUkAndAbroad(Some(Country.internationalCountries.head), Some(LocalDate.now), EmploymentStatus.activeStatuses, List(Country("ES", "Spain")), List(Country("ES", "Spain"))),
       memberOfHMForcesOrCivilServantAbroad = false,
-      currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+      currentlyReceivingChildBenefit = Some(CurrentlyReceivingChildBenefit.NotClaiming),
       changedDesignatoryDetails = Some(true),
       correspondenceAddress = Some(models.UkAddress("corr 1", Some("corr 2"), "corr town", Some("corr county"), "corr postcode"))
     ),
@@ -151,7 +151,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           nationalities = Seq(Nationality.allNationalities.head.name),
           residency = Residency.LivedInUkAndAbroad(Some(Country.internationalCountries.head.name), Some(LocalDate.now), EmploymentStatus.activeStatuses.map(_.toString), List("Spain"), List("Spain")),
           memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyClaimingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming.toString,
+          currentlyClaimingChildBenefit = Some(CurrentlyReceivingChildBenefit.NotClaiming.toString),
           changedDesignatoryDetails = Some(true),
           correspondenceAddress = Some(UkAddress("corr 1", Some("corr 2"), "corr town", Some("corr county"), "corr postcode"))
         ),
@@ -247,7 +247,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           nationalities = Seq(Nationality.allNationalities.head.name),
           residency = Residency.LivedInUkAndAbroad(Some(Country.internationalCountries.head.name), Some(LocalDate.now), EmploymentStatus.activeStatuses.map(_.toString), List("Spain"), List("Spain")),
           memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyClaimingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming.toString,
+          currentlyClaimingChildBenefit = Some(CurrentlyReceivingChildBenefit.NotClaiming.toString),
           changedDesignatoryDetails = Some(true),
           correspondenceAddress = Some(UkAddress("corr 1", Some("corr 2"), "corr town", Some("corr county"), "corr postcode"))
         ),

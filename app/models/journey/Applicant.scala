@@ -37,7 +37,7 @@ final case class Applicant(
                             nationalities: NonEmptyList[Nationality],
                             residency: Residency,
                             memberOfHMForcesOrCivilServantAbroad: Boolean,
-                            currentlyReceivingChildBenefit: CurrentlyReceivingChildBenefit,
+                            currentlyReceivingChildBenefit: Option[CurrentlyReceivingChildBenefit],
                             changedDesignatoryDetails: Option[Boolean],
                             correspondenceAddress: Option[Address]
                           )
@@ -56,10 +56,17 @@ object Applicant {
       getNationalities(answers),
       Residency.build(answers),
       answers.getIor(ApplicantIsHmfOrCivilServantPage),
-      answers.getIor(CurrentlyReceivingChildBenefitPage),
+      getCurrentlyReceivingChildBenefit(answers),
       designatoryDetailsChanged(answers),
       getCorrespondenceAddress(answers)
     ).parMapN(Applicant.apply)
+
+  private def getCurrentlyReceivingChildBenefit(answers: UserAnswers): IorNec[Query, Option[CurrentlyReceivingChildBenefit]] =
+    if (answers.isAuthenticated) {
+      Ior.Right(None)
+    } else {
+      answers.getIor(CurrentlyReceivingChildBenefitPage).map(Some(_))
+    }
 
   private def designatoryDetailsChanged(answers: UserAnswers): IorNec[Query, Option[Boolean]] =
     if (answers.isAuthenticated) {

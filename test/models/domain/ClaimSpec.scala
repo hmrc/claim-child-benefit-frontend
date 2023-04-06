@@ -48,7 +48,7 @@ class ClaimSpec extends AnyFreeSpec with Matchers with Generators with OptionVal
         nationalities = NonEmptyList(genUkCtaNationality.sample.value, Gen.listOf(arbitrary[models.Nationality]).sample.value),
         residency = journey.Residency.AlwaysLivedInUk,
         memberOfHMForcesOrCivilServantAbroad = hmfAbroad,
-        currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+        currentlyReceivingChildBenefit = None,
         changedDesignatoryDetails = Some(false),
         correspondenceAddress = None
       ),
