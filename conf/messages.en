@@ -1646,6 +1646,15 @@ pdf.addressLabel.otherDocuments = Other document(s)
 pdf.addressLabel.passports = Passport(s)
 pdf.addressLabel.adoptionCertificates = Adoption certificate(s)
 pdf.addressLabel.yourDocuments.p2 = You do not need to do anything - we’ll write to you again as soon as we’ve made a decision about your claim.
+pdf.eligibilityFails = Eligibility fails
+pdf.eligibilityFails.reason = Reason {0}
+pdf.eligibilityFails.applicantWorkedAbroadInLast3Months = The applicant has worked in another country in the last 3 months.
+pdf.eligibilityFails.applicantReceivedBenefitsAbroadInLast3Months = The applicant has received benefits from another country in the last 3 months.
+pdf.eligibilityFails.partnerWorkedAbroadInLast3Months = The applicant’s partner has worked in another country in the last 3 months.
+pdf.eligibilityFails.partnerReceivedBenefitsAbroadInLast3Months = The applicant’s partner has received benefits from another country in the last 3 months.
+pdf.eligibilityFails.childRecentlyLivedWithSomeoneElse = The child has lived with someone else, possibly outside the UK, in the last 3 months.
+pdf.eligibilityFails.bankAccountInsightsIndicatesPossibleRisk = The bank account is on a watch list and may have been subject to fraud.
+pdf.eligibilityFails.childPossiblyRecentlyUnderLocalAuthorityCare = The child has lived with someone else, possibly under Local Authority care, in the last 3 months.
 
 ordinal.0 = first
 ordinal.1 = second

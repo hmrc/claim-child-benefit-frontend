@@ -7,6 +7,11 @@
         <fo:bookmark-title>@messages("pdf.title")</fo:bookmark-title>
         <fo:bookmark internal-destination="application">
             <fo:bookmark-title>@messages("pdf.application")</fo:bookmark-title>
+            @if(model.otherEligibilityFailureReasons.nonEmpty) {
+                <fo:bookmark internal-destination="eligibility-fails">
+                    <fo:bookmark-title>@messages("pdf.eligibilityFails")</fo:bookmark-title>
+                </fo:bookmark>
+            }
             <fo:bookmark internal-destination="personal-details">
                 <fo:bookmark-title>@messages("pdf.personalDetails")</fo:bookmark-title>
             </fo:bookmark>

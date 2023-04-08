@@ -14,7 +14,7 @@
 
 <fo:page-sequence master-reference="main">
 
-    @mainHeader(isH1 = true)
+    @mainHeader(isH1 = model.otherEligibilityFailureReasons.isEmpty)
 
     <fo:flow flow-name="xsl-region-body" font-size="12pt" text-align="left">
 
