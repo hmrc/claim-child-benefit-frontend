@@ -47,7 +47,7 @@ class PaymentPreferencesSpec extends AnyFreeSpec with Matchers {
           "sortCode" -> "000000",
           "accountNumber" -> "00000000",
           "bankAccountInsightsResult" -> Json.obj(
-            "bankAccountInsightsCorrelationId" -> "correlation",
+            "correlationId" -> "correlation",
             "riskScore" -> 0,
             "reason" -> "foo"
           )
@@ -95,7 +95,7 @@ class PaymentPreferencesSpec extends AnyFreeSpec with Matchers {
           "sortCode" -> "000000",
           "accountNumber" -> "00000000",
           "bankAccountInsightsResult" -> Json.obj(
-            "bankAccountInsightsCorrelationId" -> "correlation",
+            "correlationId" -> "correlation",
             "riskScore" -> 0,
             "reason" -> "foo"
           )

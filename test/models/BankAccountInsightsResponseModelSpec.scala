@@ -20,6 +20,7 @@ import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import play.api.libs.json.{JsSuccess, Json}
 
 class BankAccountInsightsResponseModelSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks {
 
@@ -41,6 +42,46 @@ class BankAccountInsightsResponseModelSpec extends AnyFreeSpec with Matchers wit
 
         insight.riskAboveTolerance mustBe false
       }
+    }
+
+    "must deserialise from JSON with `correlationId`" in {
+
+      val json = Json.obj(
+        "correlationId" -> "correlation",
+        "riskScore" -> 0,
+        "reason" -> "reason"
+      )
+
+      val expectedResult = BankAccountInsightsResponseModel("correlation", 0, "reason")
+
+      json.validate[BankAccountInsightsResponseModel] mustEqual JsSuccess(expectedResult)
+    }
+
+    "must deserialise from JSON with `bankAccountInsightsCorrelationId`" in {
+
+      val json = Json.obj(
+        "bankAccountInsightsCorrelationId" -> "correlation",
+        "riskScore" -> 0,
+        "reason" -> "reason"
+      )
+
+      val expectedResult = BankAccountInsightsResponseModel("correlation", 0, "reason")
+
+      json.validate[BankAccountInsightsResponseModel] mustEqual JsSuccess(expectedResult)
+    }
+
+    "must deserialise from JSON with both 'correlationId' and `bankAccountInsightsCorrelationId`" in {
+
+      val json = Json.obj(
+        "bankAccountInsightsCorrelationId" -> "correlation",
+        "correlationId" -> "correlation",
+        "riskScore" -> 0,
+        "reason" -> "reason"
+      )
+
+      val expectedResult = BankAccountInsightsResponseModel("correlation", 0, "reason")
+
+      json.validate[BankAccountInsightsResponseModel] mustEqual JsSuccess(expectedResult)
     }
   }
 }
