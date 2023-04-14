@@ -51,11 +51,17 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
     Gen.const(' '),
     Gen.const('’'),
     Gen.const('\''),
-    Gen.oneOf('À' to 'Ö'),
-    Gen.oneOf('Ø' to 'ö'),
-    Gen.oneOf('ø' to 'ÿ'),
-    Gen.oneOf('Ā' to 'ň'),
-    Gen.oneOf('Ŋ' to 'ſ')
+    Gen.oneOf('À' to 'Å'),
+    Gen.oneOf('Ç' to 'Ö'),
+    Gen.oneOf('Ø' to 'Ý'),
+    Gen.oneOf('à' to 'å'),
+    Gen.oneOf('ç' to 'ö'),
+    Gen.oneOf('ø' to 'ý'),
+    Gen.oneOf('Ā' to 'ľ'),
+    Gen.oneOf('Ł' to 'ň'),
+    Gen.oneOf('Ŋ' to 'ő'),
+    Gen.oneOf('Ŕ' to 'ſ'),
+    Gen.const('ÿ')
   )
 
   def safeAddressInputs: Gen[Char] = Gen.oneOf(
@@ -64,11 +70,17 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
     Gen.const(' '),
     Gen.const('’'),
     Gen.const('\''),
-    Gen.oneOf('À' to 'Ö'),
-    Gen.oneOf('Ø' to 'ö'),
-    Gen.oneOf('ø' to 'ÿ'),
-    Gen.oneOf('Ā' to 'ň'),
-    Gen.oneOf('Ŋ' to 'ſ')
+    Gen.oneOf('À' to 'Å'),
+    Gen.oneOf('Ç' to 'Ö'),
+    Gen.oneOf('Ø' to 'Ý'),
+    Gen.oneOf('à' to 'å'),
+    Gen.oneOf('ç' to 'ö'),
+    Gen.oneOf('ø' to 'ý'),
+    Gen.oneOf('Ā' to 'ľ'),
+    Gen.oneOf('Ł' to 'ň'),
+    Gen.oneOf('Ŋ' to 'ő'),
+    Gen.oneOf('Ŕ' to 'ſ'),
+    Gen.const('ÿ')
   )
 
   def unsafeInputs: Gen[Char] = Gen.oneOf(
