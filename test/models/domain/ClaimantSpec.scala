@@ -64,7 +64,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
         nationalInsuranceNumber = None,
         currentAddress = arbitrary[models.UkAddress].sample.value,
         previousAddress = None, telephoneNumber = "0777777777",
-        nationalities = NonEmptyList(genUkCtaNationality.sample.value, Gen.listOf(arbitrary[models.Nationality]).sample.value),
+        nationalities = NonEmptyList(genUkCtaNationality.sample.value, Nil),
         residency = journey.Residency.AlwaysLivedInUk,
         memberOfHMForcesOrCivilServantAbroad = hmfAbroad,
         currentlyReceivingChildBenefit = None,
