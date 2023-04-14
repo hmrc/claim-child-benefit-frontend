@@ -24,10 +24,10 @@ class NationalityGroupSpec extends AnyFreeSpec with Matchers {
 
   "NationalityGroupOrder" - {
 
-    "must sort nationality groups in order UkCta, Eea, NonEea" in {
+    "must sort nationality groups in order Eea, NonEea, UkCta" in {
 
       val unsorted = List[NationalityGroup](NonEea, Eea, UkCta)
-      unsorted.sorted(NationalityGroupOrdering) mustEqual List(UkCta, Eea, NonEea)
+      unsorted.sorted(NationalityGroupOrdering) mustEqual List(Eea, NonEea, UkCta)
     }
   }
 }

@@ -36,7 +36,7 @@ object Claimant {
   }
 
   def build(nino: String, journeyModel: journey.JourneyModel): Claimant = {
-    val preferentialNationality: Nationality =
+    val nationalityToUse: Nationality =
       Nationality.fromNationalityGroup(
         journeyModel.applicant
           .nationalities.map(_.group)
@@ -50,7 +50,7 @@ object Claimant {
       case _ => false
     }
 
-    (preferentialNationality, journeyModel.applicant.residency) match {
+    (nationalityToUse, journeyModel.applicant.residency) match {
       case (UkCta, AlwaysLivedInUk) =>
         UkCtaClaimantAlwaysResident(
           nino = nino,
