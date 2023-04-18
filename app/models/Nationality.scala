@@ -215,7 +215,7 @@ object Nationality {
     Nationality("Pitcairn Islander", NonEea),
     Nationality("Polish", Eea),
     Nationality("Portuguese", Eea),
-    Nationality("Prydeinig", NonEea),
+    Nationality("Prydeinig", UkCta),
     Nationality("Puerto Rican", NonEea),
     Nationality("Qatari", NonEea),
     Nationality("Romanian", Eea),
