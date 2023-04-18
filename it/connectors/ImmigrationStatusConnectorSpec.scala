@@ -45,7 +45,9 @@ class ImmigrationStatusConnectorSpec
 
   implicit private lazy val hc: HeaderCarrier = HeaderCarrier()
   private val correlationId = UUID.randomUUID()
+  private val internalAuthToken = "token"
   private val nino = arbitrary[Nino].sample.value
+  private val service = "claim-child-benefit-frontend"
 
   private lazy val connector = app.injector.instanceOf[ImmigrationStatusConnector]
 
@@ -86,8 +88,9 @@ class ImmigrationStatusConnectorSpec
       )
 
       server.stubFor(
-        post(urlEqualTo("/v1/status/public-funds/nino"))
+        post(urlEqualTo(s"/v1/status/public-funds/nino/$service"))
           .withHeader("X-Correlation-Id", equalTo(correlationId.toString))
+          .withHeader("Authorization", equalTo(internalAuthToken))
           .willReturn(ok(responseBody))
       )
 
@@ -101,8 +104,9 @@ class ImmigrationStatusConnectorSpec
     "must return a failed future when the server returns an error code" in {
 
       server.stubFor(
-        post(urlEqualTo("/v1/status/public-funds/nino"))
+        post(urlEqualTo(s"/v1/status/public-funds/nino/$service"))
           .withHeader("X-Correlation-Id", equalTo(correlationId.toString))
+          .withHeader("Authorization", equalTo(internalAuthToken))
           .willReturn(serverError())
       )
 
