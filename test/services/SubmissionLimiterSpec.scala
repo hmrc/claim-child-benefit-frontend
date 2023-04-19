@@ -106,7 +106,9 @@ class SubmissionLimiterSpec
     benefits = None,
     paymentPreference = journey.PaymentPreference.DoNotPay(None),
     additionalInformation = None,
-    userAuthenticated = true
+    userAuthenticated = true,
+    reasonsNotToSubmit = Nil,
+    otherEligibilityFailureReasons = Nil
   )
 
   private val claim = Claim.build(nino, basicJourneyModel, hasClaimedChildBenefit = false)

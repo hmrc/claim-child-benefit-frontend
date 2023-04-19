@@ -22,7 +22,6 @@ import com.dmanchester.playfop.sapi.PlayFop
 import config.FeatureFlags
 import generators.ModelGenerators
 import models._
-import models.journey.JourneyModel
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{never, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -34,7 +33,7 @@ import pages.payments._
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.BrmsService
+import services.{BrmsService, JourneyModelService}
 import uk.gov.hmrc.http.HeaderCarrier
 import views.html.{PrintDocumentsRequiredView, PrintNoDocumentsRequiredView}
 
@@ -43,8 +42,6 @@ import java.time.LocalDate
 import scala.concurrent.Future
 
 class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSugar {
-
-  private implicit val hc: HeaderCarrier = HeaderCarrier()
 
   private val now = LocalDate.now
   private val applicantName = AdultName(None, "first", None, "last")
@@ -131,8 +128,9 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[PrintDocumentsRequiredView]
-        val journeyModel = JourneyModel.build(answers).right.value
+        val view                = application.injector.instanceOf[PrintDocumentsRequiredView]
+        val journeyModelService = application.injector.instanceOf[JourneyModelService]
+        val journeyModel        = journeyModelService.build(answers).right.value
 
         status(result) mustEqual OK
 

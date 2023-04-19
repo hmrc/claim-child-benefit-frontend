@@ -50,16 +50,18 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
   private val mockConnector = mock[ClaimChildBenefitConnector]
   private val mockSubmissionLimiter = mock[SubmissionLimiter]
   private val mockSupplementaryDataService = mock[SupplementaryDataService]
+  private val journeyModelService = new JourneyModelService(mockFeatureFlags)
 
   override def beforeEach(): Unit = {
     Mockito.reset(mockFeatureFlags)
     Mockito.reset(mockConnector)
     Mockito.reset(mockSubmissionLimiter)
     Mockito.reset(mockSupplementaryDataService)
+    Mockito.reset(mockFeatureFlags)
     super.beforeEach()
   }
 
-  private val submissionService = new ClaimSubmissionService(mockFeatureFlags, mockConnector, mockSubmissionLimiter, mockSupplementaryDataService)
+  private val submissionService = new ClaimSubmissionService(mockFeatureFlags, mockConnector, mockSubmissionLimiter, mockSupplementaryDataService, journeyModelService)
 
   private val nino = arbitrary[Nino].sample.value
   private val userId = "user id"
@@ -131,6 +133,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
         val request = DataRequest(identifierRequest, userId, basicUserAnswers)
 
         when(mockFeatureFlags.allowSubmissionToCbs) thenReturn false
+        when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
 
         submissionService.canSubmit(request).futureValue mustEqual false
       }
@@ -146,6 +149,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val request = DataRequest(identifierRequest, userId, basicUserAnswers)
 
           when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
+          when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
 
           submissionService.canSubmit(request).futureValue mustEqual false
         }
@@ -159,6 +163,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val request = DataRequest(identifierRequest, userId, basicUserAnswers)
 
           when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
+          when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
           when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(false)
 
           submissionService.canSubmit(request).futureValue mustEqual false
@@ -173,6 +178,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val request = DataRequest(identifierRequest, userId, answers)
 
           when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
+          when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
           when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
 
           submissionService.canSubmit(request).futureValue mustEqual false
@@ -187,6 +193,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val request = DataRequest(identifierRequest, userId, answers)
 
           when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
+          when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
           when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
 
           submissionService.canSubmit(request).futureValue mustEqual false
@@ -200,6 +207,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val request = DataRequest(identifierRequest, userId, answers)
 
           when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
+          when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
           when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
 
           submissionService.canSubmit(request).futureValue mustEqual false
@@ -213,6 +221,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val request = DataRequest(identifierRequest, userId, answers)
 
           when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
+          when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
           when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
 
           submissionService.canSubmit(request).futureValue mustEqual false
@@ -226,6 +235,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val request = DataRequest(identifierRequest, userId, answers)
 
           when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
+          when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
           when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
 
           submissionService.canSubmit(request).futureValue mustEqual false
@@ -239,6 +249,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val request = DataRequest(identifierRequest, userId, answers)
 
           when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
+          when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
           when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
 
           submissionService.canSubmit(request).futureValue mustEqual false
@@ -267,6 +278,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val request = DataRequest(identifierRequest, userId, answers)
 
           when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
+          when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
           when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
 
           submissionService.canSubmit(request).futureValue mustEqual false
@@ -283,6 +295,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val request = DataRequest(identifierRequest, userId, answers)
 
           when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
+          when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
           when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
 
           submissionService.canSubmit(request).futureValue mustEqual false
@@ -296,6 +309,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
             val request = DataRequest(identifierRequest, userId, basicUserAnswers)
 
             when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
+            when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
             when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
 
             submissionService.canSubmit(request).futureValue mustEqual true
@@ -323,6 +337,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
               val request = DataRequest(identifierRequest, userId, answers)
 
               when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
+              when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
               when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
 
               submissionService.canSubmit(request).futureValue mustEqual true
@@ -352,6 +367,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
               val request = DataRequest(identifierRequest, userId, answers)
 
               when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
+              when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
               when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
 
               submissionService.canSubmit(request).futureValue mustEqual true

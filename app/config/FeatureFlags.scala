@@ -29,4 +29,5 @@ class FeatureFlags @Inject()(configuration: Configuration) {
   val allowSubmissionToCbs: Boolean          = configuration.get[Boolean]("features.allow-submission-to-cbs")
   val showSignInPage: Boolean                = configuration.get[Boolean]("features.show-sign-in-page")
   val callBankAccountInsights: Boolean       = configuration.get[Boolean]("features.call-bank-account-insights")
+  val submitOlderChildrenToCbs: Boolean      = configuration.get[Boolean]("features.submit-older-children-to-cbs")
 }

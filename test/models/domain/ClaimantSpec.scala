@@ -108,7 +108,9 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
       benefits = None,
       paymentPreference = journey.PaymentPreference.DoNotPay(None),
       additionalInformation = None,
-      userAuthenticated = true
+      userAuthenticated = true,
+      reasonsNotToSubmit = Nil,
+      otherEligibilityFailureReasons = Nil
     )
 
     "must return a UK/CTA claimant who has always been resident in the UK" - {
