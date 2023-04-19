@@ -75,13 +75,21 @@ class ClaimSpec extends AnyFreeSpec with Matchers with Generators with OptionVal
       benefits = None,
       paymentPreference = journey.PaymentPreference.DoNotPay(None),
       additionalInformation = None,
-      userAuthenticated = true
+      userAuthenticated = true,
+      reasonsNotToSubmit = Nil,
+      otherEligibilityFailureReasons = Nil
     )
+
+    "must set `other eligibility fail` to false when the journey model has no other eligibility fail reasons" in {
+
+      val claim = Claim.build(nino, basicJourneyModel, hasClaimedChildBenefit = false)
+
+      claim.otherEligibilityFailure mustBe false
+    }
 
     "must set `other eligibility fail` to true when the journey model has any other eligibility fail reasons" in {
 
-      val residency = journey.Residency.LivedInUkAndAbroad(None, None, EmploymentStatus.activeStatuses, List(Country.internationalCountries.head), Nil)
-      val model = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(residency = residency))
+      val model = basicJourneyModel.copy(otherEligibilityFailureReasons = Seq(OtherEligibilityFailReason.ApplicantWorkedAbroad))
 
       val claim = Claim.build(nino, model, hasClaimedChildBenefit = false)
 
