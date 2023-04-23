@@ -16,6 +16,8 @@ GET         /there-is-a-problem                          controllers.JourneyReco
 
 GET         /reset-application-form                      controllers.auth.AuthController.signOut
 GET         /application-form-has-been-reset             controllers.auth.SignedOutController.onPageLoad
+GET         /application-form-reset                      controllers.auth.ApplicationResetController.onPageLoad
+
 GET         /sign-out-and-apply                          controllers.auth.AuthController.signOutAndApplyUnauthenticated()
 
 GET         /unauthorised                               controllers.UnauthorisedController.onPageLoad
