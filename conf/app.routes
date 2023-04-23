@@ -456,3 +456,5 @@ POST       /have-additional-information                         controllers.Incl
 
 GET        /there-is-an-existing-claim                          controllers.SubmissionFailedExistingClaimController.onPageLoad()
 GET        /already-being-paid                                  controllers.SubmissionFailedAlreadyInPaymentController.onPageLoad()
+
+GET         /we-saved-your-answers                          controllers.AnswersSavedController.onPageLoad()
