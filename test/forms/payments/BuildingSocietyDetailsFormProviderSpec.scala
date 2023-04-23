@@ -30,13 +30,21 @@ class BuildingSocietyDetailsFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName = "firstName"
     val requiredKey = "buildingSocietyDetails.error.firstName.required"
+    val invalidKey = "buildingSocietyDetails.error.firstName.invalid"
     val lengthKey = "buildingSocietyDetails.error.firstName.length"
     val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeNameInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.nameInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(
@@ -57,13 +65,21 @@ class BuildingSocietyDetailsFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName = "lastName"
     val requiredKey = "buildingSocietyDetails.error.lastName.required"
+    val invalidKey = "buildingSocietyDetails.error.lastName.invalid"
     val lengthKey = "buildingSocietyDetails.error.lastName.length"
     val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeNameInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.nameInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(
