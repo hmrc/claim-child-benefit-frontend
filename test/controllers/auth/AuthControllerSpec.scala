@@ -37,7 +37,7 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
 
     "when the user is unauthenticated" - {
 
-      "must clear user answers and redirect to signed out" in {
+      "must clear user answers and redirect to application reset" in {
 
         val mockUserDataService = mock[UserDataService]
         when(mockUserDataService.clear(any())) thenReturn Future.successful(true)
@@ -53,7 +53,7 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
 
           val result = route(application, request).value
 
-          val expectedRedirectUrl = routes.SignedOutController.onPageLoad.url
+          val expectedRedirectUrl = routes.ApplicationResetController.onPageLoad.url
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual expectedRedirectUrl

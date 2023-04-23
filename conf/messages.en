@@ -109,6 +109,10 @@ signedOut.title = For your security, we reset your application form
 signedOut.heading = For your security, we reset your application form
 signedOut.guidance = We did not save your answers.
 
+applicationReset.title = For your security, we reset your application form
+applicationReset.heading = For your security, we reset your application form
+applicationReset.guidance = We did not save your answers.
+
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 

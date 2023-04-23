@@ -75,7 +75,7 @@ class AuthController @Inject()(
                 Redirect(config.signOutUrl, Map("continue" -> Seq(config.host + routes.SignedOutController.onPageLoad.url)))
 
               case _ =>
-                Redirect(routes.SignedOutController.onPageLoad)
+                Redirect(routes.ApplicationResetController.onPageLoad)
             }
       }
   }
