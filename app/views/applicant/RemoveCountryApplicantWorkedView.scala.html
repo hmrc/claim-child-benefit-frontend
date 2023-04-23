@@ -15,12 +15,13 @@
  *@
 
 @import controllers.applicant.routes
+
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukErrorSummary: GovukErrorSummary,
         govukRadios: GovukRadios,
-        govukButton: GovukButton
+        continueButton: components.ContinueButton,
 )
 
 @(form: Form[_], waypoints: Waypoints, index: Index, country: String)(implicit request: Request[_], messages: Messages)
@@ -40,8 +41,6 @@
             )
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @continueButton()
     }
 }

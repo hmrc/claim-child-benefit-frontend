@@ -20,7 +20,7 @@
         layout: templates.Layout,
         govukSummaryList: GovukSummaryList,
         formHelper: FormWithCSRF,
-        govukButton: GovukButton
+        continueButton: components.ContinueButton
 )
 
 @(list: SummaryList, waypoints: Waypoints, index: Index, childName: ChildName)(implicit request: Request[_], messages: Messages)
@@ -33,8 +33,6 @@
 
         @govukSummaryList(list)
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @continueButton()
     }
 }

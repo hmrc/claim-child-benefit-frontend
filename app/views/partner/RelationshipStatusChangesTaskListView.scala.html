@@ -19,7 +19,7 @@
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
-        govukButton: GovukButton
+        continueButton: components.ContinueButton
 )
 
 @(waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
@@ -42,8 +42,6 @@
 
         <p class="govuk-body">@messages("relationshipStatusChangesTaskList.p3")</p>
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @continueButton()
     }
 }
