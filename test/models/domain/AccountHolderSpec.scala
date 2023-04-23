@@ -41,11 +41,11 @@ class AccountHolderSpec extends AnyFreeSpec with Matchers {
         result mustEqual ClaimantAccountHolder
       }
 
-      "where the account holder is joint" in {
+      "where the account holder is joint, normalising inputs" in {
 
         val bankDetails = journey.BankAccountWithHolder(
           holder = BankAccountHolder.JointNames,
-          details = BankAccountDetails("first", "last", "123456", "12345678"),
+          details = BankAccountDetails("fîrśt", "la’st", "123456", "12345678"),
           risk = None
         )
 
@@ -53,15 +53,15 @@ class AccountHolderSpec extends AnyFreeSpec with Matchers {
 
         result mustEqual OtherAccountHolder(
           accountHolderType = AccountHolderType.Joint,
-          forenames = "first", surname = "last"
+          forenames = "first", surname = "la'st"
         )
       }
 
-      "where the account holder is someone else" in {
+      "where the account holder is someone else, normalising inputs" in {
 
         val bankDetails = journey.BankAccountWithHolder(
           holder = BankAccountHolder.SomeoneElse,
-          details = BankAccountDetails("first", "last", "123456", "12345678"),
+          details = BankAccountDetails("fîrśt", "la’st", "123456", "12345678"),
           risk = Some(BankAccountInsightsResponseModel("correlation", 0, "foo"))
         )
 
@@ -69,7 +69,7 @@ class AccountHolderSpec extends AnyFreeSpec with Matchers {
 
         result mustEqual OtherAccountHolder(
           accountHolderType = AccountHolderType.SomeoneElse,
-          forenames = "first", surname = "last"
+          forenames = "first", surname = "la'st"
         )
       }
     }
@@ -88,33 +88,33 @@ class AccountHolderSpec extends AnyFreeSpec with Matchers {
         result mustEqual ClaimantAccountHolder
       }
 
-      "where the account holder is joint" in {
+      "where the account holder is joint, normalising inputs" in {
 
         val buildingSocietyDetails = journey.BuildingSocietyWithHolder(
           holder = BankAccountHolder.JointNames,
-          details = models.BuildingSocietyDetails("first", "last", models.BuildingSociety.allBuildingSocieties.head, "roll number")
+          details = models.BuildingSocietyDetails("fîrśt", "la’st", models.BuildingSociety.allBuildingSocieties.head, "roll number")
         )
 
         val result = AccountHolder.build(buildingSocietyDetails)
 
         result mustEqual OtherAccountHolder(
           accountHolderType = AccountHolderType.Joint,
-          forenames = "first", surname = "last"
+          forenames = "first", surname = "la'st"
         )
       }
 
-      "where the account holder is someone else" in {
+      "where the account holder is someone else, normalising inputs" in {
 
         val buildingSocietyDetails = journey.BuildingSocietyWithHolder(
           holder = BankAccountHolder.SomeoneElse,
-          details = models.BuildingSocietyDetails("first", "last", models.BuildingSociety.allBuildingSocieties.head, "roll number")
+          details = models.BuildingSocietyDetails("fîrśt", "la’st", models.BuildingSociety.allBuildingSocieties.head, "roll number")
         )
 
         val result = AccountHolder.build(buildingSocietyDetails)
 
         result mustEqual OtherAccountHolder(
           accountHolderType = AccountHolderType.SomeoneElse,
-          forenames = "first", surname = "last"
+          forenames = "first", surname = "la'st"
         )
       }
     }
