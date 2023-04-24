@@ -28,7 +28,7 @@
 
 @(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("wantToBePaid.couple.under60k.title"))) {
+@layout(pageTitle = titleNoForm(messages("wantToBePaid.couple.under60k.under50k.title"))) {
 
     @formHelper(action = routes.WantToBePaidController.onSubmit(waypoints)) {
 
@@ -36,38 +36,28 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <h1 class="govuk-heading-xl">@messages("wantToBePaid.couple.under60k.heading")</h1>
+        <h1 class="govuk-heading-xl">@messages("wantToBePaid.couple.under60k.under50k.heading")</h1>
 
         <p class="govuk-body">
-            @messages("wantToBePaid.couple.under60k.p1")
-            @{newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.couple.under60k.p1.link.text"), href = Some(messages("wantToBePaid.couple.under60k.p1.link.href"))))}.
+            @messages("wantToBePaid.couple.under60k.under50k.p1")
+            @{newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.couple.under60k.under50k.p1.link.text"), href = Some(messages("wantToBePaid.couple.under60k.under50k.p1.link.href"))))}.
         </p>
+
+        <p class="govuk-body">@messages("wantToBePaid.couple.under60k.under50k.p2")</p>
 
         <p class="govuk-body">
-            @messages("wantToBePaid.couple.under60k.p2.1")
-            @{newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.couple.under60k.p2.link.text"), href = Some(messages("wantToBePaid.couple.under60k.p2.link.href"))))}
-            @messages("wantToBePaid.couple.under60k.p2.2")
+            @messages("wantToBePaid.couple.under60k.under50k.p3.1")
+            @{newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.couple.under60k.under50k.p3.link.text"), href = Some(messages("wantToBePaid.couple.under60k.under50k.p3.link.href"))))}
+            @messages("wantToBePaid.couple.under60k.under50k.p3.2")
         </p>
 
-        <p class="govuk-body">@messages("wantToBePaid.couple.under60k.p3")</p>
+        <p class="govuk-body">@messages("wantToBePaid.couple.under60k.under50k.p4")</p>
 
-        <div class="govuk-warning-text">
-            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-            <strong class="govuk-warning-text__text">
-                <span class="govuk-warning-text__assistive">@messages("site.warning")</span>
-                @messages("wantToBePaid.couple.under60k.p4.1")
-                @{newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.couple.under60k.p4.link.text"), href = Some(messages("wantToBePaid.couple.under60k.p4.link.href"))))}.
-                @messages("wantToBePaid.couple.under60k.p4.2")
-            </strong>
-        </div>
+        <p class="govuk-body">@messages("wantToBePaid.couple.under60k.under50k.p5")</p>
 
-        <p class="govuk-body">
-            @messages("wantToBePaid.couple.under60k.p5.1")
-            @{newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.couple.under60k.p5.link.text"), href = Some(messages("wantToBePaid.couple.under60k.p5.link.href"))))}
-            @messages("wantToBePaid.couple.under60k.p5.2")
-        </p>
+        <h2 class="govuk-heading-m">@messages("wantToBePaid.couple.under60k.under50k.h2")</h2>
 
-        <p class="govuk-body govuk-!-margin-bottom-7">@messages("wantToBePaid.couple.under60k.p6")</p>
+        <p class="govuk-body govuk-!-margin-bottom-7">@messages("wantToBePaid.couple.under60k.under50k.p6")</p>
 
         @govukRadios(
             RadiosViewModel(
@@ -75,7 +65,7 @@
                 legend = LegendViewModel(messages("wantToBePaid.wantToBePaid")).withCssClass("govuk-!-font-weight-bold"),
                 items = Seq(
                     RadioItem(
-                        content = messages("wantToBePaid.couple.yes"),
+                        content = messages("wantToBePaid.couple.applicant.yes"),
                         value = Some("true"),
                         id = Some("value")
                     ),
