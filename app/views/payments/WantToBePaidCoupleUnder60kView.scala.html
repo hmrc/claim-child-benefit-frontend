@@ -20,7 +20,7 @@
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
-        govukButton: GovukButton,
+        continueButton: components.ContinueButton,
         govukRadios: GovukRadios,
         newTabLink: HmrcNewTabLinkHelper,
         govukErrorSummary: GovukErrorSummary
@@ -88,8 +88,6 @@
             )
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @continueButton()
     }
 }

@@ -20,7 +20,7 @@
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
-        govukButton: GovukButton
+        continueButton: components.ContinueButton
 )
 
 @(waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
@@ -53,8 +53,6 @@
             <a href="@baseRoutes.IndexController.startAgain" class="govuk-link">@messages("cannotBePaidWeekly.p4.link.text")</a>.
         </p>
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @continueButton()
     }
 }

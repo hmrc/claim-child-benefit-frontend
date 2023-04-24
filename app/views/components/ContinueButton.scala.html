@@ -14,24 +14,25 @@
  * limitations under the License.
  *@
 
-@import controllers.payments.routes
+@import config.FeatureFlags
 
 @this(
-        layout: templates.Layout,
-        formHelper: FormWithCSRF,
-        continueButton: components.ContinueButton
+        govukButton: GovukButton,
+        featureFlags: FeatureFlags
 )
 
-@(waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
+@()(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("paidToExistingAccount.title"))) {
+@if(featureFlags.saveAndReturn && request.signedIn) {
+    @govukButton(
+        ButtonViewModel(messages("site.saveAndContinue"))
+    )
 
-    @formHelper(action = routes.PaidToExistingAccountController.onSubmit(waypoints)) {
-
-        <h1 class="govuk-heading-xl">@messages("paidToExistingAccount.heading")</h1>
-
-        <p class="govuk-body">@messages("paidToExistingAccount.p1")</p>
-
-        @continueButton()
-    }
+    <p class="govuk-body">
+        <a href="@routes.AnswersSavedController.onPageLoad().url" class="govuk-link govuk-link--no-visited-state">@messages("site.saveAndComeBackLater")</a>
+    </p>
+} else {
+    @govukButton(
+        ButtonViewModel(messages("site.continue"))
+    )
 }

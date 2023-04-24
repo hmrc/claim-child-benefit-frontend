@@ -68,15 +68,15 @@
             }
             </ul>
         </li>
-
-        @if(numberOfSections == completedSections) {
-            <p class="govuk-body">@messages("taskList.declaration")</p>
-
-            @formHelper(action = routes.TaskListController.onSubmit, 'autoComplete -> "off") {
-                @govukButton(
-                    ButtonViewModel(messages("site.acceptAndContinue"))
-                )
-            }
-        }
     </ol>
+
+    @if(numberOfSections == completedSections) {
+        <p class="govuk-body">@messages("taskList.declaration")</p>
+
+        @formHelper(action = routes.TaskListController.onSubmit, 'autoComplete -> "off") {
+            @govukButton(
+                ButtonViewModel(messages("site.acceptAndContinue"))
+            )
+        }
+    }
 }

@@ -20,7 +20,7 @@
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
-        govukButton: GovukButton,
+        continueButton: components.ContinueButton,
         newTabLink: HmrcNewTabLinkHelper
 )
 
@@ -51,8 +51,6 @@
 
         <input type="hidden" name="value" value="true" />
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @continueButton()
     }
 }

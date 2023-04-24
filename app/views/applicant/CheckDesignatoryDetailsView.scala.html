@@ -20,7 +20,7 @@
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukSummaryList: GovukSummaryList,
-        govukButton: GovukButton
+        continueButton: components.ContinueButton,
 )
 
 @(
@@ -39,8 +39,6 @@
 
         <input type="hidden" name="value" value="true" />
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @continueButton()
     }
 }

@@ -20,7 +20,7 @@
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukSummaryList: GovukSummaryList,
-        govukButton: GovukButton
+        continueButton: components.ContinueButton
 )
 
 @(
@@ -36,8 +36,6 @@
         <h2 class="govuk-heading-m">@messages("checkPartnerDetails.yourDetails")</h2>
         @govukSummaryList(partnerDetails)
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @continueButton()
     }
 }
