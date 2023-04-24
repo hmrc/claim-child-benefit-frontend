@@ -89,6 +89,9 @@ POST       /your-benefits                        controllers.payments.ApplicantB
 GET        /your-income                                 controllers.payments.ApplicantIncomeController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-income                                 controllers.payments.ApplicantIncomeController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
+GET        /your-partners-income                                 controllers.payments.PartnerIncomeController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+POST       /your-partners-income                                 controllers.payments.PartnerIncomeController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
+
 GET        /your-or-your-partners-income                                 controllers.payments.ApplicantOrPartnerIncomeController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /your-or-your-partners-income                                 controllers.payments.ApplicantOrPartnerIncomeController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
