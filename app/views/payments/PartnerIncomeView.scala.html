@@ -26,7 +26,7 @@
         newTabLink: HmrcNewTabLinkHelper
 )
 
-@(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints, partnerFirstName: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("partnerIncome.title"), section = Some(messages("section.income")))) {
 
@@ -36,7 +36,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
         }
 
-        <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">@messages("partnerIncome.heading")</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">@messages("partnerIncome.heading", partnerFirstName)</h1>
 
         <p class="govuk-body">@messages("partnerIncome.p1")</p>
 
@@ -44,6 +44,8 @@
             @messages("partnerIncome.p2")
             @{newTabLink(NewTabLinkHelper(text = messages("partnerIncome.p2.link.text"), href = Some(messages("partnerIncome.p2.link.href"))))}.
         </p>
+
+        <p class="govuk-body">@messages("partnerIncome.p3")</p>
 
         @govukRadios(
             RadiosViewModel(

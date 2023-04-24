@@ -22,7 +22,8 @@ import play.api.data.FormError
 
 class PartnerIncomeFormProviderSpec extends OptionFieldBehaviours {
 
-  val form = new PartnerIncomeFormProvider()()
+  val name = "name"
+  val form = new PartnerIncomeFormProvider()(name)
 
   ".value" - {
 
@@ -33,13 +34,13 @@ class PartnerIncomeFormProviderSpec extends OptionFieldBehaviours {
       form,
       fieldName,
       validValues  = Income.values,
-      invalidError = FormError(fieldName, "error.invalid")
+      invalidError = FormError(fieldName, "error.invalid", Seq(name))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq(name))
     )
   }
 }

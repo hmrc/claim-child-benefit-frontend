@@ -227,10 +227,23 @@ applicantIncome.p1 = Your adjusted net income is your total taxable income befor
 applicantIncome.p2 = You can use our guidance to work out your
 applicantIncome.p2.link.text = adjusted net income
 applicantIncome.p2.link.href = https://www.gov.uk/guidance/adjusted-net-income
+applicantIncome.p3 = Do not combine you and your partner’s income.
 applicantIncome.error.required = Select your adjusted net income each year
 applicantIncome.error.hidden = your adjusted net income each year
 applicantIncome.checkYourAnswersLabel = Adjusted net income each year
 applicantIncome.change.hidden = your adjusted net income each year
+
+partnerIncome.title = What is your partner’s adjusted net income each year?
+partnerIncome.heading = What is {0}’s adjusted net income each year?
+partnerIncome.p1 = Your partner’s adjusted net income is their total taxable income before any personal allowances. It does not include things like Gift Aid.
+partnerIncome.p2 = You can use our guidance to work out your partner’s
+partnerIncome.p2.link.text = adjusted net income
+partnerIncome.p2.link.href = https://www.gov.uk/guidance/adjusted-net-income
+partnerIncome.p3 = Do not combine you and your partner’s income.
+partnerIncome.error.required = Select {0}’s adjusted net income each year
+partnerIncome.error.hidden = {0}’s adjusted net income each year
+partnerIncome.checkYourAnswersLabel = {0}’s Adjusted net income each year
+partnerIncome.change.hidden = {0}’s adjusted net income each year
 
 applicantOrPartnerBenefits.title = Do you or your partner get any of these benefits?
 applicantOrPartnerBenefits.heading = Do you or your partner get any of these benefits?

@@ -17,6 +17,7 @@
 package viewmodels.checkAnswers.payments
 
 import models.UserAnswers
+import pages.partner.PartnerNamePage
 import pages.payments.PartnerIncomePage
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
@@ -27,17 +28,20 @@ import viewmodels.implicits._
 object PartnerIncomeSummary {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
-         (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(PartnerIncomePage).map {
-      answer =>
+         (implicit messages: Messages): Option[SummaryListRow] = {
+    for {
+      partnerName <- answers.get(PartnerNamePage)
+      income <- answers.get(PartnerIncomePage)
+    } yield {
 
         SummaryListRowViewModel(
           key = "partnerIncome.checkYourAnswersLabel",
-          value = ValueViewModel(messages(s"income.$answer")),
+          value = ValueViewModel(messages(s"income.$income", partnerName.firstName)),
           actions = Seq(
             ActionItemViewModel("site.change", PartnerIncomePage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("partnerIncome.change.hidden"))
+              .withVisuallyHiddenText(messages("partnerIncome.change.hidden", partnerName.firstName))
           )
         )
     }
+  }
 }

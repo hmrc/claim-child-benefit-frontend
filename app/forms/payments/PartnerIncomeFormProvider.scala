@@ -24,8 +24,8 @@ import javax.inject.Inject
 
 class PartnerIncomeFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Income] =
+  def apply(partnerFirstName: String): Form[Income] =
     Form(
-      "value" -> enumerable[Income]("partnerIncome.error.required")
+      "value" -> enumerable[Income]("partnerIncome.error.required", args = Seq(partnerFirstName))
     )
 }

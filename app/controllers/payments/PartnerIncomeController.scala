@@ -16,9 +16,11 @@
 
 package controllers.payments
 
+import controllers.AnswerExtractor
 import controllers.actions._
 import forms.payments.PartnerIncomeFormProvider
 import pages.Waypoints
+import pages.partner.PartnerNamePage
 import pages.payments.PartnerIncomePage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -38,33 +40,45 @@ class PartnerIncomeController @Inject()(
                                            formProvider: PartnerIncomeFormProvider,
                                            val controllerComponents: MessagesControllerComponents,
                                            view: PartnerIncomeView
-                                         )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                         )(implicit ec: ExecutionContext)
+  extends FrontendBaseController
+    with I18nSupport
+    with AnswerExtractor {
 
-  val form = formProvider()
 
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
+      getAnswer(PartnerNamePage) {
+        partnerName =>
 
-      val preparedForm = request.userAnswers.get(PartnerIncomePage) match {
-        case None => form
-        case Some(value) => form.fill(value)
+          val form = formProvider(partnerName.firstName)
+
+          val preparedForm = request.userAnswers.get(PartnerIncomePage) match {
+            case None => form
+            case Some(value) => form.fill(value)
+          }
+
+          Ok(view(preparedForm, waypoints, partnerName.firstName))
       }
-
-      Ok(view(preparedForm, waypoints))
   }
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      getAnswerAsync(PartnerNamePage) {
+        partnerName =>
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints))),
+          val form = formProvider(partnerName.firstName)
 
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerIncomePage, value))
-            _              <- userDataService.set(updatedAnswers)
-          } yield Redirect(PartnerIncomePage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
-      )
+          form.bindFromRequest().fold(
+            formWithErrors =>
+              Future.successful(BadRequest(view(formWithErrors, waypoints, partnerName.firstName))),
+
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerIncomePage, value))
+                _ <- userDataService.set(updatedAnswers)
+              } yield Redirect(PartnerIncomePage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+          )
+      }
   }
 }
