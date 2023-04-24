@@ -16,9 +16,12 @@
 
 package controllers.payments
 
+import controllers.AnswerExtractor
 import controllers.actions._
 import forms.payments.ApplicantIncomeFormProvider
+import models.RelationshipStatus.{Cohabiting, Married}
 import pages.Waypoints
+import pages.partner.RelationshipStatusPage
 import pages.payments.ApplicantIncomePage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -38,33 +41,46 @@ class ApplicantIncomeController @Inject()(
                                            formProvider: ApplicantIncomeFormProvider,
                                            val controllerComponents: MessagesControllerComponents,
                                            view: ApplicantIncomeView
-                                         )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                         )(implicit ec: ExecutionContext)
+  extends FrontendBaseController
+    with I18nSupport
+    with AnswerExtractor {
 
   val form = formProvider()
 
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
+      getAnswer(RelationshipStatusPage) {
+        relationshipStatus =>
 
-      val preparedForm = request.userAnswers.get(ApplicantIncomePage) match {
-        case None => form
-        case Some(value) => form.fill(value)
+          val hasPartner = relationshipStatus == Married || relationshipStatus == Cohabiting
+
+          val preparedForm = request.userAnswers.get(ApplicantIncomePage) match {
+            case None => form
+            case Some(value) => form.fill(value)
+          }
+
+          Ok(view(preparedForm, waypoints, hasPartner))
       }
-
-      Ok(view(preparedForm, waypoints))
   }
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      getAnswerAsync(RelationshipStatusPage) {
+        relationshipStatus =>
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, waypoints))),
+          val hasPartner = relationshipStatus == Married || relationshipStatus == Cohabiting
 
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(ApplicantIncomePage, value))
-            _              <- userDataService.set(updatedAnswers)
-          } yield Redirect(ApplicantIncomePage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
-      )
+          form.bindFromRequest().fold(
+            formWithErrors =>
+              Future.successful(BadRequest(view(formWithErrors, waypoints, hasPartner))),
+
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(ApplicantIncomePage, value))
+                _ <- userDataService.set(updatedAnswers)
+              } yield Redirect(ApplicantIncomePage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+          )
+      }
   }
 }
