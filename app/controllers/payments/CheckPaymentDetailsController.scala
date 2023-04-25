@@ -56,7 +56,7 @@ class CheckPaymentDetailsController  @Inject()(
       val paymentsDetails = SummaryListViewModel(
         rows = Seq(
           ApplicantIncomeSummary.row(request.userAnswers, waypoints, thisPage),
-          ApplicantOrPartnerIncomeSummary.row(request.userAnswers, waypoints, thisPage),
+          PartnerIncomeSummary.row(request.userAnswers, waypoints, thisPage),
           wantToBePaidRow,
           ApplicantBenefitsSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantOrPartnerBenefitsSummary.row(request.userAnswers, waypoints, thisPage),

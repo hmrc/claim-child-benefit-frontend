@@ -35,8 +35,8 @@ object PartnerIncomeSummary {
     } yield {
 
         SummaryListRowViewModel(
-          key = "partnerIncome.checkYourAnswersLabel",
-          value = ValueViewModel(messages(s"income.$income", partnerName.firstName)),
+          key = messages("partnerIncome.checkYourAnswersLabel", partnerName.firstName),
+          value = ValueViewModel(messages(s"income.$income")),
           actions = Seq(
             ActionItemViewModel("site.change", PartnerIncomePage.changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("partnerIncome.change.hidden", partnerName.firstName))

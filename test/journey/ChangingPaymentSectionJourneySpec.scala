@@ -36,23 +36,46 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
 
     val relationship = Gen.oneOf(Married, Cohabiting).sample.value
 
-    "changing their (or their partner's) income must show the tax charge explanation" in {
+    "changing their income must show the tax charge explanation" in {
 
       val originalIncome = Gen.oneOf(Income.values).sample.value
       val newIncome = Gen.oneOf(Income.values.toSet - originalIncome).sample.value
 
       val initialise = journeyOf(
         setUserAnswerTo(RelationshipStatusPage, relationship),
-        submitAnswer(ApplicantOrPartnerIncomePage, originalIncome),
+        submitAnswer(ApplicantIncomePage, originalIncome),
+        submitAnswer(PartnerIncomePage, originalIncome),
         submitAnswer(WantToBePaidPage, true),
         goTo(CheckPaymentDetailsPage)
       )
 
-      startingFrom(ApplicantOrPartnerIncomePage)
+      startingFrom(ApplicantIncomePage)
         .run(
           initialise,
-          goToChangeAnswer(ApplicantOrPartnerIncomePage),
-          submitAnswer(ApplicantOrPartnerIncomePage, newIncome),
+          goToChangeAnswer(ApplicantIncomePage),
+          submitAnswer(ApplicantIncomePage, newIncome),
+          pageMustBe(WantToBePaidPage)
+        )
+    }
+
+    "changing their partner's income must show the tax charge explanation" in {
+
+      val originalIncome = Gen.oneOf(Income.values).sample.value
+      val newIncome = Gen.oneOf(Income.values.toSet - originalIncome).sample.value
+
+      val initialise = journeyOf(
+        setUserAnswerTo(RelationshipStatusPage, relationship),
+        submitAnswer(ApplicantIncomePage, originalIncome),
+        submitAnswer(PartnerIncomePage, originalIncome),
+        submitAnswer(WantToBePaidPage, true),
+        goTo(CheckPaymentDetailsPage)
+      )
+
+      startingFrom(ApplicantIncomePage)
+        .run(
+          initialise,
+          goToChangeAnswer(PartnerIncomePage),
+          submitAnswer(PartnerIncomePage, newIncome),
           pageMustBe(WantToBePaidPage)
         )
     }

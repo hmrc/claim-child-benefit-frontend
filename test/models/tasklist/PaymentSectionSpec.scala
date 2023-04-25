@@ -16,22 +16,17 @@
 
 package models.tasklist
 
-import models.RelationshipStatus._
-import models.tasklist.SectionStatus.{CannotStart, Completed, InProgress, NotStarted}
-import models.{PaymentFrequency, RelationshipStatus, UserAnswers}
+import models.UserAnswers
+import models.tasklist.SectionStatus.{Completed, InProgress, NotStarted}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.{times, verify, when}
-import org.mockito.MockitoSugar.mock
-import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import pages.child.AddChildPage
-import pages.partner.RelationshipStatusPage
-import pages.payments.{ApplicantIncomePage, ApplicantOrPartnerIncomePage, CheckPaymentDetailsPage, PaymentFrequencyPage}
+import pages.payments.{ApplicantIncomePage, CheckPaymentDetailsPage, PaymentFrequencyPage}
 import services.JourneyProgressService
 
 class PaymentSectionSpec
@@ -55,43 +50,16 @@ class PaymentSectionSpec
 
   ".continue" - {
 
-    "must be whatever the Journey Progress service reports when the applicant is single, separated, divorced or widowed" in {
+    "must be whatever the Journey Progress service reports" in {
 
-      forAll(Gen.oneOf(Single, Separated, Divorced, Widowed)) {
-        relationshipStatus =>
-          when(mockJourneyProgressService.continue(any(), any())).thenReturn(PaymentFrequencyPage)
-
-          val answers = UserAnswers("id").set(RelationshipStatusPage, relationshipStatus).success.value
-          val section = new PaymentSection(mockJourneyProgressService, applicantSection, partnerSection, childSection)
-          val result = section.continue(answers)
-
-          result.value mustEqual PaymentFrequencyPage
-          verify(mockJourneyProgressService, times(1)).continue(ApplicantIncomePage, answers)
-      }
-    }
-
-    "must be whatever the Journey Progress service reports when the applicant is married or cohabiting" in {
-
-      forAll(Gen.oneOf(Married, Cohabiting)) {
-        relationshipStatus =>
-          when(mockJourneyProgressService.continue(any(), any())).thenReturn(PaymentFrequencyPage)
-
-          val answers = UserAnswers("id").set(RelationshipStatusPage, relationshipStatus).success.value
-          val section = new PaymentSection(mockJourneyProgressService, applicantSection, partnerSection, childSection)
-          val result = section.continue(answers)
-
-          result.value mustEqual PaymentFrequencyPage
-          verify(mockJourneyProgressService, times(1)).continue(ApplicantOrPartnerIncomePage, answers)
-      }
-    }
-
-    "must be None when relationship status has not been answered" in {
+      when(mockJourneyProgressService.continue(any(), any())).thenReturn(PaymentFrequencyPage)
 
       val answers = UserAnswers("id")
       val section = new PaymentSection(mockJourneyProgressService, applicantSection, partnerSection, childSection)
       val result = section.continue(answers)
 
-      result must not be defined
+      result.value mustEqual PaymentFrequencyPage
+      verify(mockJourneyProgressService, times(1)).continue(ApplicantIncomePage, answers)
     }
   }
 
@@ -101,7 +69,7 @@ class PaymentSectionSpec
 
       when(mockJourneyProgressService.continue(any(), any())).thenReturn(ApplicantIncomePage)
 
-      val answers = UserAnswers("id").set(RelationshipStatusPage, Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value).success.value
+      val answers = UserAnswers("id")
       val section = new PaymentSection(mockJourneyProgressService, applicantSection, partnerSection, childSection)
       val result = section.progress(answers)
 
@@ -109,23 +77,11 @@ class PaymentSectionSpec
       verify(mockJourneyProgressService, times(1)).continue(ApplicantIncomePage, answers)
     }
 
-    "must be Not Started when the Journey Progress service returns Applicant or Partner Income" in {
-
-      when(mockJourneyProgressService.continue(any(), any())).thenReturn(ApplicantOrPartnerIncomePage)
-
-      val answers = UserAnswers("id").set(RelationshipStatusPage, Gen.oneOf(Married, Cohabiting).sample.value).success.value
-      val section = new PaymentSection(mockJourneyProgressService, applicantSection, partnerSection, childSection)
-      val result = section.progress(answers)
-
-      result mustEqual NotStarted
-      verify(mockJourneyProgressService, times(1)).continue(ApplicantOrPartnerIncomePage, answers)
-    }
-
     "must be Completed when the Journey Progress service returns Check Payment Details" in {
 
       when(mockJourneyProgressService.continue(any(), any())).thenReturn(CheckPaymentDetailsPage)
 
-      val answers = UserAnswers("id").set(RelationshipStatusPage, Single).success.value
+      val answers = UserAnswers("id")
       val section = new PaymentSection(mockJourneyProgressService, applicantSection, partnerSection, childSection)
       val result = section.progress(answers)
 
@@ -137,23 +93,12 @@ class PaymentSectionSpec
 
       when(mockJourneyProgressService.continue(any(), any())).thenReturn(PaymentFrequencyPage)
 
-      val answers = UserAnswers("id").set(RelationshipStatusPage, Single).success.value
+      val answers = UserAnswers("id")
       val section = new PaymentSection(mockJourneyProgressService, applicantSection, partnerSection, childSection)
       val result = section.progress(answers)
 
       result mustEqual InProgress
       verify(mockJourneyProgressService, times(1)).continue(ApplicantIncomePage, answers)
-    }
-
-    "must be Cannot Start when relationship status has not been answered" in {
-
-      when(mockJourneyProgressService.continue(any(), any())).thenReturn(PaymentFrequencyPage)
-
-      val answers = UserAnswers("id")
-      val section = new PaymentSection(mockJourneyProgressService, applicantSection, partnerSection, childSection)
-      val result = section.progress(answers)
-
-      result mustEqual CannotStart
     }
   }
 
@@ -161,13 +106,10 @@ class PaymentSectionSpec
 
     "must contain Applicant, Partner and Child" in {
 
-      forAll(Gen.oneOf(Single, Separated, Widowed, Divorced)) {
-        relationshipStatus =>
-          val answers = UserAnswers("id").set(RelationshipStatusPage, relationshipStatus).success.value
-          val section = new PaymentSection(mockJourneyProgressService, applicantSection, partnerSection, childSection)
+      val answers = UserAnswers("id")
+      val section = new PaymentSection(mockJourneyProgressService, applicantSection, partnerSection, childSection)
 
-          section.prerequisiteSections(answers) must contain theSameElementsAs Seq(applicantSection, partnerSection, childSection)
-      }
+      section.prerequisiteSections(answers) must contain theSameElementsAs Seq(applicantSection, partnerSection, childSection)
     }
   }
 }

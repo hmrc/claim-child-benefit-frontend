@@ -17,7 +17,9 @@
 package pages.payments
 
 import controllers.payments.routes
+import models.RelationshipStatus._
 import models.{Income, UserAnswers}
+import pages.partner.RelationshipStatusPage
 import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
@@ -31,8 +33,12 @@ case object ApplicantIncomePage extends QuestionPage[Income] {
   override def route(waypoints: Waypoints): Call =
     routes.ApplicantIncomeController.onPageLoad(waypoints)
 
-  override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    WantToBePaidPage
+  override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page = {
+    answers.get(RelationshipStatusPage).map {
+      case Married | Cohabiting => PartnerIncomePage
+      case _ => WantToBePaidPage
+    }.orRecover
+  }
 
   override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, originalAnswers: UserAnswers, updatedAnswers: UserAnswers): Page =
     (originalAnswers.get(this), updatedAnswers.get(this)) match {

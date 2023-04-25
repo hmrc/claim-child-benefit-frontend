@@ -242,7 +242,7 @@ partnerIncome.p2.link.href = https://www.gov.uk/guidance/adjusted-net-income
 partnerIncome.p3 = Do not combine you and your partner’s income.
 partnerIncome.error.required = Select {0}’s adjusted net income each year
 partnerIncome.error.hidden = {0}’s adjusted net income each year
-partnerIncome.checkYourAnswersLabel = {0}’s Adjusted net income each year
+partnerIncome.checkYourAnswersLabel = {0}’s adjusted net income each year
 partnerIncome.change.hidden = {0}’s adjusted net income each year
 
 applicantOrPartnerBenefits.title = Do you or your partner get any of these benefits?
