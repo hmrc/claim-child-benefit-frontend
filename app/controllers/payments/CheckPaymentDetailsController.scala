@@ -17,9 +17,8 @@
 package controllers.payments
 
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
-import models.Income
 import pages.EmptyWaypoints
-import pages.payments.{ApplicantIncomePage, ApplicantOrPartnerIncomePage, CheckPaymentDetailsPage}
+import pages.payments.CheckPaymentDetailsPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -44,20 +43,11 @@ class CheckPaymentDetailsController  @Inject()(
       val thisPage = CheckPaymentDetailsPage
       val waypoints = EmptyWaypoints
 
-      val income =
-        request.userAnswers.get(ApplicantIncomePage) orElse
-          request.userAnswers.get(ApplicantOrPartnerIncomePage)
-
-      val wantToBePaidRow = income.flatMap {
-        case Income.BelowLowerThreshold => None
-        case _ => WantToBePaidSummary.row(request.userAnswers, waypoints, thisPage)
-      }
-
       val paymentsDetails = SummaryListViewModel(
         rows = Seq(
           ApplicantIncomeSummary.row(request.userAnswers, waypoints, thisPage),
           PartnerIncomeSummary.row(request.userAnswers, waypoints, thisPage),
-          wantToBePaidRow,
+          WantToBePaidSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantBenefitsSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantOrPartnerBenefitsSummary.row(request.userAnswers, waypoints, thisPage),
           PaymentFrequencySummary.row(request.userAnswers, waypoints, thisPage),

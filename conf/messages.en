@@ -253,18 +253,6 @@ applicantOrPartnerBenefits.error.required = Select the benefits you or your part
 applicantOrPartnerBenefits.error.mutuallyExclusive = Select the benefits you or your partner get or none of these benefits
 applicantOrPartnerBenefits.change.hidden = the benefits you or your partner get
 
-applicantOrPartnerIncome.title = What is your or your partner’s adjusted net income each year?
-applicantOrPartnerIncome.heading = What is your or your partner’s adjusted net income each year?
-applicantOrPartnerIncome.p1 = Your adjusted net income is your total taxable individual income before any personal allowances. It does not include things like Gift Aid.
-applicantOrPartnerIncome.p2 = You can use our guidance to work out your or your partner’s
-applicantOrPartnerIncome.p2.link.text = adjusted net income
-applicantOrPartnerIncome.p2.link.href = https://www.gov.uk/guidance/adjusted-net-income
-applicantOrPartnerIncome.p3 = Do not combine your household income.
-applicantOrPartnerIncome.error.required = Select your or your partner’s adjusted net income each year
-applicantOrPartnerIncome.error.hidden = your or your partner’s adjusted net income each year
-applicantOrPartnerIncome.checkYourAnswersLabel = Your or your partner’s adjusted net income each year
-applicantOrPartnerIncome.change.hidden = your or your partner’s adjusted net income each year
-
 applicantHasSuitableAccount.title = Do you have a UK bank or building society account that Child Benefit can be paid to?
 applicantHasSuitableAccount.heading = Do you have a UK bank or building society account that Child Benefit can be paid to?
 applicantHasSuitableAccount.p1 = If you do not have a UK account to be paid to, we will contact you.
