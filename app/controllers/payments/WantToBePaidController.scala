@@ -21,11 +21,13 @@ import controllers.actions._
 import forms.payments.WantToBePaidFormProvider
 import models.Income._
 import models.RelationshipStatus._
-import pages.payments._
+import models.requests.DataRequest
 import pages.Waypoints
 import pages.partner.RelationshipStatusPage
+import pages.payments._
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.payments._
@@ -33,27 +35,34 @@ import views.html.payments._
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
+//scalastyle:off
 class WantToBePaidController @Inject()(
-                                                override val messagesApi: MessagesApi,
-                                                identify: IdentifierAction,
-                                                getData: DataRetrievalAction,
-                                                requireData: DataRequiredAction,
-                                                val controllerComponents: MessagesControllerComponents,
-                                                coupleUnder50kView: WantToBePaidCoupleUnder50kView,
-                                                coupleUnder60kView: WantToBePaidCoupleUnder60kView,
-                                                coupleOver60kView: WantToBePaidCoupleOver60kView,
-                                                singleUnder50kView: WantToBePaidSingleUnder50kView,
-                                                singleUnder60kView: WantToBePaidSingleUnder60kView,
-                                                singleOver60kView: WantToBePaidSingleOver60kView,
-                                                formProvider: WantToBePaidFormProvider,
-                                                userDataService: UserDataService
-                                              )(implicit ec: ExecutionContext)
+                                        override val messagesApi: MessagesApi,
+                                        identify: IdentifierAction,
+                                        getData: DataRetrievalAction,
+                                        requireData: DataRequiredAction,
+                                        val controllerComponents: MessagesControllerComponents,
+                                        coupleUnder50kUnder50k: WantToBePaidCoupleUnder50kUnder50kView,
+                                        coupleUnder50kUnder60k: WantToBePaidCoupleUnder50kUnder60kView,
+                                        coupleUnder50kOver60k: WantToBePaidCoupleUnder50kOver60kView,
+                                        coupleUnder60kUnder50k: WantToBePaidCoupleUnder60kUnder50kView,
+                                        coupleUnder60kUnder60k: WantToBePaidCoupleUnder60kUnder60kView,
+                                        coupleUnder60kOver60k: WantToBePaidCoupleUnder60kOver60kView,
+                                        coupleOver60kUnder50k: WantToBePaidCoupleOver60kUnder50kView,
+                                        coupleOver60kUnder60k: WantToBePaidCoupleOver60kUnder60kView,
+                                        coupleOver60kOver60k: WantToBePaidCoupleOver60kOver60kView,
+                                        singleUnder50k: WantToBePaidSingleUnder50kView,
+                                        singleUnder60k: WantToBePaidSingleUnder60kView,
+                                        singleOver60k: WantToBePaidSingleOver60kView,
+                                        formProvider: WantToBePaidFormProvider,
+                                        userDataService: UserDataService
+                                      )(implicit ec: ExecutionContext)
   extends FrontendBaseController
     with I18nSupport
     with AnswerExtractor {
 
   private val form = formProvider()
-
+  
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
@@ -62,44 +71,15 @@ class WantToBePaidController @Inject()(
         case None        => form
       }
 
-      getAnswer(RelationshipStatusPage) {
-        case Married | Cohabiting =>
-          getAnswer(ApplicantOrPartnerIncomePage) {
-            case BelowLowerThreshold => Ok(coupleUnder50kView(waypoints))
-            case BetweenThresholds   => Ok(coupleUnder60kView(preparedForm, waypoints))
-            case AboveUpperThreshold => Ok(coupleOver60kView(preparedForm, waypoints))
-          }
-
-        case Single | Divorced | Separated | Widowed =>
-          getAnswer(ApplicantIncomePage) {
-            case BelowLowerThreshold => Ok(singleUnder50kView(waypoints))
-            case BetweenThresholds   => Ok(singleUnder60kView(preparedForm, waypoints))
-            case AboveUpperThreshold => Ok(singleOver60kView(preparedForm, waypoints))
-          }
-      }
+      showView(preparedForm, waypoints, Ok)
   }
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
       form.bindFromRequest().fold(
-        formWithErrors => {
-          getAnswerAsync(RelationshipStatusPage) {
-            case Married | Cohabiting =>
-              getAnswerAsync(ApplicantOrPartnerIncomePage) {
-                case BelowLowerThreshold => Future.successful(BadRequest(coupleUnder50kView(waypoints)))
-                case BetweenThresholds   => Future.successful(BadRequest(coupleUnder60kView(formWithErrors, waypoints)))
-                case AboveUpperThreshold => Future.successful(BadRequest(coupleOver60kView(formWithErrors, waypoints)))
-              }
-
-            case Single | Divorced | Separated | Widowed =>
-              getAnswerAsync(ApplicantIncomePage) {
-                case BelowLowerThreshold => Future.successful(BadRequest(singleUnder50kView(waypoints)))
-                case BetweenThresholds   => Future.successful(BadRequest(singleUnder60kView(formWithErrors, waypoints)))
-                case AboveUpperThreshold => Future.successful(BadRequest(singleOver60kView(formWithErrors, waypoints)))
-              }
-          }
-        },
+        formWithErrors =>
+          Future.successful(showView(formWithErrors, waypoints, BadRequest)),
 
         value =>
           for {
@@ -108,4 +88,50 @@ class WantToBePaidController @Inject()(
           } yield Redirect(WantToBePaidPage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
       )
   }
+
+  private def showView(preparedForm: Form[Boolean], waypoints: Waypoints, status: Status)
+                      (implicit request: DataRequest[AnyContent]): Result =
+    getAnswer(RelationshipStatusPage) {
+      case Married | Cohabiting =>
+        getAnswers(ApplicantIncomePage, PartnerIncomePage) {
+          case (BelowLowerThreshold, BelowLowerThreshold) =>
+            status(coupleUnder50kUnder50k(waypoints))
+
+          case (BelowLowerThreshold, BetweenThresholds) =>
+            status(coupleUnder50kUnder60k(preparedForm, waypoints))
+
+          case (BelowLowerThreshold, AboveUpperThreshold) =>
+            status(coupleUnder50kOver60k(preparedForm, waypoints))
+
+          case (BetweenThresholds, BelowLowerThreshold) =>
+            status(coupleUnder60kUnder50k(preparedForm, waypoints))
+
+          case (BetweenThresholds, BetweenThresholds) =>
+            status(coupleUnder60kUnder60k(preparedForm, waypoints))
+
+          case (BetweenThresholds, AboveUpperThreshold) =>
+            status(coupleUnder60kOver60k(preparedForm, waypoints))
+
+          case (AboveUpperThreshold, BelowLowerThreshold) =>
+            status(coupleOver60kUnder50k(preparedForm, waypoints))
+
+          case (AboveUpperThreshold, BetweenThresholds) =>
+            status(coupleOver60kUnder60k(preparedForm, waypoints))
+
+          case (AboveUpperThreshold, AboveUpperThreshold) =>
+            status(coupleOver60kOver60k(preparedForm, waypoints))
+        }
+
+      case Single | Separated | Widowed | Divorced =>
+        getAnswer(ApplicantIncomePage) {
+          case BelowLowerThreshold =>
+            status(singleUnder50k(waypoints))
+
+          case BetweenThresholds =>
+            status(singleUnder60k(preparedForm, waypoints))
+
+          case AboveUpperThreshold =>
+            status(singleOver60k(preparedForm, waypoints))
+        }
+    }
 }
