@@ -37,15 +37,13 @@
             @{newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.single.under50k.p1.link.text"), href = Some(messages("wantToBePaid.single.under50k.p1.link.href"))))}.
         </p>
 
-        <div class="govuk-warning-text">
-            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-            <strong class="govuk-warning-text__text">
-                <span class="govuk-warning-text__assistive">@messages("site.warning")</span>
-                @messages("wantToBePaid.single.under50k.p2.1")
-                @{newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.single.under50k.p2.link.text"), href = Some(messages("wantToBePaid.single.under50k.p2.link.href"))))}.
-                @messages("wantToBePaid.single.under50k.p2.2")
-            </strong>
-        </div>
+        <p class="govuk-body">
+            @messages("wantToBePaid.single.under50k.p2.1")
+            @{newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.single.under50k.p2.link.text"), href = Some(messages("wantToBePaid.single.under50k.p2.link.href"))))}.
+            @messages("wantToBePaid.single.under50k.p2.2")
+        </p>
+
+        <h2 class="govuk-heading-m">@messages("wantToBePaid.single.under50k.h2")</h2>
 
         <p class="govuk-body govuk-!-margin-bottom-7">@messages("wantToBePaid.single.under50k.p3")</p>
 

@@ -389,6 +389,7 @@ wantToBePaid.single.under50k.p2.1 = You must
 wantToBePaid.single.under50k.p2.link.href = https://www.gov.uk/report-changes-child-benefit
 wantToBePaid.single.under50k.p2.link.text = report any change of circumstances to the Child Benefit Office
 wantToBePaid.single.under50k.p2.2 = If you are overpaid Child Benefit you might have to pay it back.
+wantToBePaid.single.under50k.h2 = How Child Benefit protects State Pension
 wantToBePaid.single.under50k.p3 = Claiming Child Benefit will help to protect your State Pension, and your child will get their National Insurance number automatically at 16.
 
 wantToBePaid.single.under60k.title = How the tax charge works for you
@@ -408,6 +409,7 @@ wantToBePaid.single.under60k.p4.1 = Use the
 wantToBePaid.single.under60k.p4.link.href = https://www.gov.uk/child-benefit-tax-calculator
 wantToBePaid.single.under60k.p4.link.text = Child Benefit tax calculator
 wantToBePaid.single.under60k.p4.2 = to estimate how much tax you may have to pay.
+wantToBePaid.single.under60k.h2 = How Child Benefit protects State Pension
 wantToBePaid.single.under60k.p5 = It’s important to fill in this form even if you decide not to get Child Benefit payments. It will help to protect your State Pension, and your child will get their National Insurance number automatically at 16.
 
 wantToBePaid.single.over60k.title = How the tax charge works for you
@@ -427,6 +429,7 @@ wantToBePaid.single.over60k.p4.1 = Use the
 wantToBePaid.single.over60k.p4.link.href = https://www.gov.uk/child-benefit-tax-calculator
 wantToBePaid.single.over60k.p4.link.text = Child Benefit tax calculator
 wantToBePaid.single.over60k.p4.2 = to estimate how much tax you may have to pay.
+wantToBePaid.single.over60k.h2 = How Child Benefit protects State Pension
 wantToBePaid.single.over60k.p5 = It’s important to fill in this form even if you decide not to get Child Benefit payments. It will help to protect your State Pension, and your child will get their National Insurance number automatically at 16.
 
 wantToBePaid.couple.under50k.under50k.title = How the tax charge works
