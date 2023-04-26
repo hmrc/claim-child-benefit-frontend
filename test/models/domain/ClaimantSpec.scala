@@ -34,6 +34,20 @@ import java.time.LocalDate
 
 class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with OptionValues with ScalaCheckPropertyChecks {
 
+  private val nationalitiesThatResolveToEea = for {
+    eeaNationalities <- Gen.nonEmptyListOf(genEeaNationality)
+    ukCtaNationalities <- Gen.listOf(genUkCtaNationality)
+    nonEeaNationalities <- Gen.listOf(genNonEeaNationality)
+  } yield NonEmptyList.fromListUnsafe(eeaNationalities ++ ukCtaNationalities ++ nonEeaNationalities)
+
+  private val nationalitiesThatResolveToNonEea = for {
+    nonEeaNationalities <- Gen.nonEmptyListOf(genNonEeaNationality)
+    ukCtaNationalities  <- Gen.listOf(genUkCtaNationality)
+  } yield NonEmptyList.fromListUnsafe(nonEeaNationalities ++ ukCtaNationalities)
+
+  private val nationalitiesThatResolveToUkCta =
+    Gen.nonEmptyListOf(genUkCtaNationality).map(NonEmptyList.fromListUnsafe)
+
   ".build" - {
 
     val hmfAbroad = arbitrary[Boolean].sample.value
@@ -64,10 +78,10 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
         nationalInsuranceNumber = None,
         currentAddress = arbitrary[models.UkAddress].sample.value,
         previousAddress = None, telephoneNumber = "0777777777",
-        nationalities = NonEmptyList(genUkCtaNationality.sample.value, Gen.listOf(arbitrary[models.Nationality]).sample.value),
+        nationalities = nationalitiesThatResolveToUkCta.sample.value,
         residency = journey.Residency.AlwaysLivedInUk,
         memberOfHMForcesOrCivilServantAbroad = hmfAbroad,
-        currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+        currentlyReceivingChildBenefit = None,
         changedDesignatoryDetails = Some(false),
         correspondenceAddress = None
       ),
@@ -94,7 +108,9 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
       benefits = None,
       paymentPreference = journey.PaymentPreference.DoNotPay(None),
       additionalInformation = None,
-      userAuthenticated = true
+      userAuthenticated = true,
+      reasonsNotToSubmit = Nil,
+      otherEligibilityFailureReasons = Nil
     )
 
     "must return a UK/CTA claimant who has always been resident in the UK" - {
@@ -202,7 +218,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
           }
         }
 
-        "and currently lives in the UK" -{
+        "and currently lives in the UK" - {
 
           "and arrived in the last 3 months" - {
 
@@ -295,212 +311,85 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
 
       "when the claimant is an EEA national" - {
 
-        def nationalities: NonEmptyList[models.Nationality] =
-          NonEmptyList.fromListUnsafe(Gen.nonEmptyListOf(genEeaNationality).sample.value)
-
         "and opts out of HICBC" in {
 
-          val journeyModel = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(nationalities = nationalities))
-          val result = Claimant.build(nino, journeyModel, None)
+          forAll(nationalitiesThatResolveToEea) { nationalities =>
+            val journeyModel = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(nationalities = nationalities))
+            val result = Claimant.build(nino, journeyModel, None)
 
-          result mustEqual NonUkCtaClaimantAlwaysResident(
-            nino = nino,
-            hmfAbroad = hmfAbroad,
-            hicbcOptOut = true,
-            nationality = Nationality.Eea,
-            rightToReside = false
-          )
+            result mustEqual NonUkCtaClaimantAlwaysResident(
+              nino = nino,
+              hmfAbroad = hmfAbroad,
+              hicbcOptOut = true,
+              nationality = Nationality.Eea,
+              rightToReside = false
+            )
+          }
         }
 
         "and does not opt out of HICBC" in {
 
-          val journeyModel = basicJourneyModel.copy(
-            applicant = basicJourneyModel.applicant.copy(nationalities = nationalities),
-            paymentPreference = paymentPreference
-          )
-          val result = Claimant.build(nino, journeyModel, None)
+          forAll(nationalitiesThatResolveToEea) { nationalities =>
+            val journeyModel = basicJourneyModel.copy(
+              applicant = basicJourneyModel.applicant.copy(nationalities = nationalities),
+              paymentPreference = paymentPreference
+            )
+            val result = Claimant.build(nino, journeyModel, None)
 
-          result mustEqual NonUkCtaClaimantAlwaysResident(
-            nino = nino,
-            hmfAbroad = hmfAbroad,
-            hicbcOptOut = false,
-            nationality = Nationality.Eea,
-            rightToReside = false
-          )
+            result mustEqual NonUkCtaClaimantAlwaysResident(
+              nino = nino,
+              hmfAbroad = hmfAbroad,
+              hicbcOptOut = false,
+              nationality = Nationality.Eea,
+              rightToReside = false
+            )
+          }
         }
 
         "when they have settled status" in {
 
-          val journeyModel = basicJourneyModel.copy(
-            applicant = basicJourneyModel.applicant.copy(nationalities = nationalities),
-            paymentPreference = paymentPreference
-          )
-          val result = Claimant.build(nino, journeyModel, Some(true))
+          forAll(nationalitiesThatResolveToEea) { nationalities =>
+            val journeyModel = basicJourneyModel.copy(
+              applicant = basicJourneyModel.applicant.copy(nationalities = nationalities),
+              paymentPreference = paymentPreference
+            )
+            val result = Claimant.build(nino, journeyModel, Some(true))
 
-          result mustEqual NonUkCtaClaimantAlwaysResident(
-            nino = nino,
-            hmfAbroad = hmfAbroad,
-            hicbcOptOut = false,
-            nationality = Nationality.Eea,
-            rightToReside = true
-          )
+            result mustEqual NonUkCtaClaimantAlwaysResident(
+              nino = nino,
+              hmfAbroad = hmfAbroad,
+              hicbcOptOut = false,
+              nationality = Nationality.Eea,
+              rightToReside = true
+            )
+          }
         }
 
         "when they do not have settled status" in {
 
-          val journeyModel = basicJourneyModel.copy(
-            applicant = basicJourneyModel.applicant.copy(nationalities = nationalities),
-            paymentPreference = paymentPreference
-          )
-          val result = Claimant.build(nino, journeyModel, Some(false))
+          forAll(nationalitiesThatResolveToEea) { nationalities =>
+            val journeyModel = basicJourneyModel.copy(
+              applicant = basicJourneyModel.applicant.copy(nationalities = nationalities),
+              paymentPreference = paymentPreference
+            )
+            val result = Claimant.build(nino, journeyModel, Some(false))
 
-          result mustEqual NonUkCtaClaimantAlwaysResident(
-            nino = nino,
-            hmfAbroad = hmfAbroad,
-            hicbcOptOut = false,
-            nationality = Nationality.Eea,
-            rightToReside = false
-          )
+            result mustEqual NonUkCtaClaimantAlwaysResident(
+              nino = nino,
+              hmfAbroad = hmfAbroad,
+              hicbcOptOut = false,
+              nationality = Nationality.Eea,
+              rightToReside = false
+            )
+          }
         }
       }
 
       "when the claimant is a non-EEA national" - {
 
-        def nationalities: NonEmptyList[models.Nationality] =
-          NonEmptyList.fromListUnsafe(Gen.nonEmptyListOf(genNonEeaNationality).sample.value)
-
         "and opts out of HICBC" in {
 
-          val journeyModel = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(nationalities = nationalities))
-          val result = Claimant.build(nino, journeyModel, None)
-
-          result mustEqual NonUkCtaClaimantAlwaysResident(
-            nino = nino,
-            hmfAbroad = hmfAbroad,
-            hicbcOptOut = true,
-            nationality = Nationality.NonEea,
-            rightToReside = false
-          )
-        }
-
-        "and does not opt out of HICBC" in {
-
-          val journeyModel = basicJourneyModel.copy(
-            applicant = basicJourneyModel.applicant.copy(nationalities = nationalities),
-            paymentPreference = paymentPreference
-          )
-          val result = Claimant.build(nino, journeyModel, None)
-
-          result mustEqual NonUkCtaClaimantAlwaysResident(
-            nino = nino,
-            hmfAbroad = hmfAbroad,
-            hicbcOptOut = false,
-            nationality = Nationality.NonEea,
-            rightToReside = false
-          )
-        }
-      }
-    }
-
-    "must return a non-UK/CTA claimant who has not always been resident in the UK" - {
-
-      "when the claimant has always lived abroad" - {
-
-        "and is an EEA national" - {
-
-          def nationalities: NonEmptyList[models.Nationality] =
-            NonEmptyList.fromListUnsafe(Gen.nonEmptyListOf(genEeaNationality).sample.value)
-
-          "and opts out of HICBC" in {
-
-            val journeyModel = basicJourneyModel.copy(
-              applicant = basicJourneyModel.applicant.copy(
-                nationalities = nationalities,
-                residency = alwaysAbroad
-              ))
-            val result = Claimant.build(nino, journeyModel, None)
-
-            result mustEqual NonUkCtaClaimantNotAlwaysResident(
-              nino = nino,
-              hmfAbroad = hmfAbroad,
-              hicbcOptOut = true,
-              nationality = Nationality.Eea,
-              rightToReside = false,
-              last3MonthsInUK = false
-            )
-          }
-
-          "and does not opt out of HICBC" in {
-
-            val journeyModel = basicJourneyModel.copy(
-              applicant = basicJourneyModel.applicant.copy(
-                nationalities = nationalities,
-                residency = alwaysAbroad
-              ),
-              paymentPreference = paymentPreference
-            )
-            val result = Claimant.build(nino, journeyModel, None)
-
-            result mustEqual NonUkCtaClaimantNotAlwaysResident(
-              nino = nino,
-              hmfAbroad = hmfAbroad,
-              hicbcOptOut = false,
-              nationality = Nationality.Eea,
-              rightToReside = false,
-              last3MonthsInUK = false
-            )
-          }
-
-          "and has settled status" in {
-
-            val journeyModel = basicJourneyModel.copy(
-              applicant = basicJourneyModel.applicant.copy(
-                nationalities = nationalities,
-                residency = alwaysAbroad
-              ),
-              paymentPreference = paymentPreference
-            )
-            val result = Claimant.build(nino, journeyModel, Some(true))
-
-            result mustEqual NonUkCtaClaimantNotAlwaysResident(
-              nino = nino,
-              hmfAbroad = hmfAbroad,
-              hicbcOptOut = false,
-              nationality = Nationality.Eea,
-              rightToReside = true,
-              last3MonthsInUK = false
-            )
-          }
-
-          "and does not have settled status" in {
-
-            val journeyModel = basicJourneyModel.copy(
-              applicant = basicJourneyModel.applicant.copy(
-                nationalities = nationalities,
-                residency = alwaysAbroad
-              ),
-              paymentPreference = paymentPreference
-            )
-            val result = Claimant.build(nino, journeyModel, Some(false))
-
-            result mustEqual NonUkCtaClaimantNotAlwaysResident(
-              nino = nino,
-              hmfAbroad = hmfAbroad,
-              hicbcOptOut = false,
-              nationality = Nationality.Eea,
-              rightToReside = false,
-              last3MonthsInUK = false
-            )
-          }
-        }
-
-        "and is a non-EEA national" - {
-
-          def nationalities: NonEmptyList[models.Nationality] =
-            NonEmptyList.fromListUnsafe(Gen.nonEmptyListOf(genNonEeaNationality).sample.value)
-
-          "and opts out of HICBC" in {
-
+          forAll(nationalitiesThatResolveToNonEea) { nationalities =>
             val journeyModel = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(nationalities = nationalities))
             val result = Claimant.build(nino, journeyModel, None)
 
@@ -512,9 +401,11 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
               rightToReside = false
             )
           }
+        }
 
-          "and does not opt out of HICBC" in {
+        "and does not opt out of HICBC" in {
 
+          forAll(nationalitiesThatResolveToNonEea) { nationalities =>
             val journeyModel = basicJourneyModel.copy(
               applicant = basicJourneyModel.applicant.copy(nationalities = nationalities),
               paymentPreference = paymentPreference
@@ -531,32 +422,22 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
           }
         }
       }
+    }
 
-      "when the claimant has lived in the UK and abroad" - {
+    "must return a non-UK/CTA claimant who has not always been resident in the UK" - {
+
+      "when the claimant has always lived abroad" - {
 
         "and is an EEA national" - {
 
-          def nationalities: NonEmptyList[models.Nationality] =
-            NonEmptyList.fromListUnsafe(Gen.nonEmptyListOf(genEeaNationality).sample.value)
+          "and opts out of HICBC" in {
 
-          "add arrived in the last 3 months" - {
-
-            val residency = {
-              for {
-                country <- Gen.option(arbitrary[Country])
-                arrival <- datesBetween(LocalDate.now.minusMonths(3), LocalDate.now)
-                employment <- Gen.listOf(arbitrary[EmploymentStatus])
-                countriesWorked <- Gen.listOf(arbitrary[Country])
-                countriesReceivedBenefits <- Gen.listOf(arbitrary[Country])
-              } yield journey.Residency.LivedInUkAndAbroad(country, Some(arrival), employment.toSet, countriesWorked, countriesReceivedBenefits)
-            }.sample.value
-
-            "and opts out of HICBC" in {
+            forAll(nationalitiesThatResolveToEea) { nationalities =>
 
               val journeyModel = basicJourneyModel.copy(
                 applicant = basicJourneyModel.applicant.copy(
                   nationalities = nationalities,
-                  residency = residency
+                  residency = alwaysAbroad
                 ))
               val result = Claimant.build(nino, journeyModel, None)
 
@@ -569,59 +450,20 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                 last3MonthsInUK = false
               )
             }
+          }
 
-            "and does not opt out of HICBC" in {
+          "and does not opt out of HICBC" in {
+
+            forAll(nationalitiesThatResolveToEea) { nationalities =>
 
               val journeyModel = basicJourneyModel.copy(
                 applicant = basicJourneyModel.applicant.copy(
                   nationalities = nationalities,
-                  residency = residency
+                  residency = alwaysAbroad
                 ),
                 paymentPreference = paymentPreference
               )
               val result = Claimant.build(nino, journeyModel, None)
-
-              result mustEqual NonUkCtaClaimantNotAlwaysResident(
-                nino = nino,
-                hmfAbroad = hmfAbroad,
-                hicbcOptOut = false,
-                nationality = Nationality.Eea,
-                rightToReside = false,
-                last3MonthsInUK = false
-              )
-            }
-
-            "and has settled status" in {
-
-              val journeyModel = basicJourneyModel.copy(
-                applicant = basicJourneyModel.applicant.copy(
-                  nationalities = nationalities,
-                  residency = residency
-                ),
-                paymentPreference = paymentPreference
-              )
-              val result = Claimant.build(nino, journeyModel, Some(true))
-
-              result mustEqual NonUkCtaClaimantNotAlwaysResident(
-                nino = nino,
-                hmfAbroad = hmfAbroad,
-                hicbcOptOut = false,
-                nationality = Nationality.Eea,
-                rightToReside = true,
-                last3MonthsInUK = false
-              )
-            }
-
-            "and does not have settled status" in {
-
-              val journeyModel = basicJourneyModel.copy(
-                applicant = basicJourneyModel.applicant.copy(
-                  nationalities = nationalities,
-                  residency = residency
-                ),
-                paymentPreference = paymentPreference
-              )
-              val result = Claimant.build(nino, journeyModel, Some(false))
 
               result mustEqual NonUkCtaClaimantNotAlwaysResident(
                 nino = nino,
@@ -634,64 +476,13 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
             }
           }
 
-          "add arrived more than 3 months ago" - {
+          "and has settled status" in {
 
-            val residency = {
-              for {
-                country <- Gen.option(arbitrary[Country])
-                arrival <- datesBetween(LocalDate.now.minusYears(3), LocalDate.now.minusMonths(3).minusDays(1))
-                employment <- Gen.listOf(arbitrary[EmploymentStatus])
-                countriesWorked <- Gen.listOf(arbitrary[Country])
-                countriesReceivedBenefits <- Gen.listOf(arbitrary[Country])
-              } yield journey.Residency.LivedInUkAndAbroad(country, Some(arrival), employment.toSet, countriesWorked, countriesReceivedBenefits)
-            }.sample.value
-
-            "and opts out of HICBC" in {
-
+            forAll(nationalitiesThatResolveToEea) { nationalities =>
               val journeyModel = basicJourneyModel.copy(
                 applicant = basicJourneyModel.applicant.copy(
                   nationalities = nationalities,
-                  residency = residency
-                ))
-              val result = Claimant.build(nino, journeyModel, None)
-
-              result mustEqual NonUkCtaClaimantNotAlwaysResident(
-                nino = nino,
-                hmfAbroad = hmfAbroad,
-                hicbcOptOut = true,
-                nationality = Nationality.Eea,
-                rightToReside = false,
-                last3MonthsInUK = true
-              )
-            }
-
-            "and does not opt out of HICBC" in {
-
-              val journeyModel = basicJourneyModel.copy(
-                applicant = basicJourneyModel.applicant.copy(
-                  nationalities = nationalities,
-                  residency = residency
-                ),
-                paymentPreference = paymentPreference
-              )
-              val result = Claimant.build(nino, journeyModel, None)
-
-              result mustEqual NonUkCtaClaimantNotAlwaysResident(
-                nino = nino,
-                hmfAbroad = hmfAbroad,
-                hicbcOptOut = false,
-                nationality = Nationality.Eea,
-                rightToReside = false,
-                last3MonthsInUK = true
-              )
-            }
-
-            "and has settled status" in {
-
-              val journeyModel = basicJourneyModel.copy(
-                applicant = basicJourneyModel.applicant.copy(
-                  nationalities = nationalities,
-                  residency = residency
+                  residency = alwaysAbroad
                 ),
                 paymentPreference = paymentPreference
               )
@@ -703,16 +494,18 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                 hicbcOptOut = false,
                 nationality = Nationality.Eea,
                 rightToReside = true,
-                last3MonthsInUK = true
+                last3MonthsInUK = false
               )
             }
+          }
 
-            "and does not have settled status" in {
+          "and does not have settled status" in {
 
+            forAll(nationalitiesThatResolveToEea) { nationalities =>
               val journeyModel = basicJourneyModel.copy(
                 applicant = basicJourneyModel.applicant.copy(
                   nationalities = nationalities,
-                  residency = residency
+                  residency = alwaysAbroad
                 ),
                 paymentPreference = paymentPreference
               )
@@ -724,7 +517,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                 hicbcOptOut = false,
                 nationality = Nationality.Eea,
                 rightToReside = false,
-                last3MonthsInUK = true
+                last3MonthsInUK = false
               )
             }
           }
@@ -732,8 +525,103 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
 
         "and is a non-EEA national" - {
 
-          def nationalities: NonEmptyList[models.Nationality] =
-            NonEmptyList.fromListUnsafe(Gen.nonEmptyListOf(genNonEeaNationality).sample.value)
+          "and opts out of HICBC" in {
+
+            forAll(nationalitiesThatResolveToNonEea) { nationalities =>
+
+              val journeyModel = basicJourneyModel.copy(
+                applicant = basicJourneyModel.applicant.copy(
+                  nationalities = nationalities,
+                  residency = alwaysAbroad
+                ))
+              val result = Claimant.build(nino, journeyModel, None)
+
+              result mustEqual NonUkCtaClaimantNotAlwaysResident(
+                nino = nino,
+                hmfAbroad = hmfAbroad,
+                hicbcOptOut = true,
+                nationality = Nationality.NonEea,
+                rightToReside = false,
+                last3MonthsInUK = false
+              )
+            }
+          }
+
+          "and does not opt out of HICBC" in {
+
+            forAll(nationalitiesThatResolveToNonEea) { nationalities =>
+
+              val journeyModel = basicJourneyModel.copy(
+                applicant = basicJourneyModel.applicant.copy(
+                  nationalities = nationalities,
+                  residency = alwaysAbroad
+                ),
+                paymentPreference = paymentPreference
+              )
+              val result = Claimant.build(nino, journeyModel, None)
+
+              result mustEqual NonUkCtaClaimantNotAlwaysResident(
+                nino = nino,
+                hmfAbroad = hmfAbroad,
+                hicbcOptOut = false,
+                nationality = Nationality.NonEea,
+                rightToReside = false,
+                last3MonthsInUK = false
+              )
+            }
+          }
+
+          "and has settled status" in {
+
+            forAll(nationalitiesThatResolveToNonEea) { nationalities =>
+              val journeyModel = basicJourneyModel.copy(
+                applicant = basicJourneyModel.applicant.copy(
+                  nationalities = nationalities,
+                  residency = alwaysAbroad
+                ),
+                paymentPreference = paymentPreference
+              )
+              val result = Claimant.build(nino, journeyModel, Some(true))
+
+              result mustEqual NonUkCtaClaimantNotAlwaysResident(
+                nino = nino,
+                hmfAbroad = hmfAbroad,
+                hicbcOptOut = false,
+                nationality = Nationality.NonEea,
+                rightToReside = true,
+                last3MonthsInUK = false
+              )
+            }
+          }
+
+          "and does not have settled status" in {
+
+            forAll(nationalitiesThatResolveToNonEea) { nationalities =>
+              val journeyModel = basicJourneyModel.copy(
+                applicant = basicJourneyModel.applicant.copy(
+                  nationalities = nationalities,
+                  residency = alwaysAbroad
+                ),
+                paymentPreference = paymentPreference
+              )
+              val result = Claimant.build(nino, journeyModel, Some(false))
+
+              result mustEqual NonUkCtaClaimantNotAlwaysResident(
+                nino = nino,
+                hmfAbroad = hmfAbroad,
+                hicbcOptOut = false,
+                nationality = Nationality.NonEea,
+                rightToReside = false,
+                last3MonthsInUK = false
+              )
+            }
+          }
+        }
+      }
+
+      "when the claimant has lived in the UK and abroad" - {
+
+        "and is an EEA national" - {
 
           "add arrived in the last 3 months" - {
 
@@ -749,42 +637,46 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
 
             "and opts out of HICBC" in {
 
-              val journeyModel = basicJourneyModel.copy(
-                applicant = basicJourneyModel.applicant.copy(
-                  nationalities = nationalities,
-                  residency = residency
-                ))
-              val result = Claimant.build(nino, journeyModel, None)
+              forAll(nationalitiesThatResolveToEea) { nationalities =>
+                val journeyModel = basicJourneyModel.copy(
+                  applicant = basicJourneyModel.applicant.copy(
+                    nationalities = nationalities,
+                    residency = residency
+                  ))
+                val result = Claimant.build(nino, journeyModel, None)
 
-              result mustEqual NonUkCtaClaimantNotAlwaysResident(
-                nino = nino,
-                hmfAbroad = hmfAbroad,
-                hicbcOptOut = true,
-                nationality = Nationality.NonEea,
-                rightToReside = false,
-                last3MonthsInUK = false
-              )
+                result mustEqual NonUkCtaClaimantNotAlwaysResident(
+                  nino = nino,
+                  hmfAbroad = hmfAbroad,
+                  hicbcOptOut = true,
+                  nationality = Nationality.Eea,
+                  rightToReside = false,
+                  last3MonthsInUK = false
+                )
+              }
             }
 
             "and does not opt out of HICBC" in {
 
-              val journeyModel = basicJourneyModel.copy(
-                applicant = basicJourneyModel.applicant.copy(
-                  nationalities = nationalities,
-                  residency = residency
-                ),
-                paymentPreference = paymentPreference
-              )
-              val result = Claimant.build(nino, journeyModel, None)
+              forAll(nationalitiesThatResolveToEea) { nationalities =>
+                val journeyModel = basicJourneyModel.copy(
+                  applicant = basicJourneyModel.applicant.copy(
+                    nationalities = nationalities,
+                    residency = residency
+                  ),
+                  paymentPreference = paymentPreference
+                )
+                val result = Claimant.build(nino, journeyModel, None)
 
-              result mustEqual NonUkCtaClaimantNotAlwaysResident(
-                nino = nino,
-                hmfAbroad = hmfAbroad,
-                hicbcOptOut = false,
-                nationality = Nationality.NonEea,
-                rightToReside = false,
-                last3MonthsInUK = false
-              )
+                result mustEqual NonUkCtaClaimantNotAlwaysResident(
+                  nino = nino,
+                  hmfAbroad = hmfAbroad,
+                  hicbcOptOut = false,
+                  nationality = Nationality.Eea,
+                  rightToReside = false,
+                  last3MonthsInUK = false
+                )
+              }
             }
           }
 
@@ -802,42 +694,169 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
 
             "and opts out of HICBC" in {
 
-              val journeyModel = basicJourneyModel.copy(
-                applicant = basicJourneyModel.applicant.copy(
-                  nationalities = nationalities,
-                  residency = residency
-                ))
-              val result = Claimant.build(nino, journeyModel, None)
+              forAll(nationalitiesThatResolveToEea) { nationalities =>
 
-              result mustEqual NonUkCtaClaimantNotAlwaysResident(
-                nino = nino,
-                hmfAbroad = hmfAbroad,
-                hicbcOptOut = true,
-                nationality = Nationality.NonEea,
-                rightToReside = false,
-                last3MonthsInUK = true
-              )
+                val journeyModel = basicJourneyModel.copy(
+                  applicant = basicJourneyModel.applicant.copy(
+                    nationalities = nationalities,
+                    residency = residency
+                  ))
+                val result = Claimant.build(nino, journeyModel, None)
+
+                result mustEqual NonUkCtaClaimantNotAlwaysResident(
+                  nino = nino,
+                  hmfAbroad = hmfAbroad,
+                  hicbcOptOut = true,
+                  nationality = Nationality.Eea,
+                  rightToReside = false,
+                  last3MonthsInUK = true
+                )
+              }
             }
 
             "and does not opt out of HICBC" in {
 
-              val journeyModel = basicJourneyModel.copy(
-                applicant = basicJourneyModel.applicant.copy(
-                  nationalities = nationalities,
-                  residency = residency
-                ),
-                paymentPreference = paymentPreference
-              )
-              val result = Claimant.build(nino, journeyModel, None)
+              forAll(nationalitiesThatResolveToEea) { nationalities =>
 
-              result mustEqual NonUkCtaClaimantNotAlwaysResident(
-                nino = nino,
-                hmfAbroad = hmfAbroad,
-                hicbcOptOut = false,
-                nationality = Nationality.NonEea,
-                rightToReside = false,
-                last3MonthsInUK = true
-              )
+                val journeyModel = basicJourneyModel.copy(
+                  applicant = basicJourneyModel.applicant.copy(
+                    nationalities = nationalities,
+                    residency = residency
+                  ),
+                  paymentPreference = paymentPreference
+                )
+                val result = Claimant.build(nino, journeyModel, None)
+
+                result mustEqual NonUkCtaClaimantNotAlwaysResident(
+                  nino = nino,
+                  hmfAbroad = hmfAbroad,
+                  hicbcOptOut = false,
+                  nationality = Nationality.Eea,
+                  rightToReside = false,
+                  last3MonthsInUK = true
+                )
+              }
+            }
+          }
+        }
+
+        "and is a non-EEA national" - {
+
+          "add arrived in the last 3 months" - {
+
+            val residency = {
+              for {
+                country <- Gen.option(arbitrary[Country])
+                arrival <- datesBetween(LocalDate.now.minusMonths(3), LocalDate.now)
+                employment <- Gen.listOf(arbitrary[EmploymentStatus])
+                countriesWorked <- Gen.listOf(arbitrary[Country])
+                countriesReceivedBenefits <- Gen.listOf(arbitrary[Country])
+              } yield journey.Residency.LivedInUkAndAbroad(country, Some(arrival), employment.toSet, countriesWorked, countriesReceivedBenefits)
+            }.sample.value
+
+            "and opts out of HICBC" in {
+
+              forAll(nationalitiesThatResolveToNonEea) { nationalities =>
+
+                val journeyModel = basicJourneyModel.copy(
+                  applicant = basicJourneyModel.applicant.copy(
+                    nationalities = nationalities,
+                    residency = residency
+                  ))
+                val result = Claimant.build(nino, journeyModel, None)
+
+                result mustEqual NonUkCtaClaimantNotAlwaysResident(
+                  nino = nino,
+                  hmfAbroad = hmfAbroad,
+                  hicbcOptOut = true,
+                  nationality = Nationality.NonEea,
+                  rightToReside = false,
+                  last3MonthsInUK = false
+                )
+              }
+            }
+
+            "and does not opt out of HICBC" in {
+
+              forAll(nationalitiesThatResolveToNonEea) { nationalities =>
+
+                val journeyModel = basicJourneyModel.copy(
+                  applicant = basicJourneyModel.applicant.copy(
+                    nationalities = nationalities,
+                    residency = residency
+                  ),
+                  paymentPreference = paymentPreference
+                )
+                val result = Claimant.build(nino, journeyModel, None)
+
+                result mustEqual NonUkCtaClaimantNotAlwaysResident(
+                  nino = nino,
+                  hmfAbroad = hmfAbroad,
+                  hicbcOptOut = false,
+                  nationality = Nationality.NonEea,
+                  rightToReside = false,
+                  last3MonthsInUK = false
+                )
+              }
+            }
+          }
+
+          "add arrived more than 3 months ago" - {
+
+            val residency = {
+              for {
+                country <- Gen.option(arbitrary[Country])
+                arrival <- datesBetween(LocalDate.now.minusYears(3), LocalDate.now.minusMonths(3).minusDays(1))
+                employment <- Gen.listOf(arbitrary[EmploymentStatus])
+                countriesWorked <- Gen.listOf(arbitrary[Country])
+                countriesReceivedBenefits <- Gen.listOf(arbitrary[Country])
+              } yield journey.Residency.LivedInUkAndAbroad(country, Some(arrival), employment.toSet, countriesWorked, countriesReceivedBenefits)
+            }.sample.value
+
+            "and opts out of HICBC" in {
+
+              forAll(nationalitiesThatResolveToNonEea) { nationalities =>
+
+                val journeyModel = basicJourneyModel.copy(
+                  applicant = basicJourneyModel.applicant.copy(
+                    nationalities = nationalities,
+                    residency = residency
+                  ))
+                val result = Claimant.build(nino, journeyModel, None)
+
+                result mustEqual NonUkCtaClaimantNotAlwaysResident(
+                  nino = nino,
+                  hmfAbroad = hmfAbroad,
+                  hicbcOptOut = true,
+                  nationality = Nationality.NonEea,
+                  rightToReside = false,
+                  last3MonthsInUK = true
+                )
+              }
+            }
+
+            "and does not opt out of HICBC" in {
+
+              forAll(nationalitiesThatResolveToNonEea) { nationalities =>
+
+                val journeyModel = basicJourneyModel.copy(
+                  applicant = basicJourneyModel.applicant.copy(
+                    nationalities = nationalities,
+                    residency = residency
+                  ),
+                  paymentPreference = paymentPreference
+                )
+                val result = Claimant.build(nino, journeyModel, None)
+
+                result mustEqual NonUkCtaClaimantNotAlwaysResident(
+                  nino = nino,
+                  hmfAbroad = hmfAbroad,
+                  hicbcOptOut = false,
+                  nationality = Nationality.NonEea,
+                  rightToReside = false,
+                  last3MonthsInUK = true
+                )
+              }
             }
           }
         }

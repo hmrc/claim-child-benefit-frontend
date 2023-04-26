@@ -35,15 +35,15 @@ object Claimant {
   }
 
   def build(nino: String, journeyModel: journey.JourneyModel, hasSettledStatus: Option[Boolean]): Claimant = {
-    val preferentialNationality: Nationality =
-      Nationality.fromNationalityGroup(journeyModel.applicant.preferentialNationalityGroup)
+    val nationalityToUse: Nationality =
+      Nationality.fromNationalityGroup(journeyModel.applicant.nationalityGroupToUse)
 
     val hicbcOptOut = journeyModel.paymentPreference match {
       case _: journey.PaymentPreference.DoNotPay => true
       case _ => false
     }
 
-    (preferentialNationality, journeyModel.applicant.residency) match {
+    (nationalityToUse, journeyModel.applicant.residency) match {
       case (UkCta, AlwaysLivedInUk) =>
         UkCtaClaimantAlwaysResident(
           nino = nino,

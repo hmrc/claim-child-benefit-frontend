@@ -16,10 +16,11 @@
 
 package models
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
 final case class BankAccountInsightsResponseModel(
-                                                   bankAccountInsightsCorrelationId: String,
+                                                   correlationId: String,
                                                    riskScore: Int,
                                                    reason: String
                                                  ) {
@@ -29,5 +30,17 @@ final case class BankAccountInsightsResponseModel(
 
 object BankAccountInsightsResponseModel {
 
-  implicit lazy val format: OFormat[BankAccountInsightsResponseModel] = Json.format
+  private val writes: OWrites[BankAccountInsightsResponseModel] =
+    Json.writes
+
+  private val reads: Reads[BankAccountInsightsResponseModel] = (
+    (
+      (__ \ "correlationId").read[String] orElse
+      (__ \ "bankAccountInsightsCorrelationId").read[String]
+    ) and
+    (__ \ "riskScore").read[Int] and
+    (__ \ "reason").read[String]
+  )(BankAccountInsightsResponseModel.apply _)
+
+  implicit lazy val format: OFormat[BankAccountInsightsResponseModel] = OFormat(reads, writes)
 }

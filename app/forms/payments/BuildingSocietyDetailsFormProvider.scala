@@ -29,9 +29,15 @@ class BuildingSocietyDetailsFormProvider @Inject() extends Mappings {
   def apply(): Form[BuildingSocietyDetails] = Form(
     mapping(
       "firstName" -> text("buildingSocietyDetails.error.firstName.required")
-        .verifying(maxLength(35, "buildingSocietyDetails.error.firstName.length")),
+        .verifying(firstError(
+          maxLength(35, "buildingSocietyDetails.error.firstName.length"),
+          regexp(Validation.nameInputPattern, "buildingSocietyDetails.error.firstName.invalid")
+        )),
       "lastName" -> text("buildingSocietyDetails.error.lastName.required")
-        .verifying(maxLength(35, "buildingSocietyDetails.error.lastName.length")),
+        .verifying(firstError(
+          maxLength(35, "buildingSocietyDetails.error.lastName.length"),
+          regexp(Validation.nameInputPattern, "buildingSocietyDetails.error.lastName.invalid")
+        )),
       "buildingSociety" -> text("buildingSocietyDetails.error.buildingSociety.required")
         .verifying("buildingSocietyDetails.error.buildingSociety.required", x => BuildingSociety.allBuildingSocieties.exists(_.id == x))
         .transform[BuildingSociety](x => BuildingSociety.allBuildingSocieties.find(_.id == x).get, _.id),

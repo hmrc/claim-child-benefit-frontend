@@ -29,13 +29,21 @@ class BankAccountDetailsFormProviderSpec extends StringFieldBehaviours with Bool
 
     val fieldName = "firstName"
     val requiredKey = "bankAccountDetails.error.firstName.required"
+    val invalidKey = "bankAccountDetails.error.firstName.invalid"
     val lengthKey = "bankAccountDetails.error.firstName.length"
     val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeNameInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.nameInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(
@@ -56,13 +64,21 @@ class BankAccountDetailsFormProviderSpec extends StringFieldBehaviours with Bool
 
     val fieldName = "lastName"
     val requiredKey = "bankAccountDetails.error.lastName.required"
+    val invalidKey = "bankAccountDetails.error.lastName.invalid"
     val lengthKey = "bankAccountDetails.error.lastName.length"
     val maxLength = 35
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      safeNameInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      fieldName,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(fieldName, invalidKey, Seq(Validation.nameInputPattern.toString))
     )
 
     behave like fieldWithMaxLength(

@@ -52,13 +52,25 @@ class SubmissionsLimitedByAllowList @Inject()(
   }
 }
 
-class SubmissionsLimitedByThrottle @Inject()(connector: ClaimChildBenefitConnector, auditService: AuditService)
-                                            (implicit ec: ExecutionContext)extends SubmissionLimiter {
+class SubmissionsLimitedByThrottle @Inject()(
+                                              configuration: Configuration,
+                                              connector: ClaimChildBenefitConnector,
+                                              userAllowListConnector: UserAllowListConnector,
+                                              auditService: AuditService
+                                            )(implicit ec: ExecutionContext) extends SubmissionLimiter {
+
+  private val submissionFeature: String = configuration.get[String]("allow-list-features.submission")
 
   override def allowedToSubmit(nino: String)(implicit hc: HeaderCarrier): Future[Boolean] =
     connector
       .checkThrottleLimit()
-      .map(response => !response.limitReached)
+      .flatMap { response =>
+        if (response.limitReached) {
+          userAllowListConnector.check(submissionFeature, nino)
+        } else {
+          Future.successful(true)
+        }
+      }
 
   override def recordSubmission(model: JourneyModel, claim: Claim, correlationId: UUID)(implicit hc: HeaderCarrier): Future[Done] =
     connector

@@ -51,7 +51,7 @@
 
     <ol class="app-task-list">
         <li>
-            <ul class="app-task-list__items">
+            <ul class="app-task-list__items govuk-!-padding-left-0">
             @sections.map { section =>
                 <li class="app-task-list__item">
                     <span class="app-task-list__task-name">
@@ -68,15 +68,15 @@
             }
             </ul>
         </li>
-
-        @if(numberOfSections == completedSections) {
-            <p class="govuk-body">@messages("taskList.declaration")</p>
-
-            @formHelper(action = routes.TaskListController.onSubmit, 'autoComplete -> "off") {
-                @govukButton(
-                    ButtonViewModel(messages("site.acceptAndContinue"))
-                )
-            }
-        }
     </ol>
+
+    @if(numberOfSections == completedSections) {
+        <p class="govuk-body">@messages("taskList.declaration")</p>
+
+        @formHelper(action = routes.TaskListController.onSubmit, 'autoComplete -> "off") {
+            @govukButton(
+                ButtonViewModel(messages("site.acceptAndContinue"))
+            )
+        }
+    }
 }

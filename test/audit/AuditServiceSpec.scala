@@ -21,9 +21,8 @@ import generators.ModelGenerators
 import models.BirthRegistrationMatchingResult.NotAttempted
 import models.OtherEligibilityFailReason.{ApplicantReceivedBenefitsAbroad, ApplicantWorkedAbroad, PartnerReceivedBenefitsAbroad, PartnerWorkedAbroad}
 import models.domain.Claim
-import models.journey
 import models.journey._
-import models.{ApplicantPreviousName, BankAccountInsightsResponseModel, BirthCertificateSystemNumber, Country, CurrentlyReceivingChildBenefit, EmploymentStatus, Nationality, PartnerClaimingChildBenefit}
+import models.{ApplicantPreviousName, BankAccountInsightsResponseModel, BirthCertificateSystemNumber, Country, CurrentlyReceivingChildBenefit, EmploymentStatus, Nationality, OtherEligibilityFailReason, PartnerClaimingChildBenefit, ReasonNotToSubmit, journey}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
 import org.scalacheck.Arbitrary.arbitrary
@@ -67,7 +66,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
       nationalities = NonEmptyList(Nationality.allNationalities.head, Nil),
       residency = journey.Residency.LivedInUkAndAbroad(Some(Country.internationalCountries.head), Some(LocalDate.now), EmploymentStatus.activeStatuses, List(Country("ES", "Spain")), List(Country("ES", "Spain"))),
       memberOfHMForcesOrCivilServantAbroad = false,
-      currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+      currentlyReceivingChildBenefit = Some(CurrentlyReceivingChildBenefit.NotClaiming),
       changedDesignatoryDetails = Some(true),
       correspondenceAddress = Some(models.UkAddress("corr 1", Some("corr 2"), "corr town", Some("corr county"), "corr postcode"))
     ),
@@ -132,7 +131,9 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
       ))
     ),
     additionalInformation = Some("info"),
-    userAuthenticated = true
+    userAuthenticated = true,
+    reasonsNotToSubmit = Seq(ReasonNotToSubmit.AdditionalInformationPresent),
+    otherEligibilityFailureReasons = Seq(OtherEligibilityFailReason.ApplicantWorkedAbroad)
   )
 
   ".auditDownload" - {
@@ -151,7 +152,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           nationalities = Seq(Nationality.allNationalities.head.name),
           residency = Residency.LivedInUkAndAbroad(Some(Country.internationalCountries.head.name), Some(LocalDate.now), EmploymentStatus.activeStatuses.map(_.toString), List("Spain"), List("Spain")),
           memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyClaimingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming.toString,
+          currentlyClaimingChildBenefit = Some(CurrentlyReceivingChildBenefit.NotClaiming.toString),
           changedDesignatoryDetails = Some(true),
           correspondenceAddress = Some(UkAddress("corr 1", Some("corr 2"), "corr town", Some("corr county"), "corr postcode"))
         ),
@@ -212,13 +213,8 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
         ),
         Some("info"),
         userAuthenticated = true,
-        reasonsNotToSubmit = List("designatoryDetailsChanged", "additionalInformationPresent"),
-        otherEligibilityFailReasons = List(
-          ApplicantWorkedAbroad.toString,
-          ApplicantReceivedBenefitsAbroad.toString,
-          PartnerWorkedAbroad.toString,
-          PartnerReceivedBenefitsAbroad.toString
-        )
+        reasonsNotToSubmit = List("additionalInformationPresent"),
+        otherEligibilityFailReasons = List(ApplicantWorkedAbroad.toString)
       )
 
       val hc = HeaderCarrier()
@@ -247,7 +243,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           nationalities = Seq(Nationality.allNationalities.head.name),
           residency = Residency.LivedInUkAndAbroad(Some(Country.internationalCountries.head.name), Some(LocalDate.now), EmploymentStatus.activeStatuses.map(_.toString), List("Spain"), List("Spain")),
           memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyClaimingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming.toString,
+          currentlyClaimingChildBenefit = Some(CurrentlyReceivingChildBenefit.NotClaiming.toString),
           changedDesignatoryDetails = Some(true),
           correspondenceAddress = Some(UkAddress("corr 1", Some("corr 2"), "corr town", Some("corr county"), "corr postcode"))
         ),
@@ -307,12 +303,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           ))
         ),
         Some("info"),
-        otherEligibilityFailReasons = List(
-          ApplicantWorkedAbroad.toString,
-          ApplicantReceivedBenefitsAbroad.toString,
-          PartnerWorkedAbroad.toString,
-          PartnerReceivedBenefitsAbroad.toString
-        ),
+        otherEligibilityFailReasons = List(ApplicantWorkedAbroad.toString),
         claim = claim,
         correlationId = correlationId.toString
       )

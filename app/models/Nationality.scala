@@ -27,9 +27,9 @@ sealed trait NationalityGroup {
 
 object NationalityGroup extends Enumerable.Implicits {
 
-  case object UkCta extends WithName("UkCta") with NationalityGroup { override val order: Int = 1 }
-  case object Eea extends WithName("Eea") with NationalityGroup { override val order: Int = 2 }
-  case object NonEea extends WithName("NonEea") with NationalityGroup { override val order: Int = 3 }
+  case object UkCta extends WithName("UkCta") with NationalityGroup { override val order: Int = 3 }
+  case object Eea extends WithName("Eea") with NationalityGroup { override val order: Int = 1 }
+  case object NonEea extends WithName("NonEea") with NationalityGroup { override val order: Int = 2 }
 
   val values: Seq[NationalityGroup] = Seq(UkCta, Eea, NonEea)
 
@@ -215,7 +215,7 @@ object Nationality {
     Nationality("Pitcairn Islander", NonEea),
     Nationality("Polish", Eea),
     Nationality("Portuguese", Eea),
-    Nationality("Prydeinig", NonEea),
+    Nationality("Prydeinig", UkCta),
     Nationality("Puerto Rican", NonEea),
     Nationality("Qatari", NonEea),
     Nationality("Romanian", Eea),

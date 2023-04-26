@@ -21,7 +21,6 @@ import connectors.ClaimChildBenefitConnector
 import logging.Logging
 import models.Done
 import models.domain.Claim
-import models.journey.JourneyModel
 import models.requests.{AuthenticatedIdentifierRequest, DataRequest}
 import services.ClaimSubmissionService.{CannotBuildJourneyModelException, NotAuthenticatedException}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
@@ -36,7 +35,8 @@ class ClaimSubmissionService @Inject()(
                                         connector: ClaimChildBenefitConnector,
                                         submissionLimiter: SubmissionLimiter,
                                         supplementaryDataService: SupplementaryDataService,
-                                        immigrationStatusService: ImmigrationStatusService
+                                        immigrationStatusService: ImmigrationStatusService,
+                                        journeyModelService: JourneyModelService
                                       ) extends Logging {
 
   def canSubmit(request: DataRequest[_])(implicit ec: ExecutionContext): Future[Boolean] =
@@ -48,7 +48,7 @@ class ClaimSubmissionService @Inject()(
 
         submissionLimiter.allowedToSubmit(nino)(hc).flatMap {
           case true =>
-            JourneyModel.build(request.userAnswers).right.map {
+            journeyModelService.build(request.userAnswers).right.map {
               journeyModel =>
                 Future.successful(journeyModel.reasonsNotToSubmit.isEmpty)
             }.getOrElse(Future.successful(false))
@@ -72,7 +72,7 @@ class ClaimSubmissionService @Inject()(
       val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
       val correlationId = UUID.randomUUID()
 
-      JourneyModel.build(request.userAnswers).right.map { model =>
+      journeyModelService.build(request.userAnswers).right.map { model =>
         immigrationStatusService.hasSettledStatus(nino, model, correlationId)(hc).flatMap {
           hasSettledStatus =>
 
@@ -92,7 +92,6 @@ class ClaimSubmissionService @Inject()(
               supplementaryDataService.submit(nino, model, correlationId)(request)
             }
         }
-
       }.getOrElse(Future.failed(CannotBuildJourneyModelException))
     }
   }.getOrElse(Future.failed(NotAuthenticatedException))

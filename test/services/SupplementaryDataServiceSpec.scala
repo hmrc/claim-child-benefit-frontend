@@ -20,9 +20,8 @@ import cats.data.NonEmptyList
 import com.dmanchester.playfop.sapi.PlayFop
 import connectors.ClaimChildBenefitConnector
 import generators.ModelGenerators
-import models.journey
 import models.journey.JourneyModel
-import models.{AdultName, CurrentlyReceivingChildBenefit, Done, RelationshipStatus, SupplementaryMetadata}
+import models.{AdultName, Done, RelationshipStatus, SupplementaryMetadata, journey}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito
@@ -47,7 +46,14 @@ import java.time.{Clock, Instant, LocalDate, ZoneOffset}
 import java.util.UUID
 import scala.concurrent.Future
 
-class SupplementaryDataServiceSpec extends AnyFreeSpec with Matchers with OptionValues with MockitoSugar with ModelGenerators with ScalaFutures with BeforeAndAfterEach {
+class SupplementaryDataServiceSpec
+  extends AnyFreeSpec
+    with Matchers
+    with OptionValues
+    with MockitoSugar
+    with ModelGenerators
+    with ScalaFutures
+    with BeforeAndAfterEach {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -77,7 +83,7 @@ class SupplementaryDataServiceSpec extends AnyFreeSpec with Matchers with Option
       nationalities = NonEmptyList(genUkCtaNationality.sample.value, Gen.listOf(arbitrary[models.Nationality]).sample.value),
       residency = journey.Residency.AlwaysLivedInUk,
       memberOfHMForcesOrCivilServantAbroad = false,
-      currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+      currentlyReceivingChildBenefit = None,
       changedDesignatoryDetails = Some(false),
       correspondenceAddress = None
     ),
@@ -104,7 +110,9 @@ class SupplementaryDataServiceSpec extends AnyFreeSpec with Matchers with Option
     benefits = None,
     paymentPreference = journey.PaymentPreference.DoNotPay(None),
     additionalInformation = None,
-    userAuthenticated = true
+    userAuthenticated = true,
+    reasonsNotToSubmit = Nil,
+    otherEligibilityFailureReasons = Nil
   )
 
   "submit" - {

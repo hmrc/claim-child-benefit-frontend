@@ -30,4 +30,6 @@ class FeatureFlags @Inject()(configuration: Configuration) {
   val showSignInPage: Boolean                = configuration.get[Boolean]("features.show-sign-in-page")
   val callBankAccountInsights: Boolean       = configuration.get[Boolean]("features.call-bank-account-insights")
   val checkImmigrationStatus: Boolean        = configuration.get[Boolean]("features.check-immigration-status")
+  val submitOlderChildrenToCbs: Boolean      = configuration.get[Boolean]("features.submit-older-children-to-cbs")
+  val saveAndReturn: Boolean                 = configuration.get[Boolean]("features.save-and-return")
 }

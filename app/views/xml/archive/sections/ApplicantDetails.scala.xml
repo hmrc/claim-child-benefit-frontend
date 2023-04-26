@@ -14,7 +14,7 @@
 
 <fo:page-sequence master-reference="main">
 
-    @mainHeader(isH1 = true)
+    @mainHeader(isH1 = model.otherEligibilityFailureReasons.isEmpty)
 
     <fo:flow flow-name="xsl-region-body" font-size="12pt" text-align="left">
 
@@ -82,7 +82,9 @@
 
                     @line("pdf.phoneNumber", model.applicant.telephoneNumber)
 
-                    @line("pdf.currentlyReceiving", messages(s"pdf.currentlyReceiving.${model.applicant.currentlyReceivingChildBenefit.toString}"))
+                    @model.applicant.currentlyReceivingChildBenefit.map { x =>
+                        @line("pdf.currentlyReceiving", messages(s"pdf.currentlyReceiving.${x.toString}"))
+                    }
 
                     @{model.paymentPreference match {
                         case journey.PaymentPreference.DoNotPay(maybeEldestChild) =>

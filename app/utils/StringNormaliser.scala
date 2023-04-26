@@ -24,5 +24,27 @@ trait StringNormaliser {
     Normalizer
       .normalize(input, Normalizer.Form.NFKD)
       .replaceAll("\\p{M}", "")
-      .replaceAll("’", "'")
+      .map(c => substitutions.getOrElse(c, c)).mkString
+
+  private val substitutions: Map[Char, Char] = Map(
+    '’' -> ''',
+    'Ð' -> 'D',
+    'Ø' -> 'O',
+    'ð' -> 'o',
+    'ø' -> 'o',
+    'Đ' -> 'D',
+    'đ' -> 'd',
+    'Ė' -> 'E',
+    'ė' -> 'e',
+    'Ħ' -> 'H',
+    'ħ' -> 'h',
+    'ı' -> 'i',
+    'ĸ' -> 'k',
+    'Ł' -> 'L',
+    'ł' -> 'l',
+    'Ŋ' -> 'N',
+    'ŋ' -> 'n',
+    'Ŧ' -> 'T',
+    'ŧ' -> 't'
+  )
 }

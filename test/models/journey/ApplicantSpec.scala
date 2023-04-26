@@ -73,7 +73,6 @@ class ApplicantSpec extends AnyFreeSpec with Matchers with ModelGenerators with 
           .set(ApplicantPhoneNumberPage, phoneNumber).success.value
           .set(ApplicantNationalityPage(index), nationality).success.value
           .set(ApplicantIsHmfOrCivilServantPage, false).success.value
-          .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
 
       val minimalAnswers =
         UserAnswers("id", nino = Some(nino.value), designatoryDetails = Some(minimalDesignatoryDetails))
@@ -81,7 +80,6 @@ class ApplicantSpec extends AnyFreeSpec with Matchers with ModelGenerators with 
           .set(ApplicantPhoneNumberPage, phoneNumber).success.value
           .set(ApplicantNationalityPage(index), nationality).success.value
           .set(ApplicantIsHmfOrCivilServantPage, false).success.value
-          .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
 
       "must return an Applicant (fullest case)" in {
 
@@ -98,7 +96,7 @@ class ApplicantSpec extends AnyFreeSpec with Matchers with ModelGenerators with 
           nationalities = NonEmptyList(nationality, Nil),
           residency = Residency.AlwaysLivedInUk,
           memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+          currentlyReceivingChildBenefit = None,
           changedDesignatoryDetails = Some(false),
           correspondenceAddress = Some(npsAddress)
         )
@@ -121,7 +119,7 @@ class ApplicantSpec extends AnyFreeSpec with Matchers with ModelGenerators with 
           nationalities = NonEmptyList(nationality, Nil),
           residency = Residency.AlwaysLivedInUk,
           memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+          currentlyReceivingChildBenefit = None,
           changedDesignatoryDetails = Some(false),
           correspondenceAddress = None
         )
@@ -154,7 +152,7 @@ class ApplicantSpec extends AnyFreeSpec with Matchers with ModelGenerators with 
             nationalities = NonEmptyList(nationality, Nil),
             residency = Residency.AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = false,
-            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+            currentlyReceivingChildBenefit = None,
             changedDesignatoryDetails = Some(true),
             correspondenceAddress = Some(ukAddress)
           )
@@ -185,7 +183,7 @@ class ApplicantSpec extends AnyFreeSpec with Matchers with ModelGenerators with 
             nationalities = NonEmptyList(nationality, Nil),
             residency = Residency.AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = false,
-            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+            currentlyReceivingChildBenefit = None,
             changedDesignatoryDetails = Some(true),
             correspondenceAddress = Some(internationalAddress)
           )
@@ -313,7 +311,7 @@ class ApplicantSpec extends AnyFreeSpec with Matchers with ModelGenerators with 
           nationalities = NonEmptyList(nationality, Nil),
           residency = Residency.AlwaysLivedInUk,
           memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+          currentlyReceivingChildBenefit = Some(CurrentlyReceivingChildBenefit.NotClaiming),
           changedDesignatoryDetails = None,
           correspondenceAddress = None
         )
@@ -336,7 +334,7 @@ class ApplicantSpec extends AnyFreeSpec with Matchers with ModelGenerators with 
           nationalities = NonEmptyList(nationality, Nil),
           residency = Residency.AlwaysLivedInUk,
           memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+          currentlyReceivingChildBenefit = Some(CurrentlyReceivingChildBenefit.NotClaiming),
           changedDesignatoryDetails = None,
           correspondenceAddress = None
         )

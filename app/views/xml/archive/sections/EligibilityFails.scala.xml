@@ -1,0 +1,26 @@
+@import views.xml.xml.archive.sections._
+
+@this(
+    mainHeader: MainHeader,
+    line: Line
+)
+
+@(model: journey.JourneyModel)(implicit messages: Messages)
+
+<fo:page-sequence master-reference="eligibility-fails">
+
+    @mainHeader(isH1 = true)
+
+    <fo:flow flow-name="xsl-region-body" font-size="12pt" text-align="left">
+
+        <fo:block margin-bottom="3mm">
+
+            <fo:block role="H2" id="eligibility-fails" font-size="18pt" font-weight="bold" margin-bottom="0.5cm">@messages("pdf.eligibilityFails")</fo:block>
+
+            @for((fail, index) <- model.otherEligibilityFailureReasons.zipWithIndex) {
+                @line(messages("pdf.eligibilityFails.reason", index + 1), messages(s"pdf.eligibilityFails.${fail.toString}"))
+            }
+
+        </fo:block>
+    </fo:flow>
+</fo:page-sequence>

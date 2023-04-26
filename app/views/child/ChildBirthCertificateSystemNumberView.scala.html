@@ -22,7 +22,7 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukButton: GovukButton
+    continueButton: components.ContinueButton
 )
 
 @(form: Form[_], waypoints: Waypoints, index: Index, childName: ChildName)(implicit request: Request[_], messages: Messages)
@@ -48,8 +48,6 @@
             .withHint(HintViewModel(messages("childBirthCertificateSystemNumber.hint")))
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @continueButton()
     }
 }

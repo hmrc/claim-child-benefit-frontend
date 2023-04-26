@@ -32,7 +32,7 @@ final case class Applicant(
                             nationalities: Seq[String],
                             residency: Residency,
                             memberOfHMForcesOrCivilServantAbroad: Boolean,
-                            currentlyClaimingChildBenefit: String,
+                            currentlyClaimingChildBenefit: Option[String],
                             changedDesignatoryDetails: Option[Boolean],
                             correspondenceAddress: Option[Address]
                           )
@@ -53,7 +53,7 @@ object Applicant {
       nationalities = applicant.nationalities.toList.map(_.name),
       residency = Residency.build(applicant.residency),
       memberOfHMForcesOrCivilServantAbroad = applicant.memberOfHMForcesOrCivilServantAbroad,
-      currentlyClaimingChildBenefit = applicant.currentlyReceivingChildBenefit.toString,
+      currentlyClaimingChildBenefit = applicant.currentlyReceivingChildBenefit.map(_.toString),
       changedDesignatoryDetails = applicant.changedDesignatoryDetails,
       correspondenceAddress = applicant.correspondenceAddress.map(Address.build)
     )
