@@ -68,7 +68,7 @@ class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with Befor
       nationalities = NonEmptyList(genUkCtaNationality.sample.value, Gen.listOf(arbitrary[models.Nationality]).sample.value),
       residency = journey.Residency.AlwaysLivedInUk,
       memberOfHMForcesOrCivilServantAbroad = hmfAbroad,
-      currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
+      currentlyReceivingChildBenefit = Some(CurrentlyReceivingChildBenefit.NotClaiming),
       changedDesignatoryDetails = Some(false),
       correspondenceAddress = None
     ),
@@ -95,7 +95,9 @@ class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with Befor
     benefits = None,
     paymentPreference = journey.PaymentPreference.DoNotPay(None),
     additionalInformation = None,
-    userAuthenticated = true
+    userAuthenticated = true,
+    reasonsNotToSubmit = Nil,
+    otherEligibilityFailureReasons = Nil
   )
 
   "hasSettledStatus" - {
@@ -104,9 +106,12 @@ class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with Befor
 
       "must return None" in {
 
+        val nationality = Nationality.allNationalities.filter(_.group == NationalityGroup.Eea).head
+        val model = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(nationalities = NonEmptyList(nationality, Nil)))
+
         when(mockFeatureFlags.checkImmigrationStatus).thenReturn(false)
 
-        val result = service.hasSettledStatus(nino, basicJourneyModel, correlationId)(hc).futureValue
+        val result = service.hasSettledStatus(nino, model, correlationId)(hc).futureValue
 
         result must not be defined
         verify(mockConnector, never).checkStatus(any(), any())(any())
@@ -151,9 +156,12 @@ class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with Befor
 
         "must return None" in {
 
+          val nationality = Nationality.allNationalities.filter(_.group == NationalityGroup.NonEea).head
+          val model = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(nationalities = NonEmptyList(nationality, Nil)))
+
           when(mockFeatureFlags.checkImmigrationStatus).thenReturn(true)
 
-          val result = service.hasSettledStatus(nino, basicJourneyModel, correlationId)(hc).futureValue
+          val result = service.hasSettledStatus(nino, model, correlationId)(hc).futureValue
 
           result must not be defined
           verify(mockConnector, never).checkStatus(any(), any())(any())

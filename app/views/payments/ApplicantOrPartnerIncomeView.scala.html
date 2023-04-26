@@ -22,7 +22,7 @@
         formHelper: FormWithCSRF,
         govukErrorSummary: GovukErrorSummary,
         govukRadios: GovukRadios,
-        govukButton: GovukButton,
+        continueButton: components.ContinueButton,
         newTabLink: HmrcNewTabLinkHelper
 )
 
@@ -55,8 +55,6 @@
             )
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @continueButton()
     }
 }

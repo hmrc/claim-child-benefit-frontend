@@ -27,6 +27,7 @@ import org.apache.fop.apps.FOUserAgent
 import org.apache.xmlgraphics.util.MimeConstants
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import services.JourneyModelService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.{PrintDocumentsRequiredView, PrintNoDocumentsRequiredView}
 import views.xml.xml.download.PrintTemplate
@@ -44,7 +45,8 @@ class PrintController @Inject()(
                                  template: PrintTemplate,
                                  noDocumentsView: PrintNoDocumentsRequiredView,
                                  documentsView: PrintDocumentsRequiredView,
-                                 featureFlags: FeatureFlags
+                                 featureFlags: FeatureFlags,
+                                 journeyModelService: JourneyModelService
                                ) extends FrontendBaseController with I18nSupport with Logging {
   
   private val userAgentBlock: FOUserAgent => Unit = { foUserAgent: FOUserAgent =>
@@ -58,7 +60,7 @@ class PrintController @Inject()(
   }
 
   private def withJourneyModel(answers: UserAnswers)(f: JourneyModel => Future[Result]): Future[Result] = {
-    val (maybeErrors, maybeModel) = JourneyModel.build(answers).pad
+    val (maybeErrors, maybeModel) = journeyModelService.build(answers).pad
 
     val errors = maybeErrors.map { errors =>
       val message = errors.toChain.toList.map(_.path).mkString(", ")

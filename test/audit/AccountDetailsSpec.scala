@@ -35,7 +35,7 @@ class AccountDetailsSpec extends AnyFreeSpec with Matchers {
       "sortCode"-> "d",
       "accountNumber"-> "e",
       "bankAccountInsightsResult" -> Json.obj(
-        "bankAccountInsightsCorrelationId" -> "f",
+        "correlationId" -> "f",
         "riskScore" -> 0,
         "reason" -> "h"
       )

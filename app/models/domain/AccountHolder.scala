@@ -19,10 +19,11 @@ package models.domain
 import models.BankAccountHolder
 import models.journey
 import play.api.libs.json.{Json, OWrites}
+import utils.StringNormaliser
 
 sealed trait AccountHolder
 
-object AccountHolder {
+object AccountHolder extends StringNormaliser {
 
   implicit lazy val writes: OWrites[AccountHolder] = OWrites {
     case x: OtherAccountHolder => Json.toJsObject(x)(OtherAccountHolder.writes)
@@ -38,15 +39,15 @@ object AccountHolder {
         case BankAccountHolder.JointNames =>
           OtherAccountHolder(
             accountHolderType = AccountHolderType.Joint,
-            forenames = details.firstName,
-            surname = details.lastName
+            forenames = normalise(details.firstName),
+            surname = normalise(details.lastName)
           )
 
         case BankAccountHolder.SomeoneElse =>
           OtherAccountHolder(
             accountHolderType = AccountHolderType.SomeoneElse,
-            forenames = details.firstName,
-            surname = details.lastName
+            forenames = normalise(details.firstName),
+            surname = normalise(details.lastName)
           )
       }
 
@@ -58,15 +59,15 @@ object AccountHolder {
         case BankAccountHolder.JointNames =>
           OtherAccountHolder(
             accountHolderType = AccountHolderType.Joint,
-            forenames = details.firstName,
-            surname = details.lastName
+            forenames = normalise(details.firstName),
+            surname = normalise(details.lastName)
           )
 
         case BankAccountHolder.SomeoneElse =>
           OtherAccountHolder(
             accountHolderType = AccountHolderType.SomeoneElse,
-            forenames = details.firstName,
-            surname = details.lastName
+            forenames = normalise(details.firstName),
+            surname = normalise(details.lastName)
           )
       }
   }

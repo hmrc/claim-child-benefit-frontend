@@ -53,6 +53,8 @@
 
     <p class="govuk-body">@messages("index.whenToApply.p2")</p>
 
+    <p class="govuk-body">@messages("index.whenToApply.p3")</p>
+
     <h2 class="govuk-heading-m">@messages("index.beforeYouStart")</h2>
 
     <p class="govuk-body">@messages("index.beforeYouStart.p1")</p>
@@ -63,18 +65,25 @@
         <li>@messages("index.beforeYouStart.p1.bullet3")</li>
     </ul>
 
-    <p class="govuk-body">@messages("index.beforeYouStart.p2")</p>
-
-    <ul class="govuk-list govuk-list--bullet">
-        <li>@messages("index.beforeYouStart.p2.bullet1")</li>
-        <li>@messages("index.beforeYouStart.p2.bullet2")</li>
-        <li>@messages("index.beforeYouStart.p2.bullet3")</li>
-        <li>@messages("index.beforeYouStart.p2.bullet4")</li>
-    </ul>
+    <p class="govuk-body">
+        @messages("index.beforeYouStart.p2.1")
+        @{newTabLink(NewTabLinkHelper(text = messages("index.beforeYouStart.p2.link.text"), href = Some(messages("index.beforeYouStart.p2.link.href"))))}
+        @messages("index.beforeYouStart.p2.2")
+    </p>
 
     <p class="govuk-body">@messages("index.beforeYouStart.p3")</p>
 
-    @govukWarningText(WarningText(content = messages("index.beforeYouStart.p4")))
+    <p class="govuk-body">@messages("index.beforeYouStart.p4")</p>
+
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("index.beforeYouStart.p4.bullet1")</li>
+        <li>@messages("index.beforeYouStart.p4.bullet2")</li>
+        <li>@messages("index.beforeYouStart.p4.bullet3")</li>
+    </ul>
+
+    <p class="govuk-body">@messages("index.beforeYouStart.p5")</p>
+
+    @govukWarningText(WarningText(content = messages("index.beforeYouStart.p6")))
 
     @formHelper(action = routes.IndexController.onSubmit) {
         @govukButton(ButtonViewModel(HtmlContent(
@@ -86,7 +95,7 @@
     }
 
     <p class="govuk-body">
-        @messages("index.beforeYouStart.p5")
-        <a href="@messages("index.beforeYouStart.p5.link.href")" class="govuk-link">@messages("index.beforeYouStart.p5.link.text")</a>.
+        @messages("index.beforeYouStart.p7")
+        <a href="@messages("index.beforeYouStart.p7.link.href")" class="govuk-link">@messages("index.beforeYouStart.p7.link.text")</a>.
     </p>
 }

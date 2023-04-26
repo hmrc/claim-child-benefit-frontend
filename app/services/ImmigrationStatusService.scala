@@ -36,7 +36,7 @@ class ImmigrationStatusService @Inject()(
 
   def hasSettledStatus(nino: String, model: JourneyModel, correlationId: UUID)(hc: HeaderCarrier): Future[Option[Boolean]] =
     if (featureFlags.checkImmigrationStatus) {
-      if (model.applicant.preferentialNationalityGroup == NationalityGroup.Eea) {
+      if (model.applicant.nationalityGroupToUse == NationalityGroup.Eea) {
 
         val searchRequest = NinoSearchRequest(
           nino = nino,

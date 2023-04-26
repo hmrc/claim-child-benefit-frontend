@@ -3,6 +3,7 @@
 @this(
     layout: Layout,
     bookmarkTree: BookmarkTree,
+    eligibilityFails: EligibilityFails,
     applicantDetails: ApplicantDetails,
     paymentDetails: PaymentDetails,
     partnerDetails: PartnerDetails,
@@ -24,6 +25,10 @@
     </fo:declarations>
 
     @bookmarkTree(model)
+
+    @if(model.otherEligibilityFailureReasons.nonEmpty) {
+        @eligibilityFails(model)
+    }
 
     @applicantDetails(model)
 

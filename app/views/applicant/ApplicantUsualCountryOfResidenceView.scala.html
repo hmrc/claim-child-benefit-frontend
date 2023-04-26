@@ -23,7 +23,7 @@
         formHelper: FormWithCSRF,
         govukErrorSummary: GovukErrorSummary,
         govukSelect: GovukSelect,
-        govukButton: GovukButton
+        continueButton: components.ContinueButton,
 )
 
 @(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
@@ -46,8 +46,6 @@
             .withCssClass("autocomplete")
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @continueButton()
     }
 }
