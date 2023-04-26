@@ -106,9 +106,12 @@ class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with Befor
 
       "must return None" in {
 
+        val nationality = Nationality.allNationalities.filter(_.group == NationalityGroup.Eea).head
+        val model = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(nationalities = NonEmptyList(nationality, Nil)))
+
         when(mockFeatureFlags.checkImmigrationStatus).thenReturn(false)
 
-        val result = service.hasSettledStatus(nino, basicJourneyModel, correlationId)(hc).futureValue
+        val result = service.hasSettledStatus(nino, model, correlationId)(hc).futureValue
 
         result must not be defined
         verify(mockConnector, never).checkStatus(any(), any())(any())
