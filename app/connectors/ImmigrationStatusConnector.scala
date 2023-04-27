@@ -41,7 +41,7 @@ class ImmigrationStatusConnector @Inject()(
       .post(ninoCheckUrl)
       .withBody(Json.toJson(ninoSearchRequest))
       .setHeader("X-Correlation-Id" -> correlationId.toString)
-      .setHeader(HeaderNames.AUTHORIZATION -> config.homeOfficeImmigrationToken)
+      .setHeader(HeaderNames.AUTHORIZATION -> config.internalAuthToken)
       .execute[StatusCheckResponse]
       .map(_.result)
 }

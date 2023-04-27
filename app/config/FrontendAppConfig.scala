@@ -44,10 +44,11 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   val upliftIvUrl: String      = configuration.get[String]("urls.upliftIv")
 
   val homeOfficeImmigrationStatusUrl: String = configuration.get[Service]("microservice.services.home-office-immigration-status-proxy").baseUrl
-  val homeOfficeImmigrationToken: String = configuration.get[String]("internal-auth.home-office-immigration-proxy.token")
 
   private val exitSurveyBaseUrl: String = configuration.get[Service]("microservice.services.feedback-frontend").baseUrl
   val exitSurveyUrl: String             = s"$exitSurveyBaseUrl/feedback/claim-child-benefit-frontend"
+
+  val internalAuthToken: String = configuration.get[String]("internal-auth.token")
 
   val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("features.welsh-translation")

@@ -39,13 +39,13 @@ class ImmigrationStatusConnectorSpec
   private lazy val app: Application =
     new GuiceApplicationBuilder()
       .configure(
-        "microservice.services.home-office-immigration-status-proxy.port" -> server.port
+        "microservice.services.home-office-immigration-status-proxy.port" -> server.port,
+        "internal-auth.token" -> "authKey"
       )
       .build()
 
   implicit private lazy val hc: HeaderCarrier = HeaderCarrier()
   private val correlationId = UUID.randomUUID()
-  private val internalAuthToken = "token"
   private val nino = arbitrary[Nino].sample.value
   private val service = "claim-child-benefit-frontend"
 
@@ -95,7 +95,7 @@ class ImmigrationStatusConnectorSpec
       server.stubFor(
         post(urlEqualTo(s"/v1/status/public-funds/nino/$service"))
           .withHeader("X-Correlation-Id", equalTo(correlationId.toString))
-          .withHeader("Authorization", equalTo(internalAuthToken))
+          .withHeader("Authorization", equalTo("authKey"))
           .willReturn(ok(responseBody))
       )
 
@@ -111,7 +111,7 @@ class ImmigrationStatusConnectorSpec
       server.stubFor(
         post(urlEqualTo(s"/v1/status/public-funds/nino/$service"))
           .withHeader("X-Correlation-Id", equalTo(correlationId.toString))
-          .withHeader("Authorization", equalTo(internalAuthToken))
+          .withHeader("Authorization", equalTo("authKey"))
           .willReturn(serverError())
       )
 

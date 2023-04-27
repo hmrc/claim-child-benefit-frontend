@@ -45,20 +45,14 @@ class InternalAuthTokenInitialiserImpl @Inject() (
   private val internalAuthService: Service =
     configuration.get[Service]("microservice.services.internal-auth")
 
-  private val childBenefitToken: String =
+  private val internalAuthToken: String =
     configuration.get[String]("internal-auth.token")
-
-  private val homeOfficeImmigrationToken: String =
-    configuration.get[String]("internal-auth.home-office-immigration-proxy.token")
 
   private val appName: String =
     configuration.get[String]("appName")
 
   override val initialised: Future[Done] =
-    for {
-      _ <- ensureAuthToken(childBenefitToken)
-      _ <- ensureAuthToken(homeOfficeImmigrationToken)
-    } yield Done
+    ensureAuthToken()
 
   Await.result(initialised, 30.seconds)
 
@@ -67,19 +61,19 @@ class InternalAuthTokenInitialiserImpl @Inject() (
   private object Resource {
     implicit val formats: OFormat[Resource] = Json.format[Resource]
   }
-  private case class Permission(token: String, principle: String, permissions: Seq[Resource])
+  private case class Permission(principle: String, permissions: Seq[Resource])
 
   private object Permission {
     implicit val formats: OFormat[Permission] = Json.format[Permission]
   }
 
   private val permissions: Seq[Permission] = Seq(
-    Permission(childBenefitToken, appName, Seq(Resource("claim-child-benefit", "*", List("*")))),
-    Permission(homeOfficeImmigrationToken, appName, Seq(Resource("home-office-immigration-status-proxy", s"status/public-funds/nino/$appName", List("WRITE"))))
+    Permission(appName, Seq(Resource("claim-child-benefit", "*", List("*")))),
+    Permission(appName, Seq(Resource("home-office-immigration-status-proxy", s"status/public-funds/nino/$appName", List("WRITE"))))
   )
 
-  private def ensureAuthToken(token: String): Future[Done] = {
-    authTokenIsValid(token).flatMap { isValid =>
+  private def ensureAuthToken(): Future[Done] = {
+    authTokenIsValid().flatMap { isValid =>
       if (isValid) {
         logger.info("Auth token is already valid")
         Future.successful(Done)
@@ -104,10 +98,10 @@ class InternalAuthTokenInitialiserImpl @Inject() (
       }
   }
 
-  private def authTokenIsValid(token: String): Future[Boolean] = {
+  private def authTokenIsValid(): Future[Boolean] = {
     logger.info("Checking auth token")
     httpClient.get(url"${internalAuthService.baseUrl}/test-only/token")(HeaderCarrier())
-      .setHeader("Authorization" -> token)
+      .setHeader("Authorization" -> internalAuthToken)
       .execute
       .map(_.status == 200)
   }
