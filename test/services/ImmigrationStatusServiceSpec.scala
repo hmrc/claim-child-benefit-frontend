@@ -31,6 +31,8 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.mockito.{Mockito, MockitoSugar}
 import org.scalacheck.Gen
 import org.scalatest.BeforeAndAfterEach
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Configuration
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -39,10 +41,12 @@ import java.util.UUID
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach with Generators {
+class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach with Generators with GuiceOneAppPerSuite {
 
   private val mockFeatureFlags = mock[FeatureFlags]
   private val mockConnector = mock[ImmigrationStatusConnector]
+
+  private val configuration: Configuration = app.injector.instanceOf[Configuration]
 
   override def beforeEach(): Unit = {
     Mockito.reset(mockFeatureFlags)
@@ -50,7 +54,7 @@ class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with Befor
     super.beforeEach()
   }
 
-  private val service = new ImmigrationStatusService(mockFeatureFlags, mockConnector)
+  private val service = new ImmigrationStatusService(mockFeatureFlags, mockConnector, configuration, clockAtFixedInstant)
 
   private implicit val hc: HeaderCarrier = new HeaderCarrier()
   private val correlationId = UUID.randomUUID()

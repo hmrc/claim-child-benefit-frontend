@@ -51,6 +51,11 @@ class ImmigrationStatusConnectorSpec
 
   private lazy val connector = app.injector.instanceOf[ImmigrationStatusConnector]
 
+  private val searchRange = StatusCheckRange(
+    endDate = Some(LocalDate.of(2023, 4, 26)),
+    startDate = Some(LocalDate.of(2022, 11, 26))
+  )
+
   ".checkStatus" - {
 
     "must return a status check result when valid json is returned" in {
@@ -94,7 +99,7 @@ class ImmigrationStatusConnectorSpec
           .willReturn(ok(responseBody))
       )
 
-      val ninoSearchRequest = NinoSearchRequest(nino.nino, "First", "Last", LocalDate.of(2001, 1, 31), StatusCheckRange())
+      val ninoSearchRequest = NinoSearchRequest(nino.nino, "First", "Last", LocalDate.of(2001, 1, 31), searchRange)
 
       val result = connector.checkStatus(ninoSearchRequest, correlationId).futureValue
 
@@ -110,7 +115,7 @@ class ImmigrationStatusConnectorSpec
           .willReturn(serverError())
       )
 
-      val ninoSearchRequest = NinoSearchRequest(nino.nino, "First", "Last", LocalDate.of(2001, 1, 31), StatusCheckRange())
+      val ninoSearchRequest = NinoSearchRequest(nino.nino, "First", "Last", LocalDate.of(2001, 1, 31), searchRange)
 
       connector.checkStatus(ninoSearchRequest, correlationId).failed.futureValue
     }
