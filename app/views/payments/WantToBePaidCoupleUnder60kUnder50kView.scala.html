@@ -28,7 +28,7 @@
 
 @(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("wantToBePaid.single.over60k.title"))) {
+@layout(pageTitle = titleNoForm(messages("wantToBePaid.couple.under60k.under50k.title"))) {
 
     @formHelper(action = routes.WantToBePaidController.onSubmit(waypoints)) {
 
@@ -36,28 +36,24 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <h1 class="govuk-heading-xl">@messages("wantToBePaid.single.over60k.heading")</h1>
+        <h1 class="govuk-heading-xl">@messages("wantToBePaid.couple.under60k.under50k.heading")</h1>
 
         <p class="govuk-body">
-            @messages("wantToBePaid.single.over60k.p1")
-            @newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.single.over60k.p1.link.text"), href = Some(messages("wantToBePaid.single.over60k.p1.link.href")))).
+            @messages("wantToBePaid.couple.under60k.under50k.p1")
+            @newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.couple.under60k.under50k.p1.link.text"), href = Some(messages("wantToBePaid.couple.under60k.under50k.p1.link.href")))).
         </p>
+
+        <p class="govuk-body">@messages("wantToBePaid.couple.under60k.under50k.p2")</p>
 
         <p class="govuk-body">
-            @messages("wantToBePaid.single.over60k.p2")
+            @messages("wantToBePaid.couple.under60k.under50k.p3")
         </p>
 
-        <p class="govuk-body">
-            @messages("wantToBePaid.single.over60k.p3")
-        </p>
+        <p class="govuk-body">@messages("wantToBePaid.couple.under60k.under50k.p4")</p>
 
-        <p class="govuk-body">
-            @messages("wantToBePaid.single.over60k.p4")
-        </p>
+        <h2 class="govuk-heading-m">@messages("wantToBePaid.couple.under60k.under50k.h2")</h2>
 
-        <h2 class="govuk-heading-m">@messages("wantToBePaid.single.over60k.h2")</h2>
-
-        <p class="govuk-body govuk-!-margin-bottom-7">@messages("wantToBePaid.single.over60k.p5")</p>
+        <p class="govuk-body govuk-!-margin-bottom-7">@messages("wantToBePaid.couple.under60k.under50k.p5")</p>
 
         @govukRadios(
             RadiosViewModel(
@@ -65,12 +61,12 @@
                 legend = LegendViewModel(messages("wantToBePaid.wantToBePaid")).withCssClass("govuk-!-font-weight-bold"),
                 items = Seq(
                     RadioItem(
-                        content = messages("wantToBePaid.single.yes"),
+                        content = messages("wantToBePaid.couple.applicant.yes"),
                         value = Some("true"),
                         id = Some("value")
                     ),
                     RadioItem(
-                        content = messages("wantToBePaid.single.no"),
+                        content = messages("wantToBePaid.couple.no"),
                         value = Some("false"),
                         id = Some("value-no")
                     )

@@ -20,7 +20,7 @@ import models.Income._
 import models.RelationshipStatus._
 import models.UserAnswers
 import pages.partner.RelationshipStatusPage
-import pages.payments.{ApplicantIncomePage, ApplicantOrPartnerIncomePage, WantToBePaidPage}
+import pages.payments.{ApplicantIncomePage, PartnerIncomePage, WantToBePaidPage}
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -50,9 +50,14 @@ object WantToBePaidSummary {
 
     answers.get(RelationshipStatusPage).flatMap {
       case Married | Cohabiting =>
-        answers.get(ApplicantOrPartnerIncomePage).flatMap {
-          case BelowLowerThreshold => None
-          case _                   => buildRow
+        answers.get(ApplicantIncomePage).flatMap {
+          case BelowLowerThreshold =>
+            answers.get(PartnerIncomePage).flatMap {
+              case BelowLowerThreshold => None
+              case _ => buildRow
+            }
+
+          case _ => buildRow
         }
 
       case Single | Separated | Divorced | Widowed =>

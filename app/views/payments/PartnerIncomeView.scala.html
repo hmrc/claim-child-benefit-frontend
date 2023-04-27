@@ -26,31 +26,31 @@
         newTabLink: HmrcNewTabLinkHelper
 )
 
-@(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints, partnerFirstName: String)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("applicantOrPartnerIncome.title"), section = Some(messages("section.income")))) {
+@layout(pageTitle = title(form, messages("partnerIncome.title"), section = Some(messages("section.income")))) {
 
-    @formHelper(action = routes.ApplicantOrPartnerIncomeController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.PartnerIncomeController.onSubmit(waypoints), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
         }
 
-        <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">@messages("applicantOrPartnerIncome.heading")</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">@messages("partnerIncome.heading", partnerFirstName)</h1>
 
-        <p class="govuk-body">@messages("applicantOrPartnerIncome.p1")</p>
+        <p class="govuk-body">@messages("partnerIncome.p1")</p>
 
         <p class="govuk-body">
-            @messages("applicantOrPartnerIncome.p2")
-            @{newTabLink(NewTabLinkHelper(text = messages("applicantOrPartnerIncome.p2.link.text"), href = Some(messages("applicantOrPartnerIncome.p2.link.href"))))}.
+            @messages("partnerIncome.p2")
+            @{newTabLink(NewTabLinkHelper(text = messages("partnerIncome.p2.link.text"), href = Some(messages("partnerIncome.p2.link.href"))))}.
         </p>
 
-        <p class="govuk-body">@messages("applicantOrPartnerIncome.p3")</p>
+        <p class="govuk-body">@messages("partnerIncome.p3")</p>
 
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(messages("applicantOrPartnerIncome.heading")).visuallyHidden(),
+                legend = LegendViewModel(messages("partnerIncome.heading")).visuallyHidden(),
                 items  = Income.options
             )
         )

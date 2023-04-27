@@ -54,7 +54,8 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
 
   private val setFullPaymentDetailsPartner: JourneyStep[Unit] = journeyOf(
     setUserAnswerTo(AccountTypePage, accountType),
-    setUserAnswerTo(ApplicantOrPartnerIncomePage, Income.BetweenThresholds),
+    setUserAnswerTo(ApplicantIncomePage, Income.BetweenThresholds),
+    setUserAnswerTo(PartnerIncomePage, Income.BetweenThresholds),
     setUserAnswerTo(WantToBePaidPage, true),
     setUserAnswerTo(ApplicantOrPartnerBenefitsPage, Benefits.qualifyingBenefits),
     setUserAnswerTo(PaymentFrequencyPage, PaymentFrequency.Weekly),
@@ -67,7 +68,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
   private val paymentDetailsMustHaveBeenRemoved: JourneyStep[Unit] = journeyOf(
     answersMustNotContain(AccountTypePage),
     answersMustNotContain(ApplicantIncomePage),
-    answersMustNotContain(ApplicantOrPartnerIncomePage),
+    answersMustNotContain(PartnerIncomePage),
     answersMustNotContain(WantToBePaidPage),
     answersMustNotContain(ApplicantBenefitsPage),
     answersMustNotContain(ApplicantOrPartnerBenefitsPage),
@@ -92,7 +93,8 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
 
   private val paymentDetailsMustRemainPartner: JourneyStep[Unit] = journeyOf(
     answersMustContain(AccountTypePage),
-    answersMustContain(ApplicantOrPartnerIncomePage),
+    answersMustContain(ApplicantIncomePage),
+    answersMustContain(PartnerIncomePage),
     answersMustContain(WantToBePaidPage),
     answersMustContain(ApplicantOrPartnerBenefitsPage),
     answersMustContain(PaymentFrequencyPage),

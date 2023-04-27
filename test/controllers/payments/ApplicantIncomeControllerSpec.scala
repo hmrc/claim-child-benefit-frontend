@@ -19,11 +19,14 @@ package controllers.payments
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.payments.ApplicantIncomeFormProvider
+import models.RelationshipStatus._
 import models.{Income, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
+import org.scalacheck.Gen
 import org.scalatestplus.mockito.MockitoSugar
 import pages.EmptyWaypoints
+import pages.partner.RelationshipStatusPage
 import pages.payments.ApplicantIncomePage
 import play.api.inject.bind
 import play.api.test.FakeRequest
@@ -42,11 +45,16 @@ class ApplicantIncomeControllerSpec extends SpecBase with MockitoSugar {
   val formProvider = new ApplicantIncomeFormProvider()
   val form = formProvider()
 
+  private val singleStatus = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
+  private val coupleStatus = Gen.oneOf(Married, Cohabiting).sample.value
+  private val singleAnswers = emptyUserAnswers.set(RelationshipStatusPage, singleStatus).success.value
+  private val coupleAnswers = emptyUserAnswers.set(RelationshipStatusPage, coupleStatus).success.value
+
   "ApplicantIncome Controller" - {
 
-    "must return OK and the correct view for a GET" in {
+    "must return OK and the correct view for a GET when the user has a partner" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(coupleAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, applicantIncomeRoute)
@@ -57,13 +65,30 @@ class ApplicantIncomeControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, true)(request, messages(application)).toString
+      }
+    }
+
+    "must return OK and the correct view for a GET when the user does not have a partner" in {
+
+      val application = applicationBuilder(userAnswers = Some(singleAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, applicantIncomeRoute)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[ApplicantIncomeView]
+
+        status(result) mustEqual OK
+
+        contentAsString(result) mustEqual view(form, waypoints, false)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ApplicantIncomePage, Income.values.head).success.value
+      val userAnswers = singleAnswers.set(ApplicantIncomePage, Income.values.head).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -75,7 +100,7 @@ class ApplicantIncomeControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(Income.values.head), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(Income.values.head), waypoints, false)(request, messages(application)).toString
       }
     }
 
@@ -86,7 +111,7 @@ class ApplicantIncomeControllerSpec extends SpecBase with MockitoSugar {
       when(mockUserDataService.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(coupleAnswers))
           .overrides(
             bind[UserDataService].toInstance(mockUserDataService)
           )
@@ -98,17 +123,17 @@ class ApplicantIncomeControllerSpec extends SpecBase with MockitoSugar {
             .withFormUrlEncodedBody(("value", Income.values.head.toString))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(ApplicantIncomePage, Income.values.head).success.value
+        val expectedAnswers = coupleAnswers.set(ApplicantIncomePage, Income.values.head).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ApplicantIncomePage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual ApplicantIncomePage.navigate(waypoints, coupleAnswers, expectedAnswers).url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
       }
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(singleAnswers)).build()
 
       running(application) {
         val request =
@@ -122,7 +147,7 @@ class ApplicantIncomeControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, false)(request, messages(application)).toString
       }
     }
 

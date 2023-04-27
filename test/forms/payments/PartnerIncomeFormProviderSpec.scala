@@ -20,26 +20,27 @@ import forms.behaviours.OptionFieldBehaviours
 import models.Income
 import play.api.data.FormError
 
-class ApplicantOrPartnerIncomeFormProviderSpec extends OptionFieldBehaviours {
+class PartnerIncomeFormProviderSpec extends OptionFieldBehaviours {
 
-  val form = new ApplicantOrPartnerIncomeFormProvider()()
+  val name = "name"
+  val form = new PartnerIncomeFormProvider()(name)
 
   ".value" - {
 
     val fieldName = "value"
-    val requiredKey = "applicantOrPartnerIncome.error.required"
+    val requiredKey = "partnerIncome.error.required"
 
     behave like optionsField[Income](
       form,
       fieldName,
       validValues  = Income.values,
-      invalidError = FormError(fieldName, "error.invalid")
+      invalidError = FormError(fieldName, "error.invalid", Seq(name))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq(name))
     )
   }
 }

@@ -40,30 +40,22 @@
 
         <p class="govuk-body">
             @messages("wantToBePaid.single.under60k.p1")
-            @{newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.single.under60k.p1.link.text"), href = Some(messages("wantToBePaid.single.under60k.p1.link.href"))))}.
+            @newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.single.under60k.p1.link.text"), href = Some(messages("wantToBePaid.single.under60k.p1.link.href")))).
         </p>
 
         <p class="govuk-body">
-            @messages("wantToBePaid.single.under60k.p2.1")
-            @{newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.single.under60k.p2.link.text"), href = Some(messages("wantToBePaid.single.under60k.p2.link.href"))))}
-            @messages("wantToBePaid.single.under60k.p2.2")
+            @messages("wantToBePaid.single.under60k.p2")
         </p>
-
-        <div class="govuk-warning-text">
-            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-            <strong class="govuk-warning-text__text">
-                <span class="govuk-warning-text__assistive">@messages("site.warning")</span>
-                @messages("wantToBePaid.single.under60k.p3.1")
-                @{newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.single.under60k.p3.link.text"), href = Some(messages("wantToBePaid.single.under60k.p3.link.href"))))}.
-                @messages("wantToBePaid.single.under60k.p3.2")
-            </strong>
-        </div>
 
         <p class="govuk-body">
-            @messages("wantToBePaid.single.under60k.p4.1")
-            @{newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.single.under60k.p4.link.text"), href = Some(messages("wantToBePaid.single.under60k.p4.link.href"))))}
-            @messages("wantToBePaid.single.under60k.p4.2")
+            @messages("wantToBePaid.single.under60k.p3")
         </p>
+
+        <p class="govuk-body">
+        @messages("wantToBePaid.single.under60k.p4")
+        </p>
+
+        <h2 class="govuk-heading-m">@messages("wantToBePaid.single.under60k.h2")</h2>
 
         <p class="govuk-body govuk-!-margin-bottom-7">@messages("wantToBePaid.single.under60k.p5")</p>
 

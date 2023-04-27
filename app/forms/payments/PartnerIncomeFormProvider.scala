@@ -22,10 +22,10 @@ import play.api.data.Form
 
 import javax.inject.Inject
 
-class ApplicantOrPartnerIncomeFormProvider @Inject() extends Mappings {
+class PartnerIncomeFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Income] =
+  def apply(partnerFirstName: String): Form[Income] =
     Form(
-      "value" -> enumerable[Income]("applicantOrPartnerIncome.error.required")
+      "value" -> enumerable[Income]("partnerIncome.error.required", args = Seq(partnerFirstName))
     )
 }
