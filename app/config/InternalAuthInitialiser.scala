@@ -18,7 +18,7 @@ package config
 
 import models.Done
 import play.api.{Configuration, Logging}
-import play.api.libs.json.{JsObject, Json, OFormat}
+import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
@@ -56,22 +56,6 @@ class InternalAuthTokenInitialiserImpl @Inject() (
 
   Await.result(initialised, 30.seconds)
 
-  private case class Resource(resourceType: String, resourceLocation: String, actions: Seq[String])
-
-  private object Resource {
-    implicit val formats: OFormat[Resource] = Json.format[Resource]
-  }
-  private case class Permission(principle: String, permissions: Seq[Resource])
-
-  private object Permission {
-    implicit val formats: OFormat[Permission] = Json.format[Permission]
-  }
-
-  private val permissions: Seq[Permission] = Seq(
-    Permission(appName, Seq(Resource("claim-child-benefit", "*", List("*")))),
-    Permission(appName, Seq(Resource("home-office-immigration-status-proxy", s"status/public-funds/nino/$appName", List("WRITE"))))
-  )
-
   private def ensureAuthToken(): Future[Done] = {
     authTokenIsValid().flatMap { isValid =>
       if (isValid) {
@@ -86,7 +70,22 @@ class InternalAuthTokenInitialiserImpl @Inject() (
   private def createClientAuthToken(): Future[Done] = {
     logger.info("Initialising auth token")
     httpClient.post(url"${internalAuthService.baseUrl}/test-only/token")(HeaderCarrier())
-      .withBody(Json.toJson(permissions))
+      .withBody(Json.obj(
+    "token" -> internalAuthToken,
+        "principal" -> appName,
+        "permissions" -> Seq(
+          Json.obj(
+        "resourceType" -> "claim-child-benefit",
+          "resourceLocation" -> "*",
+          "actions" -> List("*")
+          ),
+          Json.obj(
+            "resourceType" -> "home-office-immigration-status-proxy",
+            "resourceLocation" -> s"status/public-funds/nino/$appName",
+            "actions" -> List("WRITE")
+          )
+        )
+      ))
       .execute
       .flatMap { response =>
         if (response.status == 201) {
