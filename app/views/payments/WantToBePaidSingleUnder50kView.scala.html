@@ -34,13 +34,11 @@
 
         <p class="govuk-body">
             @messages("wantToBePaid.single.under50k.p1")
-            @{newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.single.under50k.p1.link.text"), href = Some(messages("wantToBePaid.single.under50k.p1.link.href"))))}.
         </p>
 
         <p class="govuk-body">
-            @messages("wantToBePaid.single.under50k.p2.1")
-            @{newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.single.under50k.p2.link.text"), href = Some(messages("wantToBePaid.single.under50k.p2.link.href"))))}.
-            @messages("wantToBePaid.single.under50k.p2.2")
+            @messages("wantToBePaid.single.under50k.p2")
+            @newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.single.under50k.p2.link.text"), href = Some(messages("wantToBePaid.single.under50k.p2.link.href")))).
         </p>
 
         <h2 class="govuk-heading-m">@messages("wantToBePaid.single.under50k.h2")</h2>
