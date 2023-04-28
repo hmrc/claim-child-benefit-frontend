@@ -81,7 +81,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
         nationalities = nationalitiesThatResolveToUkCta.sample.value,
         residency = journey.Residency.AlwaysLivedInUk,
         memberOfHMForcesOrCivilServantAbroad = hmfAbroad,
-        currentlyReceivingChildBenefit = None,
+        currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
         changedDesignatoryDetails = Some(false),
         correspondenceAddress = None
       ),

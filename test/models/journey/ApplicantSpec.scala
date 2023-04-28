@@ -73,6 +73,7 @@ class ApplicantSpec extends AnyFreeSpec with Matchers with ModelGenerators with 
           .set(ApplicantPhoneNumberPage, phoneNumber).success.value
           .set(ApplicantNationalityPage(index), nationality).success.value
           .set(ApplicantIsHmfOrCivilServantPage, false).success.value
+          .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
 
       val minimalAnswers =
         UserAnswers("id", nino = Some(nino.value), designatoryDetails = Some(minimalDesignatoryDetails))
@@ -80,6 +81,7 @@ class ApplicantSpec extends AnyFreeSpec with Matchers with ModelGenerators with 
           .set(ApplicantPhoneNumberPage, phoneNumber).success.value
           .set(ApplicantNationalityPage(index), nationality).success.value
           .set(ApplicantIsHmfOrCivilServantPage, false).success.value
+          .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
 
       "must return an Applicant (fullest case)" in {
 
@@ -96,7 +98,7 @@ class ApplicantSpec extends AnyFreeSpec with Matchers with ModelGenerators with 
           nationalities = NonEmptyList(nationality, Nil),
           residency = Residency.AlwaysLivedInUk,
           memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyReceivingChildBenefit = None,
+          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
           changedDesignatoryDetails = Some(false),
           correspondenceAddress = Some(npsAddress)
         )
@@ -119,7 +121,7 @@ class ApplicantSpec extends AnyFreeSpec with Matchers with ModelGenerators with 
           nationalities = NonEmptyList(nationality, Nil),
           residency = Residency.AlwaysLivedInUk,
           memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyReceivingChildBenefit = None,
+          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
           changedDesignatoryDetails = Some(false),
           correspondenceAddress = None
         )
@@ -138,6 +140,7 @@ class ApplicantSpec extends AnyFreeSpec with Matchers with ModelGenerators with 
               .set(DesignatoryUkAddressPage, ukAddress).success.value
               .set(CorrespondenceAddressInUkPage, true).success.value
               .set(CorrespondenceUkAddressPage, ukAddress).success.value
+              .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
 
           val (errors, data) = Applicant.build(answers).pad
 
@@ -152,7 +155,7 @@ class ApplicantSpec extends AnyFreeSpec with Matchers with ModelGenerators with 
             nationalities = NonEmptyList(nationality, Nil),
             residency = Residency.AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = false,
-            currentlyReceivingChildBenefit = None,
+            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
             changedDesignatoryDetails = Some(true),
             correspondenceAddress = Some(ukAddress)
           )
@@ -169,6 +172,7 @@ class ApplicantSpec extends AnyFreeSpec with Matchers with ModelGenerators with 
               .set(DesignatoryInternationalAddressPage, internationalAddress).success.value
               .set(CorrespondenceAddressInUkPage, false).success.value
               .set(CorrespondenceInternationalAddressPage, internationalAddress).success.value
+              .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
 
           val (errors, data) = Applicant.build(answers).pad
 
@@ -183,7 +187,7 @@ class ApplicantSpec extends AnyFreeSpec with Matchers with ModelGenerators with 
             nationalities = NonEmptyList(nationality, Nil),
             residency = Residency.AlwaysLivedInUk,
             memberOfHMForcesOrCivilServantAbroad = false,
-            currentlyReceivingChildBenefit = None,
+            currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
             changedDesignatoryDetails = Some(true),
             correspondenceAddress = Some(internationalAddress)
           )
@@ -311,7 +315,7 @@ class ApplicantSpec extends AnyFreeSpec with Matchers with ModelGenerators with 
           nationalities = NonEmptyList(nationality, Nil),
           residency = Residency.AlwaysLivedInUk,
           memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyReceivingChildBenefit = Some(CurrentlyReceivingChildBenefit.NotClaiming),
+          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
           changedDesignatoryDetails = None,
           correspondenceAddress = None
         )
@@ -334,7 +338,7 @@ class ApplicantSpec extends AnyFreeSpec with Matchers with ModelGenerators with 
           nationalities = NonEmptyList(nationality, Nil),
           residency = Residency.AlwaysLivedInUk,
           memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyReceivingChildBenefit = Some(CurrentlyReceivingChildBenefit.NotClaiming),
+          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
           changedDesignatoryDetails = None,
           correspondenceAddress = None
         )
