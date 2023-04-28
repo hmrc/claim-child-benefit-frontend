@@ -21,7 +21,7 @@ import com.dmanchester.playfop.sapi.PlayFop
 import connectors.ClaimChildBenefitConnector
 import generators.ModelGenerators
 import models.journey.JourneyModel
-import models.{AdultName, Done, RelationshipStatus, SupplementaryMetadata, journey}
+import models.{AdultName, CurrentlyReceivingChildBenefit, Done, RelationshipStatus, SupplementaryMetadata, journey}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito
@@ -83,7 +83,7 @@ class SupplementaryDataServiceSpec
       nationalities = NonEmptyList(genUkCtaNationality.sample.value, Gen.listOf(arbitrary[models.Nationality]).sample.value),
       residency = journey.Residency.AlwaysLivedInUk,
       memberOfHMForcesOrCivilServantAbroad = false,
-      currentlyReceivingChildBenefit = None,
+      currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
       changedDesignatoryDetails = Some(false),
       correspondenceAddress = None
     ),

@@ -76,7 +76,7 @@ class JourneyModelSpec
           nationalities = NonEmptyList(nationality, Nil),
           residency = Residency.AlwaysLivedInUk,
           memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyReceivingChildBenefit = Some(CurrentlyReceivingChildBenefit.NotClaiming),
+          currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
           changedDesignatoryDetails = None,
           correspondenceAddress = None
         ),

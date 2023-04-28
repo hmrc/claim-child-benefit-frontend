@@ -115,9 +115,7 @@
 
                     @line("pdf.phoneNumber", model.applicant.telephoneNumber)
 
-                    @model.applicant.currentlyReceivingChildBenefit.map { x =>
-                        @line("pdf.currentlyReceiving", messages(s"pdf.currentlyReceiving.${x.toString}"))
-                    }
+                    @line("pdf.currentlyReceiving", messages(s"pdf.currentlyReceiving.${model.applicant.currentlyReceivingChildBenefit.toString}"))
 
                     @{model.paymentPreference match {
                         case journey.PaymentPreference.DoNotPay(maybeEldestChild) =>
