@@ -22,28 +22,40 @@ import logging.Logging
 import models.NationalityGroup
 import models.immigration.{NinoSearchRequest, StatusCheckRange}
 import models.journey.JourneyModel
+import play.api.Configuration
 import uk.gov.hmrc.http.HeaderCarrier
 
+import java.time.{Clock, LocalDate, ZoneId}
 import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class ImmigrationStatusService @Inject()(
                                           featureFlags: FeatureFlags,
-                                          connector: ImmigrationStatusConnector
+                                          connector: ImmigrationStatusConnector,
+                                          config: Configuration,
+                                          clock: Clock
                                         )
                                         (implicit ec: ExecutionContext) extends Logging {
+
+  private val searchRangeInMonths: Long =
+    config.get[Long]("microservice.services.home-office-immigration-status-proxy.searchRangeInMonths")
 
   def hasSettledStatus(nino: String, model: JourneyModel, correlationId: UUID)(hc: HeaderCarrier): Future[Option[Boolean]] =
     if (featureFlags.checkImmigrationStatus) {
       if (model.applicant.nationalityGroupToUse == NationalityGroup.Eea) {
+
+        val today = LocalDate.now(clock)
 
         val searchRequest = NinoSearchRequest(
           nino = nino,
           givenName = model.applicant.name.firstName,
           familyName = model.applicant.name.lastName,
           dateOfBirth = model.applicant.dateOfBirth,
-          statusCheckRange = StatusCheckRange()
+          statusCheckRange = StatusCheckRange(
+            startDate = Some(today.minusMonths(searchRangeInMonths)),
+            endDate = Some(today)
+          )
         )
 
         connector

@@ -39,15 +39,22 @@ class ImmigrationStatusConnectorSpec
   private lazy val app: Application =
     new GuiceApplicationBuilder()
       .configure(
-        "microservice.services.home-office-immigration-status-proxy.port" -> server.port
+        "microservice.services.home-office-immigration-status-proxy.port" -> server.port,
+        "internal-auth.token" -> "authKey"
       )
       .build()
 
   implicit private lazy val hc: HeaderCarrier = HeaderCarrier()
   private val correlationId = UUID.randomUUID()
   private val nino = arbitrary[Nino].sample.value
+  private val service = "claim-child-benefit-frontend"
 
   private lazy val connector = app.injector.instanceOf[ImmigrationStatusConnector]
+
+  private val searchRange = StatusCheckRange(
+    endDate = Some(LocalDate.of(2023, 4, 26)),
+    startDate = Some(LocalDate.of(2022, 11, 26))
+  )
 
   ".checkStatus" - {
 
@@ -86,12 +93,13 @@ class ImmigrationStatusConnectorSpec
       )
 
       server.stubFor(
-        post(urlEqualTo("/v1/status/public-funds/nino"))
+        post(urlEqualTo(s"/v1/status/public-funds/nino/$service"))
           .withHeader("X-Correlation-Id", equalTo(correlationId.toString))
+          .withHeader("Authorization", equalTo("authKey"))
           .willReturn(ok(responseBody))
       )
 
-      val ninoSearchRequest = NinoSearchRequest(nino.nino, "First", "Last", LocalDate.of(2001, 1, 31), StatusCheckRange())
+      val ninoSearchRequest = NinoSearchRequest(nino.nino, "First", "Last", LocalDate.of(2001, 1, 31), searchRange)
 
       val result = connector.checkStatus(ninoSearchRequest, correlationId).futureValue
 
@@ -101,12 +109,13 @@ class ImmigrationStatusConnectorSpec
     "must return a failed future when the server returns an error code" in {
 
       server.stubFor(
-        post(urlEqualTo("/v1/status/public-funds/nino"))
+        post(urlEqualTo(s"/v1/status/public-funds/nino/$service"))
           .withHeader("X-Correlation-Id", equalTo(correlationId.toString))
+          .withHeader("Authorization", equalTo("authKey"))
           .willReturn(serverError())
       )
 
-      val ninoSearchRequest = NinoSearchRequest(nino.nino, "First", "Last", LocalDate.of(2001, 1, 31), StatusCheckRange())
+      val ninoSearchRequest = NinoSearchRequest(nino.nino, "First", "Last", LocalDate.of(2001, 1, 31), searchRange)
 
       connector.checkStatus(ninoSearchRequest, correlationId).failed.futureValue
     }
