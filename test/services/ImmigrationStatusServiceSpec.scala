@@ -72,7 +72,7 @@ class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with Befor
       nationalities = NonEmptyList(genUkCtaNationality.sample.value, Gen.listOf(arbitrary[models.Nationality]).sample.value),
       residency = journey.Residency.AlwaysLivedInUk,
       memberOfHMForcesOrCivilServantAbroad = hmfAbroad,
-      currentlyReceivingChildBenefit = Some(CurrentlyReceivingChildBenefit.NotClaiming),
+      currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
       changedDesignatoryDetails = Some(false),
       correspondenceAddress = None
     ),
@@ -115,7 +115,7 @@ class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with Befor
 
         when(mockFeatureFlags.checkImmigrationStatus).thenReturn(false)
 
-        val result = service.hasSettledStatus(nino, model, correlationId)(hc).futureValue
+        val result = service.settledStatusStartDate(nino, model, correlationId)(hc).futureValue
 
         result must not be defined
         verify(mockConnector, never).checkStatus(any(), any())(any())
@@ -130,9 +130,10 @@ class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with Befor
 
           val nationality = Nationality.allNationalities.filter(_.group == NationalityGroup.Eea).head
           val model = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(nationalities = NonEmptyList(nationality, Nil)))
+          val settledStatusDate = LocalDate.now
 
           val immigrationStatusWithSettledStatus = ImmigrationStatus(
-            statusStartDate = LocalDate.now,
+            statusStartDate = settledStatusDate,
             statusEndDate = None,
             productType = eus,
             immigrationStatus = ilr,
@@ -149,9 +150,9 @@ class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with Befor
           when(mockFeatureFlags.checkImmigrationStatus).thenReturn(true)
           when(mockConnector.checkStatus(any(), any())(any())).thenReturn(Future.successful(response))
 
-          val result = service.hasSettledStatus(nino, model, correlationId)(hc).futureValue
+          val result = service.settledStatusStartDate(nino, model, correlationId)(hc).futureValue
 
-          result.value mustEqual true
+          result.value mustEqual settledStatusDate
           verify(mockConnector, times(1)).checkStatus(any(), any())(any())
         }
       }
@@ -165,7 +166,7 @@ class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with Befor
 
           when(mockFeatureFlags.checkImmigrationStatus).thenReturn(true)
 
-          val result = service.hasSettledStatus(nino, model, correlationId)(hc).futureValue
+          val result = service.settledStatusStartDate(nino, model, correlationId)(hc).futureValue
 
           result must not be defined
           verify(mockConnector, never).checkStatus(any(), any())(any())
@@ -182,7 +183,7 @@ class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with Befor
           when(mockFeatureFlags.checkImmigrationStatus).thenReturn(true)
           when(mockConnector.checkStatus(any(), any())(any())).thenReturn(Future.failed(new RuntimeException("foo")))
 
-          val result = service.hasSettledStatus(nino, model, correlationId)(hc).futureValue
+          val result = service.settledStatusStartDate(nino, model, correlationId)(hc).futureValue
 
           result must not be defined
         }

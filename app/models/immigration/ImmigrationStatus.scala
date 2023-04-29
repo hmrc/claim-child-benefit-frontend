@@ -29,10 +29,13 @@ final case class ImmigrationStatus(
                                     noRecourseToPublicFunds: Boolean
                                   ) {
 
-  lazy val isEus: Boolean = productType.take(3) == eus
-  lazy val isExpired: Boolean = statusEndDate.exists(_.isBefore(LocalDate.now))
+  private lazy val isEus: Boolean = productType.take(3) == eus
+  private lazy val isIlr: Boolean = immigrationStatus.take(3) == ilr
+  private lazy val isExpired: Boolean = statusEndDate.exists(_.isBefore(LocalDate.now))
 
-  lazy val hasSettledStatus: Boolean = immigrationStatus.take(3) == ilr && isEus && !isExpired
+  private lazy val hasSettledStatus: Boolean = isIlr && isEus && !isExpired
+
+  lazy val settledStatusStartDate: Option[LocalDate] = if (hasSettledStatus) Some(statusStartDate) else None
 }
 
 object ImmigrationStatus {

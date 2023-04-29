@@ -41,7 +41,8 @@ class ImmigrationStatusService @Inject()(
   private val searchRangeInMonths: Long =
     config.get[Long]("microservice.services.home-office-immigration-status-proxy.searchRangeInMonths")
 
-  def hasSettledStatus(nino: String, model: JourneyModel, correlationId: UUID)(hc: HeaderCarrier): Future[Option[Boolean]] =
+  def settledStatusStartDate(nino: String, model: JourneyModel, correlationId: UUID)
+                            (hc: HeaderCarrier): Future[Option[LocalDate]] =
     if (featureFlags.checkImmigrationStatus) {
       if (model.applicant.nationalityGroupToUse == NationalityGroup.Eea) {
 
@@ -60,7 +61,7 @@ class ImmigrationStatusService @Inject()(
 
         connector
           .checkStatus(searchRequest, correlationId)(hc)
-          .map(result => Some(result.hasSettledStatus))
+          .map(result => result.settledStatusStartDate)
           .recover {
             case e: Throwable =>
               logger.warn("Call to home-office-immigration-status-proxy failed: " + e.getMessage)
