@@ -46,13 +46,15 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
 
   override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, originalAnswers: UserAnswers, updatedAnswers: UserAnswers): Page = {
 
-    def taskListSectionsChanging(newStatus: RelationshipStatus): Boolean =
+    def taskListSectionsChanging(oldStatus: RelationshipStatus, newStatus: RelationshipStatus): Boolean =
       newStatus match {
         case Married | Cohabiting =>
-          originalAnswers.isDefined(ApplicantIncomePage)
+          Seq(Single, Separated, Divorced, Widowed).contains(oldStatus) &&
+            originalAnswers.isDefined(ApplicantIncomePage)
 
         case Single | Separated | Divorced | Widowed =>
-          originalAnswers.isDefined(ApplicantOrPartnerIncomePage)
+          Seq(Married, Cohabiting).contains(oldStatus) &&
+            originalAnswers.isDefined(ApplicantIncomePage)
       }
 
     def nextPage(newStatus: RelationshipStatus) =
@@ -79,13 +81,17 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
           waypoints.next.page
       }
 
-    updatedAnswers.get(this).map {
-      status =>
-        if (taskListSectionsChanging(status)) {
-          RelationshipStatusChangesTaskListPage
-        } else {
-          nextPage(status)
-        }
+    originalAnswers.get(this).map {
+      oldStatus =>
+        updatedAnswers.get(this).map {
+          newStatus =>
+            if (taskListSectionsChanging(oldStatus, newStatus)) {
+              RelationshipStatusChangesTaskListPage
+            } else {
+              nextPage(newStatus)
+            }
+        }.orRecover
+
     }.orRecover
   }
 
@@ -105,7 +111,7 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
         case Single | Separated | Divorced | Widowed =>
           originalAnswers.get(RelationshipStatusPage).exists {
             case Cohabiting | Married =>
-              originalAnswers.isDefined(ApplicantOrPartnerIncomePage)
+              originalAnswers.isDefined(ApplicantIncomePage)
 
             case Single | Separated | Divorced | Widowed =>
               false
@@ -159,8 +165,8 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
 
   private val paymentPages: Seq[Settable[_]] = Seq(
     AccountTypePage,
-    ApplicantOrPartnerIncomePage,
     ApplicantIncomePage,
+    PartnerIncomePage,
     WantToBePaidPage,
     ApplicantBenefitsPage,
     ApplicantOrPartnerBenefitsPage,

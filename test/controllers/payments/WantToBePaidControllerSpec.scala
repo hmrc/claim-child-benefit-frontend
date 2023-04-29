@@ -47,86 +47,219 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
       "when the applicant is married or cohabiting" - {
 
-        "and their income is under 50k" in {
+        val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
+        val baseAnswers = emptyUserAnswers.set(RelationshipStatusPage, relationshipStatus).success.value
 
-          val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
+        "and their income is under 50k" - {
 
-          val answers =
-            emptyUserAnswers
-              .set(RelationshipStatusPage, relationshipStatus).success.value
-              .set(ApplicantOrPartnerIncomePage, BelowLowerThreshold).success.value
+          "and their partner's income is under 50k" in {
 
-          val application = applicationBuilder(userAnswers = Some(answers)).build()
+            val answers =
+              baseAnswers
+                .set(ApplicantIncomePage, BelowLowerThreshold).success.value
+                .set(PartnerIncomePage, BelowLowerThreshold).success.value
 
-          running(application) {
-            val request = FakeRequest(GET, routes.WantToBePaidController.onPageLoad(waypoints).url)
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-            val result = route(application, request).value
+            running(application) {
+              val request = FakeRequest(GET, routes.WantToBePaidController.onPageLoad(waypoints).url)
 
-            val view = application.injector.instanceOf[WantToBePaidCoupleUnder50kView]
+              val result = route(application, request).value
 
-            status(result) mustEqual OK
-            contentAsString(result) mustEqual view(waypoints)(request, messages(application)).toString
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnder50kUnder50kView]
+
+              status(result) mustEqual OK
+              contentAsString(result) mustEqual view(waypoints)(request, messages(application)).toString
+            }
+          }
+
+          "and their partner's income is between 50k and 60k" in {
+
+            val answers =
+              baseAnswers
+                .set(ApplicantIncomePage, BelowLowerThreshold).success.value
+                .set(PartnerIncomePage, BetweenThresholds).success.value
+
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+            running(application) {
+              val request = FakeRequest(GET, routes.WantToBePaidController.onPageLoad(waypoints).url)
+
+              val result = route(application, request).value
+
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnder50kUnder60kView]
+
+              status(result) mustEqual OK
+              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+            }
+          }
+
+          "and their partner's income is over 60k" in {
+
+            val answers =
+              baseAnswers
+                .set(ApplicantIncomePage, BelowLowerThreshold).success.value
+                .set(PartnerIncomePage, AboveUpperThreshold).success.value
+
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+            running(application) {
+              val request = FakeRequest(GET, routes.WantToBePaidController.onPageLoad(waypoints).url)
+
+              val result = route(application, request).value
+
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnder50kOver60kView]
+
+              status(result) mustEqual OK
+              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+            }
           }
         }
 
-        "and their income is between 50k and 60k" in {
+        "and their income is between 50k and 60k" - {
 
-          val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
+          "and their partner's income is below 60k" in {
 
-          val answers =
-            emptyUserAnswers
-              .set(RelationshipStatusPage, relationshipStatus).success.value
-              .set(ApplicantOrPartnerIncomePage, BetweenThresholds).success.value
+            val answers =
+              baseAnswers
+                .set(ApplicantIncomePage, BetweenThresholds).success.value
+                .set(PartnerIncomePage, BelowLowerThreshold).success.value
 
-          val application = applicationBuilder(userAnswers = Some(answers)).build()
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-          running(application) {
-            val request = FakeRequest(GET, routes.WantToBePaidController.onPageLoad(waypoints).url)
+            running(application) {
+              val request = FakeRequest(GET, routes.WantToBePaidController.onPageLoad(waypoints).url)
 
-            val result = route(application, request).value
+              val result = route(application, request).value
 
-            val view = application.injector.instanceOf[WantToBePaidCoupleUnder60kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnder60kUnder50kView]
 
-            status(result) mustEqual OK
-            contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+              status(result) mustEqual OK
+              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+            }
+          }
+
+          "and their partner's income is between 50k and 60k" in {
+
+            val answers =
+              baseAnswers
+                .set(ApplicantIncomePage, BetweenThresholds).success.value
+                .set(PartnerIncomePage, BetweenThresholds).success.value
+
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+            running(application) {
+              val request = FakeRequest(GET, routes.WantToBePaidController.onPageLoad(waypoints).url)
+
+              val result = route(application, request).value
+
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnder60kUnder60kView]
+
+              status(result) mustEqual OK
+              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+            }
+          }
+
+          "and their partner's income is over 60k" in {
+
+            val answers =
+              baseAnswers
+                .set(ApplicantIncomePage, BetweenThresholds).success.value
+                .set(PartnerIncomePage, AboveUpperThreshold).success.value
+
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+            running(application) {
+              val request = FakeRequest(GET, routes.WantToBePaidController.onPageLoad(waypoints).url)
+
+              val result = route(application, request).value
+
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnder60kOver60kView]
+
+              status(result) mustEqual OK
+              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+            }
           }
         }
 
-        "and their income is over 60k" in {
+        "and their income is over 60k" - {
 
-          val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
+          "and their partner's income is below 50k" in {
 
-          val answers =
-            emptyUserAnswers
-              .set(RelationshipStatusPage, relationshipStatus).success.value
-              .set(ApplicantOrPartnerIncomePage, AboveUpperThreshold).success.value
+            val answers =
+              baseAnswers
+                .set(RelationshipStatusPage, relationshipStatus).success.value
+                .set(ApplicantIncomePage, AboveUpperThreshold).success.value
+                .set(PartnerIncomePage, BelowLowerThreshold).success.value
 
-          val application = applicationBuilder(userAnswers = Some(answers)).build()
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-          running(application) {
-            val request = FakeRequest(GET, routes.WantToBePaidController.onPageLoad(waypoints).url)
+            running(application) {
+              val request = FakeRequest(GET, routes.WantToBePaidController.onPageLoad(waypoints).url)
 
-            val result = route(application, request).value
+              val result = route(application, request).value
 
-            val view = application.injector.instanceOf[WantToBePaidCoupleOver60kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleOver60kUnder50kView]
 
-            status(result) mustEqual OK
-            contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+              status(result) mustEqual OK
+              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+            }
+          }
+
+          "and their partner's income is between 50k and 60k" in {
+
+            val answers =
+              baseAnswers
+                .set(RelationshipStatusPage, relationshipStatus).success.value
+                .set(ApplicantIncomePage, AboveUpperThreshold).success.value
+                .set(PartnerIncomePage, BetweenThresholds).success.value
+
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+            running(application) {
+              val request = FakeRequest(GET, routes.WantToBePaidController.onPageLoad(waypoints).url)
+
+              val result = route(application, request).value
+
+              val view = application.injector.instanceOf[WantToBePaidCoupleOver60kUnder60kView]
+
+              status(result) mustEqual OK
+              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+            }
+          }
+
+          "and their partner's income is over 60k" in {
+
+            val answers =
+              baseAnswers
+                .set(RelationshipStatusPage, relationshipStatus).success.value
+                .set(ApplicantIncomePage, AboveUpperThreshold).success.value
+                .set(PartnerIncomePage, AboveUpperThreshold).success.value
+
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+            running(application) {
+              val request = FakeRequest(GET, routes.WantToBePaidController.onPageLoad(waypoints).url)
+
+              val result = route(application, request).value
+
+              val view = application.injector.instanceOf[WantToBePaidCoupleOver60kOver60kView]
+
+              status(result) mustEqual OK
+              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+            }
           }
         }
       }
 
       "when the applicant is single, separated, divorced or widowed" - {
 
+        val relationshipStatus = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
+        val baseAnswers = emptyUserAnswers.set(RelationshipStatusPage, relationshipStatus).success.value
+
         "and their income is under 50k" in {
 
-          val relationshipStatus = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
-
-          val answers =
-            emptyUserAnswers
-              .set(RelationshipStatusPage, relationshipStatus).success.value
-              .set(ApplicantIncomePage, BelowLowerThreshold).success.value
+          val answers = baseAnswers.set(ApplicantIncomePage, BelowLowerThreshold).success.value
 
           val application = applicationBuilder(userAnswers = Some(answers)).build()
 
@@ -144,12 +277,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
         "and their income is between 50k and 60k" in {
 
-          val relationshipStatus = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
-
-          val answers =
-            emptyUserAnswers
-              .set(RelationshipStatusPage, relationshipStatus).success.value
-              .set(ApplicantIncomePage, BetweenThresholds).success.value
+          val answers = baseAnswers.set(ApplicantIncomePage, BetweenThresholds).success.value
 
           val application = applicationBuilder(userAnswers = Some(answers)).build()
 
@@ -167,12 +295,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
         "and their income is over 60k" in {
 
-          val relationshipStatus = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
-
-          val answers =
-            emptyUserAnswers
-              .set(RelationshipStatusPage, relationshipStatus).success.value
-              .set(ApplicantIncomePage, AboveUpperThreshold).success.value
+          val answers = baseAnswers.set(ApplicantIncomePage, AboveUpperThreshold).success.value
 
           val application = applicationBuilder(userAnswers = Some(answers)).build()
 
@@ -194,51 +317,191 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
       "when the applicant is married or cohabiting" - {
 
-        "and their income is between 50k and 60k" in {
+        val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
+        val baseAnswers = emptyUserAnswers.set(RelationshipStatusPage, relationshipStatus).success.value
 
-          val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
+        "and their income is below 50k" - {
 
-          val answers =
-            emptyUserAnswers
-              .set(RelationshipStatusPage, relationshipStatus).success.value
-              .set(ApplicantOrPartnerIncomePage, BetweenThresholds).success.value
-              .set(WantToBePaidPage, true).success.value
+          "and their partner's income is between 50k and 60k" in {
 
-          val application = applicationBuilder(userAnswers = Some(answers)).build()
+            val answers =
+              baseAnswers
+                .set(ApplicantIncomePage, BelowLowerThreshold).success.value
+                .set(PartnerIncomePage, BetweenThresholds).success.value
+                .set(WantToBePaidPage, true).success.value
 
-          running(application) {
-            val request = FakeRequest(GET, routes.WantToBePaidController.onPageLoad(waypoints).url)
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-            val result = route(application, request).value
+            running(application) {
+              val request = FakeRequest(GET, routes.WantToBePaidController.onPageLoad(waypoints).url)
 
-            val view = application.injector.instanceOf[WantToBePaidCoupleUnder60kView]
+              val result = route(application, request).value
 
-            status(result) mustEqual OK
-            contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnder50kUnder60kView]
+
+              status(result) mustEqual OK
+              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+            }
+          }
+
+          "and their partner's income is over 60k" in {
+
+            val answers =
+              baseAnswers
+                .set(ApplicantIncomePage, BelowLowerThreshold).success.value
+                .set(PartnerIncomePage, AboveUpperThreshold).success.value
+                .set(WantToBePaidPage, true).success.value
+
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+            running(application) {
+              val request = FakeRequest(GET, routes.WantToBePaidController.onPageLoad(waypoints).url)
+
+              val result = route(application, request).value
+
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnder50kOver60kView]
+
+              status(result) mustEqual OK
+              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+            }
           }
         }
 
-        "and their income is over 60k" in {
+        "and their income is between 50k and 60k" - {
 
-          val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
+          "and their partner's income is below 50k" in {
 
-          val answers =
-            emptyUserAnswers
-              .set(RelationshipStatusPage, relationshipStatus).success.value
-              .set(ApplicantOrPartnerIncomePage, AboveUpperThreshold).success.value
-              .set(WantToBePaidPage, true).success.value
+            val answers =
+              baseAnswers
+                .set(ApplicantIncomePage, BetweenThresholds).success.value
+                .set(PartnerIncomePage, BelowLowerThreshold).success.value
+                .set(WantToBePaidPage, true).success.value
 
-          val application = applicationBuilder(userAnswers = Some(answers)).build()
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-          running(application) {
-            val request = FakeRequest(GET, routes.WantToBePaidController.onPageLoad(waypoints).url)
+            running(application) {
+              val request = FakeRequest(GET, routes.WantToBePaidController.onPageLoad(waypoints).url)
 
-            val result = route(application, request).value
+              val result = route(application, request).value
 
-            val view = application.injector.instanceOf[WantToBePaidCoupleOver60kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnder60kUnder50kView]
 
-            status(result) mustEqual OK
-            contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+              status(result) mustEqual OK
+              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+            }
+          }
+
+          "and their partner's income is between 50k and 60k" in {
+
+            val answers =
+              baseAnswers
+                .set(ApplicantIncomePage, BetweenThresholds).success.value
+                .set(PartnerIncomePage, BetweenThresholds).success.value
+                .set(WantToBePaidPage, true).success.value
+
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+            running(application) {
+              val request = FakeRequest(GET, routes.WantToBePaidController.onPageLoad(waypoints).url)
+
+              val result = route(application, request).value
+
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnder60kUnder60kView]
+
+              status(result) mustEqual OK
+              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+            }
+          }
+
+          "and their partner's income is above 60k" in {
+
+            val answers =
+              baseAnswers
+                .set(ApplicantIncomePage, BetweenThresholds).success.value
+                .set(PartnerIncomePage, AboveUpperThreshold).success.value
+                .set(WantToBePaidPage, true).success.value
+
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+            running(application) {
+              val request = FakeRequest(GET, routes.WantToBePaidController.onPageLoad(waypoints).url)
+
+              val result = route(application, request).value
+
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnder60kOver60kView]
+
+              status(result) mustEqual OK
+              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+            }
+          }
+        }
+
+        "and their income is over 60k" - {
+
+          "and their partner's income is below 50k" in {
+
+            val answers =
+              baseAnswers
+                .set(ApplicantIncomePage, AboveUpperThreshold).success.value
+                .set(PartnerIncomePage, BelowLowerThreshold).success.value
+                .set(WantToBePaidPage, true).success.value
+
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+            running(application) {
+              val request = FakeRequest(GET, routes.WantToBePaidController.onPageLoad(waypoints).url)
+
+              val result = route(application, request).value
+
+              val view = application.injector.instanceOf[WantToBePaidCoupleOver60kUnder50kView]
+
+              status(result) mustEqual OK
+              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+            }
+          }
+
+          "and their partner's income is between 50k and 60k" in {
+
+            val answers =
+              baseAnswers
+                .set(ApplicantIncomePage, AboveUpperThreshold).success.value
+                .set(PartnerIncomePage, BetweenThresholds).success.value
+                .set(WantToBePaidPage, true).success.value
+
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+            running(application) {
+              val request = FakeRequest(GET, routes.WantToBePaidController.onPageLoad(waypoints).url)
+
+              val result = route(application, request).value
+
+              val view = application.injector.instanceOf[WantToBePaidCoupleOver60kUnder60kView]
+
+              status(result) mustEqual OK
+              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+            }
+          }
+
+          "and their partner's income is above 60k" in {
+
+            val answers =
+              baseAnswers
+                .set(ApplicantIncomePage, AboveUpperThreshold).success.value
+                .set(PartnerIncomePage, AboveUpperThreshold).success.value
+                .set(WantToBePaidPage, true).success.value
+
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+            running(application) {
+              val request = FakeRequest(GET, routes.WantToBePaidController.onPageLoad(waypoints).url)
+
+              val result = route(application, request).value
+
+              val view = application.injector.instanceOf[WantToBePaidCoupleOver60kOver60kView]
+
+              status(result) mustEqual OK
+              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+            }
           }
         }
       }
@@ -327,65 +590,203 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
       "when the applicant is married or cohabiting" - {
 
-        "and their income is between 50k and 60k" in {
+        val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
+        val baseAnswers = emptyUserAnswers.set(RelationshipStatusPage, relationshipStatus).success.value
 
-          val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
+        "and their income is below 50k" - {
 
-          val answers =
-            emptyUserAnswers
-              .set(RelationshipStatusPage, relationshipStatus).success.value
-              .set(ApplicantOrPartnerIncomePage, BetweenThresholds).success.value
+          "and their partner's income is between 50k and 60k" in {
 
-          val application = applicationBuilder(userAnswers = Some(answers)).build()
+            val answers =
+              baseAnswers
+                .set(ApplicantIncomePage, BelowLowerThreshold).success.value
+                .set(PartnerIncomePage, BetweenThresholds).success.value
 
-          running(application) {
-            val request = FakeRequest(POST, routes.WantToBePaidController.onSubmit(waypoints).url).withFormUrlEncodedBody(("value", ""))
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-            val boundForm = form.bind(Map("value" -> ""))
-            val result = route(application, request).value
+            running(application) {
+              val request = FakeRequest(POST, routes.WantToBePaidController.onSubmit(waypoints).url).withFormUrlEncodedBody(("value", ""))
 
-            val view = application.injector.instanceOf[WantToBePaidCoupleUnder60kView]
+              val boundForm = form.bind(Map("value" -> ""))
+              val result = route(application, request).value
 
-            status(result) mustEqual BAD_REQUEST
-            contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnder50kUnder60kView]
+
+              status(result) mustEqual BAD_REQUEST
+              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+            }
+          }
+
+          "and their partner's income is over 60k" in {
+
+            val answers =
+              baseAnswers
+                .set(ApplicantIncomePage, BelowLowerThreshold).success.value
+                .set(PartnerIncomePage, AboveUpperThreshold).success.value
+
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+            running(application) {
+              val request = FakeRequest(POST, routes.WantToBePaidController.onSubmit(waypoints).url).withFormUrlEncodedBody(("value", ""))
+
+              val boundForm = form.bind(Map("value" -> ""))
+              val result = route(application, request).value
+
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnder50kOver60kView]
+
+              status(result) mustEqual BAD_REQUEST
+              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+            }
           }
         }
 
-        "and their income is over 60k" in {
+        "and their income is between 50k and 60k" - {
 
-          val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
+          "and their partner's income is below 50k" in {
 
-          val answers =
-            emptyUserAnswers
-              .set(RelationshipStatusPage, relationshipStatus).success.value
-              .set(ApplicantOrPartnerIncomePage, AboveUpperThreshold).success.value
+            val answers =
+              baseAnswers
+                .set(ApplicantIncomePage, BetweenThresholds).success.value
+                .set(PartnerIncomePage, BelowLowerThreshold).success.value
 
-          val application = applicationBuilder(userAnswers = Some(answers)).build()
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-          running(application) {
-            val request = FakeRequest(POST, routes.WantToBePaidController.onSubmit(waypoints).url).withFormUrlEncodedBody(("value", ""))
+            running(application) {
+              val request = FakeRequest(POST, routes.WantToBePaidController.onSubmit(waypoints).url).withFormUrlEncodedBody(("value", ""))
 
-            val boundForm = form.bind(Map("value" -> ""))
-            val result = route(application, request).value
+              val boundForm = form.bind(Map("value" -> ""))
+              val result = route(application, request).value
 
-            val view = application.injector.instanceOf[WantToBePaidCoupleOver60kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnder60kUnder50kView]
 
-            status(result) mustEqual BAD_REQUEST
-            contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+              status(result) mustEqual BAD_REQUEST
+              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+            }
+          }
+
+          "and their partner's income is between 50k and 60k" in {
+
+            val answers =
+              baseAnswers
+                .set(ApplicantIncomePage, BetweenThresholds).success.value
+                .set(PartnerIncomePage, BetweenThresholds).success.value
+
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+            running(application) {
+              val request = FakeRequest(POST, routes.WantToBePaidController.onSubmit(waypoints).url).withFormUrlEncodedBody(("value", ""))
+
+              val boundForm = form.bind(Map("value" -> ""))
+              val result = route(application, request).value
+
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnder60kUnder60kView]
+
+              status(result) mustEqual BAD_REQUEST
+              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+            }
+          }
+
+          "and their partner's income is over 60k" in {
+
+            val answers =
+              baseAnswers
+                .set(ApplicantIncomePage, BetweenThresholds).success.value
+                .set(PartnerIncomePage, AboveUpperThreshold).success.value
+
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+            running(application) {
+              val request = FakeRequest(POST, routes.WantToBePaidController.onSubmit(waypoints).url).withFormUrlEncodedBody(("value", ""))
+
+              val boundForm = form.bind(Map("value" -> ""))
+              val result = route(application, request).value
+
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnder60kOver60kView]
+
+              status(result) mustEqual BAD_REQUEST
+              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+            }
+          }
+        }
+
+        "and their income is over 60k" - {
+
+          "and their partner's income is below 50k" in {
+
+            val answers =
+              baseAnswers
+                .set(ApplicantIncomePage, AboveUpperThreshold).success.value
+                .set(PartnerIncomePage, BelowLowerThreshold).success.value
+
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+            running(application) {
+              val request = FakeRequest(POST, routes.WantToBePaidController.onSubmit(waypoints).url).withFormUrlEncodedBody(("value", ""))
+
+              val boundForm = form.bind(Map("value" -> ""))
+              val result = route(application, request).value
+
+              val view = application.injector.instanceOf[WantToBePaidCoupleOver60kUnder50kView]
+
+              status(result) mustEqual BAD_REQUEST
+              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+            }
+          }
+
+          "and their partner's income is between 50k and 60k" in {
+
+            val answers =
+              baseAnswers
+                .set(ApplicantIncomePage, AboveUpperThreshold).success.value
+                .set(PartnerIncomePage, BetweenThresholds).success.value
+
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+            running(application) {
+              val request = FakeRequest(POST, routes.WantToBePaidController.onSubmit(waypoints).url).withFormUrlEncodedBody(("value", ""))
+
+              val boundForm = form.bind(Map("value" -> ""))
+              val result = route(application, request).value
+
+              val view = application.injector.instanceOf[WantToBePaidCoupleOver60kUnder60kView]
+
+              status(result) mustEqual BAD_REQUEST
+              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+            }
+          }
+
+          "and their partner's income is over 60k" in {
+
+            val answers =
+              baseAnswers
+                .set(ApplicantIncomePage, AboveUpperThreshold).success.value
+                .set(PartnerIncomePage, AboveUpperThreshold).success.value
+
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+            running(application) {
+              val request = FakeRequest(POST, routes.WantToBePaidController.onSubmit(waypoints).url).withFormUrlEncodedBody(("value", ""))
+
+              val boundForm = form.bind(Map("value" -> ""))
+              val result = route(application, request).value
+
+              val view = application.injector.instanceOf[WantToBePaidCoupleOver60kOver60kView]
+
+              status(result) mustEqual BAD_REQUEST
+              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+            }
           }
         }
       }
 
       "when the applicant is single, separated, divorced or widowed" - {
 
+        val relationshipStatus = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
+        val baseAnswers = emptyUserAnswers.set(RelationshipStatusPage, relationshipStatus).success.value
+
         "and their income is between 50k and 60k" in {
 
-          val relationshipStatus = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
-
-          val answers =
-            emptyUserAnswers
-              .set(RelationshipStatusPage, relationshipStatus).success.value
-              .set(ApplicantIncomePage, BetweenThresholds).success.value
+          val answers = baseAnswers.set(ApplicantIncomePage, BetweenThresholds).success.value
 
           val application = applicationBuilder(userAnswers = Some(answers)).build()
 
@@ -404,12 +805,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
         "and their income is over 60k" in {
 
-          val relationshipStatus = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
-
-          val answers =
-            emptyUserAnswers
-              .set(RelationshipStatusPage, relationshipStatus).success.value
-              .set(ApplicantIncomePage, AboveUpperThreshold).success.value
+          val answers = baseAnswers.set(ApplicantIncomePage, AboveUpperThreshold).success.value
 
           val application = applicationBuilder(userAnswers = Some(answers)).build()
 

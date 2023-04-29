@@ -22,14 +22,14 @@ import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-case object ApplicantOrPartnerIncomePage extends QuestionPage[Income] {
+case object PartnerIncomePage extends QuestionPage[Income] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "applicantOrPartnerIncome"
+  override def toString: String = "partnerIncome"
 
   override def route(waypoints: Waypoints): Call =
-    routes.ApplicantOrPartnerIncomeController.onPageLoad(waypoints)
+    routes.PartnerIncomeController.onPageLoad(waypoints)
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     WantToBePaidPage
@@ -37,6 +37,6 @@ case object ApplicantOrPartnerIncomePage extends QuestionPage[Income] {
   override protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, originalAnswers: UserAnswers, updatedAnswers: UserAnswers): Page =
     (originalAnswers.get(this), updatedAnswers.get(this)) match {
       case (Some(x), Some(y)) if x != y => WantToBePaidPage
-      case _                            => waypoints.next.page
+      case _ => waypoints.next.page
     }
 }

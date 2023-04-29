@@ -79,7 +79,7 @@ class SubmissionLimiterSpec
       nationalities = NonEmptyList(genUkCtaNationality.sample.value, Gen.listOf(arbitrary[models.Nationality]).sample.value),
       residency = journey.Residency.AlwaysLivedInUk,
       memberOfHMForcesOrCivilServantAbroad = false,
-      currentlyReceivingChildBenefit = None,
+      currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
       changedDesignatoryDetails = Some(false),
       correspondenceAddress = None
     ),

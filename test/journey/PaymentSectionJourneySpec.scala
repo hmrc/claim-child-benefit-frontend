@@ -45,10 +45,11 @@ class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
 
           "then go to Check Payment Details if they say no" in {
 
-            startingFrom(ApplicantOrPartnerIncomePage, answers = baseAnswers)
+            startingFrom(ApplicantIncomePage, answers = baseAnswers)
               .run(
                 setUserAnswerTo(RelationshipStatusPage, relationship),
-                submitAnswer(ApplicantOrPartnerIncomePage, income),
+                submitAnswer(ApplicantIncomePage, income),
+                submitAnswer(PartnerIncomePage, income),
                 submitAnswer(WantToBePaidPage, false),
                 pageMustBe(CheckPaymentDetailsPage)
               )
@@ -56,10 +57,11 @@ class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
 
           "then be told they will be paid to their existing account then go to Check Payments if they say yes" in {
 
-            startingFrom(ApplicantOrPartnerIncomePage, answers = baseAnswers)
+            startingFrom(ApplicantIncomePage, answers = baseAnswers)
               .run(
                 setUserAnswerTo(RelationshipStatusPage, relationship),
-                submitAnswer(ApplicantOrPartnerIncomePage, income),
+                submitAnswer(ApplicantIncomePage, income),
+                submitAnswer(PartnerIncomePage, income),
                 submitAnswer(WantToBePaidPage, true),
                 pageMustBe(PaidToExistingAccountPage),
                 next,
@@ -116,10 +118,11 @@ class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
 
           "must be asked for their income and benefits details" in {
 
-            startingFrom(ApplicantOrPartnerIncomePage, answers = baseAnswers)
+            startingFrom(ApplicantIncomePage, answers = baseAnswers)
               .run(
                 setUserAnswerTo(RelationshipStatusPage, relationship),
-                submitAnswer(ApplicantOrPartnerIncomePage, income),
+                submitAnswer(ApplicantIncomePage, income),
+                submitAnswer(PartnerIncomePage, income),
                 submitAnswer(WantToBePaidPage, true),
                 pageMustBe(ApplicantOrPartnerBenefitsPage)
               )
@@ -131,10 +134,11 @@ class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
 
               val benefits = Set(Gen.oneOf(Benefits.qualifyingBenefits).sample.value)
 
-              startingFrom(ApplicantOrPartnerIncomePage, answers = baseAnswers)
+              startingFrom(ApplicantIncomePage, answers = baseAnswers)
                 .run(
                   setUserAnswerTo(RelationshipStatusPage, relationship),
-                  submitAnswer(ApplicantOrPartnerIncomePage, income),
+                  submitAnswer(ApplicantIncomePage, income),
+                  submitAnswer(PartnerIncomePage, income),
                   submitAnswer(WantToBePaidPage, true),
                   submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
                   submitAnswer(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
@@ -150,10 +154,11 @@ class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
 
             "must not be asked how often they want to be paid, and be asked if they have a suitable bank account" in {
 
-              startingFrom(ApplicantOrPartnerIncomePage, answers = baseAnswers)
+              startingFrom(ApplicantIncomePage, answers = baseAnswers)
                 .run(
                   setUserAnswerTo(RelationshipStatusPage, relationship),
-                  submitAnswer(ApplicantOrPartnerIncomePage, income),
+                  submitAnswer(ApplicantIncomePage, income),
+                  submitAnswer(PartnerIncomePage, income),
                   submitAnswer(WantToBePaidPage, true),
                   submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
                   pageMustBe(ApplicantHasSuitableAccountPage)
@@ -166,10 +171,11 @@ class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
 
           "must be asked for their income then taken to the Check Payments page" in {
 
-            startingFrom(ApplicantOrPartnerIncomePage, answers = baseAnswers)
+            startingFrom(ApplicantIncomePage, answers = baseAnswers)
               .run(
                 setUserAnswerTo(RelationshipStatusPage, relationship),
-                submitAnswer(ApplicantOrPartnerIncomePage, income),
+                submitAnswer(ApplicantIncomePage, income),
+                submitAnswer(PartnerIncomePage, income),
                 submitAnswer(WantToBePaidPage, false),
                 pageMustBe(CheckPaymentDetailsPage)
               )
@@ -246,22 +252,24 @@ class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
 
             "then go to Check Details if they say no" in {
 
-              startingFrom(ApplicantOrPartnerIncomePage)
+              startingFrom(ApplicantIncomePage)
                 .run(
                   setUserAnswerTo(RelationshipStatusPage, relationship),
                   setUserAnswerTo(CurrentlyReceivingChildBenefitPage, GettingPayments),
-                  submitAnswer(ApplicantOrPartnerIncomePage, income),
+                  submitAnswer(ApplicantIncomePage, income),
+                  submitAnswer(PartnerIncomePage, income),
                   submitAnswer(WantToBePaidPage, false),
                   pageMustBe(CheckPaymentDetailsPage)
                 )
             }
 
             "then be told they will be paid to their existing account then go to Check Payments if they say yes" in {
-              startingFrom(ApplicantOrPartnerIncomePage)
+              startingFrom(ApplicantIncomePage)
                 .run(
                   setUserAnswerTo(RelationshipStatusPage, relationship),
                   setUserAnswerTo(CurrentlyReceivingChildBenefitPage, GettingPayments),
-                  submitAnswer(ApplicantOrPartnerIncomePage, income),
+                  submitAnswer(ApplicantIncomePage, income),
+                  submitAnswer(PartnerIncomePage, income),
                   submitAnswer(WantToBePaidPage, true),
                   pageMustBe(PaidToExistingAccountPage),
                   next,
@@ -278,11 +286,12 @@ class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
 
           "must be asked for their income and benefits details" in {
 
-            startingFrom(ApplicantOrPartnerIncomePage)
+            startingFrom(ApplicantIncomePage)
               .run(
                 setUserAnswerTo(RelationshipStatusPage, relationship),
                 setUserAnswerTo(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
-                submitAnswer(ApplicantOrPartnerIncomePage, income),
+                submitAnswer(ApplicantIncomePage, income),
+                submitAnswer(PartnerIncomePage, income),
                 submitAnswer(WantToBePaidPage, true),
                 pageMustBe(ApplicantOrPartnerBenefitsPage)
               )
@@ -292,11 +301,12 @@ class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
 
             "must be asked how often they want to be paid, then be asked if they have a suitable bank account" in {
 
-              startingFrom(ApplicantOrPartnerIncomePage)
+              startingFrom(ApplicantIncomePage)
                 .run(
                   setUserAnswerTo(RelationshipStatusPage, relationship),
                   setUserAnswerTo(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
-                  submitAnswer(ApplicantOrPartnerIncomePage, income),
+                  submitAnswer(ApplicantIncomePage, income),
+                  submitAnswer(PartnerIncomePage, income),
                   submitAnswer(WantToBePaidPage, true),
                   submitAnswer(ApplicantOrPartnerBenefitsPage, benefits),
                   submitAnswer(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks),
@@ -312,11 +322,12 @@ class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
 
             "must not be asked how often they want to be paid, and be asked if they have a suitable bank account" in {
 
-              startingFrom(ApplicantOrPartnerIncomePage)
+              startingFrom(ApplicantIncomePage)
                 .run(
                   setUserAnswerTo(RelationshipStatusPage, relationship),
                   setUserAnswerTo(CurrentlyReceivingChildBenefitPage, currentlyReceiving),
-                  submitAnswer(ApplicantOrPartnerIncomePage, income),
+                  submitAnswer(ApplicantIncomePage, income),
+                  submitAnswer(PartnerIncomePage, income),
                   submitAnswer(WantToBePaidPage, true),
                   submitAnswer(ApplicantOrPartnerBenefitsPage, Set[Benefits](Benefits.NoneOfTheAbove)),
                   pageMustBe(ApplicantHasSuitableAccountPage)
@@ -330,10 +341,11 @@ class PaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
 
         "must be asked for their income then go to Check Payment Details" in {
 
-          startingFrom(ApplicantOrPartnerIncomePage)
+          startingFrom(ApplicantIncomePage)
             .run(
               setUserAnswerTo(RelationshipStatusPage, relationship),
-              submitAnswer(ApplicantOrPartnerIncomePage, income),
+              submitAnswer(ApplicantIncomePage, income),
+              submitAnswer(PartnerIncomePage, income),
               submitAnswer(WantToBePaidPage, false),
               pageMustBe(CheckPaymentDetailsPage)
             )

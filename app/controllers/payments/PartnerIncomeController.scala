@@ -18,68 +18,66 @@ package controllers.payments
 
 import controllers.AnswerExtractor
 import controllers.actions._
-import forms.payments.ApplicantIncomeFormProvider
-import models.RelationshipStatus.{Cohabiting, Married}
+import forms.payments.PartnerIncomeFormProvider
 import pages.Waypoints
-import pages.partner.RelationshipStatusPage
-import pages.payments.ApplicantIncomePage
+import pages.partner.PartnerNamePage
+import pages.payments.PartnerIncomePage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.payments.ApplicantIncomeView
+import views.html.payments.PartnerIncomeView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class ApplicantIncomeController @Inject()(
+class PartnerIncomeController @Inject()(
                                            override val messagesApi: MessagesApi,
                                            userDataService: UserDataService,
                                            identify: IdentifierAction,
                                            getData: DataRetrievalAction,
                                            requireData: DataRequiredAction,
-                                           formProvider: ApplicantIncomeFormProvider,
+                                           formProvider: PartnerIncomeFormProvider,
                                            val controllerComponents: MessagesControllerComponents,
-                                           view: ApplicantIncomeView
+                                           view: PartnerIncomeView
                                          )(implicit ec: ExecutionContext)
   extends FrontendBaseController
     with I18nSupport
     with AnswerExtractor {
 
-  val form = formProvider()
 
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      getAnswer(RelationshipStatusPage) {
-        relationshipStatus =>
+      getAnswer(PartnerNamePage) {
+        partnerName =>
 
-          val hasPartner = relationshipStatus == Married || relationshipStatus == Cohabiting
+          val form = formProvider(partnerName.firstName)
 
-          val preparedForm = request.userAnswers.get(ApplicantIncomePage) match {
+          val preparedForm = request.userAnswers.get(PartnerIncomePage) match {
             case None => form
             case Some(value) => form.fill(value)
           }
 
-          Ok(view(preparedForm, waypoints, hasPartner))
+          Ok(view(preparedForm, waypoints, partnerName.firstName))
       }
   }
 
   def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      getAnswerAsync(RelationshipStatusPage) {
-        relationshipStatus =>
+      getAnswerAsync(PartnerNamePage) {
+        partnerName =>
 
-          val hasPartner = relationshipStatus == Married || relationshipStatus == Cohabiting
+          val form = formProvider(partnerName.firstName)
 
           form.bindFromRequest().fold(
             formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, waypoints, hasPartner))),
+              Future.successful(BadRequest(view(formWithErrors, waypoints, partnerName.firstName))),
 
             value =>
               for {
-                updatedAnswers <- Future.fromTry(request.userAnswers.set(ApplicantIncomePage, value))
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(PartnerIncomePage, value))
                 _ <- userDataService.set(updatedAnswers)
-              } yield Redirect(ApplicantIncomePage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
+              } yield Redirect(PartnerIncomePage.navigate(waypoints, request.userAnswers, updatedAnswers).route)
           )
       }
   }

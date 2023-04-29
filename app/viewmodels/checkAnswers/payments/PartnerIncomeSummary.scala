@@ -17,27 +17,31 @@
 package viewmodels.checkAnswers.payments
 
 import models.UserAnswers
-import pages.payments.ApplicantOrPartnerIncomePage
+import pages.partner.PartnerNamePage
+import pages.payments.PartnerIncomePage
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ApplicantOrPartnerIncomeSummary {
+object PartnerIncomeSummary {
 
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
-         (implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ApplicantOrPartnerIncomePage).map {
-      answer =>
+         (implicit messages: Messages): Option[SummaryListRow] = {
+    for {
+      partnerName <- answers.get(PartnerNamePage)
+      income <- answers.get(PartnerIncomePage)
+    } yield {
 
         SummaryListRowViewModel(
-          key = "applicantOrPartnerIncome.checkYourAnswersLabel",
-          value = ValueViewModel(messages(s"income.$answer")),
+          key = messages("partnerIncome.checkYourAnswersLabel", partnerName.firstName),
+          value = ValueViewModel(messages(s"income.$income")),
           actions = Seq(
-            ActionItemViewModel("site.change", ApplicantOrPartnerIncomePage.changeLink(waypoints, sourcePage).url)
-              .withVisuallyHiddenText(messages("applicantOrPartnerIncome.change.hidden"))
+            ActionItemViewModel("site.change", PartnerIncomePage.changeLink(waypoints, sourcePage).url)
+              .withVisuallyHiddenText(messages("partnerIncome.change.hidden", partnerName.firstName))
           )
         )
     }
+  }
 }

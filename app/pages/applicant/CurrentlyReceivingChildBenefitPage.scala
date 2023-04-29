@@ -48,7 +48,7 @@ case object CurrentlyReceivingChildBenefitPage extends QuestionPage[CurrentlyRec
         val answerAffectsTaskList =
           originalAnswers.get(this).exists {
             case NotClaiming => false
-            case _ => originalAnswers.isDefined(ApplicantIncomePage) || originalAnswers.isDefined(ApplicantOrPartnerIncomePage)
+            case _ => originalAnswers.isDefined(ApplicantIncomePage)
           }
 
         if (answerAffectsTaskList) CurrentlyReceivingChangesTaskListPage else waypoints.next.page
@@ -57,7 +57,7 @@ case object CurrentlyReceivingChildBenefitPage extends QuestionPage[CurrentlyRec
         val answerAffectsTaskList =
           originalAnswers.get(this).exists {
             case x if x == other => false
-            case _ => originalAnswers.isDefined(ApplicantIncomePage) || originalAnswers.isDefined(ApplicantOrPartnerIncomePage)
+            case _ => originalAnswers.isDefined(ApplicantIncomePage)
           }
 
         if (answerAffectsTaskList) {
@@ -75,7 +75,7 @@ case object CurrentlyReceivingChildBenefitPage extends QuestionPage[CurrentlyRec
       if (previousAnswers.get(CurrentlyReceivingChildBenefitPage).contains(receiving)) {
         false
       } else {
-        previousAnswers.isDefined(ApplicantIncomePage) || previousAnswers.isDefined(ApplicantOrPartnerIncomePage)
+        previousAnswers.isDefined(ApplicantIncomePage)
       }
 
     def pagesToAlwaysRemove(receiving: CurrentlyReceivingChildBenefit): Seq[Settable[_]] = {
@@ -98,8 +98,8 @@ case object CurrentlyReceivingChildBenefitPage extends QuestionPage[CurrentlyRec
 
   private val paymentPages: Seq[Settable[_]] = Seq(
     AccountTypePage,
-    ApplicantOrPartnerIncomePage,
     ApplicantIncomePage,
+    PartnerIncomePage,
     WantToBePaidPage,
     ApplicantBenefitsPage,
     ApplicantOrPartnerBenefitsPage,

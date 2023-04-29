@@ -26,9 +26,9 @@
         newTabLink: HmrcNewTabLinkHelper
 )
 
-@(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints, hasPartner: Boolean)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("applicantIncome.title"), section = Some(messages("section.income")))) {
+@layout(pageTitle = title(form, messages("applicantIncome.title"))) {
 
     @formHelper(action = routes.ApplicantIncomeController.onSubmit(waypoints), 'autoComplete -> "off") {
 
@@ -44,6 +44,10 @@
             @messages("applicantIncome.p2")
             @{newTabLink(NewTabLinkHelper(text = messages("applicantIncome.p2.link.text"), href = Some(messages("applicantIncome.p2.link.href"))))}.
         </p>
+
+        @if(hasPartner) {
+            <p class="govuk-body">@messages("applicantIncome.p3")</p>
+        }
 
         @govukRadios(
             RadiosViewModel(

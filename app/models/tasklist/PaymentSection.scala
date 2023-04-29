@@ -16,12 +16,10 @@
 
 package models.tasklist
 
-import models.RelationshipStatus.{Cohabiting, Married}
 import models.UserAnswers
 import models.tasklist.SectionStatus.{CannotStart, Completed, InProgress, NotStarted}
-import pages.payments.{ApplicantIncomePage, ApplicantOrPartnerIncomePage, CheckPaymentDetailsPage}
 import pages.Page
-import pages.partner.RelationshipStatusPage
+import pages.payments.{ApplicantIncomePage, CheckPaymentDetailsPage}
 import services.JourneyProgressService
 
 import javax.inject.Inject
@@ -36,14 +34,11 @@ class PaymentSection @Inject()(
   override val name: String = "taskList.paymentDetails"
 
   override def continue(answers: UserAnswers): Option[Page] =
-    answers.get(RelationshipStatusPage).map {
-      case Married | Cohabiting => journeyProgress.continue(ApplicantOrPartnerIncomePage, answers)
-      case _ => journeyProgress.continue(ApplicantIncomePage, answers)
-    }
+    Some(journeyProgress.continue(ApplicantIncomePage, answers))
 
   override def progress(answers: UserAnswers): SectionStatus =
     continue(answers).map {
-      case ApplicantIncomePage | ApplicantOrPartnerIncomePage => NotStarted
+      case ApplicantIncomePage => NotStarted
       case CheckPaymentDetailsPage => Completed
       case _ => InProgress
     }.getOrElse(CannotStart)

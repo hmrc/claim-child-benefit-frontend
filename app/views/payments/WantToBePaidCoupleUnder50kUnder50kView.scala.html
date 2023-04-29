@@ -26,24 +26,24 @@
 
 @(waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("wantToBePaid.single.under50k.title"))) {
+@layout(pageTitle = titleNoForm(messages("wantToBePaid.couple.under50k.under50k.title"))) {
 
     @formHelper(action = routes.WantToBePaidController.onSubmit(waypoints)) {
 
-        <h1 class="govuk-heading-xl">@messages("wantToBePaid.single.under50k.heading")</h1>
+        <h1 class="govuk-heading-xl">@messages("wantToBePaid.couple.under50k.under50k.heading")</h1>
+
+        <p class="govuk-body">@messages("wantToBePaid.couple.under50k.under50k.p1")</p>
 
         <p class="govuk-body">
-            @messages("wantToBePaid.single.under50k.p1")
+            @messages("wantToBePaid.couple.under50k.under50k.p2")
+            @newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.couple.under50k.under50k.p2.link.text"), href = Some(messages("wantToBePaid.couple.under50k.under50k.p2.link.href")))).
         </p>
 
-        <p class="govuk-body">
-            @messages("wantToBePaid.single.under50k.p2")
-            @newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.single.under50k.p2.link.text"), href = Some(messages("wantToBePaid.single.under50k.p2.link.href")))).
-        </p>
+        <p class="govuk-body">@messages("wantToBePaid.couple.under50k.under50k.p3")</p>
 
-        <h2 class="govuk-heading-m">@messages("wantToBePaid.single.under50k.h2")</h2>
+        <h2 class="govuk-heading-m">@messages("wantToBePaid.couple.under50k.under50k.h2")</h2>
 
-        <p class="govuk-body govuk-!-margin-bottom-7">@messages("wantToBePaid.single.under50k.p3")</p>
+        <p class="govuk-body govuk-!-margin-bottom-7">@messages("wantToBePaid.couple.under50k.under50k.p4")</p>
 
         <input type="hidden" name="value" value="true" />
 
