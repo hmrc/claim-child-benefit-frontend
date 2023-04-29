@@ -30,7 +30,7 @@ timeout.unauthenticated.keepAlive = Continue form
 timeout.unauthenticated.signOut = Reset
 
 timeout.authenticated.title = You’re about to be signed out
-timeout.authenticated.message = For your security, we wil sign you out in
+timeout.authenticated.message = For your security, we will sign you out in
 timeout.authenticated.keepAlive = Stay signed in
 timeout.authenticated.signOut = Sign out
 
@@ -357,6 +357,7 @@ wantToBePaid.couple.yes = Yes, I want to be paid Child Benefit. I understand tha
 wantToBePaid.couple.applicant.yes = Yes, I want to be paid Child Benefit. I understand that I may have to pay a High Income Child Benefit Charge
 wantToBePaid.couple.partner.yes = Yes, I want to be paid Child Benefit. I understand that my partner may have to pay a High Income Child Benefit Charge
 wantToBePaid.couple.no = No, I do not want to be paid Child Benefit, but I want to protect my State Pension
+wantToBePaid.change.hidden = if you want to be paid Child Benefit
 
 wantToBePaid.single.under50k.title = How the tax charge works
 wantToBePaid.single.under50k.heading = How the tax charge works
@@ -448,7 +449,7 @@ wantToBePaid.couple.under60k.over60k.heading = How the tax charge works
 wantToBePaid.couple.under60k.over60k.p1 = Your partner’s income is over £60,000 in a year, and they may have to pay a
 wantToBePaid.couple.under60k.over60k.p1.link.href = https://www.gov.uk/child-benefit-tax-charge
 wantToBePaid.couple.under60k.over60k.p1.link.text = High Income Child Benefit Charge
-wantToBePaid.couple.under60k.over60k.p2 = If you choose to be paid Child Benefit, the payments you will get the same value as the tax charge that your partner must pay.
+wantToBePaid.couple.under60k.over60k.p2 = If you choose to be paid Child Benefit, the payments you will get may be the same value as the tax charge that your partner must pay.
 wantToBePaid.couple.under60k.over60k.p3 = To pay the charge, your partner must set up and fill in a Self Assessment tax return each tax year.
 wantToBePaid.couple.under60k.over60k.p4 = If either of your circumstances change, you must report this change to the Child Benefit Office, as you or your partner’s tax charge may change. If you are overpaid Child Benefit you might have to pay it back.
 wantToBePaid.couple.under60k.over60k.h2 = How Child Benefit protects State Pension
@@ -915,7 +916,7 @@ partnerClaimingChildBenefit.gettingPayments = Claiming Child Benefit and getting
 partnerClaimingChildBenefit.notGettingPayments = Claiming Child Benefit and not getting payments
 partnerClaimingChildBenefit.notClaiming = Not claiming Child Benefit
 partnerClaimingChildBenefit.waitingToHear = Waiting to hear if they are eligible for Child Benefit
-partnerClaimingChildBenefit.error.required = Select yes if {0} is getting Child Benefit right now
+partnerClaimingChildBenefit.error.required = Select if {0} is getting Child Benefit right now
 partnerClaimingChildBenefit.change.hidden = if {0} is getting Child Benefit right now
 
 partnerName.title = What is your partner’s name?
@@ -1446,6 +1447,7 @@ includeAdditionalInformation.error.required = Select yes if you have additional 
 additionalInformation.title = Enter the additional information you have for this claim
 additionalInformation.heading = Enter the additional information you have for this claim
 additionalInformation.checkYourAnswersLabel = Further information shared
+additionalInformation.error.required = Enter the additional information
 additionalInformation.error.length = Additional information for this claim must be 1,000 characters or less
 additionalInformation.change.hidden = the additional information you have for this claim
 
@@ -1680,17 +1682,6 @@ pdf.eligibilityFails.childRecentlyLivedWithSomeoneElse = The child has lived wit
 pdf.eligibilityFails.bankAccountInsightsIndicatesPossibleRisk = The bank account is on a watch list and may have been subject to fraud.
 pdf.eligibilityFails.childPossiblyRecentlyUnderLocalAuthorityCare = The child has lived with someone else, possibly under Local Authority care, in the last 3 months.
 
-ordinal.0 = first
-ordinal.1 = second
-ordinal.2 = third
-ordinal.3 = fourth
-ordinal.4 = fifth
-ordinal.5 = sixth
-ordinal.6 = seventh
-ordinal.7 = eighth
-ordinal.8 = ninth
-ordinal.9 = tenth
-
 applicantIsHmfOrCivilServant.title = Are you a member of HM Forces or a civil servant working abroad?
 applicantIsHmfOrCivilServant.heading = Are you a member of HM&nbsp;Forces or a civil servant working abroad?
 applicantIsHmfOrCivilServant.p1 = A member of HM Forces is a member of the Royal Navy, British Army or Royal Air Force who is serving as a member of the regular forces.
@@ -1707,13 +1698,13 @@ partnerIsHmfOrCivilServant.checkYourAnswersLabel = Is {0} a member of HM Forces 
 partnerIsHmfOrCivilServant.error.required = Select yes if {0} is a member of HM Forces or a civil servant working abroad
 partnerIsHmfOrCivilServant.change.hidden = if {0} is a member of HM Forces or a civil servant working abroad
 
-unsupportedAffinityGroupOrganisation.title = You cannot use the service with this account
-unsupportedAffinityGroupOrganisation.heading = You cannot use the service with this account
-unsupportedAffinityGroupOrganisation.p1 = An agent Government Gateway account cannot be used to make a Child Benefit claim.
-unsupportedAffinityGroupOrganisation.p2 = Use a personal Government Gateway user ID and password.
-unsupportedAffinityGroupOrganisation.p3.1 = You can also
-unsupportedAffinityGroupOrganisation.p3.link.text = claim Child Benefit
-unsupportedAffinityGroupOrganisation.p3.2 = without signing in to Government Gateway.
+unsupportedAffinityGroupAgent.title = You cannot use the service with this account
+unsupportedAffinityGroupAgent.heading = You cannot use the service with this account
+unsupportedAffinityGroupAgent.p1 = An agent Government Gateway account cannot be used to make a Child Benefit claim.
+unsupportedAffinityGroupAgent.p2 = Use a personal Government Gateway user ID and password.
+unsupportedAffinityGroupAgent.p3.1 = You can also
+unsupportedAffinityGroupAgent.p3.link.text = claim Child Benefit
+unsupportedAffinityGroupAgent.p3.2 = without signing in to Government Gateway.
 
 unsupportedAffinityGroupOrganisation.title = You cannot use the service with this account
 unsupportedAffinityGroupOrganisation.heading = You cannot use the service with this account
@@ -1725,7 +1716,7 @@ unsupportedAffinityGroupOrganisation.p3.2 = without signing in to Government Gat
 
 ivIncomplete.title = Sorry, there is a problem with the service
 ivIncomplete.heading = Sorry, there is a problem with the service
-ivIncomplete.p = Try again later.
+ivIncomplete.p1 = Try again later.
 
 ivFailedMatching.title = We could not confirm your identity
 ivFailedMatching.heading = We could not confirm your identity
@@ -1791,13 +1782,10 @@ taskList.title.readyToSend = Review and send your application
 taskList.heading.incomplete = Claim Child Benefit
 taskList.heading.readyToSend = Review and send your application
 taskList.incomplete = Application incomplete
-taskList.section.prepare = Prepare your claim
-taskList.section.submit = Submit claim
 taskList.status.notStarted = Not started
 taskList.status.inProgress = In progress
 taskList.status.completed = Completed
 taskList.status.cannotStart = Cannot start yet
-taskList.relationshipDetails = Check eligibility
 taskList.applicantDetails = Your details
 taskList.partnerDetails = Relationship details
 taskList.childDetails = Child details
@@ -1923,7 +1911,7 @@ addPartnerNationality.remove.hidden = the nationality {0}
 addPartnerNationality.checkAnswers.change.hidden = {0}’s nationality
 
 removePartnerNationality.title = Are you sure you want to remove this nationality?
-removePartnerNationality.heading = Are you sure you want to remove {1} as {0}’s nationality?
+removePartnerNationality.heading = Are you sure you want to remove {0} as {1}’s nationality?
 removePartnerNationality.error.required = Select yes if you are sure you want to remove {1} as {0}’s nationality
 
 addCountryApplicantWorked.title.plural = You have added {0} country that you have worked in, in the last 3 months
@@ -1970,7 +1958,7 @@ addCountryPartnerWorked.checkAnswers.change.hidden = the countries {0} has worke
 
 removeCountryPartnerWorked.title = Are you sure you want to remove this country?
 removeCountryPartnerWorked.heading = Are you sure you want to remove {0}?
-removeCountryPartnerWorked.error.required = Select yes if you are sure you want to remove {0}
+removeCountryPartnerWorked.error.required = Select yes if you are sure you want to remove {1}
 
 addCountryPartnerReceivedBenefits.title.plural = You have added {0} countries that have paid your partner benefits, in the last 3 months
 addCountryPartnerReceivedBenefits.heading.plural = You have added {0} countries that have paid {1} benefits, in the last 3 months
@@ -1986,7 +1974,7 @@ addCountryPartnerReceivedBenefits.checkAnswers.change.hidden = the countries tha
 
 removeCountryPartnerReceivedBenefits.title = Are you sure you want to remove this country?
 removeCountryPartnerReceivedBenefits.heading = Are you sure you want to remove {0}?
-removeCountryPartnerReceivedBenefits.error.required = Select yes if you are sure you want to remove {0}
+removeCountryPartnerReceivedBenefits.error.required = Select yes if you are sure you want to remove {1}
 
 partnerEmploymentStatus.title = What is your partner’s employment status?
 partnerEmploymentStatus.heading = What is {0}’s employment status?

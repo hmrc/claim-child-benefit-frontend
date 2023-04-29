@@ -40,9 +40,6 @@ object ViewUtils {
   def date(d: LocalDate): String =
     d.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))
 
-  def indexToOrdinal(index: Int)(implicit messages: Messages): String =
-    messages(s"ordinal.$index")
-
   def booleanToYesNo(value: Boolean)(implicit messages: Messages): String =
     if (value) messages("site.yes") else messages("site.no")
 }
