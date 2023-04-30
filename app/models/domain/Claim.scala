@@ -34,13 +34,28 @@ object Claim extends CbsDateFormats {
 
   implicit lazy val writes: OWrites[Claim] = Json.writes
 
-  def build(nino: String, model: JourneyModel, hasClaimedChildBenefit: Boolean, hasSettledStatus: Option[Boolean]): Claim =
+  def build(nino: String, model: JourneyModel, hasClaimedChildBenefit: Boolean, settledStatusStartDate: Option[LocalDate]): Claim = {
+
+    val oldestChildDateOfBirth =
+      model.children
+        .toList
+        .map(_.dateOfBirth)
+        .minBy(_.toEpochDay)
+
+    val threeMonthsAgo = LocalDate.now.minusMonths(3)
+
+    val maxBackdate: LocalDate = if (oldestChildDateOfBirth.isAfter(threeMonthsAgo)) oldestChildDateOfBirth else threeMonthsAgo
+
+    val hadSettledStatusDuringBackdatePeriod: Option[Boolean] =
+      settledStatusStartDate.map(d => d.isBefore(maxBackdate) || d == maxBackdate)
+
     Claim(
       dateOfClaim = LocalDate.now,
-      claimant = Claimant.build(nino, model, hasSettledStatus),
+      claimant = Claimant.build(nino, model, hadSettledStatusDuringBackdatePeriod),
       partner = model.relationship.partner.flatMap(Partner.build),
       payment = Payment.build(model.paymentPreference, hasClaimedChildBenefit),
       children = model.children.toList.map(Child.build),
       otherEligibilityFailure = model.otherEligibilityFailureReasons.nonEmpty
     )
+  }
 }

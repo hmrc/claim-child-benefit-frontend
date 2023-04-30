@@ -73,10 +73,10 @@ class ClaimSubmissionService @Inject()(
       val correlationId = UUID.randomUUID()
 
       journeyModelService.build(request.userAnswers).right.map { model =>
-        immigrationStatusService.hasSettledStatus(nino, model, correlationId)(hc).flatMap {
-          hasSettledStatus =>
+        immigrationStatusService.settledStatusStartDate(nino, model, correlationId)(hc).flatMap {
+          settledStatusStartDate =>
 
-            val claim = Claim.build(nino, model, relationshipDetails.hasClaimedChildBenefit, hasSettledStatus)
+            val claim = Claim.build(nino, model, relationshipDetails.hasClaimedChildBenefit, settledStatusStartDate)
 
             connector
               .submitClaim(claim, correlationId)(hc)

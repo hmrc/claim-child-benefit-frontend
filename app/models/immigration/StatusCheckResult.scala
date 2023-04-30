@@ -27,7 +27,11 @@ final case class StatusCheckResult(
                                     statuses: List[ImmigrationStatus]
                                   ) {
 
-  lazy val hasSettledStatus: Boolean = statuses.exists(_.hasSettledStatus)
+  lazy val settledStatusStartDate: Option[LocalDate] =
+    statuses
+      .flatMap(_.settledStatusStartDate)
+      .sorted(Ordering.by[LocalDate, Long](_.toEpochDay))
+      .headOption
 }
 
 object StatusCheckResult {

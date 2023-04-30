@@ -21,51 +21,57 @@ import models.immigration.ImmigrationStatus.{eus, ilr}
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 import java.time.LocalDate
 
-class ImmigrationStatusSpec extends AnyFreeSpec with Matchers with Generators with OptionValues {
+class ImmigrationStatusSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with Generators with OptionValues {
 
-  ".hasSettledStatus" - {
 
-    "must be true when product type is EUS, immigration status is ILR and there is no end date" in {
+  ".settledStatusStartDate" - {
 
-      ImmigrationStatus(
-        statusStartDate = LocalDate.now,
-        statusEndDate = None,
-        productType = eus,
-        immigrationStatus = ilr,
-        noRecourseToPublicFunds = false
-      ).hasSettledStatus mustEqual true
+    "must be the start date when product type is EUS, immigration status is ILR and there is no end date" in {
+
+      forAll(datesBetween(LocalDate.now.minusYears(2), LocalDate.now)) {
+        date =>
+          ImmigrationStatus(
+            statusStartDate = date,
+            statusEndDate = None,
+            productType = eus,
+            immigrationStatus = ilr,
+            noRecourseToPublicFunds = false
+          ).settledStatusStartDate.value mustEqual date
+      }
+    }
+    "must be the start date when product type is EUS, immigration status is ILR and the end date is today or in the future" in {
+
+      forAll(datesBetween(LocalDate.now.minusYears(2), LocalDate.now), datesBetween(LocalDate.now, LocalDate.now.plusYears(1))) {
+        case (startDate, endDate) =>
+          ImmigrationStatus(
+            statusStartDate = startDate,
+            statusEndDate = Some(endDate),
+            productType = eus,
+            immigrationStatus = ilr,
+            noRecourseToPublicFunds = false
+          ).settledStatusStartDate.value mustEqual startDate
+      }
     }
 
-    "must be true when product type is EUS, immigration status is ILR and there is an end date of today or in the future" in {
+    "must be None when product type is EUS, immigration status is ILR and there is an end date in the past" in {
 
-      val endDate = datesBetween(LocalDate.now, LocalDate.now.plusYears(100)).sample.value
-
-      ImmigrationStatus(
-        statusStartDate = LocalDate.now,
-        statusEndDate = Some(endDate),
-        productType = eus,
-        immigrationStatus = ilr,
-        noRecourseToPublicFunds = false
-      ).hasSettledStatus mustEqual true
+      forAll(datesBetween(LocalDate.now.minusYears(2), LocalDate.now), datesBetween(LocalDate.now.minusYears(1), LocalDate.now.minusDays(1))) {
+        case (startDate, endDate) =>
+          ImmigrationStatus(
+            statusStartDate = startDate,
+            statusEndDate = Some(endDate),
+            productType = eus,
+            immigrationStatus = ilr,
+            noRecourseToPublicFunds = false
+          ).settledStatusStartDate must not be defined
+      }
     }
 
-    "must be false when product type is EUS, immigration status is ILR and there is an end date in the past" in {
-
-      val endDate = datesBetween(LocalDate.now.minusYears(100), LocalDate.now.minusDays(1)).sample.value
-
-      ImmigrationStatus(
-        statusStartDate = LocalDate.now,
-        statusEndDate = Some(endDate),
-        productType = eus,
-        immigrationStatus = ilr,
-        noRecourseToPublicFunds = false
-      ).hasSettledStatus mustEqual false
-    }
-
-    "must be false when product type is EUS, and immigration status is not ILR" in {
+    "must be None when product type is EUS, and immigration status is not ILR" in {
 
       ImmigrationStatus(
         statusStartDate = LocalDate.now,
@@ -73,10 +79,10 @@ class ImmigrationStatusSpec extends AnyFreeSpec with Matchers with Generators wi
         productType = eus,
         immigrationStatus = "foo",
         noRecourseToPublicFunds = false
-      ).hasSettledStatus mustEqual false
+      ).settledStatusStartDate must not be defined
     }
 
-    "must be false when product type is not EUS" in {
+    "must be None when product type is not EUS" in {
 
       ImmigrationStatus(
         statusStartDate = LocalDate.now,
@@ -84,7 +90,7 @@ class ImmigrationStatusSpec extends AnyFreeSpec with Matchers with Generators wi
         productType = "foo",
         immigrationStatus = ilr,
         noRecourseToPublicFunds = false
-      ).hasSettledStatus mustEqual false
+      ).settledStatusStartDate must not be defined
     }
   }
 }

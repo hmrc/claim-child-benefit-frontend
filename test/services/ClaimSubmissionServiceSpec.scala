@@ -400,7 +400,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
           when(mockSubmissionLimiter.recordSubmission(any(), any(), any())(any())) thenReturn Future.successful(Done)
           when(mockSupplementaryDataService.submit(any(), any(), any())(any())) thenReturn Future.successful(Done)
-          when(mockImmigrationStatusService.hasSettledStatus(any(), any(), any())(any())) thenReturn Future.successful(None)
+          when(mockImmigrationStatusService.settledStatusStartDate(any(), any(), any())(any())) thenReturn Future.successful(None)
 
           submissionService.submit(request).futureValue
 
@@ -417,7 +417,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
           when(mockSubmissionLimiter.recordSubmission(any(), any(), any())(any())) thenReturn Future.failed(new Exception("foo"))
           when(mockSupplementaryDataService.submit(any(), any(), any())(any())) thenReturn Future.successful(Done)
-          when(mockImmigrationStatusService.hasSettledStatus(any(), any(), any())(any())) thenReturn Future.successful(None)
+          when(mockImmigrationStatusService.settledStatusStartDate(any(), any(), any())(any())) thenReturn Future.successful(None)
 
           submissionService.submit(request).futureValue
 
