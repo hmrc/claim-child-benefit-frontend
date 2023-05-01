@@ -16,7 +16,7 @@
 
 package controllers.child
 
-import models.{ChildName, Index}
+import models.{ChildName, Done, Index}
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.child.PreviousClaimantNameKnownFormProvider
@@ -83,7 +83,7 @@ class PreviousClaimantNameKnownControllerSpec extends SpecBase with MockitoSugar
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -102,7 +102,7 @@ class PreviousClaimantNameKnownControllerSpec extends SpecBase with MockitoSugar
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual child.PreviousClaimantNameKnownPage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
-        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
 

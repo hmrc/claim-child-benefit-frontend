@@ -19,7 +19,7 @@ package controllers.applicant
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.applicant.CountryApplicantReceivedBenefitsFormProvider
-import models.{Country, UserAnswers}
+import models.{Country, Done, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -83,7 +83,7 @@ class CountryApplicantReceivedBenefitsControllerSpec extends SpecBase with Mocki
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -102,7 +102,7 @@ class CountryApplicantReceivedBenefitsControllerSpec extends SpecBase with Mocki
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual CountryApplicantReceivedBenefitsPage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
-        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
 

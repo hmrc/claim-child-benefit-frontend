@@ -17,7 +17,7 @@
 package controllers.auth
 
 import base.SpecBase
-import models.UserAnswers
+import models.{Done, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -178,7 +178,7 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
     "must save an empty UserAnswers then redirect to the task list when the user does not have any user answers" in {
 
       val mockUserDataService = mock[UserDataService]
-      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(None)
@@ -193,7 +193,7 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual TaskListPage.route(EmptyWaypoints).url
-        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
   }

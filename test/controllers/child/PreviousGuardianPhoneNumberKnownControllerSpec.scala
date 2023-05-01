@@ -19,11 +19,11 @@ package controllers.child
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.child.PreviousGuardianPhoneNumberKnownFormProvider
-import models.AdultName
+import models.{AdultName, Done}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.child.{PreviousGuardianPhoneNumberKnownPage, PreviousGuardianNamePage}
+import pages.child.{PreviousGuardianNamePage, PreviousGuardianPhoneNumberKnownPage}
 import pages.{EmptyWaypoints, child}
 import play.api.inject.bind
 import play.api.test.FakeRequest
@@ -84,7 +84,7 @@ class PreviousGuardianPhoneNumberKnownControllerSpec extends SpecBase with Mocki
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -103,7 +103,7 @@ class PreviousGuardianPhoneNumberKnownControllerSpec extends SpecBase with Mocki
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual child.PreviousGuardianPhoneNumberKnownPage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
-        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
 

@@ -105,7 +105,7 @@ object UserAnswers {
     (
       (__ \ "_id").read[String] and
       (__ \ "data").read[JsObject] and
-      (__ \ "lastUpdated").read(MongoJavatimeFormats.instantFormat)
+      (__ \ "lastUpdated").read[Instant]
     ) ((id, data, lastUpdated) => UserAnswers(id, data, None, None, None, lastUpdated))
   }
 
@@ -116,7 +116,7 @@ object UserAnswers {
     (
       (__ \ "_id").write[String] and
       (__ \ "data").write[JsObject] and
-      (__ \ "lastUpdated").write(MongoJavatimeFormats.instantFormat)
+      (__ \ "lastUpdated").write[Instant]
     ) (ua => (ua.id, ua.data, ua.lastUpdated))
   }
 

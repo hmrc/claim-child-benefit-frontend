@@ -17,6 +17,7 @@
 package controllers.applicant
 
 import base.SpecBase
+import models.Done
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.{times, verify, when}
@@ -58,7 +59,7 @@ class CheckDesignatoryDetailsControllerSpec extends SpecBase with SummaryListFlu
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
 
       val app =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -75,7 +76,7 @@ class CheckDesignatoryDetailsControllerSpec extends SpecBase with SummaryListFlu
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual CheckDesignatoryDetailsPage.navigate(EmptyWaypoints, emptyUserAnswers, expectedAnswers).route.url
-        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
   }

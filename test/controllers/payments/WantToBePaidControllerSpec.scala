@@ -18,6 +18,7 @@ package controllers.payments
 
 import base.SpecBase
 import forms.payments.WantToBePaidFormProvider
+import models.Done
 import models.Income._
 import models.RelationshipStatus._
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
@@ -562,7 +563,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -582,7 +583,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual WantToBePaidPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).route.url
-        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
 
