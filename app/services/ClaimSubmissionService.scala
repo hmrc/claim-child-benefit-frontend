@@ -19,7 +19,7 @@ package services
 import config.FeatureFlags
 import connectors.ClaimChildBenefitConnector
 import logging.Logging
-import models.Done
+import models.{AdditionalArchiveDetails, Done}
 import models.domain.Claim
 import models.requests.{AuthenticatedIdentifierRequest, DataRequest}
 import services.ClaimSubmissionService.{CannotBuildJourneyModelException, NotAuthenticatedException}
@@ -89,7 +89,8 @@ class ClaimSubmissionService @Inject()(
                       Done
                   }
               }.flatMap { _ =>
-              supplementaryDataService.submit(nino, model, correlationId)(request)
+              val additionalDetails = AdditionalArchiveDetails(settledStatusStartDate)
+              supplementaryDataService.submit(nino, model, correlationId, additionalDetails)(request)
             }
         }
       }.getOrElse(Future.failed(CannotBuildJourneyModelException))
