@@ -19,7 +19,7 @@ package services
 import base.SpecBase
 import config.FeatureFlags
 import connectors.ClaimChildBenefitConnector
-import generators.{Generators, ModelGenerators}
+import generators.ModelGenerators
 import models.PartnerClaimingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments, WaitingToHear}
 import models._
 import models.requests.{AuthenticatedIdentifierRequest, DataRequest, UnauthenticatedIdentifierRequest}
@@ -399,14 +399,14 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
 
           when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
           when(mockSubmissionLimiter.recordSubmission(any(), any(), any())(any())) thenReturn Future.successful(Done)
-          when(mockSupplementaryDataService.submit(any(), any(), any())(any())) thenReturn Future.successful(Done)
+          when(mockSupplementaryDataService.submit(any(), any(), any(), any())(any())) thenReturn Future.successful(Done)
           when(mockImmigrationStatusService.settledStatusStartDate(any(), any(), any())(any())) thenReturn Future.successful(None)
 
           submissionService.submit(request).futureValue
 
           verify(mockConnector, times(1)).submitClaim(any(), any())(any())
           verify(mockSubmissionLimiter, times(1)).recordSubmission(any(), any(), any())(any())
-          verify(mockSupplementaryDataService, times(1)).submit(eqTo(nino.nino), any(), any())(any())
+          verify(mockSupplementaryDataService, times(1)).submit(eqTo(nino.nino), any(), any(), any())(any())
         }
 
         "must submit a claim and return Done when recording the submission fails" in {
@@ -416,13 +416,13 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
 
           when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
           when(mockSubmissionLimiter.recordSubmission(any(), any(), any())(any())) thenReturn Future.failed(new Exception("foo"))
-          when(mockSupplementaryDataService.submit(any(), any(), any())(any())) thenReturn Future.successful(Done)
+          when(mockSupplementaryDataService.submit(any(), any(), any(), any())(any())) thenReturn Future.successful(Done)
           when(mockImmigrationStatusService.settledStatusStartDate(any(), any(), any())(any())) thenReturn Future.successful(None)
 
           submissionService.submit(request).futureValue
 
           verify(mockConnector, times(1)).submitClaim(any(), any())(any())
-          verify(mockSupplementaryDataService, times(1)).submit(eqTo(nino.nino), any(), any())(any())
+          verify(mockSupplementaryDataService, times(1)).submit(eqTo(nino.nino), any(), any(), any())(any())
         }
       }
 

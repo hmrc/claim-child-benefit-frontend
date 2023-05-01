@@ -1566,6 +1566,7 @@ pdf.nationality.other = Other nationality
 pdf.previousAddress = Previous address
 pdf.phoneNumber = Telephone number
 pdf.nationality = Nationality
+pdf.settledStatusDate = EU Settled Status granted
 pdf.incomeDetails = Income details
 pdf.benefits = Benefits received
 pdf.paymentDetails = Payment details
