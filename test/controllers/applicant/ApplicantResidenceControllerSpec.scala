@@ -19,7 +19,7 @@ package controllers.applicant
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.applicant.ApplicantResidenceFormProvider
-import models.{ApplicantResidence, UserAnswers}
+import models.{ApplicantResidence, Done, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -82,7 +82,7 @@ class ApplicantResidenceControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -101,7 +101,7 @@ class ApplicantResidenceControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual ApplicantResidencePage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
-        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
 

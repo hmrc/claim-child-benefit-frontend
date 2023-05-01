@@ -16,7 +16,8 @@
 
 package services
 
-import models.UserAnswers
+import connectors.UserAnswersConnector
+import models.{Done, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.MockitoSugar
@@ -26,10 +27,13 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import play.api.libs.json.Json
 import repositories.SessionRepository
+import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.temporal.ChronoUnit
 import java.time.{Clock, Instant, ZoneId}
 import scala.concurrent.Future
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class UserDataServiceSpec
   extends AnyFreeSpec
@@ -44,12 +48,16 @@ class UserDataServiceSpec
   private val userId    = "foo"
   private val answers   = UserAnswers(userId, Json.obj("bar" -> "baz"), lastUpdated = Instant.now(stubClock))
 
-  private val mockRepo = mock[SessionRepository]
+  private implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  private val service = new UserDataService(mockRepo)
+  private val mockRepo = mock[SessionRepository]
+  private val mockConnector = mock[UserAnswersConnector]
+
+  private val service = new UserDataService(mockRepo, mockConnector)
 
   override def beforeEach(): Unit = {
     reset(mockRepo)
+    reset(mockConnector)
     super.beforeEach()
   }
 
@@ -72,12 +80,14 @@ class UserDataServiceSpec
 
   ".set" - {
 
-    "must write the answers to the repository" in {
+    "must write the answers to the repository and the backend" in {
 
       when(mockRepo.set(any())) thenReturn Future.successful(true)
+      when(mockConnector.set(any())(any())) thenReturn Future.successful(Done)
 
-      service.set(answers).futureValue mustEqual true
+      service.set(answers).futureValue
       verify(mockRepo, times(1)).set(eqTo(answers))
+      verify(mockConnector, times(1)).set(eqTo(answers))(any())
     }
   }
 

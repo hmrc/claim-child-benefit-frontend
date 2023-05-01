@@ -19,7 +19,7 @@ package controllers.partner
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.partner.PartnerClaimingChildBenefitFormProvider
-import models.{AdultName, PartnerClaimingChildBenefit}
+import models.{AdultName, Done, PartnerClaimingChildBenefit}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -85,7 +85,7 @@ class PartnerClaimingChildBenefitControllerSpec extends SpecBase with MockitoSug
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -104,7 +104,7 @@ class PartnerClaimingChildBenefitControllerSpec extends SpecBase with MockitoSug
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual PartnerClaimingChildBenefitPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
-        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
 

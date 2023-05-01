@@ -19,6 +19,7 @@ package controllers.applicant
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.applicant.AddApplicantNationalityFormProvider
+import models.Done
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -26,7 +27,6 @@ import pages.EmptyWaypoints
 import pages.applicant.AddApplicantNationalityPage
 import play.api.i18n.Messages
 import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserDataService
@@ -36,8 +36,6 @@ import views.html.applicant.AddApplicantNationalityView
 import scala.concurrent.Future
 
 class AddApplicantNationalityControllerSpec extends SpecBase with MockitoSugar {
-
-  def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new AddApplicantNationalityFormProvider()
   val form = formProvider()
@@ -70,7 +68,7 @@ class AddApplicantNationalityControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -89,7 +87,7 @@ class AddApplicantNationalityControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual AddApplicantNationalityPage().navigate(waypoints, emptyUserAnswers, expectedAnswers).url
-        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
 

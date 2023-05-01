@@ -19,7 +19,7 @@ package controllers.applicant
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.applicant.EldestChildDateOfBirthFormProvider
-import models.ChildName
+import models.{ChildName, Done}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -95,7 +95,7 @@ class EldestChildDateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -110,7 +110,7 @@ class EldestChildDateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual EldestChildDateOfBirthPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
-        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
 

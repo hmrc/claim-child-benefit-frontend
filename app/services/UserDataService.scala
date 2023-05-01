@@ -16,21 +16,26 @@
 
 package services
 
-import models.UserAnswers
+import connectors.UserAnswersConnector
+import models.{Done, UserAnswers}
 import repositories.SessionRepository
+import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Inject
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class UserDataService @Inject()(
-                                 repository: SessionRepository
-                               ) {
+                                 repository: SessionRepository,
+                                 connector: UserAnswersConnector
+                               )(implicit ec: ExecutionContext) {
 
   def get(userId: String): Future[Option[UserAnswers]] =
     repository.get(userId)
 
-  def set(answers: UserAnswers): Future[Boolean] =
-    repository.set(answers)
+  def set(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[Done] =
+    repository
+      .set(answers)
+      .flatMap(_ => connector.set(answers))
 
   def keepAlive(userId: String): Future[Boolean] =
     repository.keepAlive(userId)

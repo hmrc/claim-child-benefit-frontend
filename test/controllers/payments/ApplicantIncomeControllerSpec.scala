@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.payments.ApplicantIncomeFormProvider
 import models.RelationshipStatus._
-import models.{Income, UserAnswers}
+import models.{Done, Income}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalacheck.Gen
@@ -108,7 +108,7 @@ class ApplicantIncomeControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(coupleAnswers))
@@ -127,7 +127,7 @@ class ApplicantIncomeControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual ApplicantIncomePage.navigate(waypoints, coupleAnswers, expectedAnswers).url
-        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
 

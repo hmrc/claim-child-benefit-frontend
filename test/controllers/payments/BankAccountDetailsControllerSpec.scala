@@ -21,7 +21,7 @@ import config.FeatureFlags
 import connectors.BankAccountInsightsConnector
 import controllers.{routes => baseRoutes}
 import forms.payments.{BankAccountDetailsFormModel, BankAccountDetailsFormProvider}
-import models.{BankAccountDetails, BankAccountHolder, BankAccountInsightsResponseModel, ReputationResponseEnum, UnexpectedException, VerifyBankDetailsResponseModel}
+import models.{BankAccountDetails, BankAccountHolder, BankAccountInsightsResponseModel, Done, ReputationResponseEnum, UnexpectedException, VerifyBankDetailsResponseModel}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito
 import org.mockito.Mockito.{never, times, verify, when}
@@ -115,7 +115,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
           )
 
           when(mockBarsService.verifyBankDetails(any())(any(), any())) thenReturn Future.successful(Some(happyBarsResponse))
-          when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+          when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
           when(mockFeatureFlags.verifyBankDetails) thenReturn true
           when(mockFeatureFlags.callBankAccountInsights) thenReturn true
           when(mockBankAccountInsightsConnector.check(any())(any())) thenReturn Future.successful(Right(bankAccountInsightsResponse))
@@ -143,7 +143,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
 
             status(result) mustEqual SEE_OTHER
             redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, baseAnswers, expectedAnswers).url
-            verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+            verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
             verify(mockBarsService, times(1)).verifyBankDetails(any())(any(), any())
             verify(mockBankAccountInsightsConnector, times(1)).check(any())(any())
           }
@@ -161,7 +161,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
           )
 
           when(mockBarsService.verifyBankDetails(any())(any(), any())) thenReturn Future.successful(Some(happyBarsResponse))
-          when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+          when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
           when(mockFeatureFlags.verifyBankDetails) thenReturn true
           when(mockFeatureFlags.callBankAccountInsights) thenReturn true
           when(mockBankAccountInsightsConnector.check(any())(any())) thenReturn Future.successful(Left(UnexpectedException))
@@ -186,7 +186,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
 
             status(result) mustEqual SEE_OTHER
             redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, baseAnswers, expectedAnswers).url
-            verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+            verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
             verify(mockBarsService, times(1)).verifyBankDetails(any())(any(), any())
             verify(mockBankAccountInsightsConnector, times(1)).check(any())(any())
           }
@@ -195,7 +195,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
         "must save the answer and redirect to the next page when valid data is submitted and we cannot get a good response from BARS" in {
 
           when(mockBarsService.verifyBankDetails(any())(any(), any())) thenReturn Future.successful(None)
-          when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+          when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
           when(mockFeatureFlags.verifyBankDetails) thenReturn true
           when(mockFeatureFlags.callBankAccountInsights) thenReturn true
           when(mockBankAccountInsightsConnector.check(any())(any())) thenReturn Future.successful(Right(bankAccountInsightsResponse))
@@ -223,7 +223,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
 
             status(result) mustEqual SEE_OTHER
             redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, baseAnswers, expectedAnswers).url
-            verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+            verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
             verify(mockBarsService, times(1)).verifyBankDetails(any())(any(), any())
             verify(mockBankAccountInsightsConnector, times(1)).check(any())(any())
           }
@@ -244,7 +244,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
           )
 
           when(mockBarsService.verifyBankDetails(any())(any(), any())) thenReturn Future.successful(Some(happyBarsResponse))
-          when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+          when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
           when(mockFeatureFlags.verifyBankDetails) thenReturn true
           when(mockFeatureFlags.callBankAccountInsights) thenReturn false
 
@@ -268,7 +268,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
 
             status(result) mustEqual SEE_OTHER
             redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, baseAnswers, expectedAnswers).url
-            verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+            verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
             verify(mockBarsService, times(1)).verifyBankDetails(any())(any(), any())
             verify(mockBankAccountInsightsConnector, never()).check(any())(any())
           }
@@ -277,7 +277,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
         "must save the answer and redirect to the next page when valid data is submitted and we cannot get a good response from BARS" in {
 
           when(mockBarsService.verifyBankDetails(any())(any(), any())) thenReturn Future.successful(None)
-          when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+          when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
           when(mockFeatureFlags.verifyBankDetails) thenReturn true
           when(mockFeatureFlags.callBankAccountInsights) thenReturn false
 
@@ -301,7 +301,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
 
             status(result) mustEqual SEE_OTHER
             redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, baseAnswers, expectedAnswers).url
-            verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+            verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
             verify(mockBarsService, times(1)).verifyBankDetails(any())(any(), any())
             verify(mockBankAccountInsightsConnector, never()).check(any())(any())
           }
@@ -315,7 +315,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
 
         "must save the answer and redirect to the next page without calling BARS, but still calling bank account insights" in {
 
-          when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+          when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
           when(mockFeatureFlags.verifyBankDetails) thenReturn false
           when(mockFeatureFlags.callBankAccountInsights) thenReturn true
           when(mockBankAccountInsightsConnector.check(any())(any())) thenReturn Future.successful(Right(bankAccountInsightsResponse))
@@ -343,7 +343,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
 
             status(result) mustEqual SEE_OTHER
             redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, baseAnswers, expectedAnswers).url
-            verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+            verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
             verify(mockBarsService, never()).verifyBankDetails(any())(any(), any())
             verify(mockBankAccountInsightsConnector, times(1)).check(any())(any())
           }
@@ -354,7 +354,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
 
         "must save the answer and redirect to the next page without calling BARS or bank account insights" in {
 
-          when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+          when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
           when(mockFeatureFlags.verifyBankDetails) thenReturn false
           when(mockFeatureFlags.callBankAccountInsights) thenReturn false
 
@@ -378,7 +378,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
 
             status(result) mustEqual SEE_OTHER
             redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, baseAnswers, expectedAnswers).url
-            verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+            verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
             verify(mockBarsService, never()).verifyBankDetails(any())(any(), any())
             verify(mockBankAccountInsightsConnector, never()).check(any())(any())
           }
@@ -649,7 +649,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
       )
 
       when(mockBarsService.verifyBankDetails(any())(any(), any())) thenReturn Future.successful(Some(invalidDetailsResponse))
-      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
       when(mockFeatureFlags.verifyBankDetails) thenReturn true
       when(mockFeatureFlags.callBankAccountInsights) thenReturn true
       when(mockBankAccountInsightsConnector.check(any())(any())) thenReturn Future.successful(Right(bankAccountInsightsResponse))
@@ -677,7 +677,7 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, baseAnswers, expectedAnswers).url
-        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
 

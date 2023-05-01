@@ -19,7 +19,7 @@ package controllers.child
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.child.PreviousGuardianInternationalAddressFormProvider
-import models.{AdultName, Country, InternationalAddress}
+import models.{AdultName, Country, Done, InternationalAddress}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -86,7 +86,7 @@ class PreviousGuardianInternationalAddressControllerSpec extends SpecBase with M
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -105,7 +105,7 @@ class PreviousGuardianInternationalAddressControllerSpec extends SpecBase with M
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual child.PreviousGuardianInternationalAddressPage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
-        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
 

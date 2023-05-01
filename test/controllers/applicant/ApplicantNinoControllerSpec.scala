@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.applicant.ApplicantNinoFormProvider
 import generators.Generators
-import models.UserAnswers
+import models.{Done, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalacheck.Arbitrary.arbitrary
@@ -86,7 +86,7 @@ class ApplicantNinoControllerSpec extends SpecBase with MockitoSugar with Genera
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -105,7 +105,7 @@ class ApplicantNinoControllerSpec extends SpecBase with MockitoSugar with Genera
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual ApplicantNinoPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
-        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
 

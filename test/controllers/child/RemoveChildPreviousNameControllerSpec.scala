@@ -19,14 +19,13 @@ package controllers.child
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.child.RemoveChildPreviousNameFormProvider
-import models.ChildName
+import models.{ChildName, Done}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{never, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.child.{ChildPreviousNamePage, RemoveChildPreviousNamePage}
 import pages.{EmptyWaypoints, child}
 import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserDataService
@@ -35,8 +34,6 @@ import views.html.child.RemoveChildPreviousNameView
 import scala.concurrent.Future
 
 class RemoveChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
-
-  def onwardRoute = Call("GET", "/foo")
 
   private val name = ChildName("first", None, "last")
   val formProvider = new RemoveChildPreviousNameFormProvider()
@@ -68,7 +65,7 @@ class RemoveChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -87,7 +84,7 @@ class RemoveChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual RemoveChildPreviousNamePage(index, index).navigate(waypoints, baseAnswers, expectedAnswers).url
-        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
 
@@ -95,7 +92,7 @@ class RemoveChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -113,7 +110,7 @@ class RemoveChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual child.RemoveChildPreviousNamePage(index, index).navigate(waypoints, baseAnswers, baseAnswers).url
-        verify(mockUserDataService, never()).set(any())
+        verify(mockUserDataService, never()).set(any())(any())
       }
     }
 

@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.applicant.ApplicantPreviousInternationalAddressFormProvider
 import generators.ModelGenerators
-import models.{Country, InternationalAddress, UkAddress}
+import models.{Country, Done, InternationalAddress, UkAddress}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalacheck.Arbitrary.arbitrary
@@ -88,7 +88,7 @@ class ApplicantPreviousInternationalAddressControllerSpec extends SpecBase with 
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -107,7 +107,7 @@ class ApplicantPreviousInternationalAddressControllerSpec extends SpecBase with 
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual ApplicantPreviousInternationalAddressPage.navigate(waypoints, baseAnswers, expectedAnswers).url
-        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
 

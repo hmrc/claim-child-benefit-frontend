@@ -19,14 +19,13 @@ package controllers.applicant
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.applicant.ApplicantHasPreviousFamilyNameFormProvider
-import models.UserAnswers
+import models.{Done, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.EmptyWaypoints
 import pages.applicant.ApplicantHasPreviousFamilyNamePage
 import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserDataService
@@ -35,8 +34,6 @@ import views.html.applicant.ApplicantHasPreviousFamilyNameView
 import scala.concurrent.Future
 
 class ApplicantHasPreviousFamilyNameControllerSpec extends SpecBase with MockitoSugar {
-
-  def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new ApplicantHasPreviousFamilyNameFormProvider()
   val form = formProvider()
@@ -84,7 +81,7 @@ class ApplicantHasPreviousFamilyNameControllerSpec extends SpecBase with Mockito
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -103,7 +100,7 @@ class ApplicantHasPreviousFamilyNameControllerSpec extends SpecBase with Mockito
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual ApplicantHasPreviousFamilyNamePage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
-        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
 

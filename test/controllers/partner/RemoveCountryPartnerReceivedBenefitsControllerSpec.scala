@@ -19,7 +19,7 @@ package controllers.partner
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.partner.RemoveCountryPartnerReceivedBenefitsFormProvider
-import models.{AdultName, Country}
+import models.{AdultName, Country, Done}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{never, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -70,7 +70,7 @@ class RemoveCountryPartnerReceivedBenefitsControllerSpec extends SpecBase with M
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -89,7 +89,7 @@ class RemoveCountryPartnerReceivedBenefitsControllerSpec extends SpecBase with M
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual RemoveCountryPartnerReceivedBenefitsPage(index).navigate(waypoints, baseAnswers, expectedAnswers).url
-        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
 
@@ -97,7 +97,7 @@ class RemoveCountryPartnerReceivedBenefitsControllerSpec extends SpecBase with M
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -115,7 +115,7 @@ class RemoveCountryPartnerReceivedBenefitsControllerSpec extends SpecBase with M
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual partner.RemoveCountryPartnerReceivedBenefitsPage(index).navigate(waypoints, baseAnswers, baseAnswers).url
-        verify(mockUserDataService, never()).set(any())
+        verify(mockUserDataService, never()).set(any())(any())
       }
     }
 

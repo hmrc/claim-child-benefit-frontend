@@ -19,7 +19,7 @@ package controllers.child
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.child.AnyoneClaimedForChildBeforeFormProvider
-import models.ChildName
+import models.{ChildName, Done}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -35,8 +35,8 @@ import scala.concurrent.Future
 
 class AnyoneClaimedForChildBeforeControllerSpec extends SpecBase with MockitoSugar {
 
-  private val waypoints          = EmptyWaypoints
-  private val childName          = ChildName("first", None, "last")
+  private val waypoints = EmptyWaypoints
+  private val childName = ChildName("first", None, "last")
 
   private val baseAnswers =
     emptyUserAnswers
@@ -92,7 +92,7 @@ class AnyoneClaimedForChildBeforeControllerSpec extends SpecBase with MockitoSug
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -111,7 +111,7 @@ class AnyoneClaimedForChildBeforeControllerSpec extends SpecBase with MockitoSug
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual child.AnyoneClaimedForChildBeforePage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
-        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
 

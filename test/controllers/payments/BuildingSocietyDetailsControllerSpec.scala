@@ -19,7 +19,7 @@ package controllers.payments
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.payments.BuildingSocietyDetailsFormProvider
-import models.{BankAccountHolder, BuildingSociety, BuildingSocietyDetails}
+import models.{BankAccountHolder, BuildingSociety, BuildingSocietyDetails, Done}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -82,7 +82,7 @@ class BuildingSocietyDetailsControllerSpec extends SpecBase with MockitoSugar {
     "must save the answer and redirect to the next page when valid data is submitted" in {
 
       val mockUserDataService = mock[UserDataService]
-      when(mockUserDataService.set(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -99,7 +99,7 @@ class BuildingSocietyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual BuildingSocietyDetailsPage.navigate(waypoints, baseAnswers, expectedAnswers).url
-        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))
+        verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
 
