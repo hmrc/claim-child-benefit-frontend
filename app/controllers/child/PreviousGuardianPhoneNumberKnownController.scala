@@ -35,6 +35,7 @@ class PreviousGuardianPhoneNumberKnownController @Inject()(
                                                        override val messagesApi: MessagesApi,
                                                        userDataService: UserDataService,
                                                        identify: IdentifierAction,
+                                                       checkRecentClaims: CheckRecentClaimsAction,
                                                        getData: DataRetrievalAction,
                                                        requireData: DataRequiredAction,
                                                        formProvider: PreviousGuardianPhoneNumberKnownFormProvider,
@@ -45,7 +46,7 @@ class PreviousGuardianPhoneNumberKnownController @Inject()(
     with I18nSupport
     with AnswerExtractor {
 
-  def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
       getAnswer(PreviousGuardianNamePage(index)) {
         previousGuardianName =>
@@ -61,7 +62,7 @@ class PreviousGuardianPhoneNumberKnownController @Inject()(
       }
   }
 
-  def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData).async {
     implicit request =>
       getAnswerAsync(PreviousGuardianNamePage(index)) {
         previousGuardianName =>

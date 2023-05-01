@@ -29,18 +29,19 @@ import javax.inject.Inject
 class CurrentlyReceivingChangesTaskListController @Inject()(
                                                              override val messagesApi: MessagesApi,
                                                              identify: IdentifierAction,
+                                                             checkRecentClaims: CheckRecentClaimsAction,
                                                              getData: DataRetrievalAction,
                                                              requireData: DataRequiredAction,
                                                              val controllerComponents: MessagesControllerComponents,
                                                              view: CurrentlyReceivingChangesTaskListView
                                                            ) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
       Ok(view(waypoints))
   }
 
-  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
       Redirect(CurrentlyReceivingChangesTaskListPage.navigate(waypoints, request.userAnswers, request.userAnswers).route)
   }

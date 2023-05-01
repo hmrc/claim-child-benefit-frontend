@@ -30,6 +30,7 @@ import javax.inject.Inject
 class RelationshipStatusChangesTaskListController @Inject()(
                                               override val messagesApi: MessagesApi,
                                               identify: IdentifierAction,
+                                              checkRecentClaims: CheckRecentClaimsAction,
                                               getData: DataRetrievalAction,
                                               requireData: DataRequiredAction,
                                               val controllerComponents: MessagesControllerComponents,
@@ -39,12 +40,12 @@ class RelationshipStatusChangesTaskListController @Inject()(
     with I18nSupport
     with AnswerExtractor {
 
-  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
       Ok(view(waypoints))
   }
 
-  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
       Redirect(RelationshipStatusChangesTaskListPage.navigate(waypoints, request.userAnswers, request.userAnswers).route)
   }

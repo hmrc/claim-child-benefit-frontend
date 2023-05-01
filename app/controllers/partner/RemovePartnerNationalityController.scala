@@ -35,6 +35,7 @@ class RemovePartnerNationalityController @Inject()(
                                                       override val messagesApi: MessagesApi,
                                                       userDataService: UserDataService,
                                                       identify: IdentifierAction,
+                                                      checkRecentClaims: CheckRecentClaimsAction,
                                                       getData: DataRetrievalAction,
                                                       requireData: DataRequiredAction,
                                                       formProvider: RemovePartnerNationalityFormProvider,
@@ -45,7 +46,7 @@ class RemovePartnerNationalityController @Inject()(
     with I18nSupport
     with AnswerExtractor {
 
-  def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
       getAnswers(PartnerNamePage, PartnerNationalityPage(index)) {
         case (partnerName, nationality) =>
@@ -56,7 +57,7 @@ class RemovePartnerNationalityController @Inject()(
       }
   }
 
-  def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData).async {
     implicit request =>
       getAnswersAsync(PartnerNamePage, PartnerNationalityPage(index)) {
         case(partnerName, nationality) =>

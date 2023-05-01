@@ -16,7 +16,7 @@
 
 package controllers.payments
 
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import controllers.actions.{CheckRecentClaimsAction, DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import pages.EmptyWaypoints
 import pages.payments.CheckPaymentDetailsPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -31,13 +31,14 @@ import javax.inject.Inject
 class CheckPaymentDetailsController  @Inject()(
                                                 override val messagesApi: MessagesApi,
                                                 identify: IdentifierAction,
+                                                checkRecentClaims: CheckRecentClaimsAction,
                                                 getData: DataRetrievalAction,
                                                 requireData: DataRequiredAction,
                                                 val controllerComponents: MessagesControllerComponents,
                                                 view: CheckPaymentDetailsView
                                               ) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad: Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
 
       val thisPage = CheckPaymentDetailsPage
@@ -61,7 +62,7 @@ class CheckPaymentDetailsController  @Inject()(
       Ok(view(paymentsDetails))
   }
 
-  def onSubmit: Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onSubmit: Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
       Redirect(CheckPaymentDetailsPage.navigate(EmptyWaypoints, request.userAnswers, request.userAnswers).route)
   }

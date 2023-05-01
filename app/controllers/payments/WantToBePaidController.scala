@@ -39,6 +39,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class WantToBePaidController @Inject()(
                                         override val messagesApi: MessagesApi,
                                         identify: IdentifierAction,
+                                        checkRecentClaims: CheckRecentClaimsAction,
                                         getData: DataRetrievalAction,
                                         requireData: DataRequiredAction,
                                         val controllerComponents: MessagesControllerComponents,
@@ -63,7 +64,7 @@ class WantToBePaidController @Inject()(
 
   private val form = formProvider()
   
-  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(WantToBePaidPage) match {
@@ -74,7 +75,7 @@ class WantToBePaidController @Inject()(
       showView(preparedForm, waypoints, Ok)
   }
 
-  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData).async {
     implicit request =>
 
       form.bindFromRequest().fold(

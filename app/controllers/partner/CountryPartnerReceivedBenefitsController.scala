@@ -36,6 +36,7 @@ class CountryPartnerReceivedBenefitsController @Inject()(
                                                             override val messagesApi: MessagesApi,
                                                             userDataService: UserDataService,
                                                             identify: IdentifierAction,
+                                                            checkRecentClaims: CheckRecentClaimsAction,
                                                             getData: DataRetrievalAction,
                                                             requireData: DataRequiredAction,
                                                             formProvider: CountryPartnerReceivedBenefitsFormProvider,
@@ -46,7 +47,7 @@ class CountryPartnerReceivedBenefitsController @Inject()(
     with I18nSupport
     with AnswerExtractor {
 
-  def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
       getAnswer(PartnerNamePage) {
         partnerName =>
@@ -63,7 +64,7 @@ class CountryPartnerReceivedBenefitsController @Inject()(
       }
   }
 
-  def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData).async {
     implicit request =>
       getAnswerAsync(PartnerNamePage) {
         partnerName =>

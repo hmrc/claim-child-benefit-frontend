@@ -35,6 +35,7 @@ class ApplicantNationalityController @Inject()(
                                         override val messagesApi: MessagesApi,
                                         userDataService: UserDataService,
                                         identify: IdentifierAction,
+                                        checkRecentClaims: CheckRecentClaimsAction,
                                         getData: DataRetrievalAction,
                                         requireData: DataRequiredAction,
                                         formProvider: ApplicantNationalityFormProvider,
@@ -42,7 +43,7 @@ class ApplicantNationalityController @Inject()(
                                         view: ApplicantNationalityView
                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
 
       val nationalities = request.userAnswers.get(AllApplicantNationalities).getOrElse(Nil)
@@ -57,7 +58,7 @@ class ApplicantNationalityController @Inject()(
       Ok(view(preparedForm, waypoints, index))
   }
 
-  def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData).async {
     implicit request =>
 
       val nationalities = request.userAnswers.get(AllApplicantNationalities).getOrElse(Nil)

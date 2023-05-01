@@ -34,6 +34,7 @@ class SeparationDateController @Inject()(
                                             override val messagesApi: MessagesApi,
                                             userDataService: UserDataService,
                                             identify: IdentifierAction,
+                                            checkRecentClaims: CheckRecentClaimsAction,
                                             getData: DataRetrievalAction,
                                             requireData: DataRequiredAction,
                                             formProvider: SeparationDateFormProvider,
@@ -46,7 +47,7 @@ class SeparationDateController @Inject()(
 
   private val form = formProvider()
 
-  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(SeparationDatePage) match {
@@ -57,7 +58,7 @@ class SeparationDateController @Inject()(
       Ok(view(preparedForm, waypoints))
   }
 
-  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData).async {
     implicit request =>
 
       form.bindFromRequest().fold(

@@ -35,6 +35,7 @@ class ChildPreviousNameController @Inject()(
                                       override val messagesApi: MessagesApi,
                                       userDataService: UserDataService,
                                       identify: IdentifierAction,
+                                      checkRecentClaims: CheckRecentClaimsAction,
                                       getData: DataRetrievalAction,
                                       requireData: DataRequiredAction,
                                       formProvider: ChildPreviousNameFormProvider,
@@ -47,7 +48,7 @@ class ChildPreviousNameController @Inject()(
 
 
 
-  def onPageLoad(waypoints: Waypoints, childIndex: Index, nameIndex: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints, childIndex: Index, nameIndex: Index): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
       getAnswer(ChildNamePage(childIndex)) {
         childName =>
@@ -63,7 +64,7 @@ class ChildPreviousNameController @Inject()(
       }
   }
 
-  def onSubmit(waypoints: Waypoints, childIndex: Index, nameIndex: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(waypoints: Waypoints, childIndex: Index, nameIndex: Index): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData).async {
     implicit request =>
       getAnswerAsync(ChildNamePage(childIndex)) {
         childName =>

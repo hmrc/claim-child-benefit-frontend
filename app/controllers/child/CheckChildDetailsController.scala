@@ -18,7 +18,7 @@ package controllers.child
 
 import com.google.inject.Inject
 import controllers.AnswerExtractor
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import controllers.actions.{CheckRecentClaimsAction, DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import models.Index
 import pages.Waypoints
 import pages.child.{CheckChildDetailsPage, ChildNamePage}
@@ -32,13 +32,14 @@ import views.html.child.CheckChildDetailsView
 class CheckChildDetailsController @Inject()(
                                             override val messagesApi: MessagesApi,
                                             identify: IdentifierAction,
+                                            checkRecentClaims: CheckRecentClaimsAction,
                                             getData: DataRetrievalAction,
                                             requireData: DataRequiredAction,
                                             val controllerComponents: MessagesControllerComponents,
                                             view: CheckChildDetailsView
                                           ) extends FrontendBaseController with I18nSupport with AnswerExtractor {
 
-  def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
       getAnswer(ChildNamePage(index)) {
         childName =>
@@ -90,7 +91,7 @@ class CheckChildDetailsController @Inject()(
           Ok(view(list, waypoints, index, childName))
       }
   }
-  def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
       Redirect(CheckChildDetailsPage(index).navigate(waypoints, request.userAnswers, request.userAnswers).route)
   }

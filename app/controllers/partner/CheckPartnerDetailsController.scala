@@ -16,7 +16,7 @@
 
 package controllers.partner
 
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import controllers.actions.{CheckRecentClaimsAction, DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import pages.EmptyWaypoints
 import pages.partner.CheckPartnerDetailsPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -31,13 +31,14 @@ import javax.inject.Inject
 class CheckPartnerDetailsController  @Inject()(
                                                   override val messagesApi: MessagesApi,
                                                   identify: IdentifierAction,
+                                                  checkRecentClaims: CheckRecentClaimsAction,
                                                   getData: DataRetrievalAction,
                                                   requireData: DataRequiredAction,
                                                   val controllerComponents: MessagesControllerComponents,
                                                   view: CheckPartnerDetailsView
                                                 ) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad: Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
 
       val thisPage = CheckPartnerDetailsPage
@@ -67,7 +68,7 @@ class CheckPartnerDetailsController  @Inject()(
       Ok(view(partnerDetails))
   }
 
-  def onSubmit: Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onSubmit: Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
       Redirect(CheckPartnerDetailsPage.navigate(EmptyWaypoints, request.userAnswers, request.userAnswers).route)
   }

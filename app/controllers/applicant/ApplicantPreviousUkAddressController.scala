@@ -33,6 +33,7 @@ class ApplicantPreviousUkAddressController @Inject()(
                                                     override val messagesApi: MessagesApi,
                                                     userDataService: UserDataService,
                                                     identify: IdentifierAction,
+                                                    checkRecentClaims: CheckRecentClaimsAction,
                                                     getData: DataRetrievalAction,
                                                     requireData: DataRequiredAction,
                                                     formProvider: ApplicantPreviousUkAddressFormProvider,
@@ -45,7 +46,7 @@ class ApplicantPreviousUkAddressController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData).async {
     implicit request =>
       getCurrentAddress {
         currentAddress =>
@@ -59,7 +60,7 @@ class ApplicantPreviousUkAddressController @Inject()(
       }
   }
 
-  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData).async {
     implicit request =>
       getCurrentAddress {
         currentAddress =>

@@ -35,6 +35,7 @@ class AddApplicantPreviousFamilyNameController @Inject()(
                                          override val messagesApi: MessagesApi,
                                          userDataService: UserDataService,
                                          identify: IdentifierAction,
+                                         checkRecentClaims: CheckRecentClaimsAction,
                                          getData: DataRetrievalAction,
                                          requireData: DataRequiredAction,
                                          formProvider: AddApplicantPreviousFamilyNameFormProvider,
@@ -44,7 +45,7 @@ class AddApplicantPreviousFamilyNameController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
 
       val otherNames = AddApplicantPreviousFamilyNameSummary.rows(request.userAnswers, waypoints, AddApplicantPreviousFamilyNamePage())
@@ -52,7 +53,7 @@ class AddApplicantPreviousFamilyNameController @Inject()(
       Ok(view(form, waypoints, otherNames))
   }
 
-  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData).async {
     implicit request =>
 
       form.bindFromRequest().fold(

@@ -42,6 +42,7 @@ class BankAccountDetailsController @Inject()(
                                       override val messagesApi: MessagesApi,
                                       userDataService: UserDataService,
                                       identify: IdentifierAction,
+                                      checkRecentClaims: CheckRecentClaimsAction,
                                       getData: DataRetrievalAction,
                                       requireData: DataRequiredAction,
                                       formProvider: BankAccountDetailsFormProvider,
@@ -57,7 +58,7 @@ class BankAccountDetailsController @Inject()(
 
   private val form = formProvider()
 
-  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
       getAnswer(BankAccountHolderPage) {
         accountHolder =>
@@ -72,7 +73,7 @@ class BankAccountDetailsController @Inject()(
       }
   }
 
-  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData).async {
     implicit request =>
       getAnswerAsync(BankAccountHolderPage) {
         accountHolder =>

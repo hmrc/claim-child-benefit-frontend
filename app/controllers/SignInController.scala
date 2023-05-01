@@ -31,6 +31,7 @@ import javax.inject.Inject
 class SignInController @Inject()(
                                     override val messagesApi: MessagesApi,
                                     identify: IdentifierAction,
+                                    checkRecentClaims: CheckRecentClaimsAction,
                                     getData: DataRetrievalAction,
                                     formProvider: SignInFormProvider,
                                     val controllerComponents: MessagesControllerComponents,
@@ -40,12 +41,12 @@ class SignInController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData) {
     implicit request =>
       Ok(view(form, waypoints))
   }
 
-  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData) {
+  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData) {
     implicit request =>
 
       form.bindFromRequest().fold(
