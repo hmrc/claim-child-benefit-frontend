@@ -30,7 +30,7 @@
         @eligibilityFails(model)
     }
 
-    @applicantDetails(model)
+    @applicantDetails(model, additionalDetails)
 
     @model.relationship.partner.map { partner =>
         @partnerDetails(partner)
