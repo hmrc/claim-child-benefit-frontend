@@ -4,7 +4,7 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 import connectors.ClaimChildBenefitConnector._
 import generators.ModelGenerators
 import models.domain._
-import models.{AdultName, CheckLimitResponse, DesignatoryDetails, Done, NPSAddress, RelationshipDetails, SupplementaryMetadata}
+import models.{AdultName, CheckLimitResponse, DesignatoryDetails, Done, NPSAddress, RecentClaim, RelationshipDetails, SupplementaryMetadata}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -21,7 +21,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-import java.time.{LocalDate, LocalDateTime, ZoneOffset}
+import java.time.{Instant, LocalDate, LocalDateTime, ZoneOffset}
 import java.util.UUID
 
 class ClaimChildBenefitConnectorSpec
@@ -443,6 +443,70 @@ class ClaimChildBenefitConnectorSpec
 
         result.failed.futureValue mustBe an[Exception]
       }
+    }
+  }
+
+  ".getRecentClaim" - {
+
+    val recentClaim = RecentClaim("nino", Instant.now)
+
+    "must return a recent claim when the server returns one" in {
+
+      server.stubFor(
+        get(urlEqualTo("/claim-child-benefit/recent-claims"))
+          .willReturn(ok(Json.toJson(recentClaim).toString))
+      )
+
+      val result = connector.getRecentClaim().futureValue
+
+      result.value mustEqual recentClaim
+    }
+
+    "must return None when the server returns Not Found" in {
+
+      server.stubFor(
+        get(urlEqualTo("/claim-child-benefit/recent-claims"))
+          .willReturn(notFound())
+      )
+
+      connector.getRecentClaim().futureValue must not be defined
+    }
+
+    "must return a failed future when the server returns an error" in {
+
+      server.stubFor(
+        get(urlEqualTo("/claim-child-benefit/recent-claims"))
+          .willReturn(serverError())
+      )
+
+      connector.getRecentClaim().failed.futureValue
+    }
+  }
+
+  ".recordRecentClaim" - {
+
+    val recentClaim = RecentClaim("nino", Instant.now)
+
+    "must succeed when the server responds with No Content" in {
+
+      server.stubFor(
+        post(urlEqualTo("/claim-child-benefit/recent-claims"))
+          .withRequestBody(equalTo(Json.toJson(recentClaim).toString))
+          .willReturn(noContent())
+      )
+
+      connector.recordRecentClaim(recentClaim).futureValue
+    }
+
+    "must return a failed future when the server returns an error" in {
+
+      server.stubFor(
+        post(urlEqualTo("/claim-child-benefit/recent-claims"))
+          .withRequestBody(equalTo(Json.toJson(recentClaim).toString))
+          .willReturn(serverError())
+      )
+
+      connector.recordRecentClaim(recentClaim).failed.futureValue
     }
   }
 }
