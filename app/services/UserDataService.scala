@@ -17,6 +17,7 @@
 package services
 
 import connectors.UserAnswersConnector
+import logging.Logging
 import models.{Done, UserAnswers}
 import repositories.SessionRepository
 import uk.gov.hmrc.http.HeaderCarrier
@@ -27,7 +28,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class UserDataService @Inject()(
                                  repository: SessionRepository,
                                  connector: UserAnswersConnector
-                               )(implicit ec: ExecutionContext) {
+                               )(implicit ec: ExecutionContext) extends Logging {
 
   def get(userId: String): Future[Option[UserAnswers]] =
     repository.get(userId)
@@ -35,7 +36,15 @@ class UserDataService @Inject()(
   def set(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[Done] =
     repository
       .set(answers)
-      .flatMap(_ => connector.set(answers))
+      .flatMap { _ =>
+        connector
+          .set(answers)
+          .recover {
+            case e: Throwable =>
+              logger.error("Failed to write user answers to claim-child-benefit", e)
+              Done
+          }
+      }
 
   def keepAlive(userId: String): Future[Boolean] =
     repository.keepAlive(userId)

@@ -89,6 +89,26 @@ class UserDataServiceSpec
       verify(mockRepo, times(1)).set(eqTo(answers))
       verify(mockConnector, times(1)).set(eqTo(answers))(any())
     }
+
+    "must succeed when writing to the repository succeeds but the call to the backend fails" in {
+
+
+      when(mockRepo.set(any())) thenReturn Future.successful(true)
+      when(mockConnector.set(any())(any())) thenReturn Future.failed(new RuntimeException("foo"))
+
+      service.set(answers).futureValue
+      verify(mockRepo, times(1)).set(eqTo(answers))
+      verify(mockConnector, times(1)).set(eqTo(answers))(any())
+    }
+
+    "must fail when writing to the repository" in {
+
+
+      when(mockRepo.set(any())) thenReturn Future.failed(new RuntimeException("foo"))
+
+      service.set(answers).failed.futureValue
+      verify(mockRepo, times(1)).set(eqTo(answers))
+    }
   }
 
   ".keepAlive" - {
