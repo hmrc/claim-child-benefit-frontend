@@ -424,6 +424,22 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           verify(mockConnector, times(1)).submitClaim(any(), any())(any())
           verify(mockSupplementaryDataService, times(1)).submit(eqTo(nino.nino), any(), any(), any())(any())
         }
+
+        "must submit a claim and return Done when the supplementary data service fails" in {
+
+          val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
+          val request = DataRequest(identifierRequest, userId, basicUserAnswers)
+
+          when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
+          when(mockSubmissionLimiter.recordSubmission(any(), any(), any())(any())) thenReturn Future.successful(Done)
+          when(mockSupplementaryDataService.submit(any(), any(), any())(any())) thenReturn Future.failed(new RuntimeException())
+
+          submissionService.submit(request).futureValue
+
+          verify(mockConnector, times(1)).submitClaim(any(), any())(any())
+          verify(mockSubmissionLimiter, times(1)).recordSubmission(any(), any(), any())(any())
+          verify(mockSupplementaryDataService, times(1)).submit(eqTo(nino.nino), any(), any())(any())
+        }
       }
 
       "and their answers cannot produce a valid Journey Model" - {

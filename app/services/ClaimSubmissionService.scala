@@ -90,7 +90,11 @@ class ClaimSubmissionService @Inject()(
                   }
               }.flatMap { _ =>
               val additionalDetails = AdditionalArchiveDetails(settledStatusStartDate)
-              supplementaryDataService.submit(nino, model, correlationId, additionalDetails)(request)
+              supplementaryDataService.submit(nino, model, correlationId, additionalDetails)(request).recover {
+                case e: Exception =>
+                  logger.error("Failed to submit supplementary data", e)
+                  Done
+              }
             }
         }
       }.getOrElse(Future.failed(CannotBuildJourneyModelException))
