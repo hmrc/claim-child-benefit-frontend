@@ -10,7 +10,7 @@
     alwaysLivedAbroad: AlwaysLivedAbroad
 )
 
-@(model: journey.JourneyModel)(implicit messages: Messages)
+@(model: journey.JourneyModel, additionalDetails: AdditionalArchiveDetails)(implicit messages: Messages)
 
 <fo:page-sequence master-reference="main">
 
@@ -28,6 +28,10 @@
                     @line("pdf.nino", model.applicant.nationalInsuranceNumber.getOrElse(messages("pdf.notKnown")))
 
                     @line("pdf.nationality", model.applicant.nationalities.toList.map(_.name).mkString(" - "))
+
+                    @additionalDetails.settledStatusStartDate.map { startDate =>
+                        @line("pdf.settledStatusDate", date(startDate))
+                    }
 
                     @{model.applicant.residency match {
                         case journey.Residency.AlwaysLivedInUk =>

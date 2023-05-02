@@ -228,7 +228,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
 
     "must call the audit connector with the correct payload" in {
 
-      val claim = Claim.build(applicantNino, model, hasClaimedChildBenefit = false)
+      val claim = Claim.build(applicantNino, model, hasClaimedChildBenefit = false, settledStatusStartDate = None)
       val correlationId = UUID.randomUUID()
 
       val expectedAuditEvent: SubmitToCbsAuditEvent = SubmitToCbsAuditEvent(

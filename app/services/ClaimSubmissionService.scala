@@ -19,7 +19,7 @@ package services
 import config.FeatureFlags
 import connectors.ClaimChildBenefitConnector
 import logging.Logging
-import models.Done
+import models.{AdditionalArchiveDetails, Done}
 import models.domain.Claim
 import models.requests.{AuthenticatedIdentifierRequest, DataRequest}
 import services.ClaimSubmissionService.{CannotBuildJourneyModelException, NotAuthenticatedException}
@@ -35,6 +35,7 @@ class ClaimSubmissionService @Inject()(
                                         connector: ClaimChildBenefitConnector,
                                         submissionLimiter: SubmissionLimiter,
                                         supplementaryDataService: SupplementaryDataService,
+                                        immigrationStatusService: ImmigrationStatusService,
                                         journeyModelService: JourneyModelService
                                       ) extends Logging {
 
@@ -69,25 +70,29 @@ class ClaimSubmissionService @Inject()(
     } yield {
 
       val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+      val correlationId = UUID.randomUUID()
 
       journeyModelService.build(request.userAnswers).right.map { model =>
-        val claim = Claim.build(nino, model, relationshipDetails.hasClaimedChildBenefit)
-        val correlationId = UUID.randomUUID()
+        immigrationStatusService.settledStatusStartDate(nino, model, correlationId)(hc).flatMap {
+          settledStatusStartDate =>
 
-        connector
-          .submitClaim(claim, correlationId)(hc)
-          .flatMap { _ =>
-            submissionLimiter
-              .recordSubmission(model, claim, correlationId)(hc)
-              .recover {
-                case e: Exception =>
-                  logger.error("Failed to record submission: " + e.getMessage)
-                  Done
-              }
-          }.flatMap { _ =>
-            supplementaryDataService.submit(nino, model, correlationId)(request)
-          }
+            val claim = Claim.build(nino, model, relationshipDetails.hasClaimedChildBenefit, settledStatusStartDate)
 
+            connector
+              .submitClaim(claim, correlationId)(hc)
+              .flatMap { _ =>
+                submissionLimiter
+                  .recordSubmission(model, claim, correlationId)(hc)
+                  .recover {
+                    case e: Exception =>
+                      logger.error("Failed to record submission: " + e.getMessage)
+                      Done
+                  }
+              }.flatMap { _ =>
+              val additionalDetails = AdditionalArchiveDetails(settledStatusStartDate)
+              supplementaryDataService.submit(nino, model, correlationId, additionalDetails)(request)
+            }
+        }
       }.getOrElse(Future.failed(CannotBuildJourneyModelException))
     }
   }.getOrElse(Future.failed(NotAuthenticatedException))

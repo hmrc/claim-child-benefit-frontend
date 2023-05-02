@@ -21,7 +21,7 @@ import com.dmanchester.playfop.sapi.PlayFop
 import connectors.ClaimChildBenefitConnector
 import generators.ModelGenerators
 import models.journey.JourneyModel
-import models.{AdultName, CurrentlyReceivingChildBenefit, Done, RelationshipStatus, SupplementaryMetadata, journey}
+import models.{AdditionalArchiveDetails, AdultName, CurrentlyReceivingChildBenefit, Done, RelationshipStatus, SupplementaryMetadata, journey}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito
@@ -141,15 +141,15 @@ class SupplementaryDataServiceSpec
           correlationId = uuid.toString
         )
 
+        val additionalDetails = AdditionalArchiveDetails(None)
         val template = app.injector.instanceOf[ArchiveTemplate]
-        val expectedView = template(model)(app.injector.instanceOf[MessagesApi].preferred(FakeRequest()))
+        val expectedView = template(model, additionalDetails)(app.injector.instanceOf[MessagesApi].preferred(FakeRequest()))
         val expectedPdf = "hello".getBytes
-
 
         when(mockFop.processTwirlXml(any(), any(), any(), any())) thenReturn expectedPdf
         when(mockClaimChildBenefitConnector.submitSupplementaryData(any(), any())(any())).thenReturn(Future.successful(Done))
 
-        service.submit(nino, model, uuid)(request).futureValue
+        service.submit(nino, model, uuid, additionalDetails)(request).futureValue
 
         verify(mockFop, times(1)).processTwirlXml(eqTo(expectedView), any(), any(), any())
         verify(mockClaimChildBenefitConnector, times(1)).submitSupplementaryData(eqTo(expectedPdf), eqTo(expectedMetadata))(any())
@@ -157,8 +157,9 @@ class SupplementaryDataServiceSpec
 
       "must fail when the supplementary data call fails" in {
 
+        val additionalDetails = AdditionalArchiveDetails(None)
         when(mockClaimChildBenefitConnector.submitSupplementaryData(any(), any())(any())).thenReturn(Future.failed(new RuntimeException()))
-        service.submit(nino, model, uuid)(request).failed.futureValue
+        service.submit(nino, model, uuid, additionalDetails)(request).failed.futureValue
       }
     }
 
@@ -177,8 +178,9 @@ class SupplementaryDataServiceSpec
 
         val service = app.injector.instanceOf[SupplementaryDataService]
         val uuid = UUID.randomUUID()
+        val additionalDetails = AdditionalArchiveDetails(None)
 
-        service.submit(nino, model, uuid)(request).futureValue
+        service.submit(nino, model, uuid, additionalDetails)(request).futureValue
 
         verify(mockClaimChildBenefitConnector, times(0)).submitSupplementaryData(any(), any())(any())
       }

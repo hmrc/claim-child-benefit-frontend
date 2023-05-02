@@ -45,7 +45,7 @@ class InternalAuthTokenInitialiserImpl @Inject() (
   private val internalAuthService: Service =
     configuration.get[Service]("microservice.services.internal-auth")
 
-  private val authToken: String =
+  private val internalAuthToken: String =
     configuration.get[String]("internal-auth.token")
 
   private val appName: String =
@@ -57,7 +57,7 @@ class InternalAuthTokenInitialiserImpl @Inject() (
   Await.result(initialised, 30.seconds)
 
   private def ensureAuthToken(): Future[Done] = {
-    authTokenIsValid.flatMap { isValid =>
+    authTokenIsValid().flatMap { isValid =>
       if (isValid) {
         logger.info("Auth token is already valid")
         Future.successful(Done)
@@ -71,13 +71,18 @@ class InternalAuthTokenInitialiserImpl @Inject() (
     logger.info("Initialising auth token")
     httpClient.post(url"${internalAuthService.baseUrl}/test-only/token")(HeaderCarrier())
       .withBody(Json.obj(
-        "token" -> authToken,
+    "token" -> internalAuthToken,
         "principal" -> appName,
         "permissions" -> Seq(
           Json.obj(
-            "resourceType" -> "claim-child-benefit",
-            "resourceLocation" -> "*",
-            "actions" -> List("*")
+        "resourceType" -> "claim-child-benefit",
+          "resourceLocation" -> "*",
+          "actions" -> List("*")
+          ),
+          Json.obj(
+            "resourceType" -> "home-office-immigration-status-proxy",
+            "resourceLocation" -> s"status/public-funds/nino/$appName",
+            "actions" -> List("WRITE")
           )
         )
       ))
@@ -92,10 +97,10 @@ class InternalAuthTokenInitialiserImpl @Inject() (
       }
   }
 
-  private def authTokenIsValid: Future[Boolean] = {
+  private def authTokenIsValid(): Future[Boolean] = {
     logger.info("Checking auth token")
     httpClient.get(url"${internalAuthService.baseUrl}/test-only/token")(HeaderCarrier())
-      .setHeader("Authorization" -> authToken)
+      .setHeader("Authorization" -> internalAuthToken)
       .execute
       .map(_.status == 200)
   }

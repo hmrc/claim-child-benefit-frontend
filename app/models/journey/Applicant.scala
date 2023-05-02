@@ -19,7 +19,7 @@ package models.journey
 import cats.data._
 import cats.implicits._
 import models.ApplicantResidence.{AlwaysAbroad, AlwaysUk, UkAndAbroad}
-import models.{Address, AdultName, ApplicantPreviousName, CurrentlyReceivingChildBenefit, Nationality, UserAnswers}
+import models.{Address, AdultName, ApplicantPreviousName, CurrentlyReceivingChildBenefit, Nationality, NationalityGroup, NationalityGroupOrdering, UserAnswers}
 import pages.applicant._
 import queries.{AllApplicantNationalities, AllPreviousFamilyNames, Query}
 
@@ -40,7 +40,15 @@ final case class Applicant(
                             currentlyReceivingChildBenefit: CurrentlyReceivingChildBenefit,
                             changedDesignatoryDetails: Option[Boolean],
                             correspondenceAddress: Option[Address]
-                          )
+                          ) {
+
+  lazy val nationalityGroupToUse: NationalityGroup =
+    nationalities
+      .map(_.group)
+      .toList
+      .sorted(NationalityGroupOrdering)
+      .head
+}
 
 object Applicant {
 

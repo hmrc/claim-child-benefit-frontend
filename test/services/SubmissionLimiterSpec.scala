@@ -111,7 +111,7 @@ class SubmissionLimiterSpec
     otherEligibilityFailureReasons = Nil
   )
 
-  private val claim = Claim.build(nino, basicJourneyModel, hasClaimedChildBenefit = false)
+  private val claim = Claim.build(nino, basicJourneyModel, hasClaimedChildBenefit = false, settledStatusStartDate = None)
 
   "SubmissionsLimitedByAllowList" - {
 

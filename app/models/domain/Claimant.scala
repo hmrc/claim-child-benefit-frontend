@@ -16,10 +16,9 @@
 
 package models.domain
 
-import models.NationalityGroupOrdering
-import models.journey.Residency.{AlwaysLivedAbroad, AlwaysLivedInUk, LivedInUkAndAbroad}
 import models.domain.Nationality.UkCta
 import models.journey
+import models.journey.Residency.{AlwaysLivedAbroad, AlwaysLivedInUk, LivedInUkAndAbroad}
 import play.api.libs.json.{Json, OWrites}
 
 import java.time.LocalDate
@@ -35,15 +34,9 @@ object Claimant {
     case x: NonUkCtaClaimantNotAlwaysResident => Json.toJsObject(x)(NonUkCtaClaimantNotAlwaysResident.writes)
   }
 
-  def build(nino: String, journeyModel: journey.JourneyModel): Claimant = {
+  def build(nino: String, journeyModel: journey.JourneyModel, hasSettledStatus: Option[Boolean]): Claimant = {
     val nationalityToUse: Nationality =
-      Nationality.fromNationalityGroup(
-        journeyModel.applicant
-          .nationalities.map(_.group)
-          .toList
-          .sorted(NationalityGroupOrdering)
-          .head
-        )
+      Nationality.fromNationalityGroup(journeyModel.applicant.nationalityGroupToUse)
 
     val hicbcOptOut = journeyModel.paymentPreference match {
       case _: journey.PaymentPreference.DoNotPay => true
@@ -83,7 +76,7 @@ object Claimant {
           hmfAbroad = journeyModel.applicant.memberOfHMForcesOrCivilServantAbroad,
           hicbcOptOut = hicbcOptOut,
           nationality = nationality,
-          rightToReside = false
+          rightToReside = hasSettledStatus.getOrElse(false)
         )
 
       case (nationality, _: AlwaysLivedAbroad) =>
@@ -92,7 +85,7 @@ object Claimant {
           hmfAbroad = journeyModel.applicant.memberOfHMForcesOrCivilServantAbroad,
           hicbcOptOut = hicbcOptOut,
           nationality = nationality,
-          rightToReside = false,
+          rightToReside = hasSettledStatus.getOrElse(false),
           last3MonthsInUK = false
         )
 
@@ -104,7 +97,7 @@ object Claimant {
           hmfAbroad = journeyModel.applicant.memberOfHMForcesOrCivilServantAbroad,
           hicbcOptOut = hicbcOptOut,
           nationality = nationality,
-          rightToReside = false,
+          rightToReside = hasSettledStatus.getOrElse(false),
           last3MonthsInUK = last3MonthsInUK
         )
     }

@@ -19,7 +19,7 @@ package services
 import com.dmanchester.playfop.sapi.PlayFop
 import connectors.ClaimChildBenefitConnector
 import models.journey.JourneyModel
-import models.{Done, SupplementaryMetadata}
+import models.{AdditionalArchiveDetails, Done, SupplementaryMetadata}
 import org.apache.fop.apps.FOUserAgent
 import org.apache.xmlgraphics.util.MimeConstants
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -34,7 +34,7 @@ import scala.concurrent.Future
 
 trait SupplementaryDataService {
 
-  def submit(nino: String, model: JourneyModel, correlationId: UUID)(implicit request: RequestHeader): Future[Done]
+  def submit(nino: String, model: JourneyModel, correlationId: UUID, additionalDetails: AdditionalArchiveDetails)(implicit request: RequestHeader): Future[Done]
 }
 
 @Singleton
@@ -56,7 +56,8 @@ class SupplementaryDataServiceImpl @Inject() (
     foUserAgent.setTitle("Claim Child Benefit submission")
   }
 
-  override def submit(nino: String, model: JourneyModel, correlationId: UUID)(implicit request: RequestHeader): Future[Done] = {
+  override def submit(nino: String, model: JourneyModel, correlationId: UUID, additionalDetails: AdditionalArchiveDetails)
+                     (implicit request: RequestHeader): Future[Done] = {
 
     val metadata = SupplementaryMetadata(
       nino = model.applicant.nationalInsuranceNumber.get,
@@ -64,7 +65,7 @@ class SupplementaryDataServiceImpl @Inject() (
       correlationId = correlationId.toString
     )
 
-    val pdf = fop.processTwirlXml(template(model), MimeConstants.MIME_PDF, foUserAgentBlock = userAgentBlock)
+    val pdf = fop.processTwirlXml(template(model, additionalDetails), MimeConstants.MIME_PDF, foUserAgentBlock = userAgentBlock)
 
     connector.submitSupplementaryData(pdf, metadata)(HeaderCarrierConverter.fromRequestAndSession(request, request.session))
   }
@@ -73,6 +74,7 @@ class SupplementaryDataServiceImpl @Inject() (
 @Singleton
 class NoOpSupplementaryDataService @Inject() () extends SupplementaryDataService {
 
-  override def submit(nino: String, model: JourneyModel, correlationId: UUID)(implicit request: RequestHeader): Future[Done] =
+  override def submit(nino: String, model: JourneyModel, correlationId: UUID, additionalDetails: AdditionalArchiveDetails)
+                     (implicit request: RequestHeader): Future[Done] =
     Future.successful(Done)
 }

@@ -19,7 +19,7 @@ package services
 import base.SpecBase
 import config.FeatureFlags
 import connectors.ClaimChildBenefitConnector
-import generators.Generators
+import generators.ModelGenerators
 import models.PartnerClaimingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments, WaitingToHear}
 import models._
 import models.requests.{AuthenticatedIdentifierRequest, DataRequest, UnauthenticatedIdentifierRequest}
@@ -44,12 +44,13 @@ import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach with Generators {
+class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach with ModelGenerators {
 
   private val mockFeatureFlags = mock[FeatureFlags]
   private val mockConnector = mock[ClaimChildBenefitConnector]
   private val mockSubmissionLimiter = mock[SubmissionLimiter]
   private val mockSupplementaryDataService = mock[SupplementaryDataService]
+  private val mockImmigrationStatusService = mock[ImmigrationStatusService]
   private val journeyModelService = new JourneyModelService(mockFeatureFlags)
 
   override def beforeEach(): Unit = {
@@ -57,11 +58,18 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
     Mockito.reset(mockConnector)
     Mockito.reset(mockSubmissionLimiter)
     Mockito.reset(mockSupplementaryDataService)
-    Mockito.reset(mockFeatureFlags)
+    Mockito.reset(mockImmigrationStatusService)
     super.beforeEach()
   }
 
-  private val submissionService = new ClaimSubmissionService(mockFeatureFlags, mockConnector, mockSubmissionLimiter, mockSupplementaryDataService, journeyModelService)
+  private val submissionService = new ClaimSubmissionService(
+    mockFeatureFlags,
+    mockConnector,
+    mockSubmissionLimiter,
+    mockSupplementaryDataService,
+    mockImmigrationStatusService,
+    journeyModelService
+  )
 
   private val nino = arbitrary[Nino].sample.value
   private val userId = "user id"
@@ -391,13 +399,14 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
 
           when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
           when(mockSubmissionLimiter.recordSubmission(any(), any(), any())(any())) thenReturn Future.successful(Done)
-          when(mockSupplementaryDataService.submit(any(), any(), any())(any())) thenReturn Future.successful(Done)
+          when(mockSupplementaryDataService.submit(any(), any(), any(), any())(any())) thenReturn Future.successful(Done)
+          when(mockImmigrationStatusService.settledStatusStartDate(any(), any(), any())(any())) thenReturn Future.successful(None)
 
           submissionService.submit(request).futureValue
 
           verify(mockConnector, times(1)).submitClaim(any(), any())(any())
           verify(mockSubmissionLimiter, times(1)).recordSubmission(any(), any(), any())(any())
-          verify(mockSupplementaryDataService, times(1)).submit(eqTo(nino.nino), any(), any())(any())
+          verify(mockSupplementaryDataService, times(1)).submit(eqTo(nino.nino), any(), any(), any())(any())
         }
 
         "must submit a claim and return Done when recording the submission fails" in {
@@ -407,12 +416,13 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
 
           when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
           when(mockSubmissionLimiter.recordSubmission(any(), any(), any())(any())) thenReturn Future.failed(new Exception("foo"))
-          when(mockSupplementaryDataService.submit(any(), any(), any())(any())) thenReturn Future.successful(Done)
+          when(mockSupplementaryDataService.submit(any(), any(), any(), any())(any())) thenReturn Future.successful(Done)
+          when(mockImmigrationStatusService.settledStatusStartDate(any(), any(), any())(any())) thenReturn Future.successful(None)
 
           submissionService.submit(request).futureValue
 
           verify(mockConnector, times(1)).submitClaim(any(), any())(any())
-          verify(mockSupplementaryDataService, times(1)).submit(eqTo(nino.nino), any(), any())(any())
+          verify(mockSupplementaryDataService, times(1)).submit(eqTo(nino.nino), any(), any(), any())(any())
         }
       }
 
