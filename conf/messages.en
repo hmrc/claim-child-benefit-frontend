@@ -1027,6 +1027,22 @@ childBirthCertificateSystemNumber.error.required = Enter the system number on {0
 childBirthCertificateSystemNumber.error.invalid = The system number on {1}’s birth certificate must be 9 digits
 childBirthCertificateSystemNumber.change.hidden = the system number on this child’s birth certificate
 
+birthCertificateHasNorthernIrishNumber.title = Does this child’s birth certificate have a birth registration number?
+birthCertificateHasNorthernIrishNumber.heading = Does {0}’s birth certificate have a birth registration number?
+birthCertificateHasNorthernIrishNumber.guidance = This is the number from the top right hand corner of their birth certificate. For example, B12345678.
+birthCertificateHasNorthernIrishNumber.checkYourAnswersLabel = Does this child’s birth certificate have a birth registration number?
+birthCertificateHasNorthernIrishNumber.error.required = Select yes if {0}’s birth certificate has a birth registration number
+birthCertificateHasNorthernIrishNumber.change.hidden = if this child’s birth certificate has a birth registration number
+
+childNorthernIrishBirthCertificateNumber.title = What is the birth registration number on this child’s birth certificate?
+childNorthernIrishBirthCertificateNumber.heading = What is the birth registration number on {0}’s birth certificate?
+childNorthernIrishBirthCertificateNumber.guidance = This is the  number from the top right hand corner of their birth certificate.
+childNorthernIrishBirthCertificateNumber.hint = For example, B12345678.
+childNorthernIrishBirthCertificateNumber.checkYourAnswersLabel = The birth registration number on this child’s birth certificate
+childNorthernIrishBirthCertificateNumber.error.required = Enter the birth registration number on {0}’s birth certificate
+childNorthernIrishBirthCertificateNumber.error.invalid = The birth registration number on {1}’s birth certificate must be the letter B followed by 8 digits digits
+childNorthernIrishBirthCertificateNumber.change.hidden = the birth registration number on this child’s birth certificate
+
 childBirthRegistrationCountry.title = Where was this child’s birth registered?
 childBirthRegistrationCountry.heading = Where was {0}’s birth registered?
 childBirthRegistrationCountry.england = England
