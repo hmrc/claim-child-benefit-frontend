@@ -35,16 +35,7 @@ class UserDataService @Inject()(
 
   def set(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[Done] =
     repository
-      .set(answers)
-      .flatMap { _ =>
-        connector
-          .set(answers)
-          .recover {
-            case e: Throwable =>
-              logger.error("Failed to write user answers to claim-child-benefit", e)
-              Done
-          }
-      }
+      .set(answers).map(_ => Done)
 
   def keepAlive(userId: String): Future[Boolean] =
     repository.keepAlive(userId)
