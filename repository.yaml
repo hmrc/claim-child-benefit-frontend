@@ -3,6 +3,9 @@ leakDetectionExemptions:
   - ruleId: 'aws_secret_access_key'
     filePaths:
       - '/app/viewmodels/checkAnswers/child/ChildNorthernIrishBirthCertificateNumberSummary.scala'
-      - '/test/forms/child/ChildNorthernIrishBirthCertificateNumberFormProviderSpec.scala'
-      - '/test/forms/child/ChildNorthernIrishBirthCertificateNumberFormProviderSpec.scala'
     text: 'key = "childNorthernIrishBirthCertificateNumber'
+  - ruleId: 'aws_secret_access_key'
+    filePaths:
+      - '/test/forms/child/ChildNorthernIrishBirthCertificateNumberFormProviderSpec.scala'
+      - '/test/forms/child/ChildNorthernIrishBirthCertificateNumberFormProviderSpec.scala'
+    text: 'Key = "childNorthernIrishBirthCertificateNumber'
