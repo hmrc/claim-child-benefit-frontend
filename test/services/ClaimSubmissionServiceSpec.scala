@@ -209,7 +209,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
 
         "must be false when any documents need to be posted for a child" in {
 
-          val answers = basicUserAnswers.set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.NorthernIreland).success.value
+          val answers = basicUserAnswers.set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.OtherCountry).success.value
 
           val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
           val request = DataRequest(identifierRequest, userId, answers)

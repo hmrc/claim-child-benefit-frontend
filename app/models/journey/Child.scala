@@ -48,10 +48,9 @@ final case class Child(
     if (relationshipToApplicant == AdoptedChild) Some(AdoptionCertificate) else None
 
   private val (birthCertificate, travelDocument) = countryOfRegistration match {
-    case England | Scotland | Wales      => (None, None)
-    case _ if previousClaimant.isDefined => (None, None)
-    case NorthernIreland                 => (Some(BirthCertificate), None)
-    case _                               => (Some(BirthCertificate), Some(TravelDocument))
+    case England | Scotland | Wales | NorthernIreland => (None, None)
+    case _ if previousClaimant.isDefined              => (None, None)
+    case _                                            => (Some(BirthCertificate), Some(TravelDocument))
   }
 
   val requiredDocuments: Seq[DocumentType] =

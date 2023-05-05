@@ -61,10 +61,10 @@ class ChildSpec extends AnyFreeSpec with Matchers with ModelGenerators with TryV
 
   ".requiredDocuments" - {
 
-    "must be empty if the child was born in ESW and is not adopted" in {
+    "must be empty if the child was born in E/S/W/NI and is not adopted" in {
 
       val gen = for {
-        country <- Gen.oneOf(England, Scotland, Wales)
+        country <- Gen.oneOf(England, Scotland, Wales, NorthernIreland)
         relationship <- Gen.oneOf(BirthChild, StepChild, OtherRelationship)
       } yield (country, relationship)
 
@@ -79,11 +79,6 @@ class ChildSpec extends AnyFreeSpec with Matchers with ModelGenerators with TryV
       }
     }
 
-    "must contain Birth Certificate if the child was born in Northern Ireland" in {
-
-      baseChild.copy(countryOfRegistration = NorthernIreland).requiredDocuments must contain only BirthCertificate
-    }
-
     "must contain Birth Certificate and Travel Document if the child was born outside the UK" in {
 
       forAll(Gen.oneOf(OtherCountry, UnknownCountry)) {
@@ -96,9 +91,10 @@ class ChildSpec extends AnyFreeSpec with Matchers with ModelGenerators with TryV
       }
     }
 
-    "must contain Adoption Certificate if the child is adopted" in {}
+    "must contain Adoption Certificate if the child is adopted" in {
 
-    baseChild.copy(relationshipToApplicant = AdoptedChild).requiredDocuments must contain only AdoptionCertificate
+      baseChild.copy(relationshipToApplicant = AdoptedChild).requiredDocuments must contain only AdoptionCertificate
+    }
   }
 
   ".possiblyLivedAbroadSeparately" - {
