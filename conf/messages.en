@@ -1032,7 +1032,7 @@ birthCertificateHasNorthernIrishNumber.heading = Does {0}’s birth certificate 
 birthCertificateHasNorthernIrishNumber.guidance = This is at the top right hand corner of their birth certificate. For example, B12345678.
 birthCertificateHasNorthernIrishNumber.checkYourAnswersLabel = Does this child’s birth certificate have a registration number?
 birthCertificateHasNorthernIrishNumber.error.required = Select yes if {0}’s birth certificate has a registration number
-birthCertificateHasNorthernIrishNumber.change.hidden = if this child’s birth certificate has a  registration number
+birthCertificateHasNorthernIrishNumber.change.hidden = if this child’s birth certificate has a registration number
 
 childNorthernIrishBirthCertificateNumber.title = What is the registration number on this child’s birth certificate?
 childNorthernIrishBirthCertificateNumber.heading = What is the registration number on {0}’s birth certificate?
@@ -1040,7 +1040,7 @@ childNorthernIrishBirthCertificateNumber.guidance = This is at the top right han
 childNorthernIrishBirthCertificateNumber.hint = For example, B12345678.
 childNorthernIrishBirthCertificateNumber.checkYourAnswersLabel = The registration number on this child’s birth certificate
 childNorthernIrishBirthCertificateNumber.error.required = Enter the registration number on {0}’s birth certificate
-childNorthernIrishBirthCertificateNumber.error.invalid = The registration number on {1}’s birth certificate must be the letter B followed by 8 digits digits
+childNorthernIrishBirthCertificateNumber.error.invalid = The registration number on {1}’s birth certificate must be B1 followed by 7 digits
 childNorthernIrishBirthCertificateNumber.change.hidden = the registration number on this child’s birth certificate
 
 childBirthRegistrationCountry.title = Where was this child’s birth registered?

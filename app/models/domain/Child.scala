@@ -54,11 +54,19 @@ object Child extends CbsDateFormats {
         Some(false)
     }
 
+    val maybeBirthRegistrationNumber = child.countryOfRegistration match {
+      case England | Scotland | Wales =>
+        child.birthCertificateNumber.map(_.brmsFormat)
+
+      case _ =>
+        None
+    }
+
     Child(
       name = ChildName.build(child.name),
       gender = BiologicalSex.build(child.biologicalSex),
       dateOfBirth = child.dateOfBirth,
-      birthRegistrationNumber = child.birthCertificateNumber.map(_.brmsFormat),
+      birthRegistrationNumber = maybeBirthRegistrationNumber,
       crn = None,
       countryOfRegistration = CountryOfRegistration.build(child.countryOfRegistration),
       dateOfBirthVerified = dateOfBirthVerified,
