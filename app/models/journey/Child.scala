@@ -133,6 +133,14 @@ object Child {
             Ior.Right(None)
         }
 
+      case NorthernIreland =>
+        answers.getIor(BirthCertificateHasNorthernIrishNumberPage(index)).flatMap {
+          case true =>
+            answers.getIor(ChildNorthernIrishBirthCertificateNumberPage(index)).map(Some(_))
+          case false =>
+            Ior.Right(None)
+        }
+
       case _ =>
         Ior.Right(None)
     }

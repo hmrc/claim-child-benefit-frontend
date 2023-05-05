@@ -356,6 +356,32 @@ class ChildSpec extends AnyFreeSpec with Matchers with ModelGenerators with TryV
         data must not be defined
         errors.value.toChain.toList must contain only ChildScottishBirthCertificateDetailsPage(Index(0))
       }
+
+      "when the birth is registered in Northern Ireland, but whether there is a registration number is missing" in {
+
+        val answers =
+          minimalChildAnswers
+            .set(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland).success.value
+
+
+        val (errors, data) = Child.buildChildren(answers).pad
+
+        data must not be defined
+        errors.value.toChain.toList must contain only BirthCertificateHasNorthernIrishNumberPage(Index(0))
+      }
+
+      "when the user said there was a NI registration number but it is missing" in {
+
+        val answers =
+          minimalChildAnswers
+            .set(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland).success.value
+            .set(BirthCertificateHasNorthernIrishNumberPage(Index(0)), true).success.value
+
+        val (errors, data) = Child.buildChildren(answers).pad
+
+        data must not be defined
+        errors.value.toChain.toList must contain only ChildNorthernIrishBirthCertificateNumberPage(Index(0))
+      }
     }
   }
 }
