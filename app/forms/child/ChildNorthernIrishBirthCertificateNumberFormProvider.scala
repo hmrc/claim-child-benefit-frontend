@@ -29,6 +29,6 @@ class ChildNorthernIrishBirthCertificateNumberFormProvider @Inject() extends Map
     Form(
       "value" -> text("childNorthernIrishBirthCertificateNumber.error.required", args = Seq(childName.firstName))
         .verifying(regexp(Validation.northernIrelandBirthCertificateNumberPattern, "childNorthernIrishBirthCertificateNumber.error.invalid", childName.firstName))
-        .transform[NorthernIrishBirthCertificateNumber](x => NorthernIrishBirthCertificateNumber(x.replace(" ", "").replace("-", "")), x => x.value)
+        .transform[NorthernIrishBirthCertificateNumber](x => NorthernIrishBirthCertificateNumber(x.replace(" ", "")), x => x.value)
     )
 }
