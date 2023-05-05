@@ -36,11 +36,12 @@ class UserAllowListConnector @Inject() (
                                          httpClient: HttpClientV2
                                        )(implicit ec: ExecutionContext) {
 
+  private val appName: String = configuration.get[String]("appName")
   private val userAllowListService: Service = configuration.get[Service]("microservice.services.user-allow-list")
   private val internalAuthToken: String = configuration.get[String]("internal-auth.token")
 
   def check(feature: String, value: String)(implicit hc: HeaderCarrier): Future[Boolean] =
-    httpClient.post(url"$userAllowListService/user-allow-list/$feature/check")
+    httpClient.post(url"$userAllowListService/user-allow-list/$appName/$feature/check")
       .setHeader("Authorization" -> internalAuthToken)
       .withBody(Json.toJson(CheckRequest(value)))
       .execute[HttpResponse]
