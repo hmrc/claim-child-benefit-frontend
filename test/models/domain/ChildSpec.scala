@@ -16,8 +16,7 @@
 
 package models.domain
 
-import models.BirthRegistrationMatchingResult
-import models.journey
+import models.{BirthRegistrationMatchingResult, NorthernIrishBirthCertificateNumber, journey}
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -154,7 +153,19 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
       result.dateOfBirthVerified must not be defined
     }
 
-    "must set `date of birth verified` to `false` when the child is registered in Northern Ireland" in {
+    "must set `date of birth verified` to `true` when the child is registered in Northern Ireland and a birth cert number is present" in {
+
+      val child = basicChild.copy(
+        countryOfRegistration = models.ChildBirthRegistrationCountry.NorthernIreland,
+        birthCertificateNumber = Some(NorthernIrishBirthCertificateNumber("B12345678"))
+      )
+
+      val result = Child.build(child)
+
+      result.dateOfBirthVerified.value mustBe true
+    }
+
+    "must set `date of birth verified` to `false` when the child is registered in Northern Ireland and no birth cert number is present" in {
 
       val child = basicChild.copy(countryOfRegistration = models.ChildBirthRegistrationCountry.NorthernIreland)
 
