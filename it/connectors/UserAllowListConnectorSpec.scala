@@ -33,7 +33,8 @@ class UserAllowListConnectorSpec
     new GuiceApplicationBuilder()
       .configure(
         "microservice.services.user-allow-list.port" -> server.port,
-        "internal-auth.token" -> "token"
+        "internal-auth.token" -> "token",
+        "appName" -> "appName"
       )
       .build()
 
@@ -42,7 +43,7 @@ class UserAllowListConnectorSpec
   ".check" - {
 
     val feature = "foobar"
-    val url = s"/user-allow-list/$feature/check"
+    val url = s"/user-allow-list/appName/$feature/check"
     val request = CheckRequest("value")
 
     "must return true when the server responds OK" in {
