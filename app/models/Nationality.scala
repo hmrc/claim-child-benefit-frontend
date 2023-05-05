@@ -131,7 +131,7 @@ object Nationality {
     Nationality("Gabonese", NonEea),
     Nationality("Gambian", NonEea),
     Nationality("Georgian", NonEea),
-    Nationality("German", NonEea),
+    Nationality("German", Eea),
     Nationality("Ghanaian", NonEea),
     Nationality("Gibraltarian", NonEea),
     Nationality("Greek", Eea),
