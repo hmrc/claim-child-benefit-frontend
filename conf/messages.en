@@ -852,7 +852,7 @@ applicantPreviousUkAddress.error.line1.length = Address line 1 of your previous 
 applicantPreviousUkAddress.error.line2.length = Address line 2 of your previous address must be 35 characters or less
 applicantPreviousUkAddress.error.town.length = Town or city of your previous address must be 35 characters or less
 applicantPreviousUkAddress.error.county.length = County of your previous address must be 35 characters or less
-applicantPreviousUkAddress.error.postcode.length = Postcode of your previous address must be 35 characters or less
+applicantPreviousUkAddress.error.postcode.length = Postcode of your previous address must be 8 characters or less
 applicantPreviousUkAddress.change.hidden = your previous address
 
 applicantPreviousFamilyName.title = What was your other last name(s) or family name(s)?
