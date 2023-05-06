@@ -83,7 +83,7 @@ journeyRecovery.startAgain.p2.2 = if you need to speak to someone about claiming
 
 signIn.title = Do you want to sign in using Government Gateway?
 signIn.heading = Do you want to sign in using Government Gateway?
-signIn.p1 = If you sign in and verify your identity, you will not have to repeat information HMRC have about you.
+signIn.p1 = If you sign in and verify your identity, you will be able to complete this claim faster.
 
 signedOut.title = For your security, we reset your application form
 signedOut.heading = For your security, we reset your application form
