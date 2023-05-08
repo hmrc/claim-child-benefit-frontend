@@ -18,12 +18,13 @@ package services
 
 import audit.AuditService
 import connectors.{ClaimChildBenefitConnector, UserAllowListConnector}
-import models.Done
+import models.{Done, RecentClaim}
 import models.domain.Claim
 import models.journey.JourneyModel
 import play.api.Configuration
 import uk.gov.hmrc.http.HeaderCarrier
 
+import java.time.{Clock, Instant}
 import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -32,13 +33,15 @@ trait SubmissionLimiter {
 
   def allowedToSubmit(nino: String)(implicit hc: HeaderCarrier): Future[Boolean]
 
-  def recordSubmission(model: JourneyModel, claim: Claim, correlationId: UUID)(implicit hc: HeaderCarrier): Future[Done]
+  def recordSubmission(nino: String, model: JourneyModel, claim: Claim, correlationId: UUID)(implicit hc: HeaderCarrier): Future[Done]
 }
 
 class SubmissionsLimitedByAllowList @Inject()(
                                                configuration: Configuration,
                                                userAllowListConnector: UserAllowListConnector,
-                                               auditService: AuditService
+                                               auditService: AuditService,
+                                               claimChildBenefitConnector: ClaimChildBenefitConnector,
+                                               clock: Clock
                                              )(implicit ec: ExecutionContext) extends SubmissionLimiter {
 
   private val submissionFeature: String = configuration.get[String]("allow-list-features.submission")
@@ -46,9 +49,13 @@ class SubmissionsLimitedByAllowList @Inject()(
   override def allowedToSubmit(nino: String)(implicit hc: HeaderCarrier): Future[Boolean] =
     userAllowListConnector.check(submissionFeature, nino)
 
-  override def recordSubmission(model: JourneyModel, claim: Claim, correlationId: UUID)(implicit hc: HeaderCarrier): Future[Done] = {
+  override def recordSubmission(nino: String, model: JourneyModel, claim: Claim, correlationId: UUID)(implicit hc: HeaderCarrier): Future[Done] = {
     auditService.auditSubmissionToCbs(model, claim, correlationId)
-    Future.successful(Done)
+    val recentClaim = RecentClaim(nino, Instant.now(clock))
+
+    claimChildBenefitConnector
+      .recordRecentClaim(recentClaim)
+      .map(_ => Done)
   }
 }
 
@@ -56,7 +63,8 @@ class SubmissionsLimitedByThrottle @Inject()(
                                               configuration: Configuration,
                                               connector: ClaimChildBenefitConnector,
                                               userAllowListConnector: UserAllowListConnector,
-                                              auditService: AuditService
+                                              auditService: AuditService,
+                                              clock: Clock
                                             )(implicit ec: ExecutionContext) extends SubmissionLimiter {
 
   private val submissionFeature: String = configuration.get[String]("allow-list-features.submission")
@@ -72,22 +80,34 @@ class SubmissionsLimitedByThrottle @Inject()(
         }
       }
 
-  override def recordSubmission(model: JourneyModel, claim: Claim, correlationId: UUID)(implicit hc: HeaderCarrier): Future[Done] =
+  override def recordSubmission(nino: String, model: JourneyModel, claim: Claim, correlationId: UUID)(implicit hc: HeaderCarrier): Future[Done] =
     connector
       .incrementThrottleCount()
-      .map { _ =>
+      .flatMap { _ =>
         auditService.auditSubmissionToCbs(model, claim, correlationId)
-        Done
+        val recentClaim = RecentClaim(nino, Instant.now(clock))
+
+        connector
+          .recordRecentClaim(recentClaim)
+          .map(_ => Done)
       }
 }
 
-class SubmissionsNotLimited @Inject()(auditService: AuditService) extends SubmissionLimiter {
+class SubmissionsNotLimited @Inject()(
+                                       auditService: AuditService,
+                                       clock: Clock,
+                                       claimChildBenefitConnector: ClaimChildBenefitConnector
+                                     )(implicit ec: ExecutionContext) extends SubmissionLimiter {
 
   override def allowedToSubmit(nino: String)(implicit hc: HeaderCarrier): Future[Boolean] =
     Future.successful(true)
 
-  override def recordSubmission(model: JourneyModel, claim: Claim, correlationId: UUID)(implicit hc: HeaderCarrier): Future[Done] = {
+  override def recordSubmission(nino: String, model: JourneyModel, claim: Claim, correlationId: UUID)(implicit hc: HeaderCarrier): Future[Done] = {
     auditService.auditSubmissionToCbs(model, claim, correlationId)
-    Future.successful(Done)
+    val recentClaim = RecentClaim(nino, Instant.now(clock))
+
+    claimChildBenefitConnector
+      .recordRecentClaim(recentClaim)
+      .map(_ => Done)
   }
 }

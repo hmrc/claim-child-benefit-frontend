@@ -37,7 +37,7 @@ import play.api.Configuration
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 
-import java.time.LocalDate
+import java.time.{Clock, Instant, LocalDate, ZoneId}
 import java.util.UUID
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -67,6 +67,10 @@ class SubmissionLimiterSpec
 
   private val nino = arbitrary[Nino].sample.value.nino
   private val correlationId = UUID.randomUUID()
+
+  private val now = Instant.now
+  private val stubClock = Clock.fixed(now, ZoneId.systemDefault())
+  private val recentClaim = RecentClaim(nino, now)
 
   private val basicJourneyModel = JourneyModel(
     applicant = journey.Applicant(
@@ -115,7 +119,13 @@ class SubmissionLimiterSpec
 
   "SubmissionsLimitedByAllowList" - {
 
-    val limiter = new SubmissionsLimitedByAllowList(configuration, mockUserAllowListConnector, mockAuditService)
+    val limiter = new SubmissionsLimitedByAllowList(
+      configuration,
+      mockUserAllowListConnector,
+      mockAuditService,
+      mockClaimChildBenefitConnector,
+      stubClock
+    )
 
     ".allowedToSubmit" - {
 
@@ -138,17 +148,21 @@ class SubmissionLimiterSpec
 
     "recordSubmission" - {
 
-      "must audit the submission and return Done" in {
+      "must audit the submission, record the recent claim and return Done" in {
 
-        limiter.recordSubmission(basicJourneyModel, claim, correlationId).futureValue mustEqual Done
+        when(mockClaimChildBenefitConnector.recordRecentClaim(any())(any()))thenReturn Future.successful(Done)
+
+        limiter.recordSubmission(nino, basicJourneyModel, claim, correlationId).futureValue mustEqual Done
+
         verify(mockAuditService, times(1)).auditSubmissionToCbs(eqTo(basicJourneyModel), eqTo(claim), any())(any())
+        verify(mockClaimChildBenefitConnector, times(1)).recordRecentClaim(eqTo(recentClaim))(any())
       }
     }
   }
 
   "SubmissionsNotLimited" - {
 
-    val limiter = new SubmissionsNotLimited(mockAuditService)
+    val limiter = new SubmissionsNotLimited(mockAuditService, stubClock, mockClaimChildBenefitConnector)
 
     ".allowedToSubmit" - {
 
@@ -160,17 +174,27 @@ class SubmissionLimiterSpec
 
     ".recordSubmission" - {
 
-      "must audit the submission and return Done" in {
+      "must audit the submission, record the recent claim and return Done" in {
 
-        limiter.recordSubmission(basicJourneyModel, claim, correlationId).futureValue mustEqual Done
+        when(mockClaimChildBenefitConnector.recordRecentClaim(any())(any()))thenReturn Future.successful(Done)
+
+        limiter.recordSubmission(nino, basicJourneyModel, claim, correlationId).futureValue mustEqual Done
+
         verify(mockAuditService, times(1)).auditSubmissionToCbs(eqTo(basicJourneyModel), eqTo(claim), any())(any())
+        verify(mockClaimChildBenefitConnector, times(1)).recordRecentClaim(eqTo(recentClaim))(any())
       }
     }
   }
 
   "SubmissionsLimitedByThrottle" - {
 
-    val limiter = new SubmissionsLimitedByThrottle(configuration, mockClaimChildBenefitConnector, mockUserAllowListConnector, mockAuditService)
+    val limiter = new SubmissionsLimitedByThrottle(
+      configuration,
+      mockClaimChildBenefitConnector,
+      mockUserAllowListConnector,
+      mockAuditService,
+      stubClock
+    )
 
     ".allowedToSubmit" - {
 
@@ -203,13 +227,16 @@ class SubmissionLimiterSpec
 
     ".recordSubmission" - {
 
-      "must increment the throttle counter, audit the submission and  and return Done" in {
+      "must increment the throttle counter, audit the submission, record the recent claim and return Done" in {
 
         when(mockClaimChildBenefitConnector.incrementThrottleCount()(any())) thenReturn Future.successful(Done)
+        when(mockClaimChildBenefitConnector.recordRecentClaim(any())(any()))thenReturn Future.successful(Done)
 
-        limiter.recordSubmission(basicJourneyModel, claim, correlationId)(hc).futureValue
+        limiter.recordSubmission(nino, basicJourneyModel, claim, correlationId)(hc).futureValue
+
         verify(mockClaimChildBenefitConnector, times(1)).incrementThrottleCount()(any())
         verify(mockAuditService, times(1)).auditSubmissionToCbs(eqTo(basicJourneyModel), eqTo(claim), any())(any())
+        verify(mockClaimChildBenefitConnector, times(1)).recordRecentClaim(eqTo(recentClaim))(any())
       }
     }
   }
