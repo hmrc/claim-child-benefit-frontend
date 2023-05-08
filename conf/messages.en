@@ -133,14 +133,17 @@ alreadyClaimed.p4.link.text = start your application again
 
 recentlySubmitted.title = You have recently made a Child Benefit claim
 recentlySubmitted.heading = You have recently made a Child Benefit claim
-recentlySubmitted.p1 = You have recently applied for Child Benefit by making a claim.
+recentlySubmitted.p1 = You have recently applied for Child Benefit on {0} and do not need to make another claim.
 recentlySubmitted.p2.1 = You can
 recentlySubmitted.p2.link.text = check when you can expect a reply from HMRC
 recentlySubmitted.p2.link.href = https://www.gov.uk/guidance/check-when-you-can-expect-a-reply-from-hmrc
-recentlySubmitted.p2.2 = where you can report a change of circumstances and request a proof of entitlement letter as well.
-recentlySubmitted.p3 = Find out more about
-recentlySubmitted.p3.link.text = claiming Child Benefit
-recentlySubmitted.p3.link.href = https://www.gov.uk/child-benefit
+recentlySubmitted.p3 = If you need to make a claim for another child, wait 1 week so the new claim is not considered a duplicate claim.
+recentlySubmitted.p4 = If you need to report a change of circumstances or request a proof of entitlement letter,
+recentlySubmitted.p4.link.text = contact the Child Benefit helpline
+recentlySubmitted.p4.link.href = https://www.gov.uk/government/organisations/hm-revenue-customs/contact/child-benefit
+recentlySubmitted.p5 = Find out more about
+recentlySubmitted.p5.link.text = claiming Child Benefit
+recentlySubmitted.p5.link.href = https://www.gov.uk/child-benefit
 
 cohabitationDate.title = When did you start living with your partner?
 cohabitationDate.heading = When did you start living with your partner?

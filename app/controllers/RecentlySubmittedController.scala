@@ -16,25 +16,35 @@
 
 package controllers
 
+import connectors.ClaimChildBenefitConnector
 import controllers.actions._
-import pages.Waypoints
-
-import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.RecentlySubmittedView
 
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import javax.inject.Inject
+import scala.concurrent.ExecutionContext
+
 class RecentlySubmittedController @Inject()(
                                           override val messagesApi: MessagesApi,
                                           identify: IdentifierAction,
                                           val controllerComponents: MessagesControllerComponents,
-                                          view: RecentlySubmittedView
-                                        ) extends FrontendBaseController with I18nSupport {
+                                          view: RecentlySubmittedView,
+                                          connector: ClaimChildBenefitConnector
+                                        )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = identify {
+  private val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy").withZone(ZoneId.systemDefault())
+
+  def onPageLoad(): Action[AnyContent] = identify.async {
     implicit request =>
-      Ok(view())
+      connector
+        .getRecentClaim()
+        .map(_.map(claim => Ok(view(dateFormatter.format(claim.created))))
+          .getOrElse(Redirect(routes.JourneyRecoveryController.onPageLoad())))
+
   }
 }
 

@@ -22,24 +22,28 @@
         newTabLink: HmrcNewTabLinkHelper
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(claimDate: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("recentlySubmitted.title")), showBackLink = false) {
 
     <h1 class="govuk-heading-xl">@messages("recentlySubmitted.heading")</h1>
 
-    <p class="govuk-body">
-    @messages("recentlySubmitted.p1")
-    </p>
+    <p class="govuk-body">@messages("recentlySubmitted.p1", claimDate)</p>
 
     <p class="govuk-body">
         @messages("recentlySubmitted.p2.1")
-        @{newTabLink(NewTabLinkHelper(text = messages("recentlySubmitted.p2.link.text"), href = Some(messages("recentlySubmitted.p2.link.href"))))},
-        @messages("recentlySubmitted.p2.2")
+        @newTabLink(NewTabLinkHelper(text = messages("recentlySubmitted.p2.link.text"), href = Some(messages("recentlySubmitted.p2.link.href")))).
+    </p>
+
+    <p class="govuk-body">@messages("recentlySubmitted.p3")</p>
+
+    <p class="govuk-body">
+        @messages("recentlySubmitted.p4")
+        @newTabLink(NewTabLinkHelper(text = messages("recentlySubmitted.p4.link.text"), href = Some(messages("recentlySubmitted.p4.link.href")))).
     </p>
 
     <p class="govuk-body">
-        @messages("recentlySubmitted.p3")
-        @{newTabLink(NewTabLinkHelper(text = messages("recentlySubmitted.p3.link.text"), href = Some(messages("recentlySubmitted.p3.link.href"))))}.
+        @messages("recentlySubmitted.p5")
+        @newTabLink(NewTabLinkHelper(text = messages("recentlySubmitted.p5.link.text"), href = Some(messages("recentlySubmitted.p5.link.href")))).
     </p>
 }
