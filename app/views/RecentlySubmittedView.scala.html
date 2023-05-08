@@ -24,7 +24,7 @@
 
 @(claimDate: String)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("recentlySubmitted.title")), showBackLink = false) {
+@layout(pageTitle = titleNoForm(messages("recentlySubmitted.title")), showBackLink = false, timeout = false) {
 
     <h1 class="govuk-heading-xl">@messages("recentlySubmitted.heading")</h1>
 
