@@ -283,5 +283,23 @@ class SubmittedControllerSpec extends SpecBase {
 
       }
     }
+
+    ".exitSurvey" - {
+
+      "must clear the user's session and redirect to the exit survey" in {
+
+        val application = applicationBuilder().build
+
+        running(application) {
+
+          val request = FakeRequest(routes.SubmittedController.exitSurvey).withSession("foo" -> "bar")
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          session(result).get("foo") must not be defined
+        }
+      }
+    }
   }
 }

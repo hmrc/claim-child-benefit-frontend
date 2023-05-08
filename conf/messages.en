@@ -2052,6 +2052,7 @@ submitted.circumstancesChange.p3 = If you are overpaid Child Benefit you might h
 submitted.circumstancesChange.p4 = If you require further assistance with your claim, contact the
 submitted.circumstancesChange.p4.link.text = Child Benefit Office
 submitted.circumstancesChange.p4.link.href = https://www.gov.uk/government/organisations/hm-revenue-customs/contact/child-benefit
+submitted.feedback = What did you think of this service? (takes 30 seconds)
 
 submissionFailedExistingClaim.title = You have already made a Child Benefit claim
 submissionFailedExistingClaim.heading = You have already made a Child Benefit claim

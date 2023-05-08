@@ -108,4 +108,8 @@
         @messages("submitted.circumstancesChange.p4")
         @newTabLink(NewTabLinkHelper(text = messages("submitted.circumstancesChange.p4.link.text"), href = Some(messages("submitted.circumstancesChange.p4.link.href")))).
     </p>
+
+    <p class="govuk-body">
+        <a href="@routes.SubmittedController.exitSurvey" class="govuk-link">@messages("submitted.feedback")</a>
+    </p>
 }

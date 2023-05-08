@@ -16,6 +16,7 @@
 
 package controllers
 
+import config.FrontendAppConfig
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import logging.Logging
 import models.Income.BelowLowerThreshold
@@ -37,7 +38,8 @@ class SubmittedController @Inject()(
                                      getData: DataRetrievalAction,
                                      requireData: DataRequiredAction,
                                      noTaxChargeView: SubmittedNoTaxChargeView,
-                                     withTaxChargeView: SubmittedWithTaxChargeView
+                                     withTaxChargeView: SubmittedWithTaxChargeView,
+                                     appConfig: FrontendAppConfig
                                    ) extends FrontendBaseController with I18nSupport with Logging with AnswerExtractor {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
@@ -70,5 +72,10 @@ class SubmittedController @Inject()(
             }
         }
       }
+  }
+
+  def exitSurvey: Action[AnyContent] = Action {
+    implicit request =>
+      Redirect(appConfig.exitSurveyUrl).withNewSession
   }
 }
