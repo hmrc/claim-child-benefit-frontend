@@ -468,3 +468,5 @@ GET        /there-is-an-existing-claim                          controllers.Subm
 GET        /already-being-paid                                  controllers.SubmissionFailedAlreadyInPaymentController.onPageLoad()
 
 GET         /we-saved-your-answers                          controllers.AnswersSavedController.onPageLoad()
+
+GET         /give-feedback                                  controllers.SubmittedController.exitSurvey

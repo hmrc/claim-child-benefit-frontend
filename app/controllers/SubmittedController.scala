@@ -16,22 +16,70 @@
 
 package controllers
 
-import controllers.actions.IdentifierAction
+import config.FrontendAppConfig
+import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import logging.Logging
+import models.Income.BelowLowerThreshold
+import models.IncomeOrdering._
+import models.RelationshipStatus.{Cohabiting, Married}
+import models.TaxChargePayer
+import pages.partner.RelationshipStatusPage
+import pages.payments.{ApplicantIncomePage, PartnerIncomePage, WantToBePaidPage}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.SubmittedView
+import views.html.{SubmittedNoTaxChargeView, SubmittedWithTaxChargeBeingPaidView, SubmittedWithTaxChargeNotBeingPaidView}
 
 import javax.inject.Inject
 
 class SubmittedController @Inject()(
                                      val controllerComponents: MessagesControllerComponents,
                                      identify: IdentifierAction,
-                                     view: SubmittedView
-                                   ) extends FrontendBaseController with I18nSupport {
+                                     getData: DataRetrievalAction,
+                                     requireData: DataRequiredAction,
+                                     noTaxChargeView: SubmittedNoTaxChargeView,
+                                     withTaxChargeBeingPaidView: SubmittedWithTaxChargeBeingPaidView,
+                                     withTaxChargeNotBeingPaidView: SubmittedWithTaxChargeNotBeingPaidView,
+                                     appConfig: FrontendAppConfig
+                                   ) extends FrontendBaseController with I18nSupport with Logging with AnswerExtractor {
 
-  def onPageLoad: Action[AnyContent] = (identify) {
+  //scalastyle:off
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      Ok(view())
+      getAnswer(WantToBePaidPage) { wantToBePaid =>
+        getAnswer(RelationshipStatusPage) {
+          case Married | Cohabiting =>
+            getAnswers(ApplicantIncomePage, PartnerIncomePage) {
+              case (applicantIncome, partnerIncome) =>
+                if (applicantIncome == BelowLowerThreshold && partnerIncome == BelowLowerThreshold) {
+                  Ok(noTaxChargeView(hasPartner = true))
+                } else {
+                  val taxChargePayer = {
+                    if      (applicantIncome < partnerIncome)  TaxChargePayer.Partner
+                    else if (applicantIncome == partnerIncome) TaxChargePayer.ApplicantOrPartner
+                    else                                       TaxChargePayer.Applicant
+                  }
+
+                  if (wantToBePaid) Ok(withTaxChargeBeingPaidView(hasPartner = true, taxChargePayer))
+                  else              Ok(withTaxChargeNotBeingPaidView())
+                }
+            }
+
+          case _ =>
+            getAnswer(ApplicantIncomePage) {
+              case BelowLowerThreshold =>
+                Ok(noTaxChargeView(hasPartner = false))
+
+              case _ =>
+                if (wantToBePaid) Ok(withTaxChargeBeingPaidView(hasPartner = false, TaxChargePayer.Applicant))
+                else              Ok(withTaxChargeNotBeingPaidView())
+            }
+        }
+      }
+  }
+
+  def exitSurvey: Action[AnyContent] = Action {
+    implicit request =>
+      Redirect(appConfig.exitSurveyUrl).withNewSession
   }
 }

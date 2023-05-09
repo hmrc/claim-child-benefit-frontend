@@ -99,7 +99,12 @@ class PrintController @Inject()(
           if (journeyModel.children.exists(_.requiredDocuments.nonEmpty)) {
             Future.successful(Ok(documentsView(journeyModel)))
           } else {
-            Future.successful(Ok(noDocumentsView()))
+            val wantToBePaid = journeyModel.paymentPreference match {
+              case _: models.journey.PaymentPreference.DoNotPay => false
+              case _ => true
+            }
+
+            Future.successful(Ok(noDocumentsView(wantToBePaid)))
           }
       }
   }

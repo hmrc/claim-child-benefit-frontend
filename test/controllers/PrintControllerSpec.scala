@@ -34,7 +34,6 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{BrmsService, JourneyModelService}
-import uk.gov.hmrc.http.HeaderCarrier
 import views.html.{PrintDocumentsRequiredView, PrintNoDocumentsRequiredView}
 
 import java.nio.charset.Charset
@@ -107,7 +106,7 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+        contentAsString(result) mustEqual view(false)(request, messages(application)).toString
       }
     }
 

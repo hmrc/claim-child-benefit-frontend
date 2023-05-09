@@ -45,8 +45,8 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
 
   val homeOfficeImmigrationStatusUrl: String = configuration.get[Service]("microservice.services.home-office-immigration-status-proxy").baseUrl
 
-  private val exitSurveyBaseUrl: String = configuration.get[Service]("microservice.services.feedback-frontend").baseUrl
-  val exitSurveyUrl: String             = s"$exitSurveyBaseUrl/feedback/claim-child-benefit-frontend"
+  private val exitSurveyBaseUrl: String = configuration.get[String]("feedback-frontend.host")
+  val exitSurveyUrl: String             = s"$exitSurveyBaseUrl/feedback/claim-child-benefit"
 
   val internalAuthToken: String = configuration.get[String]("internal-auth.token")
 

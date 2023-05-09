@@ -20,13 +20,15 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
-sealed trait Income
+sealed trait Income {
+  val order: Int
+}
 
 object Income extends Enumerable.Implicits {
 
-  case object BelowLowerThreshold extends WithName("belowLowerThreshold") with Income
-  case object BetweenThresholds extends WithName("betweenThresholds") with Income
-  case object AboveUpperThreshold extends WithName("aboveUpperThreshold") with Income
+  case object BelowLowerThreshold extends WithName("belowLowerThreshold") with Income { override val order: Int = 1 }
+  case object BetweenThresholds extends WithName("betweenThresholds") with Income { override val order: Int = 2 }
+  case object AboveUpperThreshold extends WithName("aboveUpperThreshold") with Income { override val order: Int = 3 }
 
   val values: Seq[Income] = Seq(
     BelowLowerThreshold,
@@ -47,4 +49,8 @@ object Income extends Enumerable.Implicits {
 
   implicit val enumerable: Enumerable[Income] =
     Enumerable(values.map(v => v.toString -> v): _*)
+}
+
+object IncomeOrdering extends Ordering[Income] {
+  override def compare(x: Income, y: Income): Int = x.order compare y.order
 }

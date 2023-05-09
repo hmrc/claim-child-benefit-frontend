@@ -1,0 +1,79 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.newtablinkhelper.NewTabLinkHelper
+
+@this(
+        layout: templates.Layout,
+        govukPanel : GovukPanel,
+        newTabLink: HmrcNewTabLinkHelper,
+        govukWarningText: GovukWarningText
+)
+
+@(hasPartner: Boolean, taxChargePayer: TaxChargePayer)(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = titleNoForm(messages("submitted.title")), showBackLink = false) {
+
+    @govukPanel(Panel(title = messages("submitted.heading")))
+
+    <h2 class="govuk-heading-m">@messages("submitted.whatHappensNext")</h2>
+
+    <p class="govuk-body">@messages("submitted.whatHappensNext.paid.p1")</p>
+
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("submitted.whatHappensNext.paid.bullet1")</li>
+        <li>@newTabLink(NewTabLinkHelper(text = messages("submitted.whatHappensNext.paid.bullet2.text"), href = Some(messages("submitted.whatHappensNext.paid.bullet2.href"))))</li>
+        <li>@newTabLink(NewTabLinkHelper(text = messages("submitted.whatHappensNext.paid.bullet3.text"), href = Some(messages("submitted.whatHappensNext.paid.bullet3.href"))))</li>
+    </ul>
+
+    <p class="govuk-body">@messages("submitted.whatHappensNext.paid.p2")</p>
+
+    <h2 class="govuk-heading-m">@messages("submitted.needToDo")</h2>
+
+    <p class="govuk-body">
+        @messages(s"submitted.needToDo.withTaxCharge.paid.${taxChargePayer.toString}.p1.1")
+        @newTabLink(NewTabLinkHelper(text = messages("submitted.needToDo.withTaxCharge.paid.p1.link.text"), href = Some(messages("submitted.needToDo.withTaxCharge.paid.p1.link.href"))))
+        @messages("submitted.needToDo.withTaxCharge.paid.p1.2")
+    </p>
+
+    <p class="govuk-body">
+        @messages("submitted.needToDo.withTaxCharge.paid.p2.1")
+        @newTabLink(NewTabLinkHelper(text = messages("submitted.needToDo.withTaxCharge.paid.p2.link.text"), href = Some(messages("submitted.needToDo.withTaxCharge.paid.p2.link.href"))))
+        @messages(s"submitted.needToDo.withTaxCharge.paid.${taxChargePayer.toString}.p2.2")
+    </p>
+
+    <p class="govuk-body">@messages("submitted.needToDo.withTaxCharge.paid.p3")</p>
+
+    <h2 class="govuk-heading-m">@messages("submitted.circumstancesChange")</h2>
+
+    <p class="govuk-body">
+        @messages("submitted.circumstancesChange.paid.p1.1")
+        @newTabLink(NewTabLinkHelper(text = messages("submitted.circumstancesChange.paid.p1.link1.text"), href = Some(messages("submitted.circumstancesChange.paid.p1.link1.href"))))
+        @messages("submitted.circumstancesChange.paid.p1.2")
+        @newTabLink(NewTabLinkHelper(text = messages("submitted.circumstancesChange.paid.p1.link2.text"), href = Some(messages("submitted.circumstancesChange.paid.p1.link2.href")))).
+    </p>
+
+    @govukWarningText(WarningText(content = Text(messages("submitted.circumstancesChange.p2"))))
+
+    <p class="govuk-body">
+        @messages("submitted.circumstancesChange.p3")
+        @newTabLink(NewTabLinkHelper(text = messages("submitted.circumstancesChange.p3.link.text"), href = Some(messages("submitted.circumstancesChange.p3.link.href")))).
+    </p>
+
+    <p class="govuk-body">
+        <a href="@routes.SubmittedController.exitSurvey" class="govuk-link">@messages("submitted.feedback")</a>
+    </p>
+}
