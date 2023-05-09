@@ -66,7 +66,8 @@ trait SpecBase
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         identifierActionBinding,
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
-        bind[Clock].toInstance(clock)
+        bind[Clock].toInstance(clock),
+        bind[CheckRecentClaimsAction].toInstance(new FakeCheckRecentClaimsAction())
       )
   }
 }

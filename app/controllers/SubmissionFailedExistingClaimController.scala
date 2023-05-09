@@ -27,13 +27,14 @@ import javax.inject.Inject
 class SubmissionFailedExistingClaimController @Inject()(
                                                          override val messagesApi: MessagesApi,
                                                          identify: IdentifierAction,
+                                                         checkRecentClaims: CheckRecentClaimsAction,
                                                          getData: DataRetrievalAction,
                                                          requireData: DataRequiredAction,
                                                          val controllerComponents: MessagesControllerComponents,
                                                          view: SubmissionFailedExistingClaimView
                                                        ) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
       Ok(view())
   }

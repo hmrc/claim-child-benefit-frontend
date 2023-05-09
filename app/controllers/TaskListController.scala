@@ -16,7 +16,7 @@
 
 package controllers
 
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import controllers.actions._
 import pages.{EmptyWaypoints, TaskListPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -29,6 +29,7 @@ import javax.inject.Inject
 class TaskListController@Inject()(
                                    override val messagesApi: MessagesApi,
                                    identify: IdentifierAction,
+                                   checkRecentClaims: CheckRecentClaimsAction,
                                    getData: DataRetrievalAction,
                                    requireData: DataRequiredAction,
                                    val controllerComponents: MessagesControllerComponents,
@@ -36,14 +37,14 @@ class TaskListController@Inject()(
                                    taskListService: TaskListService
                                  ) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
 
       val sections = taskListService.sections(request.userAnswers)
       Ok(view(sections))
   }
 
-  def onSubmit(): Action[AnyContent]=  (identify andThen getData andThen requireData) {
+  def onSubmit(): Action[AnyContent]=  (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
 
       Redirect(TaskListPage.navigate(EmptyWaypoints, request.userAnswers, request.userAnswers).route)

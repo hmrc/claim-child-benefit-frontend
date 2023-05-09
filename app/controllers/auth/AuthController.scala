@@ -17,7 +17,7 @@
 package controllers.auth
 
 import config.FrontendAppConfig
-import controllers.actions.{DataRetrievalAction, IdentifierAction}
+import controllers.actions.{CheckRecentClaimsAction, DataRetrievalAction, IdentifierAction}
 import controllers.{routes => baseRoutes}
 import models.UserAnswers
 import models.requests.AuthenticatedIdentifierRequest
@@ -36,6 +36,7 @@ class AuthController @Inject()(
                                 val controllerComponents: MessagesControllerComponents,
                                 userDataService: UserDataService,
                                 identify: IdentifierAction,
+                                checkRecentClaims: CheckRecentClaimsAction,
                                 getData: DataRetrievalAction,
                                 config: FrontendAppConfig,
                                 unsupportedAffinityGroupAgentView: UnsupportedAffinityGroupAgentView,
@@ -94,7 +95,7 @@ class AuthController @Inject()(
     Ok(unsupportedAffinityGroupOrganisationView(continueUrl))
   }
 
-  def signedIn(): Action[AnyContent] = (identify andThen getData).async {
+  def signedIn(): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData).async {
     implicit request =>
       request.userAnswers
         .map(_ => Future.successful(Redirect(TaskListPage.route(EmptyWaypoints).url)))

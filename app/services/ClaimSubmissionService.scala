@@ -82,7 +82,7 @@ class ClaimSubmissionService @Inject()(
               .submitClaim(claim, correlationId)(hc)
               .flatMap { _ =>
                 submissionLimiter
-                  .recordSubmission(model, claim, correlationId)(hc)
+                  .recordSubmission(nino, model, claim, correlationId)(hc)
                   .recover {
                     case e: Exception =>
                       logger.error("Failed to record submission: " + e.getMessage)

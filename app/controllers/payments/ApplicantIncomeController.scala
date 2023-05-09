@@ -36,6 +36,7 @@ class ApplicantIncomeController @Inject()(
                                            override val messagesApi: MessagesApi,
                                            userDataService: UserDataService,
                                            identify: IdentifierAction,
+                                           checkRecentClaims: CheckRecentClaimsAction,
                                            getData: DataRetrievalAction,
                                            requireData: DataRequiredAction,
                                            formProvider: ApplicantIncomeFormProvider,
@@ -48,7 +49,7 @@ class ApplicantIncomeController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
       getAnswer(RelationshipStatusPage) {
         relationshipStatus =>
@@ -64,7 +65,7 @@ class ApplicantIncomeController @Inject()(
       }
   }
 
-  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData).async {
     implicit request =>
       getAnswerAsync(RelationshipStatusPage) {
         relationshipStatus =>

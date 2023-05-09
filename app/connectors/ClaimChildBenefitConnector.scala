@@ -22,7 +22,7 @@ import config.Service
 import connectors.ClaimChildBenefitConnector._
 import connectors.SubmitClaimHttpParser._
 import models.domain.Claim
-import models.{CheckLimitResponse, DesignatoryDetails, Done, RelationshipDetails, SupplementaryMetadata}
+import models.{CheckLimitResponse, DesignatoryDetails, Done, RecentClaim, RelationshipDetails, SupplementaryMetadata}
 import play.api.Configuration
 import play.api.libs.json.Json
 import play.api.mvc.MultipartFormData
@@ -48,6 +48,7 @@ class ClaimChildBenefitConnector @Inject()(
   private val checkThrottleUrl = url"$baseUrl/claim-child-benefit/throttle/check"
   private val incrementThrottleCountUrl = url"$baseUrl/claim-child-benefit/throttle/increment"
   private val relationshipDetailsUrl = url"$baseUrl/claim-child-benefit/relationship-details"
+  private val recentClaimUrl = url"$baseUrl/claim-child-benefit/recent-claims"
 
   private val internalAuthToken = config.get[String]("internal-auth.token")
 
@@ -118,6 +119,18 @@ class ClaimChildBenefitConnector @Inject()(
       .get(relationshipDetailsUrl)
       .execute[RelationshipDetails]
   }
+
+  def getRecentClaim()(implicit hc: HeaderCarrier): Future[Option[RecentClaim]] =
+    httpClient
+      .get(recentClaimUrl)
+      .execute[Option[RecentClaim]]
+
+  def recordRecentClaim(recentClaim: RecentClaim)(implicit hc: HeaderCarrier): Future[Done] =
+    httpClient
+      .post(recentClaimUrl)
+      .withBody(Json.toJson(recentClaim))
+      .execute[HttpResponse]
+      .map(_ => Done)
 }
 
 object ClaimChildBenefitConnector {

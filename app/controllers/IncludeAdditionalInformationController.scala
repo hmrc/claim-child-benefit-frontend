@@ -34,6 +34,7 @@ class IncludeAdditionalInformationController @Inject()(
                                            override val messagesApi: MessagesApi,
                                            userDataService: UserDataService,
                                            identify: IdentifierAction,
+                                           checkRecentClaims: CheckRecentClaimsAction,
                                            getData: DataRetrievalAction,
                                            requireData: DataRequiredAction,
                                            formProvider: IncludeAdditionalInformationFormProvider,
@@ -43,7 +44,7 @@ class IncludeAdditionalInformationController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(IncludeAdditionalInformationPage) match {
@@ -54,7 +55,7 @@ class IncludeAdditionalInformationController @Inject()(
       Ok(view(preparedForm, waypoints))
   }
 
-  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData).async {
     implicit request =>
 
       form.bindFromRequest().fold(

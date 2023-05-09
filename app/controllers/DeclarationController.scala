@@ -17,7 +17,7 @@
 package controllers
 
 import connectors.ClaimChildBenefitConnector.{AlreadyInPaymentException, InvalidClaimStateException}
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import controllers.actions.{CheckRecentClaimsAction, DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import logging.Logging
 import pages.Waypoints
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -32,6 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class DeclarationController @Inject()(
                                        override val messagesApi: MessagesApi,
                                        identify: IdentifierAction,
+                                       checkRecentClaims: CheckRecentClaimsAction,
                                        getData: DataRetrievalAction,
                                        requireData: DataRequiredAction,
                                        val controllerComponents: MessagesControllerComponents,
@@ -39,13 +40,13 @@ class DeclarationController @Inject()(
                                        claimSubmissionService: ClaimSubmissionService
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad: Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
 
       Ok(view())
   }
 
-  def onSubmit: Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit: Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData).async {
     implicit request =>
 
       claimSubmissionService.canSubmit(request).flatMap {

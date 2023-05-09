@@ -35,6 +35,7 @@ class AddCountryApplicantWorkedController @Inject()(
                                                    override val messagesApi: MessagesApi,
                                                    userDataService: UserDataService,
                                                    identify: IdentifierAction,
+                                                   checkRecentClaims: CheckRecentClaimsAction,
                                                    getData: DataRetrievalAction,
                                                    requireData: DataRequiredAction,
                                                    formProvider: AddCountryApplicantWorkedFormProvider,
@@ -44,7 +45,7 @@ class AddCountryApplicantWorkedController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
 
       val countries = AddCountryApplicantWorkedSummary.rows(request.userAnswers, waypoints, AddCountryApplicantWorkedPage())
@@ -52,7 +53,7 @@ class AddCountryApplicantWorkedController @Inject()(
       Ok(view(form, waypoints, countries))
   }
 
-  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData).async {
     implicit request =>
 
       form.bindFromRequest().fold(

@@ -34,6 +34,7 @@ class RecentlyClaimedController @Inject()(
                                                    override val messagesApi: MessagesApi,
                                                    userDataService: UserDataService,
                                                    identify: IdentifierAction,
+                                                   checkRecentClaims: CheckRecentClaimsAction,
                                                    getData: DataRetrievalAction,
                                                    formProvider: RecentlyClaimedFormProvider,
                                                    val controllerComponents: MessagesControllerComponents,
@@ -43,7 +44,7 @@ class RecentlyClaimedController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData) {
     implicit request =>
 
       val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(recentlyClaimedPage) match {
@@ -54,7 +55,7 @@ class RecentlyClaimedController @Inject()(
       Ok(view(preparedForm, waypoints))
   }
 
-  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData).async {
     implicit request =>
 
       form.bindFromRequest().fold(

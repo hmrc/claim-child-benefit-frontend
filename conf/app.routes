@@ -64,6 +64,8 @@ POST       /recently-claimed-child-benefit                  controllers.Recently
 
 GET        /already-claimed-child-benefit                   controllers.AlreadyClaimedController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 
+GET        /recently-submitted-a-claim                   controllers.RecentlySubmittedController.onPageLoad()
+
 GET        /date-started-living-with-partner                  controllers.partner.CohabitationDateController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /date-started-living-with-partner                  controllers.partner.CohabitationDateController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 

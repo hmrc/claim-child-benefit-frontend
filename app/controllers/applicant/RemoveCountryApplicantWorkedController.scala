@@ -35,6 +35,7 @@ class RemoveCountryApplicantWorkedController @Inject()(
                                                       override val messagesApi: MessagesApi,
                                                       userDataService: UserDataService,
                                                       identify: IdentifierAction,
+                                                      checkRecentClaims: CheckRecentClaimsAction,
                                                       getData: DataRetrievalAction,
                                                       requireData: DataRequiredAction,
                                                       formProvider: RemoveCountryApplicantWorkedFormProvider,
@@ -45,7 +46,7 @@ class RemoveCountryApplicantWorkedController @Inject()(
     with I18nSupport
     with AnswerExtractor {
 
-  def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
       getAnswer(CountryApplicantWorkedPage(index)) {
         country =>
@@ -56,7 +57,7 @@ class RemoveCountryApplicantWorkedController @Inject()(
       }
   }
 
-  def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData).async {
     implicit request =>
       getAnswerAsync(applicant.CountryApplicantWorkedPage(index)) {
         country =>
