@@ -42,7 +42,10 @@ final case class ChildBirthRegistrationCountryPage(index: Index) extends ChildQu
       case Scotland =>
         ScottishBirthCertificateHasNumbersPage(index)
 
-      case NorthernIreland | OtherCountry | UnknownCountry =>
+      case NorthernIreland =>
+        BirthCertificateHasNorthernIrishNumberPage(index)
+
+      case OtherCountry | UnknownCountry =>
         AdoptingThroughLocalAuthorityPage(index)
     }.orRecover
 
@@ -58,7 +61,12 @@ final case class ChildBirthRegistrationCountryPage(index: Index) extends ChildQu
           .map(_ => waypoints.next.page)
           .getOrElse(ScottishBirthCertificateHasNumbersPage(index))
 
-      case NorthernIreland | OtherCountry | UnknownCountry =>
+      case NorthernIreland =>
+        answers.get(BirthCertificateHasNorthernIrishNumberPage(index))
+          .map(_ => waypoints.next.page)
+          .getOrElse(BirthCertificateHasNorthernIrishNumberPage(index))
+
+      case OtherCountry | UnknownCountry =>
         waypoints.next.page
     }.orRecover
 
@@ -68,18 +76,31 @@ final case class ChildBirthRegistrationCountryPage(index: Index) extends ChildQu
         userAnswers
           .remove(ScottishBirthCertificateHasNumbersPage(index))
           .flatMap(_.remove(ChildScottishBirthCertificateDetailsPage(index)))
+          .flatMap(_.remove(BirthCertificateHasNorthernIrishNumberPage(index)))
+          .flatMap(_.remove(ChildNorthernIrishBirthCertificateNumberPage(index)))
 
       case Scotland =>
         userAnswers
           .remove(BirthCertificateHasSystemNumberPage(index))
           .flatMap(_.remove(ChildBirthCertificateSystemNumberPage(index)))
+          .flatMap(_.remove(BirthCertificateHasNorthernIrishNumberPage(index)))
+          .flatMap(_.remove(ChildNorthernIrishBirthCertificateNumberPage(index)))
 
-      case NorthernIreland | OtherCountry | UnknownCountry =>
+      case NorthernIreland =>
         userAnswers
           .remove(BirthCertificateHasSystemNumberPage(index))
           .flatMap(_.remove(ChildBirthCertificateSystemNumberPage(index)))
           .flatMap(_.remove(ScottishBirthCertificateHasNumbersPage(index)))
           .flatMap(_.remove(ChildScottishBirthCertificateDetailsPage(index)))
+
+      case OtherCountry | UnknownCountry =>
+        userAnswers
+          .remove(BirthCertificateHasSystemNumberPage(index))
+          .flatMap(_.remove(ChildBirthCertificateSystemNumberPage(index)))
+          .flatMap(_.remove(ScottishBirthCertificateHasNumbersPage(index)))
+          .flatMap(_.remove(ChildScottishBirthCertificateDetailsPage(index)))
+          .flatMap(_.remove(BirthCertificateHasNorthernIrishNumberPage(index)))
+          .flatMap(_.remove(ChildNorthernIrishBirthCertificateNumberPage(index)))
 
     }.getOrElse(super.cleanup(value, userAnswers))
   }

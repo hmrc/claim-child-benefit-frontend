@@ -56,6 +56,8 @@ class CheckChildDetailsController @Inject()(
               ChildBirthCertificateSystemNumberSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               ScottishBirthCertificateHasNumbersSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               ChildScottishBirthCertificateDetailsSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              BirthCertificateHasNorthernIrishNumberSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
+              ChildNorthernIrishBirthCertificateNumberSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               AdoptingThroughLocalAuthoritySummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               ApplicantRelationshipToChildSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),
               AnyoneClaimedForChildBeforeSummary.row(request.userAnswers, index, waypoints, CheckChildDetailsPage(index)),

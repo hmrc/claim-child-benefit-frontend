@@ -1,1 +1,11 @@
 repoVisibility: public_0C3F0CE3E6E6448FAD341E7BFA50FCD333E06A20CFF05FCACE61154DDBBADF71
+leakDetectionExemptions:
+  - ruleId: 'aws_secret_access_key'
+    filePaths:
+      - '/app/viewmodels/checkAnswers/child/ChildNorthernIrishBirthCertificateNumberSummary.scala'
+    text: 'key = "childNorthernIrishBirthCertificateNumber'
+  - ruleId: 'aws_secret_access_key'
+    filePaths:
+      - '/test/forms/child/ChildNorthernIrishBirthCertificateNumberFormProviderSpec.scala'
+      - '/test/forms/child/ChildNorthernIrishBirthCertificateNumberFormProviderSpec.scala'
+    text: 'Key = "childNorthernIrishBirthCertificateNumber'

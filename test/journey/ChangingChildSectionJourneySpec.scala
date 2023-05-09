@@ -30,14 +30,15 @@ import java.time.LocalDate
 
 class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
-  private val childName            = arbitrary[ChildName].sample.value
-  private val sex                  = arbitrary[ChildBiologicalSex].sample.value
-  private val systemNumber         = Gen.listOfN(9, Gen.numChar).map(chars => BirthCertificateSystemNumber(chars.mkString)).sample.value
-  private val adultName            = arbitrary[AdultName].sample.value
-  private val ukAddress            = arbitrary[UkAddress].sample.value
-  private val internationalAddress = arbitrary[InternationalAddress].sample.value
-  private val scottishBcDetails    = arbitrary[ScottishBirthCertificateDetails].sample.value
-  private val relationship         = arbitrary[Relationship].sample.value
+  private val childName              = arbitrary[ChildName].sample.value
+  private val sex                    = arbitrary[ChildBiologicalSex].sample.value
+  private val systemNumber           = Gen.listOfN(9, Gen.numChar).map(chars => BirthCertificateSystemNumber(chars.mkString)).sample.value
+  private val adultName              = arbitrary[AdultName].sample.value
+  private val ukAddress              = arbitrary[UkAddress].sample.value
+  private val internationalAddress   = arbitrary[InternationalAddress].sample.value
+  private val scottishBcDetails      = arbitrary[ScottishBirthCertificateDetails].sample.value
+  private val northernIrishBcDetails = Gen.listOfN(7, Gen.numChar).map(chars => NorthernIrishBirthCertificateNumber(s"B1${chars.mkString}")).sample.value
+  private val relationship           = arbitrary[Relationship].sample.value
 
   "when a user has added a child" - {
 
@@ -308,13 +309,15 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           )
       }
 
-      "changing the country to Northern Ireland must remove Birth Certificate System Number, then return to Check Child Details" in {
+      "changing the country to Northern Ireland must remove Birth Certificate System Number, collect Northern Irish details, then return to Check Child Details" in {
 
         startingFrom(ChildNamePage(Index(0)))
           .run(
             basicChildJourney,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland),
+            submitAnswer(BirthCertificateHasNorthernIrishNumberPage(Index(0)), true),
+            submitAnswer(ChildNorthernIrishBirthCertificateNumberPage(Index(0)), northernIrishBcDetails),
             pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(BirthCertificateHasSystemNumberPage(Index(0))),
             answersMustNotContain(ChildBirthCertificateSystemNumberPage(Index(0)))
@@ -382,13 +385,15 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           )
       }
 
-      "changing the country to Northern Ireland must remove Birth Certificate System Number, then return to Check Child Details" in {
+      "changing the country to Northern Ireland must remove Birth Certificate System Number, collect Northern Irish details, then return to Check Child Details" in {
 
         startingFrom(ChildNamePage(Index(0)))
           .run(
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland),
+            submitAnswer(BirthCertificateHasNorthernIrishNumberPage(Index(0)), true),
+            submitAnswer(ChildNorthernIrishBirthCertificateNumberPage(Index(0)), northernIrishBcDetails),
             pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(BirthCertificateHasSystemNumberPage(Index(0))),
             answersMustNotContain(ChildBirthCertificateSystemNumberPage(Index(0)))
@@ -463,13 +468,15 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           )
       }
 
-      "changing the country to Northern Ireland must remove Scottish  Details, then return to Check Child Details" in {
+      "changing the country to Northern Ireland must remove Scottish Details, collect Northern Irish details, then return to Check Child Details" in {
 
         startingFrom(ChildNamePage(Index(0)))
           .run(
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland),
+            submitAnswer(BirthCertificateHasNorthernIrishNumberPage(Index(0)), true),
+            submitAnswer(ChildNorthernIrishBirthCertificateNumberPage(Index(0)), northernIrishBcDetails),
             pageMustBe(CheckChildDetailsPage(Index(0))),
             answersMustNotContain(BirthCertificateHasSystemNumberPage(Index(0))),
             answersMustNotContain(ChildScottishBirthCertificateDetailsPage(Index(0)))
@@ -552,13 +559,15 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           )
       }
 
-      "changing the country to Northern Ireland must return to Check Child Details" in {
+      "changing the country to Northern Ireland must collect Northern Irish details, then return to Check Child Details" in {
 
         startingFrom(ChildNamePage(Index(0)))
           .run(
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland),
+            submitAnswer(BirthCertificateHasNorthernIrishNumberPage(Index(0)), true),
+            submitAnswer(ChildNorthernIrishBirthCertificateNumberPage(Index(0)), northernIrishBcDetails),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }
@@ -581,6 +590,89 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
         journeyOf(
           basicChildJourney,
           setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland),
+          setUserAnswerTo(BirthCertificateHasNorthernIrishNumberPage(Index(0)), true),
+          setUserAnswerTo(ChildNorthernIrishBirthCertificateNumberPage(Index(0)), northernIrishBcDetails),
+          remove(ChildBirthCertificateSystemNumberPage(Index(0)))
+        )
+
+      "changing the country to England must remove Northern Irish details, collect the Birth Certificate System number, then return to Check Child Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
+            submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), true),
+            submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(BirthCertificateHasNorthernIrishNumberPage(Index(0))),
+            answersMustNotContain(ChildNorthernIrishBirthCertificateNumberPage(Index(0)))
+          )
+      }
+
+      "changing the country to Wales must remove Northern Irish details, collect the Birth Certificate System number, then return to Check Child Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Wales),
+            submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), true),
+            submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(BirthCertificateHasNorthernIrishNumberPage(Index(0))),
+            answersMustNotContain(ChildNorthernIrishBirthCertificateNumberPage(Index(0)))
+          )
+      }
+
+      "changing the country to Scotland must remove Northern Irish details, collect Scottish Details, then return to Check Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
+            submitAnswer(ScottishBirthCertificateHasNumbersPage(Index(0)), true),
+            submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBcDetails),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(BirthCertificateHasNorthernIrishNumberPage(Index(0))),
+            answersMustNotContain(ChildNorthernIrishBirthCertificateNumberPage(Index(0)))
+          )
+      }
+
+      "changing the country to Other must remove Northern Irish details and return to Check Child Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), OtherCountry),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(BirthCertificateHasNorthernIrishNumberPage(Index(0))),
+            answersMustNotContain(ChildNorthernIrishBirthCertificateNumberPage(Index(0)))
+          )
+      }
+
+      "changing the country to Unknown must remove Northern Irish details and return to Check Child Details" in {
+
+        startingFrom(ChildNamePage(Index(0)))
+          .run(
+            initialState,
+            goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), UnknownCountry),
+            pageMustBe(CheckChildDetailsPage(Index(0))),
+            answersMustNotContain(BirthCertificateHasNorthernIrishNumberPage(Index(0))),
+            answersMustNotContain(ChildNorthernIrishBirthCertificateNumberPage(Index(0)))
+          )
+      }
+    }
+
+    "that the user said was registered in an Unknown country" - {
+
+      val initialState =
+        journeyOf(
+          basicChildJourney,
+          setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), UnknownCountry),
           remove(ChildBirthCertificateSystemNumberPage(Index(0)))
         )
 
@@ -623,84 +715,15 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
           )
       }
 
-      "changing the country to Other must return to Check Child Details" in {
-
-        startingFrom(ChildNamePage(Index(0)))
-          .run(
-            initialState,
-            goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
-            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), OtherCountry),
-            pageMustBe(CheckChildDetailsPage(Index(0)))
-          )
-      }
-
-      "changing the country to Unknown must return to Check Child Details" in {
-
-        startingFrom(ChildNamePage(Index(0)))
-          .run(
-            initialState,
-            goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
-            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), UnknownCountry),
-            pageMustBe(CheckChildDetailsPage(Index(0)))
-          )
-      }
-    }
-
-    "that the user said was registered in an Unknown country" - {
-
-      val initialState =
-        journeyOf(
-          basicChildJourney,
-          setUserAnswerTo(ChildBirthRegistrationCountryPage(Index(0)), UnknownCountry),
-          remove(ChildBirthCertificateSystemNumberPage(Index(0)))
-        )
-
-      "changing the country to England must collect the Birth Certificate System number, then return to Check Child Details" in {
-
-        startingFrom(ChildNamePage(Index(0)))
-          .run(
-            initialState,
-            goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
-            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), England),
-            submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), true),
-            submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
-            pageMustBe(CheckChildDetailsPage(Index(0)))
-          )
-      }
-
-      "changing the country to Wales must collect the Birth Certificate System number, then return to Check Child Details" in {
-
-        startingFrom(ChildNamePage(Index(0)))
-          .run(
-            initialState,
-            goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
-            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Wales),
-            submitAnswer(BirthCertificateHasSystemNumberPage(Index(0)), true),
-            submitAnswer(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber),
-            pageMustBe(CheckChildDetailsPage(Index(0)))
-          )
-      }
-
-      "changing the country to Scotland must collect Scottish Details,  then return to Check Details" in {
-
-        startingFrom(ChildNamePage(Index(0)))
-          .run(
-            initialState,
-            goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
-            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
-            submitAnswer(ScottishBirthCertificateHasNumbersPage(Index(0)), true),
-            submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), scottishBcDetails),
-            pageMustBe(CheckChildDetailsPage(Index(0)))
-          )
-      }
-
-      "changing the country to Northern Ireland must return to Check Child Details" in {
+      "changing the country to Northern Ireland must collect Northern Irish details, then return to Check Child Details" in {
 
         startingFrom(ChildNamePage(Index(0)))
           .run(
             initialState,
             goToChangeAnswer(ChildBirthRegistrationCountryPage(Index(0))),
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland),
+            submitAnswer(BirthCertificateHasNorthernIrishNumberPage(Index(0)), true),
+            submitAnswer(ChildNorthernIrishBirthCertificateNumberPage(Index(0)), northernIrishBcDetails),
             pageMustBe(CheckChildDetailsPage(Index(0)))
           )
       }

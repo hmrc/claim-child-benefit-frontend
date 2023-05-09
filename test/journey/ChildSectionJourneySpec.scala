@@ -200,17 +200,39 @@ class ChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Model
 
   "users whose child was registered in Northern Ireland" - {
 
-    "must not be asked for birth certificate details" in {
+    "where their birth certificate has a registration number" - {
 
-      val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
+      "must be asked for the birth registration number" in {
 
-      startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
-        .run(
-          submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland),
-          submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
-          submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
-          pageMustBe(AnyoneClaimedForChildBeforePage(Index(0)))
-        )
+        val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
+
+        startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
+          .run(
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland),
+            submitAnswer(BirthCertificateHasNorthernIrishNumberPage(Index(0)), true),
+            submitAnswer(ChildNorthernIrishBirthCertificateNumberPage(Index(0)), NorthernIrishBirthCertificateNumber("B12345678")),
+            submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
+            submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+            pageMustBe(AnyoneClaimedForChildBeforePage(Index(0)))
+          )
+      }
+    }
+
+    "where their birth certificate does not have a system number" - {
+
+      "must not be asked for the birth certificate system number" in {
+
+        val relationship = arbitrary[ApplicantRelationshipToChild].sample.value
+
+        startingFrom(ChildBirthRegistrationCountryPage(Index(0)))
+          .run(
+            submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland),
+            submitAnswer(BirthCertificateHasNorthernIrishNumberPage(Index(0)), false),
+            submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
+            submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
+            pageMustBe(AnyoneClaimedForChildBeforePage(Index(0)))
+          )
+      }
     }
   }
 

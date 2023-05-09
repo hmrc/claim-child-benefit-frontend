@@ -852,7 +852,7 @@ applicantPreviousUkAddress.error.line1.length = Address line 1 of your previous 
 applicantPreviousUkAddress.error.line2.length = Address line 2 of your previous address must be 35 characters or less
 applicantPreviousUkAddress.error.town.length = Town or city of your previous address must be 35 characters or less
 applicantPreviousUkAddress.error.county.length = County of your previous address must be 35 characters or less
-applicantPreviousUkAddress.error.postcode.length = Postcode of your previous address must be 35 characters or less
+applicantPreviousUkAddress.error.postcode.length = Postcode of your previous address must be 8 characters or less
 applicantPreviousUkAddress.change.hidden = your previous address
 
 applicantPreviousFamilyName.title = What was your other last name(s) or family name(s)?
@@ -1026,6 +1026,22 @@ childBirthCertificateSystemNumber.checkYourAnswersLabel = The system number on t
 childBirthCertificateSystemNumber.error.required = Enter the system number on {0}’s birth certificate
 childBirthCertificateSystemNumber.error.invalid = The system number on {1}’s birth certificate must be 9 digits
 childBirthCertificateSystemNumber.change.hidden = the system number on this child’s birth certificate
+
+birthCertificateHasNorthernIrishNumber.title = Does this child’s birth certificate have a registration number?
+birthCertificateHasNorthernIrishNumber.heading = Does {0}’s birth certificate have a registration number?
+birthCertificateHasNorthernIrishNumber.guidance = This is at the top right hand corner of their birth certificate. For example, B12345678.
+birthCertificateHasNorthernIrishNumber.checkYourAnswersLabel = Does this child’s birth certificate have a registration number?
+birthCertificateHasNorthernIrishNumber.error.required = Select yes if {0}’s birth certificate has a registration number
+birthCertificateHasNorthernIrishNumber.change.hidden = if this child’s birth certificate has a registration number
+
+childNorthernIrishBirthCertificateNumber.title = What is the registration number on this child’s birth certificate?
+childNorthernIrishBirthCertificateNumber.heading = What is the registration number on {0}’s birth certificate?
+childNorthernIrishBirthCertificateNumber.guidance = This is at the top right hand corner of their birth certificate.
+childNorthernIrishBirthCertificateNumber.hint = For example, B12345678.
+childNorthernIrishBirthCertificateNumber.checkYourAnswersLabel = The registration number on this child’s birth certificate
+childNorthernIrishBirthCertificateNumber.error.required = Enter the registration number on {0}’s birth certificate
+childNorthernIrishBirthCertificateNumber.error.invalid = The registration number on {1}’s birth certificate must be B1 followed by 7 digits
+childNorthernIrishBirthCertificateNumber.change.hidden = the registration number on this child’s birth certificate
 
 childBirthRegistrationCountry.title = Where was this child’s birth registered?
 childBirthRegistrationCountry.heading = Where was {0}’s birth registered?

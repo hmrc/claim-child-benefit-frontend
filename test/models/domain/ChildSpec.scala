@@ -16,8 +16,8 @@
 
 package models.domain
 
-import models.BirthRegistrationMatchingResult
-import models.journey
+import models.ChildBirthRegistrationCountry._
+import models.{BirthCertificateSystemNumber, BirthRegistrationMatchingResult, NorthernIrishBirthCertificateNumber, ScottishBirthCertificateDetails, journey}
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -154,7 +154,19 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
       result.dateOfBirthVerified must not be defined
     }
 
-    "must set `date of birth verified` to `false` when the child is registered in Northern Ireland" in {
+    "must set `date of birth verified` to `true` when the child is registered in Northern Ireland and a birth cert number is present" in {
+
+      val child = basicChild.copy(
+        countryOfRegistration = models.ChildBirthRegistrationCountry.NorthernIreland,
+        birthCertificateNumber = Some(NorthernIrishBirthCertificateNumber("B12345678"))
+      )
+
+      val result = Child.build(child)
+
+      result.dateOfBirthVerified.value mustBe true
+    }
+
+    "must set `date of birth verified` to `false` when the child is registered in Northern Ireland and no birth cert number is present" in {
 
       val child = basicChild.copy(countryOfRegistration = models.ChildBirthRegistrationCountry.NorthernIreland)
 
@@ -179,6 +191,51 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
       val result = Child.build(child)
 
       result.dateOfBirthVerified.value mustBe false
+    }
+
+    "must include birth certificate for a child born in England when it is present" in {
+
+      val child = basicChild.copy(birthCertificateNumber = Some(BirthCertificateSystemNumber("123456789")))
+
+      val result = Child.build(child)
+
+      result.birthRegistrationNumber.value mustEqual "123456789"
+    }
+
+    "must include birth certificate number for a child born in Wales when it is present" in {
+
+      val child = basicChild.copy(
+        birthCertificateNumber = Some(BirthCertificateSystemNumber("123456789")),
+        countryOfRegistration = Wales
+      )
+
+      val result = Child.build(child)
+
+      result.birthRegistrationNumber.value mustEqual "123456789"
+    }
+
+    "must include birth certificate number for a child born in Scotland when it is present" in {
+
+      val child = basicChild.copy(
+        birthCertificateNumber = Some(ScottishBirthCertificateDetails(123, 2022, 456)),
+        countryOfRegistration = Scotland
+      )
+
+      val result = Child.build(child)
+
+      result.birthRegistrationNumber.value mustEqual "2022123456"
+    }
+
+    "must not include birth certificate number for a child born in Northern Ireland when it is present" in {
+
+      val child = basicChild.copy(
+        birthCertificateNumber = Some(NorthernIrishBirthCertificateNumber("B12345678")),
+        countryOfRegistration = NorthernIreland
+      )
+
+      val result = Child.build(child)
+
+      result.birthRegistrationNumber must not be defined
     }
   }
 

@@ -336,6 +336,12 @@ POST       /child-birth-certificate-system-number/:index                        
 GET        /child-birth-certificate-has-system-number/:index                        controllers.child.BirthCertificateHasSystemNumberController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /child-birth-certificate-has-system-number/:index                        controllers.child.BirthCertificateHasSystemNumberController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
+GET        /child-birth-certificate-registration-number/:index                        controllers.child.ChildNorthernIrishBirthCertificateNumberController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /child-birth-certificate-registration-number/:index                        controllers.child.ChildNorthernIrishBirthCertificateNumberController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+
+GET        /child-birth-certificate-has-registration-number/:index                        controllers.child.BirthCertificateHasNorthernIrishNumberController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+POST       /child-birth-certificate-has-registration-number/:index                        controllers.child.BirthCertificateHasNorthernIrishNumberController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
+
 GET        /child-birth-registration-country/:index                        controllers.child.ChildBirthRegistrationCountryController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 POST       /child-birth-registration-country/:index                        controllers.child.ChildBirthRegistrationCountryController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints, index: Index)
 
