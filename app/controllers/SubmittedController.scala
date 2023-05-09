@@ -28,7 +28,7 @@ import pages.payments.{ApplicantIncomePage, PartnerIncomePage, WantToBePaidPage}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.{SubmittedNoTaxChargeView, SubmittedWithTaxChargeView}
+import views.html.{SubmittedNoTaxChargeView, SubmittedWithTaxChargeBeingPaidView, SubmittedWithTaxChargeNotBeingPaidView}
 
 import javax.inject.Inject
 
@@ -38,10 +38,12 @@ class SubmittedController @Inject()(
                                      getData: DataRetrievalAction,
                                      requireData: DataRequiredAction,
                                      noTaxChargeView: SubmittedNoTaxChargeView,
-                                     withTaxChargeView: SubmittedWithTaxChargeView,
+                                     withTaxChargeBeingPaidView: SubmittedWithTaxChargeBeingPaidView,
+                                     withTaxChargeNotBeingPaidView: SubmittedWithTaxChargeNotBeingPaidView,
                                      appConfig: FrontendAppConfig
                                    ) extends FrontendBaseController with I18nSupport with Logging with AnswerExtractor {
 
+  //scalastyle:off
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       getAnswer(WantToBePaidPage) { wantToBePaid =>
@@ -58,7 +60,8 @@ class SubmittedController @Inject()(
                     else                                       TaxChargePayer.Applicant
                   }
 
-                  Ok(withTaxChargeView(wantToBePaid, hasPartner = true, taxChargePayer))
+                  if (wantToBePaid) Ok(withTaxChargeBeingPaidView(hasPartner = true, taxChargePayer))
+                  else              Ok(withTaxChargeNotBeingPaidView())
                 }
             }
 
@@ -68,7 +71,8 @@ class SubmittedController @Inject()(
                 Ok(noTaxChargeView(hasPartner = false))
 
               case _ =>
-                Ok(withTaxChargeView(wantToBePaid, hasPartner = false, TaxChargePayer.Applicant))
+                if (wantToBePaid) Ok(withTaxChargeBeingPaidView(hasPartner = false, TaxChargePayer.Applicant))
+                else              Ok(withTaxChargeNotBeingPaidView())
             }
         }
       }

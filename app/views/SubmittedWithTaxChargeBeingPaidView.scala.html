@@ -23,7 +23,7 @@
         govukWarningText: GovukWarningText
 )
 
-@(hasPartner: Boolean)(implicit request: Request[_], messages: Messages)
+@(hasPartner: Boolean, taxChargePayer: TaxChargePayer)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("submitted.title")), showBackLink = false) {
 
@@ -43,9 +43,19 @@
 
     <h2 class="govuk-heading-m">@messages("submitted.needToDo")</h2>
 
-    <p class="govuk-body">@messages("submitted.needToDo.noTaxCharge.p1")</p>
+    <p class="govuk-body">
+        @messages(s"submitted.needToDo.withTaxCharge.paid.${taxChargePayer.toString}.p1.1")
+        @newTabLink(NewTabLinkHelper(text = messages("submitted.needToDo.withTaxCharge.paid.p1.link.text"), href = Some(messages("submitted.needToDo.withTaxCharge.paid.p1.link.href"))))
+        @messages("submitted.needToDo.withTaxCharge.paid.p1.2")
+    </p>
 
-    <p class="govuk-body">@messages("submitted.needToDo.noTaxCharge.p2")</p>
+    <p class="govuk-body">
+        @messages("submitted.needToDo.withTaxCharge.paid.p2.1")
+        @newTabLink(NewTabLinkHelper(text = messages("submitted.needToDo.withTaxCharge.paid.p2.link.text"), href = Some(messages("submitted.needToDo.withTaxCharge.paid.p2.link.href"))))
+        @messages(s"submitted.needToDo.withTaxCharge.paid.${taxChargePayer.toString}.p2.2")
+    </p>
+
+    <p class="govuk-body">@messages("submitted.needToDo.withTaxCharge.paid.p3")</p>
 
     <h2 class="govuk-heading-m">@messages("submitted.circumstancesChange")</h2>
 

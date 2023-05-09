@@ -23,7 +23,7 @@
         govukWarningText: GovukWarningText
 )
 
-@(hasPartner: Boolean)(implicit request: Request[_], messages: Messages)
+@()(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("submitted.title")), showBackLink = false) {
 
@@ -31,32 +31,21 @@
 
     <h2 class="govuk-heading-m">@messages("submitted.whatHappensNext")</h2>
 
-    <p class="govuk-body">@messages("submitted.whatHappensNext.paid.p1")</p>
-
-    <ul class="govuk-list govuk-list--bullet">
-        <li>@messages("submitted.whatHappensNext.paid.bullet1")</li>
-        <li>@newTabLink(NewTabLinkHelper(text = messages("submitted.whatHappensNext.paid.bullet2.text"), href = Some(messages("submitted.whatHappensNext.paid.bullet2.href"))))</li>
-        <li>@newTabLink(NewTabLinkHelper(text = messages("submitted.whatHappensNext.paid.bullet3.text"), href = Some(messages("submitted.whatHappensNext.paid.bullet3.href"))))</li>
-    </ul>
-
-    <p class="govuk-body">@messages("submitted.whatHappensNext.paid.p2")</p>
+    <p class="govuk-body">@messages("submitted.whatHappensNext.notPaid.p1")</p>
 
     <h2 class="govuk-heading-m">@messages("submitted.needToDo")</h2>
 
-    <p class="govuk-body">@messages("submitted.needToDo.noTaxCharge.p1")</p>
+    <p class="govuk-body">@messages("submitted.needToDo.withTaxCharge.notPaid.p1")</p>
 
-    <p class="govuk-body">@messages("submitted.needToDo.noTaxCharge.p2")</p>
+    <p class="govuk-body">@messages("submitted.needToDo.withTaxCharge.notPaid.p2")</p>
 
     <h2 class="govuk-heading-m">@messages("submitted.circumstancesChange")</h2>
 
     <p class="govuk-body">
-        @messages("submitted.circumstancesChange.paid.p1.1")
-        @newTabLink(NewTabLinkHelper(text = messages("submitted.circumstancesChange.paid.p1.link1.text"), href = Some(messages("submitted.circumstancesChange.paid.p1.link1.href"))))
-        @messages("submitted.circumstancesChange.paid.p1.2")
-        @newTabLink(NewTabLinkHelper(text = messages("submitted.circumstancesChange.paid.p1.link2.text"), href = Some(messages("submitted.circumstancesChange.paid.p1.link2.href")))).
+        @messages("submitted.circumstancesChange.notPaid.p1.1")
+        @newTabLink(NewTabLinkHelper(text = messages("submitted.circumstancesChange.notPaid.p1.link.text"), href = Some(messages("submitted.circumstancesChange.notPaid.p1.link.href"))))
+        @messages("submitted.circumstancesChange.notPaid.p1.2")
     </p>
-
-    @govukWarningText(WarningText(content = Text(messages("submitted.circumstancesChange.p2"))))
 
     <p class="govuk-body">
         @messages("submitted.circumstancesChange.p3")

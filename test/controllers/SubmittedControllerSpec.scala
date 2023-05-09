@@ -26,7 +26,7 @@ import pages.partner.RelationshipStatusPage
 import pages.payments.{ApplicantIncomePage, PartnerIncomePage, WantToBePaidPage}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.{SubmittedNoTaxChargeView, SubmittedWithTaxChargeView}
+import views.html.{SubmittedNoTaxChargeView, SubmittedWithTaxChargeBeingPaidView, SubmittedWithTaxChargeNotBeingPaidView}
 
 class SubmittedControllerSpec extends SpecBase {
 
@@ -37,13 +37,12 @@ class SubmittedControllerSpec extends SpecBase {
       "when the applicant is single, separated, divorced or widowed" - {
 
         val relationshipStatus = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
-        val wantToBePaid = arbitrary[Boolean].sample.value
 
         "and their income is below the lower threshold" in {
 
           val answers =
             emptyUserAnswers
-              .set(WantToBePaidPage, wantToBePaid).success.value
+              .set(WantToBePaidPage, true).success.value
               .set(RelationshipStatusPage, relationshipStatus).success.value
               .set(ApplicantIncomePage, BelowLowerThreshold).success.value
 
@@ -61,27 +60,54 @@ class SubmittedControllerSpec extends SpecBase {
           }
         }
 
-        "and their income is above the lower threshold" in {
+        "and their income is above the lower threshold" - {
 
-          val income = Gen.oneOf(BetweenThresholds, AboveUpperThreshold).sample.value
+          "and they want to be paid" in {
 
-          val answers =
-            emptyUserAnswers
-              .set(WantToBePaidPage, wantToBePaid).success.value
-              .set(RelationshipStatusPage, relationshipStatus).success.value
-              .set(ApplicantIncomePage, income).success.value
+            val income = Gen.oneOf(BetweenThresholds, AboveUpperThreshold).sample.value
 
-          val application = applicationBuilder(userAnswers = Some(answers)).build()
+            val answers =
+              emptyUserAnswers
+                .set(WantToBePaidPage, true).success.value
+                .set(RelationshipStatusPage, relationshipStatus).success.value
+                .set(ApplicantIncomePage, income).success.value
 
-          running(application) {
-            val request = FakeRequest(GET, routes.SubmittedController.onPageLoad.url)
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-            val result = route(application, request).value
+            running(application) {
+              val request = FakeRequest(GET, routes.SubmittedController.onPageLoad.url)
 
-            val view = application.injector.instanceOf[SubmittedWithTaxChargeView]
+              val result = route(application, request).value
 
-            status(result) mustEqual OK
-            contentAsString(result) mustEqual view(wantToBePaid, hasPartner = false, TaxChargePayer.Applicant)(request, messages(application)).toString
+              val view = application.injector.instanceOf[SubmittedWithTaxChargeBeingPaidView]
+
+              status(result) mustEqual OK
+              contentAsString(result) mustEqual view(hasPartner = false, TaxChargePayer.Applicant)(request, messages(application)).toString
+            }
+          }
+
+          "and they do not want to be paid" in {
+
+            val income = Gen.oneOf(BetweenThresholds, AboveUpperThreshold).sample.value
+
+            val answers =
+              emptyUserAnswers
+                .set(WantToBePaidPage, false).success.value
+                .set(RelationshipStatusPage, relationshipStatus).success.value
+                .set(ApplicantIncomePage, income).success.value
+
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+            running(application) {
+              val request = FakeRequest(GET, routes.SubmittedController.onPageLoad.url)
+
+              val result = route(application, request).value
+
+              val view = application.injector.instanceOf[SubmittedWithTaxChargeNotBeingPaidView]
+
+              status(result) mustEqual OK
+              contentAsString(result) mustEqual view()(request, messages(application)).toString
+            }
           }
         }
       }
@@ -89,7 +115,6 @@ class SubmittedControllerSpec extends SpecBase {
       "when the applicant is married or cohabiting" - {
 
         val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
-        val wantToBePaid = arbitrary[Boolean].sample.value
 
         "and their income is below the lower threshold" - {
 
@@ -101,7 +126,7 @@ class SubmittedControllerSpec extends SpecBase {
 
             val answers =
               emptyUserAnswers
-                .set(WantToBePaidPage, wantToBePaid).success.value
+                .set(WantToBePaidPage, true).success.value
                 .set(RelationshipStatusPage, relationshipStatus).success.value
                 .set(ApplicantIncomePage, applicantIncome).success.value
                 .set(PartnerIncomePage, partnerIncome).success.value
@@ -120,28 +145,54 @@ class SubmittedControllerSpec extends SpecBase {
             }
           }
 
-          "and their partner's income is above the lower threshold" in {
+          "and their partner's income is above the lower threshold" - {
 
             val partnerIncome = Gen.oneOf(BetweenThresholds, AboveUpperThreshold).sample.value
 
-            val answers =
-              emptyUserAnswers
-                .set(WantToBePaidPage, wantToBePaid).success.value
-                .set(RelationshipStatusPage, relationshipStatus).success.value
-                .set(ApplicantIncomePage, applicantIncome).success.value
-                .set(PartnerIncomePage, partnerIncome).success.value
+            "and they want to be paid" in {
 
-            val application = applicationBuilder(userAnswers = Some(answers)).build()
+              val answers =
+                emptyUserAnswers
+                  .set(WantToBePaidPage, true).success.value
+                  .set(RelationshipStatusPage, relationshipStatus).success.value
+                  .set(ApplicantIncomePage, applicantIncome).success.value
+                  .set(PartnerIncomePage, partnerIncome).success.value
 
-            running(application) {
-              val request = FakeRequest(GET, routes.SubmittedController.onPageLoad.url)
+              val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-              val result = route(application, request).value
+              running(application) {
+                val request = FakeRequest(GET, routes.SubmittedController.onPageLoad.url)
 
-              val view = application.injector.instanceOf[SubmittedWithTaxChargeView]
+                val result = route(application, request).value
 
-              status(result) mustEqual OK
-              contentAsString(result) mustEqual view(wantToBePaid, hasPartner = true, TaxChargePayer.Partner)(request, messages(application)).toString
+                val view = application.injector.instanceOf[SubmittedWithTaxChargeBeingPaidView]
+
+                status(result) mustEqual OK
+                contentAsString(result) mustEqual view(hasPartner = true, TaxChargePayer.Partner)(request, messages(application)).toString
+              }
+            }
+
+            "and they do not want to be paid" in {
+
+              val answers =
+                emptyUserAnswers
+                  .set(WantToBePaidPage, false).success.value
+                  .set(RelationshipStatusPage, relationshipStatus).success.value
+                  .set(ApplicantIncomePage, applicantIncome).success.value
+                  .set(PartnerIncomePage, partnerIncome).success.value
+
+              val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+              running(application) {
+                val request = FakeRequest(GET, routes.SubmittedController.onPageLoad.url)
+
+                val result = route(application, request).value
+
+                val view = application.injector.instanceOf[SubmittedWithTaxChargeNotBeingPaidView]
+
+                status(result) mustEqual OK
+                contentAsString(result) mustEqual view()(request, messages(application)).toString
+              }
             }
           }
         }
@@ -150,78 +201,156 @@ class SubmittedControllerSpec extends SpecBase {
 
           val applicantIncome = BetweenThresholds
 
-          "and their partner's income is below the lower threshold" in {
+          "and their partner's income is below the lower threshold" - {
 
             val partnerIncome = BelowLowerThreshold
 
-            val answers =
-              emptyUserAnswers
-                .set(WantToBePaidPage, wantToBePaid).success.value
-                .set(RelationshipStatusPage, relationshipStatus).success.value
-                .set(ApplicantIncomePage, applicantIncome).success.value
-                .set(PartnerIncomePage, partnerIncome).success.value
+            "and they want to be paid" in {
 
-            val application = applicationBuilder(userAnswers = Some(answers)).build()
+              val answers =
+                emptyUserAnswers
+                  .set(WantToBePaidPage, true).success.value
+                  .set(RelationshipStatusPage, relationshipStatus).success.value
+                  .set(ApplicantIncomePage, applicantIncome).success.value
+                  .set(PartnerIncomePage, partnerIncome).success.value
 
-            running(application) {
-              val request = FakeRequest(GET, routes.SubmittedController.onPageLoad.url)
+              val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-              val result = route(application, request).value
+              running(application) {
+                val request = FakeRequest(GET, routes.SubmittedController.onPageLoad.url)
 
-              val view = application.injector.instanceOf[SubmittedWithTaxChargeView]
+                val result = route(application, request).value
 
-              status(result) mustEqual OK
-              contentAsString(result) mustEqual view(wantToBePaid, hasPartner = true, TaxChargePayer.Applicant)(request, messages(application)).toString
+                val view = application.injector.instanceOf[SubmittedWithTaxChargeBeingPaidView]
+
+                status(result) mustEqual OK
+                contentAsString(result) mustEqual view(hasPartner = true, TaxChargePayer.Applicant)(request, messages(application)).toString
+              }
+            }
+
+            "and they do not want to be paid" in {
+
+              val answers =
+                emptyUserAnswers
+                  .set(WantToBePaidPage, false).success.value
+                  .set(RelationshipStatusPage, relationshipStatus).success.value
+                  .set(ApplicantIncomePage, applicantIncome).success.value
+                  .set(PartnerIncomePage, partnerIncome).success.value
+
+              val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+              running(application) {
+                val request = FakeRequest(GET, routes.SubmittedController.onPageLoad.url)
+
+                val result = route(application, request).value
+
+                val view = application.injector.instanceOf[SubmittedWithTaxChargeNotBeingPaidView]
+
+                status(result) mustEqual OK
+                contentAsString(result) mustEqual view()(request, messages(application)).toString
+              }
             }
           }
 
-          "and their partner's income is between the thresholds" in {
+          "and their partner's income is between the thresholds" - {
 
             val partnerIncome = BetweenThresholds
 
-            val answers =
-              emptyUserAnswers
-                .set(WantToBePaidPage, wantToBePaid).success.value
-                .set(RelationshipStatusPage, relationshipStatus).success.value
-                .set(ApplicantIncomePage, applicantIncome).success.value
-                .set(PartnerIncomePage, partnerIncome).success.value
+            "and they want to be paid" in {
 
-            val application = applicationBuilder(userAnswers = Some(answers)).build()
+              val answers =
+                emptyUserAnswers
+                  .set(WantToBePaidPage, true).success.value
+                  .set(RelationshipStatusPage, relationshipStatus).success.value
+                  .set(ApplicantIncomePage, applicantIncome).success.value
+                  .set(PartnerIncomePage, partnerIncome).success.value
 
-            running(application) {
-              val request = FakeRequest(GET, routes.SubmittedController.onPageLoad.url)
+              val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-              val result = route(application, request).value
+              running(application) {
+                val request = FakeRequest(GET, routes.SubmittedController.onPageLoad.url)
 
-              val view = application.injector.instanceOf[SubmittedWithTaxChargeView]
+                val result = route(application, request).value
 
-              status(result) mustEqual OK
-              contentAsString(result) mustEqual view(wantToBePaid, hasPartner = true, TaxChargePayer.ApplicantOrPartner)(request, messages(application)).toString
+                val view = application.injector.instanceOf[SubmittedWithTaxChargeBeingPaidView]
+
+                status(result) mustEqual OK
+                contentAsString(result) mustEqual view(hasPartner = true, TaxChargePayer.ApplicantOrPartner)(request, messages(application)).toString
+              }
+            }
+
+            "and they do not want to be paid" in {
+
+              val answers =
+                emptyUserAnswers
+                  .set(WantToBePaidPage, false).success.value
+                  .set(RelationshipStatusPage, relationshipStatus).success.value
+                  .set(ApplicantIncomePage, applicantIncome).success.value
+                  .set(PartnerIncomePage, partnerIncome).success.value
+
+              val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+              running(application) {
+                val request = FakeRequest(GET, routes.SubmittedController.onPageLoad.url)
+
+                val result = route(application, request).value
+
+                val view = application.injector.instanceOf[SubmittedWithTaxChargeNotBeingPaidView]
+
+                status(result) mustEqual OK
+                contentAsString(result) mustEqual view()(request, messages(application)).toString
+              }
             }
           }
 
-          "and their partner's income is above the lower threshold" in {
+          "and their partner's income is above the lower threshold" - {
 
             val partnerIncome = AboveUpperThreshold
 
-            val answers =
-              emptyUserAnswers
-                .set(WantToBePaidPage, wantToBePaid).success.value
-                .set(RelationshipStatusPage, relationshipStatus).success.value
-                .set(ApplicantIncomePage, applicantIncome).success.value
-                .set(PartnerIncomePage, partnerIncome).success.value
+            "and they want to be paid" in {
 
-            val application = applicationBuilder(userAnswers = Some(answers)).build()
+              val answers =
+                emptyUserAnswers
+                  .set(WantToBePaidPage, true).success.value
+                  .set(RelationshipStatusPage, relationshipStatus).success.value
+                  .set(ApplicantIncomePage, applicantIncome).success.value
+                  .set(PartnerIncomePage, partnerIncome).success.value
 
-            running(application) {
-              val request = FakeRequest(GET, routes.SubmittedController.onPageLoad.url)
+              val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-              val result = route(application, request).value
+              running(application) {
+                val request = FakeRequest(GET, routes.SubmittedController.onPageLoad.url)
 
-              val view = application.injector.instanceOf[SubmittedWithTaxChargeView]
+                val result = route(application, request).value
 
-              status(result) mustEqual OK
-              contentAsString(result) mustEqual view(wantToBePaid, hasPartner = true, TaxChargePayer.Partner)(request, messages(application)).toString
+                val view = application.injector.instanceOf[SubmittedWithTaxChargeBeingPaidView]
+
+                status(result) mustEqual OK
+                contentAsString(result) mustEqual view(hasPartner = true, TaxChargePayer.Partner)(request, messages(application)).toString
+              }
+            }
+
+            "and they do not want to be paid" in {
+
+              val answers =
+                emptyUserAnswers
+                  .set(WantToBePaidPage, false).success.value
+                  .set(RelationshipStatusPage, relationshipStatus).success.value
+                  .set(ApplicantIncomePage, applicantIncome).success.value
+                  .set(PartnerIncomePage, partnerIncome).success.value
+
+              val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+              running(application) {
+                val request = FakeRequest(GET, routes.SubmittedController.onPageLoad.url)
+
+                val result = route(application, request).value
+
+                val view = application.injector.instanceOf[SubmittedWithTaxChargeNotBeingPaidView]
+
+                status(result) mustEqual OK
+                contentAsString(result) mustEqual view()(request, messages(application)).toString
+              }
             }
           }
         }
@@ -230,53 +359,107 @@ class SubmittedControllerSpec extends SpecBase {
 
           val applicantIncome = AboveUpperThreshold
 
-          "and their partner's income is below the upper threshold" in {
+          "and their partner's income is below the upper threshold" - {
 
-            val partnerIncome = Gen.oneOf(BelowLowerThreshold, BetweenThresholds).sample.value
+            "and they want to be paid" in {
 
-            val answers =
-              emptyUserAnswers
-                .set(WantToBePaidPage, wantToBePaid).success.value
-                .set(RelationshipStatusPage, relationshipStatus).success.value
-                .set(ApplicantIncomePage, applicantIncome).success.value
-                .set(PartnerIncomePage, partnerIncome).success.value
+              val partnerIncome = Gen.oneOf(BelowLowerThreshold, BetweenThresholds).sample.value
 
-            val application = applicationBuilder(userAnswers = Some(answers)).build()
+              val answers =
+                emptyUserAnswers
+                  .set(WantToBePaidPage, true).success.value
+                  .set(RelationshipStatusPage, relationshipStatus).success.value
+                  .set(ApplicantIncomePage, applicantIncome).success.value
+                  .set(PartnerIncomePage, partnerIncome).success.value
 
-            running(application) {
-              val request = FakeRequest(GET, routes.SubmittedController.onPageLoad.url)
+              val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-              val result = route(application, request).value
+              running(application) {
+                val request = FakeRequest(GET, routes.SubmittedController.onPageLoad.url)
 
-              val view = application.injector.instanceOf[SubmittedWithTaxChargeView]
+                val result = route(application, request).value
 
-              status(result) mustEqual OK
-              contentAsString(result) mustEqual view(wantToBePaid, hasPartner = true, TaxChargePayer.Applicant)(request, messages(application)).toString
+                val view = application.injector.instanceOf[SubmittedWithTaxChargeBeingPaidView]
+
+                status(result) mustEqual OK
+                contentAsString(result) mustEqual view(hasPartner = true, TaxChargePayer.Applicant)(request, messages(application)).toString
+              }
+            }
+
+            "and they do not want to be paid" in {
+
+              val partnerIncome = Gen.oneOf(BelowLowerThreshold, BetweenThresholds).sample.value
+
+              val answers =
+                emptyUserAnswers
+                  .set(WantToBePaidPage, false).success.value
+                  .set(RelationshipStatusPage, relationshipStatus).success.value
+                  .set(ApplicantIncomePage, applicantIncome).success.value
+                  .set(PartnerIncomePage, partnerIncome).success.value
+
+              val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+              running(application) {
+                val request = FakeRequest(GET, routes.SubmittedController.onPageLoad.url)
+
+                val result = route(application, request).value
+
+                val view = application.injector.instanceOf[SubmittedWithTaxChargeNotBeingPaidView]
+
+                status(result) mustEqual OK
+                contentAsString(result) mustEqual view()(request, messages(application)).toString
+              }
             }
           }
 
-          "and their partner's income is above the upper threshold" in {
+          "and their partner's income is above the upper threshold" - {
 
             val partnerIncome = AboveUpperThreshold
 
-            val answers =
-              emptyUserAnswers
-                .set(WantToBePaidPage, wantToBePaid).success.value
-                .set(RelationshipStatusPage, relationshipStatus).success.value
-                .set(ApplicantIncomePage, applicantIncome).success.value
-                .set(PartnerIncomePage, partnerIncome).success.value
+            "and they want to be paid" in {
 
-            val application = applicationBuilder(userAnswers = Some(answers)).build()
+              val answers =
+                emptyUserAnswers
+                  .set(WantToBePaidPage, true).success.value
+                  .set(RelationshipStatusPage, relationshipStatus).success.value
+                  .set(ApplicantIncomePage, applicantIncome).success.value
+                  .set(PartnerIncomePage, partnerIncome).success.value
 
-            running(application) {
-              val request = FakeRequest(GET, routes.SubmittedController.onPageLoad.url)
+              val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-              val result = route(application, request).value
+              running(application) {
+                val request = FakeRequest(GET, routes.SubmittedController.onPageLoad.url)
 
-              val view = application.injector.instanceOf[SubmittedWithTaxChargeView]
+                val result = route(application, request).value
 
-              status(result) mustEqual OK
-              contentAsString(result) mustEqual view(wantToBePaid, hasPartner = true, TaxChargePayer.ApplicantOrPartner)(request, messages(application)).toString
+                val view = application.injector.instanceOf[SubmittedWithTaxChargeBeingPaidView]
+
+                status(result) mustEqual OK
+                contentAsString(result) mustEqual view(hasPartner = true, TaxChargePayer.ApplicantOrPartner)(request, messages(application)).toString
+              }
+            }
+
+            "and they do not want to be paid" in {
+
+              val answers =
+                emptyUserAnswers
+                  .set(WantToBePaidPage, false).success.value
+                  .set(RelationshipStatusPage, relationshipStatus).success.value
+                  .set(ApplicantIncomePage, applicantIncome).success.value
+                  .set(PartnerIncomePage, partnerIncome).success.value
+
+              val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+              running(application) {
+                val request = FakeRequest(GET, routes.SubmittedController.onPageLoad.url)
+
+                val result = route(application, request).value
+
+                val view = application.injector.instanceOf[SubmittedWithTaxChargeNotBeingPaidView]
+
+                status(result) mustEqual OK
+                contentAsString(result) mustEqual view()(request, messages(application)).toString
+              }
             }
           }
         }
