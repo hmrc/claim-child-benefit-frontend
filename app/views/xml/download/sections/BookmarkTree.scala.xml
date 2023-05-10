@@ -21,11 +21,6 @@
             <fo:bookmark internal-destination="payment-details">
                 <fo:bookmark-title>@messages("pdf.paymentDetails")</fo:bookmark-title>
             </fo:bookmark>
-            @if(model.additionalInformation.nonEmpty) {
-                <fo:bookmark internal-destination="additional-information">
-                    <fo:bookmark-title>@messages("pdf.additionalInformation")</fo:bookmark-title>
-                </fo:bookmark>
-            }
             @if(model.anyDocumentsRequired) {
                 <fo:bookmark internal-destination="documents">
                     <fo:bookmark-title>@messages("pdf.documents")</fo:bookmark-title>

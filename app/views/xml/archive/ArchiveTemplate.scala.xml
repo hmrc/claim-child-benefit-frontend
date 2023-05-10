@@ -7,8 +7,7 @@
     applicantDetails: ApplicantDetails,
     paymentDetails: PaymentDetails,
     partnerDetails: PartnerDetails,
-    childDetails: ChildDetails,
-    additionalInfoPage: AdditionalInfoPage
+    childDetails: ChildDetails
 )
 
 @(model: journey.JourneyModel, additionalDetails: AdditionalArchiveDetails)(implicit messages: Messages)
@@ -41,10 +40,5 @@
     }
 
     @paymentDetails(model)
-
-    @model.additionalInformation.map { info =>
-        @additionalInfoPage(info)
-    }
-
 
 </fo:root>

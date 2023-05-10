@@ -129,7 +129,6 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
       .set(ChildLivedWithAnyoneElsePage(Index(0)), false).success.value
       .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
       .set(WantToBePaidPage, false).success.value
-      .set(IncludeAdditionalInformationPage, false).success.value
 
   ".canSubmit" - {
 
@@ -281,23 +280,6 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
               .set(PartnerEldestChildNamePage, childName).success.value
               .set(PartnerEldestChildDateOfBirthPage, LocalDate.now).success.value
               .set(WantToBePaidPage, false).success.value
-
-          val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
-          val request = DataRequest(identifierRequest, userId, answers)
-
-          when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
-          when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
-          when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
-
-          submissionService.canSubmit(request).futureValue mustEqual false
-        }
-
-        "must be false when the user gives any additional information" in {
-
-          val answers =
-            basicUserAnswers
-              .set(IncludeAdditionalInformationPage, true).success.value
-              .set(AdditionalInformationPage, "foo").success.value
 
           val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
           val request = DataRequest(identifierRequest, userId, answers)

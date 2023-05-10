@@ -132,7 +132,6 @@ class JourneyModelSpec
         )),
         None,
         PaymentPreference.DoNotPay(None),
-        None,
         true,
         Nil,
         Nil

@@ -19,10 +19,10 @@ package audit
 import cats.data.NonEmptyList
 import generators.ModelGenerators
 import models.BirthRegistrationMatchingResult.NotAttempted
-import models.OtherEligibilityFailReason.{ApplicantReceivedBenefitsAbroad, ApplicantWorkedAbroad, PartnerReceivedBenefitsAbroad, PartnerWorkedAbroad}
+import models.OtherEligibilityFailReason.ApplicantWorkedAbroad
 import models.domain.Claim
 import models.journey._
-import models.{ApplicantPreviousName, BankAccountInsightsResponseModel, BirthCertificateSystemNumber, Country, CurrentlyReceivingChildBenefit, EmploymentStatus, Nationality, OtherEligibilityFailReason, PartnerClaimingChildBenefit, ReasonNotToSubmit, journey}
+import models.{ApplicantPreviousName, BankAccountInsightsResponseModel, BirthCertificateSystemNumber, Country, CurrentlyReceivingChildBenefit, EmploymentStatus, Nationality, OtherEligibilityFailReason, PartnerClaimingChildBenefit, journey}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
 import org.scalacheck.Arbitrary.arbitrary
@@ -130,9 +130,8 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
         dateOfBirth = now
       ))
     ),
-    additionalInformation = Some("info"),
     userAuthenticated = true,
-    reasonsNotToSubmit = Seq(ReasonNotToSubmit.AdditionalInformationPresent),
+    reasonsNotToSubmit = Nil,
     otherEligibilityFailureReasons = Seq(OtherEligibilityFailReason.ApplicantWorkedAbroad)
   )
 
@@ -211,9 +210,8 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             dateOfBirth = now
           ))
         ),
-        Some("info"),
         userAuthenticated = true,
-        reasonsNotToSubmit = List("additionalInformationPresent"),
+        reasonsNotToSubmit = Nil,
         otherEligibilityFailReasons = List(ApplicantWorkedAbroad.toString)
       )
 
@@ -302,7 +300,6 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             dateOfBirth = now
           ))
         ),
-        Some("info"),
         otherEligibilityFailReasons = List(ApplicantWorkedAbroad.toString),
         claim = claim,
         correlationId = correlationId.toString

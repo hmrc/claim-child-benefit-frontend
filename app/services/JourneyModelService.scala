@@ -27,7 +27,6 @@ import models.journey._
 import pages.applicant.CurrentlyReceivingChildBenefitPage
 import pages.partner.RelationshipStatusPage
 import pages.payments.{ApplicantBenefitsPage, ApplicantOrPartnerBenefitsPage, WantToBePaidPage}
-import pages.{AdditionalInformationPage, IncludeAdditionalInformationPage}
 import queries.Query
 
 import javax.inject.Inject
@@ -41,28 +40,20 @@ class JourneyModelService @Inject()(featureFlags: FeatureFlags) {
       Relationship.build(answers),
       Child.buildChildren(answers),
       getBenefits(answers),
-      PaymentPreference.build(answers),
-      getAdditionalInformation(answers)
+      PaymentPreference.build(answers)
     ).parMapN(
-      (applicant, relationship, children, benefits, paymentPreference, additionalInfo) =>
+      (applicant, relationship, children, benefits, paymentPreference) =>
         JourneyModel(
           applicant,
           relationship,
           children,
           benefits,
           paymentPreference,
-          additionalInfo,
           answers.isAuthenticated,
-          reasonsNotToSubmit(answers.isAuthenticated, applicant, children, relationship, additionalInfo.nonEmpty),
+          reasonsNotToSubmit(answers.isAuthenticated, applicant, children, relationship),
           otherEligibilityFails(applicant, relationship, children, paymentPreference)
         )
     )
-
-  private def getAdditionalInformation(answers: UserAnswers): IorNec[Query, Option[String]] =
-    answers.getIor(IncludeAdditionalInformationPage).flatMap {
-      case true => answers.getIor(AdditionalInformationPage).map(Some(_))
-      case false => Ior.Right(None)
-    }
 
   private def getBenefits(answers: UserAnswers): IorNec[Query, Option[Set[Benefits]]] =
     if (answers.isAuthenticated) authenticatedBenefits(answers) else unauthenticatedBenefits(answers)
@@ -114,8 +105,7 @@ class JourneyModelService @Inject()(featureFlags: FeatureFlags) {
                                   isAuthenticated: Boolean,
                                   applicant: Applicant,
                                   children: NonEmptyList[Child],
-                                  relationship: Relationship,
-                                  additionalInformation: Boolean
+                                  relationship: Relationship
                                 ): Seq[ReasonNotToSubmit] = {
     
     val childOverSixMonths = if (featureFlags.submitOlderChildrenToCbs) {
@@ -128,15 +118,13 @@ class JourneyModelService @Inject()(featureFlags: FeatureFlags) {
     val documentsRequired =            if (children.toList.flatMap(child => child.requiredDocuments).nonEmpty) Some(DocumentsRequired) else None
     val designatoryDetailsChanged =    if (applicant.changedDesignatoryDetails.contains(true)) Some(DesignatoryDetailsChanged) else None
     val partnerNinoMissing =           if (relationship.partner.exists(p => p.eldestChild.nonEmpty && p.nationalInsuranceNumber.isEmpty)) Some(PartnerNinoMissing) else None
-    val additionalInformationPresent = if (additionalInformation) Some(AdditionalInformationPresent) else None
 
     Seq(
       userUnauthenticated,
       childOverSixMonths,
       documentsRequired,
       designatoryDetailsChanged,
-      partnerNinoMissing,
-      additionalInformationPresent
+      partnerNinoMissing
     ).flatten
   }
 

@@ -25,15 +25,13 @@ object ReasonNotToSubmit extends Enumerable.Implicits {
   case object DocumentsRequired extends WithName("documentsRequired") with ReasonNotToSubmit
   case object DesignatoryDetailsChanged extends WithName("designatoryDetailsChanged") with ReasonNotToSubmit
   case object PartnerNinoMissing extends WithName("partnerNinoMissing") with ReasonNotToSubmit
-  case object AdditionalInformationPresent extends WithName("additionalInformationPresent") with ReasonNotToSubmit
 
   val values: Seq[ReasonNotToSubmit] = Seq(
     UserUnauthenticated,
     ChildOverSixMonths,
     DocumentsRequired,
     DesignatoryDetailsChanged,
-    PartnerNinoMissing,
-    AdditionalInformationPresent
+    PartnerNinoMissing
   )
 
   implicit val enumerable: Enumerable[ReasonNotToSubmit] =

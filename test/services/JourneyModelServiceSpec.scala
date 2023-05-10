@@ -102,7 +102,6 @@ class JourneyModelServiceSpec
     .set(ChildLivedWithAnyoneElsePage(Index(0)), false).success.value
     .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
     .set(WantToBePaidPage, false).success.value
-    .set(IncludeAdditionalInformationPage, false).success.value
 
   ".build" - {
 
@@ -246,22 +245,6 @@ class JourneyModelServiceSpec
 
         errors mustBe empty
         data.value.reasonsNotToSubmit must contain only PartnerNinoMissing
-        data.value.userAuthenticated mustBe true
-      }
-
-      "must contain `Additional Information Present` when some additional information is supplied" in {
-
-        when(mockFeatureFlags.submitOlderChildrenToCbs).thenReturn(false)
-
-        val answers =
-          basicAnswers
-            .set(IncludeAdditionalInformationPage, true).success.value
-            .set(AdditionalInformationPage, "foo").success.value
-
-        val (errors, data) = service.build(answers).pad
-
-        errors mustBe empty
-        data.value.reasonsNotToSubmit must contain only AdditionalInformationPresent
         data.value.userAuthenticated mustBe true
       }
     }
