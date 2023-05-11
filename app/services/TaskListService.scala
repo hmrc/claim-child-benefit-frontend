@@ -25,8 +25,7 @@ class TaskListService @Inject()(
                                  applicantSection: ApplicantSection,
                                  partnerSection: PartnerSection,
                                  childSection: ChildSection,
-                                 paymentSection: PaymentSection,
-                                 additionalInfoSection: AdditionalInfoSection
+                                 paymentSection: PaymentSection
                                ) {
 
   def sections(answers: UserAnswers): Seq[SectionViewModel] =
@@ -34,7 +33,6 @@ class TaskListService @Inject()(
       applicantSection.asViewModel(answers),
       partnerSection.asViewModel(answers),
       childSection.asViewModel(answers),
-      paymentSection.asViewModel(answers),
-      additionalInfoSection.asViewModel(answers)
+      paymentSection.asViewModel(answers)
     )
 }

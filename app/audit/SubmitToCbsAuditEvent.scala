@@ -28,7 +28,6 @@ final case class SubmitToCbsAuditEvent(
                                         children: List[Child],
                                         benefits: Option[Set[String]],
                                         paymentPreference: PaymentPreference,
-                                        additionalInformation: Option[String],
                                         otherEligibilityFailReasons: List[String],
                                         claim: Claim,
                                         correlationId: String
@@ -45,7 +44,6 @@ object SubmitToCbsAuditEvent {
       children = model.children.toList.map(Child.build),
       benefits = model.benefits.map(_.map(_.toString)),
       paymentPreference = PaymentPreference.build(model.paymentPreference),
-      additionalInformation = model.additionalInformation,
       otherEligibilityFailReasons = model.otherEligibilityFailureReasons.map(_.toString).toList,
       claim = claim,
       correlationId = correlationId.toString

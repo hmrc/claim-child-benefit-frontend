@@ -38,15 +38,13 @@ class TaskListServiceSpec extends AnyFreeSpec with Matchers with ScalaFutures wi
   private val mockChildSection = mock[ChildSection]
   private val mockPartnerSection = mock[PartnerSection]
   private val mockPaymentSection = mock[PaymentSection]
-  private val mockAdditionalInfoSection = mock[AdditionalInfoSection]
 
   override def beforeEach(): Unit = {
     Mockito.reset(
       mockApplicantSection,
       mockChildSection,
       mockPartnerSection,
-      mockPaymentSection,
-      mockAdditionalInfoSection
+      mockPaymentSection
     )
     super.beforeEach()
   }
@@ -59,15 +57,13 @@ class TaskListServiceSpec extends AnyFreeSpec with Matchers with ScalaFutures wi
         mockApplicantSection,
         mockPartnerSection,
         mockChildSection,
-        mockPaymentSection,
-        mockAdditionalInfoSection
+        mockPaymentSection
       )
 
       when(mockApplicantSection.asViewModel(any())).thenReturn(SectionViewModel("applicant", Some(Call("", "app")), Completed))
       when(mockPartnerSection.asViewModel(any())).thenReturn(SectionViewModel("partner", Some(Call("", "p")), Completed))
       when(mockChildSection.asViewModel(any())).thenReturn(SectionViewModel("child", Some(Call("", "child")), InProgress))
       when(mockPaymentSection.asViewModel(any())).thenReturn(SectionViewModel("payment", None, CannotStart))
-      when(mockAdditionalInfoSection.asViewModel(any())).thenReturn(SectionViewModel("additional info", None, CannotStart))
 
       val relationshipStatus = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
 
@@ -79,8 +75,7 @@ class TaskListServiceSpec extends AnyFreeSpec with Matchers with ScalaFutures wi
         SectionViewModel("applicant", Some(Call("", "app")), Completed),
         SectionViewModel("partner", Some(Call("", "p")), Completed),
         SectionViewModel("child", Some(Call("", "child")), InProgress),
-        SectionViewModel("payment", None, CannotStart),
-        SectionViewModel("additional info", None, CannotStart)
+        SectionViewModel("payment", None, CannotStart)
       )
     }
   }

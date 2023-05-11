@@ -25,7 +25,6 @@ final case class JourneyModel(
                                children: NonEmptyList[Child],
                                benefits: Option[Set[Benefits]],
                                paymentPreference: PaymentPreference,
-                               additionalInformation: Option[String],
                                userAuthenticated: Boolean,
                                reasonsNotToSubmit: Seq[ReasonNotToSubmit],
                                otherEligibilityFailureReasons: Seq[OtherEligibilityFailReason]

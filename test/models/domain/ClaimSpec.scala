@@ -74,7 +74,6 @@ class ClaimSpec extends AnyFreeSpec with Matchers with Generators with OptionVal
       children = NonEmptyList(basicChild, Nil),
       benefits = None,
       paymentPreference = journey.PaymentPreference.DoNotPay(None),
-      additionalInformation = None,
       userAuthenticated = true,
       reasonsNotToSubmit = Nil,
       otherEligibilityFailureReasons = Nil

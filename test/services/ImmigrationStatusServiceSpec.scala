@@ -98,7 +98,6 @@ class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with Befor
     ),
     benefits = None,
     paymentPreference = journey.PaymentPreference.DoNotPay(None),
-    additionalInformation = None,
     userAuthenticated = true,
     reasonsNotToSubmit = Nil,
     otherEligibilityFailureReasons = Nil

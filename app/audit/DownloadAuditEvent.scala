@@ -25,7 +25,6 @@ final case class DownloadAuditEvent(
                                      children: List[Child],
                                      benefits: Option[Set[String]],
                                      paymentPreference: PaymentPreference,
-                                     additionalInformation: Option[String],
                                      userAuthenticated: Boolean,
                                      reasonsNotToSubmit: List[String],
                                      otherEligibilityFailReasons: List[String]
@@ -40,7 +39,6 @@ object DownloadAuditEvent {
       children = model.children.toList.map(Child.build),
       benefits = model.benefits.map(_.map(_.toString)),
       paymentPreference = PaymentPreference.build(model.paymentPreference),
-      additionalInformation = model.additionalInformation,
       userAuthenticated = model.userAuthenticated,
       reasonsNotToSubmit = model.reasonsNotToSubmit.map(_.toString).toList,
       otherEligibilityFailReasons = model.otherEligibilityFailureReasons.map(_.toString).toList

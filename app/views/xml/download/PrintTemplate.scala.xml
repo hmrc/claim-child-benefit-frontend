@@ -10,7 +10,6 @@
     declaration: Declaration,
     instructions: Instructions,
     addressLabel: AddressLabel,
-    additionalInfoPage: AdditionalInfoPage,
     documents: Documents
 )
 
@@ -40,10 +39,6 @@
     }
 
     @paymentDetails(model)
-
-    @model.additionalInformation.map { info =>
-        @additionalInfoPage(info)
-    }
 
     @{if(model.anyDocumentsRequired) {
         documents(model)
