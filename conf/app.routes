@@ -25,6 +25,7 @@ GET         /agent-unsupported                          controllers.auth.AuthCon
 GET         /organisation-unsupported                   controllers.auth.AuthController.unsupportedAffinityGroupOrganisation(continueUrl: String)
 GET         /register                                   controllers.auth.AuthController.redirectToRegister(continueUrl: String)
 GET         /sign-in                                    controllers.auth.AuthController.redirectToLogin(continueUrl: String)
+GET         /uplift-iv                                  controllers.auth.AuthController.upliftIv()
 
 GET         /sign-in-to-government-gateway              controllers.SignInController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST        /sign-in-to-government-gateway              controllers.SignInController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
@@ -464,3 +465,5 @@ GET        /already-being-paid                                  controllers.Subm
 GET         /we-saved-your-answers                          controllers.AnswersSavedController.onPageLoad()
 
 GET         /give-feedback                                  controllers.SubmittedController.exitSurvey
+
+GET         /need-to-confirm-identity                       controllers.NeedToUpliftIvController.onPageLoad()

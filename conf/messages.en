@@ -2085,3 +2085,9 @@ answersSaved.continue.1 = Alternatively,
 answersSaved.continue.link.text = continue your application
 answersSaved.continue.2 = now.
 
+needToUpliftIv.title = We need you to confirm your identity
+needToUpliftIv.heading = We need you to confirm your identity
+needToUpliftIv.p1 = To send your Child Benefit claim digitally, you will need to provide more information that confirms your identity.
+needToUpliftIv.p2.1 = You can also
+needToUpliftIv.p2.link.text = make a claim without confirming your identity
+needToUpliftIv.p2.2 = You will be signed out and will need to print and post your claim to HMRC.
