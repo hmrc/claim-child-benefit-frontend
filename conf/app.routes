@@ -464,3 +464,6 @@ GET        /already-being-paid                                  controllers.Subm
 GET         /we-saved-your-answers                          controllers.AnswersSavedController.onPageLoad()
 
 GET         /give-feedback                                  controllers.SubmittedController.exitSurvey
+
+GET         /need-to-confirm-identity                       controllers.NeedToUpliftIvController.onPageLoad()
+POST        /need-to-confirm-identity                       controllers.NeedToUpliftIvController.onSubmit()

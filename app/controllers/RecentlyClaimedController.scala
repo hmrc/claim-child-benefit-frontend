@@ -19,6 +19,7 @@ package controllers
 import controllers.actions._
 import forms.RecentlyClaimedFormProvider
 import models.UserAnswers
+import models.requests.AuthenticatedIdentifierRequest
 
 import javax.inject.Inject
 import pages.{RecentlyClaimedPage, Waypoints}
@@ -64,7 +65,15 @@ class RecentlyClaimedController @Inject()(
 
         value => {
 
-          val originalAnswers = request.userAnswers.getOrElse(UserAnswers(request.userId))
+          val originalAnswers = request.userAnswers.getOrElse {
+            request.request match {
+              case r: AuthenticatedIdentifierRequest[_] =>
+                UserAnswers(r.userId, nino = Some(r.nino))
+
+              case r =>
+                UserAnswers(r.userId)
+            }
+          }
 
           for {
             updatedAnswers <- Future.fromTry(originalAnswers.set(recentlyClaimedPage, value))
