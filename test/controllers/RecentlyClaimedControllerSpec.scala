@@ -139,7 +139,7 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
-    "must redirect to the next page for a POST if no existing data is found" in {
+    "must redirect to the next page for a POST if no existing data is found and the user is unauthenticated" in {
 
       val mockUserDataService = mock[UserDataService]
 
@@ -159,6 +159,32 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
         val expectedAnswers = emptyUserAnswers.set(recentlyClaimedPage, true).success.value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual recentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+      }
+    }
+
+    "must redirect to the next page for a POST if no existing data is found and the user is authenticated" in {
+
+      val mockUserDataService = mock[UserDataService]
+
+      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+
+      val application =
+        applicationBuilder(userAnswers = None, userIsAuthenticated = true)
+          .overrides(
+            bind[UserDataService].toInstance(mockUserDataService)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, anyChildLivedWithOthersRoute)
+            .withFormUrlEncodedBody(("value", "true"))
+
+        val result = route(application, request).value
+        val expectedAnswers = emptyUserAnswers.copy(nino = Some("nino")).set(recentlyClaimedPage, true).success.value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual recentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
