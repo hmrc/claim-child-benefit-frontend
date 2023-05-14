@@ -15,7 +15,9 @@
  *@
 
 @this(
-        layout: templates.Layout
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukButton: GovukButton
 )
 
 @()(implicit request: Request[_], messages: Messages)
@@ -28,7 +30,11 @@
         @messages("needToUpliftIv.p1")
     </p>
 
-    <a href="" class="govuk-button">@messages("site.continue")</a>
+    @formHelper(action = routes.NeedToUpliftIvController.onSubmit()) {
+        @govukButton(
+            ButtonViewModel(messages("site.continue"))
+        )
+    }
 
     <p class="govuk-body">
         @messages("needToUpliftIv.p2.1")

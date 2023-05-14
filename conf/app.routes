@@ -467,3 +467,4 @@ GET         /we-saved-your-answers                          controllers.AnswersS
 GET         /give-feedback                                  controllers.SubmittedController.exitSurvey
 
 GET         /need-to-confirm-identity                       controllers.NeedToUpliftIvController.onPageLoad()
+POST        /need-to-confirm-identity                       controllers.NeedToUpliftIvController.onSubmit()

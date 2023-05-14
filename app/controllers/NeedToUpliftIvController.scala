@@ -16,9 +16,10 @@
 
 package controllers
 
-import controllers.actions._
+import config.FrontendAppConfig
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.NeedToUpliftIvView
 
@@ -26,13 +27,26 @@ import javax.inject.Inject
 
 class NeedToUpliftIvController @Inject()(
                                           override val messagesApi: MessagesApi,
-                                          identify: IdentifierAction,
                                           val controllerComponents: MessagesControllerComponents,
-                                          view: NeedToUpliftIvView
+                                          view: NeedToUpliftIvView,
+                                          config: FrontendAppConfig
                                         ) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = identify {
+  def onPageLoad(): Action[AnyContent] = Action {
     implicit request =>
       Ok(view())
+  }
+
+  def onSubmit(): Action[AnyContent] = Action {
+    implicit request =>
+      Redirect(
+        config.upliftIvUrl,
+        Map(
+          "origin" -> Seq(config.origin),
+          "confidenceLevel" -> Seq(ConfidenceLevel.L250.toString),
+          "completionURL" -> Seq(config.loginContinueUrl + routes.RecentlyClaimedController.onPageLoad().url),
+          "failureURL" -> Seq(config.loginContinueUrl + controllers.auth.routes.IvController.handleIvFailure(request.path, None).url)
+        )
+      )
   }
 }

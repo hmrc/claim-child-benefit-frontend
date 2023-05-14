@@ -17,36 +17,54 @@
 package controllers
 
 import controllers.actions.IdentifierAction
-import models.UserAnswers
-import pages.{EmptyWaypoints, IndexPage}
-
-import javax.inject.Inject
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserDataService
+import uk.gov.hmrc.auth.core.AffinityGroup.Individual
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
+import uk.gov.hmrc.auth.core.retrieve.~
+import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions, ConfidenceLevel, NoActiveSession}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import views.html.IndexView
 
-import scala.concurrent.ExecutionContext
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class IndexController @Inject()(
                                  val controllerComponents: MessagesControllerComponents,
                                  identify: IdentifierAction,
                                  view: IndexView,
                                  userDataService: UserDataService,
-                                 indexPage: IndexPage
-                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                 val authConnector: AuthConnector
+                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with AuthorisedFunctions {
 
-  def onPageLoad: Action[AnyContent] = identify { implicit request =>
+  def onPageLoad: Action[AnyContent] = Action { implicit request =>
     Ok(view())
   }
 
-  def onSubmit: Action[AnyContent] = identify { implicit request =>
+  def onSubmit: Action[AnyContent] = Action.async { implicit request =>
 
-    val userAnswers = UserAnswers(request.userId)
+    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    Redirect(indexPage.navigate(EmptyWaypoints, userAnswers, userAnswers).route)
+    authorised().retrieve(
+      Retrievals.affinityGroup and
+        Retrievals.confidenceLevel
+    ) {
+      case Some(Individual) ~ confidenceLevel if confidenceLevel < ConfidenceLevel.L250 =>
+        Future.successful(Redirect(routes.NeedToUpliftIvController.onPageLoad()))
+
+      case _ =>
+        goToNextPage
+    }.recoverWith {
+      case _: NoActiveSession =>
+        goToNextPage
+    }
   }
+
+  private def goToNextPage: Future[Result] =
+    Future.successful(Redirect(routes.RecentlyClaimedController.onPageLoad()))
 
   def startAgain: Action[AnyContent] = identify.async { implicit request =>
     userDataService.clear(request.userId).map {
