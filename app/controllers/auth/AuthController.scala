@@ -23,10 +23,8 @@ import models.UserAnswers
 import models.requests.AuthenticatedIdentifierRequest
 import pages.{EmptyWaypoints, TaskListPage}
 import play.api.i18n.I18nSupport
-import play.api.mvc.Results.Redirect
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserDataService
-import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.auth._
 
@@ -106,18 +104,5 @@ class AuthController @Inject()(
             .set(UserAnswers(request.userId, lastUpdated = Instant.now(clock)))
             .map(_ => Redirect(TaskListPage.route(EmptyWaypoints).url))
         }
-  }
-
-  def upliftIv(): Action[AnyContent] = Action {
-    implicit request =>
-      Redirect(
-        config.upliftIvUrl,
-        Map(
-          "origin" -> Seq(config.origin),
-          "confidenceLevel" -> Seq(ConfidenceLevel.L250.toString),
-          "completionURL" -> Seq(config.loginContinueUrl + request.path),
-          "failureURL" -> Seq(config.loginContinueUrl + routes.IvController.handleIvFailure(request.path, None).url)
-        )
-      )
   }
 }
