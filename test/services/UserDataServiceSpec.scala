@@ -50,74 +50,60 @@ class UserDataServiceSpec
 
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  private val mockRepo = mock[SessionRepository]
   private val mockConnector = mock[UserAnswersConnector]
 
-  private val service = new UserDataService(mockRepo, mockConnector)
+  private val service = new UserDataService(mockConnector)
 
   override def beforeEach(): Unit = {
-    reset(mockRepo)
     reset(mockConnector)
     super.beforeEach()
   }
 
   ".get" - {
 
-    "must return user answers when they exist in the repository" in {
+    "must return user answers when they exist in the backend" in {
 
-      when(mockRepo.get(eqTo(userId))) thenReturn Future.successful(Some(answers))
+      when(mockConnector.get()(any())) thenReturn Future.successful(Some(answers))
 
-      service.get(userId).futureValue.value mustEqual answers
+      service.get().futureValue.value mustEqual answers
     }
 
     "must return None when answers do not exist in the repository" in {
 
-      when(mockRepo.get(eqTo(userId))) thenReturn Future.successful(None)
+      when(mockConnector.get()(any())) thenReturn Future.successful(None)
 
-      service.get(userId).futureValue must not be defined
+      service.get().futureValue must not be defined
     }
   }
 
   ".set" - {
 
-    "must write the answers to the repository and the backend" in {
+    "must write the answers to the backend" in {
 
-      when(mockRepo.set(any())) thenReturn Future.successful(true)
       when(mockConnector.set(any())(any())) thenReturn Future.successful(Done)
 
       service.set(answers).futureValue
-      verify(mockRepo, times(1)).set(eqTo(answers))
       verify(mockConnector, times(1)).set(eqTo(answers))(any())
     }
 
-    "must succeed when writing to the repository succeeds but the call to the backend fails" in {
 
+    "must fail when writing to the repository fails" in {
 
-      when(mockRepo.set(any())) thenReturn Future.successful(true)
       when(mockConnector.set(any())(any())) thenReturn Future.failed(new RuntimeException("foo"))
 
-      service.set(answers).futureValue
-      verify(mockRepo, times(1)).set(eqTo(answers))
-      verify(mockConnector, times(1)).set(eqTo(answers))(any())
-    }
-
-    "must fail when writing to the repository" in {
-
-      when(mockRepo.set(any())) thenReturn Future.failed(new RuntimeException("foo"))
-
       service.set(answers).failed.futureValue
-      verify(mockRepo, times(1)).set(eqTo(answers))
+      verify(mockConnector, times(1)).set(eqTo(answers))(any())
     }
   }
 
   ".keepAlive" - {
 
-    "must keep the repository record alive" in {
+    "must keep the backend record alive" in {
 
-      when(mockRepo.keepAlive(any())) thenReturn Future.successful(true)
+      when(mockConnector.keepAlive()(any())) thenReturn Future.successful(Done)
 
-      service.keepAlive(userId).futureValue mustEqual true
-      verify(mockRepo, times(1)).keepAlive(eqTo(userId))
+      service.keepAlive().futureValue
+      verify(mockConnector, times(1)).keepAlive()(any())
     }
   }
 
@@ -125,10 +111,10 @@ class UserDataServiceSpec
 
     "must remove the record from the repository" in {
 
-      when(mockRepo.clear(any())) thenReturn Future.successful(true)
+      when(mockConnector.clear()(any())) thenReturn Future.successful(Done)
 
-      service.clear(userId).futureValue mustEqual true
-      verify(mockRepo, times(1)).clear(eqTo(userId))
+      service.clear().futureValue
+      verify(mockConnector, times(1)).clear()(any())
     }
   }
 }

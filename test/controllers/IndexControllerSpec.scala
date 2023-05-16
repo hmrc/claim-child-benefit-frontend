@@ -18,6 +18,7 @@ package controllers
 
 import _root_.auth.Retrievals._
 import base.SpecBase
+import models.Done
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -59,7 +60,7 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
     ".startAgain must clear the user's cache and redirect to the home page" in {
 
       val mockUserDataService = mock[UserDataService]
-      when(mockUserDataService.clear(any())) thenReturn Future.successful(true)
+      when(mockUserDataService.clear()(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -73,7 +74,7 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.IndexController.onPageLoad.url
-        verify(mockUserDataService, times(1)).clear(any())
+        verify(mockUserDataService, times(1)).clear()(any())
       }
     }
 

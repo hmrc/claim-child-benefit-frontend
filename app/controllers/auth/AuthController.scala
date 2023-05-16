@@ -68,7 +68,7 @@ class AuthController @Inject()(
   def signOut(): Action[AnyContent] = identify.async {
     implicit request =>
       userDataService
-        .clear(request.userId)
+        .clear()
         .map {
           _ =>
             request match {
