@@ -80,16 +80,7 @@ class UserDataServiceSpec
 
   ".set" - {
 
-    "must write the answers to the repository" in {
-
-      when(mockRepo.set(any())) thenReturn Future.successful(true)
-
-      service.set(answers).futureValue
-      verify(mockRepo, times(1)).set(eqTo(answers))
-      verify(mockConnector, times(0)).set(any())(any())
-    }
-
-    "must write the answers to the repository and the backend" ignore {
+    "must write the answers to the repository and the backend" in {
 
       when(mockRepo.set(any())) thenReturn Future.successful(true)
       when(mockConnector.set(any())(any())) thenReturn Future.successful(Done)
@@ -99,7 +90,7 @@ class UserDataServiceSpec
       verify(mockConnector, times(1)).set(eqTo(answers))(any())
     }
 
-    "must succeed when writing to the repository succeeds but the call to the backend fails" ignore {
+    "must succeed when writing to the repository succeeds but the call to the backend fails" in {
 
 
       when(mockRepo.set(any())) thenReturn Future.successful(true)

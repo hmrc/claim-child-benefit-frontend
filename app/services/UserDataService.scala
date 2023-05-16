@@ -35,7 +35,17 @@ class UserDataService @Inject()(
 
   def set(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[Done] =
     repository
-      .set(answers).map(_ => Done)
+      .set(answers)
+      .flatMap { _ =>
+        connector
+          .set(answers)
+          .map(_ => Done)
+          .recover {
+            case e: Throwable =>
+              logger.error("Failed writing user data to the backend")
+              Done
+          }
+      }
 
   def keepAlive(userId: String): Future[Boolean] =
     repository.keepAlive(userId)
