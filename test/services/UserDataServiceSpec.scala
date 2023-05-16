@@ -26,14 +26,11 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import play.api.libs.json.Json
-import repositories.SessionRepository
 import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.temporal.ChronoUnit
 import java.time.{Clock, Instant, ZoneId}
 import scala.concurrent.Future
-
-import scala.concurrent.ExecutionContext.Implicits.global
 
 class UserDataServiceSpec
   extends AnyFreeSpec
