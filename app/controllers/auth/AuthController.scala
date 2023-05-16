@@ -67,16 +67,15 @@ class AuthController @Inject()(
 
   def signOut(): Action[AnyContent] = identify.async {
     implicit request =>
-      userDataService
-        .clear()
-        .map {
-          _ =>
-            request match {
-              case _: AuthenticatedIdentifierRequest[_] =>
-                Redirect(config.signOutUrl, Map("continue" -> Seq(config.host + routes.SignedOutController.onPageLoad.url)))
+      request match {
+        case _: AuthenticatedIdentifierRequest[_] =>
+          Future.successful(Redirect(config.signOutUrl, Map("continue" -> Seq(config.host + routes.SignedOutController.onPageLoad.url))))
 
-              case _ =>
-                Redirect(routes.ApplicationResetController.onPageLoad)
+        case _ =>
+          userDataService
+            .clear()
+            .map { _ =>
+              Redirect(routes.ApplicationResetController.onPageLoad)
             }
       }
   }

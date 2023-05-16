@@ -19,7 +19,7 @@ package controllers.auth
 import base.SpecBase
 import models.{Done, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.Mockito.{times, verify, when}
+import org.mockito.Mockito.{never, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{EmptyWaypoints, TaskListPage}
 import play.api.inject.bind
@@ -64,10 +64,9 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
 
     "when the user is authenticated" - {
 
-      "must clear user answers and redirect to BAS sign-out" in {
+      "must redirect to BAS sign-out" in {
 
         val mockUserDataService = mock[UserDataService]
-        when(mockUserDataService.clear()(any())) thenReturn Future.successful(Done)
 
         val application =
           applicationBuilder(None, userIsAuthenticated = true)
@@ -84,7 +83,7 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual expectedRedirectUrl
-          verify(mockUserDataService, times(1)).clear()(any())
+          verify(mockUserDataService, never).clear()(any())
         }
       }
     }
