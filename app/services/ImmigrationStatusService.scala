@@ -16,7 +16,6 @@
 
 package services
 
-import config.FeatureFlags
 import connectors.ImmigrationStatusConnector
 import logging.Logging
 import models.NationalityGroup
@@ -25,13 +24,12 @@ import models.journey.JourneyModel
 import play.api.Configuration
 import uk.gov.hmrc.http.HeaderCarrier
 
-import java.time.{Clock, LocalDate, ZoneId}
+import java.time.{Clock, LocalDate}
 import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class ImmigrationStatusService @Inject()(
-                                          featureFlags: FeatureFlags,
                                           connector: ImmigrationStatusConnector,
                                           config: Configuration,
                                           clock: Clock
@@ -43,33 +41,29 @@ class ImmigrationStatusService @Inject()(
 
   def settledStatusStartDate(nino: String, model: JourneyModel, correlationId: UUID)
                             (hc: HeaderCarrier): Future[Option[LocalDate]] =
-    if (featureFlags.checkImmigrationStatus) {
-      if (model.applicant.nationalityGroupToUse == NationalityGroup.Eea) {
+    if (model.applicant.nationalityGroupToUse == NationalityGroup.Eea) {
 
-        val today = LocalDate.now(clock)
+      val today = LocalDate.now(clock)
 
-        val searchRequest = NinoSearchRequest(
-          nino = nino,
-          givenName = model.applicant.name.firstName,
-          familyName = model.applicant.name.lastName,
-          dateOfBirth = model.applicant.dateOfBirth,
-          statusCheckRange = StatusCheckRange(
-            startDate = Some(today.minusMonths(searchRangeInMonths)),
-            endDate = Some(today)
-          )
+      val searchRequest = NinoSearchRequest(
+        nino = nino,
+        givenName = model.applicant.name.firstName,
+        familyName = model.applicant.name.lastName,
+        dateOfBirth = model.applicant.dateOfBirth,
+        statusCheckRange = StatusCheckRange(
+          startDate = Some(today.minusMonths(searchRangeInMonths)),
+          endDate = Some(today)
         )
+      )
 
-        connector
-          .checkStatus(searchRequest, correlationId)(hc)
-          .map(result => result.settledStatusStartDate)
-          .recover {
-            case e: Throwable =>
-              logger.warn("Call to home-office-immigration-status-proxy failed: " + e.getMessage)
-              None
-          }
-      } else {
-        Future.successful(None)
-      }
+      connector
+        .checkStatus(searchRequest, correlationId)(hc)
+        .map(result => result.settledStatusStartDate)
+        .recover {
+          case e: Throwable =>
+            logger.warn("Call to home-office-immigration-status-proxy failed: " + e.getMessage)
+            None
+        }
     } else {
       Future.successful(None)
     }
