@@ -15,27 +15,33 @@
  *@
 
 @this(
-    layout: templates.Layout,
-    govukButton: GovukButton
+        layout: templates.Layout,
+        govukPanel : GovukPanel
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
-@layout(
-    pageTitle    = titleNoForm(messages("signedOut.title")),
-    showBackLink = false,
-    timeout      = false,
-    showSignOut  = false
-) {
+@layout(pageTitle = titleNoForm(messages("signedOut.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("signedOut.heading")</h1>
+    @govukPanel(Panel(
+        title = messages("signedOut.heading"),
+        content = messages("signedOut.heading.info")
+    ))
 
-    <p class="govuk-body">@messages("signedOut.guidance")</p>
+    <h2 class="govuk-heading-m">@messages("signedOut.howToContinue")</h2>
+
+    <ol class="govuk-list govuk-list--number">
+        <li>
+            @messages("signedOut.howToContinue.step1")
+            <a href="@messages("signedOut.howToContinue.step1.link.href")" class="govuk-link">@messages("signedOut.howToContinue.step1.link.text")</a>
+        </li>
+        <li>@messages("signedOut.howToContinue.step2")</li>
+        <li>@messages("signedOut.howToContinue.step3")</li>
+    </ol>
 
     <p class="govuk-body">
-        @govukButton(
-            ButtonViewModel(messages("site.startAgain"))
-                .asLink(routes.IndexController.startAgain.url)
-        )
+        @messages("signedOut.continue.1")
+        <a href="@routes.IndexController.onPageLoad" class="govuk-link">@messages("signedOut.continue.link.text")</a>
+        @messages("signedOut.continue.2")
     </p>
 }
