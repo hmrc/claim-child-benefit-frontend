@@ -16,14 +16,12 @@
 
 package controllers.payments
 
-import config.FeatureFlags
 import connectors.BankAccountInsightsConnector
-import connectors.BankAccountInsightsHttpParser.BankAccountInsightsResponse
 import controllers.AnswerExtractor
 import controllers.actions._
 import forms.payments.{BankAccountDetailsFormModel, BankAccountDetailsFormProvider}
 import models.requests.DataRequest
-import models.{BankAccountDetails, BankAccountHolder, BankAccountInsightsRequest, BankAccountInsightsResponseModel, ReputationResponseEnum, VerifyBankDetailsResponseModel}
+import models.{BankAccountDetails, BankAccountHolder, BankAccountInsightsRequest, ReputationResponseEnum, VerifyBankDetailsResponseModel}
 import pages.Waypoints
 import pages.payments.{BankAccountDetailsPage, BankAccountHolderPage}
 import play.api.data.FormError
@@ -49,7 +47,6 @@ class BankAccountDetailsController @Inject()(
                                       val controllerComponents: MessagesControllerComponents,
                                       view: BankAccountDetailsView,
                                       barsService: BarsService,
-                                      featureFlags: FeatureFlags,
                                       bankAccountInsightsConnector: BankAccountInsightsConnector
                                      )(implicit ec: ExecutionContext)
   extends FrontendBaseController
@@ -85,19 +82,15 @@ class BankAccountDetailsController @Inject()(
               Future.successful(BadRequest(view(formWithErrors, waypoints, maybeGuidance))),
 
             value => {
-              if (featureFlags.verifyBankDetails) {
-                barsService.verifyBankDetails(value.details).flatMap {
-                  getBarsError(_).map { barsError =>
-                    if (barsError.softError && value.softError.getOrElse(false)) {
-                      saveAndRedirect(value.details, request, waypoints)
-                    } else {
-                      val updatedValue = value.copy(softError = Some(barsError.softError))
-                      Future.successful(BadRequest(view(form.fill(updatedValue).withError(barsError.error), waypoints, maybeGuidance)))
-                    }
-                  }.getOrElse(saveAndRedirect(value.details, request, waypoints))
-                }
-              } else {
-                saveAndRedirect(value.details, request, waypoints)
+              barsService.verifyBankDetails(value.details).flatMap {
+                getBarsError(_).map { barsError =>
+                  if (barsError.softError && value.softError.getOrElse(false)) {
+                    saveAndRedirect(value.details, request, waypoints)
+                  } else {
+                    val updatedValue = value.copy(softError = Some(barsError.softError))
+                    Future.successful(BadRequest(view(form.fill(updatedValue).withError(barsError.error), waypoints, maybeGuidance)))
+                  }
+                }.getOrElse(saveAndRedirect(value.details, request, waypoints))
               }
             }
         )
