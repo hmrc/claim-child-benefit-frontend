@@ -21,11 +21,11 @@ import play.api.mvc.Call
 
 import javax.inject.Inject
 
-class IndexPage @Inject()(recentlyClaimedPage: RecentlyClaimedPage) extends Page {
+object IndexPage  extends Page {
 
   override def route(waypoints: Waypoints): Call =
     routes.IndexController.onPageLoad
 
   override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
-    recentlyClaimedPage
+    RecentlyClaimedPage
 }

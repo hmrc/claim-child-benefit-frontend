@@ -22,14 +22,7 @@ import javax.inject.Inject
 
 class FeatureFlags @Inject()(configuration: Configuration) {
 
-  val verifyBankDetails: Boolean             = configuration.get[Boolean]("features.verify-bank-details")
-  val auditDownload: Boolean                 = configuration.get[Boolean]("features.audit-download")
   val matchBirthRegistrationDetails: Boolean = configuration.get[Boolean]("features.match-birth-registration-details")
-  val allowAuthenticatedSessions: Boolean    = configuration.get[Boolean]("features.allow-authenticated-sessions")
-  val allowSubmissionToCbs: Boolean          = configuration.get[Boolean]("features.allow-submission-to-cbs")
-  val showSignInPage: Boolean                = configuration.get[Boolean]("features.show-sign-in-page")
-  val callBankAccountInsights: Boolean       = configuration.get[Boolean]("features.call-bank-account-insights")
-  val checkImmigrationStatus: Boolean        = configuration.get[Boolean]("features.check-immigration-status")
   val submitOlderChildrenToCbs: Boolean      = configuration.get[Boolean]("features.submit-older-children-to-cbs")
   val saveAndReturn: Boolean                 = configuration.get[Boolean]("features.save-and-return")
 }

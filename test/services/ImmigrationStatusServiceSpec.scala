@@ -43,18 +43,16 @@ import scala.concurrent.Future
 
 class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach with Generators with GuiceOneAppPerSuite {
 
-  private val mockFeatureFlags = mock[FeatureFlags]
   private val mockConnector = mock[ImmigrationStatusConnector]
 
   private val configuration: Configuration = app.injector.instanceOf[Configuration]
 
   override def beforeEach(): Unit = {
-    Mockito.reset(mockFeatureFlags)
     Mockito.reset(mockConnector)
     super.beforeEach()
   }
 
-  private val service = new ImmigrationStatusService(mockFeatureFlags, mockConnector, configuration, clockAtFixedInstant)
+  private val service = new ImmigrationStatusService(mockConnector, configuration, clockAtFixedInstant)
 
   private implicit val hc: HeaderCarrier = new HeaderCarrier()
   private val correlationId = UUID.randomUUID()
@@ -105,14 +103,44 @@ class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with Befor
 
   "hasSettledStatus" - {
 
-    "when the check immigration status feature is off" - {
+    "and the applicant is an EU national" - {
 
-      "must return None" in {
+      "must return the result of the call to check immigration status" in {
 
         val nationality = Nationality.allNationalities.filter(_.group == NationalityGroup.Eea).head
         val model = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(nationalities = NonEmptyList(nationality, Nil)))
+        val settledStatusDate = LocalDate.now
 
-        when(mockFeatureFlags.checkImmigrationStatus).thenReturn(false)
+        val immigrationStatusWithSettledStatus = ImmigrationStatus(
+          statusStartDate = settledStatusDate,
+          statusEndDate = None,
+          productType = eus,
+          immigrationStatus = ilr,
+          noRecourseToPublicFunds = false
+        )
+
+        val response = StatusCheckResult(
+          fullName = "name",
+          dateOfBirth = LocalDate.now,
+          nationality = nationality.name,
+          statuses = List(immigrationStatusWithSettledStatus)
+        )
+
+        when(mockConnector.checkStatus(any(), any())(any())).thenReturn(Future.successful(response))
+
+        val result = service.settledStatusStartDate(nino, model, correlationId)(hc).futureValue
+
+        result.value mustEqual settledStatusDate
+        verify(mockConnector, times(1)).checkStatus(any(), any())(any())
+      }
+    }
+
+    "and the applicant is not an EU national" - {
+
+      "must return None" in {
+
+        val nationality = Nationality.allNationalities.filter(_.group == NationalityGroup.NonEea).head
+        val model = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(nationalities = NonEmptyList(nationality, Nil)))
 
         val result = service.settledStatusStartDate(nino, model, correlationId)(hc).futureValue
 
@@ -121,71 +149,18 @@ class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with Befor
       }
     }
 
-    "when the check immigration status feature is on" - {
+    "and the connector call fails" - {
 
-      "and the applicant is an EU national" - {
+      "must return None" in {
 
-        "must return the result of the call to check immigration status" in {
+        val nationality = Nationality.allNationalities.filter(_.group == NationalityGroup.Eea).head
+        val model = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(nationalities = NonEmptyList(nationality, Nil)))
 
-          val nationality = Nationality.allNationalities.filter(_.group == NationalityGroup.Eea).head
-          val model = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(nationalities = NonEmptyList(nationality, Nil)))
-          val settledStatusDate = LocalDate.now
+        when(mockConnector.checkStatus(any(), any())(any())).thenReturn(Future.failed(new RuntimeException("foo")))
 
-          val immigrationStatusWithSettledStatus = ImmigrationStatus(
-            statusStartDate = settledStatusDate,
-            statusEndDate = None,
-            productType = eus,
-            immigrationStatus = ilr,
-            noRecourseToPublicFunds = false
-          )
+        val result = service.settledStatusStartDate(nino, model, correlationId)(hc).futureValue
 
-          val response = StatusCheckResult(
-            fullName = "name",
-            dateOfBirth = LocalDate.now,
-            nationality = nationality.name,
-            statuses = List(immigrationStatusWithSettledStatus)
-          )
-
-          when(mockFeatureFlags.checkImmigrationStatus).thenReturn(true)
-          when(mockConnector.checkStatus(any(), any())(any())).thenReturn(Future.successful(response))
-
-          val result = service.settledStatusStartDate(nino, model, correlationId)(hc).futureValue
-
-          result.value mustEqual settledStatusDate
-          verify(mockConnector, times(1)).checkStatus(any(), any())(any())
-        }
-      }
-
-      "and the applicant is not an EU national" - {
-
-        "must return None" in {
-
-          val nationality = Nationality.allNationalities.filter(_.group == NationalityGroup.NonEea).head
-          val model = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(nationalities = NonEmptyList(nationality, Nil)))
-
-          when(mockFeatureFlags.checkImmigrationStatus).thenReturn(true)
-
-          val result = service.settledStatusStartDate(nino, model, correlationId)(hc).futureValue
-
-          result must not be defined
-          verify(mockConnector, never).checkStatus(any(), any())(any())
-        }
-      }
-
-      "and the connector call fails" - {
-
-        "must return None" in {
-
-          val nationality = Nationality.allNationalities.filter(_.group == NationalityGroup.Eea).head
-          val model = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(nationalities = NonEmptyList(nationality, Nil)))
-
-          when(mockFeatureFlags.checkImmigrationStatus).thenReturn(true)
-          when(mockConnector.checkStatus(any(), any())(any())).thenReturn(Future.failed(new RuntimeException("foo")))
-
-          val result = service.settledStatusStartDate(nino, model, correlationId)(hc).futureValue
-
-          result must not be defined
-        }
+        result must not be defined
       }
     }
   }

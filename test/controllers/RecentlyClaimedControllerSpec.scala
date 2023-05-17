@@ -17,7 +17,6 @@
 package controllers
 
 import base.SpecBase
-import config.FeatureFlags
 import forms.RecentlyClaimedFormProvider
 import models.{Done, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
@@ -37,9 +36,6 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
   private val formProvider = new RecentlyClaimedFormProvider()
   private val form = formProvider()
   private val waypoints = EmptyWaypoints
-  private val mockFeatureFlags = mock[FeatureFlags]
-  private val recentlyClaimedPage = new RecentlyClaimedPage(mockFeatureFlags)
-  when(mockFeatureFlags.allowAuthenticatedSessions) thenReturn false
 
   private lazy val anyChildLivedWithOthersRoute = routes.RecentlyClaimedController.onPageLoad(waypoints).url
 
@@ -63,7 +59,7 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(recentlyClaimedPage, true).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(RecentlyClaimedPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -98,10 +94,10 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(recentlyClaimedPage, true).success.value
+        val expectedAnswers = emptyUserAnswers.set(RecentlyClaimedPage, true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual recentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual RecentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -158,10 +154,10 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(recentlyClaimedPage, true).success.value
+        val expectedAnswers = emptyUserAnswers.set(RecentlyClaimedPage, true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual recentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual RecentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
       }
     }
 
@@ -184,10 +180,10 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.copy(nino = Some("nino")).set(recentlyClaimedPage, true).success.value
+        val expectedAnswers = emptyUserAnswers.copy(nino = Some("nino")).set(RecentlyClaimedPage, true).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual recentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual RecentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
       }
     }
   }

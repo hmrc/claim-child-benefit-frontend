@@ -159,14 +159,12 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
       }
     }
 
-    "must return OK and audit the download for onDownload when user answers are complete and auditing is enabled" in {
+    "must return OK and audit the download for onDownload when user answers are complete" in {
 
       val mockAuditService = mock[AuditService]
       val mockFop = mock[PlayFop]
-      val mockFeatureFlags = mock[FeatureFlags]
       val mockBrmsService = mock[BrmsService]
       when(mockFop.processTwirlXml(any(), any(), any(), any())) thenReturn "hello".getBytes
-      when(mockFeatureFlags.auditDownload) thenReturn true
       when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(BirthRegistrationMatchingResult.Matched)
 
       val application =
@@ -174,7 +172,6 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
           .overrides(
             bind[PlayFop].toInstance(mockFop),
             bind[AuditService].toInstance(mockAuditService),
-            bind[FeatureFlags].toInstance(mockFeatureFlags),
             bind[BrmsService].toInstance(mockBrmsService)
           )
           .build()
@@ -188,38 +185,6 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
         contentAsBytes(result).decodeString(Charset.defaultCharset()) mustEqual "hello"
 
         verify(mockAuditService, times(1)).auditDownload(any())(any())
-      }
-    }
-
-    "must return OK and not audit the download for onDownload when user answers are complete and auditing is disabled" in {
-
-      val mockAuditService = mock[AuditService]
-      val mockFop = mock[PlayFop]
-      val mockFeatureFlags = mock[FeatureFlags]
-      val mockBrmsService = mock[BrmsService]
-      when(mockFop.processTwirlXml(any(), any(), any(), any())) thenReturn "hello".getBytes
-      when(mockFeatureFlags.auditDownload) thenReturn false
-      when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(BirthRegistrationMatchingResult.Matched)
-
-      val application =
-        applicationBuilder(userAnswers = Some(completeAnswers))
-          .overrides(
-            bind[PlayFop].toInstance(mockFop),
-            bind[AuditService].toInstance(mockAuditService),
-            bind[FeatureFlags].toInstance(mockFeatureFlags),
-            bind[BrmsService].toInstance(mockBrmsService)
-          )
-          .build()
-
-      running(application) {
-        val request = FakeRequest(GET, routes.PrintController.onDownload.url)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsBytes(result).decodeString(Charset.defaultCharset()) mustEqual "hello"
-
-        verify(mockAuditService, never()).auditDownload(any())(any())
       }
     }
 
