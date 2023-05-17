@@ -35,13 +35,6 @@ class Module extends play.api.inject.Module {
         Seq(bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser].eagerly())
       }
 
-    val identifierActionBinding: Binding[_] =
-      if (configuration.get[Boolean]("features.allow-authenticated-sessions")) {
-        bind[IdentifierAction].to[OptionalAuthIdentifierAction].eagerly
-      } else {
-        bind[IdentifierAction].to[SessionIdentifierAction].eagerly
-      }
-
     val submissionLimiterBinding: Binding[_] =
       if (configuration.get[String]("features.submission-limiter") == "allow-list") {
         bind[SubmissionLimiter].to[SubmissionsLimitedByAllowList]
@@ -64,7 +57,7 @@ class Module extends play.api.inject.Module {
       bind[Clock].toInstance(Clock.systemUTC()),
       bind[FeatureFlags].toSelf.eagerly,
       bind[Encrypter with Decrypter].toProvider[CryptoProvider].eagerly,
-      identifierActionBinding,
+      bind[IdentifierAction].to[OptionalAuthIdentifierAction].eagerly,
       submissionLimiterBinding,
       supplementaryDataServiceBinding
     ) ++ authTokenInitialiserBindings
