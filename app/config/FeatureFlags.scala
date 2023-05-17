@@ -24,7 +24,6 @@ class FeatureFlags @Inject()(configuration: Configuration) {
 
   val verifyBankDetails: Boolean             = configuration.get[Boolean]("features.verify-bank-details")
   val matchBirthRegistrationDetails: Boolean = configuration.get[Boolean]("features.match-birth-registration-details")
-  val allowSubmissionToCbs: Boolean          = configuration.get[Boolean]("features.allow-submission-to-cbs")
   val callBankAccountInsights: Boolean       = configuration.get[Boolean]("features.call-bank-account-insights")
   val checkImmigrationStatus: Boolean        = configuration.get[Boolean]("features.check-immigration-status")
   val submitOlderChildrenToCbs: Boolean      = configuration.get[Boolean]("features.submit-older-children-to-cbs")

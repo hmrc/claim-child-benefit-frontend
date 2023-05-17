@@ -31,7 +31,6 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import pages._
 import pages.applicant._
 import pages.child._
 import pages.partner._
@@ -63,7 +62,6 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
   }
 
   private val submissionService = new ClaimSubmissionService(
-    mockFeatureFlags,
     mockConnector,
     mockSubmissionLimiter,
     mockSupplementaryDataService,
@@ -132,236 +130,207 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
 
   ".canSubmit" - {
 
-    "when the submission feature is disabled" - {
+    "and the user is unauthenticated" - {
 
       "must be false" in {
 
-        val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
+        val identifierRequest = UnauthenticatedIdentifierRequest(baseRequest, userId)
         val request = DataRequest(identifierRequest, userId, basicUserAnswers)
 
-        when(mockFeatureFlags.allowSubmissionToCbs) thenReturn false
         when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
 
         submissionService.canSubmit(request).futureValue mustEqual false
       }
     }
 
-    "when the submission feature is enabled" - {
+    "and the user is authenticated" - {
 
-      "and the user is unauthenticated" - {
+      "must be false when the submission limiter returns false" in {
 
-        "must be false" in {
+        val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
+        val request = DataRequest(identifierRequest, userId, basicUserAnswers)
 
-          val identifierRequest = UnauthenticatedIdentifierRequest(baseRequest, userId)
-          val request = DataRequest(identifierRequest, userId, basicUserAnswers)
+        when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
+        when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(false)
 
-          when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
-          when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
+        submissionService.canSubmit(request).futureValue mustEqual false
 
-          submissionService.canSubmit(request).futureValue mustEqual false
-        }
+        verify(mockSubmissionLimiter, times(1)).allowedToSubmit(eqTo(nino.nino))(any())
       }
 
-      "and the user is authenticated" - {
+      "must be false if the user's answers are incomplete and cannot be built into a journey model" in {
 
-        "must be false when the submission limiter returns false" in {
+        val answers = basicUserAnswers.remove(ApplicantPhoneNumberPage).success.value
+        val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
+        val request = DataRequest(identifierRequest, userId, answers)
+
+        when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
+        when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
+
+        submissionService.canSubmit(request).futureValue mustEqual false
+      }
+
+      "must be false when a child in the claim is over 6 months old" in {
+
+        val dob = LocalDate.now(clockAtFixedInstant).minusMonths(6).minusDays(1)
+        val answers = basicUserAnswers.set(ChildDateOfBirthPage(Index(0)), dob).success.value
+
+        val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
+        val request = DataRequest(identifierRequest, userId, answers)
+
+        when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
+        when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
+
+        submissionService.canSubmit(request).futureValue mustEqual false
+      }
+
+      "must be false when any documents need to be posted for a child" in {
+
+        val answers = basicUserAnswers.set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.OtherCountry).success.value
+
+        val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
+        val request = DataRequest(identifierRequest, userId, answers)
+
+        when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
+        when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
+
+        submissionService.canSubmit(request).futureValue mustEqual false
+      }
+
+      "must be false when the user's designatory details are not correct (name)" in {
+
+        val answers = basicUserAnswers.set(DesignatoryNamePage, adultName).success.value
+
+        val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
+        val request = DataRequest(identifierRequest, userId, answers)
+
+        when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
+        when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
+
+        submissionService.canSubmit(request).futureValue mustEqual false
+      }
+
+      "must be false when the user's designatory details are not correct (residential address)" in {
+
+        val answers = basicUserAnswers.set(DesignatoryAddressInUkPage, true).success.value
+
+        val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
+        val request = DataRequest(identifierRequest, userId, answers)
+
+        when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
+        when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
+
+        submissionService.canSubmit(request).futureValue mustEqual false
+      }
+
+      "must be false when the user's designatory details are not correct (correspondence address)" in {
+
+        val answers = basicUserAnswers.set(CorrespondenceAddressInUkPage, true).success.value
+
+        val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
+        val request = DataRequest(identifierRequest, userId, answers)
+
+        when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
+        when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
+
+        submissionService.canSubmit(request).futureValue mustEqual false
+      }
+
+      "must be false when the user's partner is claiming Child Benefit but no NINO is provided for them" in {
+
+        val claiming = Gen.oneOf(GettingPayments, NotGettingPayments, WaitingToHear).sample.value
+        val answers =
+          basicUserAnswers
+            .set(RelationshipStatusPage, RelationshipStatus.Married).success.value
+            .set(PartnerNamePage, adultName).success.value
+            .set(PartnerNinoKnownPage, false).success.value
+            .set(PartnerDateOfBirthPage, now).success.value
+            .set(PartnerNationalityPage(Index(0)), nationality).success.value
+            .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
+            .set(PartnerIsHmfOrCivilServantPage, false).success.value
+            .set(PartnerWorkedAbroadPage, false).success.value
+            .set(PartnerReceivedBenefitsAbroadPage, false).success.value
+            .set(PartnerClaimingChildBenefitPage, claiming).success.value
+            .set(PartnerEldestChildNamePage, childName).success.value
+            .set(PartnerEldestChildDateOfBirthPage, LocalDate.now).success.value
+            .set(WantToBePaidPage, false).success.value
+
+        val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
+        val request = DataRequest(identifierRequest, userId, answers)
+
+        when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
+        when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
+
+        submissionService.canSubmit(request).futureValue mustEqual false
+      }
+
+      "must be true when the submission limiter allows submission, they have not changed designatory details or added information, no children are over 6 or need to send documents" - {
+
+        "and the user does not have a partner" in {
 
           val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
           val request = DataRequest(identifierRequest, userId, basicUserAnswers)
 
-          when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
-          when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
-          when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(false)
-
-          submissionService.canSubmit(request).futureValue mustEqual false
-
-          verify(mockSubmissionLimiter, times(1)).allowedToSubmit(eqTo(nino.nino))(any())
-        }
-
-        "must be false if the user's answers are incomplete and cannot be built into a journey model" in {
-
-          val answers = basicUserAnswers.remove(ApplicantPhoneNumberPage).success.value
-          val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
-          val request = DataRequest(identifierRequest, userId, answers)
-
-          when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
           when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
           when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
 
-          submissionService.canSubmit(request).futureValue mustEqual false
+          submissionService.canSubmit(request).futureValue mustEqual true
         }
 
-        "must be false when a child in the claim is over 6 months old" in {
+        "and the user has a partner" - {
 
-          val dob = LocalDate.now(clockAtFixedInstant).minusMonths(6).minusDays(1)
-          val answers = basicUserAnswers.set(ChildDateOfBirthPage(Index(0)), dob).success.value
+          "who is not claiming Child Benefit" in {
 
-          val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
-          val request = DataRequest(identifierRequest, userId, answers)
-
-          when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
-          when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
-          when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
-
-          submissionService.canSubmit(request).futureValue mustEqual false
-        }
-
-        "must be false when any documents need to be posted for a child" in {
-
-          val answers = basicUserAnswers.set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.OtherCountry).success.value
-
-          val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
-          val request = DataRequest(identifierRequest, userId, answers)
-
-          when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
-          when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
-          when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
-
-          submissionService.canSubmit(request).futureValue mustEqual false
-        }
-
-        "must be false when the user's designatory details are not correct (name)" in {
-
-          val answers = basicUserAnswers.set(DesignatoryNamePage, adultName).success.value
-
-          val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
-          val request = DataRequest(identifierRequest, userId, answers)
-
-          when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
-          when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
-          when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
-
-          submissionService.canSubmit(request).futureValue mustEqual false
-        }
-
-        "must be false when the user's designatory details are not correct (residential address)" in {
-
-          val answers = basicUserAnswers.set(DesignatoryAddressInUkPage, true).success.value
-
-          val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
-          val request = DataRequest(identifierRequest, userId, answers)
-
-          when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
-          when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
-          when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
-
-          submissionService.canSubmit(request).futureValue mustEqual false
-        }
-
-        "must be false when the user's designatory details are not correct (correspondence address)" in {
-
-          val answers = basicUserAnswers.set(CorrespondenceAddressInUkPage, true).success.value
-
-          val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
-          val request = DataRequest(identifierRequest, userId, answers)
-
-          when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
-          when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
-          when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
-
-          submissionService.canSubmit(request).futureValue mustEqual false
-        }
-
-        "must be false when the user's partner is claiming Child Benefit but no NINO is provided for them" in {
-
-          val claiming = Gen.oneOf(GettingPayments, NotGettingPayments, WaitingToHear).sample.value
-          val answers =
-            basicUserAnswers
-              .set(RelationshipStatusPage, RelationshipStatus.Married).success.value
-              .set(PartnerNamePage, adultName).success.value
-              .set(PartnerNinoKnownPage, false).success.value
-              .set(PartnerDateOfBirthPage, now).success.value
-              .set(PartnerNationalityPage(Index(0)), nationality).success.value
-              .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-              .set(PartnerIsHmfOrCivilServantPage, false).success.value
-              .set(PartnerWorkedAbroadPage, false).success.value
-              .set(PartnerReceivedBenefitsAbroadPage, false).success.value
-              .set(PartnerClaimingChildBenefitPage, claiming).success.value
-              .set(PartnerEldestChildNamePage, childName).success.value
-              .set(PartnerEldestChildDateOfBirthPage, LocalDate.now).success.value
-              .set(WantToBePaidPage, false).success.value
-
-          val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
-          val request = DataRequest(identifierRequest, userId, answers)
-
-          when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
-          when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
-          when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
-
-          submissionService.canSubmit(request).futureValue mustEqual false
-        }
-
-        "must be true when the submission limiter allows submission, they have not changed designatory details or added information, no children are over 6 or need to send documents" - {
-
-          "and the user does not have a partner" in {
+            val answers =
+              basicUserAnswers
+                .set(RelationshipStatusPage, RelationshipStatus.Married).success.value
+                .set(PartnerNamePage, adultName).success.value
+                .set(PartnerNinoKnownPage, false).success.value
+                .set(PartnerDateOfBirthPage, now).success.value
+                .set(PartnerNationalityPage(Index(0)), nationality).success.value
+                .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
+                .set(PartnerIsHmfOrCivilServantPage, false).success.value
+                .set(PartnerWorkedAbroadPage, false).success.value
+                .set(PartnerReceivedBenefitsAbroadPage, false).success.value
+                .set(PartnerClaimingChildBenefitPage, NotClaiming).success.value
+                .set(WantToBePaidPage, false).success.value
 
             val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
-            val request = DataRequest(identifierRequest, userId, basicUserAnswers)
+            val request = DataRequest(identifierRequest, userId, answers)
 
-            when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
             when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
             when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
 
             submissionService.canSubmit(request).futureValue mustEqual true
           }
 
-          "and the user has a partner" - {
+          "who is claiming Child Benefit, and the user has supplied their NINO" in {
 
-            "who is not claiming Child Benefit" in {
+            val claiming = Gen.oneOf(GettingPayments, NotGettingPayments, WaitingToHear).sample.value
+            val answers =
+              basicUserAnswers
+                .set(RelationshipStatusPage, RelationshipStatus.Married).success.value
+                .set(PartnerNamePage, adultName).success.value
+                .set(PartnerNinoKnownPage, true).success.value
+                .set(PartnerNinoPage, nino).success.value
+                .set(PartnerDateOfBirthPage, now).success.value
+                .set(PartnerNationalityPage(Index(0)), nationality).success.value
+                .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
+                .set(PartnerIsHmfOrCivilServantPage, false).success.value
+                .set(PartnerWorkedAbroadPage, false).success.value
+                .set(PartnerReceivedBenefitsAbroadPage, false).success.value
+                .set(PartnerClaimingChildBenefitPage, claiming).success.value
+                .set(PartnerEldestChildNamePage, childName).success.value
+                .set(PartnerEldestChildDateOfBirthPage, LocalDate.now).success.value
+                .set(WantToBePaidPage, false).success.value
 
-              val answers =
-                basicUserAnswers
-                  .set(RelationshipStatusPage, RelationshipStatus.Married).success.value
-                  .set(PartnerNamePage, adultName).success.value
-                  .set(PartnerNinoKnownPage, false).success.value
-                  .set(PartnerDateOfBirthPage, now).success.value
-                  .set(PartnerNationalityPage(Index(0)), nationality).success.value
-                  .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-                  .set(PartnerIsHmfOrCivilServantPage, false).success.value
-                  .set(PartnerWorkedAbroadPage, false).success.value
-                  .set(PartnerReceivedBenefitsAbroadPage, false).success.value
-                  .set(PartnerClaimingChildBenefitPage, NotClaiming).success.value
-                  .set(WantToBePaidPage, false).success.value
+            val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
+            val request = DataRequest(identifierRequest, userId, answers)
 
-              val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
-              val request = DataRequest(identifierRequest, userId, answers)
+            when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
+            when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
 
-              when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
-              when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
-              when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
-
-              submissionService.canSubmit(request).futureValue mustEqual true
-            }
-
-            "who is claiming Child Benefit, and the user has supplied their NINO" in {
-
-              val claiming = Gen.oneOf(GettingPayments, NotGettingPayments, WaitingToHear).sample.value
-              val answers =
-                basicUserAnswers
-                  .set(RelationshipStatusPage, RelationshipStatus.Married).success.value
-                  .set(PartnerNamePage, adultName).success.value
-                  .set(PartnerNinoKnownPage, true).success.value
-                  .set(PartnerNinoPage, nino).success.value
-                  .set(PartnerDateOfBirthPage, now).success.value
-                  .set(PartnerNationalityPage(Index(0)), nationality).success.value
-                  .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-                  .set(PartnerIsHmfOrCivilServantPage, false).success.value
-                  .set(PartnerWorkedAbroadPage, false).success.value
-                  .set(PartnerReceivedBenefitsAbroadPage, false).success.value
-                  .set(PartnerClaimingChildBenefitPage, claiming).success.value
-                  .set(PartnerEldestChildNamePage, childName).success.value
-                  .set(PartnerEldestChildDateOfBirthPage, LocalDate.now).success.value
-                  .set(WantToBePaidPage, false).success.value
-
-              val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
-              val request = DataRequest(identifierRequest, userId, answers)
-
-              when(mockFeatureFlags.allowSubmissionToCbs) thenReturn true
-              when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
-              when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
-
-              submissionService.canSubmit(request).futureValue mustEqual true
-            }
+            submissionService.canSubmit(request).futureValue mustEqual true
           }
         }
       }

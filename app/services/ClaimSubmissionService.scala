@@ -31,7 +31,6 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class ClaimSubmissionService @Inject()(
-                                        featureFlags: FeatureFlags,
                                         connector: ClaimChildBenefitConnector,
                                         submissionLimiter: SubmissionLimiter,
                                         supplementaryDataService: SupplementaryDataService,
@@ -40,24 +39,20 @@ class ClaimSubmissionService @Inject()(
                                       ) extends Logging {
 
   def canSubmit(request: DataRequest[_])(implicit ec: ExecutionContext): Future[Boolean] =
-    if (featureFlags.allowSubmissionToCbs) {
-      if (request.signedIn) {
+    if (request.signedIn) {
 
-        val nino = request.request.asInstanceOf[AuthenticatedIdentifierRequest[_]].nino // TODO tidy this
-        val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+      val nino = request.request.asInstanceOf[AuthenticatedIdentifierRequest[_]].nino // TODO tidy this
+      val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-        submissionLimiter.allowedToSubmit(nino)(hc).flatMap {
-          case true =>
-            journeyModelService.build(request.userAnswers).right.map {
-              journeyModel =>
-                Future.successful(journeyModel.reasonsNotToSubmit.isEmpty)
-            }.getOrElse(Future.successful(false))
+      submissionLimiter.allowedToSubmit(nino)(hc).flatMap {
+        case true =>
+          journeyModelService.build(request.userAnswers).right.map {
+            journeyModel =>
+              Future.successful(journeyModel.reasonsNotToSubmit.isEmpty)
+          }.getOrElse(Future.successful(false))
 
-          case false =>
-            Future.successful(false)
-        }
-      } else {
-        Future.successful(false)
+        case false =>
+          Future.successful(false)
       }
     } else {
       Future.successful(false)
