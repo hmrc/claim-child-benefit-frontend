@@ -31,8 +31,6 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait SubmissionLimiter {
 
-  def allowedToSubmit(nino: String)(implicit hc: HeaderCarrier): Future[Boolean]
-
   def recordSubmission(nino: String, model: JourneyModel, claim: Claim, correlationId: UUID)(implicit hc: HeaderCarrier): Future[Done]
 }
 
@@ -45,9 +43,6 @@ class SubmissionsLimitedByAllowList @Inject()(
                                              )(implicit ec: ExecutionContext) extends SubmissionLimiter {
 
   private val submissionFeature: String = configuration.get[String]("allow-list-features.submission")
-
-  override def allowedToSubmit(nino: String)(implicit hc: HeaderCarrier): Future[Boolean] =
-    userAllowListConnector.check(submissionFeature, nino)
 
   override def recordSubmission(nino: String, model: JourneyModel, claim: Claim, correlationId: UUID)(implicit hc: HeaderCarrier): Future[Done] = {
     auditService.auditSubmissionToCbs(model, claim, correlationId)
@@ -69,17 +64,6 @@ class SubmissionsLimitedByThrottle @Inject()(
 
   private val submissionFeature: String = configuration.get[String]("allow-list-features.submission")
 
-  override def allowedToSubmit(nino: String)(implicit hc: HeaderCarrier): Future[Boolean] =
-    connector
-      .checkThrottleLimit()
-      .flatMap { response =>
-        if (response.limitReached) {
-          userAllowListConnector.check(submissionFeature, nino)
-        } else {
-          Future.successful(true)
-        }
-      }
-
   override def recordSubmission(nino: String, model: JourneyModel, claim: Claim, correlationId: UUID)(implicit hc: HeaderCarrier): Future[Done] =
     connector
       .incrementThrottleCount()
@@ -98,9 +82,6 @@ class SubmissionsNotLimited @Inject()(
                                        clock: Clock,
                                        claimChildBenefitConnector: ClaimChildBenefitConnector
                                      )(implicit ec: ExecutionContext) extends SubmissionLimiter {
-
-  override def allowedToSubmit(nino: String)(implicit hc: HeaderCarrier): Future[Boolean] =
-    Future.successful(true)
 
   override def recordSubmission(nino: String, model: JourneyModel, claim: Claim, correlationId: UUID)(implicit hc: HeaderCarrier): Future[Done] = {
     auditService.auditSubmissionToCbs(model, claim, correlationId)

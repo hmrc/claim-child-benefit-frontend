@@ -126,25 +126,6 @@ class SubmissionLimiterSpec
       stubClock
     )
 
-    ".allowedToSubmit" - {
-
-      "must return true when the connector's checkAllowlist returns true" in {
-
-        when(mockUserAllowListConnector.check(any(), any())(any())) thenReturn Future.successful(true)
-
-        limiter.allowedToSubmit(nino).futureValue mustEqual true
-
-        verify(mockUserAllowListConnector, times(1)).check(eqTo("Submission"), eqTo(nino))(any())
-      }
-
-      "must return false when the connector's checkAllowlist returns false" in {
-
-        when(mockUserAllowListConnector.check(any(), any())(any())) thenReturn Future.successful(false)
-
-        limiter.allowedToSubmit(nino).futureValue mustEqual false
-      }
-    }
-
     "recordSubmission" - {
 
       "must audit the submission, record the recent claim and return Done" in {
@@ -163,13 +144,6 @@ class SubmissionLimiterSpec
 
     val limiter = new SubmissionsNotLimited(mockAuditService, stubClock, mockClaimChildBenefitConnector)
 
-    ".allowedToSubmit" - {
-
-      "must return true" in {
-
-        limiter.allowedToSubmit(nino).futureValue mustEqual true
-      }
-    }
 
     ".recordSubmission" - {
 
@@ -194,36 +168,7 @@ class SubmissionLimiterSpec
       mockAuditService,
       stubClock
     )
-
-    ".allowedToSubmit" - {
-
-      "must return true when the connector's checkThrottleLimit returns a response that the limit has not been reached" in {
-
-        val response = CheckLimitResponse(limitReached = false)
-        when(mockClaimChildBenefitConnector.checkThrottleLimit()(any())) thenReturn Future.successful(response)
-
-        limiter.allowedToSubmit(nino).futureValue mustEqual true
-      }
-
-      "must return true when the connector's checkThrottleLimit returns a response that the limit has been reached and the user is on the allowlist" in {
-
-        val response = CheckLimitResponse(limitReached = true)
-        when(mockClaimChildBenefitConnector.checkThrottleLimit()(any())) thenReturn Future.successful(response)
-        when(mockUserAllowListConnector.check(any(), any())(any())) thenReturn Future.successful(true)
-
-        limiter.allowedToSubmit(nino).futureValue mustEqual true
-      }
-
-      "must return false when the connector's checkThrottleLimit returns a response that the limit has been reached and the user is not on the allowlist" in {
-
-        val response = CheckLimitResponse(limitReached = true)
-        when(mockClaimChildBenefitConnector.checkThrottleLimit()(any())) thenReturn Future.successful(response)
-        when(mockUserAllowListConnector.check(any(), any())(any())) thenReturn Future.successful(false)
-
-        limiter.allowedToSubmit(nino).futureValue mustEqual false
-      }
-    }
-
+    
     ".recordSubmission" - {
 
       "must increment the throttle counter, audit the submission, record the recent claim and return Done" in {

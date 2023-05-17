@@ -16,12 +16,11 @@
 
 package services
 
-import config.FeatureFlags
 import connectors.ClaimChildBenefitConnector
 import logging.Logging
 import models.{AdditionalArchiveDetails, Done}
 import models.domain.Claim
-import models.requests.{AuthenticatedIdentifierRequest, DataRequest}
+import models.requests.DataRequest
 import services.ClaimSubmissionService.{CannotBuildJourneyModelException, NotAuthenticatedException}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.RequestOps._
@@ -38,22 +37,12 @@ class ClaimSubmissionService @Inject()(
                                         journeyModelService: JourneyModelService
                                       ) extends Logging {
 
-  def canSubmit(request: DataRequest[_])(implicit ec: ExecutionContext): Future[Boolean] =
+  def canSubmit(request: DataRequest[_]): Future[Boolean] =
     if (request.signedIn) {
-
-      val nino = request.request.asInstanceOf[AuthenticatedIdentifierRequest[_]].nino // TODO tidy this
-      val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
-
-      submissionLimiter.allowedToSubmit(nino)(hc).flatMap {
-        case true =>
-          journeyModelService.build(request.userAnswers).right.map {
-            journeyModel =>
-              Future.successful(journeyModel.reasonsNotToSubmit.isEmpty)
-          }.getOrElse(Future.successful(false))
-
-        case false =>
-          Future.successful(false)
-      }
+      journeyModelService.build(request.userAnswers).right.map {
+        journeyModel =>
+          Future.successful(journeyModel.reasonsNotToSubmit.isEmpty)
+      }.getOrElse(Future.successful(false))
     } else {
       Future.successful(false)
     }
