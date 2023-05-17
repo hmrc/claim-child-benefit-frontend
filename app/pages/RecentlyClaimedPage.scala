@@ -16,15 +16,12 @@
 
 package pages
 
-import config.FeatureFlags
 import controllers.routes
 import models.UserAnswers
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-import javax.inject.Inject
-
-class RecentlyClaimedPage @Inject()(featureFlags: FeatureFlags) extends QuestionPage[Boolean] {
+object RecentlyClaimedPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString
 
@@ -39,10 +36,10 @@ class RecentlyClaimedPage @Inject()(featureFlags: FeatureFlags) extends Question
         AlreadyClaimedPage
 
       case false =>
-        if (featureFlags.showSignInPage && !answers.isAuthenticated) {
-          SignInPage
-        } else {
+        if (answers.isAuthenticated) {
           TaskListPage
+        } else {
+          SignInPage
         }
     }.orRecover
 }
