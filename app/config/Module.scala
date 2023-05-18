@@ -19,7 +19,7 @@ package config
 import controllers.actions._
 import play.api.inject.Binding
 import play.api.{Configuration, Environment}
-import services.{NoOpSupplementaryDataService, SubmissionLimiter, SubmissionsLimitedByAllowList, SubmissionsLimitedByThrottle, SubmissionsNotLimited, SupplementaryDataService, SupplementaryDataServiceImpl}
+import services.{NoOpSupplementaryDataService, SupplementaryDataService, SupplementaryDataServiceImpl}
 import uk.gov.hmrc.crypto.{Decrypter, Encrypter}
 
 import java.time.Clock
@@ -33,15 +33,6 @@ class Module extends play.api.inject.Module {
         Seq(bind[InternalAuthTokenInitialiser].to[InternalAuthTokenInitialiserImpl].eagerly())
       } else {
         Seq(bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser].eagerly())
-      }
-
-    val submissionLimiterBinding: Binding[_] =
-      if (configuration.get[String]("features.submission-limiter") == "allow-list") {
-        bind[SubmissionLimiter].to[SubmissionsLimitedByAllowList]
-      } else if (configuration.get[String]("features.submission-limiter") == "throttle") {
-        bind[SubmissionLimiter].to[SubmissionsLimitedByThrottle]
-      } else {
-        bind[SubmissionLimiter].to[SubmissionsNotLimited]
       }
 
     val supplementaryDataServiceBinding: Binding[_] =
@@ -58,7 +49,6 @@ class Module extends play.api.inject.Module {
       bind[FeatureFlags].toSelf.eagerly,
       bind[Encrypter with Decrypter].toProvider[CryptoProvider].eagerly,
       bind[IdentifierAction].to[OptionalAuthIdentifierAction].eagerly,
-      submissionLimiterBinding,
       supplementaryDataServiceBinding
     ) ++ authTokenInitialiserBindings
   }

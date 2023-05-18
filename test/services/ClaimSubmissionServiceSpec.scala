@@ -48,7 +48,6 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
 
   private val mockFeatureFlags = mock[FeatureFlags]
   private val mockConnector = mock[ClaimChildBenefitConnector]
-  private val mockSubmissionLimiter = mock[SubmissionLimiter]
   private val mockSupplementaryDataService = mock[SupplementaryDataService]
   private val mockImmigrationStatusService = mock[ImmigrationStatusService]
   private val mockAuditService = mock[AuditService]
@@ -57,13 +56,11 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
   override def beforeEach(): Unit = {
     Mockito.reset(mockFeatureFlags)
     Mockito.reset(mockConnector)
-    Mockito.reset(mockSubmissionLimiter)
     Mockito.reset(mockSupplementaryDataService)
     Mockito.reset(mockImmigrationStatusService)
     Mockito.reset(mockAuditService)
     super.beforeEach()
   }
-
 
   private val nino = arbitrary[Nino].sample.value
   private val userId = "user id"
