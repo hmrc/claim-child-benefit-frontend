@@ -21,7 +21,7 @@ import connectors.ClaimChildBenefitConnector
 import logging.Logging
 import models.domain.Claim
 import models.requests.DataRequest
-import models.{AdditionalArchiveDetails, Done, RecentClaim}
+import models.{AdditionalArchiveDetails, Done, RecentClaim, TaxChargeChoice}
 import services.ClaimSubmissionService.{CannotBuildJourneyModelException, NotAuthenticatedException}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.RequestOps._
@@ -70,7 +70,7 @@ class ClaimSubmissionService @Inject()(
               .flatMap { _ =>
 
                 auditService.auditSubmissionToCbs(model, claim, correlationId)(hc)
-                val recentClaim = RecentClaim(nino, Instant.now(clock))
+                val recentClaim = RecentClaim(nino, Instant.now(clock), TaxChargeChoice.NotRecorded)
 
                 connector
                   .recordRecentClaim(recentClaim)(hc)

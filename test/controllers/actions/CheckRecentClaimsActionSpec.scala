@@ -18,21 +18,21 @@ package controllers.actions
 
 import connectors.ClaimChildBenefitConnector
 import controllers.routes
-import models.RecentClaim
 import models.requests.{AuthenticatedIdentifierRequest, IdentifierRequest, UnauthenticatedIdentifierRequest}
+import models.{RecentClaim, TaxChargeChoice}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.{Mockito, MockitoSugar}
-import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import org.scalatest.{BeforeAndAfterEach, OptionValues}
+import play.api.mvc.Result
 import play.api.mvc.Results.Redirect
-import play.api.mvc.{ActionFilter, Result}
 import play.api.test.FakeRequest
 
 import java.time.Instant
-import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class CheckRecentClaimsActionSpec
   extends AnyFreeSpec
@@ -63,7 +63,7 @@ class CheckRecentClaimsActionSpec
 
       "must redirect to Recently Submitted when the user has recently submitted a claim" in {
 
-        val recentClaim = RecentClaim("nino", Instant.now)
+        val recentClaim = RecentClaim("nino", Instant.now, TaxChargeChoice.NotRecorded)
         when(mockConnector.getRecentClaim()(any())) thenReturn Future.successful(Some(recentClaim))
 
         val action = new Harness(mockConnector)

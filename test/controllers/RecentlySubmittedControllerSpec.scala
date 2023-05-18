@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import connectors.ClaimChildBenefitConnector
-import models.RecentClaim
+import models.{RecentClaim, TaxChargeChoice}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.when
@@ -46,7 +46,7 @@ class RecentlySubmittedControllerSpec extends SpecBase with MockitoSugar with Be
 
     "must return OK and the correct view for a GET" in {
 
-      val recentClaim = RecentClaim("nino", fixedInstant)
+      val recentClaim = RecentClaim("nino", fixedInstant, TaxChargeChoice.NotRecorded)
       val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy").withZone(ZoneId.systemDefault())
       val formattedDate = formatter.format(fixedInstant)
 

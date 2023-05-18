@@ -16,13 +16,26 @@
 
 package models
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
 import java.time.Instant
 
-final case class RecentClaim(nino: String, created: Instant)
+final case class RecentClaim(
+                              nino: String,
+                              created: Instant,
+                              taxChargeChoice: TaxChargeChoice
+                            )
 
 object RecentClaim {
 
-  lazy implicit val format: OFormat[RecentClaim] = Json.format
+  implicit lazy val reads: Reads[RecentClaim] =
+    (
+      (__ \ "nino").read[String] and
+      (__ \ "created").read[Instant] and
+      (__ \ "taxChargeChoice").read[TaxChargeChoice].orElse(Reads.pure(TaxChargeChoice.NotRecorded))
+    )(RecentClaim.apply _)
+
+  implicit lazy val writes: OWrites[RecentClaim] = Json.writes
 }
+
