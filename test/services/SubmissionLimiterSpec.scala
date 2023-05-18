@@ -168,7 +168,7 @@ class SubmissionLimiterSpec
       mockAuditService,
       stubClock
     )
-    
+
     ".recordSubmission" - {
 
       "must increment the throttle counter, audit the submission, record the recent claim and return Done" in {

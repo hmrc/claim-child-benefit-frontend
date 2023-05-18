@@ -16,25 +16,28 @@
 
 package services
 
+import audit.AuditService
 import connectors.ClaimChildBenefitConnector
 import logging.Logging
-import models.{AdditionalArchiveDetails, Done}
 import models.domain.Claim
 import models.requests.DataRequest
+import models.{AdditionalArchiveDetails, Done, RecentClaim}
 import services.ClaimSubmissionService.{CannotBuildJourneyModelException, NotAuthenticatedException}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.RequestOps._
 
+import java.time.{Clock, Instant}
 import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class ClaimSubmissionService @Inject()(
                                         connector: ClaimChildBenefitConnector,
-                                        submissionLimiter: SubmissionLimiter,
                                         supplementaryDataService: SupplementaryDataService,
                                         immigrationStatusService: ImmigrationStatusService,
-                                        journeyModelService: JourneyModelService
+                                        journeyModelService: JourneyModelService,
+                                        auditService: AuditService,
+                                        clock: Clock
                                       ) extends Logging {
 
   def canSubmit(request: DataRequest[_]): Future[Boolean] =
@@ -65,19 +68,23 @@ class ClaimSubmissionService @Inject()(
             connector
               .submitClaim(claim, correlationId)(hc)
               .flatMap { _ =>
-                submissionLimiter
-                  .recordSubmission(nino, model, claim, correlationId)(hc)
+
+                auditService.auditSubmissionToCbs(model, claim, correlationId)(hc)
+                val recentClaim = RecentClaim(nino, Instant.now(clock))
+
+                connector
+                  .recordRecentClaim(recentClaim)(hc)
                   .recover {
                     case e: Exception =>
-                      logger.error("Failed to record submission: " + e.getMessage)
+                      logger.error("Failed to record recent submission: " + e.getMessage)
                       Done
                   }
               }.flatMap { _ =>
-              val additionalDetails = AdditionalArchiveDetails(settledStatusStartDate)
-              supplementaryDataService.submit(nino, model, correlationId, additionalDetails)(request).recover {
-                case e: Exception =>
-                  logger.error("Failed to submit supplementary data", e)
-                  Done
+                val additionalDetails = AdditionalArchiveDetails(settledStatusStartDate)
+                supplementaryDataService.submit(nino, model, correlationId, additionalDetails)(request).recover {
+                  case e: Exception =>
+                    logger.error("Failed to submit supplementary data", e)
+                    Done
               }
             }
         }
