@@ -16,6 +16,7 @@
 
 package services
 
+import audit.AuditService
 import base.SpecBase
 import config.FeatureFlags
 import connectors.ClaimChildBenefitConnector
@@ -39,7 +40,7 @@ import play.api.test.FakeRequest
 import services.ClaimSubmissionService._
 import uk.gov.hmrc.domain.Nino
 
-import java.time.LocalDate
+import java.time.{Clock, Instant, LocalDate, ZoneId}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -47,33 +48,28 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
 
   private val mockFeatureFlags = mock[FeatureFlags]
   private val mockConnector = mock[ClaimChildBenefitConnector]
-  private val mockSubmissionLimiter = mock[SubmissionLimiter]
   private val mockSupplementaryDataService = mock[SupplementaryDataService]
   private val mockImmigrationStatusService = mock[ImmigrationStatusService]
+  private val mockAuditService = mock[AuditService]
   private val journeyModelService = new JourneyModelService(mockFeatureFlags)
 
   override def beforeEach(): Unit = {
     Mockito.reset(mockFeatureFlags)
     Mockito.reset(mockConnector)
-    Mockito.reset(mockSubmissionLimiter)
     Mockito.reset(mockSupplementaryDataService)
     Mockito.reset(mockImmigrationStatusService)
+    Mockito.reset(mockAuditService)
     super.beforeEach()
   }
-
-  private val submissionService = new ClaimSubmissionService(
-    mockConnector,
-    mockSubmissionLimiter,
-    mockSupplementaryDataService,
-    mockImmigrationStatusService,
-    journeyModelService
-  )
 
   private val nino = arbitrary[Nino].sample.value
   private val userId = "user id"
   private val baseRequest = FakeRequest("", "")
+  private val now = Instant.now
+  private val recentClaim = RecentClaim(nino.nino, now)
+  private val stubClock = Clock.fixed(now, ZoneId.systemDefault())
 
-  private val now = LocalDate.now
+  private val today = LocalDate.now
   private val adultName = AdultName(None, "first", None, "last")
   private val currentUkAddress = UkAddress("line 1", None, "town", None, "AA11 1AA")
   private val phoneNumber = "07777 777777"
@@ -103,7 +99,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
       .set(ApplicantNinoKnownPage, false).success.value
       .set(ApplicantNamePage, adultName).success.value
       .set(ApplicantHasPreviousFamilyNamePage, false).success.value
-      .set(ApplicantDateOfBirthPage, now).success.value
+      .set(ApplicantDateOfBirthPage, today).success.value
       .set(ApplicantPhoneNumberPage, phoneNumber).success.value
       .set(ApplicantNationalityPage(Index(0)), nationality).success.value
       .set(ApplicantIsHmfOrCivilServantPage, false).success.value
@@ -116,7 +112,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
       .set(ChildNamePage(Index(0)), childName).success.value
       .set(ChildHasPreviousNamePage(Index(0)), false).success.value
       .set(ChildBiologicalSexPage(Index(0)), biologicalSex).success.value
-      .set(ChildDateOfBirthPage(Index(0)), now).success.value
+      .set(ChildDateOfBirthPage(Index(0)), today).success.value
       .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.England).success.value
       .set(BirthCertificateHasSystemNumberPage(Index(0)), true).success.value
       .set(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber).success.value
@@ -127,6 +123,16 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
       .set(ChildLivedWithAnyoneElsePage(Index(0)), false).success.value
       .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
       .set(WantToBePaidPage, false).success.value
+
+
+  private val submissionService = new ClaimSubmissionService(
+    mockConnector,
+    mockSupplementaryDataService,
+    mockImmigrationStatusService,
+    journeyModelService,
+    mockAuditService,
+    stubClock
+  )
 
   ".canSubmit" - {
 
@@ -145,19 +151,6 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
 
     "and the user is authenticated" - {
 
-      "must be false when the submission limiter returns false" in {
-
-        val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
-        val request = DataRequest(identifierRequest, userId, basicUserAnswers)
-
-        when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
-        when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(false)
-
-        submissionService.canSubmit(request).futureValue mustEqual false
-
-        verify(mockSubmissionLimiter, times(1)).allowedToSubmit(eqTo(nino.nino))(any())
-      }
-
       "must be false if the user's answers are incomplete and cannot be built into a journey model" in {
 
         val answers = basicUserAnswers.remove(ApplicantPhoneNumberPage).success.value
@@ -165,7 +158,6 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
         val request = DataRequest(identifierRequest, userId, answers)
 
         when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
-        when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
 
         submissionService.canSubmit(request).futureValue mustEqual false
       }
@@ -179,7 +171,6 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
         val request = DataRequest(identifierRequest, userId, answers)
 
         when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
-        when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
 
         submissionService.canSubmit(request).futureValue mustEqual false
       }
@@ -192,7 +183,6 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
         val request = DataRequest(identifierRequest, userId, answers)
 
         when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
-        when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
 
         submissionService.canSubmit(request).futureValue mustEqual false
       }
@@ -205,7 +195,6 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
         val request = DataRequest(identifierRequest, userId, answers)
 
         when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
-        when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
 
         submissionService.canSubmit(request).futureValue mustEqual false
       }
@@ -218,7 +207,6 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
         val request = DataRequest(identifierRequest, userId, answers)
 
         when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
-        when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
 
         submissionService.canSubmit(request).futureValue mustEqual false
       }
@@ -231,7 +219,6 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
         val request = DataRequest(identifierRequest, userId, answers)
 
         when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
-        when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
 
         submissionService.canSubmit(request).futureValue mustEqual false
       }
@@ -244,7 +231,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
             .set(RelationshipStatusPage, RelationshipStatus.Married).success.value
             .set(PartnerNamePage, adultName).success.value
             .set(PartnerNinoKnownPage, false).success.value
-            .set(PartnerDateOfBirthPage, now).success.value
+            .set(PartnerDateOfBirthPage, today).success.value
             .set(PartnerNationalityPage(Index(0)), nationality).success.value
             .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
             .set(PartnerIsHmfOrCivilServantPage, false).success.value
@@ -259,7 +246,6 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
         val request = DataRequest(identifierRequest, userId, answers)
 
         when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
-        when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
 
         submissionService.canSubmit(request).futureValue mustEqual false
       }
@@ -272,7 +258,6 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val request = DataRequest(identifierRequest, userId, basicUserAnswers)
 
           when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
-          when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
 
           submissionService.canSubmit(request).futureValue mustEqual true
         }
@@ -286,7 +271,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
                 .set(RelationshipStatusPage, RelationshipStatus.Married).success.value
                 .set(PartnerNamePage, adultName).success.value
                 .set(PartnerNinoKnownPage, false).success.value
-                .set(PartnerDateOfBirthPage, now).success.value
+                .set(PartnerDateOfBirthPage, today).success.value
                 .set(PartnerNationalityPage(Index(0)), nationality).success.value
                 .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
                 .set(PartnerIsHmfOrCivilServantPage, false).success.value
@@ -299,7 +284,6 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
             val request = DataRequest(identifierRequest, userId, answers)
 
             when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
-            when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
 
             submissionService.canSubmit(request).futureValue mustEqual true
           }
@@ -313,7 +297,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
                 .set(PartnerNamePage, adultName).success.value
                 .set(PartnerNinoKnownPage, true).success.value
                 .set(PartnerNinoPage, nino).success.value
-                .set(PartnerDateOfBirthPage, now).success.value
+                .set(PartnerDateOfBirthPage, today).success.value
                 .set(PartnerNationalityPage(Index(0)), nationality).success.value
                 .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
                 .set(PartnerIsHmfOrCivilServantPage, false).success.value
@@ -328,7 +312,6 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
             val request = DataRequest(identifierRequest, userId, answers)
 
             when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
-            when(mockSubmissionLimiter.allowedToSubmit(any())(any())) thenReturn Future.successful(true)
 
             submissionService.canSubmit(request).futureValue mustEqual true
           }
@@ -349,15 +332,16 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val request = DataRequest(identifierRequest, userId, basicUserAnswers)
 
           when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
-          when(mockSubmissionLimiter.recordSubmission(any(), any(), any(), any())(any())) thenReturn Future.successful(Done)
           when(mockSupplementaryDataService.submit(any(), any(), any(), any())(any())) thenReturn Future.successful(Done)
           when(mockImmigrationStatusService.settledStatusStartDate(any(), any(), any())(any())) thenReturn Future.successful(None)
+          when(mockConnector.recordRecentClaim(any())(any())) thenReturn Future.successful(Done)
 
           submissionService.submit(request).futureValue
 
           verify(mockConnector, times(1)).submitClaim(any(), any())(any())
-          verify(mockSubmissionLimiter, times(1)).recordSubmission(any(), any(), any(), any())(any())
           verify(mockSupplementaryDataService, times(1)).submit(eqTo(nino.nino), any(), any(), any())(any())
+          verify(mockAuditService, times(1)).auditSubmissionToCbs(any(), any(), any())(any())
+          verify(mockConnector, times(1)).recordRecentClaim(eqTo(recentClaim))(any())
         }
 
         "must submit a claim and return Done when recording the submission fails" in {
@@ -366,14 +350,16 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val request = DataRequest(identifierRequest, userId, basicUserAnswers)
 
           when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
-          when(mockSubmissionLimiter.recordSubmission(any(), any(), any(), any())(any())) thenReturn Future.failed(new Exception("foo"))
           when(mockSupplementaryDataService.submit(any(), any(), any(), any())(any())) thenReturn Future.successful(Done)
           when(mockImmigrationStatusService.settledStatusStartDate(any(), any(), any())(any())) thenReturn Future.successful(None)
+          when(mockConnector.recordRecentClaim(any())(any())) thenReturn Future.failed(new RuntimeException("foo"))
 
           submissionService.submit(request).futureValue
 
           verify(mockConnector, times(1)).submitClaim(any(), any())(any())
           verify(mockSupplementaryDataService, times(1)).submit(eqTo(nino.nino), any(), any(), any())(any())
+          verify(mockAuditService, times(1)).auditSubmissionToCbs(any(), any(), any())(any())
+          verify(mockConnector, times(1)).recordRecentClaim(eqTo(recentClaim))(any())
         }
 
         "must submit a claim and return Done when the supplementary data service fails" in {
@@ -382,15 +368,16 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val request = DataRequest(identifierRequest, userId, basicUserAnswers)
 
           when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
-          when(mockSubmissionLimiter.recordSubmission(any(), any(), any(), any())(any())) thenReturn Future.successful(Done)
           when(mockSupplementaryDataService.submit(any(), any(), any(), any())(any())) thenReturn Future.failed(new RuntimeException())
           when(mockImmigrationStatusService.settledStatusStartDate(any(), any(), any())(any())) thenReturn Future.successful(None)
+          when(mockConnector.recordRecentClaim(any())(any())) thenReturn Future.successful(Done)
 
           submissionService.submit(request).futureValue
 
           verify(mockConnector, times(1)).submitClaim(any(), any())(any())
-          verify(mockSubmissionLimiter, times(1)).recordSubmission(any(), any(), any(), any())(any())
           verify(mockSupplementaryDataService, times(1)).submit(eqTo(nino.nino), any(), any(), any())(any())
+          verify(mockAuditService, times(1)).auditSubmissionToCbs(any(), any(), any())(any())
+          verify(mockConnector, times(1)).recordRecentClaim(eqTo(recentClaim))(any())
         }
       }
 

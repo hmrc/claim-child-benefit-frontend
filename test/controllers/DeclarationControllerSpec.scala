@@ -63,7 +63,7 @@ class DeclarationControllerSpec extends SpecBase with MockitoSugar with BeforeAn
 
       "must redirect to Print" in {
 
-        when(mockSubmissionService.canSubmit(any())(any())) thenReturn Future.successful(false)
+        when(mockSubmissionService.canSubmit(any())) thenReturn Future.successful(false)
 
         val app =
           applicationBuilder(Some(emptyUserAnswers))
@@ -87,7 +87,7 @@ class DeclarationControllerSpec extends SpecBase with MockitoSugar with BeforeAn
 
         "and redirect to Submitted when the submission is successful" in {
 
-          when(mockSubmissionService.canSubmit(any())(any())) thenReturn Future.successful(true)
+          when(mockSubmissionService.canSubmit(any())) thenReturn Future.successful(true)
           when(mockSubmissionService.submit(any())(any())) thenReturn Future.successful(Done)
 
           val app =
@@ -109,7 +109,7 @@ class DeclarationControllerSpec extends SpecBase with MockitoSugar with BeforeAn
 
         "and redirect to SubmissionFailedExistingClaim when there is an existing claim for the user in CBS" in {
 
-          when(mockSubmissionService.canSubmit(any())(any())) thenReturn Future.successful(true)
+          when(mockSubmissionService.canSubmit(any())) thenReturn Future.successful(true)
           when(mockSubmissionService.submit(any())(any())) thenReturn Future.failed(new InvalidClaimStateException)
 
           val app =
@@ -129,7 +129,7 @@ class DeclarationControllerSpec extends SpecBase with MockitoSugar with BeforeAn
 
         "and redirect to SubmissionFailedAlreadyInPayment when the user has an existing claim which is already in payment" in {
 
-          when(mockSubmissionService.canSubmit(any())(any())) thenReturn Future.successful(true)
+          when(mockSubmissionService.canSubmit(any())) thenReturn Future.successful(true)
           when(mockSubmissionService.submit(any())(any())) thenReturn Future.failed(new AlreadyInPaymentException)
 
           val app =
@@ -149,7 +149,7 @@ class DeclarationControllerSpec extends SpecBase with MockitoSugar with BeforeAn
 
         "and redirect to Print when the submission fails for another reason" in {
 
-          when(mockSubmissionService.canSubmit(any())(any())) thenReturn Future.successful(true)
+          when(mockSubmissionService.canSubmit(any())) thenReturn Future.successful(true)
           when(mockSubmissionService.submit(any())(any())) thenReturn Future.failed(new Exception("foo"))
 
           val app =
