@@ -16,6 +16,12 @@
 
 package models
 
+import models.Income._
+import models.IncomeOrdering._
+import models.RelationshipStatus._
+import models.TaxChargeChoice._
+import pages.partner.RelationshipStatusPage
+import pages.payments.{ApplicantIncomePage, PartnerIncomePage, WantToBePaidPage}
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
@@ -37,5 +43,38 @@ object RecentClaim {
     )(RecentClaim.apply _)
 
   implicit lazy val writes: OWrites[RecentClaim] = Json.writes
-}
 
+  //scalastyle:off
+  def build(nino: String, answers: UserAnswers, created: Instant): Option[RecentClaim] =
+    answers.get(WantToBePaidPage).flatMap { wantToBePaid =>
+      answers.get(RelationshipStatusPage).flatMap {
+        case Married | Cohabiting =>
+          answers.get(ApplicantIncomePage).flatMap { applicantIncome =>
+            answers.get(PartnerIncomePage).map { partnerIncome =>
+              if (applicantIncome == BelowLowerThreshold && partnerIncome == BelowLowerThreshold) {
+                RecentClaim(nino, created, DoesNotApply)
+              } else {
+                val taxChargePayer = {
+                  if (applicantIncome < partnerIncome)       TaxChargePayer.Partner
+                  else if (applicantIncome == partnerIncome) TaxChargePayer.ApplicantOrPartner
+                  else                                       TaxChargePayer.Applicant
+                }
+
+                if (wantToBePaid) RecentClaim(nino, created, OptedIn(taxChargePayer))
+                else              RecentClaim(nino, created, OptedOut)
+              }
+            }
+          }
+
+        case _ =>
+          answers.get(ApplicantIncomePage).map {
+            case BelowLowerThreshold =>
+              RecentClaim(nino, created, DoesNotApply)
+
+            case _ =>
+              if (wantToBePaid) RecentClaim(nino, created, OptedIn(TaxChargePayer.Applicant))
+              else              RecentClaim(nino, created, OptedOut)
+          }
+      }
+    }
+}
