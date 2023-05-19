@@ -70,23 +70,28 @@ class ClaimSubmissionService @Inject()(
               .flatMap { _ =>
 
                 auditService.auditSubmissionToCbs(model, claim, correlationId)(hc)
-                val recentClaim = RecentClaim(nino, Instant.now(clock), TaxChargeChoice.NotRecorded)
+                val recentClaim = RecentClaim.build(nino, request.userAnswers, Instant.now(clock))
 
-                connector
-                  .recordRecentClaim(recentClaim)(hc)
-                  .recover {
-                    case e: Exception =>
-                      logger.error("Failed to record recent submission: " + e.getMessage)
-                      Done
-                  }
+                recentClaim.map { rc =>
+                  connector
+                    .recordRecentClaim(rc)(hc)
+                    .recover {
+                      case e: Exception =>
+                        logger.error("Failed to record recent submission: " + e.getMessage)
+                        Done
+                    }
+                }.getOrElse {
+                  logger.error("Unable to build a recent claim from user's answers")
+                  Future.successful(Done)
+                }
               }.flatMap { _ =>
                 val additionalDetails = AdditionalArchiveDetails(settledStatusStartDate)
                 supplementaryDataService.submit(nino, model, correlationId, additionalDetails)(request).recover {
                   case e: Exception =>
                     logger.error("Failed to submit supplementary data", e)
                     Done
+                }
               }
-            }
         }
       }.getOrElse(Future.failed(CannotBuildJourneyModelException))
     }
