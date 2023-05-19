@@ -56,7 +56,7 @@ class SubmittedControllerSpec extends SpecBase {
             val view = application.injector.instanceOf[SubmittedNoTaxChargeView]
 
             status(result) mustEqual OK
-            contentAsString(result) mustEqual view(hasPartner = false)(request, messages(application)).toString
+            contentAsString(result) mustEqual view()(request, messages(application)).toString
           }
         }
 
@@ -82,7 +82,7 @@ class SubmittedControllerSpec extends SpecBase {
               val view = application.injector.instanceOf[SubmittedWithTaxChargeBeingPaidView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(hasPartner = false, TaxChargePayer.Applicant)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(TaxChargePayer.Applicant)(request, messages(application)).toString
             }
           }
 
@@ -141,7 +141,7 @@ class SubmittedControllerSpec extends SpecBase {
               val view = application.injector.instanceOf[SubmittedNoTaxChargeView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(hasPartner = true)(request, messages(application)).toString
+              contentAsString(result) mustEqual view()(request, messages(application)).toString
             }
           }
 
@@ -168,7 +168,7 @@ class SubmittedControllerSpec extends SpecBase {
                 val view = application.injector.instanceOf[SubmittedWithTaxChargeBeingPaidView]
 
                 status(result) mustEqual OK
-                contentAsString(result) mustEqual view(hasPartner = true, TaxChargePayer.Partner)(request, messages(application)).toString
+                contentAsString(result) mustEqual view(TaxChargePayer.Partner)(request, messages(application)).toString
               }
             }
 
@@ -224,7 +224,7 @@ class SubmittedControllerSpec extends SpecBase {
                 val view = application.injector.instanceOf[SubmittedWithTaxChargeBeingPaidView]
 
                 status(result) mustEqual OK
-                contentAsString(result) mustEqual view(hasPartner = true, TaxChargePayer.Applicant)(request, messages(application)).toString
+                contentAsString(result) mustEqual view(TaxChargePayer.Applicant)(request, messages(application)).toString
               }
             }
 
@@ -275,7 +275,7 @@ class SubmittedControllerSpec extends SpecBase {
                 val view = application.injector.instanceOf[SubmittedWithTaxChargeBeingPaidView]
 
                 status(result) mustEqual OK
-                contentAsString(result) mustEqual view(hasPartner = true, TaxChargePayer.ApplicantOrPartner)(request, messages(application)).toString
+                contentAsString(result) mustEqual view(TaxChargePayer.ApplicantOrPartner)(request, messages(application)).toString
               }
             }
 
@@ -326,7 +326,7 @@ class SubmittedControllerSpec extends SpecBase {
                 val view = application.injector.instanceOf[SubmittedWithTaxChargeBeingPaidView]
 
                 status(result) mustEqual OK
-                contentAsString(result) mustEqual view(hasPartner = true, TaxChargePayer.Partner)(request, messages(application)).toString
+                contentAsString(result) mustEqual view(TaxChargePayer.Partner)(request, messages(application)).toString
               }
             }
 
@@ -382,7 +382,7 @@ class SubmittedControllerSpec extends SpecBase {
                 val view = application.injector.instanceOf[SubmittedWithTaxChargeBeingPaidView]
 
                 status(result) mustEqual OK
-                contentAsString(result) mustEqual view(hasPartner = true, TaxChargePayer.Applicant)(request, messages(application)).toString
+                contentAsString(result) mustEqual view(TaxChargePayer.Applicant)(request, messages(application)).toString
               }
             }
 
@@ -435,7 +435,7 @@ class SubmittedControllerSpec extends SpecBase {
                 val view = application.injector.instanceOf[SubmittedWithTaxChargeBeingPaidView]
 
                 status(result) mustEqual OK
-                contentAsString(result) mustEqual view(hasPartner = true, TaxChargePayer.ApplicantOrPartner)(request, messages(application)).toString
+                contentAsString(result) mustEqual view(TaxChargePayer.ApplicantOrPartner)(request, messages(application)).toString
               }
             }
 

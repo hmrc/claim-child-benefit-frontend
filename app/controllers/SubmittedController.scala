@@ -52,7 +52,7 @@ class SubmittedController @Inject()(
             getAnswers(ApplicantIncomePage, PartnerIncomePage) {
               case (applicantIncome, partnerIncome) =>
                 if (applicantIncome == BelowLowerThreshold && partnerIncome == BelowLowerThreshold) {
-                  Ok(noTaxChargeView(hasPartner = true))
+                  Ok(noTaxChargeView())
                 } else {
                   val taxChargePayer = {
                     if      (applicantIncome < partnerIncome)  TaxChargePayer.Partner
@@ -60,7 +60,7 @@ class SubmittedController @Inject()(
                     else                                       TaxChargePayer.Applicant
                   }
 
-                  if (wantToBePaid) Ok(withTaxChargeBeingPaidView(hasPartner = true, taxChargePayer))
+                  if (wantToBePaid) Ok(withTaxChargeBeingPaidView(taxChargePayer))
                   else              Ok(withTaxChargeNotBeingPaidView())
                 }
             }
@@ -68,10 +68,10 @@ class SubmittedController @Inject()(
           case _ =>
             getAnswer(ApplicantIncomePage) {
               case BelowLowerThreshold =>
-                Ok(noTaxChargeView(hasPartner = false))
+                Ok(noTaxChargeView())
 
               case _ =>
-                if (wantToBePaid) Ok(withTaxChargeBeingPaidView(hasPartner = false, TaxChargePayer.Applicant))
+                if (wantToBePaid) Ok(withTaxChargeBeingPaidView(TaxChargePayer.Applicant))
                 else              Ok(withTaxChargeNotBeingPaidView())
             }
         }
