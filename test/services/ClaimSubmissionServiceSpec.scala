@@ -52,6 +52,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
   private val mockImmigrationStatusService = mock[ImmigrationStatusService]
   private val mockAuditService = mock[AuditService]
   private val journeyModelService = new JourneyModelService(mockFeatureFlags)
+  private val mockUserDataService = mock[UserDataService]
 
   override def beforeEach(): Unit = {
     Mockito.reset(mockFeatureFlags)
@@ -59,6 +60,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
     Mockito.reset(mockSupplementaryDataService)
     Mockito.reset(mockImmigrationStatusService)
     Mockito.reset(mockAuditService)
+    Mockito.reset(mockUserDataService)
     super.beforeEach()
   }
 
@@ -131,6 +133,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
     mockImmigrationStatusService,
     journeyModelService,
     mockAuditService,
+    mockUserDataService,
     stubClock
   )
 
@@ -326,7 +329,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
 
       "and their answers can produce a valid Journey Model" - {
 
-        "must submit a claim and record the submission" in {
+        "must submit a claim, delete user answers, and record the submission" in {
 
           val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
           val request = DataRequest(identifierRequest, userId, basicUserAnswers)
@@ -335,6 +338,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           when(mockSupplementaryDataService.submit(any(), any(), any(), any())(any())) thenReturn Future.successful(Done)
           when(mockImmigrationStatusService.settledStatusStartDate(any(), any(), any())(any())) thenReturn Future.successful(None)
           when(mockConnector.recordRecentClaim(any())(any())) thenReturn Future.successful(Done)
+          when(mockUserDataService.clear(any())) thenReturn Future.successful(true)
 
           submissionService.submit(request).futureValue
 
@@ -342,6 +346,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           verify(mockSupplementaryDataService, times(1)).submit(eqTo(nino.nino), any(), any(), any())(any())
           verify(mockAuditService, times(1)).auditSubmissionToCbs(any(), any(), any())(any())
           verify(mockConnector, times(1)).recordRecentClaim(eqTo(recentClaim))(any())
+          verify(mockUserDataService, times(1)).clear(eqTo(userId))
         }
 
         "must submit a claim and return Done when recording the submission fails" in {
@@ -353,6 +358,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           when(mockSupplementaryDataService.submit(any(), any(), any(), any())(any())) thenReturn Future.successful(Done)
           when(mockImmigrationStatusService.settledStatusStartDate(any(), any(), any())(any())) thenReturn Future.successful(None)
           when(mockConnector.recordRecentClaim(any())(any())) thenReturn Future.failed(new RuntimeException("foo"))
+          when(mockUserDataService.clear(any())) thenReturn Future.successful(true)
 
           submissionService.submit(request).futureValue
 
@@ -360,6 +366,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           verify(mockSupplementaryDataService, times(1)).submit(eqTo(nino.nino), any(), any(), any())(any())
           verify(mockAuditService, times(1)).auditSubmissionToCbs(any(), any(), any())(any())
           verify(mockConnector, times(1)).recordRecentClaim(eqTo(recentClaim))(any())
+          verify(mockUserDataService, times(1)).clear(eqTo(userId))
         }
 
         "must submit a claim and return Done when the supplementary data service fails" in {
@@ -371,6 +378,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           when(mockSupplementaryDataService.submit(any(), any(), any(), any())(any())) thenReturn Future.failed(new RuntimeException())
           when(mockImmigrationStatusService.settledStatusStartDate(any(), any(), any())(any())) thenReturn Future.successful(None)
           when(mockConnector.recordRecentClaim(any())(any())) thenReturn Future.successful(Done)
+          when(mockUserDataService.clear(any())) thenReturn Future.successful(true)
 
           submissionService.submit(request).futureValue
 
@@ -378,6 +386,27 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           verify(mockSupplementaryDataService, times(1)).submit(eqTo(nino.nino), any(), any(), any())(any())
           verify(mockAuditService, times(1)).auditSubmissionToCbs(any(), any(), any())(any())
           verify(mockConnector, times(1)).recordRecentClaim(eqTo(recentClaim))(any())
+          verify(mockUserDataService, times(1)).clear(eqTo(userId))
+        }
+
+        "must submit a claim and return Done when clearing user data fails" in {
+
+          val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
+          val request = DataRequest(identifierRequest, userId, basicUserAnswers)
+
+          when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
+          when(mockSupplementaryDataService.submit(any(), any(), any(), any())(any())) thenReturn Future.failed(new RuntimeException())
+          when(mockImmigrationStatusService.settledStatusStartDate(any(), any(), any())(any())) thenReturn Future.successful(None)
+          when(mockConnector.recordRecentClaim(any())(any())) thenReturn Future.successful(Done)
+          when(mockUserDataService.clear(any())) thenReturn Future.failed(new RuntimeException("foo"))
+
+          submissionService.submit(request).futureValue
+
+          verify(mockConnector, times(1)).submitClaim(any(), any())(any())
+          verify(mockSupplementaryDataService, times(1)).submit(eqTo(nino.nino), any(), any(), any())(any())
+          verify(mockAuditService, times(1)).auditSubmissionToCbs(any(), any(), any())(any())
+          verify(mockConnector, times(1)).recordRecentClaim(eqTo(recentClaim))(any())
+          verify(mockUserDataService, times(1)).clear(eqTo(userId))
         }
       }
 

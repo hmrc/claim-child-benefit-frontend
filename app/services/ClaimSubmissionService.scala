@@ -21,7 +21,7 @@ import connectors.ClaimChildBenefitConnector
 import logging.Logging
 import models.domain.Claim
 import models.requests.DataRequest
-import models.{AdditionalArchiveDetails, Done, RecentClaim, TaxChargeChoice}
+import models.{AdditionalArchiveDetails, Done, RecentClaim}
 import services.ClaimSubmissionService.{CannotBuildJourneyModelException, NotAuthenticatedException}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.RequestOps._
@@ -37,6 +37,7 @@ class ClaimSubmissionService @Inject()(
                                         immigrationStatusService: ImmigrationStatusService,
                                         journeyModelService: JourneyModelService,
                                         auditService: AuditService,
+                                        userDataService: UserDataService,
                                         clock: Clock
                                       ) extends Logging {
 
@@ -77,7 +78,7 @@ class ClaimSubmissionService @Inject()(
                     .recordRecentClaim(rc)(hc)
                     .recover {
                       case e: Exception =>
-                        logger.error("Failed to record recent submission: " + e.getMessage)
+                        logger.error("Failed to record recent submission", e)
                         Done
                     }
                 }.getOrElse {
@@ -91,6 +92,15 @@ class ClaimSubmissionService @Inject()(
                     logger.error("Failed to submit supplementary data", e)
                     Done
                 }
+              }.flatMap { _ =>
+                userDataService
+                  .clear(request.userId)
+                  .map(_ => Done)
+                  .recover {
+                    case e: Exception =>
+                      logger.error("Failed to delete user data", e)
+                      Done
+                  }
               }
         }
       }.getOrElse(Future.failed(CannotBuildJourneyModelException))
