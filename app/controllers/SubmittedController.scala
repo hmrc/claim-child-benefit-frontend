@@ -17,65 +17,49 @@
 package controllers
 
 import config.FrontendAppConfig
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import connectors.ClaimChildBenefitConnector
+import controllers.actions.IdentifierAction
 import logging.Logging
-import models.Income.BelowLowerThreshold
-import models.IncomeOrdering._
-import models.RelationshipStatus.{Cohabiting, Married}
-import models.TaxChargePayer
-import pages.partner.RelationshipStatusPage
-import pages.payments.{ApplicantIncomePage, PartnerIncomePage, WantToBePaidPage}
+import models.TaxChargeChoice._
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.{SubmittedNoTaxChargeView, SubmittedWithTaxChargeBeingPaidView, SubmittedWithTaxChargeNotBeingPaidView}
 
 import javax.inject.Inject
+import scala.concurrent.ExecutionContext
 
 class SubmittedController @Inject()(
                                      val controllerComponents: MessagesControllerComponents,
                                      identify: IdentifierAction,
-                                     getData: DataRetrievalAction,
-                                     requireData: DataRequiredAction,
                                      noTaxChargeView: SubmittedNoTaxChargeView,
                                      withTaxChargeBeingPaidView: SubmittedWithTaxChargeBeingPaidView,
                                      withTaxChargeNotBeingPaidView: SubmittedWithTaxChargeNotBeingPaidView,
-                                     appConfig: FrontendAppConfig
-                                   ) extends FrontendBaseController with I18nSupport with Logging with AnswerExtractor {
+                                     appConfig: FrontendAppConfig,
+                                     connector: ClaimChildBenefitConnector
+                                   )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging with AnswerExtractor {
 
-  //scalastyle:off
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad: Action[AnyContent] = identify.async {
     implicit request =>
-      getAnswer(WantToBePaidPage) { wantToBePaid =>
-        getAnswer(RelationshipStatusPage) {
-          case Married | Cohabiting =>
-            getAnswers(ApplicantIncomePage, PartnerIncomePage) {
-              case (applicantIncome, partnerIncome) =>
-                if (applicantIncome == BelowLowerThreshold && partnerIncome == BelowLowerThreshold) {
-                  Ok(noTaxChargeView())
-                } else {
-                  val taxChargePayer = {
-                    if      (applicantIncome < partnerIncome)  TaxChargePayer.Partner
-                    else if (applicantIncome == partnerIncome) TaxChargePayer.ApplicantOrPartner
-                    else                                       TaxChargePayer.Applicant
-                  }
-
-                  if (wantToBePaid) Ok(withTaxChargeBeingPaidView(taxChargePayer))
-                  else              Ok(withTaxChargeNotBeingPaidView())
-                }
-            }
-
-          case _ =>
-            getAnswer(ApplicantIncomePage) {
-              case BelowLowerThreshold =>
+      connector
+        .getRecentClaim()
+        .map {
+          _.map { recentClaim =>
+            recentClaim.taxChargeChoice match {
+              case DoesNotApply =>
                 Ok(noTaxChargeView())
 
-              case _ =>
-                if (wantToBePaid) Ok(withTaxChargeBeingPaidView(TaxChargePayer.Applicant))
-                else              Ok(withTaxChargeNotBeingPaidView())
+              case OptedOut =>
+                Ok(withTaxChargeNotBeingPaidView())
+
+              case OptedIn(taxChargePayer) =>
+                Ok(withTaxChargeBeingPaidView(taxChargePayer))
+
+              case NotRecorded =>
+                Redirect(routes.RecentlySubmittedController.onPageLoad())
             }
+          }.getOrElse(Redirect(routes.IndexController.onPageLoad))
         }
-      }
   }
 
   def exitSurvey: Action[AnyContent] = Action {
