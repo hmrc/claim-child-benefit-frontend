@@ -4,7 +4,7 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 import connectors.ClaimChildBenefitConnector._
 import generators.ModelGenerators
 import models.domain._
-import models.{AdultName, CheckLimitResponse, DesignatoryDetails, Done, NPSAddress, RecentClaim, RelationshipDetails, SupplementaryMetadata}
+import models.{AdultName, CheckLimitResponse, DesignatoryDetails, Done, NPSAddress, RecentClaim, RelationshipDetails, SupplementaryMetadata, TaxChargeChoice}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -448,7 +448,7 @@ class ClaimChildBenefitConnectorSpec
 
   ".getRecentClaim" - {
 
-    val recentClaim = RecentClaim("nino", Instant.now)
+    val recentClaim = RecentClaim("nino", Instant.now, TaxChargeChoice.DoesNotApply)
 
     "must return a recent claim when the server returns one" in {
 
@@ -485,7 +485,7 @@ class ClaimChildBenefitConnectorSpec
 
   ".recordRecentClaim" - {
 
-    val recentClaim = RecentClaim("nino", Instant.now)
+    val recentClaim = RecentClaim("nino", Instant.now, TaxChargeChoice.DoesNotApply)
 
     "must succeed when the server responds with No Content" in {
 

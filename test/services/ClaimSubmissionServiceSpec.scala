@@ -66,7 +66,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
   private val userId = "user id"
   private val baseRequest = FakeRequest("", "")
   private val now = Instant.now
-  private val recentClaim = RecentClaim(nino.nino, now)
+  private val recentClaim = RecentClaim(nino.nino, now, TaxChargeChoice.DoesNotApply)
   private val stubClock = Clock.fixed(now, ZoneId.systemDefault())
 
   private val today = LocalDate.now
