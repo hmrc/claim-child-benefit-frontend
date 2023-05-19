@@ -58,7 +58,10 @@ class SubmittedController @Inject()(
               case NotRecorded =>
                 Redirect(routes.RecentlySubmittedController.onPageLoad())
             }
-          }.getOrElse(Redirect(routes.IndexController.onPageLoad))
+          }.getOrElse {
+            logger.warn("Unable to find a recent claim for this user")
+            Redirect(routes.IndexController.onPageLoad)
+          }
         }
   }
 
