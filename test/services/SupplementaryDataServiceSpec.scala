@@ -33,7 +33,7 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.i18n.MessagesApi
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.RequestHeader
@@ -66,6 +66,7 @@ class SupplementaryDataServiceSpec
   private val mockClaimChildBenefitConnector = mock[ClaimChildBenefitConnector]
   private val mockFop = mock[PlayFop]
   private val clock = Clock.fixed(Instant.now(), ZoneOffset.UTC)
+
 
   private val request: RequestHeader = FakeRequest()
   private val hc: HeaderCarrier = HeaderCarrier()
@@ -129,8 +130,11 @@ class SupplementaryDataServiceSpec
         )
         .build()
 
+      val messagesApi = app.injector.instanceOf[MessagesApi]
       val service = app.injector.instanceOf[SupplementaryDataService]
       val uuid = UUID.randomUUID()
+
+      val englishMessages: Messages = MessagesImpl(Lang("en"), messagesApi)
 
       "must create a PDF and submit as supplementary data" in {
 
@@ -142,7 +146,7 @@ class SupplementaryDataServiceSpec
 
         val additionalDetails = AdditionalArchiveDetails(None)
         val template = app.injector.instanceOf[ArchiveTemplate]
-        val expectedView = template(model, additionalDetails)(app.injector.instanceOf[MessagesApi].preferred(FakeRequest()))
+        val expectedView = template(model, additionalDetails)(englishMessages)
         val expectedPdf = "hello".getBytes
 
         when(mockFop.processTwirlXml(any(), any(), any(), any())) thenReturn expectedPdf
