@@ -15,7 +15,8 @@ GET         /refresh-session                             controllers.KeepAliveCo
 GET         /there-is-a-problem                          controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
 GET         /reset-application-form                      controllers.auth.AuthController.signOut
-GET         /application-form-has-been-reset             controllers.auth.SignedOutController.onPageLoad
+GET         /signed-out                                  controllers.auth.SignedOutController.onPageLoad
+GET         /submitted-signed-out                        controllers.auth.SignedOutAfterSubmissionController.onPageLoad
 GET         /application-form-reset                      controllers.auth.ApplicationResetController.onPageLoad
 
 GET         /sign-out-and-apply                          controllers.auth.AuthController.signOutAndApplyUnauthenticated()

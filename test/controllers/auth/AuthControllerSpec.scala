@@ -17,7 +17,8 @@
 package controllers.auth
 
 import base.SpecBase
-import models.{Done, UserAnswers}
+import connectors.ClaimChildBenefitConnector
+import models.{Done, RecentClaim, TaxChargeChoice, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{never, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -64,26 +65,68 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
 
     "when the user is authenticated" - {
 
-      "must redirect to BAS sign-out" in {
+      "and has a recent claim" - {
 
-        val mockUserDataService = mock[UserDataService]
+        "must redirect to BAS sign-out then go to recently-submitted" in {
 
-        val application =
-          applicationBuilder(None, userIsAuthenticated = true)
-            .overrides(bind[UserDataService].toInstance(mockUserDataService))
-            .build()
+          val mockUserDataService = mock[UserDataService]
+          val mockConnector = mock[ClaimChildBenefitConnector]
+          val recentClaim = RecentClaim("nino", Instant.now, TaxChargeChoice.OptedOut)
 
-        running(application) {
+          when(mockConnector.getRecentClaim()(any())).thenReturn(Future.successful(Some(recentClaim)))
 
-          val request = FakeRequest(GET, routes.AuthController.signOut.url)
+          val application =
+            applicationBuilder(None, userIsAuthenticated = true)
+              .overrides(
+                bind[UserDataService].toInstance(mockUserDataService),
+                bind[ClaimChildBenefitConnector].toInstance(mockConnector)
+              )
+              .build()
 
-          val result = route(application, request).value
+          running(application) {
 
-          val expectedRedirectUrl = "http://localhost:9553/bas-gateway/sign-out-without-state?continue=http%3A%2F%2Flocalhost%3A11303%2Ffill-online%2Fclaim-child-benefit%2Fapplication-form-has-been-reset"
+            val request = FakeRequest(GET, routes.AuthController.signOut.url)
 
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual expectedRedirectUrl
-          verify(mockUserDataService, never).clear()(any())
+            val result = route(application, request).value
+
+            val expectedRedirectUrl = "http://localhost:9553/bas-gateway/sign-out-without-state?continue=http%3A%2F%2Flocalhost%3A11303%2Ffill-online%2Fclaim-child-benefit%2Fsubmitted-signed-out"
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual expectedRedirectUrl
+            verify(mockUserDataService, never).clear()(any())
+          }
+        }
+      }
+
+      "and does not have a recent claim" - {
+
+        "must redirect to BAS sign-out then go to signed-out" in {
+
+          val mockUserDataService = mock[UserDataService]
+          val mockConnector = mock[ClaimChildBenefitConnector]
+
+          when(mockConnector.getRecentClaim()(any())).thenReturn(Future.successful(None))
+
+          val application =
+            applicationBuilder(None, userIsAuthenticated = true)
+              .overrides(
+                bind[UserDataService].toInstance(mockUserDataService),
+                bind[ClaimChildBenefitConnector].toInstance(mockConnector)
+              )
+              .build()
+
+          running(application) {
+
+            val request = FakeRequest(GET, routes.AuthController.signOut.url)
+
+            val result = route(application, request).value
+
+            val expectedRedirectUrl = "http://localhost:9553/bas-gateway/sign-out-without-state?continue=http%3A%2F%2Flocalhost%3A11303%2Ffill-online%2Fclaim-child-benefit%2Fsigned-out"
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual expectedRedirectUrl
+            verify(mockUserDataService, never).clear()(any())
+          }
         }
       }
     }

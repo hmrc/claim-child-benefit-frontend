@@ -17,6 +17,7 @@
 package controllers.auth
 
 import config.FrontendAppConfig
+import connectors.ClaimChildBenefitConnector
 import controllers.actions.{CheckRecentClaimsAction, DataRetrievalAction, IdentifierAction}
 import controllers.{routes => baseRoutes}
 import models.UserAnswers
@@ -41,7 +42,8 @@ class AuthController @Inject()(
                                 config: FrontendAppConfig,
                                 unsupportedAffinityGroupAgentView: UnsupportedAffinityGroupAgentView,
                                 unsupportedAffinityGroupOrganisationView: UnsupportedAffinityGroupOrganisationView,
-                                clock: Clock
+                                clock: Clock,
+                                connector: ClaimChildBenefitConnector
                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
 
@@ -69,7 +71,12 @@ class AuthController @Inject()(
     implicit request =>
       request match {
         case _: AuthenticatedIdentifierRequest[_] =>
-          Future.successful(Redirect(config.signOutUrl, Map("continue" -> Seq(config.host + routes.SignedOutController.onPageLoad.url))))
+          connector
+            .getRecentClaim()
+            .map {
+              _.map(_ => Redirect(config.signOutUrl, Map("continue" -> Seq(config.host + routes.SignedOutAfterSubmissionController.onPageLoad.url))))
+                .getOrElse(Redirect(config.signOutUrl, Map("continue" -> Seq(config.host + routes.SignedOutController.onPageLoad.url))))
+            }
 
         case _ =>
           userDataService
