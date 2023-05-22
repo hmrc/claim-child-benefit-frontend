@@ -19,37 +19,22 @@ package services
 import connectors.UserAnswersConnector
 import logging.Logging
 import models.{Done, UserAnswers}
-import repositories.SessionRepository
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
-class UserDataService @Inject()(
-                                 repository: SessionRepository,
-                                 connector: UserAnswersConnector
-                               )(implicit ec: ExecutionContext) extends Logging {
+class UserDataService @Inject()(connector: UserAnswersConnector) extends Logging {
 
-  def get(userId: String): Future[Option[UserAnswers]] =
-    repository.get(userId)
+  def get()(implicit hc: HeaderCarrier): Future[Option[UserAnswers]] =
+    connector.get()
 
   def set(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[Done] =
-    repository
-      .set(answers)
-      .flatMap { _ =>
-        connector
-          .set(answers)
-          .map(_ => Done)
-          .recover {
-            case e: Throwable =>
-              logger.error("Failed writing user data to the backend")
-              Done
-          }
-      }
+    connector.set(answers)
 
-  def keepAlive(userId: String): Future[Boolean] =
-    repository.keepAlive(userId)
+  def keepAlive()(implicit hc: HeaderCarrier): Future[Done] =
+    connector.keepAlive()
 
-  def clear(userId: String): Future[Boolean] =
-    repository.clear(userId)
+  def clear()(implicit hc: HeaderCarrier): Future[Done] =
+    connector.clear()
 }

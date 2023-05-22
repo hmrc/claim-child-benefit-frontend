@@ -14,30 +14,21 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.auth
 
-import controllers.actions.{DataRetrievalAction, IdentifierAction}
+import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import views.html.auth.SignedOutAfterSubmissionView
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
 
-class KeepAliveController @Inject()(
+class SignedOutAfterSubmissionController @Inject()(
                                      val controllerComponents: MessagesControllerComponents,
-                                     identify: IdentifierAction,
-                                     getData: DataRetrievalAction,
-                                     userDataService: UserDataService
-                                   )(implicit ec: ExecutionContext) extends FrontendBaseController {
+                                     view: SignedOutAfterSubmissionView
+                                   ) extends FrontendBaseController with I18nSupport {
 
-  def keepAlive: Action[AnyContent] = (identify andThen getData).async {
-    implicit request =>
-      request.userAnswers
-        .map {
-          answers =>
-            userDataService.keepAlive().map(_ => Ok)
-        }
-        .getOrElse(Future.successful(Ok))
+  def onPageLoad: Action[AnyContent] = Action { implicit request =>
+    Ok(view())
   }
 }

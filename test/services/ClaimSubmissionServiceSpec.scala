@@ -338,7 +338,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           when(mockSupplementaryDataService.submit(any(), any(), any(), any())(any())) thenReturn Future.successful(Done)
           when(mockImmigrationStatusService.settledStatusStartDate(any(), any(), any())(any())) thenReturn Future.successful(None)
           when(mockConnector.recordRecentClaim(any())(any())) thenReturn Future.successful(Done)
-          when(mockUserDataService.clear(any())) thenReturn Future.successful(true)
+          when(mockUserDataService.clear()(any())) thenReturn Future.successful(Done)
 
           submissionService.submit(request).futureValue
 
@@ -346,7 +346,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           verify(mockSupplementaryDataService, times(1)).submit(eqTo(nino.nino), any(), any(), any())(any())
           verify(mockAuditService, times(1)).auditSubmissionToCbs(any(), any(), any())(any())
           verify(mockConnector, times(1)).recordRecentClaim(eqTo(recentClaim))(any())
-          verify(mockUserDataService, times(1)).clear(eqTo(userId))
+          verify(mockUserDataService, times(1)).clear()(any())
         }
 
         "must submit a claim and return Done when recording the submission fails" in {
@@ -358,7 +358,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           when(mockSupplementaryDataService.submit(any(), any(), any(), any())(any())) thenReturn Future.successful(Done)
           when(mockImmigrationStatusService.settledStatusStartDate(any(), any(), any())(any())) thenReturn Future.successful(None)
           when(mockConnector.recordRecentClaim(any())(any())) thenReturn Future.failed(new RuntimeException("foo"))
-          when(mockUserDataService.clear(any())) thenReturn Future.successful(true)
+          when(mockUserDataService.clear()(any())) thenReturn Future.successful(Done)
 
           submissionService.submit(request).futureValue
 
@@ -366,7 +366,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           verify(mockSupplementaryDataService, times(1)).submit(eqTo(nino.nino), any(), any(), any())(any())
           verify(mockAuditService, times(1)).auditSubmissionToCbs(any(), any(), any())(any())
           verify(mockConnector, times(1)).recordRecentClaim(eqTo(recentClaim))(any())
-          verify(mockUserDataService, times(1)).clear(eqTo(userId))
+          verify(mockUserDataService, times(1)).clear()(any())
         }
 
         "must submit a claim and return Done when the supplementary data service fails" in {
@@ -378,7 +378,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           when(mockSupplementaryDataService.submit(any(), any(), any(), any())(any())) thenReturn Future.failed(new RuntimeException())
           when(mockImmigrationStatusService.settledStatusStartDate(any(), any(), any())(any())) thenReturn Future.successful(None)
           when(mockConnector.recordRecentClaim(any())(any())) thenReturn Future.successful(Done)
-          when(mockUserDataService.clear(any())) thenReturn Future.successful(true)
+          when(mockUserDataService.clear()(any())) thenReturn Future.successful(Done)
 
           submissionService.submit(request).futureValue
 
@@ -386,7 +386,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           verify(mockSupplementaryDataService, times(1)).submit(eqTo(nino.nino), any(), any(), any())(any())
           verify(mockAuditService, times(1)).auditSubmissionToCbs(any(), any(), any())(any())
           verify(mockConnector, times(1)).recordRecentClaim(eqTo(recentClaim))(any())
-          verify(mockUserDataService, times(1)).clear(eqTo(userId))
+          verify(mockUserDataService, times(1)).clear()(any())
         }
 
         "must submit a claim and return Done when clearing user data fails" in {
@@ -398,7 +398,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           when(mockSupplementaryDataService.submit(any(), any(), any(), any())(any())) thenReturn Future.failed(new RuntimeException())
           when(mockImmigrationStatusService.settledStatusStartDate(any(), any(), any())(any())) thenReturn Future.successful(None)
           when(mockConnector.recordRecentClaim(any())(any())) thenReturn Future.successful(Done)
-          when(mockUserDataService.clear(any())) thenReturn Future.failed(new RuntimeException("foo"))
+          when(mockUserDataService.clear()(any())) thenReturn Future.failed(new RuntimeException("foo"))
 
           submissionService.submit(request).futureValue
 
@@ -406,7 +406,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           verify(mockSupplementaryDataService, times(1)).submit(eqTo(nino.nino), any(), any(), any())(any())
           verify(mockAuditService, times(1)).auditSubmissionToCbs(any(), any(), any())(any())
           verify(mockConnector, times(1)).recordRecentClaim(eqTo(recentClaim))(any())
-          verify(mockUserDataService, times(1)).clear(eqTo(userId))
+          verify(mockUserDataService, times(1)).clear()(any())
         }
       }
 

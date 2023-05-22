@@ -94,7 +94,7 @@ class ClaimSubmissionService @Inject()(
                 }
               }.flatMap { _ =>
                 userDataService
-                  .clear(request.userId)
+                  .clear()(hc)
                   .map(_ => Done)
                   .recover {
                     case e: Exception =>

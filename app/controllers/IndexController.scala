@@ -67,7 +67,7 @@ class IndexController @Inject()(
     Future.successful(Redirect(routes.RecentlyClaimedController.onPageLoad()))
 
   def startAgain: Action[AnyContent] = identify.async { implicit request =>
-    userDataService.clear(request.userId).map {
+    userDataService.clear().map {
       _ =>
         Redirect(routes.IndexController.onPageLoad)
     }

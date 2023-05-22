@@ -25,12 +25,15 @@ import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.test.FakeRequest
 import services.UserDataService
+import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
+
+  private implicit val hc: HeaderCarrier = HeaderCarrier()
 
   class Harness(
                  sessionRepository: UserDataService,
@@ -50,7 +53,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
 
         val sessionRepository = mock[UserDataService]
         val connector = mock[ClaimChildBenefitConnector]
-        when(sessionRepository.get("id")) thenReturn Future(None)
+        when(sessionRepository.get()(any())) thenReturn Future(None)
         val action = new Harness(sessionRepository, connector)
 
         val result = action.callTransform(UnauthenticatedIdentifierRequest(FakeRequest(), "id")).futureValue
@@ -68,7 +71,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
           val sessionRepository = mock[UserDataService]
           val connector = mock[ClaimChildBenefitConnector]
           val userAnswers = UserAnswers(userId)
-          when(sessionRepository.get(userId)) thenReturn Future(Some(userAnswers))
+          when(sessionRepository.get()(any())) thenReturn Future(Some(userAnswers))
           val action = new Harness(sessionRepository, connector)
 
           val result = action.callTransform(UnauthenticatedIdentifierRequest(FakeRequest(), userId)).futureValue
@@ -87,7 +90,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
           val designatoryDetails = DesignatoryDetails(None, None, None, None, LocalDate.now)
           val relationshipDetails = RelationshipDetails(hasClaimedChildBenefit = false)
 
-          when(sessionRepository.get(userId)) thenReturn Future.successful(Some(cachedAnswers))
+          when(sessionRepository.get()(any())) thenReturn Future.successful(Some(cachedAnswers))
           when(connector.designatoryDetails()(any())) thenReturn Future.successful(designatoryDetails)
           when(connector.relationshipDetails()(any())) thenReturn Future.successful(relationshipDetails)
 
