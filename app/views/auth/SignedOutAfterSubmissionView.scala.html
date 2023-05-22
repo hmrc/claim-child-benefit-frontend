@@ -19,6 +19,7 @@
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
+        govukPanel : GovukPanel,
         newTabLink: HmrcNewTabLinkHelper
 )
 
@@ -26,22 +27,18 @@
 
 @layout(pageTitle = titleNoForm(messages("signedOutAfterSubmission.title")), showBackLink = false, timeout = false) {
 
-    <h1 class="govuk-heading-xl">@messages("signedOutAfterSubmission.heading")</h1>
+    @govukPanel(Panel(title = messages("signedOutAfterSubmission.heading")))
+
+    <p class="govuk-body">@messages("signedOutAfterSubmission.p1")</p>
 
     <p class="govuk-body">
-        @messages("signedOutAfterSubmission.p1.1")
-        @newTabLink(NewTabLinkHelper(text = messages("signedOutAfterSubmission.p1.link.text"), href = Some(messages("signedOutAfterSubmission.p1.link.href")))).
+        @messages("signedOutAfterSubmission.p2.1")
+        @newTabLink(NewTabLinkHelper(text = messages("signedOutAfterSubmission.p2.link.text"), href = Some(messages("signedOutAfterSubmission.p2.link.href")))),
+        @messages("signedOutAfterSubmission.p2.2")
     </p>
-
-    <p class="govuk-body">@messages("signedOutAfterSubmission.p2")</p>
 
     <p class="govuk-body">
         @messages("signedOutAfterSubmission.p3")
         @newTabLink(NewTabLinkHelper(text = messages("signedOutAfterSubmission.p3.link.text"), href = Some(messages("signedOutAfterSubmission.p3.link.href")))).
-    </p>
-
-    <p class="govuk-body">
-        @messages("signedOutAfterSubmission.p4")
-        @newTabLink(NewTabLinkHelper(text = messages("signedOutAfterSubmission.p4.link.text"), href = Some(messages("signedOutAfterSubmission.p4.link.href")))).
     </p>
 }
