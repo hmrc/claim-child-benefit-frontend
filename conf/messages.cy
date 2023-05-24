@@ -97,6 +97,17 @@ signedOut.continue.1 = Fel arall,
 signedOut.continue.link.text = ewch ymlaen â’ch cais
 signedOut.continue.2 = nawr.
 
+signedOutAfterSubmission.title = Cyflwynwyd eich hawliad Budd-dal Plant
+signedOutAfterSubmission.heading = Cyflwynwyd eich hawliad Budd-dal Plant
+signedOutAfterSubmission.p1 = Gwnaethoch hawliad am Fudd-dal Plant yn ddiweddar ac nid oes angen i chi wneud hawliad arall ar gyfer yr un plentyn.
+signedOutAfterSubmission.p2.1 = Gallwch
+signedOutAfterSubmission.p2.link.text = wirio pryd y gallwch ddisgwyl ateb gan CThEF
+signedOutAfterSubmission.p2.link.href = https://www.gov.uk/guidance/check-when-you-can-expect-a-reply-from-hmrc.cy
+signedOutAfterSubmission.p2.2 = lle y gallwch hefyd roi gwybod am newid mewn amgylchiadau a gofyn am lythyr sy’n dangos prawf o’r hawl.
+signedOutAfterSubmission.p3 = Dysgwch ragor am
+signedOutAfterSubmission.p3.link.text = hawlio Budd-dal Plant
+signedOutAfterSubmission.p3.link.href = https://www.gov.uk/budd-dal-plant
+
 applicationReset.title = Er eich diogelwch, rydym wedi ailosod eich ffurflen gais
 applicationReset.heading = Er eich diogelwch, rydym wedi ailosod eich ffurflen gais
 applicationReset.guidance = Ni wnaethom gadw’ch atebion.
@@ -1476,18 +1487,6 @@ cannotBePaidWeekly.p3.link.text = am hawlio Budd-dal Plant
 cannotBePaidWeekly.p3.link.href = https://www.gov.uk/budd-dal-plant
 cannotBePaidWeekly.p4 = Os ydych yn credu eich bod wedi gwneud camgymeriad, gallwch
 cannotBePaidWeekly.p4.link.text = ddechrau’ch cais eto
-
-includeAdditionalInformation.title = Oes gennych chi wybodaeth ychwanegol ar gyfer yr hawliad hwn?
-includeAdditionalInformation.heading = Oes gennych chi wybodaeth ychwanegol ar gyfer yr hawliad hwn?
-includeAdditionalInformation.p1 = Gallai hyn beri oedi cyn gwneud penderfyniad am eich hawliad.
-includeAdditionalInformation.error.required = Dewiswch ‘Iawn’ os oes gennych wybodaeth ychwanegol ar gyfer yr hawliad hwn
-
-additionalInformation.title = Nodwch yr wybodaeth ychwanegol sydd gennych ar gyfer yr hawliad hwn
-additionalInformation.heading = Nodwch yr wybodaeth ychwanegol sydd gennych ar gyfer yr hawliad hwn
-additionalInformation.checkYourAnswersLabel = Gwybodaeth ychwanegol wedi’i rhannu
-additionalInformation.error.required = Nodwch yr wybodaeth ychwanegol
-additionalInformation.error.length = Mae’n rhaid i’r wybodaeth ychwanegol ar gyfer yr hawliad hwn fod yn 1,000 o gymeriadau neu lai
-additionalInformation.change.hidden = yr wybodaeth ychwanegol sydd gennych ar gyfer yr hawliad hwn
 
 print.title = Mae’ch ffurflen yn barod i gael ei phostio
 print.heading = Mae’ch ffurflen yn barod i gael ei phostio
