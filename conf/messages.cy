@@ -1769,8 +1769,8 @@ removePartnerNationality.title = A ydych yn siŵr eich bod am dynnu’r cenedlig
 removePartnerNationality.heading = A ydych yn siŵr eich bod am dynnu {1} fel cenedligrwydd {0}?
 removePartnerNationality.error.required = Dewiswch ‘Iawn’ os ydych yn siŵr eich bod am dynnu {1} fel cenedligrwydd {0}
 
-addCountryApplicantWorked.title.plural = Rydych wedi ychwanegu {0) gwlad ble’r oeddech yn gweithio, yn ystod y 3 mis diwethaf
-addCountryApplicantWorked.heading.plural = Rydych wedi ychwanegu {0) gwlad ble’r oeddech yn gweithio, yn ystod y 3 mis diwethaf
+addCountryApplicantWorked.title.plural = Rydych wedi ychwanegu {0} gwlad ble’r oeddech yn gweithio, yn ystod y 3 mis diwethaf
+addCountryApplicantWorked.heading.plural = Rydych wedi ychwanegu {0} gwlad ble’r oeddech yn gweithio, yn ystod y 3 mis diwethaf
 addCountryApplicantWorked.title.singular = Rydych wedi ychwanegu 1 wlad ble’r oeddech yn gweithio, yn ystod y 3 mis diwethaf
 addCountryApplicantWorked.heading.singular = Rydych wedi ychwanegu 1 wlad ble’r oeddech yn gweithio, yn ystod y 3 mis diwethaf
 addCountryApplicantWorked.checkYourAnswersLabel = Y gwledydd ble’r oeddech yn gweithio, yn ystod y 3 mis diwethaf
@@ -1784,8 +1784,8 @@ removeCountryApplicantWorked.title = A ydych yn siŵr eich bod am dynnu’r wlad
 removeCountryApplicantWorked.heading = A ydych yn siŵr eich bod am dynnu {0}?
 removeCountryApplicantWorked.error.required = Dewiswch ‘Iawn’ os ydych yn siŵr eich bod am dynnu {0}
 
-addCountryApplicantReceivedBenefits.title.plural = Rydych wedi ychwanegu {0) gwlad a dalodd fudd-daliadau i chi, yn ystod y 3 mis diwethaf
-addCountryApplicantReceivedBenefits.heading.plural = Rydych wedi ychwanegu {0) gwlad a dalodd fudd-daliadau i chi, yn ystod y 3 mis diwethaf
+addCountryApplicantReceivedBenefits.title.plural = Rydych wedi ychwanegu {0} gwlad a dalodd fudd-daliadau i chi, yn ystod y 3 mis diwethaf
+addCountryApplicantReceivedBenefits.heading.plural = Rydych wedi ychwanegu {0} gwlad a dalodd fudd-daliadau i chi, yn ystod y 3 mis diwethaf
 addCountryApplicantReceivedBenefits.title.singular = Rydych wedi ychwanegu 1 wlad a dalodd fudd-daliadau i chi, yn ystod y 3 mis diwethaf
 addCountryApplicantReceivedBenefits.heading.singular = Rydych wedi ychwanegu 1 wlad a dalodd fudd-daliadau i chi, yn ystod y 3 mis diwethaf
 addCountryApplicantReceivedBenefits.p1 = Mae hyn yn cynnwys lwfansau a dalwyd i chi gan lywodraeth.
@@ -1800,8 +1800,8 @@ removeCountryApplicantReceivedBenefits.title = A ydych yn siŵr eich bod am dynn
 removeCountryApplicantReceivedBenefits.heading = A ydych yn siŵr eich bod am dynnu {0}?
 removeCountryApplicantReceivedBenefits.error.required = Dewiswch ‘Iawn’ os ydych yn siŵr eich bod am dynnu {0}
 
-addCountryPartnerWorked.title.plural = Rydych wedi ychwanegu {0) gwlad ble’r oedd eich partner yn gweithio, yn ystod y 3 mis diwethaf
-addCountryPartnerWorked.heading.plural = Rydych wedi ychwanegu {0) gwlad ble’r oedd {1} yn gweithio, yn ystod y 3 mis diwethaf
+addCountryPartnerWorked.title.plural = Rydych wedi ychwanegu {0} gwlad ble’r oedd eich partner yn gweithio, yn ystod y 3 mis diwethaf
+addCountryPartnerWorked.heading.plural = Rydych wedi ychwanegu {0} gwlad ble’r oedd {1} yn gweithio, yn ystod y 3 mis diwethaf
 addCountryPartnerWorked.title.singular = Rydych wedi ychwanegu 1 wlad ble’r oedd eich partner yn gweithio, yn ystod y 3 mis diwethaf
 addCountryPartnerWorked.heading.singular = Rydych wedi ychwanegu 1 wlad ble’r oedd {0} yn gweithio, yn ystod y 3 mis diwethaf
 addCountryPartnerWorked.checkYourAnswersLabel = Y gwledydd ble’r oedd {0} yn gweithio, yn ystod y 3 mis diwethaf
@@ -1815,8 +1815,8 @@ removeCountryPartnerWorked.title = A ydych yn siŵr eich bod am dynnu’r wlad h
 removeCountryPartnerWorked.heading = A ydych yn siŵr eich bod am dynnu {0}?
 removeCountryPartnerWorked.error.required = Dewiswch ‘Iawn’ os ydych yn siŵr eich bod am dynnu {0}
 
-addCountryPartnerReceivedBenefits.title.plural = Rydych wedi ychwanegu {0) gwlad a dalodd fudd-daliadau i’ch partner, yn ystod y 3 mis diwethaf
-addCountryPartnerReceivedBenefits.heading.plural = Rydych wedi ychwanegu {0) gwlad a dalodd fudd-daliadau i {1}, yn ystod y 3 mis diwethaf
+addCountryPartnerReceivedBenefits.title.plural = Rydych wedi ychwanegu {0} gwlad a dalodd fudd-daliadau i’ch partner, yn ystod y 3 mis diwethaf
+addCountryPartnerReceivedBenefits.heading.plural = Rydych wedi ychwanegu {0} gwlad a dalodd fudd-daliadau i {1}, yn ystod y 3 mis diwethaf
 addCountryPartnerReceivedBenefits.title.singular = Rydych wedi ychwanegu 1 wlad a dalodd fudd-daliadau i’ch partner, yn ystod y 3 mis diwethaf
 addCountryPartnerReceivedBenefits.heading.singular = Rydych wedi ychwanegu 1 wlad a dalodd fudd-daliadau i {0}, yn ystod y 3 mis diwethaf
 addCountryPartnerReceivedBenefits.p1 = Mae hyn yn cynnwys lwfansau a dalwyd i {0} gan lywodraeth.
