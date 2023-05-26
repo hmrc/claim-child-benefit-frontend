@@ -24,7 +24,7 @@ import models.UserAnswers
 import models.journey.JourneyModel
 import org.apache.fop.apps.FOUserAgent
 import org.apache.xmlgraphics.util.MimeConstants
-import play.api.i18n.I18nSupport
+import play.api.i18n.{I18nSupport, Lang, Messages, MessagesImpl}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.JourneyModelService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -78,7 +78,8 @@ class PrintController @Inject()(
     implicit request =>
       withJourneyModel(request.userAnswers) {
         journeyModel =>
-          val pdf = fop.processTwirlXml(template.render(journeyModel, implicitly), MimeConstants.MIME_PDF, foUserAgentBlock = userAgentBlock)
+          val englishMessages: Messages = MessagesImpl(Lang("en"), implicitly)
+          val pdf = fop.processTwirlXml(template.render(journeyModel, englishMessages), MimeConstants.MIME_PDF, foUserAgentBlock = userAgentBlock)
 
           auditService.auditDownload(journeyModel)
 

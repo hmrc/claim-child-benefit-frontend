@@ -22,7 +22,7 @@ import models.journey.JourneyModel
 import models.{AdditionalArchiveDetails, Done, SupplementaryMetadata}
 import org.apache.fop.apps.FOUserAgent
 import org.apache.xmlgraphics.util.MimeConstants
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import views.xml.xml.archive.ArchiveTemplate
@@ -65,7 +65,8 @@ class SupplementaryDataServiceImpl @Inject() (
       correlationId = correlationId.toString
     )
 
-    val pdf = fop.processTwirlXml(template(model, additionalDetails), MimeConstants.MIME_PDF, foUserAgentBlock = userAgentBlock)
+    val englishMessages: Messages = MessagesImpl(Lang("en"), messagesApi)
+    val pdf = fop.processTwirlXml(template.render(model, additionalDetails, englishMessages), MimeConstants.MIME_PDF, foUserAgentBlock = userAgentBlock)
 
     connector.submitSupplementaryData(pdf, metadata)(HeaderCarrierConverter.fromRequestAndSession(request, request.session))
   }

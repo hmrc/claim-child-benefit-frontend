@@ -19,22 +19,23 @@ package controllers
 import audit.AuditService
 import base.SpecBase
 import com.dmanchester.playfop.sapi.PlayFop
-import config.FeatureFlags
 import generators.ModelGenerators
 import models._
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.{never, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages._
 import pages.applicant._
 import pages.child._
 import pages.partner.RelationshipStatusPage
 import pages.payments._
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{BrmsService, JourneyModelService}
 import views.html.{PrintDocumentsRequiredView, PrintNoDocumentsRequiredView}
+import views.xml.xml.download.PrintTemplate
 
 import java.nio.charset.Charset
 import java.time.LocalDate
@@ -159,7 +160,7 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
       }
     }
 
-    "must return OK and audit the download for onDownload when user answers are complete" in {
+    "must return OK and an English-language PDF, and audit the download for onDownload when user answers are complete" in {
 
       val mockAuditService = mock[AuditService]
       val mockFop = mock[PlayFop]
@@ -181,10 +182,19 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
 
         val result = route(application, request).value
 
+        val template = application.injector.instanceOf[PrintTemplate]
+        val journeyModelService = application.injector.instanceOf[JourneyModelService]
+        val messagesApi = application.injector.instanceOf[MessagesApi]
+
+        val journeyModel = journeyModelService.build(completeAnswers)
+        val englishMessages: Messages = MessagesImpl(Lang("en"), messagesApi)
+        val expectedRenderedTemplate = template.render(journeyModel.right.value, englishMessages)
+
         status(result) mustEqual OK
         contentAsBytes(result).decodeString(Charset.defaultCharset()) mustEqual "hello"
 
         verify(mockAuditService, times(1)).auditDownload(any())(any())
+        verify(mockFop, times(1)).processTwirlXml(eqTo(expectedRenderedTemplate), any(), any(), any())
       }
     }
 
