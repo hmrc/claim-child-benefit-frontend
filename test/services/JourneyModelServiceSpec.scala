@@ -29,7 +29,6 @@ import org.scalacheck.Gen
 import org.scalatest.{BeforeAndAfterEach, EitherValues, OptionValues, TryValues}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import pages._
 import pages.applicant._
 import pages.child._
 import pages.partner._

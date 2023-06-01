@@ -18,7 +18,6 @@ package services
 
 import base.SpecBase
 import cats.data.NonEmptyList
-import config.FeatureFlags
 import connectors.ImmigrationStatusConnector
 import generators.Generators
 import models._

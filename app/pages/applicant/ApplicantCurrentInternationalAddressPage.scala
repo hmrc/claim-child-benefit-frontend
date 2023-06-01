@@ -17,7 +17,6 @@
 package pages.applicant
 
 import controllers.applicant.routes
-import models.ApplicantResidence.AlwaysUk
 import models.{InternationalAddress, UserAnswers}
 import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath

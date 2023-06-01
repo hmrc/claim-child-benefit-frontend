@@ -17,7 +17,6 @@
 package connectors
 
 import models.{ErrorResponse, InvalidJson, UnexpectedResponseStatus, VerifyBankDetailsResponseModel}
-import org.slf4j.LoggerFactory
 import play.api.http.Status.OK
 import play.api.libs.json.JsSuccess
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}

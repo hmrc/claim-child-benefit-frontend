@@ -17,7 +17,7 @@
 package forms.child
 
 import forms.mappings.Mappings
-import models.{AdultName, ChildName}
+import models.ChildName
 import play.api.data.Form
 
 import javax.inject.Inject

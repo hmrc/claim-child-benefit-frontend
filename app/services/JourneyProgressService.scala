@@ -20,7 +20,6 @@ import models.UserAnswers
 import pages.{AddItemPage, CheckAnswersPage, EmptyWaypoints, Page, QuestionPage, Terminus}
 
 import javax.inject.Singleton
-import scala.annotation.tailrec
 
 @Singleton
 class JourneyProgressService {

@@ -21,7 +21,7 @@ import controllers.actions._
 import forms.child.PreviousClaimantNameKnownFormProvider
 import models.Index
 import pages.Waypoints
-import pages.child.{ChildNamePage, PreviousClaimantNameKnownPage, PreviousClaimantNamePage}
+import pages.child.{ChildNamePage, PreviousClaimantNameKnownPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserDataService

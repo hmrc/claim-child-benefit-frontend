@@ -20,7 +20,7 @@ import controllers.AnswerExtractor
 import controllers.actions._
 import forms.partner.PartnerEldestChildDateOfBirthFormProvider
 import pages.Waypoints
-import pages.partner.{PartnerEldestChildDateOfBirthPage, PartnerEldestChildNamePage, PartnerNamePage}
+import pages.partner.{PartnerEldestChildDateOfBirthPage, PartnerEldestChildNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserDataService

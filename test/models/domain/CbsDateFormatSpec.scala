@@ -18,7 +18,7 @@ package models.domain
 
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import play.api.libs.json.{Json, OWrites, Writes}
+import play.api.libs.json.{Json, OWrites}
 
 import java.time.LocalDate
 

@@ -20,7 +20,7 @@ import audit.{AuditService, VerifyBankDetailsAuditEvent}
 import config.Service
 import connectors.BarsHttpParser.{BarsReads, VerifyBankDetailsResponse}
 import logging.Logging
-import models.{InvalidJson, UnexpectedException, VerifyBankDetailsRequest}
+import models.{UnexpectedException, VerifyBankDetailsRequest}
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.client.HttpClientV2

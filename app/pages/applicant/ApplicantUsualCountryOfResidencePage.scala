@@ -18,7 +18,7 @@ package pages.applicant
 
 import controllers.applicant.routes
 import models.{ApplicantResidence, Country, UserAnswers}
-import pages.{JourneyRecoveryPage, Page, QuestionPage, Waypoints}
+import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 

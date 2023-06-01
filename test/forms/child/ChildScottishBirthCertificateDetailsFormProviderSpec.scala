@@ -16,10 +16,8 @@
 
 package forms.child
 
-import forms.Validation
 import forms.behaviours.IntFieldBehaviours
 import models.ChildName
-import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import play.api.data.FormError
 

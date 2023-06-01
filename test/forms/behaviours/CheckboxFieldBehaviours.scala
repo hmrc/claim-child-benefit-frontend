@@ -17,7 +17,6 @@
 package forms.behaviours
 
 import forms.FormSpec
-import models.WithName
 import play.api.data.{Form, FormError}
 
 trait CheckboxFieldBehaviours extends FormSpec {

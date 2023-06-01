@@ -16,7 +16,7 @@
 
 package audit
 
-import models.{Country, NPSAddress}
+import models.Country
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import play.api.libs.json.Json

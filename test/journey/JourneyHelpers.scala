@@ -23,7 +23,7 @@ import org.scalactic.source.Position
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{OptionValues, TryValues}
 import pages.{EmptyWaypoints, Page, PageAndWaypoints, WaypointPage, Waypoints}
-import play.api.libs.json.{Json, Reads, Writes}
+import play.api.libs.json.{Reads, Writes}
 import queries.{Gettable, Settable}
 
 trait JourneyHelpers extends Matchers with TryValues with OptionValues {

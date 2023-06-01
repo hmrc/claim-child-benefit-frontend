@@ -17,7 +17,6 @@
 package models
 
 import play.api.libs.json._
-import play.twirl.api.HtmlFormat
 
 case class AdultName(
                       title: Option[String],

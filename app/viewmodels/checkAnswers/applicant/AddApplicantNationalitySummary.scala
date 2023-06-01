@@ -21,7 +21,6 @@ import models.{Index, UserAnswers}
 import pages.applicant.{AddApplicantNationalityPage, ApplicantNationalityPage}
 import pages.{AddItemPage, CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import queries.AllApplicantNationalities
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow

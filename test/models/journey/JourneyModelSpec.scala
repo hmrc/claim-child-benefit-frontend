@@ -18,9 +18,6 @@ package models.journey
 
 import cats.data.NonEmptyList
 import generators.ModelGenerators
-import models.OtherEligibilityFailReason._
-import models.PartnerClaimingChildBenefit.{GettingPayments, NotGettingPayments, WaitingToHear}
-import models.ReasonNotToSubmit._
 import models.RelationshipStatus._
 import models._
 import org.scalacheck.Arbitrary.arbitrary
@@ -28,11 +25,6 @@ import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{EitherValues, OptionValues, TryValues}
-import pages._
-import pages.applicant._
-import pages.child._
-import pages.partner._
-import pages.payments._
 import uk.gov.hmrc.domain.Nino
 
 import java.time.LocalDate
