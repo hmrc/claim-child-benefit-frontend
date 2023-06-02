@@ -18,22 +18,19 @@ package controllers.actions
 
 import base.SpecBase
 import connectors.ClaimChildBenefitConnector
-import models.{DesignatoryDetails, RelationshipDetails, UserAnswers}
 import models.requests.{AuthenticatedIdentifierRequest, IdentifierRequest, OptionalDataRequest, UnauthenticatedIdentifierRequest}
+import models.{DesignatoryDetails, RelationshipDetails, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.test.FakeRequest
 import services.UserDataService
-import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
-
-  private implicit val hc: HeaderCarrier = HeaderCarrier()
 
   class Harness(
                  sessionRepository: UserDataService,

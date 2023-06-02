@@ -43,6 +43,6 @@ class PreviousGuardianNameFormProvider @Inject() extends Mappings {
           maxLength(35, "previousGuardianName.error.lastName.length", childName.firstName),
           regexp(Validation.nameInputPattern, "previousGuardianName.error.lastName.invalid", childName.firstName)
         ))
-    )(AdultName.apply(None, _, _, _))(name => Some(name.firstName, name.middleNames, name.lastName))
+    )(AdultName.apply(None, _, _, _))(name => Some((name.firstName, name.middleNames, name.lastName)))
   )
 }

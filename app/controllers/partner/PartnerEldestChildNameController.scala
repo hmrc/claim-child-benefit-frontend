@@ -23,7 +23,6 @@ import pages.Waypoints
 import pages.partner.{PartnerEldestChildNamePage, PartnerNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import play.twirl.api.HtmlFormat
 import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.partner.PartnerEldestChildNameView
@@ -71,8 +70,6 @@ class PartnerEldestChildNameController @Inject()(
 
           form.bindFromRequest().fold(
             formWithErrors => {
-              val safeName = HtmlFormat.escape(partnerName.firstName).toString
-
               Future.successful(BadRequest(view(formWithErrors, waypoints, partnerName.firstName)))
             },
 

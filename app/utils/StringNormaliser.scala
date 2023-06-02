@@ -27,7 +27,7 @@ trait StringNormaliser {
       .map(c => substitutions.getOrElse(c, c)).mkString
 
   private val substitutions: Map[Char, Char] = Map(
-    '’' -> ''',
+    '’' -> '\'',
     'Ð' -> 'D',
     'Ø' -> 'O',
     'ð' -> 'o',

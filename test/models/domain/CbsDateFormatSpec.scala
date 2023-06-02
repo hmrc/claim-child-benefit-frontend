@@ -24,7 +24,7 @@ import java.time.LocalDate
 
 class CbsDateFormatSpec extends AnyFreeSpec with Matchers {
 
-  final case class TestModel(date: LocalDate)
+  case class TestModel(date: LocalDate)
 
   object TestModel extends CbsDateFormats {
 

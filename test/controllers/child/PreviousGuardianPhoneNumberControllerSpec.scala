@@ -19,7 +19,7 @@ package controllers.child
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.child.PreviousGuardianPhoneNumberFormProvider
-import models.{AdultName, Country, Done}
+import models.{AdultName, Done}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -44,7 +44,6 @@ class PreviousGuardianPhoneNumberControllerSpec extends SpecBase with MockitoSug
 
   lazy val previousGuardianPhoneNumberRoute = routes.PreviousGuardianPhoneNumberController.onPageLoad(waypoints, index).url
 
-  private val country     = Country.internationalCountries.head
   private val validAnswer = "0777 777777"
   private val userAnswers = baseAnswers.set(PreviousGuardianPhoneNumberPage(index), validAnswer).success.value
 

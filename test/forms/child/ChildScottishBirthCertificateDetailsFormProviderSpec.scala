@@ -40,7 +40,6 @@ class ChildScottishBirthCertificateDetailsFormProviderSpec extends IntFieldBehav
 
     val fieldName = "district"
     val requiredKey = "childScottishBirthCertificateDetails.district.error.required"
-    val invalidKey = "childScottishBirthCertificateDetails.district.error.invalid"
     val outOfRangeKey = "childScottishBirthCertificateDetails.district.error.outOfRange"
 
     behave like fieldThatBindsValidData(
@@ -70,7 +69,6 @@ class ChildScottishBirthCertificateDetailsFormProviderSpec extends IntFieldBehav
     val min = max - 20
     val fieldName = "year"
     val requiredKey = "childScottishBirthCertificateDetails.year.error.required"
-    val invalidKey = "childScottishBirthCertificateDetails.year.error.invalid"
     val outOfRangeKey = "childScottishBirthCertificateDetails.year.error.outOfRange"
 
     behave like fieldThatBindsValidData(
@@ -98,7 +96,6 @@ class ChildScottishBirthCertificateDetailsFormProviderSpec extends IntFieldBehav
 
     val fieldName = "entry"
     val requiredKey = "childScottishBirthCertificateDetails.entry.error.required"
-    val invalidKey = "childScottishBirthCertificateDetails.entry.error.invalid"
     val outOfRangeKey = "childScottishBirthCertificateDetails.entry.error.outOfRange"
 
     behave like fieldThatBindsValidData(

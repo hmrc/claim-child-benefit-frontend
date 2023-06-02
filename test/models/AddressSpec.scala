@@ -25,21 +25,6 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class AddressSpec extends AnyFreeSpec with Matchers with OptionValues with ScalaCheckPropertyChecks with ModelGenerators {
 
-  private def keyword = Gen.oneOf(
-    "COUNCIL",
-    "CIVIC",
-    "AUTHORITY",
-    "DISTRICT",
-    "METROPOLITAN",
-    "BOROUGH",
-    "Council",
-    "civic",
-    "Authority",
-    "District",
-    "metropolitan",
-    "Borough",
-  )
-
   ".possibleLocalAuthority" - {
 
     "for a UK address" - {

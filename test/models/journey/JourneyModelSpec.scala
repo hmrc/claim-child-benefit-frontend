@@ -37,18 +37,14 @@ class JourneyModelSpec
     with OptionValues
     with ModelGenerators {
 
-  private val now = LocalDate.now
   private val adultName = AdultName(None, "first", None, "last")
   private val ukAddress = UkAddress("line 1", None, "town", None, "AA11 1AA")
   private val phoneNumber = "07777 777777"
   private val nationality = Gen.oneOf(Nationality.allNationalities).sample.value
 
   private val childName = ChildName("first", None, "last")
-  private val biologicalSex = ChildBiologicalSex.Female
   private val relationshipToChild = ApplicantRelationshipToChild.BirthChild
   private val systemNumber = BirthCertificateSystemNumber("000000000")
-  private val npsAddress = NPSAddress("line 1", None, None, None, None, None, None)
-  private val designatoryDetails = DesignatoryDetails(Some(adultName), None, Some(npsAddress), None, LocalDate.now)
 
   private val nino = arbitrary[Nino].sample.value
 

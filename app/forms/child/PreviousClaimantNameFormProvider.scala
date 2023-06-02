@@ -43,6 +43,6 @@ class PreviousClaimantNameFormProvider @Inject() extends Mappings {
           maxLength(35, "previousClaimantName.error.lastName.length", childName.firstName),
           regexp(Validation.nameInputPattern, "previousClaimantName.error.lastName.invalid", childName.firstName)
         ))
-    )(AdultName.apply(None, _, _, _))(name => Some(name.firstName, name.middleNames, name.lastName))
+    )(AdultName.apply(None, _, _, _))(name => Some((name.firstName, name.middleNames, name.lastName)))
   )
 }
