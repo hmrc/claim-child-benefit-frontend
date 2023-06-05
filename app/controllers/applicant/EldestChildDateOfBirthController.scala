@@ -23,7 +23,6 @@ import pages.Waypoints
 import pages.applicant.{EldestChildDateOfBirthPage, EldestChildNamePage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import play.twirl.api.HtmlFormat
 import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.applicant.EldestChildDateOfBirthView

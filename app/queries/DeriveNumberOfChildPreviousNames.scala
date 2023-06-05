@@ -16,7 +16,7 @@
 
 package queries
 
-import models.{ChildName, Index}
+import models.Index
 import play.api.libs.json.{JsObject, JsPath}
 
 case class DeriveNumberOfChildPreviousNames(childIndex: Index) extends Derivable[Seq[JsObject], Int] {

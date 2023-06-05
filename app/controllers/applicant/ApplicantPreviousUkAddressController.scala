@@ -19,7 +19,7 @@ package controllers.applicant
 import controllers.actions._
 import forms.applicant.ApplicantPreviousUkAddressFormProvider
 import pages.Waypoints
-import pages.applicant.{ApplicantLivedAtCurrentAddressOneYearPage, ApplicantPreviousUkAddressPage}
+import pages.applicant.ApplicantPreviousUkAddressPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserDataService

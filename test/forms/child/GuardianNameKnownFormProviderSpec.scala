@@ -17,7 +17,7 @@
 package forms.child
 
 import forms.behaviours.BooleanFieldBehaviours
-import models.{AdultName, ChildName}
+import models.ChildName
 import play.api.data.FormError
 
 class GuardianNameKnownFormProviderSpec extends BooleanFieldBehaviours {

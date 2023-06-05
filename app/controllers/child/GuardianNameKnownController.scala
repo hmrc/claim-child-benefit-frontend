@@ -21,7 +21,7 @@ import controllers.actions._
 import forms.child.GuardianNameKnownFormProvider
 import models.Index
 import pages.Waypoints
-import pages.child.{ChildNamePage, GuardianNameKnownPage, GuardianNamePage}
+import pages.child.{ChildNamePage, GuardianNameKnownPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserDataService

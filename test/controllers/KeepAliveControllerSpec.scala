@@ -25,13 +25,10 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserDataService
-import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
 
 class KeepAliveControllerSpec extends SpecBase with MockitoSugar {
-
-  private implicit val hc: HeaderCarrier = HeaderCarrier()
 
   "keepAlive" - {
 

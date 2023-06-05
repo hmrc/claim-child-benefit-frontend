@@ -233,7 +233,7 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
     object Section1 extends AddToListSection
     object Section2 extends AddToListSection
 
-    final case class AddItemPage1(override val index: Option[Index] = None) extends AddItemPage(index) {
+    case class AddItemPage1(override val index: Option[Index] = None) extends AddItemPage(index) {
       override val normalModeUrlFragment: String = "add-page-1"
       override val checkModeUrlFragment: String = "change-page-1"
 
@@ -255,7 +255,7 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
       }
     }
 
-    final case class AddItemPage2(override val index: Option[Index] = None) extends AddItemPage(index) {
+    case class AddItemPage2(override val index: Option[Index] = None) extends AddItemPage(index) {
       override val normalModeUrlFragment: String = "add-page-2"
       override val checkModeUrlFragment: String = "change-page-2"
 

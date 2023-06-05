@@ -39,7 +39,7 @@ object BirthRegistrationMatchingRequest {
              name: ChildName,
              dateOfBirth: LocalDate,
              countryOfRegistration: ChildBirthRegistrationCountry
-           ): Option[BirthRegistrationMatchingRequest] =
+           ): Option[BirthRegistrationMatchingRequest] = {
     countryOfRegistration match {
       case England | Scotland | Wales | NorthernIreland =>
         Some(BirthRegistrationMatchingRequest(
@@ -53,10 +53,12 @@ object BirthRegistrationMatchingRequest {
             case Scotland        => "scotland"
             case Wales           => "wales"
             case NorthernIreland => "northern ireland"
-            }
-          ))
+            case _               => throw new RuntimeException()
+          }
+        ))
 
       case _ =>
         None
     }
+  }
 }

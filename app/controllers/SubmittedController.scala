@@ -66,7 +66,6 @@ class SubmittedController @Inject()(
   }
 
   def exitSurvey: Action[AnyContent] = Action {
-    implicit request =>
-      Redirect(appConfig.exitSurveyUrl).withNewSession
+    Redirect(appConfig.exitSurveyUrl).withNewSession
   }
 }

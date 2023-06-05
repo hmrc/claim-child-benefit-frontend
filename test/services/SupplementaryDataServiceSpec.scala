@@ -39,7 +39,6 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.RequestHeader
 import play.api.test.FakeRequest
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.HeaderCarrier
 import views.xml.xml.archive.ArchiveTemplate
 
 import java.time.{Clock, Instant, LocalDate, ZoneOffset}
@@ -69,7 +68,6 @@ class SupplementaryDataServiceSpec
 
 
   private val request: RequestHeader = FakeRequest()
-  private val hc: HeaderCarrier = HeaderCarrier()
 
   private val nino = arbitrary[Nino].sample.value.value
 

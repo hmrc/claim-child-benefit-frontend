@@ -17,7 +17,7 @@
 package pages.child
 
 import controllers.child.routes
-import models.{AdultName, Index, UserAnswers}
+import models.{Index, UserAnswers}
 import pages.{Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call

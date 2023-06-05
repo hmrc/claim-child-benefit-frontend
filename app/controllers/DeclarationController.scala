@@ -19,7 +19,6 @@ package controllers
 import connectors.ClaimChildBenefitConnector.{AlreadyInPaymentException, InvalidClaimStateException}
 import controllers.actions.{CheckRecentClaimsAction, DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import logging.Logging
-import pages.Waypoints
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.ClaimSubmissionService

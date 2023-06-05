@@ -16,18 +16,16 @@
 
 package models.tasklist
 
-import models.RelationshipStatus._
 import models.UserAnswers
 import models.tasklist.SectionStatus.{Completed, InProgress, NotStarted}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.{times, verify, when}
-import org.scalacheck.Gen
 import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.mockito.MockitoSugar
-import pages.partner.{CheckPartnerDetailsPage, PartnerNamePage, PartnerNinoPage, RelationshipStatusPage}
+import pages.partner.{CheckPartnerDetailsPage, PartnerNinoPage, RelationshipStatusPage}
 import services.JourneyProgressService
 
 class PartnerSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar with BeforeAndAfterEach with OptionValues with TryValues {

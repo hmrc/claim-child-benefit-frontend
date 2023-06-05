@@ -45,7 +45,7 @@ class BankAccountDetailsFormProvider @Inject() extends Mappings {
       "softError" -> optional(boolean())
     )
     ((f, l, s, a, e) => BankAccountDetailsFormModel(BankAccountDetails(f, l, s, a), e))
-    (f => Some(f.details.firstName, f.details.lastName, f.details.sortCode, f.details.accountNumber, f.softError))
+    (f => Some((f.details.firstName, f.details.lastName, f.details.sortCode, f.details.accountNumber, f.softError)))
   )
 }
 

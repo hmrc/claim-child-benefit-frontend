@@ -19,9 +19,11 @@ package connectors
 import config.Service
 import models.{Done, UserAnswers}
 import play.api.Configuration
+import play.api.http.Status.NO_CONTENT
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
+import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps, UpstreamErrorResponse}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -43,17 +45,35 @@ class UserAnswersConnector @Inject()(config: Configuration, httpClient: HttpClie
       .post(userAnswersUrl)
       .withBody(Json.toJson(answers))
       .execute[HttpResponse]
-      .map(_ => Done)
+      .flatMap { response =>
+        if (response.status == NO_CONTENT) {
+          Future.successful(Done)
+        } else {
+          Future.failed(UpstreamErrorResponse("", response.status))
+        }
+      }
 
   def keepAlive()(implicit hc: HeaderCarrier): Future[Done] =
     httpClient
       .post(keepAliveUrl)
       .execute[HttpResponse]
-      .map(_ => Done)
+      .flatMap { response =>
+        if (response.status == NO_CONTENT) {
+          Future.successful(Done)
+        } else {
+          Future.failed(UpstreamErrorResponse("", response.status))
+        }
+      }
 
   def clear()(implicit hc: HeaderCarrier): Future[Done] =
     httpClient
       .delete(userAnswersUrl)
       .execute[HttpResponse]
-      .map(_ => Done)
+      .flatMap { response =>
+        if (response.status == NO_CONTENT) {
+          Future.successful(Done)
+        } else {
+          Future.failed(UpstreamErrorResponse("", response.status))
+        }
+      }
 }

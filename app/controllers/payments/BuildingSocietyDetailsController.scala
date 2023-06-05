@@ -16,7 +16,6 @@
 
 package controllers.payments
 
-import config.FeatureFlags
 import controllers.AnswerExtractor
 import controllers.actions._
 import forms.payments.BuildingSocietyDetailsFormProvider
@@ -25,7 +24,7 @@ import pages.Waypoints
 import pages.payments.{BankAccountHolderPage, BuildingSocietyDetailsPage}
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.{BarsService, UserDataService}
+import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.payments.BuildingSocietyDetailsView
 

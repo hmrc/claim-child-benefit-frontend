@@ -30,7 +30,7 @@ import play.api.test.Helpers._
 import views.html.RecentlySubmittedView
 
 import java.time.format.DateTimeFormatter
-import java.time.{LocalDate, ZoneId}
+import java.time.ZoneId
 import scala.concurrent.Future
 
 class RecentlySubmittedControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {

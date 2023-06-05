@@ -17,14 +17,13 @@
 package journey
 
 import generators.ModelGenerators
-import models.{AdultName, InternationalAddress, UkAddress}
+import models.{InternationalAddress, UkAddress}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.freespec.AnyFreeSpec
 import pages.applicant._
 
 class ChangingDesignatoryDetailsJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
-  private def name = arbitrary[AdultName].sample.value
   private def ukAddress = arbitrary[UkAddress].sample.value
   private def internationalAddress = arbitrary[InternationalAddress].sample.value
 

@@ -20,7 +20,6 @@ import models.{Index, UserAnswers}
 import pages.child.ChildBiologicalSexPage
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._

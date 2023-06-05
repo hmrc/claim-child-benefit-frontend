@@ -17,10 +17,8 @@
 package pages.payments
 
 import controllers.payments.routes
-import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming}
 import models.PaymentFrequency.{EveryFourWeeks, Weekly}
 import models.{Benefits, UserAnswers}
-import pages.applicant.CurrentlyReceivingChildBenefitPage
 import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call

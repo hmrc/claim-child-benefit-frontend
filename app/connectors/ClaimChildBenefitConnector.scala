@@ -22,16 +22,18 @@ import config.Service
 import connectors.ClaimChildBenefitConnector._
 import connectors.SubmitClaimHttpParser._
 import models.domain.Claim
-import models.{CheckLimitResponse, DesignatoryDetails, Done, RecentClaim, RelationshipDetails, SupplementaryMetadata}
+import models.{DesignatoryDetails, Done, RecentClaim, RelationshipDetails, SupplementaryMetadata}
 import play.api.Configuration
+import play.api.http.Status.{ACCEPTED, NO_CONTENT}
 import play.api.libs.json.Json
 import play.api.mvc.MultipartFormData
+import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps, UpstreamErrorResponse}
 
-import java.time.{LocalDateTime, ZoneOffset}
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import java.time.{LocalDateTime, ZoneOffset}
 import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -45,8 +47,6 @@ class ClaimChildBenefitConnector @Inject()(
   private val designatoryDetailsUrl = url"$baseUrl/claim-child-benefit/designatory-details"
   private val submitClaimUrl = url"$baseUrl/claim-child-benefit/submit"
   private val supplementaryDataUrl = url"$baseUrl/claim-child-benefit/supplementary-data"
-  private val checkThrottleUrl = url"$baseUrl/claim-child-benefit/throttle/check"
-  private val incrementThrottleCountUrl = url"$baseUrl/claim-child-benefit/throttle/increment"
   private val relationshipDetailsUrl = url"$baseUrl/claim-child-benefit/relationship-details"
   private val recentClaimUrl = url"$baseUrl/claim-child-benefit/recent-claims"
 
@@ -98,21 +98,14 @@ class ClaimChildBenefitConnector @Inject()(
         )
       )
       .execute[HttpResponse]
-      .map(_ => Done)
+      .flatMap { response =>
+        if (response.status == ACCEPTED) {
+          Future.successful(Done)
+        } else {
+          Future.failed(UpstreamErrorResponse("", response.status))
+        }
+      }
   }
-
-  def checkThrottleLimit()(implicit hc: HeaderCarrier): Future[CheckLimitResponse] =
-    httpClient
-      .get(checkThrottleUrl)
-      .setHeader("Authorization" -> internalAuthToken)
-      .execute[CheckLimitResponse]
-
-  def incrementThrottleCount()(implicit hc: HeaderCarrier): Future[Done] =
-    httpClient
-      .post(incrementThrottleCountUrl)
-      .setHeader("Authorization" -> internalAuthToken)
-      .execute[HttpResponse]
-      .map(_ => Done)
 
   def relationshipDetails()(implicit hc: HeaderCarrier): Future[RelationshipDetails] = {
     httpClient
@@ -130,7 +123,13 @@ class ClaimChildBenefitConnector @Inject()(
       .post(recentClaimUrl)
       .withBody(Json.toJson(recentClaim))
       .execute[HttpResponse]
-      .map(_ => Done)
+      .flatMap { response =>
+        if (response.status == NO_CONTENT) {
+          Future.successful(Done)
+        } else {
+          Future.failed(UpstreamErrorResponse("", response.status))
+        }
+      }
 }
 
 object ClaimChildBenefitConnector {

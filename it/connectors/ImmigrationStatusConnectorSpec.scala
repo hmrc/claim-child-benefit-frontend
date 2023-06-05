@@ -1,13 +1,9 @@
 package connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock._
-import connectors.ClaimChildBenefitConnector._
 import generators.ModelGenerators
-import models.domain._
 import models.immigration.{ImmigrationStatus, NinoSearchRequest, StatusCheckRange, StatusCheckResult}
-import models.{AdultName, CheckLimitResponse, DesignatoryDetails, Done, NPSAddress, RelationshipDetails, SupplementaryMetadata}
 import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.Gen
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -15,14 +11,10 @@ import org.scalatest.{EitherValues, OptionValues}
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json.Json
-import play.api.test.Helpers._
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 
-import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
-import java.time.{LocalDate, LocalDateTime, ZoneOffset}
+import java.time.LocalDate
 import java.util.UUID
 
 class ImmigrationStatusConnectorSpec

@@ -4,7 +4,7 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 import connectors.ClaimChildBenefitConnector._
 import generators.ModelGenerators
 import models.domain._
-import models.{AdultName, CheckLimitResponse, DesignatoryDetails, Done, NPSAddress, RecentClaim, RelationshipDetails, SupplementaryMetadata, TaxChargeChoice}
+import models.{AdultName, DesignatoryDetails, Done, NPSAddress, RecentClaim, RelationshipDetails, SupplementaryMetadata, TaxChargeChoice}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -358,56 +358,6 @@ class ClaimChildBenefitConnectorSpec
       )
 
       connector.submitSupplementaryData(pdf, metadata)(hc).failed.futureValue
-    }
-  }
-
-  ".checkThrottleLimit" - {
-
-    "must return a result when the server returns one" in {
-
-      val response = CheckLimitResponse(limitReached = true)
-
-      server.stubFor(
-        get(urlEqualTo("/claim-child-benefit/throttle/check"))
-          .withHeader("Authorization", equalTo("authKey"))
-          .willReturn(aResponse().withStatus(OK).withBody(Json.toJson(response).toString))
-      )
-
-      connector.checkThrottleLimit().futureValue mustEqual response
-    }
-
-    "must fail when the server returns an error" in {
-
-      server.stubFor(
-        get(urlEqualTo("/claim-child-benefit/throttle/check"))
-          .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
-      )
-
-      connector.checkThrottleLimit().failed.futureValue
-    }
-  }
-
-  ".incrementThrottleCount" - {
-
-    "must return Done when the server responds with OK" in {
-
-      server.stubFor(
-        post(urlEqualTo("/claim-child-benefit/throttle/increment"))
-          .withHeader("Authorization", equalTo("authKey"))
-          .willReturn(aResponse().withStatus(OK))
-      )
-
-      connector.incrementThrottleCount().futureValue mustEqual Done
-    }
-
-    "must fail when the server returns an error" in {
-
-      server.stubFor(
-        get(urlEqualTo("/claim-child-benefit/throttle/incremnt"))
-          .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
-      )
-
-      connector.incrementThrottleCount().failed.futureValue
     }
   }
 

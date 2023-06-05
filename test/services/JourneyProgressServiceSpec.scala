@@ -66,19 +66,19 @@ class JourneyProgressServiceSpec extends AnyFreeSpec with Matchers with OptionVa
     override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page = AddToListQuestionPage7(Index(0))
   }
 
-  final case class AddToListQuestionPage7(index: Index) extends QuestionPage[String] {
+  case class AddToListQuestionPage7(index: Index) extends QuestionPage[String] {
     override def route(waypoints: Waypoints): Call = ???
     override def path: JsPath = JsPath \ "addToList" \ index.position \ "page7"
     override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page = AddToListQuestionPage8(index)
   }
 
-  final case class AddToListQuestionPage8(index: Index) extends QuestionPage[String] {
+  case class AddToListQuestionPage8(index: Index) extends QuestionPage[String] {
     override def route(waypoints: Waypoints): Call = ???
     override def path: JsPath = JsPath \ "addToList" \ index.position \ "page8"
     override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page = CheckAddToListAnswersPage9(index)
   }
 
-  final case class CheckAddToListAnswersPage9(index: Index) extends CheckAnswersPage {
+  case class CheckAddToListAnswersPage9(index: Index) extends CheckAnswersPage {
     override val urlFragment: String = "foo"
     override def route(waypoints: Waypoints): Call = ???
     override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page = AddAnotherPage10(Some(index))
@@ -94,7 +94,7 @@ class JourneyProgressServiceSpec extends AnyFreeSpec with Matchers with OptionVa
     override def path: JsPath = JsPath \ "addToList"
   }
 
-  final case class AddAnotherPage10(override val index: Option[Index] = None) extends AddItemPage(index) with QuestionPage[Boolean] {
+  case class AddAnotherPage10(override val index: Option[Index] = None) extends AddItemPage(index) with QuestionPage[Boolean] {
     override val normalModeUrlFragment: String = "bar"
     override val checkModeUrlFragment: String = "baz"
     override def route(waypoints: Waypoints): Call = ???
@@ -144,7 +144,7 @@ class JourneyProgressServiceSpec extends AnyFreeSpec with Matchers with OptionVa
     }
   }
 
-  final case class AddToListQuestionPage13(index: Index) extends QuestionPage[String] {
+  case class AddToListQuestionPage13(index: Index) extends QuestionPage[String] {
     override def route(waypoints: Waypoints): Call = ???
 
     override def path: JsPath = JsPath \ "addToList2" \ index.position \ "page13"
@@ -152,7 +152,7 @@ class JourneyProgressServiceSpec extends AnyFreeSpec with Matchers with OptionVa
     override def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page = AddToListQuestionPage14(index)
   }
 
-  final case class AddToListQuestionPage14(index: Index) extends QuestionPage[String] {
+  case class AddToListQuestionPage14(index: Index) extends QuestionPage[String] {
     override def route(waypoints: Waypoints): Call = ???
 
     override def path: JsPath = JsPath \ "addToList2" \ index.position \ "page14"
@@ -160,7 +160,7 @@ class JourneyProgressServiceSpec extends AnyFreeSpec with Matchers with OptionVa
     override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page = CheckAddToListAnswersPage15(index)
   }
 
-  final case class CheckAddToListAnswersPage15(index: Index) extends CheckAnswersPage {
+  case class CheckAddToListAnswersPage15(index: Index) extends CheckAnswersPage {
     override val urlFragment: String = "foo"
 
     override def route(waypoints: Waypoints): Call = ???
@@ -179,7 +179,7 @@ class JourneyProgressServiceSpec extends AnyFreeSpec with Matchers with OptionVa
     override def path: JsPath = JsPath \ "addToList2"
   }
 
-  final case class AddAnotherPage16(override val index: Option[Index] = None) extends AddItemPage(index) with QuestionPage[Boolean] with Terminus {
+  case class AddAnotherPage16(override val index: Option[Index] = None) extends AddItemPage(index) with QuestionPage[Boolean] with Terminus {
     override val normalModeUrlFragment: String = "x"
     override val checkModeUrlFragment: String = "y"
 

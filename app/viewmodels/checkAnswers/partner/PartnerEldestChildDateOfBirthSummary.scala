@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers.partner
 
 import models.UserAnswers
-import pages.partner.{PartnerEldestChildDateOfBirthPage, PartnerEldestChildNamePage, PartnerNamePage}
+import pages.partner.{PartnerEldestChildDateOfBirthPage, PartnerEldestChildNamePage}
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow

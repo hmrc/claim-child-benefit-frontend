@@ -16,20 +16,17 @@
 
 package models.tasklist
 
-import models.RelationshipStatus._
 import models.tasklist.SectionStatus.{Completed, InProgress, NotStarted}
 import models.{Index, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.{times, verify, when}
-import org.scalacheck.Gen
 import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.child.{AddChildPage, ChildDateOfBirthPage, ChildNamePage}
-import pages.partner.RelationshipStatusPage
 import services.JourneyProgressService
 
 class ChildSectionSpec

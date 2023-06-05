@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers.child
 
 import models.{Index, UserAnswers}
-import pages.child.{ChildHasPreviousNamePage, GuardianAddressInUkPage}
+import pages.child.GuardianAddressInUkPage
 import pages.{CheckAnswersPage, Waypoints}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow

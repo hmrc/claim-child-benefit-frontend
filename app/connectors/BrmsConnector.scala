@@ -21,6 +21,7 @@ import models.{BirthRegistrationMatchingRequest, BirthRegistrationMatchingRespon
 import play.api.Configuration
 import play.api.http.HeaderNames
 import play.api.libs.json.Json
+import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 

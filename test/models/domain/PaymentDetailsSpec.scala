@@ -18,15 +18,12 @@ package models.domain
 
 import generators.ModelGenerators
 import models.journey
-import models.journey.EldestChild
 import models.{BankAccountDetails, BankAccountHolder, BankAccountInsightsResponseModel, BuildingSociety}
-import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import play.api.libs.json.Json
 
-import java.time.LocalDate
 
 class PaymentDetailsSpec extends AnyFreeSpec with Matchers with OptionValues with ModelGenerators {
 

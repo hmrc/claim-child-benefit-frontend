@@ -23,7 +23,7 @@ import models.{ChildName, Done}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.child.{ChildNamePage, GuardianNameKnownPage, GuardianNamePage}
+import pages.child.{ChildNamePage, GuardianNameKnownPage}
 import pages.{EmptyWaypoints, child}
 import play.api.inject.bind
 import play.api.test.FakeRequest
