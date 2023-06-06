@@ -83,6 +83,7 @@ journeyRecovery.startAgain.p2.2 = os ydych am siarad â rhywun ynglŷn â hawlio
 signIn.title = A ydych am fewngofnodi drwy ddefnyddio Porth y Llywodraeth?
 signIn.heading = A ydych am fewngofnodi drwy ddefnyddio Porth y Llywodraeth?
 signIn.p1 = Os ydych yn mewngofnodi ac yn cadarnhau pwy ydych, byddwch yn gallu llenwi’r hawliad hwn yn gyflymach.
+signIn.error.required = Dewiswch ’Iawn’ os ydych am fewngofnodi drwy ddefnyddio Porth y Llywodraeth
 
 signedOut.title = Gwnaethom gadw’ch cynnydd
 signedOut.heading = Gwnaethom gadw’ch cynnydd

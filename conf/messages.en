@@ -458,7 +458,7 @@ wantToBePaid.couple.under50k.over60k.p5 = It is important to claim for Child Ben
 
 wantToBePaid.couple.under60k.under50k.title = How the tax charge works
 wantToBePaid.couple.under60k.under50k.heading = How the tax charge works
-wantToBePaid.couple.under60k.under50k.p1 = You income is between £50,100 and £60,000 in a year, and you may have to pay a
+wantToBePaid.couple.under60k.under50k.p1 = Your income is between £50,100 and £60,000 in a year, and you may have to pay a
 wantToBePaid.couple.under60k.under50k.p1.link.href = https://www.gov.uk/child-benefit-tax-charge
 wantToBePaid.couple.under60k.under50k.p1.link.text = High Income Child Benefit Charge
 wantToBePaid.couple.under60k.under50k.p2 = If you choose to be paid Child Benefit, the payments you will get will be more than the value of the tax charge that you must pay.
