@@ -29,7 +29,7 @@
 
 @layout(pageTitle = title(form, messages("applicantCurrentUkAddress.title"))) {
 
-    @formHelper(action = routes.ApplicantCurrentUkAddressController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.ApplicantCurrentUkAddressController.onSubmit(waypoints), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

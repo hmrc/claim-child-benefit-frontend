@@ -28,7 +28,7 @@
 
 @layout(pageTitle = title(form, messages("separationDate.title"))) {
 
-    @formHelper(action = routes.SeparationDateController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.SeparationDateController.onSubmit(waypoints), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value.day")))

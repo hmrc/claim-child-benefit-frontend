@@ -28,7 +28,7 @@
 
     @layout(pageTitle = title(form, messages("anyoneClaimedForChildBefore.title"))) {
 
-        @formHelper(action = routes.AnyoneClaimedForChildBeforeController.onSubmit(waypoints, index), 'autoComplete -> "off") {
+        @formHelper(action = routes.AnyoneClaimedForChildBeforeController.onSubmit(waypoints, index), Symbol("autoComplete") -> "off") {
 
             @if(form.errors.nonEmpty) {
                 @govukErrorSummary(ErrorSummaryViewModel(form))

@@ -29,7 +29,7 @@
 
 @layout(pageTitle = title(form, messages("partnerName.title"))) {
 
-    @formHelper(action = routes.PartnerNameController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.PartnerNameController.onSubmit(waypoints), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

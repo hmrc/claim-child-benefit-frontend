@@ -16,10 +16,8 @@
 
 package utils
 
-import cats.implicits._
 import cats.Monad
-
-import scala.language.higherKinds
+import cats.implicits._
 
 object MonadOps {
 

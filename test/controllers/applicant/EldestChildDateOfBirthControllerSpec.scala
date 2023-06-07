@@ -48,10 +48,10 @@ class EldestChildDateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
   val baseAnswers = emptyUserAnswers.set(EldestChildNamePage, eldestChildName).success.value
 
-  def getRequest(): FakeRequest[AnyContentAsEmpty.type] =
+  def getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, eldestChildDateOfBirthRoute)
 
-  def postRequest(): FakeRequest[AnyContentAsFormUrlEncoded] =
+  def postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest(POST, eldestChildDateOfBirthRoute)
       .withFormUrlEncodedBody(
         "value.day"   -> validAnswer.getDayOfMonth.toString,

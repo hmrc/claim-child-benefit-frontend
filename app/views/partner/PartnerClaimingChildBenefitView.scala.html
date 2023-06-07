@@ -28,7 +28,7 @@
 
 @layout(pageTitle = title(form, messages("partnerClaimingChildBenefit.title"))) {
 
-    @formHelper(action = routes.PartnerClaimingChildBenefitController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.PartnerClaimingChildBenefitController.onSubmit(waypoints), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

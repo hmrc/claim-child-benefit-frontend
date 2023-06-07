@@ -30,6 +30,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import javax.inject.Inject
+import scala.annotation.nowarn
 import scala.concurrent.{ExecutionContext, Future}
 
 class OptionalAuthIdentifierAction @Inject()(
@@ -38,6 +39,7 @@ class OptionalAuthIdentifierAction @Inject()(
                                               config: FrontendAppConfig
                                             )(implicit val executionContext: ExecutionContext) extends IdentifierAction with AuthorisedFunctions {
 
+  @nowarn()
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)

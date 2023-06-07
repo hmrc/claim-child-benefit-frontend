@@ -30,7 +30,7 @@
 
 @layout(pageTitle = title(form, messages("partnerIncome.title"))) {
 
-    @formHelper(action = routes.PartnerIncomeController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.PartnerIncomeController.onSubmit(waypoints), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))

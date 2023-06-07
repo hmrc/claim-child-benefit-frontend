@@ -28,7 +28,7 @@
 
 @layout(pageTitle = title(form, messages("correspondenceAddressInUk.title"))) {
 
-    @formHelper(action = routes.CorrespondenceAddressInUkController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.CorrespondenceAddressInUkController.onSubmit(waypoints), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

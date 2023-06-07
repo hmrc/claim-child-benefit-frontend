@@ -28,7 +28,7 @@
 
 @layout(pageTitle = title(form, messages("applicantArrivedInUk.title"))) {
 
-    @formHelper(action = routes.ApplicantArrivedInUkController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.ApplicantArrivedInUkController.onSubmit(waypoints), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value.day")))

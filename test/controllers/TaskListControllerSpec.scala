@@ -51,7 +51,7 @@ class TaskListControllerSpec extends SpecBase with MockitoSugar with BeforeAndAf
       when(mockTaskListService.sections(any())).thenReturn(Nil)
 
       running(application) {
-        val request = FakeRequest(GET, routes.TaskListController.onPageLoad.url)
+        val request = FakeRequest(GET, routes.TaskListController.onPageLoad().url)
 
         val result = route(application, request).value
 
@@ -67,7 +67,7 @@ class TaskListControllerSpec extends SpecBase with MockitoSugar with BeforeAndAf
       val application = appBuilder( None).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.TaskListController.onPageLoad.url)
+        val request = FakeRequest(GET, routes.TaskListController.onPageLoad().url)
 
         val result = route(application, request).value
 

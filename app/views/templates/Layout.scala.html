@@ -52,7 +52,7 @@
                 countdown           = Some(appConfig.countdown),
                 keepAliveUrl        = Some(routes.KeepAliveController.keepAlive.url),
                 keepAliveButtonText = Some(messages(s"timeout.$timeoutType.keepAlive")),
-                signOutUrl          = Some(controllers.auth.routes.AuthController.signOut.url),
+                signOutUrl          = Some(controllers.auth.routes.AuthController.signOut().url),
                 signOutButtonText   = Some(messages(s"timeout.$timeoutType.signOut")),
                 title               = Some(messages(s"timeout.$timeoutType.title")),
                 message             = Some(messages(s"timeout.$timeoutType.message"))
@@ -96,7 +96,7 @@
     headBlock   = Some(head),
     headerBlock = Some(hmrcStandardHeader(
         serviceUrl  = Some(routes.IndexController.onPageLoad.url),
-        signOutUrl  = if(request.signedIn && showSignOut) Some(controllers.auth.routes.AuthController.signOut.url) else None,
+        signOutUrl  = if(request.signedIn && showSignOut) Some(controllers.auth.routes.AuthController.signOut().url) else None,
         phaseBanner = Some(betaBanner(appConfig.feedbackUrl))
     )),
     beforeContentBlock = Some(beforeContent),

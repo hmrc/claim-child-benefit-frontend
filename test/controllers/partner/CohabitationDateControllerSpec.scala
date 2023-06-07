@@ -45,10 +45,10 @@ class CohabitationDateControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val relationshipStatusDateRoute = routes.CohabitationDateController.onPageLoad(waypoints).url
 
-  def getRequest(): FakeRequest[AnyContentAsEmpty.type] =
+  def getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, relationshipStatusDateRoute)
 
-  def postRequest(): FakeRequest[AnyContentAsFormUrlEncoded] =
+  def postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest(POST, relationshipStatusDateRoute)
       .withFormUrlEncodedBody(
         "value.day"   -> validAnswer.getDayOfMonth.toString,

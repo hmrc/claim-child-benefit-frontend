@@ -18,7 +18,7 @@ package models.domain
 
 import play.api.libs.json.{JsString, Writes}
 
-trait CountryOfRegistration
+sealed trait CountryOfRegistration
 
 object CountryOfRegistration {
 

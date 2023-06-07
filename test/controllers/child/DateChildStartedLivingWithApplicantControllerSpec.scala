@@ -56,10 +56,10 @@ class DateChildStartedLivingWithApplicantControllerSpec extends SpecBase with Mo
 
   lazy val dateChildStartedLivingWithApplicantRoute = routes.DateChildStartedLivingWithApplicantController.onPageLoad(waypoints, index).url
 
-  def getRequest(): FakeRequest[AnyContentAsEmpty.type] =
+  def getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, dateChildStartedLivingWithApplicantRoute)
 
-  def postRequest(): FakeRequest[AnyContentAsFormUrlEncoded] =
+  def postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest(POST, dateChildStartedLivingWithApplicantRoute)
       .withFormUrlEncodedBody(
         "value.day"   -> validAnswer.getDayOfMonth.toString,

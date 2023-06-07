@@ -28,7 +28,7 @@
 
 @layout(pageTitle = title(form, messages("accountType.title"))) {
 
-    @formHelper(action = routes.AccountTypeController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.AccountTypeController.onSubmit(waypoints), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))

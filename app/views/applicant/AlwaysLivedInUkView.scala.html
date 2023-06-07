@@ -28,7 +28,7 @@
 
 @layout(pageTitle = title(form, messages(s"alwaysLivedInUk.title"))) {
 
-    @formHelper(action = routes.AlwaysLivedInUkController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.AlwaysLivedInUkController.onSubmit(waypoints), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

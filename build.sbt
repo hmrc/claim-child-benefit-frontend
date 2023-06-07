@@ -14,7 +14,7 @@ lazy val root = (project in file("."))
   .settings(majorVersion := 0)
   .settings(ThisBuild / useSuperShell := false)
   .settings(
-    scalaVersion := "2.12.16",
+    scalaVersion := "2.13.8",
     name := appName,
     RoutesKeys.routesImport ++= Seq(
       "models._",
@@ -45,7 +45,6 @@ lazy val root = (project in file("."))
     ScoverageKeys.coverageHighlighting := true,
     scalacOptions ++= Seq(
       "-Wconf:cat=deprecation:ws,cat=feature:ws,cat=optimizer:ws,src=target/.*:s",
-      "-Ypartial-unification",
       "-rootdir",
       baseDirectory.value.getCanonicalPath,
       "-Xfatal-warnings",

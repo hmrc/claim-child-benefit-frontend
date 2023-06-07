@@ -29,7 +29,7 @@
 
 @layout(pageTitle = title(form, messages("childPreviousName.title"))) {
 
-    @formHelper(action = routes.ChildPreviousNameController.onSubmit(waypoints, childIndex, nameIndex), 'autoComplete -> "off") {
+    @formHelper(action = routes.ChildPreviousNameController.onSubmit(waypoints, childIndex, nameIndex), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

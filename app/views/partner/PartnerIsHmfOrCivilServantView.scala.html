@@ -28,7 +28,7 @@
 
 @layout(pageTitle = title(form, messages("partnerIsHmfOrCivilServant.title"))) {
 
-    @formHelper(action = routes.PartnerIsHmfOrCivilServantController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.PartnerIsHmfOrCivilServantController.onSubmit(waypoints), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

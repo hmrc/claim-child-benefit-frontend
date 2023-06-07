@@ -28,7 +28,7 @@
 
 @layout(pageTitle = title(form, messages("childNameChangedByDeedPoll.title"))) {
 
-    @formHelper(action = routes.ChildNameChangedByDeedPollController.onSubmit(waypoints, index), 'autoComplete -> "off") {
+    @formHelper(action = routes.ChildNameChangedByDeedPollController.onSubmit(waypoints, index), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

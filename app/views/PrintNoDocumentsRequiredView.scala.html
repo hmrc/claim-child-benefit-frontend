@@ -52,7 +52,7 @@
 
     <p class="govuk-body">
         @messages("print.downloadForm.p4")
-        <a href="@routes.TaskListController.onPageLoad.url" class="govuk-link">@messages("print.downloadForm.p4.link1.text")</a>
+        <a href="@routes.TaskListController.onPageLoad().url" class="govuk-link">@messages("print.downloadForm.p4.link1.text")</a>
         @messages("print.downloadForm.p4.2")
         <a href="@routes.IndexController.startAgain.url" class="govuk-link">@messages("print.downloadForm.p4.link2.text")</a>
     </p>

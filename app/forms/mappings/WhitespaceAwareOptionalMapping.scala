@@ -32,7 +32,7 @@ final case class WhitespaceAwareOptionalMapping[A](
 
   override def bind(data: Map[String, String]): Either[Seq[FormError], Option[A]] =
     data.get(key).filter(_.trim.nonEmpty).map { _ =>
-      wrapped.bind(data).right.map(a => Some(a)).flatMap(applyConstraints)
+      wrapped.bind(data).map(a => Some(a)).flatMap(applyConstraints)
     }.getOrElse(applyConstraints(None))
 
   override def unbind(value: Option[A]): Map[String, String] =
