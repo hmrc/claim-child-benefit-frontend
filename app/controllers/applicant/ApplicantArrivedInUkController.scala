@@ -41,7 +41,7 @@ class ApplicantArrivedInUkController @Inject()(
                                                 view: ApplicantArrivedInUkView
                                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def form = formProvider()
+  private def form = formProvider()
 
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>

@@ -45,7 +45,7 @@ class SeparationDateController @Inject()(
     with I18nSupport
     with AnswerExtractor {
 
-  private val form = formProvider()
+  private def form = formProvider()
 
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
     implicit request =>
