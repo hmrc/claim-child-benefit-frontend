@@ -14,7 +14,6 @@ object AppDependencies {
     "uk.gov.hmrc"                   %% "crypto-json-play-28"            % "7.3.0",
     "org.typelevel"                 %% "cats-core"                      % "2.3.0",
     "uk.gov.hmrc"                   %% "domain"                         % "8.3.0-play-28",
-    "com.dmanchester"               %% "playfop"                        % "1.0",
     "com.googlecode.libphonenumber" % "libphonenumber"                  % "8.12.47",
     "org.apache.xmlgraphics"        % "fop"                             % "2.8"
   )
