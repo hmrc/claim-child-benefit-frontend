@@ -16,13 +16,11 @@
 
 package services
 
-import com.dmanchester.playfop.sapi.PlayFop
 import connectors.ClaimChildBenefitConnector
 import models.journey.JourneyModel
 import models.{AdditionalArchiveDetails, Done, SupplementaryMetadata}
 import org.apache.fop.apps.FOUserAgent
-import org.apache.xmlgraphics.util.MimeConstants
-import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi, MessagesImpl}
+import play.api.i18n._
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import views.xml.xml.archive.ArchiveTemplate
@@ -30,7 +28,7 @@ import views.xml.xml.archive.ArchiveTemplate
 import java.time.Clock
 import java.util.UUID
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 trait SupplementaryDataService {
 
@@ -42,9 +40,9 @@ class SupplementaryDataServiceImpl @Inject() (
                                                clock: Clock,
                                                connector: ClaimChildBenefitConnector,
                                                template: ArchiveTemplate,
-                                               fop: PlayFop,
+                                               fop: FopService,
                                                override val messagesApi: MessagesApi
-                                             ) extends SupplementaryDataService with I18nSupport {
+                                             )(implicit ec: ExecutionContext) extends SupplementaryDataService with I18nSupport {
 
   private val userAgentBlock: FOUserAgent => Unit = { foUserAgent: FOUserAgent =>
     foUserAgent.setAccessibility(true)
@@ -66,9 +64,10 @@ class SupplementaryDataServiceImpl @Inject() (
     )
 
     val englishMessages: Messages = MessagesImpl(Lang("en"), messagesApi)
-    val pdf = fop.processTwirlXml(template.render(model, additionalDetails, englishMessages), MimeConstants.MIME_PDF, foUserAgentBlock = userAgentBlock)
 
-    connector.submitSupplementaryData(pdf, metadata)(HeaderCarrierConverter.fromRequestAndSession(request, request.session))
+    fop.render(template.render(model, additionalDetails, englishMessages).body, userAgentBlock).flatMap { pdf =>
+      connector.submitSupplementaryData(pdf, metadata)(HeaderCarrierConverter.fromRequestAndSession(request, request.session))
+    }
   }
 }
 

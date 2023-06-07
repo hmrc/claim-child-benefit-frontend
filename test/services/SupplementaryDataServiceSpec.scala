@@ -17,7 +17,6 @@
 package services
 
 import cats.data.NonEmptyList
-import com.dmanchester.playfop.sapi.PlayFop
 import connectors.ClaimChildBenefitConnector
 import generators.ModelGenerators
 import models.journey.JourneyModel
@@ -63,7 +62,7 @@ class SupplementaryDataServiceSpec
   }
 
   private val mockClaimChildBenefitConnector = mock[ClaimChildBenefitConnector]
-  private val mockFop = mock[PlayFop]
+  private val mockFop = mock[FopService]
   private val clock = Clock.fixed(Instant.now(), ZoneOffset.UTC)
 
 
@@ -120,7 +119,7 @@ class SupplementaryDataServiceSpec
       val app = GuiceApplicationBuilder()
         .overrides(
           bind[ClaimChildBenefitConnector].toInstance(mockClaimChildBenefitConnector),
-          bind[PlayFop].toInstance(mockFop),
+          bind[FopService].toInstance(mockFop),
           bind[Clock].toInstance(clock)
         )
         .configure(
@@ -147,18 +146,19 @@ class SupplementaryDataServiceSpec
         val expectedView = template(model, additionalDetails)(englishMessages)
         val expectedPdf = "hello".getBytes
 
-        when(mockFop.processTwirlXml(any(), any(), any(), any())) thenReturn expectedPdf
+        when(mockFop.render(any(), any())) thenReturn Future.successful(expectedPdf)
         when(mockClaimChildBenefitConnector.submitSupplementaryData(any(), any())(any())).thenReturn(Future.successful(Done))
 
         service.submit(nino, model, uuid, additionalDetails)(request).futureValue
 
-        verify(mockFop, times(1)).processTwirlXml(eqTo(expectedView), any(), any(), any())
+        verify(mockFop, times(1)).render(eqTo(expectedView.body), any())
         verify(mockClaimChildBenefitConnector, times(1)).submitSupplementaryData(eqTo(expectedPdf), eqTo(expectedMetadata))(any())
       }
 
       "must fail when the supplementary data call fails" in {
 
         val additionalDetails = AdditionalArchiveDetails(None)
+        when(mockFop.render(any(), any())) thenReturn Future.successful("hello".getBytes)
         when(mockClaimChildBenefitConnector.submitSupplementaryData(any(), any())(any())).thenReturn(Future.failed(new RuntimeException()))
         service.submit(nino, model, uuid, additionalDetails)(request).failed.futureValue
       }
