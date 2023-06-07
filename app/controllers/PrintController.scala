@@ -17,22 +17,20 @@
 package controllers
 
 import audit.AuditService
-import com.dmanchester.playfop.sapi.PlayFop
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import logging.Logging
 import models.UserAnswers
 import models.journey.JourneyModel
 import org.apache.fop.apps.FOUserAgent
-import org.apache.xmlgraphics.util.MimeConstants
 import play.api.i18n.{I18nSupport, Lang, Messages, MessagesImpl}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.JourneyModelService
+import services.{FopService, JourneyModelService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.{PrintDocumentsRequiredView, PrintNoDocumentsRequiredView}
 import views.xml.xml.download.PrintTemplate
 
 import javax.inject.Inject
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class PrintController @Inject()(
                                  val controllerComponents: MessagesControllerComponents,
@@ -40,12 +38,12 @@ class PrintController @Inject()(
                                  getData: DataRetrievalAction,
                                  requireData: DataRequiredAction,
                                  auditService: AuditService,
-                                 fop: PlayFop,
+                                 fop: FopService,
                                  template: PrintTemplate,
                                  noDocumentsView: PrintNoDocumentsRequiredView,
                                  documentsView: PrintDocumentsRequiredView,
                                  journeyModelService: JourneyModelService
-                               ) extends FrontendBaseController with I18nSupport with Logging {
+                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
   
   private val userAgentBlock: FOUserAgent => Unit = { foUserAgent: FOUserAgent =>
     foUserAgent.setAccessibility(true)
@@ -79,13 +77,13 @@ class PrintController @Inject()(
       withJourneyModel(request.userAnswers) {
         journeyModel =>
           val englishMessages: Messages = MessagesImpl(Lang("en"), implicitly)
-          val pdf = fop.processTwirlXml(template.render(journeyModel, englishMessages), MimeConstants.MIME_PDF, foUserAgentBlock = userAgentBlock)
 
           auditService.auditDownload(journeyModel)
 
-          Future.successful(
+          fop.render(template.render(journeyModel, englishMessages).body, userAgentBlock).map { pdf =>
             Ok(pdf).as("application/octet-stream")
-              .withHeaders(CONTENT_DISPOSITION -> "attachment; filename=claim-child-benefit-by-post.pdf"))
+              .withHeaders(CONTENT_DISPOSITION -> "attachment; filename=claim-child-benefit-by-post.pdf")
+          }
       }
   }
 

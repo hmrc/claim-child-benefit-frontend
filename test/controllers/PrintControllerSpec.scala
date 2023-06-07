@@ -18,7 +18,6 @@ package controllers
 
 import audit.AuditService
 import base.SpecBase
-import com.dmanchester.playfop.sapi.PlayFop
 import generators.ModelGenerators
 import models._
 import org.mockito.ArgumentMatchers.any
@@ -33,7 +32,7 @@ import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.{BrmsService, JourneyModelService}
+import services.{BrmsService, FopService, JourneyModelService}
 import views.html.{PrintDocumentsRequiredView, PrintNoDocumentsRequiredView}
 import views.xml.xml.download.PrintTemplate
 
@@ -163,15 +162,15 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
     "must return OK and an English-language PDF, and audit the download for onDownload when user answers are complete" in {
 
       val mockAuditService = mock[AuditService]
-      val mockFop = mock[PlayFop]
+      val mockFop = mock[FopService]
       val mockBrmsService = mock[BrmsService]
-      when(mockFop.processTwirlXml(any(), any(), any(), any())) thenReturn "hello".getBytes
+      when(mockFop.render(any(), any())) thenReturn Future.successful("hello".getBytes)
       when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(BirthRegistrationMatchingResult.Matched)
 
       val application =
         applicationBuilder(userAnswers = Some(completeAnswers))
           .overrides(
-            bind[PlayFop].toInstance(mockFop),
+            bind[FopService].toInstance(mockFop),
             bind[AuditService].toInstance(mockAuditService),
             bind[BrmsService].toInstance(mockBrmsService)
           )
@@ -194,7 +193,7 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
         contentAsBytes(result).decodeString(Charset.defaultCharset()) mustEqual "hello"
 
         verify(mockAuditService, times(1)).auditDownload(any())(any())
-        verify(mockFop, times(1)).processTwirlXml(eqTo(expectedRenderedTemplate), any(), any(), any())
+        verify(mockFop, times(1)).render(eqTo(expectedRenderedTemplate.body), any())
       }
     }
 
@@ -203,15 +202,15 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
       val incompleteAnswers = completeAnswers.remove(ApplicantNamePage).success.value
 
       val mockAuditService = mock[AuditService]
-      val mockFop = mock[PlayFop]
+      val mockFop = mock[FopService]
       val mockBrmsService = mock[BrmsService]
       when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(BirthRegistrationMatchingResult.Matched)
-      when(mockFop.processTwirlXml(any(), any(), any(), any())) thenReturn "hello".getBytes
+      when(mockFop.render(any(), any())) thenReturn Future.successful("hello".getBytes)
 
       val application =
         applicationBuilder(userAnswers = Some(incompleteAnswers))
           .overrides(
-            bind[PlayFop].toInstance(mockFop),
+            bind[FopService].toInstance(mockFop),
             bind[AuditService].toInstance(mockAuditService),
             bind[BrmsService].toInstance(mockBrmsService)
           )
