@@ -17,6 +17,7 @@
 package config
 
 import controllers.actions._
+import org.apache.fop.apps.FopFactory
 import play.api.inject.Binding
 import play.api.{Configuration, Environment}
 import services.{NoOpSupplementaryDataService, SupplementaryDataService, SupplementaryDataServiceImpl}
@@ -49,7 +50,8 @@ class Module extends play.api.inject.Module {
       bind[FeatureFlags].toSelf.eagerly,
       bind[Encrypter with Decrypter].toProvider[CryptoProvider].eagerly,
       bind[IdentifierAction].to[OptionalAuthIdentifierAction].eagerly,
-      supplementaryDataServiceBinding
+      supplementaryDataServiceBinding,
+      bind[FopFactory].toProvider[FopFactoryProvider].eagerly,
     ) ++ authTokenInitialiserBindings
   }
 }
