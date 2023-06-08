@@ -48,10 +48,10 @@ class ChildDateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val childDateOfBirthRoute = routes.ChildDateOfBirthController.onPageLoad(waypoints, index).url
 
-  def getRequest(): FakeRequest[AnyContentAsEmpty.type] =
+  def getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, childDateOfBirthRoute)
 
-  def postRequest(): FakeRequest[AnyContentAsFormUrlEncoded] =
+  def postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest(POST, childDateOfBirthRoute)
       .withFormUrlEncodedBody(
         "value.day"   -> validAnswer.getDayOfMonth.toString,

@@ -25,7 +25,7 @@
 
 @layout(pageTitle = titleNoForm(messages("declaration.title"))) {
 
-    @formHelper(action = routes.DeclarationController.onSubmit, 'autoComplete -> "off") {
+    @formHelper(action = routes.DeclarationController.onSubmit, Symbol("autoComplete") -> "off") {
 
         <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">@messages("declaration.heading")</h1>
 
@@ -35,7 +35,7 @@
 
         <p class="govuk-body">
             @messages("declaration.p3.1")
-            <a href="@routes.TaskListController.onPageLoad" class="govuk-link">@messages("declaration.p3.link.text")</a>
+            <a href="@routes.TaskListController.onPageLoad()" class="govuk-link">@messages("declaration.p3.link.text")</a>
             @messages("declaration.p3.2")
         </p>
 

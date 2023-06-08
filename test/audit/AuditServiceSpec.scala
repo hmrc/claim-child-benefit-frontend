@@ -140,7 +140,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
     "must call the audit connector with the correct payload" in {
 
       val expectedAuditEvent: DownloadAuditEvent = DownloadAuditEvent(
-        applicant = Applicant(
+        applicant = audit.Applicant(
           name = AdultName(title = Some("title"), firstName = "applicant first", middleNames = Some("applicant middle"), lastName = "applicant last"),
           previousFamilyNames = List("previous family name"),
           dateOfBirth = now,
@@ -149,23 +149,23 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           previousAddress = Some(UkAddress("previous line 1", Some("previous line 2"), "previous town", Some("previous county"), "previous postcode")),
           telephoneNumber = "07777 777777",
           nationalities = Seq(Nationality.allNationalities.head.name),
-          residency = Residency.LivedInUkAndAbroad(Some(Country.internationalCountries.head.name), Some(LocalDate.now), EmploymentStatus.activeStatuses.map(_.toString), List("Spain"), List("Spain")),
+          residency = audit.Residency.LivedInUkAndAbroad(Some(Country.internationalCountries.head.name), Some(LocalDate.now), EmploymentStatus.activeStatuses.map(_.toString), List("Spain"), List("Spain")),
           memberOfHMForcesOrCivilServantAbroad = false,
           currentlyClaimingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming.toString,
           changedDesignatoryDetails = Some(true),
           correspondenceAddress = Some(UkAddress("corr 1", Some("corr 2"), "corr town", Some("corr county"), "corr postcode"))
         ),
-        relationship = Relationship(
+        relationship = audit.Relationship(
           status = "cohabiting",
           since = Some(now),
-          partner = Some(Partner(
+          partner = Some(audit.Partner(
             name = AdultName(title = Some("title"), firstName = "partner first", middleNames = Some("partner middle"), lastName = "partner last"),
             dateOfBirth = now,
             nationalities = Seq(Nationality.allNationalities.head.name),
             nationalInsuranceNumber = Some(partnerNino.nino),
             memberOfHMForcesOrCivilServantAbroad = false,
             currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments.toString,
-            eldestChild = Some(EldestChild(
+            eldestChild = Some(audit.EldestChild(
               name        = ChildName("partner eldest child first", Some("partner eldest child middle"), "partner eldest child last"),
               dateOfBirth = now
             )),
@@ -175,7 +175,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           ))
         ),
         children = List(
-          Child(
+          audit.Child(
             name = ChildName("child 1 first", Some("child 1 middle"), "child 1 last"),
             nameChangedByDeedPoll = Some(true),
             previousNames = List(ChildName("child 1 previous first", Some("child 1 previous middle"), "child 1 previous last")),
@@ -186,15 +186,15 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             birthCertificateDetailsMatched = "notAttempted",
             relationshipToApplicant = "birthChild",
             adoptingThroughLocalAuthority = true,
-            previousClaimant = Some(PreviousClaimant(
+            previousClaimant = Some(audit.PreviousClaimant(
               name    = Some(AdultName(title = Some("title"), "previous claimant first", Some("previous claimant middle"), "previous claimant last")),
               address = Some(UkAddress("previous claimant line 1", Some("previous claimant line 2"), "previous claimant town", Some("previous claimant county"), "previous claimant postcode"))
             )),
-            guardian = Some(Guardian(
+            guardian = Some(audit.Guardian(
               name    = Some(AdultName(title = Some("title"), "guardian first", Some("guardian middle"), "guardian last")),
               address = Some(UkAddress("guardian line 1", Some("guardian line 2"), "guardian town", Some("guardian county"), "guardian postcode"))
             )),
-            previousGuardian = Some(PreviousGuardian(
+            previousGuardian = Some(audit.PreviousGuardian(
               name        = Some(AdultName(title = Some("title"), "previous guardian first", Some("previous guardian middle"), "previous guardian last")),
               address     = Some(UkAddress("previous guardian line 1", Some("previous guardian line 2"), "previous guardian town", Some("previous guardian county"), "previous guardian postcode")),
               phoneNumber = Some("previous guardian phone")
@@ -205,7 +205,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
         benefits = Some(Set("incomeSupport", "jobseekersAllowance")),
         paymentPreference = Weekly(
           bankAccount = Some(BankAccount("applicant", "first", "last", "000000", "00000000", Some(BankAccountInsightsResponseModel("correlation", 0, "reason")))),
-          eldestChild = Some(EldestChild(
+          eldestChild = Some(audit.EldestChild(
             name        = ChildName("applicant eldest first", Some("applicant eldest middle"), "applicant eldest last"),
             dateOfBirth = now
           ))
@@ -230,7 +230,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
       val correlationId = UUID.randomUUID()
 
       val expectedAuditEvent: SubmitToCbsAuditEvent = SubmitToCbsAuditEvent(
-        applicant = Applicant(
+        applicant = audit.Applicant(
           name = AdultName(title = Some("title"), firstName = "applicant first", middleNames = Some("applicant middle"), lastName = "applicant last"),
           previousFamilyNames = List("previous family name"),
           dateOfBirth = now,
@@ -239,23 +239,23 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           previousAddress = Some(UkAddress("previous line 1", Some("previous line 2"), "previous town", Some("previous county"), "previous postcode")),
           telephoneNumber = "07777 777777",
           nationalities = Seq(Nationality.allNationalities.head.name),
-          residency = Residency.LivedInUkAndAbroad(Some(Country.internationalCountries.head.name), Some(LocalDate.now), EmploymentStatus.activeStatuses.map(_.toString), List("Spain"), List("Spain")),
+          residency = audit.Residency.LivedInUkAndAbroad(Some(Country.internationalCountries.head.name), Some(LocalDate.now), EmploymentStatus.activeStatuses.map(_.toString), List("Spain"), List("Spain")),
           memberOfHMForcesOrCivilServantAbroad = false,
           currentlyClaimingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming.toString,
           changedDesignatoryDetails = Some(true),
           correspondenceAddress = Some(UkAddress("corr 1", Some("corr 2"), "corr town", Some("corr county"), "corr postcode"))
         ),
-        relationship = Relationship(
+        relationship = audit.Relationship(
           status = "cohabiting",
           since = Some(now),
-          partner = Some(Partner(
+          partner = Some(audit.Partner(
             name = AdultName(title = Some("title"), firstName = "partner first", middleNames = Some("partner middle"), lastName = "partner last"),
             dateOfBirth = now,
             nationalities = Seq(Nationality.allNationalities.head.name),
             nationalInsuranceNumber = Some(partnerNino.nino),
             memberOfHMForcesOrCivilServantAbroad = false,
             currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.GettingPayments.toString,
-            eldestChild = Some(EldestChild(
+            eldestChild = Some(audit.EldestChild(
               name = ChildName("partner eldest child first", Some("partner eldest child middle"), "partner eldest child last"),
               dateOfBirth = now
             )),
@@ -265,7 +265,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
           ))
         ),
         children = List(
-          Child(
+          audit.Child(
             name = ChildName("child 1 first", Some("child 1 middle"), "child 1 last"),
             nameChangedByDeedPoll = Some(true),
             previousNames = List(ChildName("child 1 previous first", Some("child 1 previous middle"), "child 1 previous last")),
@@ -276,15 +276,15 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
             birthCertificateDetailsMatched = "notAttempted",
             relationshipToApplicant = "birthChild",
             adoptingThroughLocalAuthority = true,
-            previousClaimant = Some(PreviousClaimant(
+            previousClaimant = Some(audit.PreviousClaimant(
               name = Some(AdultName(title = Some("title"), "previous claimant first", Some("previous claimant middle"), "previous claimant last")),
               address = Some(UkAddress("previous claimant line 1", Some("previous claimant line 2"), "previous claimant town", Some("previous claimant county"), "previous claimant postcode"))
             )),
-            guardian = Some(Guardian(
+            guardian = Some(audit.Guardian(
               name = Some(AdultName(title = Some("title"), "guardian first", Some("guardian middle"), "guardian last")),
               address = Some(UkAddress("guardian line 1", Some("guardian line 2"), "guardian town", Some("guardian county"), "guardian postcode"))
             )),
-            previousGuardian = Some(PreviousGuardian(
+            previousGuardian = Some(audit.PreviousGuardian(
               name = Some(AdultName(title = Some("title"), "previous guardian first", Some("previous guardian middle"), "previous guardian last")),
               address = Some(UkAddress("previous guardian line 1", Some("previous guardian line 2"), "previous guardian town", Some("previous guardian county"), "previous guardian postcode")),
               phoneNumber = Some("previous guardian phone")
@@ -295,7 +295,7 @@ class AuditServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
         benefits = Some(Set("incomeSupport", "jobseekersAllowance")),
         paymentPreference = Weekly(
           bankAccount = Some(BankAccount("applicant", "first", "last", "000000", "00000000",Some(BankAccountInsightsResponseModel("correlation", 0, "reason")))),
-          eldestChild = Some(EldestChild(
+          eldestChild = Some(audit.EldestChild(
             name = ChildName("applicant eldest first", Some("applicant eldest middle"), "applicant eldest last"),
             dateOfBirth = now
           ))

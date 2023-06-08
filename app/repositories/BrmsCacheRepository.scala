@@ -69,7 +69,7 @@ class BrmsCacheRepository @Inject()(
 
   def getResult(request: BirthRegistrationMatchingRequest): Future[Option[BirthRegistrationMatchingResult]] = {
     collection.find(Filters.equal("request", request))
-      .headOption
+      .headOption()
       .map(_.map(_.result))
   }
 }

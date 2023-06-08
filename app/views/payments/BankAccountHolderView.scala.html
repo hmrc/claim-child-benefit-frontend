@@ -28,7 +28,7 @@
 
 @layout(pageTitle = title(form, messages("bankAccountHolder.title"))) {
 
-    @formHelper(action = routes.BankAccountHolderController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.BankAccountHolderController.onSubmit(waypoints), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))

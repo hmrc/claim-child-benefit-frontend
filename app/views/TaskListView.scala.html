@@ -73,7 +73,7 @@
     @if(numberOfSections == completedSections) {
         <p class="govuk-body">@messages("taskList.declaration")</p>
 
-        @formHelper(action = routes.TaskListController.onSubmit, 'autoComplete -> "off") {
+        @formHelper(action = routes.TaskListController.onSubmit(), Symbol("autoComplete") -> "off") {
             @govukButton(
                 ButtonViewModel(messages("site.acceptAndContinue"))
             )

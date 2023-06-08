@@ -14,7 +14,7 @@ GET         /refresh-session                             controllers.KeepAliveCo
 
 GET         /there-is-a-problem                          controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
-GET         /reset-application-form                      controllers.auth.AuthController.signOut
+GET         /reset-application-form                      controllers.auth.AuthController.signOut()
 GET         /signed-out                                  controllers.auth.SignedOutController.onPageLoad
 GET         /submitted-signed-out                        controllers.auth.SignedOutAfterSubmissionController.onPageLoad
 GET         /application-form-reset                      controllers.auth.ApplicationResetController.onPageLoad
@@ -43,8 +43,8 @@ GET         /identity-verification/technical-issue                   controllers
 GET         /identity-verification/timeout                           controllers.auth.IvController.ivTimeout
 GET         /identity-verification/error                             controllers.auth.IvController.ivError
 
-GET         /task-list                                      controllers.TaskListController.onPageLoad
-POST        /task-list                                      controllers.TaskListController.onSubmit
+GET         /task-list                                      controllers.TaskListController.onPageLoad()
+POST        /task-list                                      controllers.TaskListController.onSubmit()
 
 GET         /relationship-status-change              controllers.partner.RelationshipStatusChangesTaskListController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST        /relationship-status-change              controllers.partner.RelationshipStatusChangesTaskListController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)

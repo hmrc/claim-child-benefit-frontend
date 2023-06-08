@@ -28,7 +28,7 @@
 
 @layout(pageTitle = title(form, messages("previousClaimantAddressKnown.title"))) {
 
-    @formHelper(action = routes.PreviousClaimantAddressKnownController.onSubmit(waypoints, index), 'autoComplete -> "off") {
+    @formHelper(action = routes.PreviousClaimantAddressKnownController.onSubmit(waypoints, index), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

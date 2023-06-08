@@ -14,23 +14,19 @@
  * limitations under the License.
  */
 
-package utils
+package config
 
-import cats.Monad
-import cats.implicits._
+import org.apache.fop.apps.{FopFactory, FopFactoryBuilder}
+import play.api.Environment
 
-object MonadOps {
+import javax.inject.{Inject, Provider, Singleton}
 
-  implicit class BooleanMonadSyntax[F[_]](fa: F[Boolean])(implicit m: Monad[F]) {
-
-    def &&(that: F[Boolean]): F[Boolean] = fa.flatMap {
-      case false => m.pure(false)
-      case true  => that
-    }
-
-    def ||(that: F[Boolean]): F[Boolean] = fa.flatMap {
-      case true  => m.pure(true)
-      case false => that
-    }
+@Singleton
+class FopFactoryProvider @Inject()(
+                                     environment: Environment
+                                   ) extends Provider[FopFactory] {
+  override def get(): FopFactory = {
+    new FopFactoryBuilder(environment.rootPath.toURI)
+      .build()
   }
 }

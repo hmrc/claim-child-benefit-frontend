@@ -28,7 +28,7 @@
 
 @layout(pageTitle = title(form, messages("partnerDateOfBirth.title"))) {
 
-    @formHelper(action = routes.PartnerDateOfBirthController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.PartnerDateOfBirthController.onSubmit(waypoints), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value.day")))

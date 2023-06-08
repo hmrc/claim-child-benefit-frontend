@@ -21,7 +21,8 @@ import models.UserAnswers
 import play.api.mvc.Call
 
 object TaskListPage extends Page {
-  override def route(waypoints: Waypoints): Call = routes.TaskListController.onPageLoad
+
+  override def route(waypoints: Waypoints): Call = routes.TaskListController.onPageLoad()
 
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     DeclarationPage

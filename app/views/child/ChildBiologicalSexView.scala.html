@@ -28,7 +28,7 @@
 
 @layout(pageTitle = title(form, messages("childBiologicalSex.title"))) {
 
-    @formHelper(action = routes.ChildBiologicalSexController.onSubmit(waypoints, index), 'autoComplete -> "off") {
+    @formHelper(action = routes.ChildBiologicalSexController.onSubmit(waypoints, index), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))

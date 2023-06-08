@@ -28,7 +28,7 @@
 
 @layout(pageTitle = title(form, messages("currentlyReceivingChildBenefit.title"), section = Some(messages("section.payments")))) {
 
-    @formHelper(action = routes.CurrentlyReceivingChildBenefitController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.CurrentlyReceivingChildBenefitController.onSubmit(waypoints), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

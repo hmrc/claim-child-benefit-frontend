@@ -48,10 +48,10 @@ class PartnerDateOfBirthControllerSpec extends SpecBase with MockitoSugar {
 
   val baseAnswers = emptyUserAnswers.set(PartnerNamePage, name).success.value
 
-  def getRequest(): FakeRequest[AnyContentAsEmpty.type] =
+  def getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, partnerDateOfBirthRoute)
 
-  def postRequest(): FakeRequest[AnyContentAsFormUrlEncoded] =
+  def postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest(POST, partnerDateOfBirthRoute)
       .withFormUrlEncodedBody(
         "value.day"   -> validAnswer.getDayOfMonth.toString,

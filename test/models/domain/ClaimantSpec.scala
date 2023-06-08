@@ -320,7 +320,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
               nino = nino,
               hmfAbroad = hmfAbroad,
               hicbcOptOut = true,
-              nationality = Nationality.Eea,
+              nationality = models.domain.Nationality.Eea,
               rightToReside = false
             )
           }
@@ -339,7 +339,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
               nino = nino,
               hmfAbroad = hmfAbroad,
               hicbcOptOut = false,
-              nationality = Nationality.Eea,
+              nationality = models.domain.Nationality.Eea,
               rightToReside = false
             )
           }
@@ -358,7 +358,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
               nino = nino,
               hmfAbroad = hmfAbroad,
               hicbcOptOut = false,
-              nationality = Nationality.Eea,
+              nationality = models.domain.Nationality.Eea,
               rightToReside = true
             )
           }
@@ -377,7 +377,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
               nino = nino,
               hmfAbroad = hmfAbroad,
               hicbcOptOut = false,
-              nationality = Nationality.Eea,
+              nationality = models.domain.Nationality.Eea,
               rightToReside = false
             )
           }
@@ -396,7 +396,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
               nino = nino,
               hmfAbroad = hmfAbroad,
               hicbcOptOut = true,
-              nationality = Nationality.NonEea,
+              nationality = models.domain.Nationality.NonEea,
               rightToReside = false
             )
           }
@@ -415,7 +415,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
               nino = nino,
               hmfAbroad = hmfAbroad,
               hicbcOptOut = false,
-              nationality = Nationality.NonEea,
+              nationality = models.domain.Nationality.NonEea,
               rightToReside = false
             )
           }
@@ -444,7 +444,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                 nino = nino,
                 hmfAbroad = hmfAbroad,
                 hicbcOptOut = true,
-                nationality = Nationality.Eea,
+                nationality = models.domain.Nationality.Eea,
                 rightToReside = false,
                 last3MonthsInUK = false
               )
@@ -468,7 +468,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                 nino = nino,
                 hmfAbroad = hmfAbroad,
                 hicbcOptOut = false,
-                nationality = Nationality.Eea,
+                nationality = models.domain.Nationality.Eea,
                 rightToReside = false,
                 last3MonthsInUK = false
               )
@@ -491,7 +491,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                 nino = nino,
                 hmfAbroad = hmfAbroad,
                 hicbcOptOut = false,
-                nationality = Nationality.Eea,
+                nationality = models.domain.Nationality.Eea,
                 rightToReside = true,
                 last3MonthsInUK = false
               )
@@ -514,7 +514,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                 nino = nino,
                 hmfAbroad = hmfAbroad,
                 hicbcOptOut = false,
-                nationality = Nationality.Eea,
+                nationality = models.domain.Nationality.Eea,
                 rightToReside = false,
                 last3MonthsInUK = false
               )
@@ -539,7 +539,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                 nino = nino,
                 hmfAbroad = hmfAbroad,
                 hicbcOptOut = true,
-                nationality = Nationality.NonEea,
+                nationality = models.domain.Nationality.NonEea,
                 rightToReside = false,
                 last3MonthsInUK = false
               )
@@ -563,7 +563,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                 nino = nino,
                 hmfAbroad = hmfAbroad,
                 hicbcOptOut = false,
-                nationality = Nationality.NonEea,
+                nationality = models.domain.Nationality.NonEea,
                 rightToReside = false,
                 last3MonthsInUK = false
               )
@@ -586,7 +586,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                 nino = nino,
                 hmfAbroad = hmfAbroad,
                 hicbcOptOut = false,
-                nationality = Nationality.NonEea,
+                nationality = models.domain.Nationality.NonEea,
                 rightToReside = true,
                 last3MonthsInUK = false
               )
@@ -609,7 +609,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                 nino = nino,
                 hmfAbroad = hmfAbroad,
                 hicbcOptOut = false,
-                nationality = Nationality.NonEea,
+                nationality = models.domain.Nationality.NonEea,
                 rightToReside = false,
                 last3MonthsInUK = false
               )
@@ -648,7 +648,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                   nino = nino,
                   hmfAbroad = hmfAbroad,
                   hicbcOptOut = true,
-                  nationality = Nationality.Eea,
+                  nationality = models.domain.Nationality.Eea,
                   rightToReside = false,
                   last3MonthsInUK = false
                 )
@@ -671,7 +671,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                   nino = nino,
                   hmfAbroad = hmfAbroad,
                   hicbcOptOut = false,
-                  nationality = Nationality.Eea,
+                  nationality = models.domain.Nationality.Eea,
                   rightToReside = false,
                   last3MonthsInUK = false
                 )
@@ -706,7 +706,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                   nino = nino,
                   hmfAbroad = hmfAbroad,
                   hicbcOptOut = true,
-                  nationality = Nationality.Eea,
+                  nationality = models.domain.Nationality.Eea,
                   rightToReside = false,
                   last3MonthsInUK = true
                 )
@@ -730,7 +730,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                   nino = nino,
                   hmfAbroad = hmfAbroad,
                   hicbcOptOut = false,
-                  nationality = Nationality.Eea,
+                  nationality = models.domain.Nationality.Eea,
                   rightToReside = false,
                   last3MonthsInUK = true
                 )
@@ -768,7 +768,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                   nino = nino,
                   hmfAbroad = hmfAbroad,
                   hicbcOptOut = true,
-                  nationality = Nationality.NonEea,
+                  nationality = models.domain.Nationality.NonEea,
                   rightToReside = false,
                   last3MonthsInUK = false
                 )
@@ -792,7 +792,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                   nino = nino,
                   hmfAbroad = hmfAbroad,
                   hicbcOptOut = false,
-                  nationality = Nationality.NonEea,
+                  nationality = models.domain.Nationality.NonEea,
                   rightToReside = false,
                   last3MonthsInUK = false
                 )
@@ -827,7 +827,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                   nino = nino,
                   hmfAbroad = hmfAbroad,
                   hicbcOptOut = true,
-                  nationality = Nationality.NonEea,
+                  nationality = models.domain.Nationality.NonEea,
                   rightToReside = false,
                   last3MonthsInUK = true
                 )
@@ -851,7 +851,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
                   nino = nino,
                   hmfAbroad = hmfAbroad,
                   hicbcOptOut = false,
-                  nationality = Nationality.NonEea,
+                  nationality = models.domain.Nationality.NonEea,
                   rightToReside = false,
                   last3MonthsInUK = true
                 )
@@ -914,7 +914,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
         nino = nino,
         hmfAbroad = false,
         hicbcOptOut = true,
-        nationality = Nationality.Eea,
+        nationality = models.domain.Nationality.Eea,
         rightToReside = true
       )
 
@@ -938,7 +938,7 @@ class ClaimantSpec extends AnyFreeSpec with Matchers with Generators with Option
         hmfAbroad = false,
         hicbcOptOut = true,
         last3MonthsInUK = true,
-        nationality = Nationality.Eea,
+        nationality = models.domain.Nationality.Eea,
         rightToReside = true
       )
 

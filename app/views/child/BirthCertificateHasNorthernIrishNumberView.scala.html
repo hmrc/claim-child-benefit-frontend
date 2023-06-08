@@ -28,7 +28,7 @@
 
 @layout(pageTitle = title(form, messages("birthCertificateHasNorthernIrishNumber.title"))) {
 
-    @formHelper(action = routes.BirthCertificateHasNorthernIrishNumberController.onSubmit(waypoints, index), 'autoComplete -> "off") {
+    @formHelper(action = routes.BirthCertificateHasNorthernIrishNumberController.onSubmit(waypoints, index), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

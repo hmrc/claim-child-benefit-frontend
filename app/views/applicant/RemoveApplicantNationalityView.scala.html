@@ -27,7 +27,7 @@
 
 @layout(pageTitle = title(form, messages("removeApplicantNationality.title"))) {
 
-    @formHelper(action = routes.RemoveApplicantNationalityController.onSubmit(waypoints, index), 'autoComplete -> "off") {
+    @formHelper(action = routes.RemoveApplicantNationalityController.onSubmit(waypoints, index), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

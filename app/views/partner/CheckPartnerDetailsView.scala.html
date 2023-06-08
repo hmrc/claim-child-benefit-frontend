@@ -29,7 +29,7 @@
 
 @layout(pageTitle = titleNoForm(messages("checkPartnerDetails.title"))) {
 
-    @formHelper(action = routes.CheckPartnerDetailsController.onSubmit, 'autoComplete -> "off") {
+    @formHelper(action = routes.CheckPartnerDetailsController.onSubmit, Symbol("autoComplete") -> "off") {
 
         <h1 class="govuk-heading-xl">@messages("checkPartnerDetails.heading")</h1>
 

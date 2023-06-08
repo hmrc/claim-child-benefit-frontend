@@ -27,7 +27,7 @@
 
 @layout(pageTitle = title(form, messages("signIn.title"))) {
 
-    @formHelper(action = routes.SignInController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.SignInController.onSubmit(waypoints), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

@@ -28,7 +28,7 @@
 
 @layout(pageTitle = title(form, messages("partnerEmploymentStatus.title"))) {
 
-    @formHelper(action = routes.PartnerEmploymentStatusController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.PartnerEmploymentStatusController.onSubmit(waypoints), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))

@@ -48,10 +48,10 @@ class PartnerEldestChildDateOfBirthControllerSpec extends SpecBase with MockitoS
 
   val baseAnswers = emptyUserAnswers.set(PartnerEldestChildNamePage, name).success.value
 
-  def getRequest(): FakeRequest[AnyContentAsEmpty.type] =
+  def getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, partnerEldestChildDateOfBirthRoute)
 
-  def postRequest(): FakeRequest[AnyContentAsFormUrlEncoded] =
+  def postRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest(POST, partnerEldestChildDateOfBirthRoute)
       .withFormUrlEncodedBody(
         "value.day"   -> validAnswer.getDayOfMonth.toString,

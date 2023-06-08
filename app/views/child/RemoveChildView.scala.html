@@ -28,7 +28,7 @@
 
 @layout(pageTitle = title(form, messages("removeChild.title"))) {
 
-    @formHelper(action = routes.RemoveChildController.onSubmit(waypoints, index), 'autoComplete -> "off") {
+    @formHelper(action = routes.RemoveChildController.onSubmit(waypoints, index), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

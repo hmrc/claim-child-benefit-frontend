@@ -131,7 +131,7 @@ class SubmittedControllerSpec extends SpecBase with MockitoSugar with BeforeAndA
 
       "must clear the user's session and redirect to the exit survey" in {
 
-        val application = applicationBuilder().build
+        val application = applicationBuilder().build()
 
         running(application) {
 

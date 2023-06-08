@@ -17,6 +17,7 @@
 package config
 
 import controllers.actions._
+import org.apache.fop.apps.FopFactory
 import play.api.inject.Binding
 import play.api.{Configuration, Environment}
 import services.{NoOpSupplementaryDataService, SupplementaryDataService, SupplementaryDataServiceImpl}
@@ -37,19 +38,20 @@ class Module extends play.api.inject.Module {
 
     val supplementaryDataServiceBinding: Binding[_] =
       if (configuration.get[Boolean]("features.dmsa-submission")) {
-        bind[SupplementaryDataService].to[SupplementaryDataServiceImpl].eagerly
+        bind[SupplementaryDataService].to[SupplementaryDataServiceImpl].eagerly()
       } else {
-        bind[SupplementaryDataService].to[NoOpSupplementaryDataService].eagerly
+        bind[SupplementaryDataService].to[NoOpSupplementaryDataService].eagerly()
       }
 
     Seq(
-      bind[DataRetrievalAction].to[DataRetrievalActionImpl].eagerly,
-      bind[DataRequiredAction].to[DataRequiredActionImpl].eagerly,
+      bind[DataRetrievalAction].to[DataRetrievalActionImpl].eagerly(),
+      bind[DataRequiredAction].to[DataRequiredActionImpl].eagerly(),
       bind[Clock].toInstance(Clock.systemUTC()),
-      bind[FeatureFlags].toSelf.eagerly,
-      bind[Encrypter with Decrypter].toProvider[CryptoProvider].eagerly,
-      bind[IdentifierAction].to[OptionalAuthIdentifierAction].eagerly,
-      supplementaryDataServiceBinding
+      bind[FeatureFlags].toSelf.eagerly(),
+      bind[Encrypter with Decrypter].toProvider[CryptoProvider].eagerly(),
+      bind[IdentifierAction].to[OptionalAuthIdentifierAction].eagerly(),
+      supplementaryDataServiceBinding,
+      bind[FopFactory].toProvider[FopFactoryProvider].eagerly(),
     ) ++ authTokenInitialiserBindings
   }
 }

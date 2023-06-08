@@ -28,7 +28,7 @@
 
 @layout(pageTitle = title(form, messages("applicantHasPreviousFamilyName.title"))) {
 
-    @formHelper(action = routes.ApplicantHasPreviousFamilyNameController.onSubmit(waypoints), 'autoComplete -> "off") {
+    @formHelper(action = routes.ApplicantHasPreviousFamilyNameController.onSubmit(waypoints), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
