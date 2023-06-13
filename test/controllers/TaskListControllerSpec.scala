@@ -17,14 +17,12 @@
 package controllers
 
 import base.SpecBase
-import models.UserAnswers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.inject.bind
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.TaskListService
@@ -39,40 +37,65 @@ class TaskListControllerSpec extends SpecBase with MockitoSugar with BeforeAndAf
     super.beforeEach()
   }
 
-  private def appBuilder(answers: Option[UserAnswers]): GuiceApplicationBuilder =
-    applicationBuilder(answers).overrides(bind[TaskListService].toInstance(mockTaskListService))
-
   "Task List Controller" - {
 
-    "must return OK and the correct view for a GET" in {
+    "must return OK and the correct view for a GET" - {
 
-      val application = appBuilder(Some(emptyUserAnswers)).build()
+      "when user answers can be found" in {
 
-      when(mockTaskListService.sections(any())).thenReturn(Nil)
+        val application =
+          applicationBuilder(Some(emptyUserAnswers))
+            .overrides(bind[TaskListService].toInstance(mockTaskListService))
+            .build()
 
-      running(application) {
-        val request = FakeRequest(GET, routes.TaskListController.onPageLoad().url)
+        when(mockTaskListService.sections(any())).thenReturn(Nil)
 
-        val result = route(application, request).value
+        running(application) {
+          val request = FakeRequest(GET, routes.TaskListController.onPageLoad().url)
 
-        val view = application.injector.instanceOf[TaskListView]
+          val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(Nil)(request, messages(application)).toString
+          val view = application.injector.instanceOf[TaskListView]
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(Nil)(request, messages(application)).toString
+        }
       }
-    }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+      "when user answers can't be found and the user is signed in" in {
 
-      val application = appBuilder( None).build()
+        val application =
+          applicationBuilder(None, userIsAuthenticated = true)
+            .overrides(bind[TaskListService].toInstance(mockTaskListService))
+            .build()
 
-      running(application) {
-        val request = FakeRequest(GET, routes.TaskListController.onPageLoad().url)
+        when(mockTaskListService.sections(any())).thenReturn(Nil)
 
-        val result = route(application, request).value
+        running(application) {
+          val request = FakeRequest(GET, routes.TaskListController.onPageLoad().url)
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+          val result = route(application, request).value
+
+          status(result) mustEqual OK
+        }
+      }
+
+      "when user answers can't be found and the user is not signed in" in {
+
+        val application =
+          applicationBuilder(None, userIsAuthenticated = false)
+            .overrides(bind[TaskListService].toInstance(mockTaskListService))
+            .build()
+
+        when(mockTaskListService.sections(any())).thenReturn(Nil)
+
+        running(application) {
+          val request = FakeRequest(GET, routes.TaskListController.onPageLoad().url)
+
+          val result = route(application, request).value
+
+          status(result) mustEqual OK
+        }
       }
     }
   }
