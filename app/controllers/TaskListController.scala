@@ -17,6 +17,8 @@
 package controllers
 
 import controllers.actions._
+import models.UserAnswers
+import models.requests.OptionalDataRequest
 import pages.{EmptyWaypoints, TaskListPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -31,22 +33,24 @@ class TaskListController@Inject()(
                                    identify: IdentifierAction,
                                    checkRecentClaims: CheckRecentClaimsAction,
                                    getData: DataRetrievalAction,
-                                   requireData: DataRequiredAction,
                                    val controllerComponents: MessagesControllerComponents,
                                    view: TaskListView,
                                    taskListService: TaskListService
                                  ) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {
+  def onPageLoad(): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData) {
     implicit request =>
 
-      val sections = taskListService.sections(request.userAnswers)
+      val sections = taskListService.sections(userAnswers)
       Ok(view(sections))
   }
 
-  def onSubmit(): Action[AnyContent]=  (identify andThen checkRecentClaims andThen getData andThen requireData) {
+  def onSubmit(): Action[AnyContent]=  (identify andThen checkRecentClaims andThen getData) {
     implicit request =>
 
-      Redirect(TaskListPage.navigate(EmptyWaypoints, request.userAnswers, request.userAnswers).route)
+      Redirect(TaskListPage.navigate(EmptyWaypoints, userAnswers, userAnswers).route)
   }
+
+  private def userAnswers(implicit request: OptionalDataRequest[_]): UserAnswers =
+    request.userAnswers.getOrElse(UserAnswers(request.userId))
 }
