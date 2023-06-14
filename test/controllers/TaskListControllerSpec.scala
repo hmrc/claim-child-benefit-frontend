@@ -17,23 +17,28 @@
 package controllers
 
 import base.SpecBase
+import models.Done
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
-import org.mockito.Mockito.when
+import org.mockito.Mockito.{times, verify, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.TaskListService
+import services.{TaskListService, UserDataService}
 import views.html.TaskListView
+
+import scala.concurrent.Future
 
 class TaskListControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
 
   private val mockTaskListService = mock[TaskListService]
+  private val mockUserDataService = mock[UserDataService]
 
   override def beforeEach(): Unit = {
     Mockito.reset(mockTaskListService)
+    Mockito.reset(mockUserDataService)
     super.beforeEach()
   }
 
@@ -45,7 +50,10 @@ class TaskListControllerSpec extends SpecBase with MockitoSugar with BeforeAndAf
 
         val application =
           applicationBuilder(Some(emptyUserAnswers))
-            .overrides(bind[TaskListService].toInstance(mockTaskListService))
+            .overrides(
+              bind[TaskListService].toInstance(mockTaskListService),
+              bind[UserDataService].toInstance(mockUserDataService)
+            )
             .build()
 
         when(mockTaskListService.sections(any())).thenReturn(Nil)
@@ -66,10 +74,14 @@ class TaskListControllerSpec extends SpecBase with MockitoSugar with BeforeAndAf
 
         val application =
           applicationBuilder(None, userIsAuthenticated = true)
-            .overrides(bind[TaskListService].toInstance(mockTaskListService))
+            .overrides(
+              bind[TaskListService].toInstance(mockTaskListService),
+              bind[UserDataService].toInstance(mockUserDataService)
+            )
             .build()
 
         when(mockTaskListService.sections(any())).thenReturn(Nil)
+        when(mockUserDataService.set(any())(any())).thenReturn(Future.successful(Done))
 
         running(application) {
           val request = FakeRequest(GET, routes.TaskListController.onPageLoad().url)
@@ -77,6 +89,7 @@ class TaskListControllerSpec extends SpecBase with MockitoSugar with BeforeAndAf
           val result = route(application, request).value
 
           status(result) mustEqual OK
+          verify(mockUserDataService, times(1)).set(any())(any())
         }
       }
 
@@ -84,10 +97,14 @@ class TaskListControllerSpec extends SpecBase with MockitoSugar with BeforeAndAf
 
         val application =
           applicationBuilder(None, userIsAuthenticated = false)
-            .overrides(bind[TaskListService].toInstance(mockTaskListService))
+            .overrides(
+              bind[TaskListService].toInstance(mockTaskListService),
+              bind[UserDataService].toInstance(mockUserDataService)
+            )
             .build()
 
         when(mockTaskListService.sections(any())).thenReturn(Nil)
+        when(mockUserDataService.set(any())(any())).thenReturn(Future.successful(Done))
 
         running(application) {
           val request = FakeRequest(GET, routes.TaskListController.onPageLoad().url)
@@ -95,6 +112,7 @@ class TaskListControllerSpec extends SpecBase with MockitoSugar with BeforeAndAf
           val result = route(application, request).value
 
           status(result) mustEqual OK
+          verify(mockUserDataService, times(1)).set(any())(any())
         }
       }
     }
