@@ -22,11 +22,12 @@ import models.requests.OptionalDataRequest
 import pages.{EmptyWaypoints, TaskListPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.TaskListService
+import services.{TaskListService, UserDataService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.TaskListView
 
 import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class TaskListController@Inject()(
                                    override val messagesApi: MessagesApi,
@@ -35,22 +36,33 @@ class TaskListController@Inject()(
                                    getData: DataRetrievalAction,
                                    val controllerComponents: MessagesControllerComponents,
                                    view: TaskListView,
-                                   taskListService: TaskListService
-                                 ) extends FrontendBaseController with I18nSupport {
+                                   taskListService: TaskListService,
+                                   userDataService: UserDataService
+                                 )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData) {
+  def onPageLoad(): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData).async {
     implicit request =>
-
-      val sections = taskListService.sections(userAnswers)
-      Ok(view(sections))
+      getUserAnswers.map { answers =>
+        val sections = taskListService.sections(answers)
+        Ok(view(sections))
+      }
   }
 
-  def onSubmit(): Action[AnyContent]=  (identify andThen checkRecentClaims andThen getData) {
+  def onSubmit(): Action[AnyContent]=  (identify andThen checkRecentClaims andThen getData).async {
     implicit request =>
-
-      Redirect(TaskListPage.navigate(EmptyWaypoints, userAnswers, userAnswers).route)
+      getUserAnswers.map { answers =>
+        Redirect(TaskListPage.navigate(EmptyWaypoints, answers, answers).route)
+      }
   }
 
-  private def userAnswers(implicit request: OptionalDataRequest[_]): UserAnswers =
-    request.userAnswers.getOrElse(UserAnswers(request.userId))
+  private def getUserAnswers(implicit request: OptionalDataRequest[_]): Future[UserAnswers] =
+    request
+      .userAnswers
+      .map(Future.successful)
+      .getOrElse {
+        val answers = UserAnswers(request.userId)
+        userDataService
+          .set(answers)
+          .map(_ => answers)
+      }
 }
