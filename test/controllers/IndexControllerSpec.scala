@@ -31,7 +31,6 @@ import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, MissingBearerToken
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
 import uk.gov.hmrc.http.HeaderCarrier
-import views.html.IndexView
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
@@ -40,22 +39,6 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
 
   "Index Controller" - {
 
-    "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request = FakeRequest(GET, routes.IndexController.onPageLoad.url)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[IndexView]
-
-        status(result) mustEqual OK
-
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
-      }
-    }
 
     ".startAgain must clear the user's cache and redirect to the home page" in {
 
@@ -78,7 +61,7 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
-    ".onSubmit" - {
+    ".onPageLoad" - {
 
       "must redirect to Need to Uplift IV when the user is signed in as an individual with CL less than 250" in {
 
@@ -90,7 +73,7 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
             .build()
 
         running(application) {
-          val request = FakeRequest(POST, routes.IndexController.onSubmit.url)
+          val request = FakeRequest(GET, routes.IndexController.onPageLoad.url)
 
           val result = route(application, request).value
 
@@ -109,7 +92,7 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
             .build()
 
         running(application) {
-          val request = FakeRequest(POST, routes.IndexController.onSubmit.url)
+          val request = FakeRequest(GET, routes.IndexController.onPageLoad.url)
 
           val result = route(application, request).value
 
@@ -128,7 +111,7 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
             .build()
 
         running(application) {
-          val request = FakeRequest(POST, routes.IndexController.onSubmit.url)
+          val request = FakeRequest(GET, routes.IndexController.onPageLoad.url)
 
           val result = route(application, request).value
 
@@ -147,7 +130,7 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
             .build()
 
         running(application) {
-          val request = FakeRequest(POST, routes.IndexController.onSubmit.url)
+          val request = FakeRequest(GET, routes.IndexController.onPageLoad.url)
 
           val result = route(application, request).value
 
@@ -166,7 +149,7 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
             .build()
 
         running(application) {
-          val request = FakeRequest(POST, routes.IndexController.onSubmit.url)
+          val request = FakeRequest(GET, routes.IndexController.onPageLoad.url)
 
           val result = route(application, request).value
 

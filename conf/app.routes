@@ -3,7 +3,6 @@
 ->          /hmrc-frontend                               hmrcfrontend.Routes
 
 GET         /                                           controllers.IndexController.onPageLoad
-POST        /                                           controllers.IndexController.onSubmit
 GET         /start-again                                controllers.IndexController.startAgain
 
 GET         /assets/*file                                controllers.Assets.versioned(path="/public", file: Asset)

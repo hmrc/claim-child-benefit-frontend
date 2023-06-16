@@ -27,7 +27,6 @@ import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions, ConfidenceLeve
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
-import views.html.IndexView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -35,16 +34,11 @@ import scala.concurrent.{ExecutionContext, Future}
 class IndexController @Inject()(
                                  val controllerComponents: MessagesControllerComponents,
                                  identify: IdentifierAction,
-                                 view: IndexView,
                                  userDataService: UserDataService,
                                  val authConnector: AuthConnector
                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with AuthorisedFunctions {
 
-  def onPageLoad: Action[AnyContent] = Action { implicit request =>
-    Ok(view())
-  }
-
-  def onSubmit: Action[AnyContent] = Action.async { implicit request =>
+  def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
