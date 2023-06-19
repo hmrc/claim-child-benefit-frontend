@@ -20,6 +20,7 @@ import config.FrontendAppConfig
 import controllers.auth.{routes => authRoutes}
 import controllers.routes
 import models.requests.{AuthenticatedIdentifierRequest, IdentifierRequest, UnauthenticatedIdentifierRequest}
+import play.api.Logging
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionBuilder, ActionFunction, AnyContent, BodyParsers, Call, Request, Result}
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
@@ -39,7 +40,7 @@ class OptionalAuthIdentifierAction @Inject()(
                                               val authConnector: AuthConnector,
                                               val parser: BodyParsers.Default,
                                               config: FrontendAppConfig
-                                            )(implicit val executionContext: ExecutionContext) extends IdentifierAction with AuthorisedFunctions {
+                                            )(implicit val executionContext: ExecutionContext) extends IdentifierAction with AuthorisedFunctions with Logging {
 
   @nowarn()
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
@@ -74,6 +75,7 @@ class OptionalAuthIdentifierAction @Inject()(
           case Some(sessionId) =>
             block(UnauthenticatedIdentifierRequest(request, sessionId.value))
           case None =>
+            logger.error(s"User has no active sessionId: ${request.path}")
             Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
         }
     }
