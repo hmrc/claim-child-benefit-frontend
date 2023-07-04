@@ -16,6 +16,7 @@
 
 package controllers
 
+import logging.Logging
 import models.requests.DataRequest
 import play.api.libs.json.Reads
 import play.api.mvc.Results.Redirect
@@ -24,7 +25,7 @@ import queries.Gettable
 
 import scala.concurrent.Future
 
-trait AnswerExtractor {
+trait AnswerExtractor extends Logging {
 
   def getAnswer[A](query: Gettable[A])
                   (block: A => Result)
@@ -32,7 +33,10 @@ trait AnswerExtractor {
     request.userAnswers
       .get(query)
       .map(block(_))
-      .getOrElse(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+      .getOrElse({
+        logAnswerNotFoundMessage(query)
+        Redirect(routes.JourneyRecoveryController.onPageLoad())
+      })
 
   def getAnswerAsync[A](query: Gettable[A])
                        (block: A => Future[Result])
@@ -40,7 +44,10 @@ trait AnswerExtractor {
     request.userAnswers
       .get(query)
       .map(block(_))
-      .getOrElse(Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad())))
+      .getOrElse({
+        logAnswerNotFoundMessage(query)
+        Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+      })
 
   def getAnswers[A, B](queryA: Gettable[A], queryB: Gettable[B])
                       (block: (A, B) => Result)
@@ -52,7 +59,10 @@ trait AnswerExtractor {
           request.userAnswers
             .get(queryB)
             .map(block(a, _))
-      }.getOrElse(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+      }.getOrElse({
+      logAnswerNotFoundMessage(queryA, queryB)
+      Redirect(routes.JourneyRecoveryController.onPageLoad())
+    })
 
   def getAnswersAsync[A, B](queryA: Gettable[A], queryB: Gettable[B])
                            (block: (A, B) => Future[Result])
@@ -64,5 +74,12 @@ trait AnswerExtractor {
           request.userAnswers
             .get(queryB)
             .map(block(a, _))
-      }.getOrElse(Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad())))
+      }.getOrElse({
+      logAnswerNotFoundMessage(queryA, queryB)
+      Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+    })
+
+  private def logAnswerNotFoundMessage[T](query: Gettable[T]): Unit = logger.warn(s"$query question has not been answered")
+
+  private def logAnswerNotFoundMessage[T, U](queryA: Gettable[T], queryB: Gettable[U]): Unit = logger.warn(s"Neither $queryA nor $queryB question has been answered")
 }

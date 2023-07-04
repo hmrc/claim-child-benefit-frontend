@@ -17,6 +17,7 @@
 package controllers.applicant
 
 import controllers.{routes => baseRoutes}
+import logging.Logging
 import models.Address
 import models.requests.DataRequest
 import pages.applicant.{ApplicantCurrentInternationalAddressPage, ApplicantCurrentUkAddressPage}
@@ -25,10 +26,13 @@ import play.api.mvc.Results.Redirect
 
 import scala.concurrent.Future
 
-trait CurrentAddressExtractor {
+trait CurrentAddressExtractor extends Logging {
 
   def getCurrentAddress(block: Address => Future[Result])(implicit request: DataRequest[AnyContent]): Future[Result] =
     (request.userAnswers.get(ApplicantCurrentUkAddressPage) orElse request.userAnswers.get(ApplicantCurrentInternationalAddressPage))
       .map(block(_))
-      .getOrElse(Future.successful(Redirect(baseRoutes.JourneyRecoveryController.onPageLoad())))
+      .getOrElse({
+        logger.warn(s"Neither $ApplicantCurrentUkAddressPage nor $ApplicantCurrentInternationalAddressPage questions have been answered.")
+        Future.successful(Redirect(baseRoutes.JourneyRecoveryController.onPageLoad()))
+      })
 }
