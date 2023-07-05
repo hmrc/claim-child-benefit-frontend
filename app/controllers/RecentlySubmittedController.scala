@@ -18,6 +18,7 @@ package controllers
 
 import connectors.ClaimChildBenefitConnector
 import controllers.actions._
+import logging.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -34,7 +35,7 @@ class RecentlySubmittedController @Inject()(
                                           val controllerComponents: MessagesControllerComponents,
                                           view: RecentlySubmittedView,
                                           connector: ClaimChildBenefitConnector
-                                        )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                        )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   private val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy").withZone(ZoneId.systemDefault())
 
@@ -43,7 +44,10 @@ class RecentlySubmittedController @Inject()(
       connector
         .getRecentClaim()
         .map(_.map(claim => Ok(view(dateFormatter.format(claim.created))))
-          .getOrElse(Redirect(routes.JourneyRecoveryController.onPageLoad())))
+          .getOrElse({
+            logger.warn("No recent claim found.")
+            Redirect(routes.JourneyRecoveryController.onPageLoad())
+          }))
 
   }
 }

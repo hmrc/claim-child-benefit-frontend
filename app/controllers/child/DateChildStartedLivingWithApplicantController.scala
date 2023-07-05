@@ -19,6 +19,7 @@ package controllers.child
 import controllers.actions._
 import controllers.{routes => baseRoutes}
 import forms.child.DateChildStartedLivingWithApplicantFormProvider
+import logging.Logging
 import models.requests.DataRequest
 import models.{AdultName, ChildName, Index}
 import pages.Waypoints
@@ -44,7 +45,7 @@ class DateChildStartedLivingWithApplicantController @Inject()(
                                             val controllerComponents: MessagesControllerComponents,
                                             view: DateChildStartedLivingWithApplicantView
                                           )(implicit ec: ExecutionContext)
-  extends FrontendBaseController with I18nSupport {
+  extends FrontendBaseController with I18nSupport with Logging {
 
   def onPageLoad(waypoints: Waypoints, index: Index): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData).async {
     implicit request =>
@@ -99,6 +100,9 @@ class DateChildStartedLivingWithApplicantController @Inject()(
               .get(ApplicantNamePage)
               .map(block(childName, _))
           }
-      }.getOrElse(Future.successful(Redirect(baseRoutes.JourneyRecoveryController.onPageLoad())))
+      }.getOrElse({
+      logger.warn(s"$ChildNamePage (with index ${index.position}) question has been answered.")
+      Future.successful(Redirect(baseRoutes.JourneyRecoveryController.onPageLoad()))
+    })
 
 }
