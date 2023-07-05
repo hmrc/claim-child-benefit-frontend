@@ -81,7 +81,7 @@ class BankAccountDetailsController @Inject()(
             formWithErrors =>
               Future.successful(BadRequest(view(formWithErrors, waypoints, maybeGuidance))),
 
-            value => {
+            (value: BankAccountDetailsFormModel) => {
               barsService.verifyBankDetails(value.details).flatMap {
                 getBarsError(_).map { barsError =>
                   if (barsError.softError && value.softError.getOrElse(false)) {
