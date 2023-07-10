@@ -26,6 +26,7 @@ import javax.xml.transform.TransformerFactory
 import javax.xml.transform.sax.SAXResult
 import javax.xml.transform.stream.StreamSource
 import scala.concurrent.{ExecutionContext, Future}
+import utils.FutureOps._
 
 @Singleton
 class FopService @Inject()(
@@ -50,5 +51,5 @@ class FopService @Inject()(
     transformer.transform(source, result)
 
     out.toByteArray
-  }
+  }.logFailure("FopService failure.")
 }

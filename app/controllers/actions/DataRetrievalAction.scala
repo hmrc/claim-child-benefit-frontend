@@ -17,6 +17,7 @@
 package controllers.actions
 
 import connectors.ClaimChildBenefitConnector
+import logging.Logging
 import models.requests.{AuthenticatedIdentifierRequest, IdentifierRequest, OptionalDataRequest, UnauthenticatedIdentifierRequest}
 import play.api.mvc.ActionTransformer
 import services.UserDataService
@@ -24,22 +25,22 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
+import utils.FutureOps._
 
 class DataRetrievalActionImpl @Inject()(
                                          val userDataService: UserDataService,
                                          val connector: ClaimChildBenefitConnector
-                                       )(implicit val executionContext: ExecutionContext) extends DataRetrievalAction {
+                                       )(implicit val executionContext: ExecutionContext) extends DataRetrievalAction with Logging {
 
   override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = {
     val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     request match {
       case a: AuthenticatedIdentifierRequest[_] =>
-
         for {
-          maybeUserAnswers <- userDataService.get()(hc)
-          designatoryDetails <- connector.designatoryDetails()(hc)
-          relationshipDetails <- connector.relationshipDetails()(hc)
+          maybeUserAnswers <- userDataService.get()(hc).logFailure(s"UserDataService failed on get on ${request.path}")
+          designatoryDetails <- connector.designatoryDetails()(hc).logFailure(s"DesignatoryDetails failed on ${request.path}.")
+          relationshipDetails <- connector.relationshipDetails()(hc).logFailure(s"RelationshipDetails failed on ${request.path}.")
         } yield OptionalDataRequest(
           request,
           request.userId,
@@ -50,10 +51,11 @@ class DataRetrievalActionImpl @Inject()(
           ))
         )
 
+
       case _: UnauthenticatedIdentifierRequest[_] =>
         userDataService.get()(hc).map { maybeAnswers =>
           OptionalDataRequest(request, request.userId, maybeAnswers)
-        }
+        }.logFailure(s"UserDataService failed on get on ${request.path}.")
     }
   }
 }

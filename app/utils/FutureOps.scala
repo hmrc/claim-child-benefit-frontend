@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
-package services
+package utils
 
-import connectors.BarsConnector
-import models.{BankAccountDetails, VerifyBankDetailsRequest, VerifyBankDetailsResponseModel}
-import uk.gov.hmrc.http.HeaderCarrier
+import logging.Logging
 
-import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
-import utils.FutureOps._
+import scala.util.{Failure, Success}
 
-class BarsService @Inject()(connector: BarsConnector) {
-
-  def verifyBankDetails(bankAccountDetails: BankAccountDetails)
-                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[VerifyBankDetailsResponseModel]] = {
-
-    val request = VerifyBankDetailsRequest.from(bankAccountDetails)
-
-    connector.verify(request).map(_.toOption).logFailure("BarService failure.")
+object FutureOps extends Logging {
+  implicit class FutureFailed[T](future: Future[T]) {
+    def logFailure(logText: String)(implicit ec: ExecutionContext): Future[T] = {
+      future onComplete {
+        case Failure(exception) => {
+          logger.debug(s"$logText with exception: ${exception.getMessage}")
+          logger.error(logText)
+        }
+        case Success(_) => ()
+      }
+      future
+    }
   }
 }

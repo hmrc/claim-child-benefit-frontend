@@ -25,6 +25,7 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
+import utils.FutureOps._
 
 class CheckRecentClaimsAction @Inject() (connector: ClaimChildBenefitConnector)
                                         (implicit val executionContext: ExecutionContext) extends ActionFilter[IdentifierRequest] {
@@ -37,6 +38,7 @@ class CheckRecentClaimsAction @Inject() (connector: ClaimChildBenefitConnector)
         connector
           .getRecentClaim()(hc)
           .map(_.map(_ => Redirect(routes.RecentlySubmittedController.onPageLoad())))
+          .logFailure(s"RecentClaim failed on ${request.path}.")
 
       case _: UnauthenticatedIdentifierRequest[_] =>
         Future.successful(None)
