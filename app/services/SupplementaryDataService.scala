@@ -29,6 +29,7 @@ import java.time.Clock
 import java.util.UUID
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
+import utils.FutureOps._
 
 trait SupplementaryDataService {
 
@@ -67,7 +68,7 @@ class SupplementaryDataServiceImpl @Inject() (
 
     fop.render(template.render(model, additionalDetails, englishMessages).body, userAgentBlock).flatMap { pdf =>
       connector.submitSupplementaryData(pdf, metadata)(HeaderCarrierConverter.fromRequestAndSession(request, request.session))
-    }
+    }.logFailure("SupplementaryDataService failure.")
   }
 }
 
