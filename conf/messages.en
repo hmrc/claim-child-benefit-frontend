@@ -18,6 +18,7 @@ site.returnToGovuk = Return to GOV.UK
 site.govUk.link.href = https://gov.uk
 site.acceptAndSend = Accept and send
 site.acceptAndContinue = Accept and continue
+site.opensInNewTab = (opens in new tab)
 
 date.day = Day
 date.month = Month
@@ -1076,6 +1077,12 @@ childHasPreviousName.change.hidden = if this child has been known by any other n
 
 childName.title = What is the name of the child you want to claim for?
 childName.heading = What is the name of the child you want to claim for?
+childName.p1 = If you’re adding a child to an existing claim, only enter details for that child.
+childName.warning = Do not enter details of a child you’ve already claimed for.
+childName.p2 = You can {0} by viewing your proof of entitlement to Child Benefit. You’ll need to log in to your Government Gateway account to do this. You can create an account if you do not have one.
+childName.p2.linkText = check who you’re already claiming for
+childName.form.title = Child's Name
+childName.form.hintText = Enter the name exactly as shown on the birth or adoption certificate.
 childName.firstName = First name or given names
 childName.middleNames = Middle names
 childName.lastName = Last name(s) or family name(s)
@@ -2078,3 +2085,6 @@ needToUpliftIv.p1 = To send your Child Benefit claim digitally, you will need to
 needToUpliftIv.p2.1 = You can also
 needToUpliftIv.p2.link.text = make a claim without confirming your identity
 needToUpliftIv.p2.2 = You will be signed out and will need to print and post your claim to HMRC.
+
+# ----------  External Links ------------
+external.link.childBenefit.proofOfEntitlement = https://tax.service.gov.uk/child-benefit/view-proof-entitlement

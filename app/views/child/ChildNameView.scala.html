@@ -16,26 +16,47 @@
 
 @import controllers.child.routes
 @import viewmodels.InputWidth._
+@import components._
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    continueButton: components.ContinueButton
+    continueButton: ContinueButton,
+    heading: Heading,
+    heading2: Heading2,
+    link: Link,
+    paragraph: ParagraphBody,
+    warning: Warning
 )
 
 @(form: Form[_], waypoints: Waypoints, index: Index)(implicit request: Request[_], messages: Messages)
 
+@proofOfEntitlementLink = @{link(
+    id = "view-proof-of-entitlement-link",
+    text = messages("childName.p2.linkText"),
+    call = Call("GET", messages("external.link.childBenefit.proofOfEntitlement"))
+)}
+
 @layout(pageTitle = title(form, messages("childName.title"))) {
 
+    @heading(messages("childName.heading"))
+
+    @paragraph(messages("childName.p1"))
+
+    @warning(Html(messages("childName.warning")))
+
+    @paragraph(messages("childName.p2", proofOfEntitlementLink))
+
     @formHelper(action = routes.ChildNameController.onSubmit(waypoints, index), Symbol("autoComplete") -> "off") {
+        @heading2(messages("childName.form.title"))
+
+        @paragraph(messages("childName.form.hintText"))
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
-
-        <h1 class="govuk-heading-xl">@messages("childName.heading")</h1>
 
         @govukInput(
             InputViewModel(
