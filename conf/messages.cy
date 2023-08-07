@@ -18,6 +18,7 @@ site.returnToGovuk = Yn ôl i GOV.UK
 site.govUk.link.href = https://gov.uk
 site.acceptAndSend = Derbyn ac anfon
 site.acceptAndContinue = Derbyn ac yn eich blaen
+site.opensInNewTab = (yn agor tab newydd)
 
 date.day = Diwrnod
 date.month = Mis
@@ -1076,6 +1077,12 @@ childHasPreviousName.change.hidden = os yw’r plentyn hwn wedi cael ei adnabod 
 
 childName.title = Beth yw enw’r plentyn rydych am hawlio ar ei gyfer?
 childName.heading = Beth yw enw’r plentyn rydych am hawlio ar ei gyfer?
+childName.p1 = Os ydych yn ychwanegu plentyn at hawliad sy’n bodoli eisoes, nodwch fanylion y plentyn hwnnw yn unig.
+childName.warning = Peidiwch â nodi manylion unrhyw blentyn rydych eisoes wedi hawlio ar ei gyfer.
+childName.p2 = Gallwch hefyd {0} drwy fwrw golwg dros eich tystiolaeth o hawl i Fudd-dal Plant. Bydd angen i chi fewngofnodi i’ch cyfrif Porth y Llywodraeth i wneud hyn. Gallwch greu cyfrif os nad oes gennych un.
+childName.p2.linkText = wirio pwy rydych eisoes yn hawlio ar ei gyfer
+childName.form.title = 	Enw’r plentyn
+childName.form.hintText = Nodwch yr enw yn union fel y dangosir ar y dystysgrif geni neu’r dystysgrif mabwysiadu.
 childName.firstName = Enw cyntaf neu’r enwau a roddwyd
 childName.middleNames = Enwau canol
 childName.lastName = Enw(au) olaf neu’r enw(au) teuluol
@@ -1901,3 +1908,6 @@ needToUpliftIv.p1 = I anfon eich hawliad Budd-dal Plant drwy ddull digidol, bydd
 needToUpliftIv.p2.1 = Gallwch hefyd
 needToUpliftIv.p2.link.text = wneud hawliad heb gadarnhau pwy ydych
 needToUpliftIv.p2.2 = Byddwch yn cael eich allgofnodi a bydd angen i chi argraffu a phostio’ch hawliad i CThEF.
+
+# ----------  External Links ------------
+external.link.childBenefit.proofOfEntitlement = https://tax.service.gov.uk/child-benefit/view-proof-entitlement
