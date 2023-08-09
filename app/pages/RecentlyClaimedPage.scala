@@ -16,30 +16,47 @@
 
 package pages
 
+import config.FrontendAppConfig
 import controllers.routes
-import models.UserAnswers
+import models.{CheckMode, NormalMode, ServiceType, UserAnswers}
+import pages.utils.ExternalPage
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-object RecentlyClaimedPage extends QuestionPage[Boolean] {
+object RecentlyClaimedPage extends QuestionPage[ServiceType] {
 
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "recentlyClaimed"
 
-  override def route(waypoints: Waypoints): Call =
-    routes.RecentlyClaimedController.onPageLoad(waypoints)
+  def navigate(waypoints: Waypoints, originalAnswers: UserAnswers, updatedAnswers: UserAnswers, config: FrontendAppConfig): PageAndWaypoints = {
+    val targetPage = waypoints match {
+      case EmptyWaypoints => nextPage(updatedAnswers, config)
+      case b: NonEmptyWaypoints =>
+        b.currentMode match {
+          case CheckMode => nextPageCheckMode(b, originalAnswers, updatedAnswers)
+          case NormalMode => nextPage(updatedAnswers, config)
+        }
+    }
+    val recalibratedWaypoints = waypoints.recalibrate(this, targetPage)
 
-  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
+    PageAndWaypoints(targetPage, recalibratedWaypoints)
+  }
+
+
+  private def nextPage(answers: UserAnswers, config: FrontendAppConfig): Page =
     answers.get(this).map {
-      case true =>
-        AlreadyClaimedPage
-
-      case false =>
+      case ServiceType.NewClaim | ServiceType.AddClaim =>
         if (answers.isAuthenticated) {
           TaskListPage
         } else {
           SignInPage
         }
+      case ServiceType.CheckClaim => AlreadyClaimedPage
+      case ServiceType.RestartChildBenefit => ExternalPage(config.childBenefitTaxChargeRestartUrl)
+      case ServiceType.StopChildBenefit => ExternalPage(config.childBenefitTaxChargeStopUrl)
     }.orRecover
+
+  override def route(waypoints: Waypoints): Call =
+    routes.RecentlyClaimedController.onPageLoad(waypoints)
 }

@@ -100,10 +100,16 @@ applicantUsualCountryOfResidence.checkYourAnswersLabel = Country you normally li
 applicantUsualCountryOfResidence.error.required = Select the country you normally live in
 applicantUsualCountryOfResidence.change.hidden = the country you normally live in
 
-recentlyClaimed.title = Have you recently made a Child Benefit claim and are waiting to hear if you are eligible?
-recentlyClaimed.heading = Have you recently made a Child Benefit claim and are waiting to hear if you are eligible?
+recentlyClaimed.title = Make sure you’re using the right Child Benefit service
+recentlyClaimed.heading = Make sure you’re using the right Child Benefit service
+recentlyClaimed.hint = Confirm which service you want to use.
+recentlyClaim.options.newClaim = Make a new claim
+recentlyClaim.options.addExisting = Add a child to an existing claim
+recentlyClaim.options.checkProgress = Check on the progress of a claim
+recentlyClaim.options.restart = Restart your payments (without adding a child to an existing claim)
+recentlyClaim.options.stop = Stop your payments (without adding a child to an existing claim)
 recentlyClaimed.checkYourAnswersLabel = Have you recently made a Child Benefit claim and are waiting to hear if you are eligible?
-recentlyClaimed.error.required = Select yes if you have recently made a Child Benefit claim and are waiting to hear if you are eligible
+recentlyClaimed.error.required = Confirm which service you want to use.
 recentlyClaimed.change.hidden = if you have recently made a Child Benefit claim and are waiting to hear if you are eligible
 
 alreadyClaimed.title = You have already made a Child Benefit claim
@@ -2088,3 +2094,5 @@ needToUpliftIv.p2.2 = You will be signed out and will need to print and post you
 
 # ----------  External Links ------------
 external.link.childBenefit.proofOfEntitlement = https://tax.service.gov.uk/child-benefit/view-proof-entitlement
+external.link.childBenefit.taxCharge.restart = https://www.gov.uk/child-benefit-tax-charge/restart-child-benefit
+external.link.childBenefit.taxCharge.stop = https://www.gov.uk/child-benefit-tax-charge/stop-child-benefit

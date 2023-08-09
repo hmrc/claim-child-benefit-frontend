@@ -16,6 +16,7 @@
 
 package controllers
 
+import config.FrontendAppConfig
 import controllers.actions._
 import forms.RecentlyClaimedFormProvider
 import models.UserAnswers
@@ -39,7 +40,8 @@ class RecentlyClaimedController @Inject()(
                                                    getData: DataRetrievalAction,
                                                    formProvider: RecentlyClaimedFormProvider,
                                                    val controllerComponents: MessagesControllerComponents,
-                                                   view: RecentlyClaimedView
+                                                   view: RecentlyClaimedView,
+                                                   config: FrontendAppConfig
                                                  )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form = formProvider()
@@ -77,7 +79,7 @@ class RecentlyClaimedController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(originalAnswers.set(RecentlyClaimedPage, value))
             _              <- userDataService.set(updatedAnswers)
-          } yield Redirect(RecentlyClaimedPage.navigate(waypoints, originalAnswers, updatedAnswers).route)
+          } yield Redirect(RecentlyClaimedPage.navigate(waypoints, originalAnswers, updatedAnswers, config).route)
         }
       )
   }

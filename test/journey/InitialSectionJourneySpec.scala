@@ -16,20 +16,51 @@
 
 package journey
 
+import config.FrontendAppConfig
 import generators.ModelGenerators
-import models.UserAnswers
+import models.{ServiceType, UserAnswers}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.prop.TableDrivenPropertyChecks
+import org.scalatestplus.mockito.MockitoSugar
 import pages._
+import pages.utils.ExternalPage
 import uk.gov.hmrc.domain.Nino
 
-class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
+class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators with TableDrivenPropertyChecks with MockitoSugar {
+  private val defaultServiceType = ServiceType.values.head
+
+  val mockAppConfig = mock[FrontendAppConfig]
+
+  val journeyScenarios = Table(
+    ("selectedServiceType", "userIsAuthenticated", "pageName", "expectedPage"),
+    (ServiceType.NewClaim,            false, "Sign In",               SignInPage),
+    (ServiceType.AddClaim,            false, "Sign In",               SignInPage),
+    (ServiceType.CheckClaim,          false, "Already Claimed",       AlreadyClaimedPage),
+    (ServiceType.StopChildBenefit,    false, "Stop Child Benefit",    ExternalPage("")),
+    (ServiceType.RestartChildBenefit, false, "Restart Child Benefit", ExternalPage(""))
+  )
+
+  forAll (journeyScenarios) { (selectedServiceType, userIsAuthenticated, pageName, expectedPage) => {
+    s"users who select the ${selectedServiceType.toString} and are ${if(userIsAuthenticated) "" else "not "}authenticated must go to the $pageName" in {
+      val selectedUserAnswers = UserAnswers("id").set(RecentlyClaimedPage,selectedServiceType).get
+      startingFrom(RecentlyClaimedPage)
+        .run(
+          submitAnswer[ServiceType, RecentlyClaimedPage.type](
+            RecentlyClaimedPage,
+            selectedServiceType,
+            p => p.navigate(EmptyWaypoints, UserAnswers("id"), selectedUserAnswers, mockAppConfig)
+          ),
+          pageMustBe(expectedPage)
+        )
+    }
+  }}
 
   "users who have recently claimed must go to the Already Claimed page" in {
 
     startingFrom(RecentlyClaimedPage)
       .run(
-        submitAnswer(RecentlyClaimedPage, true),
+        submitAnswer(RecentlyClaimedPage, ServiceType.AddClaim),
         pageMustBe(AlreadyClaimedPage)
       )
   }
@@ -43,7 +74,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
 
       startingFrom(RecentlyClaimedPage, answers = authenticatedAnswers)
         .run(
-          submitAnswer(RecentlyClaimedPage, false),
+          submitAnswer(RecentlyClaimedPage, defaultServiceType),
           pageMustBe(TaskListPage)
         )
     }
@@ -52,7 +83,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
 
       startingFrom(RecentlyClaimedPage)
         .run(
-          submitAnswer(RecentlyClaimedPage, false),
+          submitAnswer(RecentlyClaimedPage, defaultServiceType),
           pageMustBe(SignInPage)
         )
     }

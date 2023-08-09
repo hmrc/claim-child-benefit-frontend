@@ -42,6 +42,8 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   val origin: String           = configuration.get[String]("origin")
   val upliftMfaUrl: String     = configuration.get[String]("urls.upliftMfa")
   val upliftIvUrl: String      = configuration.get[String]("urls.upliftIv")
+  val childBenefitTaxChargeRestartUrl: String = configuration.get[String]("urls.childBenefitTaxChargeRestart")
+  val childBenefitTaxChargeStopUrl: String    = configuration.get[String]("urls.childBenefitTaxChargeStop")
 
   val homeOfficeImmigrationStatusUrl: String = configuration.get[Service]("microservice.services.home-office-immigration-status-proxy").baseUrl
 

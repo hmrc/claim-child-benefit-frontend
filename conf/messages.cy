@@ -97,11 +97,17 @@ applicantUsuallyLivesInUk.change.hidden = os ydych yn byw yn y DU fel arfer
 applicantUsualCountryOfResidence.title = Ym mha wlad ydych chi’n byw fel arfer?
 applicantUsualCountryOfResidence.heading = Ym mha wlad ydych chi’n byw fel arfer?
 applicantUsualCountryOfResidence.checkYourAnswersLabel = Y wlad rydych yn byw ynddi fel arfer
-applicantUsualCountryOfResidence.error.required = Dewiswch y wlad rydych yn byw ynddi fel arfer
+applicantUsualCountryOfResidence.error.required = Cadarnhewch y gwasanaeth rydych am ei ddefnyddio.
 applicantUsualCountryOfResidence.change.hidden = y wlad rydych yn byw ynddi fel arfer
 
-recentlyClaimed.title = Ydych chi wedi hawlio Budd-dal Plant yn ddiweddar ac yn aros i glywed a ydych yn gymwys?
-recentlyClaimed.heading = Ydych chi wedi hawlio Budd-dal Plant yn ddiweddar ac yn aros i glywed a ydych yn gymwys?
+recentlyClaimed.title = Gwnewch yn siŵr eich bod yn defnyddio’r gwasanaeth Budd-dal Plant cywir
+recentlyClaimed.heading = Gwnewch yn siŵr eich bod yn defnyddio’r gwasanaeth Budd-dal Plant cywir
+recentlyClaimed.hint = Cadarnhewch y gwasanaeth rydych am ei ddefnyddio.
+recentlyClaim.options.newClaim = Gwneud hawliad newydd
+recentlyClaim.options.addExisting = Ychwanegu plentyn at hawliad sy’n bodoli eisoes
+recentlyClaim.options.checkProgress = Gweld hynt hawliad
+recentlyClaim.options.restart = Ailddechrau’ch taliadau (heb ychwanegu plentyn at hawliad sy’n bodoli eisoes)
+recentlyClaim.options.stop = Rhoi’r gorau i’ch taliadau (heb ychwanegu plentyn at hawliad sy’n bodoli eisoes)
 recentlyClaimed.checkYourAnswersLabel = Ydych chi wedi hawlio Budd-dal Plant yn ddiweddar ac yn aros i glywed a ydych yn gymwys?
 recentlyClaimed.error.required = Dewiswch ‘Iawn’ os ydych wedi hawlio Budd-dal Plant yn ddiweddar ac yn aros i glywed a ydych yn gymwys
 recentlyClaimed.change.hidden = os ydych wedi hawlio Budd-dal Plant yn ddiweddar ac yn aros i glywed a ydych yn gymwys
@@ -1911,3 +1917,5 @@ needToUpliftIv.p2.2 = Byddwch yn cael eich allgofnodi a bydd angen i chi argraff
 
 # ----------  External Links ------------
 external.link.childBenefit.proofOfEntitlement = https://tax.service.gov.uk/child-benefit/view-proof-entitlement
+external.link.childBenefit.taxCharge.restart = https://www.gov.uk/child-benefit-tax-charge/restart-child-benefit
+external.link.childBenefit.taxCharge.stop = https://www.gov.uk/child-benefit-tax-charge/stop-child-benefit

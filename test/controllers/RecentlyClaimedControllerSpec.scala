@@ -17,8 +17,9 @@
 package controllers
 
 import base.SpecBase
+import config.FrontendAppConfig
 import forms.RecentlyClaimedFormProvider
-import models.{Done, UserAnswers}
+import models.{Done, ServiceType, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -36,8 +37,9 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
   private val formProvider = new RecentlyClaimedFormProvider()
   private val form = formProvider()
   private val waypoints = EmptyWaypoints
+  private val defaultServiceType = ServiceType.values.head
 
-  private lazy val anyChildLivedWithOthersRoute = routes.RecentlyClaimedController.onPageLoad(waypoints).url
+  private lazy val recentlyClaimedRoute = routes.RecentlyClaimedController.onPageLoad(waypoints).url
 
   "RecentlyClaimed Controller" - {
 
@@ -46,7 +48,7 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, anyChildLivedWithOthersRoute)
+        val request = FakeRequest(GET, recentlyClaimedRoute)
 
         val result = route(application, request).value
 
@@ -59,19 +61,19 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(RecentlyClaimedPage, true).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(RecentlyClaimedPage, defaultServiceType).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, anyChildLivedWithOthersRoute)
+        val request = FakeRequest(GET, recentlyClaimedRoute)
 
         val view = application.injector.instanceOf[RecentlyClaimedView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(defaultServiceType), waypoints)(request, messages(application)).toString
       }
     }
 
@@ -90,14 +92,15 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, anyChildLivedWithOthersRoute)
-            .withFormUrlEncodedBody(("value", "true"))
+          FakeRequest(POST, recentlyClaimedRoute)
+            .withFormUrlEncodedBody(("serviceType", defaultServiceType.toString))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(RecentlyClaimedPage, true).success.value
+        val config = application.injector.instanceOf[FrontendAppConfig]
+        val expectedAnswers = emptyUserAnswers.set(RecentlyClaimedPage, defaultServiceType).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual RecentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual RecentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers, config).url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -108,10 +111,10 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, anyChildLivedWithOthersRoute)
-            .withFormUrlEncodedBody(("value", ""))
+          FakeRequest(POST, recentlyClaimedRoute)
+            .withFormUrlEncodedBody(("serviceType", "notAValidValue"))
 
-        val boundForm = form.bind(Map("value" -> ""))
+        val boundForm = form.bind(Map("serviceType" -> "notAValidValueEither"))
 
         val view = application.injector.instanceOf[RecentlyClaimedView]
 
@@ -127,7 +130,7 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, anyChildLivedWithOthersRoute)
+        val request = FakeRequest(GET, recentlyClaimedRoute)
 
         val result = route(application, request).value
 
@@ -150,14 +153,15 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, anyChildLivedWithOthersRoute)
-            .withFormUrlEncodedBody(("value", "true"))
+          FakeRequest(POST, recentlyClaimedRoute)
+            .withFormUrlEncodedBody(("serviceType", defaultServiceType.toString))
+        val config = application.injector.instanceOf[FrontendAppConfig]
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(RecentlyClaimedPage, true).success.value
+        val expectedAnswers = emptyUserAnswers.set(RecentlyClaimedPage, defaultServiceType).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual RecentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual RecentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers, config).url
       }
     }
 
@@ -176,14 +180,15 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, anyChildLivedWithOthersRoute)
-            .withFormUrlEncodedBody(("value", "true"))
+          FakeRequest(POST, recentlyClaimedRoute)
+            .withFormUrlEncodedBody(("serviceType", defaultServiceType.toString))
+        val config = application.injector.instanceOf[FrontendAppConfig]
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.copy(nino = Some("nino")).set(RecentlyClaimedPage, true).success.value
+        val expectedAnswers = emptyUserAnswers.copy(nino = Some("nino")).set(RecentlyClaimedPage, defaultServiceType).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual RecentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        redirectLocation(result).value mustEqual RecentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers, config).url
       }
     }
   }
