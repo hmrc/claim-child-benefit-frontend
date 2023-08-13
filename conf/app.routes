@@ -62,7 +62,7 @@ POST        /declaration                                controllers.DeclarationC
 GET        /recently-claimed-child-benefit                  controllers.RecentlyClaimedController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST       /recently-claimed-child-benefit                  controllers.RecentlyClaimedController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 
-GET        /already-claimed-child-benefit                   controllers.AlreadyClaimedController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
+GET        /check-on-claim                               controllers.CheckOnClaimController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 
 GET        /recently-submitted-a-claim                   controllers.RecentlySubmittedController.onPageLoad()
 

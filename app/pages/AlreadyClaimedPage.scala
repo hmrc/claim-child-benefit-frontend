@@ -22,5 +22,5 @@ import play.api.mvc.Call
 case object AlreadyClaimedPage extends Page {
 
   override def route(waypoints: Waypoints): Call =
-    routes.AlreadyClaimedController.onPageLoad(waypoints)
+    routes.CheckOnClaimController.onPageLoad(waypoints)
 }

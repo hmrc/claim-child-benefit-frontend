@@ -24,26 +24,18 @@
 
 @()(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("alreadyClaimed.title")), showBackLink = false) {
+@layout(pageTitle = titleNoForm(messages("alreadyClaimed.title")), showBackLink = true) {
 
     <h1 class="govuk-heading-xl">@messages("alreadyClaimed.heading")</h1>
 
     <p class="govuk-body">
-        @messages("alreadyClaimed.p1")
-    </p>
-
-    <p class="govuk-body">
         @messages("alreadyClaimed.p2.1")
-        @{newTabLink(NewTabLinkHelper(text = messages("alreadyClaimed.p2.link.text"), href = Some(messages("alreadyClaimed.p2.link.href"))))},
-        @messages("alreadyClaimed.p2.2")
+        @{newTabLink(NewTabLinkHelper(text = messages("alreadyClaimed.p2.link.text"), href = Some(messages("alreadyClaimed.p2.link.href"))))}.
     </p>
 
     <p class="govuk-body">
-        @messages("alreadyClaimed.p3")
-        @{newTabLink(NewTabLinkHelper(text = messages("alreadyClaimed.p3.link.text"), href = Some(messages("alreadyClaimed.p3.link.href"))))}.
-    </p>
-
-    <p class="govuk-body">
-        @messages("alreadyClaimed.p4") <a href="@routes.IndexController.startAgain" class="govuk-link">@messages("alreadyClaimed.p4.link.text")</a>.
+        @messages("alreadyClaimed.p3.1")
+        @{newTabLink(NewTabLinkHelper(text = messages("alreadyClaimed.p3.link.text"), href = Some(messages("alreadyClaimed.p3.link.href"))))}
+        @messages("alreadyClaimed.p3.2")
     </p>
 }

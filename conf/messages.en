@@ -106,18 +106,15 @@ recentlyClaimed.checkYourAnswersLabel = Have you recently made a Child Benefit c
 recentlyClaimed.error.required = Select yes if you have recently made a Child Benefit claim and are waiting to hear if you are eligible
 recentlyClaimed.change.hidden = if you have recently made a Child Benefit claim and are waiting to hear if you are eligible
 
-alreadyClaimed.title = You have already made a Child Benefit claim
-alreadyClaimed.heading = You have already made a Child Benefit claim
-alreadyClaimed.p1 = You have already applied for Child Benefit by making a claim.
-alreadyClaimed.p2.1 = You can
-alreadyClaimed.p2.link.text = check when you can expect a reply from HMRC
+alreadyClaimed.title = Check on the progress of a Child Benefit claim
+alreadyClaimed.heading = Check on the progress of a Child Benefit claim
+alreadyClaimed.p2.1 = You can use HMRC’s online service to
+alreadyClaimed.p2.link.text = check when you can expect a reply to your claim
 alreadyClaimed.p2.link.href = https://www.gov.uk/guidance/check-when-you-can-expect-a-reply-from-hmrc
-alreadyClaimed.p2.2 = where you can report a change of circumstances and request a proof of entitlement letter as well.
-alreadyClaimed.p3 = Find out more about
-alreadyClaimed.p3.link.text = claiming Child Benefit
-alreadyClaimed.p3.link.href = https://www.gov.uk/child-benefit
-alreadyClaimed.p4 = If you think that you’ve made a mistake you can
-alreadyClaimed.p4.link.text = start your application again
+alreadyClaimed.p3.1 = You can also
+alreadyClaimed.p3.link.text = check if your claim’s been approved
+alreadyClaimed.p3.link.href = https://www.tax.service.gov.uk/child-benefit/view-proof-entitlement
+alreadyClaimed.p3.2 = by viewing your proof of entitlement to Child Benefit. You’ll need to log in to your Government Gateway account to do this. You can create an account if you do not have one.
 
 recentlySubmitted.title = You have recently made a Child Benefit claim
 recentlySubmitted.heading = You have recently made a Child Benefit claim
