@@ -21,15 +21,15 @@ import pages.Waypoints
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.AlreadyClaimedView
+import views.html.CheckOnClaimView
 
 import javax.inject.Inject
 
-class AlreadyClaimedController @Inject()(
+class CheckOnClaimController @Inject()(
                                           override val messagesApi: MessagesApi,
                                           identify: IdentifierAction,
                                           val controllerComponents: MessagesControllerComponents,
-                                          view: AlreadyClaimedView
+                                          view: CheckOnClaimView
                                         ) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(waypoints: Waypoints): Action[AnyContent] = identify {
