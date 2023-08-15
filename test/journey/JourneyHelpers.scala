@@ -42,11 +42,6 @@ trait JourneyHelpers extends Matchers with TryValues with OptionValues {
       JourneyState(nextPage, newWaypoints, answers)
     }
 
-    def next[P <: Page](originalAnswers: UserAnswers, customNavigation: P => PageAndWaypoints): JourneyState = {
-      val PageAndWaypoints(nextPage, newWaypoints) = customNavigation(page)
-      JourneyState(nextPage, newWaypoints, answers)
-    }
-
     def run(steps: JourneyStep[Unit]*): JourneyState =
       journeyOf(steps: _*).runS(this).value
 
@@ -71,9 +66,6 @@ trait JourneyHelpers extends Matchers with TryValues with OptionValues {
 
   def next(originalAnswers: UserAnswers): JourneyStep[Unit] =
     State.modify(_.next(originalAnswers))
-
-  def next(originalAnswers: UserAnswers, customNavigation: Page => PageAndWaypoints): JourneyStep[Unit] =
-    State.modify(_.next(originalAnswers, customNavigation))
 
   def getPage: JourneyStep[Page] =
     State.inspect(_.page)
@@ -125,15 +117,6 @@ trait JourneyHelpers extends Matchers with TryValues with OptionValues {
       originalAnswers <- getAnswers
       _ <- setUserAnswerTo(page, value)
       _ <- next(originalAnswers)
-    } yield ()
-  }
-
-  def submitAnswer[A, P <: Page with Settable[A]](page: P, value: A, customNavigation: P => PageAndWaypoints)(implicit writes: Writes[A], position: Position): JourneyStep[Unit] = {
-    for {
-      _ <- pageMustBe(page)
-      originalAnswers <- getAnswers
-      _ <- setUserAnswerTo(page, value)
-      _ <- next(originalAnswers, customNavigation)
     } yield ()
   }
 

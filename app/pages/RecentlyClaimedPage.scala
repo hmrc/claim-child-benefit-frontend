@@ -18,33 +18,18 @@ package pages
 
 import config.FrontendAppConfig
 import controllers.routes
-import models.{CheckMode, NormalMode, ServiceType, UserAnswers}
+import models.{ServiceType, UserAnswers}
 import pages.utils.ExternalPage
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-object RecentlyClaimedPage extends QuestionPage[ServiceType] {
+final case class RecentlyClaimedPage(config: FrontendAppConfig) extends QuestionPage[ServiceType] {
 
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "recentlyClaimed"
 
-  def navigate(waypoints: Waypoints, originalAnswers: UserAnswers, updatedAnswers: UserAnswers, config: FrontendAppConfig): PageAndWaypoints = {
-    val targetPage = waypoints match {
-      case EmptyWaypoints => nextPage(updatedAnswers, config)
-      case b: NonEmptyWaypoints =>
-        b.currentMode match {
-          case CheckMode => nextPageCheckMode(b, originalAnswers, updatedAnswers)
-          case NormalMode => nextPage(updatedAnswers, config)
-        }
-    }
-    val recalibratedWaypoints = waypoints.recalibrate(this, targetPage)
-
-    PageAndWaypoints(targetPage, recalibratedWaypoints)
-  }
-
-
-  private def nextPage(answers: UserAnswers, config: FrontendAppConfig): Page =
+  override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
       case ServiceType.NewClaim | ServiceType.AddClaim =>
         if (answers.isAuthenticated) {

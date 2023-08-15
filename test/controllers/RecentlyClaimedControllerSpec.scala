@@ -17,6 +17,7 @@
 package controllers
 
 import base.SpecBase
+import com.typesafe.config.ConfigFactory
 import config.FrontendAppConfig
 import forms.RecentlyClaimedFormProvider
 import models.{Done, ServiceType, UserAnswers}
@@ -24,7 +25,8 @@ import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{EmptyWaypoints, RecentlyClaimedPage}
-import play.api.inject.bind
+import play.api.Configuration
+import play.api.inject.{bind}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserDataService
@@ -61,11 +63,12 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(RecentlyClaimedPage, defaultServiceType).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(RecentlyClaimedPage(new FrontendAppConfig(new Configuration(ConfigFactory.load()))), defaultServiceType).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
+
         val request = FakeRequest(GET, recentlyClaimedRoute)
 
         val view = application.injector.instanceOf[RecentlyClaimedView]
@@ -97,10 +100,11 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
         val config = application.injector.instanceOf[FrontendAppConfig]
-        val expectedAnswers = emptyUserAnswers.set(RecentlyClaimedPage, defaultServiceType).success.value
+        val recentlyClaimedPage = RecentlyClaimedPage(config)
+        val expectedAnswers = emptyUserAnswers.set(recentlyClaimedPage, defaultServiceType).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual RecentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers, config).url
+        redirectLocation(result).value mustEqual recentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -156,12 +160,12 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
           FakeRequest(POST, recentlyClaimedRoute)
             .withFormUrlEncodedBody(("serviceType", defaultServiceType.toString))
         val config = application.injector.instanceOf[FrontendAppConfig]
-
+        val recentlyClaimedPage = RecentlyClaimedPage(config)
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(RecentlyClaimedPage, defaultServiceType).success.value
+        val expectedAnswers = emptyUserAnswers.set(recentlyClaimedPage, defaultServiceType).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual RecentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers, config).url
+        redirectLocation(result).value mustEqual recentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
       }
     }
 
@@ -183,12 +187,13 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
           FakeRequest(POST, recentlyClaimedRoute)
             .withFormUrlEncodedBody(("serviceType", defaultServiceType.toString))
         val config = application.injector.instanceOf[FrontendAppConfig]
-
+        val recentlyClaimedPage = RecentlyClaimedPage(config)
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.copy(nino = Some("nino")).set(RecentlyClaimedPage, defaultServiceType).success.value
+
+        val expectedAnswers = emptyUserAnswers.copy(nino = Some("nino")).set(recentlyClaimedPage, defaultServiceType).success.value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual RecentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers, config).url
+        redirectLocation(result).value mustEqual recentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
       }
     }
   }
