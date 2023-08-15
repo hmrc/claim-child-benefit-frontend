@@ -106,18 +106,15 @@ recentlyClaimed.checkYourAnswersLabel = Ydych chi wedi hawlio Budd-dal Plant yn 
 recentlyClaimed.error.required = Dewiswch ‘Iawn’ os ydych wedi hawlio Budd-dal Plant yn ddiweddar ac yn aros i glywed a ydych yn gymwys
 recentlyClaimed.change.hidden = os ydych wedi hawlio Budd-dal Plant yn ddiweddar ac yn aros i glywed a ydych yn gymwys
 
-alreadyClaimed.title = Rydych eisoes wedi hawlio Budd-dal Plant
-alreadyClaimed.heading = Rydych eisoes wedi hawlio Budd-dal Plant
-alreadyClaimed.p1 = Rydych eisoes wedi gwneud cais am Fudd-dal Plant drwy gyflwyno hawliad.
-alreadyClaimed.p2.1 = Gallwch
-alreadyClaimed.p2.link.text = wirio pryd y gallwch ddisgwyl ateb gan CThEF
+alreadyClaimed.title = Gweld hynt hawliad Budd-dal Plant
+alreadyClaimed.heading = Gweld hynt hawliad Budd-dal Plant
+alreadyClaimed.p2.1 = Gallwch ddefnyddio gwasanaeth ar-lein CThEF i
+alreadyClaimed.p2.link.text = wirio pryd y gallwch ddisgwyl ymateb i’ch hawliad
 alreadyClaimed.p2.link.href = https://www.gov.uk/guidance/check-when-you-can-expect-a-reply-from-hmrc.cy
-alreadyClaimed.p2.2 = lle y gallwch roi gwybod am newid mewn amgylchiadau a gofyn am lythyr sy’n dangos prawf o’r hawl hefyd.
-alreadyClaimed.p3 = Rhagor o wybodaeth am
-alreadyClaimed.p3.link.text = hawlio Budd-dal Plant
-alreadyClaimed.p3.link.href = https://www.gov.uk/budd-dal-plant
-alreadyClaimed.p4 = Os ydych yn credu eich bod wedi gwneud camgymeriad, gallwch
-alreadyClaimed.p4.link.text = ddechrau’ch cais eto
+alreadyClaimed.p3.1 = Gallwch hefyd
+alreadyClaimed.p3.link.text = wirio os yw’ch hawliad wedi’i gymeradwyo
+alreadyClaimed.p3.link.href = https://www.tax.service.gov.uk/child-benefit/view-proof-entitlement
+alreadyClaimed.p3.2 = drwy fwrw golwg dros eich tystiolaeth o hawl i Fudd-dal Plant. Bydd angen i chi fewngofnodi i’ch cyfrif Porth y Llywodraeth i wneud hyn. Gallwch greu cyfrif os nad oes gennych un.
 
 recentlySubmitted.title = Rydych wedi hawlio Budd-dal Plant yn ddiweddar
 recentlySubmitted.heading = Rydych wedi hawlio Budd-dal Plant yn ddiweddar
