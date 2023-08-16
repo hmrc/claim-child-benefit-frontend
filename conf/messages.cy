@@ -109,7 +109,7 @@ recentlyClaim.options.checkProgress = Gweld hynt hawliad
 recentlyClaim.options.restart = Ailddechrau’ch taliadau (heb ychwanegu plentyn at hawliad sy’n bodoli eisoes)
 recentlyClaim.options.stop = Rhoi’r gorau i’ch taliadau (heb ychwanegu plentyn at hawliad sy’n bodoli eisoes)
 recentlyClaimed.checkYourAnswersLabel = Ydych chi wedi hawlio Budd-dal Plant yn ddiweddar ac yn aros i glywed a ydych yn gymwys?
-recentlyClaimed.error.required = Dewiswch ‘Iawn’ os ydych wedi hawlio Budd-dal Plant yn ddiweddar ac yn aros i glywed a ydych yn gymwys
+recentlyClaimed.error.required = Cadarnhewch y gwasanaeth rydych am ei ddefnyddio.
 recentlyClaimed.change.hidden = os ydych wedi hawlio Budd-dal Plant yn ddiweddar ac yn aros i glywed a ydych yn gymwys
 
 alreadyClaimed.title = Gweld hynt hawliad Budd-dal Plant
