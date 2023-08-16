@@ -113,10 +113,10 @@ trait JourneyHelpers extends Matchers with TryValues with OptionValues {
 
   def submitAnswer[A](page: Page with Settable[A], value: A)(implicit writes: Writes[A], position: Position): JourneyStep[Unit] = {
     for {
-      _               <- pageMustBe(page)
+      _ <- pageMustBe(page)
       originalAnswers <- getAnswers
-      _               <- setUserAnswerTo(page, value)
-      _               <- next(originalAnswers)
+      _ <- setUserAnswerTo(page, value)
+      _ <- next(originalAnswers)
     } yield ()
   }
 

@@ -16,23 +16,25 @@
 
 package forms
 
-import forms.behaviours.BooleanFieldBehaviours
+import forms.behaviours.OptionFieldBehaviours
+import models.ServiceType
 import play.api.data.FormError
 
-class RecentlyClaimedFormProviderSpec extends BooleanFieldBehaviours {
+class RecentlyClaimedFormProviderSpec extends OptionFieldBehaviours {
 
   val requiredKey = "recentlyClaimed.error.required"
-  val invalidKey = "error.boolean"
+  val invalidKey = "error.invalid"
 
   val form = new RecentlyClaimedFormProvider()()
 
-  ".value" - {
+  ".serviceType" - {
 
-    val fieldName = "value"
+    val fieldName = "serviceType"
 
-    behave like booleanField(
+    behave like optionsField(
       form,
       fieldName,
+      ServiceType.values,
       invalidError = FormError(fieldName, invalidKey)
     )
 

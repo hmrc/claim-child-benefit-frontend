@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-package forms
+package pages.utils
 
-import forms.mappings.Mappings
-import models.ServiceType
-import play.api.data.Form
+import pages.{Page, Waypoints}
+import play.api.mvc.Call
 
-import javax.inject.Inject
-
-class RecentlyClaimedFormProvider @Inject() extends Mappings {
-
-  def apply(): Form[ServiceType] =
-    Form(
-      "serviceType" -> enumerable[ServiceType]("recentlyClaimed.error.required")
-    )
+// A helper class to allow PageAndWayPoints results to supply external Urls
+case class ExternalPage(targetUrl: String, method: String = "GET") extends Page {
+  override def route(waypoints: Waypoints): Call = Call(method, targetUrl)
 }

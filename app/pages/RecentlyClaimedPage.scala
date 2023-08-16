@@ -16,30 +16,32 @@
 
 package pages
 
+import config.FrontendAppConfig
 import controllers.routes
-import models.UserAnswers
+import models.{ServiceType, UserAnswers}
+import pages.utils.ExternalPage
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 
-object RecentlyClaimedPage extends QuestionPage[Boolean] {
+final case class RecentlyClaimedPage(config: FrontendAppConfig) extends QuestionPage[ServiceType] {
 
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "recentlyClaimed"
 
-  override def route(waypoints: Waypoints): Call =
-    routes.RecentlyClaimedController.onPageLoad(waypoints)
-
   override protected def nextPageNormalMode(waypoints: Waypoints, answers: UserAnswers): Page =
     answers.get(this).map {
-      case true =>
-        AlreadyClaimedPage
-
-      case false =>
+      case ServiceType.NewClaim | ServiceType.AddClaim =>
         if (answers.isAuthenticated) {
           TaskListPage
         } else {
           SignInPage
         }
+      case ServiceType.CheckClaim => AlreadyClaimedPage
+      case ServiceType.RestartChildBenefit => ExternalPage(config.childBenefitTaxChargeRestartUrl)
+      case ServiceType.StopChildBenefit => ExternalPage(config.childBenefitTaxChargeStopUrl)
     }.orRecover
+
+  override def route(waypoints: Waypoints): Call =
+    routes.RecentlyClaimedController.onPageLoad(waypoints)
 }

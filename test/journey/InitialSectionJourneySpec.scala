@@ -16,23 +16,46 @@
 
 package journey
 
+import config.FrontendAppConfig
 import generators.ModelGenerators
-import models.UserAnswers
+import models.{ServiceType, UserAnswers}
+import org.mockito.MockitoSugar.when
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.freespec.AnyFreeSpec
-import pages._
+import org.scalatest.prop.TableDrivenPropertyChecks
+import org.scalatestplus.mockito.MockitoSugar
+import pages.{RecentlyClaimedPage, _}
+import pages.utils.ExternalPage
 import uk.gov.hmrc.domain.Nino
 
-class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
+class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators with TableDrivenPropertyChecks with MockitoSugar {
+  private val defaultServiceType = ServiceType.NewClaim
 
-  "users who have recently claimed must go to the Already Claimed page" in {
+  val mockAppConfig = mock[FrontendAppConfig]
+  when(mockAppConfig.childBenefitTaxChargeStopUrl).thenReturn("childBenefitTaxChargeStopUrl")
+  when(mockAppConfig.childBenefitTaxChargeRestartUrl).thenReturn("childBenefitTaxChargeRestartUrl")
+  val journeyScenarios = Table(
+    ("selectedServiceType", "userIsAuthenticated", "pageName", "expectedPage"),
+    (ServiceType.NewClaim,            false, "Sign In",               SignInPage),
+    (ServiceType.AddClaim,            false, "Sign In",               SignInPage),
+    (ServiceType.CheckClaim,          false, "Already Claimed",       AlreadyClaimedPage),
+    (ServiceType.StopChildBenefit,    false, "Stop Child Benefit",    ExternalPage("childBenefitTaxChargeStopUrl")),
+    (ServiceType.RestartChildBenefit, false, "Restart Child Benefit", ExternalPage("childBenefitTaxChargeRestartUrl"))
+  )
 
-    startingFrom(RecentlyClaimedPage)
-      .run(
-        submitAnswer(RecentlyClaimedPage, true),
-        pageMustBe(AlreadyClaimedPage)
-      )
-  }
+  forAll (journeyScenarios) { (selectedServiceType, userIsAuthenticated, pageName, expectedPage) => {
+    s"users who select the ${selectedServiceType.toString} and are ${if(userIsAuthenticated) "" else "not "}authenticated must go to the $pageName" in {
+      val recentlyClaimedPage = RecentlyClaimedPage(mockAppConfig)
+      startingFrom(recentlyClaimedPage)
+        .run(
+          submitAnswer(
+            recentlyClaimedPage,
+            selectedServiceType
+          ),
+          pageMustBe(expectedPage)
+        )
+    }
+  }}
 
   "users who have not recently claimed" - {
 
@@ -40,19 +63,19 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
 
       val nino = arbitrary[Nino].sample.value
       val authenticatedAnswers = UserAnswers("id", nino = Some(nino.nino))
-
-      startingFrom(RecentlyClaimedPage, answers = authenticatedAnswers)
+      val recentlyClaimedPage = RecentlyClaimedPage(mockAppConfig)
+      startingFrom(recentlyClaimedPage, answers = authenticatedAnswers)
         .run(
-          submitAnswer(RecentlyClaimedPage, false),
+          submitAnswer(recentlyClaimedPage, defaultServiceType),
           pageMustBe(TaskListPage)
         )
     }
 
     "who are not already authenticated must go to Sign In" in {
-
-      startingFrom(RecentlyClaimedPage)
+      val recentlyClaimedPage = RecentlyClaimedPage(mockAppConfig)
+      startingFrom(recentlyClaimedPage)
         .run(
-          submitAnswer(RecentlyClaimedPage, false),
+          submitAnswer(recentlyClaimedPage, defaultServiceType),
           pageMustBe(SignInPage)
         )
     }

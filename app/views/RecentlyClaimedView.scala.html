@@ -14,12 +14,16 @@
  * limitations under the License.
  *@
 
+@import models.ServiceType
+@import components._
+
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukErrorSummary: GovukErrorSummary,
         govukRadios: GovukRadios,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        para: ParagraphBody
 )
 
 @(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
@@ -33,10 +37,32 @@
         }
 
         @govukRadios(
-            RadiosViewModel.yesNo(
-                field = form("value"),
-                legend = LegendViewModel(messages("recentlyClaimed.heading")).asPageHeading()
-            )
+            RadiosViewModel(
+                field = form("serviceType"),
+                legend = LegendViewModel(messages("recentlyClaimed.heading")).asPageHeading(),
+                items = Seq(
+                    RadioItem(
+                        content = Text(messages("recentlyClaim.options.newClaim")),
+                        value = Some(ServiceType.NewClaim.toString)
+                    ),
+                    RadioItem(
+                        content = Text(messages("recentlyClaim.options.addExisting")),
+                        value = Some(ServiceType.AddClaim.toString)
+                    ),
+                    RadioItem(
+                        content = Text(messages("recentlyClaim.options.checkProgress")),
+                        value = Some(ServiceType.CheckClaim.toString)
+                    ),
+                    RadioItem(
+                        content = Text(messages("recentlyClaim.options.restart")),
+                        value = Some(ServiceType.RestartChildBenefit.toString)
+                    ),
+                    RadioItem(
+                        content = Text(messages("recentlyClaim.options.stop")),
+                        value = Some(ServiceType.StopChildBenefit.toString)
+                    )
+                )
+            ).withHint(HintViewModel(HtmlContent(para(messages("recentlyClaimed.hint")))))
         )
 
         @govukButton(
