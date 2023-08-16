@@ -103,7 +103,7 @@ applicantUsualCountryOfResidence.change.hidden = y wlad rydych yn byw ynddi fel 
 recentlyClaimed.title = Ydych chi wedi hawlio Budd-dal Plant yn ddiweddar ac yn aros i glywed a ydych yn gymwys?
 recentlyClaimed.heading = Ydych chi wedi hawlio Budd-dal Plant yn ddiweddar ac yn aros i glywed a ydych yn gymwys?
 recentlyClaimed.checkYourAnswersLabel = Ydych chi wedi hawlio Budd-dal Plant yn ddiweddar ac yn aros i glywed a ydych yn gymwys?
-recentlyClaimed.error.required = Dewiswch ‘Iawn’ os ydych wedi hawlio Budd-dal Plant yn ddiweddar ac yn aros i glywed a ydych yn gymwys
+recentlyClaimed.error.required = Cadarnhewch y gwasanaeth rydych am ei ddefnyddio.
 recentlyClaimed.change.hidden = os ydych wedi hawlio Budd-dal Plant yn ddiweddar ac yn aros i glywed a ydych yn gymwys
 
 alreadyClaimed.title = Rydych eisoes wedi hawlio Budd-dal Plant
