@@ -16,17 +16,18 @@
 
 package models
 
-import play.api.libs.json.{Format, Json, OFormat, Reads, Writes}
+import play.api.i18n.Messages
+import play.api.libs.json._
 
 import scala.annotation.nowarn
 
 trait Address extends Product with Serializable {
   val line1: String
-  def lines: Seq[String]
+  def lines(implicit messages: Messages): Seq[String]
 
   protected val localAuthorityKeywords: Seq[String] = Seq("COUNCIL", "CIVIC", "AUTHORITY", "DISTRICT", "METROPOLITAN", "BOROUGH")
 
-  def possibleLocalAuthorityAddress: Boolean
+  def possibleLocalAuthorityAddress(implicit messages: Messages): Boolean
 }
 
 object Address {
@@ -53,7 +54,7 @@ final case class UkAddress(
                       postcode: String
                     ) extends Address {
 
-  val lines: Seq[String] =
+  def lines(implicit messages: Messages): Seq[String] =
     Seq(
       Some(line1),
       line2,
@@ -62,7 +63,7 @@ final case class UkAddress(
       Some(postcode)
     ).flatten
 
-  override def possibleLocalAuthorityAddress: Boolean =
+  override def possibleLocalAuthorityAddress(implicit messages: Messages): Boolean =
     lines
       .mkString(" ")
       .replaceAll("\\s", " ")
@@ -86,17 +87,17 @@ final case class InternationalAddress (
                                   country: Country
                                 ) extends Address {
 
-  val lines: Seq[String] =
+  def lines(implicit messages: Messages): Seq[String] =
     Seq(
       Some(line1),
       line2,
       Some(townOrCity),
       stateOrRegion,
       postcode,
-      Some(country.name)
+      Option(country.message)
     ).flatten
 
-  override def possibleLocalAuthorityAddress: Boolean = false
+  override def possibleLocalAuthorityAddress(implicit messages: Messages): Boolean = false
 }
 
 object InternationalAddress {

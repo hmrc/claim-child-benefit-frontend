@@ -16,6 +16,7 @@
 
 package models
 
+import play.api.i18n.Messages
 import play.api.libs.json.{Json, OFormat}
 
 import java.time.LocalDate
@@ -32,7 +33,7 @@ final case class NPSAddress(
 
   lazy val isUkAddress: Boolean = country.exists(_.code == "GB") || country.isEmpty
 
-  val lines: Seq[String] =
+  def lines(implicit messages: Messages): Seq[String] =
     Seq(
       Some(line1),
       line2,
@@ -40,10 +41,10 @@ final case class NPSAddress(
       line4,
       line5,
       postcode,
-      country.map(_.name)
+      country.map(_.message)
     ).flatten
 
-  override def possibleLocalAuthorityAddress: Boolean =
+  override def possibleLocalAuthorityAddress(implicit messages: Messages): Boolean =
     isUkAddress &&
     lines
       .mkString(" ")

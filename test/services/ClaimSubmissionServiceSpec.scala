@@ -36,6 +36,7 @@ import pages.applicant._
 import pages.child._
 import pages.partner._
 import pages.payments._
+import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import services.ClaimSubmissionService._
 import uk.gov.hmrc.domain.Nino
@@ -45,6 +46,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach with ModelGenerators {
+  private implicit val message = mock[Messages]
 
   private val mockFeatureFlags = mock[FeatureFlags]
   private val mockConnector = mock[ClaimChildBenefitConnector]
@@ -53,6 +55,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
   private val mockAuditService = mock[AuditService]
   private val journeyModelService = new JourneyModelService(mockFeatureFlags)
   private val mockUserDataService = mock[UserDataService]
+
 
   override def beforeEach(): Unit = {
     Mockito.reset(mockFeatureFlags)

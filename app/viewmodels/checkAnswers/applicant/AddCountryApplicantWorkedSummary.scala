@@ -30,12 +30,12 @@ import viewmodels.implicits._
 
 object AddCountryApplicantWorkedSummary {
 
-  def rows(answers: UserAnswers, waypoints: Waypoints, sourcePage: AddItemPage): Seq[ListItem] =
+  def rows(answers: UserAnswers, waypoints: Waypoints, sourcePage: AddItemPage)(implicit messages: Messages): Seq[ListItem] =
     answers.get(AllCountriesApplicantWorked).getOrElse(List.empty).zipWithIndex.map {
       case (country, index) =>
 
         ListItem(
-          name = country.name,
+          name = country.message,
           changeUrl = CountryApplicantWorkedPage(Index(index)).changeLink(waypoints, sourcePage).url,
           removeUrl = routes.RemoveCountryApplicantWorkedController.onPageLoad(waypoints, Index(index)).url
         )
@@ -47,7 +47,7 @@ object AddCountryApplicantWorkedSummary {
     answers.get(AllCountriesApplicantWorked).map {
       countries =>
 
-        val value = countries.map(n => n.name).mkString("<br>")
+        val value = countries.map(n => n.message).mkString("<br>")
 
         SummaryListRowViewModel(
           key = "addCountryApplicantWorked.checkYourAnswersLabel",

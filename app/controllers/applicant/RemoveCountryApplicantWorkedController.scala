@@ -51,9 +51,9 @@ class RemoveCountryApplicantWorkedController @Inject()(
       getAnswer(CountryApplicantWorkedPage(index)) {
         country =>
 
-          val form = formProvider(country.name)
+          val form = formProvider(country.message)
 
-          Ok(view(form, waypoints, index, country.name))
+          Ok(view(form, waypoints, index, country.message))
       }
   }
 
@@ -62,11 +62,11 @@ class RemoveCountryApplicantWorkedController @Inject()(
       getAnswerAsync(applicant.CountryApplicantWorkedPage(index)) {
         country =>
 
-          val form = formProvider(country.name)
+          val form = formProvider(country.message)
 
           form.bindFromRequest().fold(
             formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, waypoints, index, country.name))),
+              Future.successful(BadRequest(view(formWithErrors, waypoints, index, country.message))),
 
             value =>
               if (value) {

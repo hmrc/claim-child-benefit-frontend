@@ -23,6 +23,7 @@ import models.ChildBirthRegistrationCountry._
 import models.DocumentType.{AdoptionCertificate, BirthCertificate, TravelDocument}
 import models._
 import pages.child._
+import play.api.i18n.Messages
 import queries.{AllChildPreviousNames, AllChildSummaries, Query}
 
 import java.time.LocalDate
@@ -68,7 +69,7 @@ final case class Child(
       false
     }
 
-  val possiblyRecentlyCaredForByLocalAuthority: Boolean =
+  def possiblyRecentlyCaredForByLocalAuthority(implicit messages: Messages): Boolean =
     if (dateChildStartedLivingWithApplicant.exists(_.isAfter(LocalDate.now.minusMonths(3)))) {
       previousGuardian.exists(_.address.exists(_.possibleLocalAuthorityAddress))
     } else {
