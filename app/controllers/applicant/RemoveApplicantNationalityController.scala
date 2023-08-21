@@ -51,9 +51,9 @@ class RemoveApplicantNationalityController @Inject()(
       getAnswer(ApplicantNationalityPage(index)) {
         nationality =>
 
-          val form = formProvider(nationality.name)
+          val form = formProvider(nationality.message)
 
-          Ok(view(form, waypoints, index, nationality.name))
+          Ok(view(form, waypoints, index, nationality.message))
       }
   }
 
@@ -62,11 +62,11 @@ class RemoveApplicantNationalityController @Inject()(
       getAnswerAsync(applicant.ApplicantNationalityPage(index)) {
         nationality =>
 
-          val form = formProvider(nationality.name)
+          val form = formProvider(nationality.message)
 
           form.bindFromRequest().fold(
             formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, waypoints, index, nationality.name))),
+              Future.successful(BadRequest(view(formWithErrors, waypoints, index, nationality.message))),
 
             value =>
               if (value) {

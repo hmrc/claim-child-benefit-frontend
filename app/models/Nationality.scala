@@ -41,7 +41,9 @@ object NationalityGroupOrdering extends Ordering[NationalityGroup] {
   override def compare(x: NationalityGroup, y: NationalityGroup): Int = x.order compare y.order
 }
 
-final case class Nationality(name: String, group: NationalityGroup, key: String)
+final case class Nationality(name: String, group: NationalityGroup, key: String) {
+  def message(implicit messages: Messages): String = messages(key)
+}
 
 object Nationality {
 
