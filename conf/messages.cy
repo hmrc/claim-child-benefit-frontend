@@ -184,8 +184,8 @@ employmentStatus.lookingForWork = Yn chwilio am waith
 employmentStatus.selfEmployed = Hunangyflogedig
 employmentStatus.none = Dim un o’r rhain yn berthnasol
 
-income.belowLowerThreshold = Llai na £50,100
-income.betweenThresholds = £50,100 - £60,000
+income.belowLowerThreshold = Llai na £50,000
+income.betweenThresholds = £50,000 - £60,000
 income.aboveUpperThreshold = Mwy na £60,000
 
 applicantBenefits.title = A ydych yn cael unrhyw un o’r budd-daliadau hyn?
@@ -366,7 +366,7 @@ wantToBePaid.change.hidden = os ydych am gael taliadau Budd-dal Plant
 
 wantToBePaid.single.under50k.title = Sut mae’r tâl treth yn gweithio
 wantToBePaid.single.under50k.heading = Sut mae’r tâl treth yn gweithio
-wantToBePaid.single.under50k.p1 = Does dim tâl treth gan fod eich incwm blynyddol yn llai na £50,100.
+wantToBePaid.single.under50k.p1 = Does dim tâl treth gan fod eich incwm blynyddol yn llai na £50,000.
 wantToBePaid.single.under50k.p2 = Os bydd eich amgylchiadau’n newid, mae’n rhaid i chi roi gwybod am y newid hwn i’r Swyddfa Budd-dal Plant, gan y gallai fod angen i chi dalu
 wantToBePaid.single.under50k.p2.link.href = https://www.gov.uk/tal-treth-budd-dal-plant
 wantToBePaid.single.under50k.p2.link.text = Tâl Treth Budd-dal Plant Incwm Uchel
@@ -375,7 +375,7 @@ wantToBePaid.single.under50k.p3 = Bydd hawlio Budd-dal Plant yn helpu i ddiogelu
 
 wantToBePaid.single.under60k.title = Sut mae’r tâl treth yn gweithio
 wantToBePaid.single.under60k.heading = Sut mae’r tâl treth yn gweithio
-wantToBePaid.single.under60k.p1 = Mae eich incwm blynyddol rhwng £50,100 a £60,000, ac efallai y bydd yn rhaid i chi dalu
+wantToBePaid.single.under60k.p1 = Mae eich incwm blynyddol rhwng £50,000 a £60,000, ac efallai y bydd yn rhaid i chi dalu
 wantToBePaid.single.under60k.p1.link.href = https://www.gov.uk/tal-treth-budd-dal-plant
 wantToBePaid.single.under60k.p1.link.text = Tâl Treth Budd-dal Plant Incwm Uchel
 wantToBePaid.single.under60k.p2 = Os dewiswch gael taliadau Budd-dal Plant, bydd y taliadau a gewch yn fwy na gwerth y tâl treth y mae’n rhaid i chi ei dalu.
@@ -397,7 +397,7 @@ wantToBePaid.single.over60k.p5 = Mae’n bwysig hawlio Budd-dal Plant, hyd yn oe
 
 wantToBePaid.couple.under50k.under50k.title = Sut mae’r tâl treth yn gweithio
 wantToBePaid.couple.under50k.under50k.heading = Sut mae’r tâl treth yn gweithio
-wantToBePaid.couple.under50k.under50k.p1 = Does dim tâl treth gan fod eich incwm blynyddol chi fel unigolyn, yn ogystal ag incwm blynyddol eich partner fel unigolyn, yn llai na £50,100.
+wantToBePaid.couple.under50k.under50k.p1 = Does dim tâl treth gan fod eich incwm blynyddol chi fel unigolyn, yn ogystal ag incwm blynyddol eich partner fel unigolyn, yn llai na £50,000.
 wantToBePaid.couple.under50k.under50k.p2 = Os yw amgylchiadau’r naill neu’r llall ohonoch yn newid, mae’n rhaid i chi roi gwybod am y newid hwn i’r Swyddfa Budd-dal Plant, gan y gallai fod angen i un ohonoch dalu
 wantToBePaid.couple.under50k.under50k.p2.link.href = https://www.gov.uk/tal-treth-budd-dal-plant
 wantToBePaid.couple.under50k.under50k.p2.link.text = Tâl Treth Budd-dal Plant Incwm Uchel
@@ -407,7 +407,7 @@ wantToBePaid.couple.under50k.under50k.p4 = Bydd hawlio Budd-dal Plant yn helpu i
 
 wantToBePaid.couple.under50k.under60k.title = Sut mae’r tâl treth yn gweithio
 wantToBePaid.couple.under50k.under60k.heading = Sut mae’r tâl treth yn gweithio
-wantToBePaid.couple.under50k.under60k.p1 = Mae incwm blynyddol eich partner rhwng £50,100 a £60,000, ac efallai y bydd yn rhaid iddo dalu
+wantToBePaid.couple.under50k.under60k.p1 = Mae incwm blynyddol eich partner rhwng £50,000 a £60,000, ac efallai y bydd yn rhaid iddo dalu
 wantToBePaid.couple.under50k.under60k.p1.link.href = https://www.gov.uk/tal-treth-budd-dal-plant
 wantToBePaid.couple.under50k.under60k.p1.link.text = Tâl Treth Budd-dal Plant Incwm Uchel
 wantToBePaid.couple.under50k.under60k.p2 = Os ydych yn dewis cael taliadau Budd-dal Plant, bydd y taliadau a gewch yn fwy na gwerth y tâl treth y mae’n rhaid i’ch partner ei dalu.
@@ -429,7 +429,7 @@ wantToBePaid.couple.under50k.over60k.p5 = Mae’n bwysig hawlio Budd-dal Plant, 
 
 wantToBePaid.couple.under60k.under50k.title = Sut mae’r tâl treth yn gweithio
 wantToBePaid.couple.under60k.under50k.heading = Sut mae’r tâl treth yn gweithio
-wantToBePaid.couple.under60k.under50k.p1 = Mae eich incwm blynyddol rhwng £50,100 a £60,000, ac efallai y bydd yn rhaid i chi dalu
+wantToBePaid.couple.under60k.under50k.p1 = Mae eich incwm blynyddol rhwng £50,000 a £60,000, ac efallai y bydd yn rhaid i chi dalu
 wantToBePaid.couple.under60k.under50k.p1.link.href = https://www.gov.uk/tal-treth-budd-dal-plant
 wantToBePaid.couple.under60k.under50k.p1.link.text = Tâl Treth Budd-dal Plant Incwm Uchel
 wantToBePaid.couple.under60k.under50k.p2 = Os dewiswch gael taliadau Budd-dal Plant, bydd y taliadau a gewch yn fwy na gwerth y tâl treth y mae’n rhaid i chi ei dalu.
@@ -440,7 +440,7 @@ wantToBePaid.couple.under60k.under50k.p5 = Mae’n bwysig hawlio Budd-dal Plant,
 
 wantToBePaid.couple.under60k.under60k.title = Sut mae’r tâl treth yn gweithio
 wantToBePaid.couple.under60k.under60k.heading = Sut mae’r tâl treth yn gweithio
-wantToBePaid.couple.under60k.under60k.p1 = Gan fod eich incwm blynyddol chi fel unigolyn, yn ogystal ag incwm blynyddol eich partner fel unigolyn, rhwng £50,100 a £60,000, efallai y bydd yn rhaid i chi neu’ch partner dalu
+wantToBePaid.couple.under60k.under60k.p1 = Gan fod eich incwm blynyddol chi fel unigolyn, yn ogystal ag incwm blynyddol eich partner fel unigolyn, rhwng £50,000 a £60,000, efallai y bydd yn rhaid i chi neu’ch partner dalu
 wantToBePaid.couple.under60k.under60k.p1.link.href = https://www.gov.uk/tal-treth-budd-dal-plant
 wantToBePaid.couple.under60k.under60k.p1.link.text = Tâl Treth Budd-dal Plant Incwm Uchel
 wantToBePaid.couple.under60k.under60k.p2 = Os ydych yn dewis cael taliadau Budd-dal Plant, bydd y taliadau a gewch yn fwy na gwerth y tâl treth y mae’n rhaid i chi neu’ch partner ei dalu.
