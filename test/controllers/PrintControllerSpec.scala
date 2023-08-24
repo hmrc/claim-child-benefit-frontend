@@ -122,6 +122,8 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
           .build()
 
       running(application) {
+        implicit val msgs: Messages = messages(application)
+
         val request = FakeRequest(GET, routes.PrintController.onPageLoad.url)
 
         val result = route(application, request).value
@@ -177,6 +179,9 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
           .build()
 
       running(application) {
+
+        implicit val msgs: Messages = messages(application)
+
         val request = FakeRequest(GET, routes.PrintController.onDownload.url)
 
         val result = route(application, request).value

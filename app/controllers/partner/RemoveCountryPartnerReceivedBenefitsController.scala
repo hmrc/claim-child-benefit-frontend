@@ -51,9 +51,9 @@ class RemoveCountryPartnerReceivedBenefitsController @Inject()(
       getAnswers(PartnerNamePage, CountryPartnerReceivedBenefitsPage(index)) {
         case (partnerName, country) =>
 
-          val form = formProvider(partnerName.firstName, country.name)
+          val form = formProvider(partnerName.firstName, country.message)
 
-          Ok(view(form, waypoints, index, partnerName.firstName, country.name))
+          Ok(view(form, waypoints, index, partnerName.firstName, country.message))
       }
   }
 
@@ -62,11 +62,11 @@ class RemoveCountryPartnerReceivedBenefitsController @Inject()(
       getAnswersAsync(PartnerNamePage, CountryPartnerReceivedBenefitsPage(index)) {
         case(partnerName, country) =>
 
-          val form = formProvider(partnerName.firstName, country.name)
+          val form = formProvider(partnerName.firstName, country.message)
 
           form.bindFromRequest().fold(
             formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, waypoints, index, partnerName.firstName, country.name))),
+              Future.successful(BadRequest(view(formWithErrors, waypoints, index, partnerName.firstName, country.message))),
 
             value =>
               if (value) {

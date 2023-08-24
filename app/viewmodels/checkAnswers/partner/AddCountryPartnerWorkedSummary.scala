@@ -30,12 +30,12 @@ import viewmodels.implicits._
 
 object AddCountryPartnerWorkedSummary {
 
-  def rows(answers: UserAnswers, waypoints: Waypoints, sourcePage: AddItemPage): Seq[ListItem] =
+  def rows(answers: UserAnswers, waypoints: Waypoints, sourcePage: AddItemPage)(implicit messages: Messages): Seq[ListItem] =
     answers.get(AllCountriesPartnerWorked).getOrElse(List.empty).zipWithIndex.map {
       case (country, index) =>
 
         ListItem(
-          name = country.name,
+          name = country.message,
           changeUrl = CountryPartnerWorkedPage(Index(index)).changeLink(waypoints, sourcePage).url,
           removeUrl = routes.RemoveCountryPartnerWorkedController.onPageLoad(waypoints, Index(index)).url
         )
@@ -48,7 +48,7 @@ object AddCountryPartnerWorkedSummary {
       partnerName <- answers.get(PartnerNamePage)
     } yield {
 
-      val value = countries.map(n => n.name).mkString("<br>")
+      val value = countries.map(n => n.message).mkString("<br>")
 
       SummaryListRowViewModel(
         key = messages("addCountryPartnerWorked.checkYourAnswersLabel", partnerName.firstName),

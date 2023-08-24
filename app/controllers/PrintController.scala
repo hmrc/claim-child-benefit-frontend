@@ -19,8 +19,8 @@ package controllers
 import audit.AuditService
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import logging.Logging
-import models.UserAnswers
 import models.journey.JourneyModel
+import models.requests.DataRequest
 import org.apache.fop.apps.FOUserAgent
 import play.api.i18n.{I18nSupport, Lang, Messages, MessagesImpl}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -44,7 +44,7 @@ class PrintController @Inject()(
                                  documentsView: PrintDocumentsRequiredView,
                                  journeyModelService: JourneyModelService
                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
-  
+
   private val userAgentBlock: FOUserAgent => Unit = { foUserAgent: FOUserAgent =>
     foUserAgent.setAccessibility(true)
     foUserAgent.setPdfUAEnabled(true)
@@ -55,8 +55,8 @@ class PrintController @Inject()(
     foUserAgent.setTitle("Claim Child Benefit by post form")
   }
 
-  private def withJourneyModel(answers: UserAnswers)(f: JourneyModel => Future[Result]): Future[Result] = {
-    val (maybeErrors, maybeModel) = journeyModelService.build(answers).pad
+  private def withJourneyModel(request: DataRequest[AnyContent])(f: JourneyModel => Future[Result]): Future[Result] = {
+    val (maybeErrors, maybeModel) = journeyModelService.build(request.userAnswers)(request2Messages(request)).pad
 
     val errors = maybeErrors.map { errors =>
       val message = errors.toChain.toList.map(_.path).mkString(", ")
@@ -74,7 +74,7 @@ class PrintController @Inject()(
 
   def onDownload: Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      withJourneyModel(request.userAnswers) {
+      withJourneyModel(request) {
         journeyModel =>
           val englishMessages: Messages = MessagesImpl(Lang("en"), implicitly)
 
@@ -89,7 +89,7 @@ class PrintController @Inject()(
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      withJourneyModel(request.userAnswers) {
+      withJourneyModel(request) {
         journeyModel =>
           if (journeyModel.children.exists(_.requiredDocuments.nonEmpty)) {
             Future.successful(Ok(documentsView(journeyModel)))

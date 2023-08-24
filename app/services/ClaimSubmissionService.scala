@@ -22,6 +22,7 @@ import logging.Logging
 import models.domain.Claim
 import models.requests.DataRequest
 import models.{AdditionalArchiveDetails, Done, RecentClaim}
+import play.api.i18n.Messages
 import services.ClaimSubmissionService.{CannotBuildJourneyModelException, NotAuthenticatedException}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.RequestOps._
@@ -41,7 +42,7 @@ class ClaimSubmissionService @Inject()(
                                         clock: Clock
                                       ) extends Logging {
 
-  def canSubmit(request: DataRequest[_]): Future[Boolean] =
+  def canSubmit(request: DataRequest[_])(implicit messages: Messages): Future[Boolean] =
     if (request.signedIn) {
       journeyModelService.build(request.userAnswers).right.map {
         journeyModel =>
@@ -51,7 +52,7 @@ class ClaimSubmissionService @Inject()(
       Future.successful(false)
     }
 
-  def submit(request: DataRequest[_])(implicit ec: ExecutionContext): Future[Done] = {
+  def submit(request: DataRequest[_])(implicit ec: ExecutionContext, messages: Messages): Future[Done] = {
     for {
       nino                <- request.userAnswers.nino
       relationshipDetails <- request.userAnswers.relationshipDetails

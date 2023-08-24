@@ -29,11 +29,11 @@ object ApplicantUsualCountryOfResidenceSummary {
   def row(answers: UserAnswers, waypoints: Waypoints, sourcePage: CheckAnswersPage)
          (implicit messages: Messages): Option[SummaryListRow] =
     answers.get(ApplicantUsualCountryOfResidencePage).map {
-      answer =>
+      country =>
 
         SummaryListRowViewModel(
           key = "applicantUsualCountryOfResidence.checkYourAnswersLabel",
-          value = ValueViewModel(answer.name),
+          value = ValueViewModel(country.message),
           actions = Seq(
             ActionItemViewModel("site.change", ApplicantUsualCountryOfResidencePage.changeLink(waypoints, sourcePage).url)
               .withVisuallyHiddenText(messages("applicantUsualCountryOfResidence.change.hidden"))

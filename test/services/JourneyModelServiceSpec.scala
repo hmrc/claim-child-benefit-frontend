@@ -33,6 +33,7 @@ import pages.applicant._
 import pages.child._
 import pages.partner._
 import pages.payments._
+import play.api.i18n.Messages
 import queries.BankAccountInsightsResultQuery
 import uk.gov.hmrc.domain.Nino
 
@@ -47,7 +48,9 @@ class JourneyModelServiceSpec
     with ModelGenerators
     with MockitoSugar
     with BeforeAndAfterEach {
-  
+
+  private implicit val messages: Messages = mock[Messages]
+
   private val mockFeatureFlags = mock[FeatureFlags]
 
   override def beforeEach(): Unit = {

@@ -27,6 +27,7 @@ import models.journey._
 import pages.applicant.CurrentlyReceivingChildBenefitPage
 import pages.partner.RelationshipStatusPage
 import pages.payments.{ApplicantBenefitsPage, ApplicantOrPartnerBenefitsPage, WantToBePaidPage}
+import play.api.i18n.Messages
 import queries.Query
 
 import javax.inject.Inject
@@ -34,7 +35,7 @@ import java.time.LocalDate
 
 class JourneyModelService @Inject()(featureFlags: FeatureFlags) {
 
-  def build(answers: UserAnswers): IorNec[Query, JourneyModel] =
+  def build(answers: UserAnswers)(implicit messages: Messages): IorNec[Query, JourneyModel] =
     (
       Applicant.build(answers),
       Relationship.build(answers),
@@ -134,7 +135,7 @@ class JourneyModelService @Inject()(featureFlags: FeatureFlags) {
                                      relationship: Relationship,
                                      children: NonEmptyList[Child],
                                      paymentPreference: PaymentPreference
-                                   ): Seq[OtherEligibilityFailReason] = {
+                                   )(implicit messages: Messages): Seq[OtherEligibilityFailReason] = {
 
     val applicantWorkedAbroad = applicant.residency match {
       case Residency.LivedInUkAndAbroad(_, _, _, countries, _) if countries.nonEmpty => Some(ApplicantWorkedAbroad)
