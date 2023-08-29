@@ -471,7 +471,11 @@ journeyRecovery.startAgain.p2.2 = os ydych am siarad â rhywun ynglŷn â hawlio
 
 signIn.title = A ydych am fewngofnodi drwy ddefnyddio Porth y Llywodraeth?
 signIn.heading = A ydych am fewngofnodi drwy ddefnyddio Porth y Llywodraeth?
-signIn.p1 = Os ydych yn mewngofnodi ac yn cadarnhau pwy ydych, byddwch yn gallu llenwi’r hawliad hwn yn gyflymach.
+signIn.p1 = Os nad oes gennych gyfrif personol ar gyfer Porth y Llywodraeth, gallwch greu un.
+signIn.p2 = Pan fyddwch yn mewngofnodi, gallwch wneud y canlynol:
+signIn.bullet1 = cael eich Budd-dal Plant yn gynharach
+signIn.bullet2 = cadw’ch cynnydd
+signIn.bullet3 = llenwi’r ffurflen hon yn gyflymach
 signIn.error.required = Dewiswch ’Iawn’ os ydych am fewngofnodi drwy ddefnyddio Porth y Llywodraeth
 
 signedOut.title = Gwnaethom gadw’ch cynnydd
