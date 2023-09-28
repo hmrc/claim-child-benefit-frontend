@@ -17,6 +17,7 @@
 package connectors
 
 import config.Service
+import ConnectorFailureLogger._
 import models.{Done, UserAnswers}
 import play.api.Configuration
 import play.api.http.Status.NO_CONTENT
@@ -39,12 +40,14 @@ class UserAnswersConnector @Inject()(config: Configuration, httpClient: HttpClie
     httpClient
       .get(userAnswersUrl)
       .execute[Option[UserAnswers]]
+      .logFailureReason(connectorName = "UserAnswersConnector on get")
 
   def set(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[Done] =
     httpClient
       .post(userAnswersUrl)
       .withBody(Json.toJson(answers))
       .execute[HttpResponse]
+      .logFailureReason(connectorName = "UserAnswersConnector on set")
       .flatMap { response =>
         if (response.status == NO_CONTENT) {
           Future.successful(Done)
@@ -57,6 +60,7 @@ class UserAnswersConnector @Inject()(config: Configuration, httpClient: HttpClie
     httpClient
       .post(keepAliveUrl)
       .execute[HttpResponse]
+      .logFailureReason(connectorName = "UserAnswersConnector on keepAlive")
       .flatMap { response =>
         if (response.status == NO_CONTENT) {
           Future.successful(Done)
@@ -69,6 +73,7 @@ class UserAnswersConnector @Inject()(config: Configuration, httpClient: HttpClie
     httpClient
       .delete(userAnswersUrl)
       .execute[HttpResponse]
+      .logFailureReason(connectorName = "UserAnswersConnector on clear")
       .flatMap { response =>
         if (response.status == NO_CONTENT) {
           Future.successful(Done)

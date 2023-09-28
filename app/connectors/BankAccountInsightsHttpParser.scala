@@ -16,12 +16,13 @@
 
 package connectors
 
+import logging.Logging
 import models.{BankAccountInsightsResponseModel, ErrorResponse, InvalidJson, UnexpectedResponseStatus}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 import play.api.http.Status.OK
 import play.api.libs.json.JsSuccess
 
-object BankAccountInsightsHttpParser {
+object BankAccountInsightsHttpParser extends Logging {
 
   type BankAccountInsightsResponse = Either[ErrorResponse, BankAccountInsightsResponseModel]
 
@@ -34,12 +35,16 @@ object BankAccountInsightsHttpParser {
             case JsSuccess(model, _) =>
               Right(model)
 
-            case _ =>
+            case _ => {
+              logger.warn(s"Unable to parse the content of a response from Bank Account Insights")
               Left(InvalidJson)
+            }
           }
 
-        case status =>
+        case status => {
+          logger.warn(s"Received error status code $status from Bank Account Insights")
           Left(UnexpectedResponseStatus(status))
+        }
       }) -> response
     }
   }

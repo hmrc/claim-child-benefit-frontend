@@ -17,6 +17,7 @@
 package connectors
 
 import config.FrontendAppConfig
+import connectors.ConnectorFailureLogger._
 import models.immigration.{NinoSearchRequest, StatusCheckResponse, StatusCheckResult}
 import play.api.http.HeaderNames
 import play.api.libs.json.Json
@@ -44,5 +45,6 @@ class ImmigrationStatusConnector @Inject()(
       .setHeader("X-Correlation-Id" -> correlationId.toString)
       .setHeader(HeaderNames.AUTHORIZATION -> config.internalAuthToken)
       .execute[StatusCheckResponse]
+      .logFailureReason(connectorName = "ImmigrationStatusConnector on checkStatus")
       .map(_.result)
 }

@@ -19,6 +19,7 @@ package connectors
 import audit.{AuditService, CheckBankAccountInsightsAuditEvent}
 import config.Service
 import connectors.BankAccountInsightsHttpParser.{BankAccountInsightsReads, BankAccountInsightsResponse}
+import connectors.ConnectorFailureLogger._
 import logging.Logging
 import models.{BankAccountInsightsRequest, UnexpectedException}
 import play.api.Configuration
@@ -48,6 +49,7 @@ class BankAccountInsightsConnector @Inject()(config: Configuration, httpClient: 
       .setHeader("Authorization" -> internalAuthToken)
       .withBody(json)
       .execute
+      .logFailureReason(connectorName = "BankAccountInsightsConnector on check")
       .map {
         case (connectorResponse, httpResponse) =>
           auditService.auditCheckBankAccountInsights(

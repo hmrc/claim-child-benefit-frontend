@@ -19,6 +19,7 @@ package connectors
 import audit.{AuditService, VerifyBankDetailsAuditEvent}
 import config.Service
 import connectors.BarsHttpParser.{BarsReads, VerifyBankDetailsResponse}
+import connectors.ConnectorFailureLogger._
 import logging.Logging
 import models.{UnexpectedException, VerifyBankDetailsRequest}
 import play.api.Configuration
@@ -45,17 +46,19 @@ class BarsConnector @Inject()(config: Configuration, httpClient: HttpClientV2, a
       case (connectorResponse, httpResponse) =>
         auditService.auditVerifyBankDetails(
           VerifyBankDetailsAuditEvent(
-            request  = barsRequest,
+            request = barsRequest,
             response = getResponseJson(httpResponse)
           )
         )
 
         connectorResponse
-    }.recover {
-      case e =>
-        logger.error(s"Error calling verify personal: ${e.getMessage}")
-        Left(UnexpectedException)
     }
+      .logFailureReason(connectorName = "BarsConnector on verify")
+      .recover {
+        case e =>
+          logger.error(s"Error calling verify personal: ${e.getMessage}")
+          Left(UnexpectedException)
+      }
   }
 
   private def getResponseJson(response: HttpResponse): JsValue =
