@@ -17,6 +17,7 @@
 package connectors
 
 import config.Service
+import connectors.ConnectorFailureLogger._
 import models.IvResult
 import play.api.Configuration
 import uk.gov.hmrc.http.client.HttpClientV2
@@ -35,4 +36,5 @@ class IvConnector @Inject()(config: Configuration, httpClient: HttpClientV2)
     httpClient
       .get(url"$baseUrl/identity-verification/journey/$journeyId")
       .execute[IvResult]
+      .logFailureReason(connectorName = "IvConnector on getJourneyStatus")
 }

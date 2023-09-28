@@ -33,19 +33,24 @@ object SubmitClaimHttpParser extends Logging {
         case CREATED =>
           Right(Done)
 
-        case BAD_REQUEST =>
+        case BAD_REQUEST => {
+          logger.warn(s"Received BadRequestException from CBS")
           Left(new BadRequestException)
-
+        }
         case UNPROCESSABLE_ENTITY =>
           response.json.validate[SubmitClaimFailureResponse] match {
             case JsSuccess(response, _) =>
               if (response.failures.exists(_.code == SubmitClaimFailure.InvalidClaimStateCode)) {
+                logger.warn(s"Received InvalidClaimStateCode from CBS")
                 Left(new InvalidClaimStateException)
               } else if (response.failures.exists(_.code == SubmitClaimFailure.InvalidAccountStateCode)) {
+                logger.warn(s"Received InvalidAccountStateException from CBS")
                 Left(new InvalidAccountStateException)
               } else if (response.failures.exists(_.code == SubmitClaimFailure.PaymentPresentAfterFirstPaymentCode)) {
+                logger.warn(s"Received InvalidAccountStateException from CBS")
                 Left(new AlreadyInPaymentException)
               } else {
+                logger.warn(s"Received UnprocessableEntityException from CBS")
                 Left(new UnprocessableEntityException)
               }
 
@@ -54,14 +59,19 @@ object SubmitClaimHttpParser extends Logging {
               Left(new UnprocessableEntityException)
           }
 
-        case INTERNAL_SERVER_ERROR =>
+        case INTERNAL_SERVER_ERROR => {
+          logger.warn(s"Received INTERNAL_SERVER_ERROR from CBS")
           Left(new ServerErrorException)
+        }
 
-        case SERVICE_UNAVAILABLE =>
+        case SERVICE_UNAVAILABLE => {
+          logger.warn(s"Received SERVICE_UNAVAILABLE from CBS")
           Left(new ServiceUnavailableException)
-
-        case code =>
+        }
+        case code => {
+          logger.warn(s"Received error status code $code from CBS")
           Left(new UnrecognisedResponseException(code))
+        }
       }
   }
   // scalastyle: on

@@ -16,12 +16,13 @@
 
 package connectors
 
+import logging.Logging
 import models.{ErrorResponse, InvalidJson, UnexpectedResponseStatus, VerifyBankDetailsResponseModel}
 import play.api.http.Status.OK
 import play.api.libs.json.JsSuccess
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
-object BarsHttpParser {
+object BarsHttpParser extends Logging {
 
   type VerifyBankDetailsResponse = Either[ErrorResponse, VerifyBankDetailsResponseModel]
 
@@ -34,11 +35,15 @@ object BarsHttpParser {
             case JsSuccess(model, _) =>
               Right(model)
 
-            case _ =>
+            case _ => {
+              logger.warn("Unable to parse the content of a response from BARS")
               Left(InvalidJson)
+            }
           }
-        case status =>
+        case status => {
+          logger.warn(s"Received an error status $status from BARS")
           Left(UnexpectedResponseStatus(status))
+        }
       }) -> response
     }
   }

@@ -24,7 +24,7 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
-
+import ConnectorFailureLogger._
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -48,5 +48,6 @@ class BrmsConnector @Inject()(config: Configuration, httpClient: HttpClientV2)
         HeaderNames.ACCEPT -> "application/vnd.hmrc.1.0+json"
       )
       .execute[BirthRegistrationMatchingResponseModel]
+      .logFailureReason(connectorName = "BrmsConnector on matchChild")
   }
 }

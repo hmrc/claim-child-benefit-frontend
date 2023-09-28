@@ -20,6 +20,7 @@ import akka.stream.scaladsl.Source
 import akka.util.ByteString
 import config.Service
 import connectors.ClaimChildBenefitConnector._
+import connectors.ConnectorFailureLogger._
 import connectors.SubmitClaimHttpParser._
 import models.domain.Claim
 import models.{DesignatoryDetails, Done, RecentClaim, RelationshipDetails, SupplementaryMetadata}
@@ -56,6 +57,7 @@ class ClaimChildBenefitConnector @Inject()(
     httpClient
       .get(designatoryDetailsUrl)
       .execute[DesignatoryDetails]
+      .logFailureReason(connectorName = "RecentClaim on designatoryDetails")
   }
 
   def submitClaim(claim: Claim, correlationId: UUID)(implicit hc: HeaderCarrier): Future[Done] =
@@ -65,6 +67,7 @@ class ClaimChildBenefitConnector @Inject()(
       .setHeader("Authorization" -> internalAuthToken)
       .setHeader("CorrelationId" -> correlationId.toString)
       .execute[Either[SubmitClaimException, Done]]
+      .logFailureReason(connectorName = "RecentClaim on submitClaim")
       .flatMap {
         case Right(_)        => Future.successful(Done)
         case Left(exception) => Future.failed(exception)
@@ -98,6 +101,7 @@ class ClaimChildBenefitConnector @Inject()(
         )
       )
       .execute[HttpResponse]
+      .logFailureReason(connectorName = "RecentClaim on submitSupplementaryData")
       .flatMap { response =>
         if (response.status == ACCEPTED) {
           Future.successful(Done)
@@ -111,18 +115,21 @@ class ClaimChildBenefitConnector @Inject()(
     httpClient
       .get(relationshipDetailsUrl)
       .execute[RelationshipDetails]
+      .logFailureReason(connectorName = "RecentClaim on relationshipDetails")
   }
 
   def getRecentClaim()(implicit hc: HeaderCarrier): Future[Option[RecentClaim]] =
     httpClient
       .get(recentClaimUrl)
       .execute[Option[RecentClaim]]
+      .logFailureReason(connectorName = "RecentClaim on getRecentClaim")
 
   def recordRecentClaim(recentClaim: RecentClaim)(implicit hc: HeaderCarrier): Future[Done] =
     httpClient
       .post(recentClaimUrl)
       .withBody(Json.toJson(recentClaim))
       .execute[HttpResponse]
+      .logFailureReason(connectorName = "RecentClaim on recordRecentClaim")
       .flatMap { response =>
         if (response.status == NO_CONTENT) {
           Future.successful(Done)
