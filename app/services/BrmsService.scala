@@ -50,12 +50,14 @@ class BrmsService @Inject()(
                   .map(_ => result)
                   .recover {
                     case e: Exception =>
-                      logger.warn("Error caching BRMS response", e.getMessage)
+                      logger.debug("Error caching BRMS response", e.getMessage)
+                      logger.warn("Error caching BRMS response")
                       result
                   }
               }.recover {
                 case e: Exception =>
-                  logger.warn("Error calling BRMS", e.getMessage)
+                  logger.debug("Error calling BRMS", e.getMessage)
+                  logger.warn("Error calling BRMS")
                   metricsService.count(BrmsMonitor.getCounter(MatchingAttemptFailed))
                   MatchingAttemptFailed
               }

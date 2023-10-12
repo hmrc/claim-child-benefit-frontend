@@ -79,7 +79,8 @@ class ClaimSubmissionService @Inject()(
                     .recordRecentClaim(rc)(hc)
                     .recover {
                       case e: Exception =>
-                        logger.error("Failed to record recent submission", e)
+                        logger.debug("Failed to record recent submission", e)
+                        logger.error("Failed to record recent submission")
                         Done
                     }
                 }.getOrElse {
@@ -90,7 +91,8 @@ class ClaimSubmissionService @Inject()(
                 val additionalDetails = AdditionalArchiveDetails(settledStatusStartDate)
                 supplementaryDataService.submit(nino, model, correlationId, additionalDetails)(request).recover {
                   case e: Exception =>
-                    logger.error("Failed to submit supplementary data", e)
+                    logger.debug("Failed to submit supplementary data", e)
+                    logger.error("Failed to submit supplementary data")
                     Done
                 }
               }.flatMap { _ =>
@@ -99,7 +101,8 @@ class ClaimSubmissionService @Inject()(
                   .map(_ => Done)
                   .recover {
                     case e: Exception =>
-                      logger.error("Failed to delete user data", e)
+                      logger.debug("Failed to delete user data", e)
+                      logger.error("Failed to delete user data")
                       Done
                   }
               }

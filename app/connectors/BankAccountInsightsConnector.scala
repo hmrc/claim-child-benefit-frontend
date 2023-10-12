@@ -61,7 +61,8 @@ class BankAccountInsightsConnector @Inject()(config: Configuration, httpClient: 
           connectorResponse
       }.recover {
         case e =>
-          logger.error(s"Error calling bank account insights: ${e.getMessage}")
+          logger.debug(s"Error calling bank account insights: ${e.getMessage}")
+          logger.error(s"Error calling bank account insights.")
           Left(UnexpectedException)
       }
   }

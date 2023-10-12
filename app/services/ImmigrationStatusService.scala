@@ -61,7 +61,8 @@ class ImmigrationStatusService @Inject()(
         .map(result => result.settledStatusStartDate)
         .recover {
           case e: Throwable =>
-            logger.warn("Call to home-office-immigration-status-proxy failed: " + e.getMessage)
+            logger.debug("Call to home-office-immigration-status-proxy failed: " + e.getMessage)
+            logger.warn("Call to home-office-immigration-status-proxy failed.")
             None
         }
     } else {

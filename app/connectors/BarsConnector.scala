@@ -56,7 +56,8 @@ class BarsConnector @Inject()(config: Configuration, httpClient: HttpClientV2, a
       .logFailureReason(connectorName = "BarsConnector on verify")
       .recover {
         case e =>
-          logger.error(s"Error calling verify personal: ${e.getMessage}")
+          logger.debug(s"Error calling verify personal: ${e.getMessage}")
+          logger.error(s"Error calling verify personal.")
           Left(UnexpectedException)
       }
   }
