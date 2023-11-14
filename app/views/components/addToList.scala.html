@@ -25,8 +25,11 @@
     <dl class="govuk-summary-list">
     @for(item <- itemList) {
         <div class="govuk-summary-list__row">
-            <dd class="govuk-summary-list__value">
+            <dt class="govuk-summary-list__key">
             @item.name
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <span class="govuk-visually-hidden">@item.name</span>
             </dd>
             <dd class="govuk-summary-list__actions">
                 <a class="govuk-link" href="@item.changeUrl">
