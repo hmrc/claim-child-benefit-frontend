@@ -1233,7 +1233,7 @@
             required: !1,
             tNoResults: () => {
                 return "cy" === document.getElementsByTagName("html")[0].getAttribute("lang") ?
-                    "Dim canlyniadau wedi’u canfod" : "No results found"
+                    "Dim canlyniadau wedi’u darganfod" : "No results found"
             },
             tAssistiveHint: function() {
                 return "When autocomplete results are available use up and down arrows to review and enter to select.  Touch device users, explore by touch or with swipe gestures."
@@ -1443,7 +1443,7 @@
             },
             tNoResults: () => {
                 return "cy" === document.getElementsByTagName("html")[0].getAttribute("lang") ?
-                    "Dim canlyniadau wedi’u canfod" : "No results found"
+                    "Dim canlyniadau wedi’u darganfod" : "No results found"
             },
             tSelectedOption: function(e, t, n) {
                 return e + " " + (n + 1) + " of " + t + " is highlighted"
