@@ -1741,7 +1741,7 @@ guardianUkAddress.error.line1.length = Mae’n rhaid i linell 1 cyfeiriad {1} fo
 guardianUkAddress.error.line2.length = Mae’n rhaid i linell 2 cyfeiriad {1} fod yn 35 o gymeriadau neu lai
 guardianUkAddress.error.town.length = Mae’n rhaid i dref neu ddinas cyfeiriad {1} fod yn 35 o gymeriadau neu lai
 guardianUkAddress.error.county.length = Mae’n rhaid i sir cyfeiriad {1} fod yn 35 o gymeriadau neu lai
-guardianUkAddress.error.postcode.length = Mae’n rhaid i god post cyfeiriad {1} fod yn 35 o gymeriadau neu lai
+guardianUkAddress.error.postcode.length = Mae’n rhaid i god post cyfeiriad {1} fod yn 8 o gymeriadau neu lai
 guardianUkAddress.change.hidden = cyfeiriad y person y mae’r plentyn hwn yn byw gydag ef
 
 childLivedWithAnyoneElse.title = Yn ystod y flwyddyn ddiwethaf, ydy’r plentyn hwn wedi byw gydag unrhyw un arall sydd â chyfeiriad gwahanol i chi?

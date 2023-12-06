@@ -21,6 +21,7 @@ import forms.mappings.Mappings
 import models.{AdultName, UkAddress}
 import play.api.data.Form
 import play.api.data.Forms._
+import utils.RequestOps.MappingOps
 
 import javax.inject.Inject
 
@@ -49,10 +50,11 @@ class PreviousGuardianUkAddressFormProvider @Inject() extends Mappings {
           regexp(Validation.addressInputPattern, "previousGuardianUkAddress.error.county.invalid", previousGuardian.firstName)
         ))),
       "postcode" -> text("previousGuardianUkAddress.error.postcode.required", args = Seq(previousGuardian.firstName))
-        .verifying(firstError(
+        .removeWhitespaces()
+        .verifying(
           maxLength(8, "previousGuardianUkAddress.error.postcode.length", previousGuardian.firstName),
           regexp(Validation.ukPostcodePattern, "previousGuardianUkAddress.error.postcode.invalid", previousGuardian.firstName)
-        ))
+        )
     )(UkAddress.apply)(UkAddress.unapply)
   )
 }

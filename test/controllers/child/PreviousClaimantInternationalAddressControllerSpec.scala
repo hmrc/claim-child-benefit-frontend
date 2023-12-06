@@ -45,7 +45,7 @@ class PreviousClaimantInternationalAddressControllerSpec extends SpecBase with M
   lazy val previousClaimantInternationalAddressRoute = routes.PreviousClaimantInternationalAddressController.onPageLoad(waypoints, index).url
 
   private val country     = Country.internationalCountries.head
-  private val validAnswer = InternationalAddress("line 1", None, "town", None, Some("AA11 1AA"), country)
+  private val validAnswer = InternationalAddress("line 1", None, "town", None, Some("AA111AA"), country)
   private val userAnswers = baseAnswers.set(PreviousClaimantInternationalAddressPage(index), validAnswer).success.value
 
   "PreviousClaimantInternationalAddress Controller" - {
@@ -98,7 +98,7 @@ class PreviousClaimantInternationalAddressControllerSpec extends SpecBase with M
       running(application) {
         val request =
           FakeRequest(POST, previousClaimantInternationalAddressRoute)
-            .withFormUrlEncodedBody(("line1", "line 1"), ("town" -> "town"), ("postcode", "AA11 1AA"), ("country", country.code))
+            .withFormUrlEncodedBody(("line1", "line 1"), ("town" -> "town"), ("postcode", "AA111AA"), ("country", country.code))
 
         val result = route(application, request).value
         val expectedAnswers = baseAnswers.set(child.PreviousClaimantInternationalAddressPage(index), validAnswer).success.value
@@ -150,7 +150,7 @@ class PreviousClaimantInternationalAddressControllerSpec extends SpecBase with M
       running(application) {
         val request =
           FakeRequest(POST, previousClaimantInternationalAddressRoute)
-            .withFormUrlEncodedBody(("line1", "line 1"), ("town" -> "town"), ("postcode", "AA11 1AA"), ("country", country.code))
+            .withFormUrlEncodedBody(("line1", "line 1"), ("town" -> "town"), ("postcode", "AA111AA"), ("country", country.code))
 
         val result = route(application, request).value
 

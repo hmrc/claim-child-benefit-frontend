@@ -21,6 +21,7 @@ import forms.mappings.Mappings
 import models.UkAddress
 import play.api.data.Form
 import play.api.data.Forms._
+import utils.RequestOps.MappingOps
 
 import javax.inject.Inject
 
@@ -49,10 +50,11 @@ class DesignatoryUkAddressFormProvider @Inject() extends Mappings {
           regexp(Validation.addressInputPattern, "designatoryUkAddress.error.county.invalid")
         ))),
       "postcode" -> text("designatoryUkAddress.error.postcode.required")
-        .verifying(firstError(
+        .removeWhitespaces()
+        .verifying(
           maxLength(8, "designatoryUkAddress.error.postcode.length"),
           regexp(Validation.ukPostcodePattern, "designatoryUkAddress.error.postcode.invalid")
-        ))
+        )
     )(UkAddress.apply)(UkAddress.unapply)
   )
 }

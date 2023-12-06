@@ -76,7 +76,7 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
 
   private val today = LocalDate.now
   private val adultName = AdultName(None, "first", None, "last")
-  private val currentUkAddress = UkAddress("line 1", None, "town", None, "AA11 1AA")
+  private val currentUkAddress = UkAddress("line 1", None, "town", None, "AA111AA")
   private val phoneNumber = "07777 777777"
   private val nationality = Gen.oneOf(Nationality.allNationalities).sample.value
 
