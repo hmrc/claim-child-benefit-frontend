@@ -1741,7 +1741,7 @@ guardianUkAddress.error.line1.length = Address line 1 of {1}’s address must be
 guardianUkAddress.error.line2.length = Address line 2 of {1}’s address must be 35 characters or less
 guardianUkAddress.error.town.length = Town or city of {1}’s address must be 35 characters or less
 guardianUkAddress.error.county.length = County of {1}’s address must be 35 characters or less
-guardianUkAddress.error.postcode.length = Postcode of {1}’s address must be 35 characters or less
+guardianUkAddress.error.postcode.length = Postcode of {1}’s address must be 8 characters or less
 guardianUkAddress.change.hidden = the person this child lives with’s address
 
 childLivedWithAnyoneElse.title = In the last year, has this child lived with anyone else that has a different address to your?

@@ -62,7 +62,7 @@ class JourneyModelServiceSpec
 
   private val now = LocalDate.now
   private val adultName = AdultName(None, "first", None, "last")
-  private val ukAddress = UkAddress("line 1", None, "town", None, "AA11 1AA")
+  private val ukAddress = UkAddress("line 1", None, "town", None, "AA111AA")
   private val phoneNumber = "07777 777777"
   private val nationality = Gen.oneOf(Nationality.allNationalities).sample.value
   private val country = Gen.oneOf(Country.internationalCountries).sample.value

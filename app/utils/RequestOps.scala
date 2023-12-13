@@ -17,6 +17,7 @@
 package utils
 
 import models.requests.{AuthenticatedIdentifierRequest, DataRequest, OptionalDataRequest}
+import play.api.data.Mapping
 import play.api.mvc.Request
 
 object RequestOps {
@@ -42,5 +43,9 @@ object RequestOps {
       case _ =>
         false
     }
+  }
+
+  implicit class MappingOps(mappings: Mapping[String]) {
+    def removeWhitespaces(): Mapping[String] = mappings.transform[String](_.replaceAll(" ", ""), identity)
   }
 }
