@@ -20,6 +20,7 @@ import play.api.data.Field
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.errormessage.ErrorMessage
+import uk.gov.hmrc.govukfrontend.views.viewmodels.errormessage.ErrorMessage.errorMessageWithDefaultStringsTranslated
 
 trait ErrorMessageAwareness {
 
@@ -27,6 +28,6 @@ trait ErrorMessageAwareness {
     field.error
       .map {
         err =>
-          ErrorMessage(content = Text(messages(err.message, err.args: _*)))
+          errorMessageWithDefaultStringsTranslated(content = Text(messages(err.message, err.args: _*)))
       }
 }
