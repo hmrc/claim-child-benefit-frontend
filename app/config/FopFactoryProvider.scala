@@ -16,17 +16,33 @@
 
 package config
 
-import org.apache.fop.apps.{FopFactory, FopFactoryBuilder}
-import play.api.Environment
+import org.apache.fop.apps.{
+  EnvironmentProfile,
+  EnvironmentalProfileFactory,
+  FopConfParser,
+  FopFactory
+}
+
+import java.io.File
 
 import javax.inject.{Inject, Provider, Singleton}
 
 @Singleton
 class FopFactoryProvider @Inject()(
-                                     environment: Environment
-                                   ) extends Provider[FopFactory] {
+  val resourceStreamResolver: BaseResourceStreamResolver,
+  val fopURIResolver: FopURIResolver
+) extends Provider[FopFactory] {
+
+  private val filePathForFOPConfig = "pdf/fop.xconf"
+
   override def get(): FopFactory = {
-    new FopFactoryBuilder(environment.rootPath.toURI)
-      .build()
+    val restrictedIO: EnvironmentProfile = EnvironmentalProfileFactory
+      .createRestrictedIO(new File(".").toURI, fopURIResolver)
+
+    new FopConfParser(
+      resourceStreamResolver.resolvePath(filePathForFOPConfig).getInputStream,
+      restrictedIO
+    ).getFopFactoryBuilder.build()
+
   }
 }

@@ -12,7 +12,7 @@
 
 @(model: journey.JourneyModel, additionalDetails: AdditionalArchiveDetails)(implicit messages: Messages)
 
-<fo:root xml:lang="en" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:fox="http://xmlgraphics.apache.org/fop/extensions" font-family="sans-serif">
+<fo:root xml:lang="en" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:fox="http://xmlgraphics.apache.org/fop/extensions" font-family="OpenSans">
     @layout()
 
     <fo:declarations>

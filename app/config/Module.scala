@@ -52,6 +52,8 @@ class Module extends play.api.inject.Module {
       bind[IdentifierAction].to[OptionalAuthIdentifierAction].eagerly(),
       supplementaryDataServiceBinding,
       bind[FopFactory].toProvider[FopFactoryProvider].eagerly(),
+      bind[FopURIResolver].to(classOf[DefaultFopURIResolver]),
+      bind[BaseResourceStreamResolver].to(classOf[DefaultResourceStreamResolver])
     ) ++ authTokenInitialiserBindings
   }
 }
