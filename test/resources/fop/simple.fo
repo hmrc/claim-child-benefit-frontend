@@ -61,7 +61,7 @@
 
       <!-- this defines a title -->
       <fo:block font-size="18pt"
-            font-family="sans-serif"
+            font-family="OpenSans"
             line-height="24pt"
             space-after.optimum="15pt"
             background-color="blue"
@@ -74,7 +74,7 @@
 
       <!-- this defines normal text -->
       <fo:block font-size="12pt"
-                font-family="sans-serif"
+                font-family="OpenSans"
                 line-height="15pt"
                 space-after.optimum="3pt"
                 text-align="justify">
@@ -85,7 +85,7 @@
 
       <!-- this defines normal text -->
       <fo:block font-size="12pt"
-                font-family="sans-serif"
+                font-family="OpenSans"
                 line-height="15pt"
                 space-after.optimum="3pt"
                 text-align="justify">
