@@ -16,14 +16,14 @@
 
 package connectors
 
-import akka.stream.scaladsl.Source
-import akka.util.ByteString
 import config.Service
 import connectors.ClaimChildBenefitConnector._
 import connectors.ConnectorFailureLogger._
 import connectors.SubmitClaimHttpParser._
 import models.domain.Claim
 import models.{DesignatoryDetails, Done, RecentClaim, RelationshipDetails, SupplementaryMetadata}
+import org.apache.pekko.stream.scaladsl.Source
+import org.apache.pekko.util.ByteString
 import play.api.Configuration
 import play.api.http.Status.{ACCEPTED, NO_CONTENT}
 import play.api.libs.json.Json
