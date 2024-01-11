@@ -9,3 +9,6 @@ leakDetectionExemptions:
       - '/test/forms/child/ChildNorthernIrishBirthCertificateNumberFormProviderSpec.scala'
       - '/test/forms/child/ChildNorthernIrishBirthCertificateNumberFormProviderSpec.scala'
     text: 'Key = "childNorthernIrishBirthCertificateNumber'
+test-repositories:
+  - claim-child-benefit-performance-tests
+  - claim-child-benefit-ui-tests
