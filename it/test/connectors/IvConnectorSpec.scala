@@ -1,6 +1,7 @@
-package connectors
+package test.connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock.{get, notFound, ok, urlEqualTo}
+import connectors.IvConnector
 import models.IvResult
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec

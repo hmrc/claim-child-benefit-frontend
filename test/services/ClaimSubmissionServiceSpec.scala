@@ -46,7 +46,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach with ModelGenerators {
-  private implicit val message = mock[Messages]
+  private implicit val message: Messages = mock[Messages]
 
   private val mockFeatureFlags = mock[FeatureFlags]
   private val mockConnector = mock[ClaimChildBenefitConnector]

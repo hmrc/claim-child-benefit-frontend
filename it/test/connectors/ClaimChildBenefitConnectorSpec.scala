@@ -1,6 +1,7 @@
-package connectors
+package test.connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock._
+import connectors.ClaimChildBenefitConnector
 import connectors.ClaimChildBenefitConnector._
 import generators.ModelGenerators
 import models.domain._

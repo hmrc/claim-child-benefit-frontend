@@ -1,20 +1,20 @@
 import play.sbt.routes.RoutesKeys
 import sbt.Def
 import scoverage.ScoverageKeys
+import uk.gov.hmrc.DefaultBuildSettings
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
 lazy val appName: String = "claim-child-benefit-frontend"
+
+ThisBuild / majorVersion := 0
 
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin)
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(inConfig(Test)(testSettings): _*)
-  .configs(IntegrationTest)
-  .settings(inConfig(IntegrationTest)(itSettings): _*)
-  .settings(majorVersion := 0)
   .settings(ThisBuild / useSuperShell := false)
   .settings(
-    scalaVersion := "2.13.8",
+    scalaVersion := "2.13.12",
     name := appName,
     RoutesKeys.routesImport ++= Seq(
       "models._",
@@ -76,14 +76,18 @@ lazy val testSettings: Seq[Def.Setting[_]] = Seq(
   unmanagedSourceDirectories += baseDirectory.value / "test-utils"
 )
 
-lazy val itSettings = Defaults.itSettings ++ Seq(
-  unmanagedSourceDirectories := Seq(
-    baseDirectory.value / "it",
-    baseDirectory.value / "test-utils"
-  ),
-  unmanagedResourceDirectories := Seq(
-    baseDirectory.value / "it" / "resources"
-  ),
-  parallelExecution := false,
-  fork := true
-)
+lazy val it = project
+  .enablePlugins(PlayScala)
+  .dependsOn(root % "test->test") // the "test->test" allows reusing test code and test dependencies
+  .settings(DefaultBuildSettings.itSettings()
+    ++ Seq(
+    unmanagedSourceDirectories := Seq(
+      baseDirectory.value / "it",
+      baseDirectory.value / "test-utils"
+    ),
+    unmanagedResourceDirectories := Seq(
+      baseDirectory.value / "it" / "resources"
+    ),
+    parallelExecution := false,
+    fork := true
+  ))

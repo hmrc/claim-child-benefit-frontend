@@ -1,6 +1,7 @@
-package connectors
+package test.connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock._
+import connectors.ImmigrationStatusConnector
 import generators.ModelGenerators
 import models.immigration.{ImmigrationStatus, NinoSearchRequest, StatusCheckRange, StatusCheckResult}
 import org.scalacheck.Arbitrary.arbitrary

@@ -1,8 +1,9 @@
-package connectors
+package test.connectors
 
 import audit.{AuditService, CheckBankAccountInsightsAuditEvent}
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.http.Fault
+import connectors.BankAccountInsightsConnector
 import models.{BankAccountInsightsRequest, BankAccountInsightsResponseModel, InvalidJson, UnexpectedException, UnexpectedResponseStatus}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo

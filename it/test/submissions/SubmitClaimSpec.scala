@@ -1,4 +1,4 @@
-package submissions
+package test.submissions
 
 import generators.ModelGenerators
 import models.domain._

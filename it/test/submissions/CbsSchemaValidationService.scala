@@ -1,5 +1,4 @@
-package submissions
-
+package test.submissions
 
 import io.vertx.core.json.JsonObject
 import io.vertx.json.schema.{Draft, JsonSchema, JsonSchemaOptions, Validator}

@@ -1,4 +1,4 @@
-package repositories
+package test.repositories
 
 import config.FrontendAppConfig
 import models.ChildBirthRegistrationCountry.England

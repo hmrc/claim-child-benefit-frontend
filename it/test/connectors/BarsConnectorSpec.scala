@@ -1,8 +1,9 @@
-package connectors
+package test.connectors
 
 import audit.{AuditService, VerifyBankDetailsAuditEvent}
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.http.Fault
+import connectors.BarsConnector
 import models.{Account, InvalidJson, ReputationResponseEnum, Subject, UnexpectedException, UnexpectedResponseStatus, VerifyBankDetailsRequest, VerifyBankDetailsResponseModel}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
