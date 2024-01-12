@@ -26,5 +26,5 @@ case class ChildName (firstName: String, middleNames: Option[String], lastName: 
 }
 
 object ChildName {
-  implicit val format = Json.format[ChildName]
+  implicit val format: OFormat[ChildName] = Json.format[ChildName]
 }

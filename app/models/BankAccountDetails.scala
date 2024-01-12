@@ -55,7 +55,7 @@ final case class BankAccountDetails (
 }
 
 object BankAccountDetails {
-  implicit val format = Json.format[BankAccountDetails]
+  implicit val format: OFormat[BankAccountDetails] = Json.format[BankAccountDetails]
 }
 
 final case class BuildingSocietyDetails(
