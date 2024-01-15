@@ -81,15 +81,4 @@ lazy val it = project
   .enablePlugins(PlayScala)
   .dependsOn(root % "test->test") // the "test->test" allows reusing test code and test dependencies
   .settings(DefaultBuildSettings.itSettings()
-//    ++ Seq(
-//    unmanagedSourceDirectories := Seq(
-//      baseDirectory.value / "it",
-//      baseDirectory.value / "test-utils"
-//    ),
-//    unmanagedResourceDirectories := Seq(
-//      baseDirectory.value / "it" / "resources"
-//    ),
-//    parallelExecution := false,
-//    fork := true
-//  )
   )

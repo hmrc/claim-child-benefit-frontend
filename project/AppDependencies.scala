@@ -7,7 +7,6 @@ object AppDependencies {
 
   val compile = Seq(
     "uk.gov.hmrc"                   %% "play-frontend-hmrc-play-30"     % "8.3.0",
-//    "uk.gov.hmrc"                   %% "play-conditional-form-mapping"  % "1.13.0-play-28",
     "uk.gov.hmrc"                   %% "bootstrap-frontend-play-30"     % bootstrapVersion,
     "uk.gov.hmrc.mongo"             %% "hmrc-mongo-play-30"             % hmrcMongoVersion,
     "uk.gov.hmrc"                   %% "crypto-json-play-30"            % "7.6.0",
@@ -24,13 +23,6 @@ object AppDependencies {
     "org.scalatestplus"       %% "mockito-4-6"              % "3.2.15.0",
     "org.scalacheck"          %% "scalacheck"              % "1.17.0",
     "org.scalatestplus"       %% "scalacheck-1-15"         % "3.2.11.0",
-
-//    "org.scalatestplus"       %% "mockito-4-6"                    % "3.2.15.0"  % Test,
-//    "org.scalatestplus"       %% "mockito-4-6"             % "3.2.15.0",
-//    "org.pegdown"             %  "pegdown"                 % "1.6.0",
-//    "org.jsoup"               %  "jsoup"                   % "1.15.4",
-//    "com.vladsch.flexmark"    %  "flexmark-all"            % "0.64.6",
-//    "com.github.tomakehurst"  %  "wiremock-standalone"     % "2.27.2",
     "io.vertx"                %  "vertx-json-schema"       % "4.4.0"
   ).map(_ % Test)
 
