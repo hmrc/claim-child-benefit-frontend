@@ -21,11 +21,13 @@ import controllers.routes
 import models.requests.{AuthenticatedIdentifierRequest, IdentifierRequest, UnauthenticatedIdentifierRequest}
 import models.{RecentClaim, TaxChargeChoice}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.{Mockito, MockitoSugar}
+import org.mockito.Mockito
+import org.mockito.Mockito.{never, times, verify, when}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{BeforeAndAfterEach, OptionValues}
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.Result
 import play.api.mvc.Results.Redirect
 import play.api.test.FakeRequest
@@ -98,7 +100,7 @@ class CheckRecentClaimsActionSpec
         val result = action.callFilter(request).futureValue
 
         result must not be defined
-        verify(mockConnector, never).getRecentClaim()(any())
+        verify(mockConnector, never()).getRecentClaim()(any())
       }
     }
   }

@@ -22,15 +22,16 @@ object AppDependencies {
     "uk.gov.hmrc.mongo"       %% "hmrc-mongo-test-play-30" % hmrcMongoVersion,
     "org.scalatest"           %% "scalatest"               % "3.2.15",
     "org.scalatestplus"       %% "mockito-4-6"              % "3.2.15.0",
-//    "org.scalatestplus"       %% "mockito-4-6"                    % "3.2.15.0"  % Test,
-//    "org.scalatestplus"       %% "scalacheck-1-15"         % "3.2.11.0",
-//    "org.scalatestplus"       %% "mockito-4-6"             % "3.2.15.0",
     "org.scalacheck"          %% "scalacheck"              % "1.17.0",
+    "org.scalatestplus"       %% "scalacheck-1-15"         % "3.2.11.0",
+
+//    "org.scalatestplus"       %% "mockito-4-6"                    % "3.2.15.0"  % Test,
+//    "org.scalatestplus"       %% "mockito-4-6"             % "3.2.15.0",
 //    "org.pegdown"             %  "pegdown"                 % "1.6.0",
 //    "org.jsoup"               %  "jsoup"                   % "1.15.4",
 //    "com.vladsch.flexmark"    %  "flexmark-all"            % "0.64.6",
 //    "com.github.tomakehurst"  %  "wiremock-standalone"     % "2.27.2",
-//    "io.vertx"                %  "vertx-json-schema"       % "4.4.0"
+    "io.vertx"                %  "vertx-json-schema"       % "4.4.0"
   ).map(_ % Test)
 
   def apply(): Seq[ModuleID] = compile ++ test

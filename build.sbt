@@ -7,6 +7,7 @@ import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 lazy val appName: String = "claim-child-benefit-frontend"
 
 ThisBuild / majorVersion := 0
+ThisBuild / scalaVersion := "2.13.12"
 
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin)
@@ -14,7 +15,7 @@ lazy val root = (project in file("."))
   .settings(inConfig(Test)(testSettings): _*)
   .settings(ThisBuild / useSuperShell := false)
   .settings(
-    scalaVersion := "2.13.12",
+
     name := appName,
     RoutesKeys.routesImport ++= Seq(
       "models._",
@@ -80,14 +81,15 @@ lazy val it = project
   .enablePlugins(PlayScala)
   .dependsOn(root % "test->test") // the "test->test" allows reusing test code and test dependencies
   .settings(DefaultBuildSettings.itSettings()
-    ++ Seq(
-    unmanagedSourceDirectories := Seq(
-      baseDirectory.value / "it",
-      baseDirectory.value / "test-utils"
-    ),
-    unmanagedResourceDirectories := Seq(
-      baseDirectory.value / "it" / "resources"
-    ),
-    parallelExecution := false,
-    fork := true
-  ))
+//    ++ Seq(
+//    unmanagedSourceDirectories := Seq(
+//      baseDirectory.value / "it",
+//      baseDirectory.value / "test-utils"
+//    ),
+//    unmanagedResourceDirectories := Seq(
+//      baseDirectory.value / "it" / "resources"
+//    ),
+//    parallelExecution := false,
+//    fork := true
+//  )
+  )

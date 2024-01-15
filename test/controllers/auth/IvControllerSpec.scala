@@ -19,8 +19,7 @@ package controllers.auth
 import base.SpecBase
 import connectors.IvConnector
 import models.IvResult
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito
 import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach

@@ -24,12 +24,9 @@ import generators.ModelGenerators
 import models.PartnerClaimingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments, WaitingToHear}
 import models._
 import models.requests.{AuthenticatedIdentifierRequest, DataRequest, UnauthenticatedIdentifierRequest}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito
 import org.mockito.Mockito.{times, verify, when}
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.Gen
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import pages.applicant._
@@ -40,6 +37,8 @@ import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import services.ClaimSubmissionService._
 import uk.gov.hmrc.domain.Nino
+import org.scalacheck.Arbitrary.arbitrary
+import org.scalacheck.Gen
 
 import java.time.{Clock, Instant, LocalDate, ZoneId}
 import scala.concurrent.ExecutionContext.Implicits.global
