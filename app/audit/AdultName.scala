@@ -18,7 +18,7 @@ package audit
 
 import play.api.libs.json.{Json, Writes}
 
-final case class AdultName(title: Option[String], firstName: String, middleNames: Option[String], lastName: String)
+final case class AdultName(title: Option[String], firstName: Option[String], middleNames: Option[String], lastName: Option[String])
 
 object AdultName {
 

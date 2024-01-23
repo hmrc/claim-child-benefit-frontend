@@ -20,9 +20,9 @@ import play.api.libs.json._
 
 case class AdultName(
                       title: Option[String],
-                      firstName: String,
+                      firstName: Option[String],
                       middleNames: Option[String],
-                      lastName: String
+                      lastName: Option[String]
                     ) {
 
   val display: String = Seq(
