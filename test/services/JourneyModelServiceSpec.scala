@@ -23,12 +23,14 @@ import models.PartnerClaimingChildBenefit.{GettingPayments, NotGettingPayments, 
 import models.ReasonNotToSubmit._
 import models.RelationshipStatus.{Married, Single}
 import models._
-import org.mockito.{Mockito, MockitoSugar}
+import org.mockito.Mockito
+import org.mockito.Mockito.when
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.{BeforeAndAfterEach, EitherValues, OptionValues, TryValues}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import org.scalatestplus.mockito.MockitoSugar
 import pages.applicant._
 import pages.child._
 import pages.partner._

@@ -27,9 +27,11 @@ import models.journey
 import models.journey.JourneyModel
 import org.mockito.ArgumentMatchers.any
 import org.scalacheck.Arbitrary.arbitrary
-import org.mockito.{Mockito, MockitoSugar}
+import org.mockito.Mockito
+import org.mockito.Mockito.{never, times, verify, when}
 import org.scalacheck.Gen
 import org.scalatest.BeforeAndAfterEach
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Configuration
 import uk.gov.hmrc.domain.Nino
@@ -144,7 +146,7 @@ class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with Befor
         val result = service.settledStatusStartDate(nino, model, correlationId)(hc).futureValue
 
         result must not be defined
-        verify(mockConnector, never).checkStatus(any(), any())(any())
+        verify(mockConnector, never()).checkStatus(any(), any())(any())
       }
     }
 

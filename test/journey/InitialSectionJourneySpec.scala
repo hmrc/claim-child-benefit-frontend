@@ -19,7 +19,7 @@ package journey
 import config.FrontendAppConfig
 import generators.ModelGenerators
 import models.{ServiceType, UserAnswers}
-import org.mockito.MockitoSugar.when
+import org.mockito.Mockito.when
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.prop.TableDrivenPropertyChecks

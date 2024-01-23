@@ -20,8 +20,7 @@ import audit.AuditService
 import base.SpecBase
 import generators.ModelGenerators
 import models._
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{never, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.applicant._

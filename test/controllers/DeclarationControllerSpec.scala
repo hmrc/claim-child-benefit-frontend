@@ -20,8 +20,10 @@ import base.SpecBase
 import connectors.ClaimChildBenefitConnector.{AlreadyInPaymentException, InvalidClaimStateException}
 import models.Done
 import org.mockito.ArgumentMatchers.any
-import org.mockito.{Mockito, MockitoSugar}
+import org.mockito.Mockito
+import org.mockito.Mockito.{times, verify, when}
 import org.scalatest.BeforeAndAfterEach
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._

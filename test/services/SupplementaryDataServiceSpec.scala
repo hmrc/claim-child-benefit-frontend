@@ -21,8 +21,7 @@ import connectors.ClaimChildBenefitConnector
 import generators.ModelGenerators
 import models.journey.JourneyModel
 import models.{AdditionalArchiveDetails, AdultName, CurrentlyReceivingChildBenefit, Done, RelationshipStatus, SupplementaryMetadata, journey}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito
 import org.mockito.Mockito.{times, verify, when}
 import org.scalacheck.Arbitrary.arbitrary

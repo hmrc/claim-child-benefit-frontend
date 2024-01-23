@@ -34,5 +34,5 @@ case class AdultName(
 }
 
 object AdultName {
-  implicit val format = Json.format[AdultName]
+  implicit val format: OFormat[AdultName] = Json.format[AdultName]
 }

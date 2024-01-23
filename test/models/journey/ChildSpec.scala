@@ -28,7 +28,7 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.child._
-import play.api.i18n.DefaultMessagesApi
+import play.api.i18n.{DefaultMessagesApi, Messages}
 import play.api.test.FakeRequest
 import queries.{AllChildPreviousNames, AllChildSummaries}
 
@@ -40,7 +40,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with ModelGenerators with TryV
     "default" -> Map("title" -> "foo bar")
   )
   val messagesApi       = new DefaultMessagesApi(testMessages)
-  implicit val messages = messagesApi.preferred(FakeRequest("GET", "/"))
+  implicit val messages: Messages = messagesApi.preferred(FakeRequest("GET", "/"))
 
   private val adultName = arbitrary[AdultName].sample.value
   private val childName = arbitrary[ChildName].sample.value
