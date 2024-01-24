@@ -20,7 +20,6 @@ import com.google.inject.{Inject, Singleton}
 import play.api.Configuration
 import play.api.i18n.Lang
 import play.api.mvc.RequestHeader
-import uk.gov.hmrc.http.StringContextOps
 
 @Singleton
 class FrontendAppConfig @Inject() (configuration: Configuration) {
@@ -32,7 +31,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   private val contactFormServiceIdentifier = "claim-child-benefit-frontend"
 
   def feedbackUrl(implicit request: RequestHeader): String =
-    url"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier&backUrl=${host + request.uri}".toURI.toASCIIString
+   s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier&backUrl=${host + request.uri}"
 
   val loginUrl: String         = configuration.get[String]("urls.login")
   val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")
