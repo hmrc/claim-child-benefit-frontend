@@ -28,7 +28,7 @@
 
 @(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("wantToBePaid.couple.over60k.under60k.title"))) {
+@layout(pageTitle = titleNoForm(messages("wantToBePaid.couple.over80k.under80k.title"))) {
 
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -36,24 +36,24 @@
 
     @formHelper(action = routes.WantToBePaidController.onSubmit(waypoints)) {
 
-        <h1 class="govuk-heading-xl">@messages("wantToBePaid.couple.over60k.under60k.heading")</h1>
+        <h1 class="govuk-heading-xl">@messages("wantToBePaid.couple.over80k.under80k.heading")</h1>
 
         <p class="govuk-body">
-            @messages("wantToBePaid.couple.over60k.under60k.p1")
-            @newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.couple.over60k.under60k.p1.link.text"), href = Some(messages("wantToBePaid.couple.over60k.under60k.p1.link.href")))).
+            @messages("wantToBePaid.couple.over80k.under80k.p1")
+            @newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.couple.over80k.under80k.p1.link.text"), href = Some(messages("wantToBePaid.couple.over80k.under80k.p1.link.href")))).
         </p>
 
-        <p class="govuk-body">@messages("wantToBePaid.couple.over60k.under60k.p2")</p>
+        <p class="govuk-body">@messages("wantToBePaid.couple.over80k.under80k.p2")</p>
 
         <p class="govuk-body">
-            @messages("wantToBePaid.couple.over60k.under60k.p3")
+            @messages("wantToBePaid.couple.over80k.under80k.p3")
         </p>
 
-        <p class="govuk-body">@messages("wantToBePaid.couple.over60k.under60k.p4")</p>
+        <p class="govuk-body">@messages("wantToBePaid.couple.over80k.under80k.p4")</p>
 
-        <h2 class="govuk-heading-m">@messages("wantToBePaid.couple.over60k.under60k.h2")</h2>
+        <h2 class="govuk-heading-m">@messages("wantToBePaid.couple.over80k.under80k.h2")</h2>
 
-        <p class="govuk-body govuk-!-margin-bottom-7">@messages("wantToBePaid.couple.over60k.under60k.p5")</p>
+        <p class="govuk-body govuk-!-margin-bottom-7">@messages("wantToBePaid.couple.over80k.under80k.p5")</p>
 
         @govukRadios(
             RadiosViewModel(

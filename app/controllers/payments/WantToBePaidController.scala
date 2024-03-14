@@ -43,18 +43,18 @@ class WantToBePaidController @Inject()(
                                         getData: DataRetrievalAction,
                                         requireData: DataRequiredAction,
                                         val controllerComponents: MessagesControllerComponents,
-                                        coupleUnder50kUnder50k: WantToBePaidCoupleUnder50kUnder50kView,
-                                        coupleUnder50kUnder60k: WantToBePaidCoupleUnder50kUnder60kView,
-                                        coupleUnder50kOver60k: WantToBePaidCoupleUnder50kOver60kView,
-                                        coupleUnder60kUnder50k: WantToBePaidCoupleUnder60kUnder50kView,
                                         coupleUnder60kUnder60k: WantToBePaidCoupleUnder60kUnder60kView,
-                                        coupleUnder60kOver60k: WantToBePaidCoupleUnder60kOver60kView,
-                                        coupleOver60kUnder50k: WantToBePaidCoupleOver60kUnder50kView,
-                                        coupleOver60kUnder60k: WantToBePaidCoupleOver60kUnder60kView,
-                                        coupleOver60kOver60k: WantToBePaidCoupleOver60kOver60kView,
-                                        singleUnder50k: WantToBePaidSingleUnder50kView,
+                                        coupleUnder60kUnder80k: WantToBePaidCoupleUnder60kUnder80kView,
+                                        coupleUnder60kOver80k: WantToBePaidCoupleUnder60kOver80kView,
+                                        coupleUnder80kUnder60k: WantToBePaidCoupleUnder80kUnder60kView,
+                                        coupleUnder80kUnder80k: WantToBePaidCoupleUnder80kUnder80kView,
+                                        coupleUnder80kOver80k: WantToBePaidCoupleUnder80kOver80kView,
+                                        coupleOver80kUnder60k: WantToBePaidCoupleOver80kUnder60kView,
+                                        coupleOver80kUnder80k: WantToBePaidCoupleOver80kUnder80kView,
+                                        coupleOver80kOver80k: WantToBePaidCoupleOver80kOver80kView,
                                         singleUnder60k: WantToBePaidSingleUnder60kView,
-                                        singleOver60k: WantToBePaidSingleOver60kView,
+                                        singleUnder80k: WantToBePaidSingleUnder80kView,
+                                        singleOver80k: WantToBePaidSingleOver80kView,
                                         formProvider: WantToBePaidFormProvider,
                                         userDataService: UserDataService
                                       )(implicit ec: ExecutionContext)
@@ -96,43 +96,43 @@ class WantToBePaidController @Inject()(
       case Married | Cohabiting =>
         getAnswers(ApplicantIncomePage, PartnerIncomePage) {
           case (BelowLowerThreshold, BelowLowerThreshold) =>
-            status(coupleUnder50kUnder50k(waypoints))
+            status(coupleUnder60kUnder60k(waypoints))
 
           case (BelowLowerThreshold, BetweenThresholds) =>
-            status(coupleUnder50kUnder60k(preparedForm, waypoints))
+            status(coupleUnder60kUnder80k(preparedForm, waypoints))
 
           case (BelowLowerThreshold, AboveUpperThreshold) =>
-            status(coupleUnder50kOver60k(preparedForm, waypoints))
+            status(coupleUnder60kOver80k(preparedForm, waypoints))
 
           case (BetweenThresholds, BelowLowerThreshold) =>
-            status(coupleUnder60kUnder50k(preparedForm, waypoints))
+            status(coupleUnder80kUnder60k(preparedForm, waypoints))
 
           case (BetweenThresholds, BetweenThresholds) =>
-            status(coupleUnder60kUnder60k(preparedForm, waypoints))
+            status(coupleUnder80kUnder80k(preparedForm, waypoints))
 
           case (BetweenThresholds, AboveUpperThreshold) =>
-            status(coupleUnder60kOver60k(preparedForm, waypoints))
+            status(coupleUnder80kOver80k(preparedForm, waypoints))
 
           case (AboveUpperThreshold, BelowLowerThreshold) =>
-            status(coupleOver60kUnder50k(preparedForm, waypoints))
+            status(coupleOver80kUnder60k(preparedForm, waypoints))
 
           case (AboveUpperThreshold, BetweenThresholds) =>
-            status(coupleOver60kUnder60k(preparedForm, waypoints))
+            status(coupleOver80kUnder80k(preparedForm, waypoints))
 
           case (AboveUpperThreshold, AboveUpperThreshold) =>
-            status(coupleOver60kOver60k(preparedForm, waypoints))
+            status(coupleOver80kOver80k(preparedForm, waypoints))
         }
 
       case Single | Separated | Widowed | Divorced =>
         getAnswer(ApplicantIncomePage) {
           case BelowLowerThreshold =>
-            status(singleUnder50k(waypoints))
+            status(singleUnder60k(waypoints))
 
           case BetweenThresholds =>
-            status(singleUnder60k(preparedForm, waypoints))
+            status(singleUnder80k(preparedForm, waypoints))
 
           case AboveUpperThreshold =>
-            status(singleOver60k(preparedForm, waypoints))
+            status(singleOver80k(preparedForm, waypoints))
         }
     }
 }

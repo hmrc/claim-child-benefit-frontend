@@ -23,37 +23,37 @@
         continueButton: components.ContinueButton,
         govukRadios: GovukRadios,
         newTabLink: HmrcNewTabLinkHelper,
-        govukErrorSummary: GovukErrorSummary,
+        govukErrorSummary: GovukErrorSummary
 )
 
 @(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("wantToBePaid.couple.over60k.over60k.title"))) {
-
-    @if(form.errors.nonEmpty) {
-        @govukErrorSummary(ErrorSummaryViewModel(form))
-    }
+@layout(pageTitle = titleNoForm(messages("wantToBePaid.couple.under80k.over80k.title"))) {
 
     @formHelper(action = routes.WantToBePaidController.onSubmit(waypoints)) {
 
-        <h1 class="govuk-heading-xl">@messages("wantToBePaid.couple.over60k.over60k.heading")</h1>
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
+
+        <h1 class="govuk-heading-xl">@messages("wantToBePaid.couple.under80k.over80k.heading")</h1>
 
         <p class="govuk-body">
-            @messages("wantToBePaid.couple.over60k.over60k.p1")
-            @newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.couple.over60k.over60k.p1.link.text"), href = Some(messages("wantToBePaid.couple.over60k.over60k.p1.link.href")))).
+            @messages("wantToBePaid.couple.under80k.over80k.p1")
+            @newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.couple.under80k.over80k.p1.link.text"), href = Some(messages("wantToBePaid.couple.under80k.over80k.p1.link.href")))).
         </p>
 
-        <p class="govuk-body">@messages("wantToBePaid.couple.over60k.over60k.p2")</p>
+        <p class="govuk-body">@messages("wantToBePaid.couple.under80k.over80k.p2")</p>
 
         <p class="govuk-body">
-            @messages("wantToBePaid.couple.over60k.over60k.p3")
+            @messages("wantToBePaid.couple.under80k.over80k.p3")
         </p>
 
-        <p class="govuk-body">@messages("wantToBePaid.couple.over60k.over60k.p4")</p>
+        <p class="govuk-body">@messages("wantToBePaid.couple.under80k.over80k.p4")</p>
 
-        <h2 class="govuk-heading-m">@messages("wantToBePaid.couple.over60k.over60k.h2")</h2>
+        <h2 class="govuk-heading-m">@messages("wantToBePaid.couple.under80k.over80k.h2")</h2>
 
-        <p class="govuk-body govuk-!-margin-bottom-7">@messages("wantToBePaid.couple.over60k.over60k.p5")</p>
+        <p class="govuk-body govuk-!-margin-bottom-7">@messages("wantToBePaid.couple.under80k.over80k.p5")</p>
 
         @govukRadios(
             RadiosViewModel(
@@ -61,7 +61,7 @@
                 legend = LegendViewModel(messages("wantToBePaid.wantToBePaid")).withCssClass("govuk-!-font-weight-bold"),
                 items = Seq(
                     RadioItem(
-                        content = messages("wantToBePaid.couple.yes"),
+                        content = messages("wantToBePaid.couple.partner.yes"),
                         value = Some("true"),
                         id = Some("value")
                     ),
@@ -73,7 +73,6 @@
                 )
             )
         )
-
         @continueButton()
     }
 }
