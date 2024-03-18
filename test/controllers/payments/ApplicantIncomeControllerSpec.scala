@@ -40,10 +40,10 @@ class ApplicantIncomeControllerSpec extends SpecBase with MockitoSugar {
 
   private val waypoints = EmptyWaypoints
 
-  lazy val applicantIncomeRoute = routes.ApplicantIncomeController.onPageLoad(waypoints).url
+  private lazy val applicantIncomeRoute = routes.ApplicantIncomeController.onPageLoad(waypoints).url
 
-  val formProvider = new ApplicantIncomeFormProvider()
-  val form = formProvider()
+  private val formProvider = new ApplicantIncomeFormProvider()
+  private val form = formProvider()
 
   private val singleStatus = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
   private val coupleStatus = Gen.oneOf(Married, Cohabiting).sample.value
@@ -65,7 +65,7 @@ class ApplicantIncomeControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(form, waypoints, true)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, hasPartner = true)(request, messages(application), clockAtFixedInstant).toString
       }
     }
 
@@ -82,7 +82,7 @@ class ApplicantIncomeControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(form, waypoints, false)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, hasPartner = false)(request, messages(application), clockAtFixedInstant).toString
       }
     }
 
@@ -100,7 +100,7 @@ class ApplicantIncomeControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(Income.values.head), waypoints, false)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(Income.values.head), waypoints, hasPartner = false)(request, messages(application), clockAtFixedInstant).toString
       }
     }
 
@@ -147,7 +147,7 @@ class ApplicantIncomeControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, false)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, hasPartner = false)(request, messages(application), clockAtFixedInstant).toString
       }
     }
 

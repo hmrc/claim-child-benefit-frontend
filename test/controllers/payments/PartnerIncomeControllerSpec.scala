@@ -61,7 +61,7 @@ class PartnerIncomeControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(form, waypoints, partnerName.firstName)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, waypoints, partnerName.firstName)(request, messages(application), clockAtFixedInstant).toString
       }
     }
 
@@ -79,7 +79,7 @@ class PartnerIncomeControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(Income.values.head), waypoints, partnerName.firstName)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(Income.values.head), waypoints, partnerName.firstName)(request, messages(application), clockAtFixedInstant).toString
       }
     }
 
@@ -126,7 +126,7 @@ class PartnerIncomeControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, partnerName.firstName)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, waypoints, partnerName.firstName)(request, messages(application), clockAtFixedInstant).toString
       }
     }
 

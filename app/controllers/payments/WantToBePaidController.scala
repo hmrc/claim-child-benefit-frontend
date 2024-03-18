@@ -32,6 +32,7 @@ import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.payments._
 
+import java.time.Clock
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -43,21 +44,21 @@ class WantToBePaidController @Inject()(
                                         getData: DataRetrievalAction,
                                         requireData: DataRequiredAction,
                                         val controllerComponents: MessagesControllerComponents,
-                                        coupleUnder50kUnder50k: WantToBePaidCoupleUnder50kUnder50kView,
-                                        coupleUnder50kUnder60k: WantToBePaidCoupleUnder50kUnder60kView,
-                                        coupleUnder50kOver60k: WantToBePaidCoupleUnder50kOver60kView,
-                                        coupleUnder60kUnder50k: WantToBePaidCoupleUnder60kUnder50kView,
-                                        coupleUnder60kUnder60k: WantToBePaidCoupleUnder60kUnder60kView,
-                                        coupleUnder60kOver60k: WantToBePaidCoupleUnder60kOver60kView,
-                                        coupleOver60kUnder50k: WantToBePaidCoupleOver60kUnder50kView,
-                                        coupleOver60kUnder60k: WantToBePaidCoupleOver60kUnder60kView,
-                                        coupleOver60kOver60k: WantToBePaidCoupleOver60kOver60kView,
-                                        singleUnder50k: WantToBePaidSingleUnder50kView,
-                                        singleUnder60k: WantToBePaidSingleUnder60kView,
-                                        singleOver60k: WantToBePaidSingleOver60kView,
+                                        coupleUnderLowerThresholdUnderLowerThreshold: WantToBePaidCoupleUnderLowerThresholdUnderLowerThresholdView,
+                                        coupleUnderLowerThresholdUnderUpperThreshold: WantToBePaidCoupleUnderLowerThresholdUnderUpperThresholdView,
+                                        coupleUnderLowerThresholdOverUpperThreshold: WantToBePaidCoupleUnderLowerThresholdOverUpperThresholdView,
+                                        coupleUnderUpperThresholdUnderLowerThreshold: WantToBePaidCoupleUnderUpperThresholdUnderLowerThresholdView,
+                                        coupleUnderUpperThresholdUnderUpperThreshold: WantToBePaidCoupleUnderUpperThresholdUnderUpperThresholdView,
+                                        coupleUnderUpperThresholdOverUpperThreshold: WantToBePaidCoupleUnderUpperThresholdOverUpperThresholdView,
+                                        coupleOverUpperThresholdUnderLowerThreshold: WantToBePaidCoupleOverUpperThresholdUnderLowerThresholdView,
+                                        coupleOverUpperThresholdUnderUpperThreshold: WantToBePaidCoupleOverUpperThresholdUnderUpperThresholdView,
+                                        coupleOverUpperThresholdOverUpperThreshold: WantToBePaidCoupleOverUpperThresholdOverUpperThresholdView,
+                                        singleUnderLowerThreshold: WantToBePaidSingleUnderLowerThresholdView,
+                                        singleUnderUpperThreshold: WantToBePaidSingleUnderUpperThresholdView,
+                                        singleOverUpperThreshold: WantToBePaidSingleOverUpperThresholdView,
                                         formProvider: WantToBePaidFormProvider,
                                         userDataService: UserDataService
-                                      )(implicit ec: ExecutionContext)
+                                      )(implicit ec: ExecutionContext, clock: Clock)
   extends FrontendBaseController
     with I18nSupport
     with AnswerExtractor {
@@ -96,43 +97,43 @@ class WantToBePaidController @Inject()(
       case Married | Cohabiting =>
         getAnswers(ApplicantIncomePage, PartnerIncomePage) {
           case (BelowLowerThreshold, BelowLowerThreshold) =>
-            status(coupleUnder50kUnder50k(waypoints))
+            status(coupleUnderLowerThresholdUnderLowerThreshold(waypoints))
 
           case (BelowLowerThreshold, BetweenThresholds) =>
-            status(coupleUnder50kUnder60k(preparedForm, waypoints))
+            status(coupleUnderLowerThresholdUnderUpperThreshold(preparedForm, waypoints))
 
           case (BelowLowerThreshold, AboveUpperThreshold) =>
-            status(coupleUnder50kOver60k(preparedForm, waypoints))
+            status(coupleUnderLowerThresholdOverUpperThreshold(preparedForm, waypoints))
 
           case (BetweenThresholds, BelowLowerThreshold) =>
-            status(coupleUnder60kUnder50k(preparedForm, waypoints))
+            status(coupleUnderUpperThresholdUnderLowerThreshold(preparedForm, waypoints))
 
           case (BetweenThresholds, BetweenThresholds) =>
-            status(coupleUnder60kUnder60k(preparedForm, waypoints))
+            status(coupleUnderUpperThresholdUnderUpperThreshold(preparedForm, waypoints))
 
           case (BetweenThresholds, AboveUpperThreshold) =>
-            status(coupleUnder60kOver60k(preparedForm, waypoints))
+            status(coupleUnderUpperThresholdOverUpperThreshold(preparedForm, waypoints))
 
           case (AboveUpperThreshold, BelowLowerThreshold) =>
-            status(coupleOver60kUnder50k(preparedForm, waypoints))
+            status(coupleOverUpperThresholdUnderLowerThreshold(preparedForm, waypoints))
 
           case (AboveUpperThreshold, BetweenThresholds) =>
-            status(coupleOver60kUnder60k(preparedForm, waypoints))
+            status(coupleOverUpperThresholdUnderUpperThreshold(preparedForm, waypoints))
 
           case (AboveUpperThreshold, AboveUpperThreshold) =>
-            status(coupleOver60kOver60k(preparedForm, waypoints))
+            status(coupleOverUpperThresholdOverUpperThreshold(preparedForm, waypoints))
         }
 
       case Single | Separated | Widowed | Divorced =>
         getAnswer(ApplicantIncomePage) {
           case BelowLowerThreshold =>
-            status(singleUnder50k(waypoints))
+            status(singleUnderLowerThreshold(waypoints))
 
           case BetweenThresholds =>
-            status(singleUnder60k(preparedForm, waypoints))
+            status(singleUnderUpperThreshold(preparedForm, waypoints))
 
           case AboveUpperThreshold =>
-            status(singleOver60k(preparedForm, waypoints))
+            status(singleOverUpperThreshold(preparedForm, waypoints))
         }
     }
 }

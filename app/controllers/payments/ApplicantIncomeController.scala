@@ -29,6 +29,7 @@ import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.payments.ApplicantIncomeView
 
+import java.time.Clock
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -42,7 +43,7 @@ class ApplicantIncomeController @Inject()(
                                            formProvider: ApplicantIncomeFormProvider,
                                            val controllerComponents: MessagesControllerComponents,
                                            view: ApplicantIncomeView
-                                         )(implicit ec: ExecutionContext)
+                                         )(implicit ec: ExecutionContext, clock: Clock)
   extends FrontendBaseController
     with I18nSupport
     with AnswerExtractor {
