@@ -19,15 +19,16 @@ package controllers.actions
 import config.FrontendAppConfig
 import controllers.auth.{routes => authRoutes}
 import controllers.routes
-import models.requests.{AuthenticatedIdentifierRequest, IdentifierRequest, UnauthenticatedIdentifierRequest}
+import models.requests.{IdentifierRequest, UnauthenticatedIdentifierRequest}
 import play.api.Logging
 import play.api.mvc.Results.Redirect
-import play.api.mvc.{ActionBuilder, ActionFunction, AnyContent, BodyParsers, Call, Request, Result}
+import play.api.mvc._
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
+import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.~
-import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.HttpVerbs.GET
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import javax.inject.Inject
@@ -67,8 +68,8 @@ class OptionalAuthIdentifierAction @Inject()(
         case Some(Individual) ~ _ ~ confidenceLevel ~ _ ~ _ if confidenceLevel < ConfidenceLevel.L250  =>
           upliftIv(request)
 
-        case Some(Individual) ~ Some(CredentialStrength.strong) ~ _ ~ Some(internalId) ~ Some(nino) =>
-          block(AuthenticatedIdentifierRequest(request, internalId, nino))
+        case Some(Individual) ~ Some(CredentialStrength.strong) ~ _ ~ Some(_) ~ Some(_) =>
+          redirectTo(Call(GET, config.pegaClaimChildBenefit))
     }.recoverWith {
       case _: NoActiveSession =>
         hc.sessionId match {

@@ -43,6 +43,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   val upliftIvUrl: String      = configuration.get[String]("urls.upliftIv")
   val childBenefitTaxChargeRestartUrl: String = configuration.get[String]("urls.childBenefitTaxChargeRestart")
   val childBenefitTaxChargeStopUrl: String    = configuration.get[String]("urls.childBenefitTaxChargeStop")
+  val pegaClaimChildBenefit: String           = configuration.get[String]("urls.pegaClaimChildBenefit")
 
   val homeOfficeImmigrationStatusUrl: String = configuration.get[Service]("microservice.services.home-office-immigration-status-proxy").baseUrl
 
@@ -62,6 +63,5 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   val timeout: Int   = configuration.get[Int]("timeout-dialog.timeout")
   val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")
 
-  val userAnswersTtl: Int = configuration.get[Int]("mongodb.userAnswersTimeToLiveInSeconds")
   val brmsCacheTtl: Int   = configuration.get[Int]("mongodb.brmsTimeToLiveInSeconds")
 }
