@@ -16,6 +16,7 @@
 
 @import controllers.payments.routes
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.newtablinkhelper.NewTabLinkHelper
+@import java.time.Clock
 
 @this(
         layout: templates.Layout,
@@ -26,9 +27,9 @@
         govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages, clock: Clock)
 
-@layout(pageTitle = titleNoForm(messages("wantToBePaid.single.under60k.title"))) {
+@layout(pageTitle = titleNoForm(messages("wantToBePaid.single.overUpperThreshold.title"))) {
 
     @formHelper(action = routes.WantToBePaidController.onSubmit(waypoints)) {
 
@@ -36,28 +37,28 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <h1 class="govuk-heading-xl">@messages("wantToBePaid.single.under60k.heading")</h1>
+        <h1 class="govuk-heading-xl">@messages("wantToBePaid.single.overUpperThreshold.heading")</h1>
 
         <p class="govuk-body">
-            @messages("wantToBePaid.single.under60k.p1")
-            @newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.single.under60k.p1.link.text"), href = Some(messages("wantToBePaid.single.under60k.p1.link.href")))).
+            @messages("wantToBePaid.single.overUpperThreshold.p1", IncomeThreshold.Upper.amount(clock))
+            @newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.single.overUpperThreshold.p1.link.text"), href = Some(messages("wantToBePaid.single.overUpperThreshold.p1.link.href")))).
         </p>
 
         <p class="govuk-body">
-            @messages("wantToBePaid.single.under60k.p2")
+            @messages("wantToBePaid.single.overUpperThreshold.p2")
         </p>
 
         <p class="govuk-body">
-            @messages("wantToBePaid.single.under60k.p3")
+            @messages("wantToBePaid.single.overUpperThreshold.p3")
         </p>
 
         <p class="govuk-body">
-        @messages("wantToBePaid.single.under60k.p4")
+            @messages("wantToBePaid.single.overUpperThreshold.p4")
         </p>
 
-        <h2 class="govuk-heading-m">@messages("wantToBePaid.single.under60k.h2")</h2>
+        <h2 class="govuk-heading-m">@messages("wantToBePaid.single.overUpperThreshold.h2")</h2>
 
-        <p class="govuk-body govuk-!-margin-bottom-7">@messages("wantToBePaid.single.under60k.p5")</p>
+        <p class="govuk-body govuk-!-margin-bottom-7">@messages("wantToBePaid.single.overUpperThreshold.p5")</p>
 
         @govukRadios(
             RadiosViewModel(

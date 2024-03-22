@@ -51,9 +51,9 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
         val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
         val baseAnswers = emptyUserAnswers.set(RelationshipStatusPage, relationshipStatus).success.value
 
-        "and their income is under 50k" - {
+        "and their income is under LowerThreshold" - {
 
-          "and their partner's income is under 50k" in {
+          "and their partner's income is under LowerThreshold" in {
 
             val answers =
               baseAnswers
@@ -67,14 +67,14 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
               val result = route(application, request).value
 
-              val view = application.injector.instanceOf[WantToBePaidCoupleUnder50kUnder50kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnderLowerThresholdUnderLowerThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(waypoints)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(waypoints)(request, messages(application), clockAtFixedInstant).toString
             }
           }
 
-          "and their partner's income is between 50k and 60k" in {
+          "and their partner's income is between LowerThreshold and UpperThreshold" in {
 
             val answers =
               baseAnswers
@@ -88,14 +88,14 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
               val result = route(application, request).value
 
-              val view = application.injector.instanceOf[WantToBePaidCoupleUnder50kUnder60kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnderLowerThresholdUnderUpperThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application), clockAtFixedInstant).toString
             }
           }
 
-          "and their partner's income is over 60k" in {
+          "and their partner's income is over UpperThreshold" in {
 
             val answers =
               baseAnswers
@@ -109,17 +109,17 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
               val result = route(application, request).value
 
-              val view = application.injector.instanceOf[WantToBePaidCoupleUnder50kOver60kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnderLowerThresholdOverUpperThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application), clockAtFixedInstant).toString
             }
           }
         }
 
-        "and their income is between 50k and 60k" - {
+        "and their income is between LowerThreshold and UpperThreshold" - {
 
-          "and their partner's income is below 60k" in {
+          "and their partner's income is below UpperThreshold" in {
 
             val answers =
               baseAnswers
@@ -133,14 +133,14 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
               val result = route(application, request).value
 
-              val view = application.injector.instanceOf[WantToBePaidCoupleUnder60kUnder50kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnderUpperThresholdUnderLowerThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application), clockAtFixedInstant).toString
             }
           }
 
-          "and their partner's income is between 50k and 60k" in {
+          "and their partner's income is between LowerThreshold and UpperThreshold" in {
 
             val answers =
               baseAnswers
@@ -154,14 +154,14 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
               val result = route(application, request).value
 
-              val view = application.injector.instanceOf[WantToBePaidCoupleUnder60kUnder60kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnderUpperThresholdUnderUpperThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application), clockAtFixedInstant).toString
             }
           }
 
-          "and their partner's income is over 60k" in {
+          "and their partner's income is over UpperThreshold" in {
 
             val answers =
               baseAnswers
@@ -175,17 +175,17 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
               val result = route(application, request).value
 
-              val view = application.injector.instanceOf[WantToBePaidCoupleUnder60kOver60kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnderUpperThresholdOverUpperThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application), clockAtFixedInstant).toString
             }
           }
         }
 
-        "and their income is over 60k" - {
+        "and their income is over UpperThreshold" - {
 
-          "and their partner's income is below 50k" in {
+          "and their partner's income is below LowerThreshold" in {
 
             val answers =
               baseAnswers
@@ -200,14 +200,14 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
               val result = route(application, request).value
 
-              val view = application.injector.instanceOf[WantToBePaidCoupleOver60kUnder50kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleOverUpperThresholdUnderLowerThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application), clockAtFixedInstant).toString
             }
           }
 
-          "and their partner's income is between 50k and 60k" in {
+          "and their partner's income is between LowerThreshold and UpperThreshold" in {
 
             val answers =
               baseAnswers
@@ -222,14 +222,14 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
               val result = route(application, request).value
 
-              val view = application.injector.instanceOf[WantToBePaidCoupleOver60kUnder60kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleOverUpperThresholdUnderUpperThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application), clockAtFixedInstant).toString
             }
           }
 
-          "and their partner's income is over 60k" in {
+          "and their partner's income is over UpperThreshold" in {
 
             val answers =
               baseAnswers
@@ -244,10 +244,10 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
               val result = route(application, request).value
 
-              val view = application.injector.instanceOf[WantToBePaidCoupleOver60kOver60kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleOverUpperThresholdOverUpperThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application), clockAtFixedInstant).toString
             }
           }
         }
@@ -258,7 +258,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
         val relationshipStatus = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
         val baseAnswers = emptyUserAnswers.set(RelationshipStatusPage, relationshipStatus).success.value
 
-        "and their income is under 50k" in {
+        "and their income is under LowerThreshold" in {
 
           val answers = baseAnswers.set(ApplicantIncomePage, BelowLowerThreshold).success.value
 
@@ -269,14 +269,14 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
             val result = route(application, request).value
 
-            val view = application.injector.instanceOf[WantToBePaidSingleUnder50kView]
+            val view = application.injector.instanceOf[WantToBePaidSingleUnderLowerThresholdView]
 
             status(result) mustEqual OK
-            contentAsString(result) mustEqual view(waypoints)(request, messages(application)).toString
+            contentAsString(result) mustEqual view(waypoints)(request, messages(application), clockAtFixedInstant).toString
           }
         }
 
-        "and their income is between 50k and 60k" in {
+        "and their income is between LowerThreshold and UpperThreshold" in {
 
           val answers = baseAnswers.set(ApplicantIncomePage, BetweenThresholds).success.value
 
@@ -287,14 +287,14 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
             val result = route(application, request).value
 
-            val view = application.injector.instanceOf[WantToBePaidSingleUnder60kView]
+            val view = application.injector.instanceOf[WantToBePaidSingleUnderUpperThresholdView]
 
             status(result) mustEqual OK
-            contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+            contentAsString(result) mustEqual view(form, waypoints)(request, messages(application), clockAtFixedInstant).toString
           }
         }
 
-        "and their income is over 60k" in {
+        "and their income is over UpperThreshold" in {
 
           val answers = baseAnswers.set(ApplicantIncomePage, AboveUpperThreshold).success.value
 
@@ -305,10 +305,10 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
             val result = route(application, request).value
 
-            val view = application.injector.instanceOf[WantToBePaidSingleOver60kView]
+            val view = application.injector.instanceOf[WantToBePaidSingleOverUpperThresholdView]
 
             status(result) mustEqual OK
-            contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+            contentAsString(result) mustEqual view(form, waypoints)(request, messages(application), clockAtFixedInstant).toString
           }
         }
       }
@@ -321,9 +321,9 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
         val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
         val baseAnswers = emptyUserAnswers.set(RelationshipStatusPage, relationshipStatus).success.value
 
-        "and their income is below 50k" - {
+        "and their income is below LowerThreshold" - {
 
-          "and their partner's income is between 50k and 60k" in {
+          "and their partner's income is between LowerThreshold and UpperThreshold" in {
 
             val answers =
               baseAnswers
@@ -338,14 +338,14 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
               val result = route(application, request).value
 
-              val view = application.injector.instanceOf[WantToBePaidCoupleUnder50kUnder60kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnderLowerThresholdUnderUpperThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application), clockAtFixedInstant).toString
             }
           }
 
-          "and their partner's income is over 60k" in {
+          "and their partner's income is over UpperThreshold" in {
 
             val answers =
               baseAnswers
@@ -360,17 +360,17 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
               val result = route(application, request).value
 
-              val view = application.injector.instanceOf[WantToBePaidCoupleUnder50kOver60kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnderLowerThresholdOverUpperThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application), clockAtFixedInstant).toString
             }
           }
         }
 
-        "and their income is between 50k and 60k" - {
+        "and their income is between LowerThreshold and UpperThreshold" - {
 
-          "and their partner's income is below 50k" in {
+          "and their partner's income is below LowerThreshold" in {
 
             val answers =
               baseAnswers
@@ -385,14 +385,14 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
               val result = route(application, request).value
 
-              val view = application.injector.instanceOf[WantToBePaidCoupleUnder60kUnder50kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnderUpperThresholdUnderLowerThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application), clockAtFixedInstant).toString
             }
           }
 
-          "and their partner's income is between 50k and 60k" in {
+          "and their partner's income is between LowerThreshold and UpperThreshold" in {
 
             val answers =
               baseAnswers
@@ -407,14 +407,14 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
               val result = route(application, request).value
 
-              val view = application.injector.instanceOf[WantToBePaidCoupleUnder60kUnder60kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnderUpperThresholdUnderUpperThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application), clockAtFixedInstant).toString
             }
           }
 
-          "and their partner's income is above 60k" in {
+          "and their partner's income is above UpperThreshold" in {
 
             val answers =
               baseAnswers
@@ -429,17 +429,17 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
               val result = route(application, request).value
 
-              val view = application.injector.instanceOf[WantToBePaidCoupleUnder60kOver60kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnderUpperThresholdOverUpperThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application), clockAtFixedInstant).toString
             }
           }
         }
 
-        "and their income is over 60k" - {
+        "and their income is over UpperThreshold" - {
 
-          "and their partner's income is below 50k" in {
+          "and their partner's income is below LowerThreshold" in {
 
             val answers =
               baseAnswers
@@ -454,14 +454,14 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
               val result = route(application, request).value
 
-              val view = application.injector.instanceOf[WantToBePaidCoupleOver60kUnder50kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleOverUpperThresholdUnderLowerThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application), clockAtFixedInstant).toString
             }
           }
 
-          "and their partner's income is between 50k and 60k" in {
+          "and their partner's income is between LowerThreshold and UpperThreshold" in {
 
             val answers =
               baseAnswers
@@ -476,14 +476,14 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
               val result = route(application, request).value
 
-              val view = application.injector.instanceOf[WantToBePaidCoupleOver60kUnder60kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleOverUpperThresholdUnderUpperThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application), clockAtFixedInstant).toString
             }
           }
 
-          "and their partner's income is above 60k" in {
+          "and their partner's income is above UpperThreshold" in {
 
             val answers =
               baseAnswers
@@ -498,10 +498,10 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
               val result = route(application, request).value
 
-              val view = application.injector.instanceOf[WantToBePaidCoupleOver60kOver60kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleOverUpperThresholdOverUpperThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application), clockAtFixedInstant).toString
             }
           }
         }
@@ -509,7 +509,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
       "when the applicant is single, separated, divorced or widowed" - {
 
-        "and their income is between 50k and 60k" in {
+        "and their income is between LowerThreshold and UpperThreshold" in {
 
           val relationshipStatus = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
 
@@ -526,14 +526,14 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
             val result = route(application, request).value
 
-            val view = application.injector.instanceOf[WantToBePaidSingleUnder60kView]
+            val view = application.injector.instanceOf[WantToBePaidSingleUnderUpperThresholdView]
 
             status(result) mustEqual OK
-            contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+            contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application), clockAtFixedInstant).toString
           }
         }
 
-        "and their income is over 60k" in {
+        "and their income is over UpperThreshold" in {
 
           val relationshipStatus = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
 
@@ -550,10 +550,10 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
 
             val result = route(application, request).value
 
-            val view = application.injector.instanceOf[WantToBePaidSingleOver60kView]
+            val view = application.injector.instanceOf[WantToBePaidSingleOverUpperThresholdView]
 
             status(result) mustEqual OK
-            contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+            contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application), clockAtFixedInstant).toString
           }
         }
       }
@@ -594,9 +594,9 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
         val relationshipStatus = Gen.oneOf(Married, Cohabiting).sample.value
         val baseAnswers = emptyUserAnswers.set(RelationshipStatusPage, relationshipStatus).success.value
 
-        "and their income is below 50k" - {
+        "and their income is below LowerThreshold" - {
 
-          "and their partner's income is between 50k and 60k" in {
+          "and their partner's income is between LowerThreshold and UpperThreshold" in {
 
             val answers =
               baseAnswers
@@ -611,14 +611,14 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val boundForm = form.bind(Map("value" -> ""))
               val result = route(application, request).value
 
-              val view = application.injector.instanceOf[WantToBePaidCoupleUnder50kUnder60kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnderLowerThresholdUnderUpperThresholdView]
 
               status(result) mustEqual BAD_REQUEST
-              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application), clockAtFixedInstant).toString
             }
           }
 
-          "and their partner's income is over 60k" in {
+          "and their partner's income is over UpperThreshold" in {
 
             val answers =
               baseAnswers
@@ -633,17 +633,17 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val boundForm = form.bind(Map("value" -> ""))
               val result = route(application, request).value
 
-              val view = application.injector.instanceOf[WantToBePaidCoupleUnder50kOver60kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnderLowerThresholdOverUpperThresholdView]
 
               status(result) mustEqual BAD_REQUEST
-              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application), clockAtFixedInstant).toString
             }
           }
         }
 
-        "and their income is between 50k and 60k" - {
+        "and their income is between LowerThreshold and UpperThreshold" - {
 
-          "and their partner's income is below 50k" in {
+          "and their partner's income is below LowerThreshold" in {
 
             val answers =
               baseAnswers
@@ -658,14 +658,14 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val boundForm = form.bind(Map("value" -> ""))
               val result = route(application, request).value
 
-              val view = application.injector.instanceOf[WantToBePaidCoupleUnder60kUnder50kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnderUpperThresholdUnderLowerThresholdView]
 
               status(result) mustEqual BAD_REQUEST
-              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application), clockAtFixedInstant).toString
             }
           }
 
-          "and their partner's income is between 50k and 60k" in {
+          "and their partner's income is between LowerThreshold and UpperThreshold" in {
 
             val answers =
               baseAnswers
@@ -680,14 +680,14 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val boundForm = form.bind(Map("value" -> ""))
               val result = route(application, request).value
 
-              val view = application.injector.instanceOf[WantToBePaidCoupleUnder60kUnder60kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnderUpperThresholdUnderUpperThresholdView]
 
               status(result) mustEqual BAD_REQUEST
-              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application), clockAtFixedInstant).toString
             }
           }
 
-          "and their partner's income is over 60k" in {
+          "and their partner's income is over UpperThreshold" in {
 
             val answers =
               baseAnswers
@@ -702,17 +702,17 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val boundForm = form.bind(Map("value" -> ""))
               val result = route(application, request).value
 
-              val view = application.injector.instanceOf[WantToBePaidCoupleUnder60kOver60kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleUnderUpperThresholdOverUpperThresholdView]
 
               status(result) mustEqual BAD_REQUEST
-              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application), clockAtFixedInstant).toString
             }
           }
         }
 
-        "and their income is over 60k" - {
+        "and their income is over UpperThreshold" - {
 
-          "and their partner's income is below 50k" in {
+          "and their partner's income is below LowerThreshold" in {
 
             val answers =
               baseAnswers
@@ -727,14 +727,14 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val boundForm = form.bind(Map("value" -> ""))
               val result = route(application, request).value
 
-              val view = application.injector.instanceOf[WantToBePaidCoupleOver60kUnder50kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleOverUpperThresholdUnderLowerThresholdView]
 
               status(result) mustEqual BAD_REQUEST
-              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application), clockAtFixedInstant).toString
             }
           }
 
-          "and their partner's income is between 50k and 60k" in {
+          "and their partner's income is between LowerThreshold and UpperThreshold" in {
 
             val answers =
               baseAnswers
@@ -749,14 +749,14 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val boundForm = form.bind(Map("value" -> ""))
               val result = route(application, request).value
 
-              val view = application.injector.instanceOf[WantToBePaidCoupleOver60kUnder60kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleOverUpperThresholdUnderUpperThresholdView]
 
               status(result) mustEqual BAD_REQUEST
-              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application), clockAtFixedInstant).toString
             }
           }
 
-          "and their partner's income is over 60k" in {
+          "and their partner's income is over UpperThreshold" in {
 
             val answers =
               baseAnswers
@@ -771,10 +771,10 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val boundForm = form.bind(Map("value" -> ""))
               val result = route(application, request).value
 
-              val view = application.injector.instanceOf[WantToBePaidCoupleOver60kOver60kView]
+              val view = application.injector.instanceOf[WantToBePaidCoupleOverUpperThresholdOverUpperThresholdView]
 
               status(result) mustEqual BAD_REQUEST
-              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application), clockAtFixedInstant).toString
             }
           }
         }
@@ -785,7 +785,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
         val relationshipStatus = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
         val baseAnswers = emptyUserAnswers.set(RelationshipStatusPage, relationshipStatus).success.value
 
-        "and their income is between 50k and 60k" in {
+        "and their income is between LowerThreshold and UpperThreshold" in {
 
           val answers = baseAnswers.set(ApplicantIncomePage, BetweenThresholds).success.value
 
@@ -797,14 +797,14 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
             val boundForm = form.bind(Map("value" -> ""))
             val result = route(application, request).value
 
-            val view = application.injector.instanceOf[WantToBePaidSingleUnder60kView]
+            val view = application.injector.instanceOf[WantToBePaidSingleUnderUpperThresholdView]
 
             status(result) mustEqual BAD_REQUEST
-            contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+            contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application), clockAtFixedInstant).toString
           }
         }
 
-        "and their income is over 60k" in {
+        "and their income is over UpperThreshold" in {
 
           val answers = baseAnswers.set(ApplicantIncomePage, AboveUpperThreshold).success.value
 
@@ -816,10 +816,10 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
             val boundForm = form.bind(Map("value" -> ""))
             val result = route(application, request).value
 
-            val view = application.injector.instanceOf[WantToBePaidSingleOver60kView]
+            val view = application.injector.instanceOf[WantToBePaidSingleOverUpperThresholdView]
 
             status(result) mustEqual BAD_REQUEST
-            contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+            contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application), clockAtFixedInstant).toString
           }
         }
       }

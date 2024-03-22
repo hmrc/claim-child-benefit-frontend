@@ -16,6 +16,7 @@
 
 @import controllers.payments.routes
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.newtablinkhelper.NewTabLinkHelper
+@import java.time.Clock
 
 @this(
         layout: templates.Layout,
@@ -24,26 +25,26 @@
         newTabLink: HmrcNewTabLinkHelper
 )
 
-@(waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
+@(waypoints: Waypoints)(implicit request: Request[_], messages: Messages, clock: Clock)
 
-@layout(pageTitle = titleNoForm(messages("wantToBePaid.single.under50k.title"))) {
+@layout(pageTitle = titleNoForm(messages("wantToBePaid.single.underLowerThreshold.title"))) {
 
     @formHelper(action = routes.WantToBePaidController.onSubmit(waypoints)) {
 
-        <h1 class="govuk-heading-xl">@messages("wantToBePaid.single.under50k.heading")</h1>
+        <h1 class="govuk-heading-xl">@messages("wantToBePaid.single.underLowerThreshold.heading")</h1>
 
         <p class="govuk-body">
-            @messages("wantToBePaid.single.under50k.p1")
+            @messages("wantToBePaid.single.underLowerThreshold.p1", IncomeThreshold.Lower.amount(clock))
         </p>
 
         <p class="govuk-body">
-            @messages("wantToBePaid.single.under50k.p2")
-            @newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.single.under50k.p2.link.text"), href = Some(messages("wantToBePaid.single.under50k.p2.link.href")))).
+            @messages("wantToBePaid.single.underLowerThreshold.p2")
+            @newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.single.underLowerThreshold.p2.link.text"), href = Some(messages("wantToBePaid.single.underLowerThreshold.p2.link.href")))).
         </p>
 
-        <h2 class="govuk-heading-m">@messages("wantToBePaid.single.under50k.h2")</h2>
+        <h2 class="govuk-heading-m">@messages("wantToBePaid.single.underLowerThreshold.h2")</h2>
 
-        <p class="govuk-body govuk-!-margin-bottom-7">@messages("wantToBePaid.single.under50k.p3")</p>
+        <p class="govuk-body govuk-!-margin-bottom-7">@messages("wantToBePaid.single.underLowerThreshold.p3")</p>
 
         <input type="hidden" name="value" value="true" />
 

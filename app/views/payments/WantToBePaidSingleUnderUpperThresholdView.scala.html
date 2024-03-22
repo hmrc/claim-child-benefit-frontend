@@ -16,6 +16,7 @@
 
 @import controllers.payments.routes
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.newtablinkhelper.NewTabLinkHelper
+@import java.time.Clock
 
 @this(
         layout: templates.Layout,
@@ -23,37 +24,41 @@
         continueButton: components.ContinueButton,
         govukRadios: GovukRadios,
         newTabLink: HmrcNewTabLinkHelper,
-        govukErrorSummary: GovukErrorSummary,
+        govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages, clock: Clock)
 
-@layout(pageTitle = titleNoForm(messages("wantToBePaid.couple.under50k.over60k.title"))) {
-
-    @if(form.errors.nonEmpty) {
-        @govukErrorSummary(ErrorSummaryViewModel(form))
-    }
+@layout(pageTitle = titleNoForm(messages("wantToBePaid.single.underUpperThreshold.title"))) {
 
     @formHelper(action = routes.WantToBePaidController.onSubmit(waypoints)) {
 
-        <h1 class="govuk-heading-xl">@messages("wantToBePaid.couple.under50k.over60k.heading")</h1>
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
+
+        <h1 class="govuk-heading-xl">@messages("wantToBePaid.single.underUpperThreshold.heading")</h1>
 
         <p class="govuk-body">
-            @messages("wantToBePaid.couple.under50k.over60k.p1")
-            @newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.couple.under50k.over60k.p1.link.text"), href = Some(messages("wantToBePaid.couple.under50k.over60k.p1.link.href")))).
+            @messages("wantToBePaid.single.underUpperThreshold.p1", IncomeThreshold.Lower.amount(clock), IncomeThreshold.Upper.amount(clock))
+            @newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.single.underUpperThreshold.p1.link.text"), href = Some(messages("wantToBePaid.single.underUpperThreshold.p1.link.href")))).
         </p>
-
-        <p class="govuk-body">@messages("wantToBePaid.couple.under50k.over60k.p2")</p>
 
         <p class="govuk-body">
-            @messages("wantToBePaid.couple.under50k.over60k.p3")
+            @messages("wantToBePaid.single.underUpperThreshold.p2")
         </p>
 
-        <p class="govuk-body">@messages("wantToBePaid.couple.under50k.over60k.p4")</p>
+        <p class="govuk-body">
+            @messages("wantToBePaid.single.underUpperThreshold.p3")
+        </p>
 
-        <h2 class="govuk-heading-m">@messages("wantToBePaid.couple.under50k.over60k.h2")</h2>
+        <p class="govuk-body">
+        @messages("wantToBePaid.single.underUpperThreshold.p4")
+        </p>
 
-        <p class="govuk-body govuk-!-margin-bottom-7">@messages("wantToBePaid.couple.under50k.over60k.p5")</p>
+        <h2 class="govuk-heading-m">@messages("wantToBePaid.single.underUpperThreshold.h2")</h2>
+
+        <p class="govuk-body govuk-!-margin-bottom-7">@messages("wantToBePaid.single.underUpperThreshold.p5")</p>
 
         @govukRadios(
             RadiosViewModel(
@@ -61,12 +66,12 @@
                 legend = LegendViewModel(messages("wantToBePaid.wantToBePaid")).withCssClass("govuk-!-font-weight-bold"),
                 items = Seq(
                     RadioItem(
-                        content = messages("wantToBePaid.couple.partner.yes"),
+                        content = messages("wantToBePaid.single.yes"),
                         value = Some("true"),
                         id = Some("value")
                     ),
                     RadioItem(
-                        content = messages("wantToBePaid.couple.no"),
+                        content = messages("wantToBePaid.single.no"),
                         value = Some("false"),
                         id = Some("value-no")
                     )
