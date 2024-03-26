@@ -142,7 +142,7 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
               })(request)
 
               status(result) mustEqual SEE_OTHER
-              redirectLocation(result) mustEqual Some("https://account.hmrc.gov.uk/child-benefit/make_a_claim/recently-claimed-child-benefit")
+              redirectLocation(result).value mustEqual "https://account.hmrc.gov.uk/child-benefit/make_a_claim/recently-claimed-child-benefit"
             }
           }
         }

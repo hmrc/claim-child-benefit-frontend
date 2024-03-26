@@ -70,22 +70,22 @@ class OptionalAuthIdentifierAction @Inject()(
 
         case Some(Individual) ~ Some(CredentialStrength.strong) ~ _ ~ Some(_) ~ Some(_) =>
           redirectTo(Call(GET, config.pegaClaimChildBenefit))
-    }.recoverWith {
-      case _: NoActiveSession =>
-        hc.sessionId match {
-          case Some(sessionId) =>
-            block(UnauthenticatedIdentifierRequest(request, sessionId.value))
-          case None =>
-            logger.error(s"User has no active sessionId: ${request.path}")
-            Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
-        }
+      }.recoverWith {
+        case _: NoActiveSession =>
+          hc.sessionId match {
+            case Some(sessionId) =>
+              block(UnauthenticatedIdentifierRequest(request, sessionId.value))
+            case None =>
+              logger.error(s"User has no active sessionId: ${request.path}")
+              Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+          }
     }
   }
 
   private def redirectTo(call: Call): Future[Result] =
     Future.successful(Redirect(call))
 
-  private def upliftMfa(request: Request[_]): Future[Result] = {
+  private def upliftMfa(request: Request[_]): Future[Result] =
     Future.successful(Redirect(
       config.upliftMfaUrl,
       Map(
@@ -93,7 +93,6 @@ class OptionalAuthIdentifierAction @Inject()(
         "continueUrl" -> Seq(config.loginContinueUrl + request.path)
       )
     ))
-  }
 
   private def upliftIv(request: Request[_]): Future[Result] =
     Future.successful(Redirect(

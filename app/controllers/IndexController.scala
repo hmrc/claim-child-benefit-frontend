@@ -18,52 +18,26 @@ package controllers
 
 import controllers.actions.IdentifierAction
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.api.mvc._
 import services.UserDataService
-import uk.gov.hmrc.auth.core.AffinityGroup.Individual
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
-import uk.gov.hmrc.auth.core.retrieve.~
-import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions, ConfidenceLevel, NoActiveSession}
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class IndexController @Inject()(
                                  val controllerComponents: MessagesControllerComponents,
                                  identify: IdentifierAction,
-                                 userDataService: UserDataService,
-                                 val authConnector: AuthConnector
-                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with AuthorisedFunctions {
+                                 userDataService: UserDataService
+                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
-
-    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
-
-    authorised().retrieve(
-      Retrievals.affinityGroup and
-        Retrievals.confidenceLevel
-    ) {
-      case Some(Individual) ~ confidenceLevel if confidenceLevel < ConfidenceLevel.L250 =>
-        Future.successful(Redirect(routes.NeedToUpliftIvController.onPageLoad()))
-
-      case _ =>
-        goToNextPage
-    }.recoverWith {
-      case _: NoActiveSession =>
-        goToNextPage
-    }
+  def onPageLoad: Action[AnyContent] = identify { _ =>
+    Redirect(routes.RecentlyClaimedController.onPageLoad())
   }
 
-  private def goToNextPage: Future[Result] =
-    Future.successful(Redirect(routes.RecentlyClaimedController.onPageLoad()))
-
   def startAgain: Action[AnyContent] = identify.async { implicit request =>
-    userDataService.clear().map {
-      _ =>
-        Redirect(routes.IndexController.onPageLoad)
+    userDataService.clear().map { _ =>
+      Redirect(routes.RecentlyClaimedController.onPageLoad())
     }
   }
 }
