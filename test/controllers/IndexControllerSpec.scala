@@ -45,7 +45,7 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
 
   "Index Controller" - {
 
-    ".startAgain must clear the user's cache and redirect to the home page" in {
+    ".startAgain must clear the user's cache and redirect to the recently claimed page" in {
 
       val mockUserDataService = mock[UserDataService]
       when(mockUserDataService.clear()(any())) thenReturn Future.successful(Done)
