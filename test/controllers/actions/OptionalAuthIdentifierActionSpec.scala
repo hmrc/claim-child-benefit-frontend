@@ -127,7 +127,7 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
 
           "with confidence level 250 or greater" - {
 
-            "they must succeed with an AuthenticatedIdentifierRequest" in {
+            "they must get redirected to PEGA" in {
 
               val authAction = new OptionalAuthIdentifierAction(
                 new FakeAuthConnector(Some(Individual) ~ Some(CredentialStrength.strong) ~ ConfidenceLevel.L250 ~ Some(userId) ~ Some(nino)),
@@ -141,8 +141,8 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
                 case y: UnauthenticatedIdentifierRequest[_] => Ok(y.userId)
               })(request)
 
-              status(result) mustEqual OK
-              contentAsString(result) mustEqual s"$userId $nino"
+              status(result) mustEqual SEE_OTHER
+              redirectLocation(result).value mustEqual "https://account.hmrc.gov.uk/child-benefit/make_a_claim/recently-claimed-child-benefit"
             }
           }
         }
