@@ -25,7 +25,7 @@
         newTabLink: HmrcNewTabLinkHelper
 )
 
-@(waypoints: Waypoints)(implicit request: Request[_], messages: Messages, clock: Clock)
+@(waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("wantToBePaid.single.underLowerThreshold.title"))) {
 
@@ -34,7 +34,7 @@
         <h1 class="govuk-heading-xl">@messages("wantToBePaid.single.underLowerThreshold.heading")</h1>
 
         <p class="govuk-body">
-            @messages("wantToBePaid.single.underLowerThreshold.p1", IncomeThreshold.Lower.amount(clock))
+            @messages("wantToBePaid.single.underLowerThreshold.p1", IncomeThreshold.Lower.amount)
         </p>
 
         <p class="govuk-body">

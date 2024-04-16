@@ -16,7 +16,6 @@
 
 package models
 
-import java.time.Clock
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
@@ -37,11 +36,11 @@ object Income extends Enumerable.Implicits {
     AboveUpperThreshold
   )
 
-  def options(implicit messages: Messages, clock: Clock): Seq[RadioItem] = {
+  def options(implicit messages: Messages): Seq[RadioItem] = {
     values.zipWithIndex.map {
       case (value, index) =>
         RadioItem(
-          content = Text(messages(s"income.${value.toString}", IncomeThreshold.Lower.amount(clock), IncomeThreshold.Upper.amount(clock))),
+          content = Text(messages(s"income.${value.toString}", IncomeThreshold.Lower.amount, IncomeThreshold.Upper.amount)),
           value = Some(value.toString),
           id = Some(s"value_$index")
         )

@@ -27,7 +27,7 @@
         govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages, clock: Clock)
+@(form: Form[_], waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("wantToBePaid.single.overUpperThreshold.title"))) {
 
@@ -40,7 +40,7 @@
         <h1 class="govuk-heading-xl">@messages("wantToBePaid.single.overUpperThreshold.heading")</h1>
 
         <p class="govuk-body">
-            @messages("wantToBePaid.single.overUpperThreshold.p1", IncomeThreshold.Upper.amount(clock))
+            @messages("wantToBePaid.single.overUpperThreshold.p1", IncomeThreshold.Upper.amount)
             @newTabLink(NewTabLinkHelper(text = messages("wantToBePaid.single.overUpperThreshold.p1.link.text"), href = Some(messages("wantToBePaid.single.overUpperThreshold.p1.link.href")))).
         </p>
 

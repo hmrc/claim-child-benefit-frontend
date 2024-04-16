@@ -70,7 +70,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val view = application.injector.instanceOf[WantToBePaidCoupleUnderLowerThresholdUnderLowerThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(waypoints)(request, messages(application), clockAtFixedInstant).toString
+              contentAsString(result) mustEqual view(waypoints)(request, messages(application)).toString
             }
           }
 
@@ -91,7 +91,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val view = application.injector.instanceOf[WantToBePaidCoupleUnderLowerThresholdUnderUpperThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application), clockAtFixedInstant).toString
+              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
             }
           }
 
@@ -112,7 +112,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val view = application.injector.instanceOf[WantToBePaidCoupleUnderLowerThresholdOverUpperThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application), clockAtFixedInstant).toString
+              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
             }
           }
         }
@@ -136,7 +136,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val view = application.injector.instanceOf[WantToBePaidCoupleUnderUpperThresholdUnderLowerThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application), clockAtFixedInstant).toString
+              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
             }
           }
 
@@ -157,7 +157,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val view = application.injector.instanceOf[WantToBePaidCoupleUnderUpperThresholdUnderUpperThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application), clockAtFixedInstant).toString
+              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
             }
           }
 
@@ -178,7 +178,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val view = application.injector.instanceOf[WantToBePaidCoupleUnderUpperThresholdOverUpperThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application), clockAtFixedInstant).toString
+              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
             }
           }
         }
@@ -203,7 +203,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val view = application.injector.instanceOf[WantToBePaidCoupleOverUpperThresholdUnderLowerThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application), clockAtFixedInstant).toString
+              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
             }
           }
 
@@ -225,7 +225,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val view = application.injector.instanceOf[WantToBePaidCoupleOverUpperThresholdUnderUpperThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application), clockAtFixedInstant).toString
+              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
             }
           }
 
@@ -247,7 +247,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val view = application.injector.instanceOf[WantToBePaidCoupleOverUpperThresholdOverUpperThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application), clockAtFixedInstant).toString
+              contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
             }
           }
         }
@@ -272,7 +272,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
             val view = application.injector.instanceOf[WantToBePaidSingleUnderLowerThresholdView]
 
             status(result) mustEqual OK
-            contentAsString(result) mustEqual view(waypoints)(request, messages(application), clockAtFixedInstant).toString
+            contentAsString(result) mustEqual view(waypoints)(request, messages(application)).toString
           }
         }
 
@@ -290,7 +290,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
             val view = application.injector.instanceOf[WantToBePaidSingleUnderUpperThresholdView]
 
             status(result) mustEqual OK
-            contentAsString(result) mustEqual view(form, waypoints)(request, messages(application), clockAtFixedInstant).toString
+            contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
           }
         }
 
@@ -308,7 +308,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
             val view = application.injector.instanceOf[WantToBePaidSingleOverUpperThresholdView]
 
             status(result) mustEqual OK
-            contentAsString(result) mustEqual view(form, waypoints)(request, messages(application), clockAtFixedInstant).toString
+            contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
           }
         }
       }
@@ -341,7 +341,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val view = application.injector.instanceOf[WantToBePaidCoupleUnderLowerThresholdUnderUpperThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application), clockAtFixedInstant).toString
+              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
             }
           }
 
@@ -363,7 +363,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val view = application.injector.instanceOf[WantToBePaidCoupleUnderLowerThresholdOverUpperThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application), clockAtFixedInstant).toString
+              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
             }
           }
         }
@@ -388,7 +388,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val view = application.injector.instanceOf[WantToBePaidCoupleUnderUpperThresholdUnderLowerThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application), clockAtFixedInstant).toString
+              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
             }
           }
 
@@ -410,7 +410,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val view = application.injector.instanceOf[WantToBePaidCoupleUnderUpperThresholdUnderUpperThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application), clockAtFixedInstant).toString
+              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
             }
           }
 
@@ -432,7 +432,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val view = application.injector.instanceOf[WantToBePaidCoupleUnderUpperThresholdOverUpperThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application), clockAtFixedInstant).toString
+              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
             }
           }
         }
@@ -457,7 +457,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val view = application.injector.instanceOf[WantToBePaidCoupleOverUpperThresholdUnderLowerThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application), clockAtFixedInstant).toString
+              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
             }
           }
 
@@ -479,7 +479,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val view = application.injector.instanceOf[WantToBePaidCoupleOverUpperThresholdUnderUpperThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application), clockAtFixedInstant).toString
+              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
             }
           }
 
@@ -501,7 +501,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val view = application.injector.instanceOf[WantToBePaidCoupleOverUpperThresholdOverUpperThresholdView]
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application), clockAtFixedInstant).toString
+              contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
             }
           }
         }
@@ -529,7 +529,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
             val view = application.injector.instanceOf[WantToBePaidSingleUnderUpperThresholdView]
 
             status(result) mustEqual OK
-            contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application), clockAtFixedInstant).toString
+            contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
           }
         }
 
@@ -553,7 +553,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
             val view = application.injector.instanceOf[WantToBePaidSingleOverUpperThresholdView]
 
             status(result) mustEqual OK
-            contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application), clockAtFixedInstant).toString
+            contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
           }
         }
       }
@@ -614,7 +614,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val view = application.injector.instanceOf[WantToBePaidCoupleUnderLowerThresholdUnderUpperThresholdView]
 
               status(result) mustEqual BAD_REQUEST
-              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application), clockAtFixedInstant).toString
+              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
             }
           }
 
@@ -636,7 +636,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val view = application.injector.instanceOf[WantToBePaidCoupleUnderLowerThresholdOverUpperThresholdView]
 
               status(result) mustEqual BAD_REQUEST
-              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application), clockAtFixedInstant).toString
+              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
             }
           }
         }
@@ -661,7 +661,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val view = application.injector.instanceOf[WantToBePaidCoupleUnderUpperThresholdUnderLowerThresholdView]
 
               status(result) mustEqual BAD_REQUEST
-              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application), clockAtFixedInstant).toString
+              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
             }
           }
 
@@ -683,7 +683,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val view = application.injector.instanceOf[WantToBePaidCoupleUnderUpperThresholdUnderUpperThresholdView]
 
               status(result) mustEqual BAD_REQUEST
-              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application), clockAtFixedInstant).toString
+              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
             }
           }
 
@@ -705,7 +705,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val view = application.injector.instanceOf[WantToBePaidCoupleUnderUpperThresholdOverUpperThresholdView]
 
               status(result) mustEqual BAD_REQUEST
-              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application), clockAtFixedInstant).toString
+              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
             }
           }
         }
@@ -730,7 +730,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val view = application.injector.instanceOf[WantToBePaidCoupleOverUpperThresholdUnderLowerThresholdView]
 
               status(result) mustEqual BAD_REQUEST
-              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application), clockAtFixedInstant).toString
+              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
             }
           }
 
@@ -752,7 +752,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val view = application.injector.instanceOf[WantToBePaidCoupleOverUpperThresholdUnderUpperThresholdView]
 
               status(result) mustEqual BAD_REQUEST
-              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application), clockAtFixedInstant).toString
+              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
             }
           }
 
@@ -774,7 +774,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
               val view = application.injector.instanceOf[WantToBePaidCoupleOverUpperThresholdOverUpperThresholdView]
 
               status(result) mustEqual BAD_REQUEST
-              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application), clockAtFixedInstant).toString
+              contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
             }
           }
         }
@@ -800,7 +800,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
             val view = application.injector.instanceOf[WantToBePaidSingleUnderUpperThresholdView]
 
             status(result) mustEqual BAD_REQUEST
-            contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application), clockAtFixedInstant).toString
+            contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
           }
         }
 
@@ -819,7 +819,7 @@ class WantToBePaidControllerSpec extends SpecBase with MockitoSugar {
             val view = application.injector.instanceOf[WantToBePaidSingleOverUpperThresholdView]
 
             status(result) mustEqual BAD_REQUEST
-            contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application), clockAtFixedInstant).toString
+            contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
           }
         }
       }
