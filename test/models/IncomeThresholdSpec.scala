@@ -18,29 +18,13 @@ package models
 
 import base.SpecBase
 
-import java.time.{Clock, Instant, LocalDate, ZoneId}
-
 class IncomeThresholdSpec extends SpecBase {
 
   "IncomeThreshold" - {
-    "must return correct amounts for date before 6 April 2024" in {
-      val instant: Instant =
-        LocalDate.of(2024, 4, 5).atStartOfDay(ZoneId.systemDefault).toInstant
-      val clock: Clock =
-        Clock.fixed(instant, ZoneId.systemDefault)
-
-      IncomeThreshold.Lower.amount(clock) mustBe "50,000"
-      IncomeThreshold.Upper.amount(clock) mustBe "60,000"
-    }
 
     "must return correct amounts for date after 5 April 2024" in {
-      val instant: Instant =
-        LocalDate.of(2024, 4, 6).atStartOfDay(ZoneId.systemDefault).toInstant
-      val clock: Clock =
-        Clock.fixed(instant, ZoneId.systemDefault)
-
-      IncomeThreshold.Lower.amount(clock) mustBe "60,000"
-      IncomeThreshold.Upper.amount(clock) mustBe "80,000"
+      IncomeThreshold.Lower.amount mustBe "60,000"
+      IncomeThreshold.Upper.amount mustBe "80,000"
     }
   }
 }

@@ -32,7 +32,6 @@ import services.UserDataService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.payments._
 
-import java.time.Clock
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -58,7 +57,7 @@ class WantToBePaidController @Inject()(
                                         singleOverUpperThreshold: WantToBePaidSingleOverUpperThresholdView,
                                         formProvider: WantToBePaidFormProvider,
                                         userDataService: UserDataService
-                                      )(implicit ec: ExecutionContext, clock: Clock)
+                                      )(implicit ec: ExecutionContext)
   extends FrontendBaseController
     with I18nSupport
     with AnswerExtractor {
