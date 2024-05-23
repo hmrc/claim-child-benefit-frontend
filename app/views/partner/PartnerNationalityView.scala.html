@@ -35,16 +35,13 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">@messages("partnerNationality.heading", partnerFirstName)</h1>
-
-        <p class="govuk-body">@messages("partnerNationality.p1")</p>
-
         @govukSelect(
             SelectViewModel(
                 field = form("value"),
                 items = Nationality.selectItems,
-                label = LabelViewModel(messages("partnerNationality.heading")).visuallyHidden()
+                label = LabelViewModel(messages("partnerNationality.heading", partnerFirstName)).asPageHeading(),
             )
+            .withHint(HintViewModel(Text(messages("partnerNationality.p1"))))
             .withCssClass("autocomplete")
         )
 
