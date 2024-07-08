@@ -51,14 +51,10 @@ trait SelectFluency {
     def describedBy(value: String): Select =
       select copy (describedBy = Some(value))
 
-    def withFormGroupClasses(classes: String): Select =
-      select copy (formGroupClasses = classes)
 
     def withCssClass(newClass: String): Select =
       select copy (classes = s"${select.classes} $newClass")
 
-    def withAttribute(attribute: (String, String)): Select =
-      select copy (attributes = select.attributes + attribute)
   }
 
   object SelectItemViewModel {
@@ -75,7 +71,5 @@ trait SelectFluency {
     def disabled: SelectItem =
       item copy (disabled = true)
 
-    def withAttribute(attribute: (String, String)): SelectItem =
-      item copy (attributes = item.attributes + attribute)
   }
 }
