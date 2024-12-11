@@ -17,7 +17,6 @@
 package pages.child
 
 import controllers.child.routes
-import models.ChildBirthRegistrationCountry._
 import models.{Index, UserAnswers}
 import pages.{Page, Waypoints}
 import play.api.libs.json.JsPath
