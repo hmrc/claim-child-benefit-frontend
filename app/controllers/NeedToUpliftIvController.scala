@@ -22,6 +22,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.NeedToUpliftIvView
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 
 import javax.inject.Inject
 
@@ -45,7 +46,7 @@ class NeedToUpliftIvController @Inject()(
           "origin" -> Seq(config.origin),
           "confidenceLevel" -> Seq(ConfidenceLevel.L250.toString),
           "completionURL" -> Seq(config.loginContinueUrl + routes.RecentlyClaimedController.onPageLoad().url),
-          "failureURL" -> Seq(config.loginContinueUrl + controllers.auth.routes.IvController.handleIvFailure(request.path, None).url)
+          "failureURL" -> Seq(config.loginContinueUrl + controllers.auth.routes.IvController.handleIvFailure(RedirectUrl(request.path), None).url)
         )
       )
   }

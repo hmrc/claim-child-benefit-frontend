@@ -29,6 +29,7 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpVerbs.GET
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import javax.inject.Inject
@@ -57,10 +58,10 @@ class OptionalAuthIdentifierAction @Inject()(
           Retrievals.nino
       ) {
         case Some(Agent) ~ _ ~ _ ~ _ ~ _ =>
-          redirectTo(authRoutes.AuthController.unsupportedAffinityGroupAgent(config.loginContinueUrl + request.path))
+          redirectTo(authRoutes.AuthController.unsupportedAffinityGroupAgent(RedirectUrl(config.loginContinueUrl + request.path)))
 
         case Some(Organisation) ~ _ ~ _ ~ _ ~ _ =>
-          redirectTo(authRoutes.AuthController.unsupportedAffinityGroupOrganisation(config.loginContinueUrl + request.path))
+          redirectTo(authRoutes.AuthController.unsupportedAffinityGroupOrganisation(RedirectUrl(config.loginContinueUrl + request.path)))
 
         case Some(Individual) ~ Some(CredentialStrength.weak) ~ _ ~ _ ~ _ =>
           upliftMfa(request)
@@ -101,7 +102,7 @@ class OptionalAuthIdentifierAction @Inject()(
         "origin" -> Seq(config.origin),
         "confidenceLevel" -> Seq(ConfidenceLevel.L250.toString),
         "completionURL" -> Seq(config.loginContinueUrl + request.path),
-        "failureURL" -> Seq(config.loginContinueUrl + authRoutes.IvController.handleIvFailure(request.path, None).url)
+        "failureURL" -> Seq(config.loginContinueUrl + authRoutes.IvController.handleIvFailure(RedirectUrl(request.path), None).url)
       )
     ))
 }

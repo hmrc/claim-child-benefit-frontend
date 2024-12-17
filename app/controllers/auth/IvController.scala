@@ -17,9 +17,11 @@
 package controllers.auth
 
 import connectors.IvConnector
+import controllers.VerifyRedirectUrl
 import models.IvResult._
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.auth._
 
@@ -38,13 +40,14 @@ class IvController @Inject()(
                               ivPreconditionFailedView: IvPreconditionFailedView,
                               ivTechnicalIssueView: IvTechnicalIssueView,
                               ivTimeoutView: IvTimeoutView,
-                              ivErrorView: IvErrorView
+                              ivErrorView: IvErrorView,
+                              verifyRedirectUrl: VerifyRedirectUrl
                             )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def handleIvFailure(continueUrl: String, journeyId: Option[String]): Action[AnyContent] = Action.async { implicit request =>
+  def handleIvFailure(continueUrl: RedirectUrl, journeyId: Option[String]): Action[AnyContent] = Action.async { implicit request =>
     journeyId.map { id =>
       ivConnector.getJourneyStatus(id).map {
-        case Success                    => Redirect(continueUrl)
+        case Success                    => Redirect(verifyRedirectUrl.verify(continueUrl))
         case Incomplete                 => Redirect(routes.IvController.ivIncomplete)
         case FailedMatching             => Redirect(routes.IvController.ivFailedMatching)
         case FailedIdentityVerification => Redirect(routes.IvController.ivFailedIdentityVerification(continueUrl))
@@ -68,16 +71,16 @@ class IvController @Inject()(
     Ok(ivFailedMatchingView())
   }
 
-  def ivFailedIdentityVerification(continueUrl: String): Action[AnyContent] = Action { implicit request =>
-    Ok(ivFailedIdentityVerificationView(continueUrl))
+  def ivFailedIdentityVerification(continueUrl: RedirectUrl): Action[AnyContent] = Action { implicit request =>
+    Ok(ivFailedIdentityVerificationView(verifyRedirectUrl.verify(continueUrl)))
   }
 
   def ivInsufficientEvidence: Action[AnyContent] = Action { implicit request =>
     Ok(ivInsufficientEvidenceView())
   }
 
-  def ivUserAborted(continueUrl: String): Action[AnyContent] = Action { implicit request =>
-    Ok(ivUserAbortedView(continueUrl))
+  def ivUserAborted(continueUrl: RedirectUrl): Action[AnyContent] = Action { implicit request =>
+    Ok(ivUserAbortedView(verifyRedirectUrl.verify(continueUrl)))
   }
 
   def ivLockedOut: Action[AnyContent] = Action { implicit request =>

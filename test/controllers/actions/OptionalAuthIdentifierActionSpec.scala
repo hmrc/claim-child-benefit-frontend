@@ -30,6 +30,7 @@ import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
 import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, CredentialStrength, MissingBearerToken}
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
@@ -83,7 +84,7 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
             val result = authAction(a => Ok(a.userId))(request)
 
             status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual authRoutes.AuthController.unsupportedAffinityGroupAgent("http://localhost:11303/").url
+            redirectLocation(result).value mustEqual authRoutes.AuthController.unsupportedAffinityGroupAgent(RedirectUrl("http://localhost:11303/")).url
           }
         }
 
@@ -101,7 +102,7 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
             val result = authAction(a => Ok(a.userId))(request)
 
             status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual authRoutes.AuthController.unsupportedAffinityGroupOrganisation("http://localhost:11303/").url
+            redirectLocation(result).value mustEqual authRoutes.AuthController.unsupportedAffinityGroupOrganisation(RedirectUrl("http://localhost:11303/")).url
           }
         }
 
@@ -116,12 +117,12 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
                 bodyParsers,
                 config
               )
-              val request = FakeRequest().withSession(SessionKeys.sessionId -> sessionId)
+              val request = FakeRequest("GET","/some/redirect").withSession(SessionKeys.sessionId -> sessionId)
 
               val result = authAction(a => Ok(a.userId))(request)
 
               status(result) mustEqual SEE_OTHER
-              redirectLocation(result).value mustEqual "http://localhost:9948/iv-stub/uplift?origin=CHB&confidenceLevel=250&completionURL=http%3A%2F%2Flocalhost%3A11303%2F&failureURL=http%3A%2F%2Flocalhost%3A11303%2Ffill-online%2Fclaim-child-benefit%2Fidentity-verification%2Fcomplete%3FcontinueUrl%3D%252F"
+              redirectLocation(result).value mustEqual "http://localhost:9948/iv-stub/uplift?origin=CHB&confidenceLevel=250&completionURL=http%3A%2F%2Flocalhost%3A11303%2Fsome%2Fredirect&failureURL=http%3A%2F%2Flocalhost%3A11303%2Ffill-online%2Fclaim-child-benefit%2Fidentity-verification%2Fcomplete%3FcontinueUrl%3D%252Fsome%252Fredirect"
             }
           }
 

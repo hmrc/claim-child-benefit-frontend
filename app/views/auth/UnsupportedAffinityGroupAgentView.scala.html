@@ -15,6 +15,7 @@
  *@
 
 @import controllers.auth.routes
+@import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 
 @this(
         layout: templates.Layout,
@@ -35,7 +36,7 @@
 
     <p class="govuk-body">@messages("unsupportedAffinityGroupAgent.p2")</p>
 
-    <p class="govuk-body"><a href="@routes.AuthController.redirectToLogin(continueUrl)" class="govuk-button">@messages("site.signIn")</a></p>
+    <p class="govuk-body"><a href="@routes.AuthController.redirectToLogin(RedirectUrl(continueUrl))" class="govuk-button">@messages("site.signIn")</a></p>
 
     <p class="govuk-body">
         @messages("unsupportedAffinityGroupAgent.p3.1")

@@ -27,6 +27,7 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserDataService
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 import views.html.auth.{UnsupportedAffinityGroupAgentView, UnsupportedAffinityGroupOrganisationView}
 
 import java.time.Instant
@@ -139,13 +140,13 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(None).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.AuthController.unsupportedAffinityGroupAgent("continueUrl").url)
+        val request = FakeRequest(GET, routes.AuthController.unsupportedAffinityGroupAgent(RedirectUrl("/continueUrl")).url)
 
         val result = route(application, request).value
         val view = application.injector.instanceOf[UnsupportedAffinityGroupAgentView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view("continueUrl")(request, messages(application)).toString
+        contentAsString(result) mustEqual view("/continueUrl")(request, messages(application)).toString
       }
     }
   }
@@ -157,13 +158,13 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(None).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.AuthController.unsupportedAffinityGroupOrganisation("continueUrl").url)
+        val request = FakeRequest(GET, routes.AuthController.unsupportedAffinityGroupOrganisation(RedirectUrl("/continueUrl")).url)
 
         val result = route(application, request).value
         val view = application.injector.instanceOf[UnsupportedAffinityGroupOrganisationView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view("continueUrl")(request, messages(application)).toString
+        contentAsString(result) mustEqual view("/continueUrl")(request, messages(application)).toString
       }
     }
   }
@@ -175,12 +176,12 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(None).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.AuthController.redirectToRegister("continueUrl").url)
+        val request = FakeRequest(GET, routes.AuthController.redirectToRegister(RedirectUrl("/continueUrl")).url)
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual "http://localhost:9553/bas-gateway/register?origin=CHB&continueUrl=continueUrl&accountType=Individual"
+        redirectLocation(result).value mustEqual "http://localhost:9553/bas-gateway/register?origin=CHB&continueUrl=%2FcontinueUrl&accountType=Individual"
       }
     }
   }
@@ -192,12 +193,12 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(None).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.AuthController.redirectToLogin("continueUrl").url)
+        val request = FakeRequest(GET, routes.AuthController.redirectToLogin(RedirectUrl("/continueUrl")).url)
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual "http://localhost:9553/bas-gateway/sign-in?origin=CHB&continue=continueUrl"
+        redirectLocation(result).value mustEqual "http://localhost:9553/bas-gateway/sign-in?origin=CHB&continue=%2FcontinueUrl"
       }
     }
   }

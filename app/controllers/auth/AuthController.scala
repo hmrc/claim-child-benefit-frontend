@@ -19,13 +19,14 @@ package controllers.auth
 import config.FrontendAppConfig
 import connectors.ClaimChildBenefitConnector
 import controllers.actions.{CheckRecentClaimsAction, DataRetrievalAction, IdentifierAction}
-import controllers.{routes => baseRoutes}
+import controllers.{VerifyRedirectUrl, routes => baseRoutes}
 import models.UserAnswers
 import models.requests.AuthenticatedIdentifierRequest
 import pages.{EmptyWaypoints, TaskListPage}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserDataService
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.auth._
 
@@ -43,26 +44,29 @@ class AuthController @Inject()(
                                 unsupportedAffinityGroupAgentView: UnsupportedAffinityGroupAgentView,
                                 unsupportedAffinityGroupOrganisationView: UnsupportedAffinityGroupOrganisationView,
                                 clock: Clock,
-                                connector: ClaimChildBenefitConnector
+                                connector: ClaimChildBenefitConnector,
+                                verifyRedirectUrl: VerifyRedirectUrl
                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
 
-  def redirectToRegister(continueUrl: String): Action[AnyContent] = Action { _ =>
+
+
+  def redirectToRegister(continueUrl: RedirectUrl): Action[AnyContent] = Action { _ =>
     Redirect(
       config.registerUrl,
       Map(
         "origin" -> Seq(config.origin),
-        "continueUrl" -> Seq(continueUrl),
+        "continueUrl" -> Seq(verifyRedirectUrl.verify(continueUrl)),
         "accountType" -> Seq("Individual"))
     )
   }
 
-  def redirectToLogin(continueUrl: String): Action[AnyContent] = Action { _ =>
+  def redirectToLogin(continueUrl: RedirectUrl): Action[AnyContent] = Action { _ =>
     Redirect(
       config.loginUrl,
       Map(
         "origin" -> Seq(config.origin),
-        "continue" -> Seq(continueUrl)
+        "continue" -> Seq(verifyRedirectUrl.verify(continueUrl))
       )
     )
   }
@@ -93,12 +97,16 @@ class AuthController @Inject()(
         Map("continue" -> Seq(config.host + baseRoutes.RecentlyClaimedController.onPageLoad().url)))
   }
 
-  def unsupportedAffinityGroupAgent(continueUrl: String): Action[AnyContent] = Action { implicit request =>
-    Ok(unsupportedAffinityGroupAgentView(continueUrl))
+  def unsupportedAffinityGroupAgent(continueUrl: RedirectUrl): Action[AnyContent] = Action { implicit request =>
+    Ok(unsupportedAffinityGroupAgentView(
+      verifyRedirectUrl.verify(continueUrl)
+    ))
   }
 
-  def unsupportedAffinityGroupOrganisation(continueUrl: String): Action[AnyContent] = Action { implicit request =>
-    Ok(unsupportedAffinityGroupOrganisationView(continueUrl))
+  def unsupportedAffinityGroupOrganisation(continueUrl: RedirectUrl): Action[AnyContent] = Action { implicit request =>
+    Ok(unsupportedAffinityGroupOrganisationView(
+      verifyRedirectUrl.verify(continueUrl)
+    ))
   }
 
   def signedIn(): Action[AnyContent] = (identify andThen checkRecentClaims andThen getData).async {

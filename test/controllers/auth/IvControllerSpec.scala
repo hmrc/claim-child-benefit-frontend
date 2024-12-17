@@ -27,6 +27,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 import views.html.auth._
 
 import scala.concurrent.Future
@@ -41,9 +42,9 @@ class IvControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEac
   }
 
   private val journeyId = "journeyId"
-  private val continueUrl = "continueUrl"
+  private val continueUrl = "/continueUrl"
   private val app = applicationBuilder(None).overrides(bind[IvConnector].toInstance(mockIvConnector)).build()
-  private val request = FakeRequest(GET, routes.IvController.handleIvFailure(continueUrl, Some(journeyId)).url)
+  private val request = FakeRequest(GET, routes.IvController.handleIvFailure(RedirectUrl(continueUrl), Some(journeyId)).url)
 
   "handleIvFailure" - {
 
@@ -80,7 +81,7 @@ class IvControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEac
       val result = route(app, request).value
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.IvController.ivFailedIdentityVerification(continueUrl).url
+      redirectLocation(result).value mustEqual routes.IvController.ivFailedIdentityVerification(RedirectUrl(continueUrl)).url
     }
 
     "must redirect to Iv Insufficient Evidence when the IV journey status is InsufficientEvidence" in {
@@ -98,7 +99,7 @@ class IvControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEac
       val result = route(app, request).value
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.IvController.ivUserAborted(continueUrl).url
+      redirectLocation(result).value mustEqual routes.IvController.ivUserAborted(RedirectUrl(continueUrl)).url
     }
 
     "must redirect to Iv Locked Out when the IV journey status is LockedOut" in {
@@ -139,7 +140,7 @@ class IvControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEac
 
     "must redirect to Iv Error when called with no journey Id" in {
 
-      val request = FakeRequest(GET, routes.IvController.handleIvFailure(continueUrl, None).url)
+      val request = FakeRequest(GET, routes.IvController.handleIvFailure(RedirectUrl(continueUrl), None).url)
       val result = route(app, request).value
 
       status(result) mustEqual SEE_OTHER
@@ -179,7 +180,7 @@ class IvControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEac
 
     "must return OK and the correct view" in {
 
-      val request = FakeRequest(GET, routes.IvController.ivFailedIdentityVerification(continueUrl).url)
+      val request = FakeRequest(GET, routes.IvController.ivFailedIdentityVerification(RedirectUrl(continueUrl)).url)
       val result = route(app, request).value
 
       val view = app.injector.instanceOf[IvFailedIdentityVerificationView]
@@ -207,7 +208,7 @@ class IvControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEac
 
     "must return OK and the correct view" in {
 
-      val request = FakeRequest(GET, routes.IvController.ivUserAborted(continueUrl).url)
+      val request = FakeRequest(GET, routes.IvController.ivUserAborted(RedirectUrl(continueUrl)).url)
       val result = route(app, request).value
 
       val view = app.injector.instanceOf[IvUserAbortedView]

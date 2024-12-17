@@ -23,6 +23,7 @@ import forms.SignInFormProvider
 import pages.{EmptyWaypoints, TaskListPage}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 import views.html.SignInView
 
 class SignInControllerSpec extends SpecBase {
@@ -59,7 +60,7 @@ class SignInControllerSpec extends SpecBase {
         val config = application.injector.instanceOf[FrontendAppConfig]
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual authRoutes.AuthController.redirectToLogin(config.loginContinueUrl + config.signedInUrl).url
+        redirectLocation(result).value mustEqual authRoutes.AuthController.redirectToLogin(RedirectUrl(config.loginContinueUrl + config.signedInUrl)).url
       }
     }
 

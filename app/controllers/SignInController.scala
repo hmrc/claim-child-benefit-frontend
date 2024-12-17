@@ -23,6 +23,7 @@ import forms.SignInFormProvider
 import pages.{TaskListPage, Waypoints}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.SignInView
 
@@ -55,7 +56,7 @@ class SignInController @Inject()(
 
         value =>
           if (value) {
-            Redirect(authRoutes.AuthController.redirectToLogin(config.loginContinueUrl + config.signedInUrl))
+            Redirect(authRoutes.AuthController.redirectToLogin(RedirectUrl(config.loginContinueUrl + config.signedInUrl)))
           } else {
             Redirect(TaskListPage.route(waypoints).url)
           }
