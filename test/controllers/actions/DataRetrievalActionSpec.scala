@@ -33,9 +33,9 @@ import scala.concurrent.Future
 class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
 
   class Harness(
-                 sessionRepository: UserDataService,
-                 connector: ClaimChildBenefitConnector
-               ) extends DataRetrievalActionImpl(sessionRepository, connector) {
+    sessionRepository: UserDataService,
+    connector: ClaimChildBenefitConnector
+  ) extends DataRetrievalActionImpl(sessionRepository, connector) {
     def callTransform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = transform(request)
   }
 
@@ -50,12 +50,12 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
 
         val sessionRepository = mock[UserDataService]
         val connector = mock[ClaimChildBenefitConnector]
-        when(sessionRepository.get()(any())) thenReturn Future(None)
+        when(sessionRepository.get()(any())) `thenReturn` Future(None)
         val action = new Harness(sessionRepository, connector)
 
         val result = action.callTransform(UnauthenticatedIdentifierRequest(FakeRequest(), "id")).futureValue
 
-        result.userAnswers must not be defined
+        result.userAnswers `must` not `be` defined
       }
     }
 
@@ -68,12 +68,12 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
           val sessionRepository = mock[UserDataService]
           val connector = mock[ClaimChildBenefitConnector]
           val userAnswers = UserAnswers(userId)
-          when(sessionRepository.get()(any())) thenReturn Future(Some(userAnswers))
+          when(sessionRepository.get()(any())) `thenReturn` Future(Some(userAnswers))
           val action = new Harness(sessionRepository, connector)
 
           val result = action.callTransform(UnauthenticatedIdentifierRequest(FakeRequest(), userId)).futureValue
 
-          result.userAnswers.value mustEqual userAnswers
+          result.userAnswers.value `mustEqual` userAnswers
         }
       }
 
@@ -87,9 +87,9 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
           val designatoryDetails = DesignatoryDetails(None, None, None, None, LocalDate.now)
           val relationshipDetails = RelationshipDetails(hasClaimedChildBenefit = false)
 
-          when(sessionRepository.get()(any())) thenReturn Future.successful(Some(cachedAnswers))
-          when(connector.designatoryDetails()(any())) thenReturn Future.successful(designatoryDetails)
-          when(connector.relationshipDetails()(any())) thenReturn Future.successful(relationshipDetails)
+          when(sessionRepository.get()(any())) `thenReturn` Future.successful(Some(cachedAnswers))
+          when(connector.designatoryDetails()(any())) `thenReturn` Future.successful(designatoryDetails)
+          when(connector.relationshipDetails()(any())) `thenReturn` Future.successful(relationshipDetails)
 
           val action = new Harness(sessionRepository, connector)
 
@@ -100,7 +100,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
             designatoryDetails = Some(designatoryDetails),
             relationshipDetails = Some(relationshipDetails)
           )
-          result.userAnswers.value mustEqual expectedAnswers
+          result.userAnswers.value `mustEqual` expectedAnswers
         }
       }
     }

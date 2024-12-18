@@ -67,7 +67,7 @@ class SubmitClaimSpec extends AnyFreeSpec with Matchers with ModelGenerators wit
       )
 
       val json = Json.toJson(claim)
-      validator.validateCbsClaim(json) mustBe true
+      validator.validateCbsClaim(json) `mustBe` true
     }
 
     "for a payload with a UK applicant who hasn't always lived abroad and S child" in {
@@ -95,7 +95,7 @@ class SubmitClaimSpec extends AnyFreeSpec with Matchers with ModelGenerators wit
       )
 
       val json = Json.toJson(claim)
-      validator.validateCbsClaim(json) mustBe true
+      validator.validateCbsClaim(json) `mustBe` true
     }
 
     "for a payload with a non-UK applicant who has always lived abroad and child registered abroad" in {
@@ -132,7 +132,7 @@ class SubmitClaimSpec extends AnyFreeSpec with Matchers with ModelGenerators wit
       )
 
       val json = Json.toJson(claim)
-      validator.validateCbsClaim(json) mustBe true
+      validator.validateCbsClaim(json) `mustBe` true
     }
 
     "for a payload with a non-UK applicant who hasn't always lived abroad and child registered abroad" in {
@@ -170,7 +170,7 @@ class SubmitClaimSpec extends AnyFreeSpec with Matchers with ModelGenerators wit
       )
 
       val json = Json.toJson(claim)
-      validator.validateCbsClaim(json) mustBe true
+      validator.validateCbsClaim(json) `mustBe` true
     }
   }
 }

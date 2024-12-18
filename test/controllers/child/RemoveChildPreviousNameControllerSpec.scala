@@ -41,7 +41,8 @@ class RemoveChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
   private val waypoints = EmptyWaypoints
   private val baseAnswers = emptyUserAnswers.set(ChildPreviousNamePage(index, index), name).success.value
 
-  lazy val removeChildPreviousNameRoute = routes.RemoveChildPreviousNameController.onPageLoad(waypoints, index, index).url
+  lazy val removeChildPreviousNameRoute =
+    routes.RemoveChildPreviousNameController.onPageLoad(waypoints, index, index).url
 
   "RemoveChildPreviousName Controller" - {
 
@@ -56,8 +57,11 @@ class RemoveChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
 
         val view = application.injector.instanceOf[RemoveChildPreviousNameView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, index, index, name)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints, index, index, name)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -65,7 +69,7 @@ class RemoveChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -82,8 +86,10 @@ class RemoveChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
         val expectedAnswers = baseAnswers.remove(child.ChildPreviousNamePage(index, index)).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual RemoveChildPreviousNamePage(index, index).navigate(waypoints, baseAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` RemoveChildPreviousNamePage(index, index)
+          .navigate(waypoints, baseAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -92,7 +98,7 @@ class RemoveChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -108,8 +114,11 @@ class RemoveChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual child.RemoveChildPreviousNamePage(index, index).navigate(waypoints, baseAnswers, baseAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` child
+          .RemoveChildPreviousNamePage(index, index)
+          .navigate(waypoints, baseAnswers, baseAnswers)
+          .url
         verify(mockUserDataService, never()).set(any())(any())
       }
     }
@@ -129,8 +138,11 @@ class RemoveChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, index, index, name)(request, messages(application)).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints, index, index, name)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -143,8 +155,8 @@ class RemoveChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -159,8 +171,8 @@ class RemoveChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

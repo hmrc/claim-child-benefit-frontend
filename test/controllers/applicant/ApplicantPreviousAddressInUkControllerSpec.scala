@@ -59,8 +59,11 @@ class ApplicantPreviousAddressInUkControllerSpec extends SpecBase with MockitoSu
 
         val view = application.injector.instanceOf[ApplicantPreviousAddressInUkView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, currentAddress.line1)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints, currentAddress.line1)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -77,8 +80,11 @@ class ApplicantPreviousAddressInUkControllerSpec extends SpecBase with MockitoSu
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), waypoints, currentAddress.line1)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form.fill(true), waypoints, currentAddress.line1)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -86,7 +92,7 @@ class ApplicantPreviousAddressInUkControllerSpec extends SpecBase with MockitoSu
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -103,8 +109,10 @@ class ApplicantPreviousAddressInUkControllerSpec extends SpecBase with MockitoSu
         val result = route(application, request).value
         val expectedAnswers = baseAnswers.set(ApplicantPreviousAddressInUkPage, true).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ApplicantPreviousAddressInUkPage.navigate(waypoints, baseAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` ApplicantPreviousAddressInUkPage
+          .navigate(waypoints, baseAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -124,8 +132,11 @@ class ApplicantPreviousAddressInUkControllerSpec extends SpecBase with MockitoSu
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, currentAddress.line1)(request, messages(application)).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints, currentAddress.line1)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -138,8 +149,8 @@ class ApplicantPreviousAddressInUkControllerSpec extends SpecBase with MockitoSu
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -154,8 +165,8 @@ class ApplicantPreviousAddressInUkControllerSpec extends SpecBase with MockitoSu
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

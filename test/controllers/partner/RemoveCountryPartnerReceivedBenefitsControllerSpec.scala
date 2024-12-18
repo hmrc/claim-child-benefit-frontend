@@ -43,10 +43,15 @@ class RemoveCountryPartnerReceivedBenefitsControllerSpec extends SpecBase with M
   private val waypoints = EmptyWaypoints
   private val baseAnswers =
     emptyUserAnswers
-      .set(PartnerNamePage, name).success.value
-      .set(CountryPartnerReceivedBenefitsPage(index), country).success.value
+      .set(PartnerNamePage, name)
+      .success
+      .value
+      .set(CountryPartnerReceivedBenefitsPage(index), country)
+      .success
+      .value
 
-  lazy val removeCountryPartnerReceivedBenefitsRoute = routes.RemoveCountryPartnerReceivedBenefitsController.onPageLoad(waypoints, index).url
+  lazy val removeCountryPartnerReceivedBenefitsRoute =
+    routes.RemoveCountryPartnerReceivedBenefitsController.onPageLoad(waypoints, index).url
 
   "RemoveCountryPartnerReceivedBenefits Controller" - {
 
@@ -61,8 +66,11 @@ class RemoveCountryPartnerReceivedBenefitsControllerSpec extends SpecBase with M
 
         val view = application.injector.instanceOf[RemoveCountryPartnerReceivedBenefitsView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, index, name.firstName, country.name)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints, index, name.firstName, country.name)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -70,7 +78,7 @@ class RemoveCountryPartnerReceivedBenefitsControllerSpec extends SpecBase with M
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -87,8 +95,10 @@ class RemoveCountryPartnerReceivedBenefitsControllerSpec extends SpecBase with M
         val result = route(application, request).value
         val expectedAnswers = baseAnswers.remove(partner.CountryPartnerReceivedBenefitsPage(index)).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual RemoveCountryPartnerReceivedBenefitsPage(index).navigate(waypoints, baseAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` RemoveCountryPartnerReceivedBenefitsPage(index)
+          .navigate(waypoints, baseAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -97,7 +107,7 @@ class RemoveCountryPartnerReceivedBenefitsControllerSpec extends SpecBase with M
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -113,8 +123,11 @@ class RemoveCountryPartnerReceivedBenefitsControllerSpec extends SpecBase with M
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual partner.RemoveCountryPartnerReceivedBenefitsPage(index).navigate(waypoints, baseAnswers, baseAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` partner
+          .RemoveCountryPartnerReceivedBenefitsPage(index)
+          .navigate(waypoints, baseAnswers, baseAnswers)
+          .url
         verify(mockUserDataService, never()).set(any())(any())
       }
     }
@@ -134,8 +147,11 @@ class RemoveCountryPartnerReceivedBenefitsControllerSpec extends SpecBase with M
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, index, name.firstName, country.name)(request, messages(application)).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints, index, name.firstName, country.name)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -148,8 +164,8 @@ class RemoveCountryPartnerReceivedBenefitsControllerSpec extends SpecBase with M
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -164,8 +180,8 @@ class RemoveCountryPartnerReceivedBenefitsControllerSpec extends SpecBase with M
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

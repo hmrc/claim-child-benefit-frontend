@@ -48,7 +48,7 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
     ".startAgain must clear the user's cache and redirect to the recently claimed page" in {
 
       val mockUserDataService = mock[UserDataService]
-      when(mockUserDataService.clear()(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.clear()(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -60,8 +60,8 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.RecentlyClaimedController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` routes.RecentlyClaimedController.onPageLoad().url
         verify(mockUserDataService, times(1)).clear()(any())
       }
     }
@@ -77,7 +77,9 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
         val config: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]
 
         val authAction = new OptionalAuthIdentifierAction(
-          new FakeAuthConnector(Some(Individual) ~ Some(CredentialStrength.strong) ~ ConfidenceLevel.L250 ~ Some("userId") ~ Some("nino")),
+          new FakeAuthConnector(
+            Some(Individual) ~ Some(CredentialStrength.strong) ~ ConfidenceLevel.L250 ~ Some("userId") ~ Some("nino")
+          ),
           bodyParsers,
           config
         )
@@ -85,13 +87,17 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
         running(application) {
           val request = FakeRequest(GET, routes.IndexController.onPageLoad.url)
 
-          val result: Future[Result] = authAction(a => a match {
-            case x: AuthenticatedIdentifierRequest[_] => Ok(s"${x.userId} ${x.nino}")
-            case y: UnauthenticatedIdentifierRequest[_] => Ok(y.userId)
-          })(request)
+          val result: Future[Result] = authAction(a =>
+            a match {
+              case x: AuthenticatedIdentifierRequest[?]   => Ok(s"${x.userId} ${x.nino}")
+              case y: UnauthenticatedIdentifierRequest[?] => Ok(y.userId)
+            }
+          )(request)
 
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual "https://account.hmrc.gov.uk/child-benefit/make_a_claim/recently-claimed-child-benefit"
+          status(result) `mustEqual` SEE_OTHER
+          redirectLocation(
+            result
+          ).value `mustEqual` "https://account.hmrc.gov.uk/child-benefit/make_a_claim/recently-claimed-child-benefit"
         }
       }
 
@@ -105,8 +111,8 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
 
           val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual routes.RecentlyClaimedController.onPageLoad().url
+          status(result) `mustEqual` SEE_OTHER
+          redirectLocation(result).value `mustEqual` routes.RecentlyClaimedController.onPageLoad().url
         }
       }
     }
@@ -114,6 +120,9 @@ class IndexControllerSpec extends SpecBase with MockitoSugar {
 }
 
 class FakeAuthConnector[T](value: T) extends AuthConnector {
-  override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
+  override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit
+    hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[A] =
     Future.fromTry(Try(value.asInstanceOf[A]))
 }

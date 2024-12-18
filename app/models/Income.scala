@@ -48,7 +48,7 @@ object Income extends Enumerable.Implicits {
   }
 
   implicit val enumerable: Enumerable[Income] =
-    Enumerable(values.map(v => v.toString -> v): _*)
+    Enumerable(values.map(v => v.toString -> v)*)
 }
 
 object IncomeOrdering extends Ordering[Income] {

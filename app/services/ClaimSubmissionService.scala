@@ -42,7 +42,7 @@ class ClaimSubmissionService @Inject()(
                                         clock: Clock
                                       ) extends Logging {
 
-  def canSubmit(request: DataRequest[_])(implicit messages: Messages): Future[Boolean] =
+  def canSubmit(request: DataRequest[?])(implicit messages: Messages): Future[Boolean] =
     if (request.signedIn) {
       journeyModelService.build(request.userAnswers).right.map {
         journeyModel =>
@@ -52,7 +52,7 @@ class ClaimSubmissionService @Inject()(
       Future.successful(false)
     }
 
-  def submit(request: DataRequest[_])(implicit ec: ExecutionContext, messages: Messages): Future[Done] = {
+  def submit(request: DataRequest[?])(implicit ec: ExecutionContext, messages: Messages): Future[Done] = {
     for {
       nino                <- request.userAnswers.nino
       relationshipDetails <- request.userAnswers.relationshipDetails

@@ -24,7 +24,7 @@
     continueButton: components.ContinueButton,
 )
 
-@(form: Form[_], waypoints: Waypoints, firstName: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[?], waypoints: Waypoints, firstName: String)(implicit request: Request[?], messages: Messages)
 
 @layout(pageTitle = title(form, messages("eldestChildDateOfBirth.title"), section = Some(messages("section.payments")))) {
 

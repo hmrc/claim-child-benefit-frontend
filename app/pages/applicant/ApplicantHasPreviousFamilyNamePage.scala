@@ -22,6 +22,7 @@ import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 import queries.AllPreviousFamilyNames
+import pages.RecoveryOps
 
 import scala.util.Try
 

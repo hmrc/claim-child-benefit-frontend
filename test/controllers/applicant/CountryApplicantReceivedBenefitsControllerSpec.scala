@@ -41,7 +41,8 @@ class CountryApplicantReceivedBenefitsControllerSpec extends SpecBase with Mocki
   private val form = formProvider(index, Seq.empty[Country])
   private val validAnswer = Country.internationalCountries.head
 
-  lazy val countryApplicantReceivedBenefitsRoute = routes.CountryApplicantReceivedBenefitsController.onPageLoad(waypoints, index).url
+  lazy val countryApplicantReceivedBenefitsRoute =
+    routes.CountryApplicantReceivedBenefitsController.onPageLoad(waypoints, index).url
 
   "CountryApplicantReceivedBenefits Controller" - {
 
@@ -56,14 +57,15 @@ class CountryApplicantReceivedBenefitsControllerSpec extends SpecBase with Mocki
 
         val view = application.injector.instanceOf[CountryApplicantReceivedBenefitsView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, index)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints, index)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(CountryApplicantReceivedBenefitsPage(index), validAnswer).success.value
+      val userAnswers =
+        UserAnswers(userAnswersId).set(CountryApplicantReceivedBenefitsPage(index), validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -74,8 +76,11 @@ class CountryApplicantReceivedBenefitsControllerSpec extends SpecBase with Mocki
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints, index)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form.fill(validAnswer), waypoints, index)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -83,7 +88,7 @@ class CountryApplicantReceivedBenefitsControllerSpec extends SpecBase with Mocki
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -98,10 +103,13 @@ class CountryApplicantReceivedBenefitsControllerSpec extends SpecBase with Mocki
             .withFormUrlEncodedBody(("value", validAnswer.code))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(CountryApplicantReceivedBenefitsPage(index), validAnswer).success.value
+        val expectedAnswers =
+          emptyUserAnswers.set(CountryApplicantReceivedBenefitsPage(index), validAnswer).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual CountryApplicantReceivedBenefitsPage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` CountryApplicantReceivedBenefitsPage(index)
+          .navigate(waypoints, emptyUserAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -121,8 +129,8 @@ class CountryApplicantReceivedBenefitsControllerSpec extends SpecBase with Mocki
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, index)(request, messages(application)).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints, index)(request, messages(application)).toString
       }
     }
 
@@ -135,8 +143,8 @@ class CountryApplicantReceivedBenefitsControllerSpec extends SpecBase with Mocki
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -151,8 +159,8 @@ class CountryApplicantReceivedBenefitsControllerSpec extends SpecBase with Mocki
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

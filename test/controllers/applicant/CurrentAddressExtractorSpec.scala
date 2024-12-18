@@ -38,9 +38,8 @@ class CurrentAddressExtractorSpec extends SpecBase with ModelGenerators {
   private class TestController() extends CurrentAddressExtractor {
 
     def get()(implicit request: DataRequest[AnyContent]): Future[Result] =
-      getCurrentAddress {
-        currentAddress =>
-          Future.successful(Ok(Json.toJson(currentAddress)))
+      getCurrentAddress { currentAddress =>
+        Future.successful(Ok(Json.toJson(currentAddress)))
       }
   }
 
@@ -48,48 +47,52 @@ class CurrentAddressExtractorSpec extends SpecBase with ModelGenerators {
 
     "must pass a UK address into the provided block when it exists in user answers" in {
 
-      val ukAddress = arbitrary[UkAddress].sample.value
-      val answers = emptyUserAnswers.set(ApplicantCurrentUkAddressPage, ukAddress).success.value
-      implicit val request = buildRequest(answers)
+      val ukAddress: UkAddress = arbitrary[UkAddress].sample.value
+      val answers = emptyUserAnswers.set(ApplicantCurrentUkAddressPage, ukAddress: UkAddress).success.value
+      implicit val request: DataRequest[AnyContent] = buildRequest(answers)
 
       val controller = new TestController()
 
-      controller.get().futureValue mustEqual Ok(Json.toJson(ukAddress))
+      controller.get().futureValue `mustEqual` Ok(Json.toJson(ukAddress))
     }
 
     "must pass an international address into the provided block when it exists in user answers" in {
 
       val internationalAddress = arbitrary[InternationalAddress].sample.value
       val answers = emptyUserAnswers.set(ApplicantCurrentInternationalAddressPage, internationalAddress).success.value
-      implicit val request = buildRequest(answers)
+      implicit val request: DataRequest[AnyContent] = buildRequest(answers)
 
       val controller = new TestController()
 
-      controller.get().futureValue mustEqual Ok(Json.toJson(internationalAddress))
+      controller.get().futureValue `mustEqual` Ok(Json.toJson(internationalAddress))
     }
 
     "must pass a UK address into the provided block when both UK and international addresses exist in user answers" in {
 
-      val ukAddress = arbitrary[UkAddress].sample.value
+      val ukAddress: UkAddress = arbitrary[UkAddress].sample.value
       val internationalAddress = arbitrary[InternationalAddress].sample.value
       val answers =
         emptyUserAnswers
-          .set(ApplicantCurrentUkAddressPage, ukAddress).success.value
-          .set(ApplicantCurrentInternationalAddressPage, internationalAddress).success.value
+          .set(ApplicantCurrentUkAddressPage, ukAddress: UkAddress)
+          .success
+          .value
+          .set(ApplicantCurrentInternationalAddressPage, internationalAddress)
+          .success
+          .value
 
-      implicit val request = buildRequest(answers)
+      implicit val request: DataRequest[AnyContent] = buildRequest(answers)
 
       val controller = new TestController()
 
-      controller.get().futureValue mustEqual Ok(Json.toJson(ukAddress))
+      controller.get().futureValue `mustEqual` Ok(Json.toJson(ukAddress))
     }
 
     "must redirect to Journey Recovery when neither a UK nor an international address exists in user answers" in {
 
-      implicit val request = buildRequest(emptyUserAnswers)
+      implicit val request: DataRequest[AnyContent] = buildRequest(emptyUserAnswers)
       val controller = new TestController()
 
-      controller.get().futureValue mustEqual Redirect(baseRoutes.JourneyRecoveryController.onPageLoad())
+      controller.get().futureValue `mustEqual` Redirect(baseRoutes.JourneyRecoveryController.onPageLoad())
     }
   }
 }

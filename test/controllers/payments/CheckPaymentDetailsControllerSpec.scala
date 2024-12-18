@@ -40,8 +40,8 @@ class CheckPaymentDetailsControllerSpec extends SpecBase with SummaryListFluency
         val view = app.injector.instanceOf[CheckPaymentDetailsView]
         val emptyList = SummaryListViewModel(Nil)
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(emptyList)(request, messages(app)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(emptyList)(request, messages(app)).toString
       }
     }
 
@@ -54,8 +54,11 @@ class CheckPaymentDetailsControllerSpec extends SpecBase with SummaryListFluency
 
         val result = route(app, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual CheckPaymentDetailsPage.navigate(EmptyWaypoints, emptyUserAnswers, emptyUserAnswers).route.url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` CheckPaymentDetailsPage
+          .navigate(EmptyWaypoints, emptyUserAnswers, emptyUserAnswers)
+          .route
+          .url
       }
     }
   }

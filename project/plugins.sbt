@@ -23,3 +23,5 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-uglify" % "2.0.0")
 addSbtPlugin("com.github.sbt" % "sbt-digest" % "2.0.0")
 
 addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.13.0")
+
+addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.2")

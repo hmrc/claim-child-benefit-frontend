@@ -193,22 +193,22 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
 
   "when the user originally said they had always lived in the UK" - {
 
-      val initialise = journeyOf(
-        submitAnswer(ApplicantNinoKnownPage, false),
-        submitAnswer(ApplicantNamePage, adultName),
-        submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
-        submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
-        submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
-        submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
-        submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
-        submitAnswer(ApplicantResidencePage, ApplicantResidence.AlwaysUk),
-        submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
-        submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
-        submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
-        submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
-        submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
-        pageMustBe(CheckApplicantDetailsPage)
-      )
+    val initialise = journeyOf(
+      submitAnswer(ApplicantNinoKnownPage, false),
+      submitAnswer(ApplicantNamePage, adultName),
+      submitAnswer(ApplicantHasPreviousFamilyNamePage, false),
+      submitAnswer(ApplicantDateOfBirthPage, LocalDate.now),
+      submitAnswer(ApplicantPhoneNumberPage, phoneNumber),
+      submitAnswer(ApplicantNationalityPage(Index(0)), nationality),
+      submitAnswer(AddApplicantNationalityPage(Some(Index(0))), false),
+      submitAnswer(ApplicantResidencePage, ApplicantResidence.AlwaysUk),
+      submitAnswer(ApplicantCurrentUkAddressPage, ukAddress),
+      submitAnswer(ApplicantLivedAtCurrentAddressOneYearPage, false),
+      submitAnswer(ApplicantPreviousUkAddressPage, ukAddress),
+      submitAnswer(ApplicantIsHmfOrCivilServantPage, false),
+      submitAnswer(CurrentlyReceivingChildBenefitPage, NotClaiming),
+      pageMustBe(CheckApplicantDetailsPage)
+    )
 
     "changing to say they have lived in the UK and abroad must remove addresses, ask residency and address questions, then go to Check Applicant" in {
 
@@ -225,7 +225,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
           submitAnswer(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses),
           submitAnswer(ApplicantWorkedAbroadPage, false),
           submitAnswer(ApplicantReceivedBenefitsAbroadPage, false),
-          pageMustBe(CheckApplicantDetailsPage),
+          pageMustBe(CheckApplicantDetailsPage)
         )
     }
 
@@ -406,7 +406,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
           submitAnswer(AddCountryApplicantReceivedBenefitsPage(Some(Index(0))), false),
           pageMustBe(CheckApplicantDetailsPage),
           answersMustNotContain(ApplicantCurrentInternationalAddressPage),
-          answersMustNotContain(ApplicantPreviousInternationalAddressPage),
+          answersMustNotContain(ApplicantPreviousInternationalAddressPage)
         )
     }
   }
@@ -1003,7 +1003,7 @@ class ChangingApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelper
         )
     }
   }
-  
+
   "when the user originally said they were getting Child Benefit payments" - {
 
     "and they had not already given payment details" - {

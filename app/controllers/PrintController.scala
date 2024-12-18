@@ -45,7 +45,7 @@ class PrintController @Inject()(
                                  journeyModelService: JourneyModelService
                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
-  private val userAgentBlock: FOUserAgent => Unit = { foUserAgent: FOUserAgent =>
+  private val userAgentBlock: FOUserAgent => Unit = { foUserAgent =>
     foUserAgent.setAccessibility(true)
     foUserAgent.setPdfUAEnabled(true)
     foUserAgent.setAuthor("HMRC forms service")

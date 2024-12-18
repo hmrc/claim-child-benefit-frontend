@@ -27,7 +27,7 @@
         addToList: components.addToList
 )
 
-@(form: Form[_], waypoints: Waypoints, countries: Seq[ListItem], partnerFirstName: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[?], waypoints: Waypoints, countries: Seq[ListItem], partnerFirstName: String)(implicit request: Request[?], messages: Messages)
 
 @titleText = @{
     countries.size match {

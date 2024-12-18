@@ -19,8 +19,6 @@ package audit
 import models.Country
 import play.api.libs.json.{Json, Writes}
 
-import scala.annotation.nowarn
-
 sealed trait Address
 
 object Address {
@@ -31,7 +29,6 @@ object Address {
     case n: NPSAddress => Json.toJson(n)(NPSAddress.writes)
   }
 
-  @nowarn("msg=match may not be exhaustive")
   def build(address: models.Address): Address = {
     address match {
       case u: models.UkAddress => UkAddress.build(u)

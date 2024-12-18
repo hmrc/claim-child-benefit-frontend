@@ -32,7 +32,7 @@ class CheckRecentClaimsAction @Inject() (connector: ClaimChildBenefitConnector)
 
   override protected def filter[A](request: IdentifierRequest[A]): Future[Option[Result]] =
     request match {
-      case _: AuthenticatedIdentifierRequest[_] =>
+      case _: AuthenticatedIdentifierRequest[?] =>
         val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
         connector
@@ -40,7 +40,7 @@ class CheckRecentClaimsAction @Inject() (connector: ClaimChildBenefitConnector)
           .map(_.map(_ => Redirect(routes.RecentlySubmittedController.onPageLoad())))
           .logFailure(s"RecentClaim failed on ${request.path}.")
 
-      case _: UnauthenticatedIdentifierRequest[_] =>
+      case _: UnauthenticatedIdentifierRequest[?] =>
         Future.successful(None)
     }
 }

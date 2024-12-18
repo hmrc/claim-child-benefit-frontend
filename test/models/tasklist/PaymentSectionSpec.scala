@@ -30,13 +30,8 @@ import pages.payments.{ApplicantIncomePage, CheckPaymentDetailsPage, PaymentFreq
 import services.JourneyProgressService
 
 class PaymentSectionSpec
-  extends AnyFreeSpec
-    with Matchers
-    with MockitoSugar
-    with BeforeAndAfterEach
-    with ScalaCheckPropertyChecks
-    with OptionValues
-    with TryValues {
+    extends AnyFreeSpec with Matchers with MockitoSugar with BeforeAndAfterEach with ScalaCheckPropertyChecks
+    with OptionValues with TryValues {
 
   private val mockJourneyProgressService = mock[JourneyProgressService]
   private val applicantSection = new ApplicantSection(mockJourneyProgressService)
@@ -58,7 +53,7 @@ class PaymentSectionSpec
       val section = new PaymentSection(mockJourneyProgressService, applicantSection, partnerSection, childSection)
       val result = section.continue(answers)
 
-      result.value mustEqual PaymentFrequencyPage
+      result.value `mustEqual` PaymentFrequencyPage
       verify(mockJourneyProgressService, times(1)).continue(ApplicantIncomePage, answers)
     }
   }
@@ -73,7 +68,7 @@ class PaymentSectionSpec
       val section = new PaymentSection(mockJourneyProgressService, applicantSection, partnerSection, childSection)
       val result = section.progress(answers)
 
-      result mustEqual NotStarted
+      result `mustEqual` NotStarted
       verify(mockJourneyProgressService, times(1)).continue(ApplicantIncomePage, answers)
     }
 
@@ -85,7 +80,7 @@ class PaymentSectionSpec
       val section = new PaymentSection(mockJourneyProgressService, applicantSection, partnerSection, childSection)
       val result = section.progress(answers)
 
-      result mustEqual Completed
+      result `mustEqual` Completed
       verify(mockJourneyProgressService, times(1)).continue(ApplicantIncomePage, answers)
     }
 
@@ -97,7 +92,7 @@ class PaymentSectionSpec
       val section = new PaymentSection(mockJourneyProgressService, applicantSection, partnerSection, childSection)
       val result = section.progress(answers)
 
-      result mustEqual InProgress
+      result `mustEqual` InProgress
       verify(mockJourneyProgressService, times(1)).continue(ApplicantIncomePage, answers)
     }
   }
@@ -109,7 +104,11 @@ class PaymentSectionSpec
       val answers = UserAnswers("id")
       val section = new PaymentSection(mockJourneyProgressService, applicantSection, partnerSection, childSection)
 
-      section.prerequisiteSections(answers) must contain theSameElementsAs Seq(applicantSection, partnerSection, childSection)
+      section.prerequisiteSections(answers) must contain theSameElementsAs Seq(
+        applicantSection,
+        partnerSection,
+        childSection
+      )
     }
   }
 }

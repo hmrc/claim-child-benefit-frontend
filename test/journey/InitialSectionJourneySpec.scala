@@ -28,7 +28,8 @@ import pages.{RecentlyClaimedPage, _}
 import pages.utils.ExternalPage
 import uk.gov.hmrc.domain.Nino
 
-class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators with TableDrivenPropertyChecks with MockitoSugar {
+class InitialSectionJourneySpec
+    extends AnyFreeSpec with JourneyHelpers with ModelGenerators with TableDrivenPropertyChecks with MockitoSugar {
   private val defaultServiceType = ServiceType.NewClaim
 
   val mockAppConfig = mock[FrontendAppConfig]
@@ -36,15 +37,15 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
   when(mockAppConfig.childBenefitTaxChargeRestartUrl).thenReturn("childBenefitTaxChargeRestartUrl")
   val journeyScenarios = Table(
     ("selectedServiceType", "userIsAuthenticated", "pageName", "expectedPage"),
-    (ServiceType.NewClaim,            false, "Sign In",               SignInPage),
-    (ServiceType.AddClaim,            false, "Sign In",               SignInPage),
-    (ServiceType.CheckClaim,          false, "Already Claimed",       AlreadyClaimedPage),
-    (ServiceType.StopChildBenefit,    false, "Stop Child Benefit",    ExternalPage("childBenefitTaxChargeStopUrl")),
+    (ServiceType.NewClaim, false, "Sign In", SignInPage),
+    (ServiceType.AddClaim, false, "Sign In", SignInPage),
+    (ServiceType.CheckClaim, false, "Already Claimed", AlreadyClaimedPage),
+    (ServiceType.StopChildBenefit, false, "Stop Child Benefit", ExternalPage("childBenefitTaxChargeStopUrl")),
     (ServiceType.RestartChildBenefit, false, "Restart Child Benefit", ExternalPage("childBenefitTaxChargeRestartUrl"))
   )
 
-  forAll (journeyScenarios) { (selectedServiceType, userIsAuthenticated, pageName, expectedPage) => {
-    s"users who select the ${selectedServiceType.toString} and are ${if(userIsAuthenticated) "" else "not "}authenticated must go to the $pageName" in {
+  forAll(journeyScenarios) { (selectedServiceType, userIsAuthenticated, pageName, expectedPage) =>
+    s"users who select the ${selectedServiceType.toString} and are ${if (userIsAuthenticated) "" else "not "}authenticated must go to the $pageName" in {
       val recentlyClaimedPage = RecentlyClaimedPage(mockAppConfig)
       startingFrom(recentlyClaimedPage)
         .run(
@@ -55,7 +56,7 @@ class InitialSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
           pageMustBe(expectedPage)
         )
     }
-  }}
+  }
 
   "users who have not recently claimed" - {
 

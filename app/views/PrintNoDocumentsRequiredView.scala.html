@@ -25,7 +25,7 @@
         newTabLink: HmrcNewTabLinkHelper
 )
 
-@(wantToBePaid: Boolean)(implicit request: Request[_], messages: Messages)
+@(wantToBePaid: Boolean)(implicit request: Request[?], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("print.title")), showBackLink = false) {
 

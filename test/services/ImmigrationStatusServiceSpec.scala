@@ -42,7 +42,8 @@ import java.util.UUID
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach with Generators with GuiceOneAppPerSuite {
+class ImmigrationStatusServiceSpec
+    extends SpecBase with MockitoSugar with BeforeAndAfterEach with Generators with GuiceOneAppPerSuite {
 
   private val mockConnector = mock[ImmigrationStatusConnector]
 
@@ -67,8 +68,10 @@ class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with Befor
       dateOfBirth = LocalDate.now,
       nationalInsuranceNumber = Some(nino),
       currentAddress = arbitrary[models.UkAddress].sample.value,
-      previousAddress = None, telephoneNumber = "0777777777",
-      nationalities = NonEmptyList(genUkCtaNationality.sample.value, Gen.listOf(arbitrary[models.Nationality]).sample.value),
+      previousAddress = None,
+      telephoneNumber = "0777777777",
+      nationalities =
+        NonEmptyList(genUkCtaNationality.sample.value, Gen.listOf(arbitrary[models.Nationality]).sample.value),
       residency = journey.Residency.AlwaysLivedInUk,
       memberOfHMForcesOrCivilServantAbroad = hmfAbroad,
       currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
@@ -109,7 +112,9 @@ class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with Befor
       "must return the result of the call to check immigration status" in {
 
         val nationality = Nationality.allNationalities.filter(_.group == NationalityGroup.Eea).head
-        val model = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(nationalities = NonEmptyList(nationality, Nil)))
+        val model = basicJourneyModel.copy(applicant =
+          basicJourneyModel.applicant.copy(nationalities = NonEmptyList(nationality, Nil))
+        )
         val settledStatusDate = LocalDate.now
 
         val immigrationStatusWithSettledStatus = ImmigrationStatus(
@@ -131,7 +136,7 @@ class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with Befor
 
         val result = service.settledStatusStartDate(nino, model, correlationId)(hc).futureValue
 
-        result.value mustEqual settledStatusDate
+        result.value `mustEqual` settledStatusDate
         verify(mockConnector, times(1)).checkStatus(any(), any())(any())
       }
     }
@@ -141,11 +146,13 @@ class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with Befor
       "must return None" in {
 
         val nationality = Nationality.allNationalities.filter(_.group == NationalityGroup.NonEea).head
-        val model = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(nationalities = NonEmptyList(nationality, Nil)))
+        val model = basicJourneyModel.copy(applicant =
+          basicJourneyModel.applicant.copy(nationalities = NonEmptyList(nationality, Nil))
+        )
 
         val result = service.settledStatusStartDate(nino, model, correlationId)(hc).futureValue
 
-        result must not be defined
+        result `must` not `be` defined
         verify(mockConnector, never()).checkStatus(any(), any())(any())
       }
     }
@@ -155,13 +162,15 @@ class ImmigrationStatusServiceSpec extends SpecBase with MockitoSugar with Befor
       "must return None" in {
 
         val nationality = Nationality.allNationalities.filter(_.group == NationalityGroup.Eea).head
-        val model = basicJourneyModel.copy(applicant = basicJourneyModel.applicant.copy(nationalities = NonEmptyList(nationality, Nil)))
+        val model = basicJourneyModel.copy(applicant =
+          basicJourneyModel.applicant.copy(nationalities = NonEmptyList(nationality, Nil))
+        )
 
         when(mockConnector.checkStatus(any(), any())(any())).thenReturn(Future.failed(new RuntimeException("foo")))
 
         val result = service.settledStatusStartDate(nino, model, correlationId)(hc).futureValue
 
-        result must not be defined
+        result `must` not `be` defined
       }
     }
   }

@@ -7,7 +7,7 @@ import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 lazy val appName: String = "claim-child-benefit-frontend"
 
 ThisBuild / majorVersion := 0
-ThisBuild / scalaVersion := "2.13.15"
+ThisBuild / scalaVersion := "3.6.2"
 
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala, SbtDistributablesPlugin)
@@ -45,12 +45,14 @@ lazy val root = (project in file("."))
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true,
     scalacOptions ++= Seq(
-      "-Wconf:cat=deprecation:ws,cat=feature:ws,cat=optimizer:ws,src=target/.*:s",
-      "-rootdir",
+      "-Wconf:src=routes/.*:s",
+      "-Wconf:msg=unused.import&src=html/.*:s",
+      "-Wconf:msg=unused.explicit.parameter&src=html/.*:s",
+      "-Wconf:msg=unused.import&src=xml/.*:s",
+      "-Wconf:msg=Flag.*repeatedly:s",
       baseDirectory.value.getCanonicalPath,
       "-Xfatal-warnings",
       "-feature",
-      "-Xlint",
       "-deprecation"
     ),
     libraryDependencies ++= AppDependencies(),
@@ -80,5 +82,5 @@ lazy val testSettings: Seq[Def.Setting[?]] = Seq(
 lazy val it = project
   .enablePlugins(PlayScala)
   .dependsOn(root % "test->test") // the "test->test" allows reusing test code and test dependencies
-  .settings(DefaultBuildSettings.itSettings()
-  )
+  .settings(DefaultBuildSettings.itSettings())
+  .settings(scalacOptions ++= Seq("-Wconf:msg=Flag.*repeatedly:s"))

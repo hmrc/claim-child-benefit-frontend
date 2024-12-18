@@ -33,7 +33,7 @@ class PartnerIncomeFormProviderSpec extends OptionFieldBehaviours {
     behave like optionsField[Income](
       form,
       fieldName,
-      validValues  = Income.values,
+      validValues = Income.values,
       invalidError = FormError(fieldName, "error.invalid", Seq(name))
     )
 

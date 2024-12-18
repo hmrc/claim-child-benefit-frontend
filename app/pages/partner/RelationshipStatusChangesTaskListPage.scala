@@ -22,6 +22,7 @@ import models.UserAnswers
 import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+import pages.RecoveryOps
 
 case object RelationshipStatusChangesTaskListPage extends QuestionPage[Boolean] {
 

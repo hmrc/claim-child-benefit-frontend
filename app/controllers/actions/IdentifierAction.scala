@@ -86,7 +86,7 @@ class OptionalAuthIdentifierAction @Inject()(
   private def redirectTo(call: Call): Future[Result] =
     Future.successful(Redirect(call))
 
-  private def upliftMfa(request: Request[_]): Future[Result] =
+  private def upliftMfa(request: Request[?]): Future[Result] =
     Future.successful(Redirect(
       config.upliftMfaUrl,
       Map(
@@ -95,7 +95,7 @@ class OptionalAuthIdentifierAction @Inject()(
       )
     ))
 
-  private def upliftIv(request: Request[_]): Future[Result] =
+  private def upliftIv(request: Request[?]): Future[Result] =
     Future.successful(Redirect(
       config.upliftIvUrl,
       Map(

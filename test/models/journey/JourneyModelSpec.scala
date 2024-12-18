@@ -30,12 +30,7 @@ import uk.gov.hmrc.domain.Nino
 import java.time.LocalDate
 
 class JourneyModelSpec
-  extends AnyFreeSpec
-    with Matchers
-    with TryValues
-    with EitherValues
-    with OptionValues
-    with ModelGenerators {
+    extends AnyFreeSpec with Matchers with TryValues with EitherValues with OptionValues with ModelGenerators {
 
   private val adultName = AdultName(None, "first", None, "last")
   private val ukAddress = UkAddress("line 1", None, "town", None, "AA111AA")
@@ -69,30 +64,15 @@ class JourneyModelSpec
           correspondenceAddress = None
         ),
         Relationship(Single, None, None),
-        NonEmptyList(Child(
-          name = childName,
-          nameChangedByDeedPoll = None,
-          previousNames = Nil,
-          biologicalSex = ChildBiologicalSex.Female,
-          dateOfBirth = LocalDate.now,
-          countryOfRegistration = ChildBirthRegistrationCountry.England,
-          birthCertificateNumber = Some(systemNumber),
-          birthCertificateDetailsMatched = BirthRegistrationMatchingResult.NotAttempted,
-          relationshipToApplicant = relationshipToChild,
-          adoptingThroughLocalAuthority = false,
-          previousClaimant = None,
-          guardian = None,
-          previousGuardian = None,
-          dateChildStartedLivingWithApplicant = None
-        ), List(
+        NonEmptyList(
           Child(
-            name = ChildName("child 2 first", None, "child 2 last"),
+            name = childName,
             nameChangedByDeedPoll = None,
             previousNames = Nil,
             biologicalSex = ChildBiologicalSex.Female,
             dateOfBirth = LocalDate.now,
-            countryOfRegistration = ChildBirthRegistrationCountry.OtherCountry,
-            birthCertificateNumber = None,
+            countryOfRegistration = ChildBirthRegistrationCountry.England,
+            birthCertificateNumber = Some(systemNumber),
             birthCertificateDetailsMatched = BirthRegistrationMatchingResult.NotAttempted,
             relationshipToApplicant = relationshipToChild,
             adoptingThroughLocalAuthority = false,
@@ -101,23 +81,41 @@ class JourneyModelSpec
             previousGuardian = None,
             dateChildStartedLivingWithApplicant = None
           ),
-          Child(
-            name = ChildName("child 3 first", None, "child 3 last"),
-            nameChangedByDeedPoll = None,
-            previousNames = Nil,
-            biologicalSex = ChildBiologicalSex.Female,
-            dateOfBirth = LocalDate.now,
-            countryOfRegistration = ChildBirthRegistrationCountry.OtherCountry,
-            birthCertificateNumber = None,
-            birthCertificateDetailsMatched = BirthRegistrationMatchingResult.NotAttempted,
-            relationshipToApplicant = ApplicantRelationshipToChild.AdoptedChild,
-            adoptingThroughLocalAuthority = false,
-            previousClaimant = None,
-            guardian = None,
-            previousGuardian = None,
-            dateChildStartedLivingWithApplicant = None
+          List(
+            Child(
+              name = ChildName("child 2 first", None, "child 2 last"),
+              nameChangedByDeedPoll = None,
+              previousNames = Nil,
+              biologicalSex = ChildBiologicalSex.Female,
+              dateOfBirth = LocalDate.now,
+              countryOfRegistration = ChildBirthRegistrationCountry.OtherCountry,
+              birthCertificateNumber = None,
+              birthCertificateDetailsMatched = BirthRegistrationMatchingResult.NotAttempted,
+              relationshipToApplicant = relationshipToChild,
+              adoptingThroughLocalAuthority = false,
+              previousClaimant = None,
+              guardian = None,
+              previousGuardian = None,
+              dateChildStartedLivingWithApplicant = None
+            ),
+            Child(
+              name = ChildName("child 3 first", None, "child 3 last"),
+              nameChangedByDeedPoll = None,
+              previousNames = Nil,
+              biologicalSex = ChildBiologicalSex.Female,
+              dateOfBirth = LocalDate.now,
+              countryOfRegistration = ChildBirthRegistrationCountry.OtherCountry,
+              birthCertificateNumber = None,
+              birthCertificateDetailsMatched = BirthRegistrationMatchingResult.NotAttempted,
+              relationshipToApplicant = ApplicantRelationshipToChild.AdoptedChild,
+              adoptingThroughLocalAuthority = false,
+              previousClaimant = None,
+              guardian = None,
+              previousGuardian = None,
+              dateChildStartedLivingWithApplicant = None
+            )
           )
-        )),
+        ),
         None,
         PaymentPreference.DoNotPay(None),
         true,
@@ -130,7 +128,7 @@ class JourneyModelSpec
         RequiredDocument(ChildName("child 2 first", None, "child 2 last"), DocumentType.TravelDocument),
         RequiredDocument(ChildName("child 3 first", None, "child 3 last"), DocumentType.BirthCertificate),
         RequiredDocument(ChildName("child 3 first", None, "child 3 last"), DocumentType.TravelDocument),
-        RequiredDocument(ChildName("child 3 first", None, "child 3 last"), DocumentType.AdoptionCertificate),
+        RequiredDocument(ChildName("child 3 first", None, "child 3 last"), DocumentType.AdoptionCertificate)
       )
     }
   }

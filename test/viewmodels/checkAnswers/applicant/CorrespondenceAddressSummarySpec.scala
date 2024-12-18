@@ -47,9 +47,13 @@ class CorrespondenceAddressSummarySpec extends AnyFreeSpec with Matchers with Op
 
           val answers =
             UserAnswers("id", designatoryDetails = Some(designatoryDetails))
-              .set(CorrespondenceUkAddressPage, newUkAddress).success.value
+              .set(CorrespondenceUkAddressPage, newUkAddress)
+              .success
+              .value
 
-          CorrespondenceAddressSummary.row(answers, EmptyWaypoints).value.value.content mustEqual HtmlContent(newUkAddress.lines.mkString("<br/>"))
+          CorrespondenceAddressSummary.row(answers, EmptyWaypoints).value.value.content `mustEqual` HtmlContent(
+            newUkAddress.lines.mkString("<br/>")
+          )
         }
       }
 
@@ -59,9 +63,13 @@ class CorrespondenceAddressSummarySpec extends AnyFreeSpec with Matchers with Op
 
           val answers =
             UserAnswers("id", designatoryDetails = Some(designatoryDetails))
-              .set(CorrespondenceInternationalAddressPage, newInternationalAddress).success.value
+              .set(CorrespondenceInternationalAddressPage, newInternationalAddress)
+              .success
+              .value
 
-          CorrespondenceAddressSummary.row(answers, EmptyWaypoints).value.value.content mustEqual HtmlContent(newInternationalAddress.lines.mkString("<br/>"))
+          CorrespondenceAddressSummary.row(answers, EmptyWaypoints).value.value.content `mustEqual` HtmlContent(
+            newInternationalAddress.lines.mkString("<br/>")
+          )
         }
       }
 
@@ -71,7 +79,9 @@ class CorrespondenceAddressSummarySpec extends AnyFreeSpec with Matchers with Op
 
           val answers = UserAnswers("id", designatoryDetails = Some(designatoryDetails))
 
-          CorrespondenceAddressSummary.row(answers, EmptyWaypoints).value.value.content mustEqual HtmlContent(originalAddress.lines.mkString("<br/>"))
+          CorrespondenceAddressSummary.row(answers, EmptyWaypoints).value.value.content `mustEqual` HtmlContent(
+            originalAddress.lines.mkString("<br/>")
+          )
         }
       }
     }
@@ -82,7 +92,7 @@ class CorrespondenceAddressSummarySpec extends AnyFreeSpec with Matchers with Op
 
         val answers = UserAnswers("id").set(CorrespondenceUkAddressPage, newUkAddress).success.value
 
-        CorrespondenceAddressSummary.row(answers, EmptyWaypoints) must not be defined
+        CorrespondenceAddressSummary.row(answers, EmptyWaypoints) `must` not `be` defined
       }
     }
   }

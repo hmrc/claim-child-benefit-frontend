@@ -55,7 +55,6 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
   private val journeyModelService = new JourneyModelService(mockFeatureFlags)
   private val mockUserDataService = mock[UserDataService]
 
-
   override def beforeEach(): Unit = {
     Mockito.reset(mockFeatureFlags)
     Mockito.reset(mockConnector)
@@ -100,34 +99,87 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
       designatoryDetails = Some(designatoryDetails),
       relationshipDetails = Some(relationshipDetails)
     )
-      .set(ApplicantNinoKnownPage, false).success.value
-      .set(ApplicantNamePage, adultName).success.value
-      .set(ApplicantHasPreviousFamilyNamePage, false).success.value
-      .set(ApplicantDateOfBirthPage, today).success.value
-      .set(ApplicantPhoneNumberPage, phoneNumber).success.value
-      .set(ApplicantNationalityPage(Index(0)), nationality).success.value
-      .set(ApplicantIsHmfOrCivilServantPage, false).success.value
-      .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
-      .set(ApplicantCurrentUkAddressPage, currentUkAddress).success.value
-      .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
-      .set(ApplicantIsHmfOrCivilServantPage, false).success.value
-      .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
-      .set(RelationshipStatusPage, RelationshipStatus.Single).success.value
-      .set(ChildNamePage(Index(0)), childName).success.value
-      .set(ChildHasPreviousNamePage(Index(0)), false).success.value
-      .set(ChildBiologicalSexPage(Index(0)), biologicalSex).success.value
-      .set(ChildDateOfBirthPage(Index(0)), today).success.value
-      .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.England).success.value
-      .set(BirthCertificateHasSystemNumberPage(Index(0)), true).success.value
-      .set(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber).success.value
-      .set(ApplicantRelationshipToChildPage(Index(0)), relationshipToChild).success.value
-      .set(AdoptingThroughLocalAuthorityPage(Index(0)), false).success.value
-      .set(AnyoneClaimedForChildBeforePage(Index(0)), false).success.value
-      .set(ChildLivesWithApplicantPage(Index(0)), true).success.value
-      .set(ChildLivedWithAnyoneElsePage(Index(0)), false).success.value
-      .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
-      .set(WantToBePaidPage, false).success.value
-
+      .set(ApplicantNinoKnownPage, false)
+      .success
+      .value
+      .set(ApplicantNamePage, adultName)
+      .success
+      .value
+      .set(ApplicantHasPreviousFamilyNamePage, false)
+      .success
+      .value
+      .set(ApplicantDateOfBirthPage, today)
+      .success
+      .value
+      .set(ApplicantPhoneNumberPage, phoneNumber)
+      .success
+      .value
+      .set(ApplicantNationalityPage(Index(0)), nationality)
+      .success
+      .value
+      .set(ApplicantIsHmfOrCivilServantPage, false)
+      .success
+      .value
+      .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk)
+      .success
+      .value
+      .set(ApplicantCurrentUkAddressPage, currentUkAddress)
+      .success
+      .value
+      .set(ApplicantLivedAtCurrentAddressOneYearPage, true)
+      .success
+      .value
+      .set(ApplicantIsHmfOrCivilServantPage, false)
+      .success
+      .value
+      .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming)
+      .success
+      .value
+      .set(RelationshipStatusPage, RelationshipStatus.Single)
+      .success
+      .value
+      .set(ChildNamePage(Index(0)), childName)
+      .success
+      .value
+      .set(ChildHasPreviousNamePage(Index(0)), false)
+      .success
+      .value
+      .set(ChildBiologicalSexPage(Index(0)), biologicalSex)
+      .success
+      .value
+      .set(ChildDateOfBirthPage(Index(0)), today)
+      .success
+      .value
+      .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.England)
+      .success
+      .value
+      .set(BirthCertificateHasSystemNumberPage(Index(0)), true)
+      .success
+      .value
+      .set(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber)
+      .success
+      .value
+      .set(ApplicantRelationshipToChildPage(Index(0)), relationshipToChild)
+      .success
+      .value
+      .set(AdoptingThroughLocalAuthorityPage(Index(0)), false)
+      .success
+      .value
+      .set(AnyoneClaimedForChildBeforePage(Index(0)), false)
+      .success
+      .value
+      .set(ChildLivesWithApplicantPage(Index(0)), true)
+      .success
+      .value
+      .set(ChildLivedWithAnyoneElsePage(Index(0)), false)
+      .success
+      .value
+      .set(ApplicantIncomePage, Income.BelowLowerThreshold)
+      .success
+      .value
+      .set(WantToBePaidPage, false)
+      .success
+      .value
 
   private val submissionService = new ClaimSubmissionService(
     mockConnector,
@@ -148,9 +200,9 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
         val identifierRequest = UnauthenticatedIdentifierRequest(baseRequest, userId)
         val request = DataRequest(identifierRequest, userId, basicUserAnswers)
 
-        when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
+        when(mockFeatureFlags.submitOlderChildrenToCbs) `thenReturn` false
 
-        submissionService.canSubmit(request).futureValue mustEqual false
+        submissionService.canSubmit(request).futureValue `mustEqual` false
       }
     }
 
@@ -162,9 +214,9 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
         val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
         val request = DataRequest(identifierRequest, userId, answers)
 
-        when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
+        when(mockFeatureFlags.submitOlderChildrenToCbs) `thenReturn` false
 
-        submissionService.canSubmit(request).futureValue mustEqual false
+        submissionService.canSubmit(request).futureValue `mustEqual` false
       }
 
       "must be false when a child in the claim is over 6 months old" in {
@@ -175,21 +227,24 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
         val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
         val request = DataRequest(identifierRequest, userId, answers)
 
-        when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
+        when(mockFeatureFlags.submitOlderChildrenToCbs) `thenReturn` false
 
-        submissionService.canSubmit(request).futureValue mustEqual false
+        submissionService.canSubmit(request).futureValue `mustEqual` false
       }
 
       "must be false when any documents need to be posted for a child" in {
 
-        val answers = basicUserAnswers.set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.OtherCountry).success.value
+        val answers = basicUserAnswers
+          .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.OtherCountry)
+          .success
+          .value
 
         val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
         val request = DataRequest(identifierRequest, userId, answers)
 
-        when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
+        when(mockFeatureFlags.submitOlderChildrenToCbs) `thenReturn` false
 
-        submissionService.canSubmit(request).futureValue mustEqual false
+        submissionService.canSubmit(request).futureValue `mustEqual` false
       }
 
       "must be false when the user's designatory details are not correct (name)" in {
@@ -199,9 +254,9 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
         val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
         val request = DataRequest(identifierRequest, userId, answers)
 
-        when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
+        when(mockFeatureFlags.submitOlderChildrenToCbs) `thenReturn` false
 
-        submissionService.canSubmit(request).futureValue mustEqual false
+        submissionService.canSubmit(request).futureValue `mustEqual` false
       }
 
       "must be false when the user's designatory details are not correct (residential address)" in {
@@ -211,9 +266,9 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
         val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
         val request = DataRequest(identifierRequest, userId, answers)
 
-        when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
+        when(mockFeatureFlags.submitOlderChildrenToCbs) `thenReturn` false
 
-        submissionService.canSubmit(request).futureValue mustEqual false
+        submissionService.canSubmit(request).futureValue `mustEqual` false
       }
 
       "must be false when the user's designatory details are not correct (correspondence address)" in {
@@ -223,9 +278,9 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
         val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
         val request = DataRequest(identifierRequest, userId, answers)
 
-        when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
+        when(mockFeatureFlags.submitOlderChildrenToCbs) `thenReturn` false
 
-        submissionService.canSubmit(request).futureValue mustEqual false
+        submissionService.canSubmit(request).futureValue `mustEqual` false
       }
 
       "must be false when the user's partner is claiming Child Benefit but no NINO is provided for them" in {
@@ -233,26 +288,52 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
         val claiming = Gen.oneOf(GettingPayments, NotGettingPayments, WaitingToHear).sample.value
         val answers =
           basicUserAnswers
-            .set(RelationshipStatusPage, RelationshipStatus.Married).success.value
-            .set(PartnerNamePage, adultName).success.value
-            .set(PartnerNinoKnownPage, false).success.value
-            .set(PartnerDateOfBirthPage, today).success.value
-            .set(PartnerNationalityPage(Index(0)), nationality).success.value
-            .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-            .set(PartnerIsHmfOrCivilServantPage, false).success.value
-            .set(PartnerWorkedAbroadPage, false).success.value
-            .set(PartnerReceivedBenefitsAbroadPage, false).success.value
-            .set(PartnerClaimingChildBenefitPage, claiming).success.value
-            .set(PartnerEldestChildNamePage, childName).success.value
-            .set(PartnerEldestChildDateOfBirthPage, LocalDate.now).success.value
-            .set(WantToBePaidPage, false).success.value
+            .set(RelationshipStatusPage, RelationshipStatus.Married)
+            .success
+            .value
+            .set(PartnerNamePage, adultName)
+            .success
+            .value
+            .set(PartnerNinoKnownPage, false)
+            .success
+            .value
+            .set(PartnerDateOfBirthPage, today)
+            .success
+            .value
+            .set(PartnerNationalityPage(Index(0)), nationality)
+            .success
+            .value
+            .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses)
+            .success
+            .value
+            .set(PartnerIsHmfOrCivilServantPage, false)
+            .success
+            .value
+            .set(PartnerWorkedAbroadPage, false)
+            .success
+            .value
+            .set(PartnerReceivedBenefitsAbroadPage, false)
+            .success
+            .value
+            .set(PartnerClaimingChildBenefitPage, claiming)
+            .success
+            .value
+            .set(PartnerEldestChildNamePage, childName)
+            .success
+            .value
+            .set(PartnerEldestChildDateOfBirthPage, LocalDate.now)
+            .success
+            .value
+            .set(WantToBePaidPage, false)
+            .success
+            .value
 
         val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
         val request = DataRequest(identifierRequest, userId, answers)
 
-        when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
+        when(mockFeatureFlags.submitOlderChildrenToCbs) `thenReturn` false
 
-        submissionService.canSubmit(request).futureValue mustEqual false
+        submissionService.canSubmit(request).futureValue `mustEqual` false
       }
 
       "must be true when the submission limiter allows submission, they have not changed designatory details or added information, no children are over 6 or need to send documents" - {
@@ -262,9 +343,9 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
           val request = DataRequest(identifierRequest, userId, basicUserAnswers)
 
-          when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
+          when(mockFeatureFlags.submitOlderChildrenToCbs) `thenReturn` false
 
-          submissionService.canSubmit(request).futureValue mustEqual true
+          submissionService.canSubmit(request).futureValue `mustEqual` true
         }
 
         "and the user has a partner" - {
@@ -273,24 +354,46 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
 
             val answers =
               basicUserAnswers
-                .set(RelationshipStatusPage, RelationshipStatus.Married).success.value
-                .set(PartnerNamePage, adultName).success.value
-                .set(PartnerNinoKnownPage, false).success.value
-                .set(PartnerDateOfBirthPage, today).success.value
-                .set(PartnerNationalityPage(Index(0)), nationality).success.value
-                .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-                .set(PartnerIsHmfOrCivilServantPage, false).success.value
-                .set(PartnerWorkedAbroadPage, false).success.value
-                .set(PartnerReceivedBenefitsAbroadPage, false).success.value
-                .set(PartnerClaimingChildBenefitPage, NotClaiming).success.value
-                .set(WantToBePaidPage, false).success.value
+                .set(RelationshipStatusPage, RelationshipStatus.Married)
+                .success
+                .value
+                .set(PartnerNamePage, adultName)
+                .success
+                .value
+                .set(PartnerNinoKnownPage, false)
+                .success
+                .value
+                .set(PartnerDateOfBirthPage, today)
+                .success
+                .value
+                .set(PartnerNationalityPage(Index(0)), nationality)
+                .success
+                .value
+                .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses)
+                .success
+                .value
+                .set(PartnerIsHmfOrCivilServantPage, false)
+                .success
+                .value
+                .set(PartnerWorkedAbroadPage, false)
+                .success
+                .value
+                .set(PartnerReceivedBenefitsAbroadPage, false)
+                .success
+                .value
+                .set(PartnerClaimingChildBenefitPage, NotClaiming)
+                .success
+                .value
+                .set(WantToBePaidPage, false)
+                .success
+                .value
 
             val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
             val request = DataRequest(identifierRequest, userId, answers)
 
-            when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
+            when(mockFeatureFlags.submitOlderChildrenToCbs) `thenReturn` false
 
-            submissionService.canSubmit(request).futureValue mustEqual true
+            submissionService.canSubmit(request).futureValue `mustEqual` true
           }
 
           "who is claiming Child Benefit, and the user has supplied their NINO" in {
@@ -298,27 +401,55 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
             val claiming = Gen.oneOf(GettingPayments, NotGettingPayments, WaitingToHear).sample.value
             val answers =
               basicUserAnswers
-                .set(RelationshipStatusPage, RelationshipStatus.Married).success.value
-                .set(PartnerNamePage, adultName).success.value
-                .set(PartnerNinoKnownPage, true).success.value
-                .set(PartnerNinoPage, nino).success.value
-                .set(PartnerDateOfBirthPage, today).success.value
-                .set(PartnerNationalityPage(Index(0)), nationality).success.value
-                .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-                .set(PartnerIsHmfOrCivilServantPage, false).success.value
-                .set(PartnerWorkedAbroadPage, false).success.value
-                .set(PartnerReceivedBenefitsAbroadPage, false).success.value
-                .set(PartnerClaimingChildBenefitPage, claiming).success.value
-                .set(PartnerEldestChildNamePage, childName).success.value
-                .set(PartnerEldestChildDateOfBirthPage, LocalDate.now).success.value
-                .set(WantToBePaidPage, false).success.value
+                .set(RelationshipStatusPage, RelationshipStatus.Married)
+                .success
+                .value
+                .set(PartnerNamePage, adultName)
+                .success
+                .value
+                .set(PartnerNinoKnownPage, true)
+                .success
+                .value
+                .set(PartnerNinoPage, nino)
+                .success
+                .value
+                .set(PartnerDateOfBirthPage, today)
+                .success
+                .value
+                .set(PartnerNationalityPage(Index(0)), nationality)
+                .success
+                .value
+                .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses)
+                .success
+                .value
+                .set(PartnerIsHmfOrCivilServantPage, false)
+                .success
+                .value
+                .set(PartnerWorkedAbroadPage, false)
+                .success
+                .value
+                .set(PartnerReceivedBenefitsAbroadPage, false)
+                .success
+                .value
+                .set(PartnerClaimingChildBenefitPage, claiming)
+                .success
+                .value
+                .set(PartnerEldestChildNamePage, childName)
+                .success
+                .value
+                .set(PartnerEldestChildDateOfBirthPage, LocalDate.now)
+                .success
+                .value
+                .set(WantToBePaidPage, false)
+                .success
+                .value
 
             val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
             val request = DataRequest(identifierRequest, userId, answers)
 
-            when(mockFeatureFlags.submitOlderChildrenToCbs) thenReturn false
+            when(mockFeatureFlags.submitOlderChildrenToCbs) `thenReturn` false
 
-            submissionService.canSubmit(request).futureValue mustEqual true
+            submissionService.canSubmit(request).futureValue `mustEqual` true
           }
         }
       }
@@ -336,11 +467,14 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
           val request = DataRequest(identifierRequest, userId, basicUserAnswers)
 
-          when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
-          when(mockSupplementaryDataService.submit(any(), any(), any(), any())(any())) thenReturn Future.successful(Done)
-          when(mockImmigrationStatusService.settledStatusStartDate(any(), any(), any())(any())) thenReturn Future.successful(None)
-          when(mockConnector.recordRecentClaim(any())(any())) thenReturn Future.successful(Done)
-          when(mockUserDataService.clear()(any())) thenReturn Future.successful(Done)
+          when(mockConnector.submitClaim(any(), any())(any())) `thenReturn` Future.successful(Done)
+          when(mockSupplementaryDataService.submit(any(), any(), any(), any())(any())) `thenReturn` Future.successful(
+            Done
+          )
+          when(mockImmigrationStatusService.settledStatusStartDate(any(), any(), any())(any())) `thenReturn` Future
+            .successful(None)
+          when(mockConnector.recordRecentClaim(any())(any())) `thenReturn` Future.successful(Done)
+          when(mockUserDataService.clear()(any())) `thenReturn` Future.successful(Done)
 
           submissionService.submit(request).futureValue
 
@@ -356,11 +490,14 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
           val request = DataRequest(identifierRequest, userId, basicUserAnswers)
 
-          when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
-          when(mockSupplementaryDataService.submit(any(), any(), any(), any())(any())) thenReturn Future.successful(Done)
-          when(mockImmigrationStatusService.settledStatusStartDate(any(), any(), any())(any())) thenReturn Future.successful(None)
-          when(mockConnector.recordRecentClaim(any())(any())) thenReturn Future.failed(new RuntimeException("foo"))
-          when(mockUserDataService.clear()(any())) thenReturn Future.successful(Done)
+          when(mockConnector.submitClaim(any(), any())(any())) `thenReturn` Future.successful(Done)
+          when(mockSupplementaryDataService.submit(any(), any(), any(), any())(any())) `thenReturn` Future.successful(
+            Done
+          )
+          when(mockImmigrationStatusService.settledStatusStartDate(any(), any(), any())(any())) `thenReturn` Future
+            .successful(None)
+          when(mockConnector.recordRecentClaim(any())(any())) `thenReturn` Future.failed(new RuntimeException("foo"))
+          when(mockUserDataService.clear()(any())) `thenReturn` Future.successful(Done)
 
           submissionService.submit(request).futureValue
 
@@ -376,11 +513,14 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
           val request = DataRequest(identifierRequest, userId, basicUserAnswers)
 
-          when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
-          when(mockSupplementaryDataService.submit(any(), any(), any(), any())(any())) thenReturn Future.failed(new RuntimeException())
-          when(mockImmigrationStatusService.settledStatusStartDate(any(), any(), any())(any())) thenReturn Future.successful(None)
-          when(mockConnector.recordRecentClaim(any())(any())) thenReturn Future.successful(Done)
-          when(mockUserDataService.clear()(any())) thenReturn Future.successful(Done)
+          when(mockConnector.submitClaim(any(), any())(any())) `thenReturn` Future.successful(Done)
+          when(mockSupplementaryDataService.submit(any(), any(), any(), any())(any())) `thenReturn` Future.failed(
+            new RuntimeException()
+          )
+          when(mockImmigrationStatusService.settledStatusStartDate(any(), any(), any())(any())) `thenReturn` Future
+            .successful(None)
+          when(mockConnector.recordRecentClaim(any())(any())) `thenReturn` Future.successful(Done)
+          when(mockUserDataService.clear()(any())) `thenReturn` Future.successful(Done)
 
           submissionService.submit(request).futureValue
 
@@ -396,11 +536,14 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
           val request = DataRequest(identifierRequest, userId, basicUserAnswers)
 
-          when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
-          when(mockSupplementaryDataService.submit(any(), any(), any(), any())(any())) thenReturn Future.failed(new RuntimeException())
-          when(mockImmigrationStatusService.settledStatusStartDate(any(), any(), any())(any())) thenReturn Future.successful(None)
-          when(mockConnector.recordRecentClaim(any())(any())) thenReturn Future.successful(Done)
-          when(mockUserDataService.clear()(any())) thenReturn Future.failed(new RuntimeException("foo"))
+          when(mockConnector.submitClaim(any(), any())(any())) `thenReturn` Future.successful(Done)
+          when(mockSupplementaryDataService.submit(any(), any(), any(), any())(any())) `thenReturn` Future.failed(
+            new RuntimeException()
+          )
+          when(mockImmigrationStatusService.settledStatusStartDate(any(), any(), any())(any())) `thenReturn` Future
+            .successful(None)
+          when(mockConnector.recordRecentClaim(any())(any())) `thenReturn` Future.successful(Done)
+          when(mockUserDataService.clear()(any())) `thenReturn` Future.failed(new RuntimeException("foo"))
 
           submissionService.submit(request).futureValue
 
@@ -421,10 +564,10 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
           val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino.nino)
           val request = DataRequest(identifierRequest, userId, answers)
 
-          when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
+          when(mockConnector.submitClaim(any(), any())(any())) `thenReturn` Future.successful(Done)
 
           val result = submissionService.submit(request).failed.futureValue
-          result.getMessage mustEqual CannotBuildJourneyModelException.getMessage
+          result.getMessage `mustEqual` CannotBuildJourneyModelException.getMessage
         }
       }
     }
@@ -437,10 +580,10 @@ class ClaimSubmissionServiceSpec extends SpecBase with MockitoSugar with BeforeA
         val identifierRequest = UnauthenticatedIdentifierRequest(baseRequest, userId)
         val request = DataRequest(identifierRequest, userId, answers)
 
-        when(mockConnector.submitClaim(any(), any())(any())) thenReturn Future.successful(Done)
+        when(mockConnector.submitClaim(any(), any())(any())) `thenReturn` Future.successful(Done)
 
         val result = submissionService.submit(request).failed.futureValue
-        result.getMessage mustEqual NotAuthenticatedException.getMessage
+        result.getMessage `mustEqual` NotAuthenticatedException.getMessage
       }
     }
   }

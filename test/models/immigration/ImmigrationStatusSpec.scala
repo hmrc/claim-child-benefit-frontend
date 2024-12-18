@@ -25,49 +25,52 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 import java.time.LocalDate
 
-class ImmigrationStatusSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with Generators with OptionValues {
-
+class ImmigrationStatusSpec
+    extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with Generators with OptionValues {
 
   ".settledStatusStartDate" - {
 
     "must be the start date when product type is EUS, immigration status is ILR and there is no end date" in {
 
-      forAll(datesBetween(LocalDate.now.minusYears(2), LocalDate.now)) {
-        date =>
-          ImmigrationStatus(
-            statusStartDate = date,
-            statusEndDate = None,
-            productType = eus,
-            immigrationStatus = ilr,
-            noRecourseToPublicFunds = false
-          ).settledStatusStartDate.value mustEqual date
+      forAll(datesBetween(LocalDate.now.minusYears(2), LocalDate.now)) { date =>
+        ImmigrationStatus(
+          statusStartDate = date,
+          statusEndDate = None,
+          productType = eus,
+          immigrationStatus = ilr,
+          noRecourseToPublicFunds = false
+        ).settledStatusStartDate.value `mustEqual` date
       }
     }
     "must be the start date when product type is EUS, immigration status is ILR and the end date is today or in the future" in {
 
-      forAll(datesBetween(LocalDate.now.minusYears(2), LocalDate.now), datesBetween(LocalDate.now, LocalDate.now.plusYears(1))) {
-        case (startDate, endDate) =>
-          ImmigrationStatus(
-            statusStartDate = startDate,
-            statusEndDate = Some(endDate),
-            productType = eus,
-            immigrationStatus = ilr,
-            noRecourseToPublicFunds = false
-          ).settledStatusStartDate.value mustEqual startDate
+      forAll(
+        datesBetween(LocalDate.now.minusYears(2), LocalDate.now),
+        datesBetween(LocalDate.now, LocalDate.now.plusYears(1))
+      ) { case (startDate, endDate) =>
+        ImmigrationStatus(
+          statusStartDate = startDate,
+          statusEndDate = Some(endDate),
+          productType = eus,
+          immigrationStatus = ilr,
+          noRecourseToPublicFunds = false
+        ).settledStatusStartDate.value `mustEqual` startDate
       }
     }
 
     "must be None when product type is EUS, immigration status is ILR and there is an end date in the past" in {
 
-      forAll(datesBetween(LocalDate.now.minusYears(2), LocalDate.now), datesBetween(LocalDate.now.minusYears(1), LocalDate.now.minusDays(1))) {
-        case (startDate, endDate) =>
-          ImmigrationStatus(
-            statusStartDate = startDate,
-            statusEndDate = Some(endDate),
-            productType = eus,
-            immigrationStatus = ilr,
-            noRecourseToPublicFunds = false
-          ).settledStatusStartDate must not be defined
+      forAll(
+        datesBetween(LocalDate.now.minusYears(2), LocalDate.now),
+        datesBetween(LocalDate.now.minusYears(1), LocalDate.now.minusDays(1))
+      ) { case (startDate, endDate) =>
+        ImmigrationStatus(
+          statusStartDate = startDate,
+          statusEndDate = Some(endDate),
+          productType = eus,
+          immigrationStatus = ilr,
+          noRecourseToPublicFunds = false
+        ).settledStatusStartDate `must` not `be` defined
       }
     }
 
@@ -79,7 +82,7 @@ class ImmigrationStatusSpec extends AnyFreeSpec with Matchers with ScalaCheckPro
         productType = eus,
         immigrationStatus = "foo",
         noRecourseToPublicFunds = false
-      ).settledStatusStartDate must not be defined
+      ).settledStatusStartDate `must` not `be` defined
     }
 
     "must be None when product type is not EUS" in {
@@ -90,7 +93,7 @@ class ImmigrationStatusSpec extends AnyFreeSpec with Matchers with ScalaCheckPro
         productType = "foo",
         immigrationStatus = ilr,
         noRecourseToPublicFunds = false
-      ).settledStatusStartDate must not be defined
+      ).settledStatusStartDate `must` not `be` defined
     }
   }
 }

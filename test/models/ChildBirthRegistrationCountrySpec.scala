@@ -24,7 +24,8 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.libs.json.{JsError, JsString, Json}
 
-class ChildBirthRegistrationCountrySpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
+class ChildBirthRegistrationCountrySpec
+    extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
 
   "ChildBirthRegistrationCountry" - {
 
@@ -32,10 +33,11 @@ class ChildBirthRegistrationCountrySpec extends AnyFreeSpec with Matchers with S
 
       val gen = Gen.oneOf(ChildBirthRegistrationCountry.values.toSeq)
 
-      forAll(gen) {
-        childBirthRegistrationCountry =>
-
-          JsString(childBirthRegistrationCountry.toString).validate[ChildBirthRegistrationCountry].asOpt.value mustEqual childBirthRegistrationCountry
+      forAll(gen) { childBirthRegistrationCountry =>
+        JsString(childBirthRegistrationCountry.toString)
+          .validate[ChildBirthRegistrationCountry]
+          .asOpt
+          .value `mustEqual` childBirthRegistrationCountry
       }
     }
 
@@ -43,10 +45,8 @@ class ChildBirthRegistrationCountrySpec extends AnyFreeSpec with Matchers with S
 
       val gen = arbitrary[String] suchThat (!ChildBirthRegistrationCountry.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-
-          JsString(invalidValue).validate[ChildBirthRegistrationCountry] mustEqual JsError("error.invalid")
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[ChildBirthRegistrationCountry] `mustEqual` JsError("error.invalid")
       }
     }
 
@@ -54,10 +54,8 @@ class ChildBirthRegistrationCountrySpec extends AnyFreeSpec with Matchers with S
 
       val gen = Gen.oneOf(ChildBirthRegistrationCountry.values.toSeq)
 
-      forAll(gen) {
-        childBirthRegistrationCountry =>
-
-          Json.toJson(childBirthRegistrationCountry) mustEqual JsString(childBirthRegistrationCountry.toString)
+      forAll(gen) { childBirthRegistrationCountry =>
+        Json.toJson(childBirthRegistrationCountry) `mustEqual` JsString(childBirthRegistrationCountry.toString)
       }
     }
   }

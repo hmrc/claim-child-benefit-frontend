@@ -27,5 +27,5 @@ object TaxChargePayer extends Enumerable.Implicits {
   val values: Seq[TaxChargePayer] = Seq(Applicant, Partner, ApplicantOrPartner)
 
   implicit val enumerable: Enumerable[TaxChargePayer] =
-    Enumerable(values.map(v => v.toString -> v): _*)
+    Enumerable(values.map(v => v.toString -> v)*)
 }

@@ -39,28 +39,40 @@ class PreviousClaimantSpec extends AnyFreeSpec with Matchers with TryValues with
 
         val answers =
           UserAnswers("id")
-            .set(AnyoneClaimedForChildBeforePage(index), true).success.value
-            .set(PreviousClaimantNameKnownPage(index), false).success.value
+            .set(AnyoneClaimedForChildBeforePage(index), true)
+            .success
+            .value
+            .set(PreviousClaimantNameKnownPage(index), false)
+            .success
+            .value
 
         val (errors, data) = PreviousClaimant.build(answers, index).pad
 
-        data.value.value mustEqual PreviousClaimant(None, None)
-        errors must not be defined
+        data.value.value `mustEqual` PreviousClaimant(None, None)
+        errors `must` `not` `be` defined
       }
 
       "must return a Previous Claimant when name is known but address is not" in {
 
         val answers =
           UserAnswers("id")
-            .set(AnyoneClaimedForChildBeforePage(index), true).success.value
-            .set(PreviousClaimantNameKnownPage(index), true).success.value
-            .set(PreviousClaimantNamePage(index), adultName).success.value
-            .set(PreviousClaimantAddressKnownPage(index), false).success.value
+            .set(AnyoneClaimedForChildBeforePage(index), true)
+            .success
+            .value
+            .set(PreviousClaimantNameKnownPage(index), true)
+            .success
+            .value
+            .set(PreviousClaimantNamePage(index), adultName)
+            .success
+            .value
+            .set(PreviousClaimantAddressKnownPage(index), false)
+            .success
+            .value
 
         val (errors, data) = PreviousClaimant.build(answers, index).pad
 
-        data.value.value mustEqual PreviousClaimant(Some(adultName), None)
-        errors must not be defined
+        data.value.value `mustEqual` PreviousClaimant(Some(adultName), None)
+        errors `must` not be defined
       }
 
       "must return a Previous Claimant when all details are known" - {
@@ -69,34 +81,58 @@ class PreviousClaimantSpec extends AnyFreeSpec with Matchers with TryValues with
 
           val answers =
             UserAnswers("id")
-              .set(AnyoneClaimedForChildBeforePage(index), true).success.value
-              .set(PreviousClaimantNameKnownPage(index), true).success.value
-              .set(PreviousClaimantNamePage(index), adultName).success.value
-              .set(PreviousClaimantAddressKnownPage(index), true).success.value
-              .set(PreviousClaimantAddressInUkPage(index), true).success.value
-              .set(PreviousClaimantUkAddressPage(index), ukAddress).success.value
+              .set(AnyoneClaimedForChildBeforePage(index), true)
+              .success
+              .value
+              .set(PreviousClaimantNameKnownPage(index), true)
+              .success
+              .value
+              .set(PreviousClaimantNamePage(index), adultName)
+              .success
+              .value
+              .set(PreviousClaimantAddressKnownPage(index), true)
+              .success
+              .value
+              .set(PreviousClaimantAddressInUkPage(index), true)
+              .success
+              .value
+              .set(PreviousClaimantUkAddressPage(index), ukAddress)
+              .success
+              .value
 
           val (errors, data) = PreviousClaimant.build(answers, index).pad
 
-          data.value.value mustEqual PreviousClaimant(Some(adultName), Some(ukAddress))
-          errors must not be defined
+          data.value.value `mustEqual` PreviousClaimant(Some(adultName), Some(ukAddress))
+          errors `must` not be defined
         }
 
         "and the address is not in the UK" in {
 
           val answers =
             UserAnswers("id")
-              .set(AnyoneClaimedForChildBeforePage(index), true).success.value
-              .set(PreviousClaimantNameKnownPage(index), true).success.value
-              .set(PreviousClaimantNamePage(index), adultName).success.value
-              .set(PreviousClaimantAddressKnownPage(index), true).success.value
-              .set(PreviousClaimantAddressInUkPage(index), false).success.value
-              .set(PreviousClaimantInternationalAddressPage(index), internationalAddress).success.value
+              .set(AnyoneClaimedForChildBeforePage(index), true)
+              .success
+              .value
+              .set(PreviousClaimantNameKnownPage(index), true)
+              .success
+              .value
+              .set(PreviousClaimantNamePage(index), adultName)
+              .success
+              .value
+              .set(PreviousClaimantAddressKnownPage(index), true)
+              .success
+              .value
+              .set(PreviousClaimantAddressInUkPage(index), false)
+              .success
+              .value
+              .set(PreviousClaimantInternationalAddressPage(index), internationalAddress)
+              .success
+              .value
 
           val (errors, data) = PreviousClaimant.build(answers, index).pad
 
-          data.value.value mustEqual PreviousClaimant(Some(adultName), Some(internationalAddress))
-          errors must not be defined
+          data.value.value `mustEqual` PreviousClaimant(Some(adultName), Some(internationalAddress))
+          errors `must` not `be` defined
         }
       }
 
@@ -104,12 +140,16 @@ class PreviousClaimantSpec extends AnyFreeSpec with Matchers with TryValues with
 
         val answers =
           UserAnswers("id")
-            .set(AnyoneClaimedForChildBeforePage(index), true).success.value
-            .set(PreviousClaimantNameKnownPage(index), true).success.value
+            .set(AnyoneClaimedForChildBeforePage(index), true)
+            .success
+            .value
+            .set(PreviousClaimantNameKnownPage(index), true)
+            .success
+            .value
 
         val (errors, data) = PreviousClaimant.build(answers, index).pad
 
-        data must not be defined
+        data `must` not `be` defined
         errors.value.toChain.toList must contain theSameElementsAs Seq(
           PreviousClaimantNamePage(index),
           PreviousClaimantAddressKnownPage(index)
@@ -120,35 +160,55 @@ class PreviousClaimantSpec extends AnyFreeSpec with Matchers with TryValues with
 
         val answers =
           UserAnswers("id")
-            .set(AnyoneClaimedForChildBeforePage(index), true).success.value
-            .set(PreviousClaimantNameKnownPage(index), true).success.value
-            .set(PreviousClaimantNamePage(index), adultName).success.value
-            .set(PreviousClaimantAddressKnownPage(index), true).success.value
-            .set(PreviousClaimantAddressInUkPage(index), true).success.value
+            .set(AnyoneClaimedForChildBeforePage(index), true)
+            .success
+            .value
+            .set(PreviousClaimantNameKnownPage(index), true)
+            .success
+            .value
+            .set(PreviousClaimantNamePage(index), adultName)
+            .success
+            .value
+            .set(PreviousClaimantAddressKnownPage(index), true)
+            .success
+            .value
+            .set(PreviousClaimantAddressInUkPage(index), true)
+            .success
+            .value
 
         val (errors, data) = PreviousClaimant.build(answers, index).pad
 
-        data must not be defined
-        errors.value.toChain.toList must contain only PreviousClaimantUkAddressPage(index)
+        data `must` not `be` defined
+        errors.value.toChain.toList `must` contain `only` PreviousClaimantUkAddressPage(index)
       }
 
       "must return errors when the user says the address is not in the UK, but no address is provided" in {
 
         val answers =
           UserAnswers("id")
-            .set(AnyoneClaimedForChildBeforePage(index), true).success.value
-            .set(PreviousClaimantNameKnownPage(index), true).success.value
-            .set(PreviousClaimantNamePage(index), adultName).success.value
-            .set(PreviousClaimantAddressKnownPage(index), true).success.value
-            .set(PreviousClaimantAddressInUkPage(index), false).success.value
+            .set(AnyoneClaimedForChildBeforePage(index), true)
+            .success
+            .value
+            .set(PreviousClaimantNameKnownPage(index), true)
+            .success
+            .value
+            .set(PreviousClaimantNamePage(index), adultName)
+            .success
+            .value
+            .set(PreviousClaimantAddressKnownPage(index), true)
+            .success
+            .value
+            .set(PreviousClaimantAddressInUkPage(index), false)
+            .success
+            .value
 
         val (errors, data) = PreviousClaimant.build(answers, index).pad
 
-        data must not be defined
-        errors.value.toChain.toList must contain only PreviousClaimantInternationalAddressPage(index)
+        data `must` not `be` defined
+        errors.value.toChain.toList `must` contain `only` PreviousClaimantInternationalAddressPage(index)
       }
     }
-    
+
     "when no one has claimed for the child before" - {
 
       "must return None" in {
@@ -157,8 +217,8 @@ class PreviousClaimantSpec extends AnyFreeSpec with Matchers with TryValues with
 
         val (errors, data) = PreviousClaimant.build(answers, index).pad
 
-        data.value must not be defined
-        errors must not be defined
+        data.value `must` not `be` defined
+        errors `must` not `be` defined
       }
     }
   }

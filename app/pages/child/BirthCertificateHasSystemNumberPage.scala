@@ -21,6 +21,7 @@ import models.{Index, UserAnswers}
 import pages.{Page, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+import pages.RecoveryOps
 
 import scala.util.Try
 

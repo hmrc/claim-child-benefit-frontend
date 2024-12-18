@@ -79,7 +79,6 @@ class ApplicantCurrentUkAddressFormProviderSpec extends StringFieldBehaviours {
       FormError(fieldName, invalidKey, Seq(Validation.addressInputPattern.toString))
     )
 
-
     behave like fieldWithMaxLength(
       form,
       fieldName,
@@ -108,7 +107,6 @@ class ApplicantCurrentUkAddressFormProviderSpec extends StringFieldBehaviours {
       unsafeInputsWithMaxLength(maxLength),
       FormError(fieldName, invalidKey, Seq(Validation.addressInputPattern.toString))
     )
-
 
     behave like fieldWithMaxLength(
       form,

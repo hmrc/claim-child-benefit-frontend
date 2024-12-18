@@ -56,6 +56,6 @@ class CorrespondenceInternationalAddressFormProvider @Inject() extends Mappings 
       "country" -> text("correspondenceInternationalAddress.error.country.required")
         .verifying("correspondenceInternationalAddress.error.country.required", value => Country.internationalCountries.exists(_.code == value))
         .transform[Country](value => Country.internationalCountries.find(_.code == value).get, _.code)
-    )(InternationalAddress.apply)(InternationalAddress.unapply)
+    )(InternationalAddress.apply)(o => Some(Tuple.fromProductTyped(o)))
   )
 }

@@ -23,7 +23,7 @@
         newTabLink: HmrcNewTabLinkHelper
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@()(implicit request: Request[?], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("signedOutAfterSubmission.title")), showBackLink = false, timeout = false) {
 

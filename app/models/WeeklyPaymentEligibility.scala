@@ -37,6 +37,6 @@ object WeeklyPaymentEligibility {
     (
       RelationshipStatusPage.path.read[RelationshipStatus] ~
         ApplicantOrPartnerBenefitsPage.path.readNullable[Set[Benefits]]
-      )(WeeklyPaymentEligibility.apply _)
+      )(WeeklyPaymentEligibility.apply)
   }
 }

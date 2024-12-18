@@ -28,6 +28,6 @@ trait ErrorMessageAwareness {
     field.error
       .map {
         err =>
-          errorMessageWithDefaultStringsTranslated(content = Text(messages(err.message, err.args: _*)))
+          errorMessageWithDefaultStringsTranslated(content = Text(messages(err.message, err.args*)))
       }
 }

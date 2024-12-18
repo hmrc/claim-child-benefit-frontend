@@ -44,19 +44,32 @@ class DateChildStartedLivingWithApplicantFormProviderSpec extends DateBehaviours
     behave like dateField(form, "value", validData)
 
     behave like dateFieldWithMax(
-      form      = form,
-      key       = "value",
-      max       = maxDate,
-      formError = FormError("value", "dateChildStartedLivingWithApplicant.error.afterMaximum", Seq(maxDate.format(dateFormatter), childName.firstName))
+      form = form,
+      key = "value",
+      max = maxDate,
+      formError = FormError(
+        "value",
+        "dateChildStartedLivingWithApplicant.error.afterMaximum",
+        Seq(maxDate.format(dateFormatter), childName.firstName)
+      )
     )
 
     behave like dateFieldWithMin(
-      form      = form,
-      key       = "value",
-      min       = minDate,
-      formError = FormError("value", "dateChildStartedLivingWithApplicant.error.beforeMinimum", Seq(minDate.format(dateFormatter), childName.firstName))
+      form = form,
+      key = "value",
+      min = minDate,
+      formError = FormError(
+        "value",
+        "dateChildStartedLivingWithApplicant.error.beforeMinimum",
+        Seq(minDate.format(dateFormatter), childName.firstName)
+      )
     )
 
-    behave like mandatoryDateField(form, "value", "dateChildStartedLivingWithApplicant.error.required.all", Seq(childName.firstName))
+    behave like mandatoryDateField(
+      form,
+      "value",
+      "dateChildStartedLivingWithApplicant.error.required.all",
+      Seq(childName.firstName)
+    )
   }
 }

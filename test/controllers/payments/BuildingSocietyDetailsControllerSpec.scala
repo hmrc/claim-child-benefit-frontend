@@ -42,7 +42,8 @@ class BuildingSocietyDetailsControllerSpec extends SpecBase with MockitoSugar {
   lazy val bankAccountDetailsRoute = routes.BuildingSocietyDetailsController.onPageLoad(waypoints).url
 
   private val baseAnswers = emptyUserAnswers.set(BankAccountHolderPage, BankAccountHolder.Applicant).success.value
-  private val validAnswer = BuildingSocietyDetails("first", "last", BuildingSociety.allBuildingSocieties.head, "roll number")
+  private val validAnswer =
+    BuildingSocietyDetails("first", "last", BuildingSociety.allBuildingSocieties.head, "roll number")
   private val userAnswers = baseAnswers.set(BuildingSocietyDetailsPage, validAnswer).success.value
 
   "BuildingSocietyDetails Controller" - {
@@ -58,8 +59,8 @@ class BuildingSocietyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, None)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints, None)(request, messages(application)).toString
       }
     }
 
@@ -74,15 +75,18 @@ class BuildingSocietyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints, None)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form.fill(validAnswer), waypoints, None)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
     "must save the answer and redirect to the next page when valid data is submitted" in {
 
       val mockUserDataService = mock[UserDataService]
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -92,13 +96,20 @@ class BuildingSocietyDetailsControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("buildingSociety", validAnswer.buildingSociety.id), ("rollNumber", "roll number"))
+            .withFormUrlEncodedBody(
+              ("firstName", "first"),
+              ("lastName", "last"),
+              ("buildingSociety", validAnswer.buildingSociety.id),
+              ("rollNumber", "roll number")
+            )
 
         val result = route(application, request).value
         val expectedAnswers = baseAnswers.set(BuildingSocietyDetailsPage, validAnswer).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual BuildingSocietyDetailsPage.navigate(waypoints, baseAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` BuildingSocietyDetailsPage
+          .navigate(waypoints, baseAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -118,8 +129,8 @@ class BuildingSocietyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, None)(request, messages(application)).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints, None)(request, messages(application)).toString
       }
     }
 
@@ -132,8 +143,8 @@ class BuildingSocietyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -144,12 +155,17 @@ class BuildingSocietyDetailsControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+            .withFormUrlEncodedBody(
+              ("firstName", "first"),
+              ("lastName", "last"),
+              ("accountNumber", "00123456"),
+              ("sortCode", "123456")
+            )
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

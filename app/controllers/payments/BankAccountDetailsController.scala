@@ -97,7 +97,7 @@ class BankAccountDetailsController @Inject()(
       }
   }
 
-  private def saveAndRedirect(details: BankAccountDetails, request: DataRequest[_], waypoints: Waypoints)(implicit hc: HeaderCarrier): Future[Result] = {
+  private def saveAndRedirect(details: BankAccountDetails, request: DataRequest[?], waypoints: Waypoints)(implicit hc: HeaderCarrier): Future[Result] = {
     val bankAccountInsightsRequest = BankAccountInsightsRequest.from(details)
 
     for {

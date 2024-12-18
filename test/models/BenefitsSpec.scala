@@ -24,7 +24,8 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.libs.json.{JsError, JsString, Json}
 
-class BenefitsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues with ModelGenerators {
+class BenefitsSpec
+    extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues with ModelGenerators {
 
   "ApplicantBenefits" - {
 
@@ -32,10 +33,8 @@ class BenefitsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChec
 
       val gen = arbitrary[Benefits]
 
-      forAll(gen) {
-        applicantBenefits =>
-
-          JsString(applicantBenefits.toString).validate[Benefits].asOpt.value mustEqual applicantBenefits
+      forAll(gen) { applicantBenefits =>
+        JsString(applicantBenefits.toString).validate[Benefits].asOpt.value `mustEqual` applicantBenefits
       }
     }
 
@@ -43,10 +42,8 @@ class BenefitsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChec
 
       val gen = arbitrary[String] suchThat (!Benefits.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-
-          JsString(invalidValue).validate[Benefits] mustEqual JsError("error.invalid")
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[Benefits] `mustEqual` JsError("error.invalid")
       }
     }
 
@@ -54,10 +51,8 @@ class BenefitsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChec
 
       val gen = arbitrary[Benefits]
 
-      forAll(gen) {
-        applicantBenefits =>
-
-          Json.toJson(applicantBenefits) mustEqual JsString(applicantBenefits.toString)
+      forAll(gen) { applicantBenefits =>
+        Json.toJson(applicantBenefits) `mustEqual` JsString(applicantBenefits.toString)
       }
     }
   }

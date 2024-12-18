@@ -40,7 +40,7 @@ object RecentClaim {
       (__ \ "nino").read[String] and
       (__ \ "created").read[Instant] and
       (__ \ "taxChargeChoice").read[TaxChargeChoice].orElse(Reads.pure(TaxChargeChoice.NotRecorded))
-    )(RecentClaim.apply _)
+    )(RecentClaim.apply)
 
   implicit lazy val writes: OWrites[RecentClaim] = Json.writes
 

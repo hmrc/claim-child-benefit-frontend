@@ -43,33 +43,51 @@ class WantToBePaidSummarySpec extends AnyFreeSpec with Matchers with OptionValue
 
         val answers =
           UserAnswers("id")
-            .set(RelationshipStatusPage, relationship).success.value
-            .set(ApplicantIncomePage, BetweenThresholds).success.value
-            .set(WantToBePaidPage, true).success.value
+            .set(RelationshipStatusPage, relationship)
+            .success
+            .value
+            .set(ApplicantIncomePage, BetweenThresholds)
+            .success
+            .value
+            .set(WantToBePaidPage, true)
+            .success
+            .value
 
-        WantToBePaidSummary.row(answers, EmptyWaypoints, CheckPaymentDetailsPage) mustBe defined
+        WantToBePaidSummary.row(answers, EmptyWaypoints, CheckPaymentDetailsPage) `mustBe` defined
       }
 
       "must return Some when the applicant's income is above the upper threshold" in {
 
         val answers =
           UserAnswers("id")
-            .set(RelationshipStatusPage, relationship).success.value
-            .set(ApplicantIncomePage, AboveUpperThreshold).success.value
-            .set(WantToBePaidPage, true).success.value
+            .set(RelationshipStatusPage, relationship)
+            .success
+            .value
+            .set(ApplicantIncomePage, AboveUpperThreshold)
+            .success
+            .value
+            .set(WantToBePaidPage, true)
+            .success
+            .value
 
-        WantToBePaidSummary.row(answers, EmptyWaypoints, CheckPaymentDetailsPage) mustBe defined
+        WantToBePaidSummary.row(answers, EmptyWaypoints, CheckPaymentDetailsPage) `mustBe` defined
       }
 
       "must return None when the applicant's income is below the lower threshold" in {
 
         val answers =
           UserAnswers("id")
-            .set(RelationshipStatusPage, relationship).success.value
-            .set(ApplicantIncomePage, BelowLowerThreshold).success.value
-            .set(WantToBePaidPage, true).success.value
+            .set(RelationshipStatusPage, relationship)
+            .success
+            .value
+            .set(ApplicantIncomePage, BelowLowerThreshold)
+            .success
+            .value
+            .set(WantToBePaidPage, true)
+            .success
+            .value
 
-        WantToBePaidSummary.row(answers, EmptyWaypoints, CheckPaymentDetailsPage) must not be defined
+        WantToBePaidSummary.row(answers, EmptyWaypoints, CheckPaymentDetailsPage) `must` not `be` defined
       }
     }
 
@@ -81,12 +99,20 @@ class WantToBePaidSummarySpec extends AnyFreeSpec with Matchers with OptionValue
 
         val answers =
           UserAnswers("id")
-            .set(RelationshipStatusPage, relationship).success.value
-            .set(ApplicantIncomePage, BetweenThresholds).success.value
-            .set(PartnerIncomePage, BelowLowerThreshold).success.value
-            .set(WantToBePaidPage, true).success.value
+            .set(RelationshipStatusPage, relationship)
+            .success
+            .value
+            .set(ApplicantIncomePage, BetweenThresholds)
+            .success
+            .value
+            .set(PartnerIncomePage, BelowLowerThreshold)
+            .success
+            .value
+            .set(WantToBePaidPage, true)
+            .success
+            .value
 
-        WantToBePaidSummary.row(answers, EmptyWaypoints, CheckPaymentDetailsPage) mustBe defined
+        WantToBePaidSummary.row(answers, EmptyWaypoints, CheckPaymentDetailsPage) `mustBe` defined
       }
 
       "must return Some when the applicant's income is above the upper threshold" in {
@@ -95,24 +121,40 @@ class WantToBePaidSummarySpec extends AnyFreeSpec with Matchers with OptionValue
 
         val answers =
           UserAnswers("id")
-            .set(RelationshipStatusPage, relationship).success.value
-            .set(ApplicantIncomePage, AboveUpperThreshold).success.value
-            .set(PartnerIncomePage, BelowLowerThreshold).success.value
-            .set(WantToBePaidPage, true).success.value
+            .set(RelationshipStatusPage, relationship)
+            .success
+            .value
+            .set(ApplicantIncomePage, AboveUpperThreshold)
+            .success
+            .value
+            .set(PartnerIncomePage, BelowLowerThreshold)
+            .success
+            .value
+            .set(WantToBePaidPage, true)
+            .success
+            .value
 
-        WantToBePaidSummary.row(answers, EmptyWaypoints, CheckPaymentDetailsPage) mustBe defined
+        WantToBePaidSummary.row(answers, EmptyWaypoints, CheckPaymentDetailsPage) `mustBe` defined
       }
 
       "must return Some when the partner's income is between the thresholds" in {
 
         val answers =
           UserAnswers("id")
-            .set(RelationshipStatusPage, relationship).success.value
-            .set(ApplicantIncomePage, BelowLowerThreshold).success.value
-            .set(PartnerIncomePage, BetweenThresholds).success.value
-            .set(WantToBePaidPage, true).success.value
+            .set(RelationshipStatusPage, relationship)
+            .success
+            .value
+            .set(ApplicantIncomePage, BelowLowerThreshold)
+            .success
+            .value
+            .set(PartnerIncomePage, BetweenThresholds)
+            .success
+            .value
+            .set(WantToBePaidPage, true)
+            .success
+            .value
 
-        WantToBePaidSummary.row(answers, EmptyWaypoints, CheckPaymentDetailsPage) mustBe defined
+        WantToBePaidSummary.row(answers, EmptyWaypoints, CheckPaymentDetailsPage) `mustBe` defined
       }
 
       "must return Some when the partner's income is above the upper threshold" in {
@@ -121,12 +163,20 @@ class WantToBePaidSummarySpec extends AnyFreeSpec with Matchers with OptionValue
 
         val answers =
           UserAnswers("id")
-            .set(RelationshipStatusPage, relationship).success.value
-            .set(ApplicantIncomePage, BelowLowerThreshold).success.value
-            .set(PartnerIncomePage, AboveUpperThreshold).success.value
-            .set(WantToBePaidPage, true).success.value
+            .set(RelationshipStatusPage, relationship)
+            .success
+            .value
+            .set(ApplicantIncomePage, BelowLowerThreshold)
+            .success
+            .value
+            .set(PartnerIncomePage, AboveUpperThreshold)
+            .success
+            .value
+            .set(WantToBePaidPage, true)
+            .success
+            .value
 
-        WantToBePaidSummary.row(answers, EmptyWaypoints, CheckPaymentDetailsPage) mustBe defined
+        WantToBePaidSummary.row(answers, EmptyWaypoints, CheckPaymentDetailsPage) `mustBe` defined
       }
 
       "must return None when the applicant and their partner's income are both below the lower threshold" in {
@@ -135,12 +185,20 @@ class WantToBePaidSummarySpec extends AnyFreeSpec with Matchers with OptionValue
 
         val answers =
           UserAnswers("id")
-            .set(RelationshipStatusPage, relationship).success.value
-            .set(ApplicantIncomePage, BelowLowerThreshold).success.value
-            .set(PartnerIncomePage, BelowLowerThreshold).success.value
-            .set(WantToBePaidPage, true).success.value
+            .set(RelationshipStatusPage, relationship)
+            .success
+            .value
+            .set(ApplicantIncomePage, BelowLowerThreshold)
+            .success
+            .value
+            .set(PartnerIncomePage, BelowLowerThreshold)
+            .success
+            .value
+            .set(WantToBePaidPage, true)
+            .success
+            .value
 
-        WantToBePaidSummary.row(answers, EmptyWaypoints, CheckPaymentDetailsPage) must not be defined
+        WantToBePaidSummary.row(answers, EmptyWaypoints, CheckPaymentDetailsPage) `must` not `be` defined
       }
     }
   }

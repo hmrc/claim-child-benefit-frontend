@@ -41,12 +41,11 @@ class ChildNorthernIrishBirthCertificateNumberFormProviderSpec extends StringFie
 
       val gen = Gen.listOfN(7, Gen.numChar).map(_.mkString)
 
-      forAll(gen) {
-        dataItem: String =>
-          val birthCertificateNumber = s"B1$dataItem"
-          val result = form.bind(Map(fieldName -> birthCertificateNumber)).apply(fieldName)
-          result.value.value mustBe birthCertificateNumber
-          result.errors mustBe empty
+      forAll(gen) { dataItem =>
+        val birthCertificateNumber = s"B1$dataItem"
+        val result = form.bind(Map(fieldName -> birthCertificateNumber)).apply(fieldName)
+        result.value.value `mustBe` birthCertificateNumber
+        result.errors `mustBe` empty
       }
     }
 
@@ -54,12 +53,11 @@ class ChildNorthernIrishBirthCertificateNumberFormProviderSpec extends StringFie
 
       val gen = Gen.listOfN(7, Gen.numChar).map(_.mkString(" "))
 
-      forAll(gen) {
-        dataItem: String =>
-          val biarthCertificateNumber = s" B 1 $dataItem"
-          val result = form.bind(Map(fieldName -> biarthCertificateNumber)).apply(fieldName)
-          result.value.value mustBe biarthCertificateNumber
-          result.errors mustBe empty
+      forAll(gen) { dataItem =>
+        val biarthCertificateNumber = s" B 1 $dataItem"
+        val result = form.bind(Map(fieldName -> biarthCertificateNumber)).apply(fieldName)
+        result.value.value `mustBe` biarthCertificateNumber
+        result.errors `mustBe` empty
       }
     }
 
@@ -70,10 +68,13 @@ class ChildNorthernIrishBirthCertificateNumberFormProviderSpec extends StringFie
         chars     <- Gen.listOfN(charCount, Gen.numChar)
       } yield s"B1${chars.mkString}"
 
-      forAll(gen) {
-        dataItem =>
-          val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
-          result.errors must contain only FormError(fieldName, invalidKey, Seq(Validation.northernIrelandBirthCertificateNumberPattern.toString, childName.firstName))
+      forAll(gen) { dataItem =>
+        val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
+        result.errors `must` contain `only` FormError(
+          fieldName,
+          invalidKey,
+          Seq(Validation.northernIrelandBirthCertificateNumberPattern.toString, childName.firstName)
+        )
       }
     }
 
@@ -84,23 +85,28 @@ class ChildNorthernIrishBirthCertificateNumberFormProviderSpec extends StringFie
         chars     <- Gen.listOfN(charCount, Gen.numChar)
       } yield s"B1${chars.mkString}"
 
-      forAll(gen) {
-        dataItem =>
-          val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
-          result.errors must contain only FormError(fieldName, invalidKey, Seq(Validation.northernIrelandBirthCertificateNumberPattern.toString, childName.firstName))
+      forAll(gen) { dataItem =>
+        val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
+        result.errors `must` contain `only` FormError(
+          fieldName,
+          invalidKey,
+          Seq(Validation.northernIrelandBirthCertificateNumberPattern.toString, childName.firstName)
+        )
       }
     }
 
     "must not bind vales that contain characters other than digits after the first character" in {
 
-      forAll(arbitrary[String]) {
-        value =>
-
-          whenever (!value.forall(_.isDigit) && !value.forall(_ == ' ')) {
-            val birthCertificateNumber = s"B$value"
-            val result = form.bind(Map(fieldName -> birthCertificateNumber)).apply(fieldName)
-            result.errors must contain only FormError(fieldName, invalidKey, Seq(Validation.northernIrelandBirthCertificateNumberPattern.toString, childName.firstName))
-          }
+      forAll(arbitrary[String]) { value =>
+        whenever(!value.forall(_.isDigit) && !value.forall(_ == ' ')) {
+          val birthCertificateNumber = s"B$value"
+          val result = form.bind(Map(fieldName -> birthCertificateNumber)).apply(fieldName)
+          result.errors `must` contain `only` FormError(
+            fieldName,
+            invalidKey,
+            Seq(Validation.northernIrelandBirthCertificateNumberPattern.toString, childName.firstName)
+          )
+        }
       }
     }
 
@@ -108,13 +114,16 @@ class ChildNorthernIrishBirthCertificateNumberFormProviderSpec extends StringFie
 
       val gen = for {
         firstChar <- arbitrary[Char].suchThat(_ != 'B')
-        digits <- Gen.listOfN(7, Gen.numChar)
+        digits    <- Gen.listOfN(7, Gen.numChar)
       } yield (Seq(firstChar, '1') ++ digits).mkString
 
-      forAll(gen) {
-        birthCertificateNumber =>
-          val result = form.bind(Map(fieldName -> birthCertificateNumber)).apply(fieldName)
-          result.errors must contain only FormError(fieldName, invalidKey, Seq(Validation.northernIrelandBirthCertificateNumberPattern.toString, childName.firstName))
+      forAll(gen) { birthCertificateNumber =>
+        val result = form.bind(Map(fieldName -> birthCertificateNumber)).apply(fieldName)
+        result.errors `must` contain `only` FormError(
+          fieldName,
+          invalidKey,
+          Seq(Validation.northernIrelandBirthCertificateNumberPattern.toString, childName.firstName)
+        )
       }
     }
 
@@ -122,13 +131,16 @@ class ChildNorthernIrishBirthCertificateNumberFormProviderSpec extends StringFie
 
       val gen = for {
         secondChar <- arbitrary[Char].suchThat(_ != '1')
-        digits <- Gen.listOfN(7, Gen.numChar)
+        digits     <- Gen.listOfN(7, Gen.numChar)
       } yield (Seq('B', secondChar) ++ digits).mkString
 
-      forAll(gen) {
-        birthCertificateNumber =>
-          val result = form.bind(Map(fieldName -> birthCertificateNumber)).apply(fieldName)
-          result.errors must contain only FormError(fieldName, invalidKey, Seq(Validation.northernIrelandBirthCertificateNumberPattern.toString, childName.firstName))
+      forAll(gen) { birthCertificateNumber =>
+        val result = form.bind(Map(fieldName -> birthCertificateNumber)).apply(fieldName)
+        result.errors `must` contain `only` FormError(
+          fieldName,
+          invalidKey,
+          Seq(Validation.northernIrelandBirthCertificateNumberPattern.toString, childName.firstName)
+        )
       }
     }
 

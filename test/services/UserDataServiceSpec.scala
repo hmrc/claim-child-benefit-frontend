@@ -33,17 +33,12 @@ import java.time.{Clock, Instant, ZoneId}
 import scala.concurrent.Future
 
 class UserDataServiceSpec
-  extends AnyFreeSpec
-    with Matchers
-    with MockitoSugar
-    with OptionValues
-    with ScalaFutures
-    with BeforeAndAfterEach {
+    extends AnyFreeSpec with Matchers with MockitoSugar with OptionValues with ScalaFutures with BeforeAndAfterEach {
 
-  private val instant   = Instant.now.truncatedTo(ChronoUnit.MILLIS)
+  private val instant = Instant.now.truncatedTo(ChronoUnit.MILLIS)
   private val stubClock = Clock.fixed(instant, ZoneId.systemDefault)
-  private val userId    = "foo"
-  private val answers   = UserAnswers(userId, Json.obj("bar" -> "baz"), lastUpdated = Instant.now(stubClock))
+  private val userId = "foo"
+  private val answers = UserAnswers(userId, Json.obj("bar" -> "baz"), lastUpdated = Instant.now(stubClock))
 
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 
@@ -60,16 +55,16 @@ class UserDataServiceSpec
 
     "must return user answers when they exist in the backend" in {
 
-      when(mockConnector.get()(any())) thenReturn Future.successful(Some(answers))
+      when(mockConnector.get()(any())) `thenReturn` Future.successful(Some(answers))
 
-      service.get().futureValue.value mustEqual answers
+      service.get().futureValue.value `mustEqual` answers
     }
 
     "must return None when answers do not exist in the repository" in {
 
-      when(mockConnector.get()(any())) thenReturn Future.successful(None)
+      when(mockConnector.get()(any())) `thenReturn` Future.successful(None)
 
-      service.get().futureValue must not be defined
+      service.get().futureValue `must` not `be` defined
     }
   }
 
@@ -77,16 +72,15 @@ class UserDataServiceSpec
 
     "must write the answers to the backend" in {
 
-      when(mockConnector.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockConnector.set(any())(any())) `thenReturn` Future.successful(Done)
 
       service.set(answers).futureValue
       verify(mockConnector, times(1)).set(eqTo(answers))(any())
     }
 
-
     "must fail when writing to the repository fails" in {
 
-      when(mockConnector.set(any())(any())) thenReturn Future.failed(new RuntimeException("foo"))
+      when(mockConnector.set(any())(any())) `thenReturn` Future.failed(new RuntimeException("foo"))
 
       service.set(answers).failed.futureValue
       verify(mockConnector, times(1)).set(eqTo(answers))(any())
@@ -97,7 +91,7 @@ class UserDataServiceSpec
 
     "must keep the backend record alive" in {
 
-      when(mockConnector.keepAlive()(any())) thenReturn Future.successful(Done)
+      when(mockConnector.keepAlive()(any())) `thenReturn` Future.successful(Done)
 
       service.keepAlive().futureValue
       verify(mockConnector, times(1)).keepAlive()(any())
@@ -108,7 +102,7 @@ class UserDataServiceSpec
 
     "must remove the record from the repository" in {
 
-      when(mockConnector.clear()(any())) thenReturn Future.successful(Done)
+      when(mockConnector.clear()(any())) `thenReturn` Future.successful(Done)
 
       service.clear().futureValue
       verify(mockConnector, times(1)).clear()(any())

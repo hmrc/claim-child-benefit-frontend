@@ -60,10 +60,14 @@ class AddChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[AddChildPreviousNameView]
 
         implicit val msgs: Messages = messages(application)
-        val previousNames = AddChildPreviousNameSummary.rows(baseAnswers, index, waypoints, AddChildPreviousNamePage(index))
+        val previousNames =
+          AddChildPreviousNameSummary.rows(baseAnswers, index, waypoints, AddChildPreviousNamePage(index))
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, index, childName.firstName, previousNames)(request,implicitly).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints, index, childName.firstName, previousNames)(
+          request,
+          implicitly
+        ).toString
       }
     }
 
@@ -79,12 +83,16 @@ class AddChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[AddChildPreviousNameView]
 
         implicit val msgs: Messages = messages(application)
-        val previousNames = AddChildPreviousNameSummary.rows(baseAnswers, index, waypoints, child.AddChildPreviousNamePage(index))
+        val previousNames =
+          AddChildPreviousNameSummary.rows(baseAnswers, index, waypoints, child.AddChildPreviousNamePage(index))
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, index, childName.firstName, previousNames)(request, implicitly).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints, index, childName.firstName, previousNames)(
+          request,
+          implicitly
+        ).toString
       }
     }
 
@@ -92,7 +100,7 @@ class AddChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -109,8 +117,11 @@ class AddChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
         val expectedAnswers = baseAnswers.set(child.AddChildPreviousNamePage(index), true).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual child.AddChildPreviousNamePage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` child
+          .AddChildPreviousNamePage(index)
+          .navigate(waypoints, emptyUserAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -129,12 +140,16 @@ class AddChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[AddChildPreviousNameView]
 
         implicit val msgs: Messages = messages(application)
-        val previousNames = AddChildPreviousNameSummary.rows(baseAnswers, index, waypoints, child.AddChildPreviousNamePage(index))
+        val previousNames =
+          AddChildPreviousNameSummary.rows(baseAnswers, index, waypoints, child.AddChildPreviousNamePage(index))
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, index, childName.firstName, previousNames)(request, implicitly).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints, index, childName.firstName, previousNames)(
+          request,
+          implicitly
+        ).toString
       }
     }
 
@@ -147,8 +162,8 @@ class AddChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -163,8 +178,8 @@ class AddChildPreviousNameControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

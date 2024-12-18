@@ -54,41 +54,99 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
 
   private val completeAnswers =
     UserAnswers("id")
-      .set(ApplicantNamePage, applicantName).success.value
-      .set(ApplicantHasPreviousFamilyNamePage, false).success.value
-      .set(ApplicantNinoKnownPage, false).success.value
-      .set(ApplicantDateOfBirthPage, now).success.value
-      .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk).success.value
-      .set(ApplicantCurrentUkAddressPage, currentAddress).success.value
-      .set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
-      .set(ApplicantPhoneNumberPage, phoneNumber).success.value
-      .set(ApplicantNationalityPage(Index(0)), Nationality.allNationalities.head).success.value
-      .set(ApplicantIsHmfOrCivilServantPage, false).success.value
-      .set(ChildNamePage(Index(0)), childName).success.value
-      .set(ChildHasPreviousNamePage(Index(0)), false).success.value
-      .set(ChildBiologicalSexPage(Index(0)), biologicalSex).success.value
-      .set(ChildDateOfBirthPage(Index(0)), now).success.value
-      .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.England).success.value
-      .set(BirthCertificateHasSystemNumberPage(Index(0)), true).success.value
-      .set(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber).success.value
-      .set(ApplicantRelationshipToChildPage(Index(0)), relationshipToChild).success.value
-      .set(AdoptingThroughLocalAuthorityPage(Index(0)), false).success.value
-      .set(AnyoneClaimedForChildBeforePage(Index(0)), false).success.value
-      .set(ChildLivesWithApplicantPage(Index(0)), true).success.value
-      .set(ChildLivedWithAnyoneElsePage(Index(0)), false).success.value
-      .set(ApplicantIncomePage, Income.BelowLowerThreshold).success.value
-      .set(ApplicantBenefitsPage, applicantBenefits).success.value
-      .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
-      .set(WantToBePaidPage, false).success.value
-      .set(RelationshipStatusPage, RelationshipStatus.Single).success.value
-      .set(AlwaysLivedInUkPage, true).success.value
+      .set(ApplicantNamePage, applicantName)
+      .success
+      .value
+      .set(ApplicantHasPreviousFamilyNamePage, false)
+      .success
+      .value
+      .set(ApplicantNinoKnownPage, false)
+      .success
+      .value
+      .set(ApplicantDateOfBirthPage, now)
+      .success
+      .value
+      .set(ApplicantResidencePage, ApplicantResidence.AlwaysUk)
+      .success
+      .value
+      .set(ApplicantCurrentUkAddressPage, currentAddress)
+      .success
+      .value
+      .set(ApplicantLivedAtCurrentAddressOneYearPage, true)
+      .success
+      .value
+      .set(ApplicantPhoneNumberPage, phoneNumber)
+      .success
+      .value
+      .set(ApplicantNationalityPage(Index(0)), Nationality.allNationalities.head)
+      .success
+      .value
+      .set(ApplicantIsHmfOrCivilServantPage, false)
+      .success
+      .value
+      .set(ChildNamePage(Index(0)), childName)
+      .success
+      .value
+      .set(ChildHasPreviousNamePage(Index(0)), false)
+      .success
+      .value
+      .set(ChildBiologicalSexPage(Index(0)), biologicalSex)
+      .success
+      .value
+      .set(ChildDateOfBirthPage(Index(0)), now)
+      .success
+      .value
+      .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.England)
+      .success
+      .value
+      .set(BirthCertificateHasSystemNumberPage(Index(0)), true)
+      .success
+      .value
+      .set(ChildBirthCertificateSystemNumberPage(Index(0)), systemNumber)
+      .success
+      .value
+      .set(ApplicantRelationshipToChildPage(Index(0)), relationshipToChild)
+      .success
+      .value
+      .set(AdoptingThroughLocalAuthorityPage(Index(0)), false)
+      .success
+      .value
+      .set(AnyoneClaimedForChildBeforePage(Index(0)), false)
+      .success
+      .value
+      .set(ChildLivesWithApplicantPage(Index(0)), true)
+      .success
+      .value
+      .set(ChildLivedWithAnyoneElsePage(Index(0)), false)
+      .success
+      .value
+      .set(ApplicantIncomePage, Income.BelowLowerThreshold)
+      .success
+      .value
+      .set(ApplicantBenefitsPage, applicantBenefits)
+      .success
+      .value
+      .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming)
+      .success
+      .value
+      .set(WantToBePaidPage, false)
+      .success
+      .value
+      .set(RelationshipStatusPage, RelationshipStatus.Single)
+      .success
+      .value
+      .set(AlwaysLivedInUkPage, true)
+      .success
+      .value
 
   "Print Controller" - {
 
     "must return OK and the correct view for onPageLoad when user answers are complete and no documents are required" in {
 
       val mockBrmsService = mock[BrmsService]
-      when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(BirthRegistrationMatchingResult.Matched)
+      when(mockBrmsService.matchChild(any())(any(), any())) `thenReturn` Future.successful(
+        BirthRegistrationMatchingResult.Matched
+      )
 
       val application =
         applicationBuilder(userAnswers = Some(completeAnswers))
@@ -102,18 +160,23 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
 
         val view = application.injector.instanceOf[PrintNoDocumentsRequiredView]
 
-        status(result) mustEqual OK
+        status(result) `mustEqual` OK
 
-        contentAsString(result) mustEqual view(false)(request, messages(application)).toString
+        contentAsString(result) `mustEqual` view(false)(request, messages(application)).toString
       }
     }
 
     "must return OK and the correct view for onPageLoad when user answers are complete and some documents are required" in {
 
       val mockBrmsService = mock[BrmsService]
-      when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(BirthRegistrationMatchingResult.Matched)
+      when(mockBrmsService.matchChild(any())(any(), any())) `thenReturn` Future.successful(
+        BirthRegistrationMatchingResult.Matched
+      )
 
-      val answers = completeAnswers.set(ApplicantRelationshipToChildPage(Index(0)), ApplicantRelationshipToChild.AdoptedChild).success.value
+      val answers = completeAnswers
+        .set(ApplicantRelationshipToChildPage(Index(0)), ApplicantRelationshipToChild.AdoptedChild)
+        .success
+        .value
 
       val application =
         applicationBuilder(userAnswers = Some(answers))
@@ -127,20 +190,22 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
 
         val result = route(application, request).value
 
-        val view                = application.injector.instanceOf[PrintDocumentsRequiredView]
+        val view = application.injector.instanceOf[PrintDocumentsRequiredView]
         val journeyModelService = application.injector.instanceOf[JourneyModelService]
-        val journeyModel        = journeyModelService.build(answers).right.value
+        val journeyModel = journeyModelService.build(answers).right.value
 
-        status(result) mustEqual OK
+        status(result) `mustEqual` OK
 
-        contentAsString(result) mustEqual view(journeyModel)(request, messages(application)).toString
+        contentAsString(result) `mustEqual` view(journeyModel)(request, messages(application)).toString
       }
     }
 
     "must redirect to journey recovery for onPageLoad when user answers are not complete" in {
 
       val mockBrmsService = mock[BrmsService]
-      when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(BirthRegistrationMatchingResult.Matched)
+      when(mockBrmsService.matchChild(any())(any(), any())) `thenReturn` Future.successful(
+        BirthRegistrationMatchingResult.Matched
+      )
 
       val incompleteAnswers = completeAnswers.remove(ApplicantNamePage).success.value
 
@@ -154,9 +219,9 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result) `mustEqual` SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value `mustEqual` routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -165,8 +230,10 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
       val mockAuditService = mock[AuditService]
       val mockFop = mock[FopService]
       val mockBrmsService = mock[BrmsService]
-      when(mockFop.render(any(), any())) thenReturn Future.successful("hello".getBytes)
-      when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(BirthRegistrationMatchingResult.Matched)
+      when(mockFop.render(any(), any())) `thenReturn` Future.successful("hello".getBytes)
+      when(mockBrmsService.matchChild(any())(any(), any())) `thenReturn` Future.successful(
+        BirthRegistrationMatchingResult.Matched
+      )
 
       val application =
         applicationBuilder(userAnswers = Some(completeAnswers))
@@ -193,8 +260,8 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
         val englishMessages: Messages = MessagesImpl(Lang("en"), messagesApi)
         val expectedRenderedTemplate = template.render(journeyModel.right.value, englishMessages)
 
-        status(result) mustEqual OK
-        contentAsBytes(result).decodeString(Charset.defaultCharset()) mustEqual "hello"
+        status(result) `mustEqual` OK
+        contentAsBytes(result).decodeString(Charset.defaultCharset()) `mustEqual` "hello"
 
         verify(mockAuditService, times(1)).auditDownload(any())(any())
         verify(mockFop, times(1)).render(eqTo(expectedRenderedTemplate.body), any())
@@ -208,8 +275,10 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
       val mockAuditService = mock[AuditService]
       val mockFop = mock[FopService]
       val mockBrmsService = mock[BrmsService]
-      when(mockBrmsService.matchChild(any())(any(), any())) thenReturn Future.successful(BirthRegistrationMatchingResult.Matched)
-      when(mockFop.render(any(), any())) thenReturn Future.successful("hello".getBytes)
+      when(mockBrmsService.matchChild(any())(any(), any())) `thenReturn` Future.successful(
+        BirthRegistrationMatchingResult.Matched
+      )
+      when(mockFop.render(any(), any())) `thenReturn` Future.successful("hello".getBytes)
 
       val application =
         applicationBuilder(userAnswers = Some(incompleteAnswers))
@@ -225,8 +294,8 @@ class PrintControllerSpec extends SpecBase with ModelGenerators with MockitoSuga
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` routes.JourneyRecoveryController.onPageLoad().url
 
         verify(mockAuditService, never()).auditDownload(any())(any())
       }

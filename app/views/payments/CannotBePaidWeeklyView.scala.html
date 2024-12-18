@@ -23,7 +23,7 @@
         continueButton: components.ContinueButton
 )
 
-@(waypoints: Waypoints)(implicit request: Request[_], messages: Messages)
+@(waypoints: Waypoints)(implicit request: Request[?], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("cannotBePaidWeekly.title"))) {
 

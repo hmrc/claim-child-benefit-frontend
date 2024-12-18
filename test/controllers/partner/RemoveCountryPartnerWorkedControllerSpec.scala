@@ -43,10 +43,15 @@ class RemoveCountryPartnerWorkedControllerSpec extends SpecBase with MockitoSuga
   private val waypoints = EmptyWaypoints
   private val baseAnswers =
     emptyUserAnswers
-      .set(PartnerNamePage, name).success.value
-      .set(CountryPartnerWorkedPage(index), country).success.value
+      .set(PartnerNamePage, name)
+      .success
+      .value
+      .set(CountryPartnerWorkedPage(index), country)
+      .success
+      .value
 
-  lazy val removeCountryPartnerWorkedRoute = routes.RemoveCountryPartnerWorkedController.onPageLoad(waypoints, index).url
+  lazy val removeCountryPartnerWorkedRoute =
+    routes.RemoveCountryPartnerWorkedController.onPageLoad(waypoints, index).url
 
   "RemoveCountryPartnerWorked Controller" - {
 
@@ -61,8 +66,11 @@ class RemoveCountryPartnerWorkedControllerSpec extends SpecBase with MockitoSuga
 
         val view = application.injector.instanceOf[RemoveCountryPartnerWorkedView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, index, name.firstName, country.name)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints, index, name.firstName, country.name)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -70,7 +78,7 @@ class RemoveCountryPartnerWorkedControllerSpec extends SpecBase with MockitoSuga
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -87,8 +95,10 @@ class RemoveCountryPartnerWorkedControllerSpec extends SpecBase with MockitoSuga
         val result = route(application, request).value
         val expectedAnswers = baseAnswers.remove(partner.CountryPartnerWorkedPage(index)).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual RemoveCountryPartnerWorkedPage(index).navigate(waypoints, baseAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` RemoveCountryPartnerWorkedPage(index)
+          .navigate(waypoints, baseAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -97,7 +107,7 @@ class RemoveCountryPartnerWorkedControllerSpec extends SpecBase with MockitoSuga
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -113,8 +123,11 @@ class RemoveCountryPartnerWorkedControllerSpec extends SpecBase with MockitoSuga
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual partner.RemoveCountryPartnerWorkedPage(index).navigate(waypoints, baseAnswers, baseAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` partner
+          .RemoveCountryPartnerWorkedPage(index)
+          .navigate(waypoints, baseAnswers, baseAnswers)
+          .url
         verify(mockUserDataService, never()).set(any())(any())
       }
     }
@@ -134,8 +147,11 @@ class RemoveCountryPartnerWorkedControllerSpec extends SpecBase with MockitoSuga
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, index, name.firstName, country.name)(request, messages(application)).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints, index, name.firstName, country.name)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -148,8 +164,8 @@ class RemoveCountryPartnerWorkedControllerSpec extends SpecBase with MockitoSuga
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -164,8 +180,8 @@ class RemoveCountryPartnerWorkedControllerSpec extends SpecBase with MockitoSuga
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

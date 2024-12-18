@@ -27,16 +27,16 @@ import java.time.Clock
 
 class Module extends play.api.inject.Module {
 
-  override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = {
+  override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[?]] = {
 
-    val authTokenInitialiserBindings: Seq[Binding[_]] =
+    val authTokenInitialiserBindings: Seq[Binding[?]] =
       if (configuration.get[Boolean]("create-internal-auth-token-on-start")) {
         Seq(bind[InternalAuthTokenInitialiser].to[InternalAuthTokenInitialiserImpl].eagerly())
       } else {
         Seq(bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser].eagerly())
       }
 
-    val supplementaryDataServiceBinding: Binding[_] =
+    val supplementaryDataServiceBinding: Binding[?] =
       if (configuration.get[Boolean]("features.dmsa-submission")) {
         bind[SupplementaryDataService].to[SupplementaryDataServiceImpl].eagerly()
       } else {
@@ -48,7 +48,7 @@ class Module extends play.api.inject.Module {
       bind[DataRequiredAction].to[DataRequiredActionImpl].eagerly(),
       bind[Clock].toInstance(Clock.systemUTC()),
       bind[FeatureFlags].toSelf.eagerly(),
-      bind[Encrypter with Decrypter].toProvider[CryptoProvider].eagerly(),
+      bind[Encrypter & Decrypter].toProvider[CryptoProvider].eagerly(),
       bind[IdentifierAction].to[OptionalAuthIdentifierAction].eagerly(),
       supplementaryDataServiceBinding,
       bind[FopFactory].toProvider[FopFactoryProvider].eagerly(),

@@ -33,7 +33,7 @@ class PartnerEmploymentStatusFormProviderSpec extends CheckboxFieldBehaviours {
     behave like checkboxField[EmploymentStatus](
       form,
       fieldName,
-      validValues  = EmploymentStatus.values,
+      validValues = EmploymentStatus.values,
       invalidError = FormError(s"$fieldName[0]", "error.invalid", Seq(name))
     )
 

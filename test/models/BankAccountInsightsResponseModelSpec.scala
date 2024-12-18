@@ -31,7 +31,7 @@ class BankAccountInsightsResponseModelSpec extends AnyFreeSpec with Matchers wit
       forAll(Gen.choose(100, Int.MaxValue)) { riskScore =>
         val insight = BankAccountInsightsResponseModel("foo", riskScore, "bar")
 
-        insight.riskAboveTolerance mustBe true
+        insight.riskAboveTolerance `mustBe` true
       }
     }
 
@@ -40,7 +40,7 @@ class BankAccountInsightsResponseModelSpec extends AnyFreeSpec with Matchers wit
       forAll(Gen.choose(0, 99)) { riskScore =>
         val insight = BankAccountInsightsResponseModel("foo", riskScore, "bar")
 
-        insight.riskAboveTolerance mustBe false
+        insight.riskAboveTolerance `mustBe` false
       }
     }
 
@@ -48,40 +48,40 @@ class BankAccountInsightsResponseModelSpec extends AnyFreeSpec with Matchers wit
 
       val json = Json.obj(
         "correlationId" -> "correlation",
-        "riskScore" -> 0,
-        "reason" -> "reason"
+        "riskScore"     -> 0,
+        "reason"        -> "reason"
       )
 
       val expectedResult = BankAccountInsightsResponseModel("correlation", 0, "reason")
 
-      json.validate[BankAccountInsightsResponseModel] mustEqual JsSuccess(expectedResult)
+      json.validate[BankAccountInsightsResponseModel] `mustEqual` JsSuccess(expectedResult)
     }
 
     "must deserialise from JSON with `bankAccountInsightsCorrelationId`" in {
 
       val json = Json.obj(
         "bankAccountInsightsCorrelationId" -> "correlation",
-        "riskScore" -> 0,
-        "reason" -> "reason"
+        "riskScore"                        -> 0,
+        "reason"                           -> "reason"
       )
 
       val expectedResult = BankAccountInsightsResponseModel("correlation", 0, "reason")
 
-      json.validate[BankAccountInsightsResponseModel] mustEqual JsSuccess(expectedResult)
+      json.validate[BankAccountInsightsResponseModel] `mustEqual` JsSuccess(expectedResult)
     }
 
     "must deserialise from JSON with both 'correlationId' and `bankAccountInsightsCorrelationId`" in {
 
       val json = Json.obj(
         "bankAccountInsightsCorrelationId" -> "correlation",
-        "correlationId" -> "correlation",
-        "riskScore" -> 0,
-        "reason" -> "reason"
+        "correlationId"                    -> "correlation",
+        "riskScore"                        -> 0,
+        "reason"                           -> "reason"
       )
 
       val expectedResult = BankAccountInsightsResponseModel("correlation", 0, "reason")
 
-      json.validate[BankAccountInsightsResponseModel] mustEqual JsSuccess(expectedResult)
+      json.validate[BankAccountInsightsResponseModel] `mustEqual` JsSuccess(expectedResult)
     }
   }
 }

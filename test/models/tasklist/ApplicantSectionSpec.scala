@@ -30,7 +30,8 @@ import services.JourneyProgressService
 
 import java.time.LocalDate
 
-class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar with BeforeAndAfterEach with OptionValues {
+class ApplicantSectionSpec
+    extends AnyFreeSpec with Matchers with MockitoSugar with BeforeAndAfterEach with OptionValues {
 
   private val mockJourneyProgressService = mock[JourneyProgressService]
 
@@ -49,7 +50,7 @@ class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar w
       val section = new ApplicantSection(mockJourneyProgressService)
       val result = section.continue(answers)
 
-      result.value mustEqual ApplicantDateOfBirthPage
+      result.value `mustEqual` ApplicantDateOfBirthPage
       verify(mockJourneyProgressService, times(1)).continue(ApplicantNinoKnownPage, answers)
     }
 
@@ -68,7 +69,8 @@ class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar w
 
       when(mockJourneyProgressService.continue(any(), any())).thenReturn(ApplicantDateOfBirthPage)
 
-      val answers = UserAnswers("id", designatoryDetails = Some(DesignatoryDetails(None, None, None, None, LocalDate.now)))
+      val answers =
+        UserAnswers("id", designatoryDetails = Some(DesignatoryDetails(None, None, None, None, LocalDate.now)))
       val section = new ApplicantSection(mockJourneyProgressService)
       section.continue(answers)
 
@@ -86,7 +88,7 @@ class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar w
       val section = new ApplicantSection(mockJourneyProgressService)
       val result = section.progress(answers)
 
-      result mustEqual NotStarted
+      result `mustEqual` NotStarted
       verify(mockJourneyProgressService, times(1)).continue(ApplicantNinoKnownPage, answers)
     }
 
@@ -94,11 +96,12 @@ class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar w
 
       when(mockJourneyProgressService.continue(any(), any())).thenReturn(CheckDesignatoryDetailsPage)
 
-      val answers = UserAnswers("id", designatoryDetails = Some(DesignatoryDetails(None, None, None, None, LocalDate.now)))
+      val answers =
+        UserAnswers("id", designatoryDetails = Some(DesignatoryDetails(None, None, None, None, LocalDate.now)))
       val section = new ApplicantSection(mockJourneyProgressService)
       val result = section.progress(answers)
 
-      result mustEqual NotStarted
+      result `mustEqual` NotStarted
       verify(mockJourneyProgressService, times(1)).continue(CheckDesignatoryDetailsPage, answers)
     }
 
@@ -110,7 +113,7 @@ class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar w
       val section = new ApplicantSection(mockJourneyProgressService)
       val result = section.progress(answers)
 
-      result mustEqual Completed
+      result `mustEqual` Completed
       verify(mockJourneyProgressService, times(1)).continue(ApplicantNinoKnownPage, answers)
     }
 
@@ -122,7 +125,7 @@ class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar w
       val section = new ApplicantSection(mockJourneyProgressService)
       val result = section.progress(answers)
 
-      result mustEqual InProgress
+      result `mustEqual` InProgress
       verify(mockJourneyProgressService, times(1)).continue(ApplicantNinoKnownPage, answers)
     }
   }
@@ -132,6 +135,6 @@ class ApplicantSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar w
     val answers = UserAnswers("id")
     val section = new ApplicantSection(mockJourneyProgressService)
 
-    section.prerequisiteSections(answers) mustBe empty
+    section.prerequisiteSections(answers) `mustBe` empty
   }
 }

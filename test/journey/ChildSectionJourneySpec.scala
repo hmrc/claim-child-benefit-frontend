@@ -29,12 +29,13 @@ import java.time.LocalDate
 class ChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
   private val adultName = AdultName(None, "first", None, "last")
-  private val internationalAddress = InternationalAddress("line 1", None, "town", None, Some("postcode"), Country.internationalCountries.head)
+  private val internationalAddress =
+    InternationalAddress("line 1", None, "town", None, Some("postcode"), Country.internationalCountries.head)
   private val ukAddress = UkAddress("line 1", None, "town", None, "postcode")
   private val childName = ChildName("first", None, "last")
   private val sex = arbitrary[ChildBiologicalSex].sample.value
 
-  "users whose child has no previous names must not be asked for them" in {
+  "users whose child has no previous names `must` not `be` asked for them" in {
 
     startingFrom(ChildNamePage(Index(0)))
       .run(
@@ -172,7 +173,10 @@ class ChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Model
           .run(
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), Scotland),
             submitAnswer(ScottishBirthCertificateHasNumbersPage(Index(0)), true),
-            submitAnswer(ChildScottishBirthCertificateDetailsPage(Index(0)), arbitrary[ScottishBirthCertificateDetails].sample.value),
+            submitAnswer(
+              ChildScottishBirthCertificateDetailsPage(Index(0)),
+              arbitrary[ScottishBirthCertificateDetails].sample.value
+            ),
             submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
             submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
             pageMustBe(AnyoneClaimedForChildBeforePage(Index(0)))
@@ -210,7 +214,10 @@ class ChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Model
           .run(
             submitAnswer(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland),
             submitAnswer(BirthCertificateHasNorthernIrishNumberPage(Index(0)), true),
-            submitAnswer(ChildNorthernIrishBirthCertificateNumberPage(Index(0)), NorthernIrishBirthCertificateNumber("B12345678")),
+            submitAnswer(
+              ChildNorthernIrishBirthCertificateNumberPage(Index(0)),
+              NorthernIrishBirthCertificateNumber("B12345678")
+            ),
             submitAnswer(AdoptingThroughLocalAuthorityPage(Index(0)), false),
             submitAnswer(ApplicantRelationshipToChildPage(Index(0)), relationship),
             pageMustBe(AnyoneClaimedForChildBeforePage(Index(0)))
@@ -378,7 +385,6 @@ class ChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Model
     }
   }
 
-
   "users whose child does not live with them" - {
 
     "who know the person the child lives with" - {
@@ -462,7 +468,6 @@ class ChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Model
         )
     }
   }
-
 
   "users whose child lived with someone else in the past year" - {
 

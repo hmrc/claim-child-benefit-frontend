@@ -75,8 +75,8 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, None)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints, None)(request, messages(application)).toString
       }
     }
 
@@ -91,8 +91,12 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(BankAccountDetailsFormModel(validAnswer, None)), waypoints, None)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(
+          form.fill(BankAccountDetailsFormModel(validAnswer, None)),
+          waypoints,
+          None
+        )(request, messages(application)).toString
       }
     }
 
@@ -107,9 +111,11 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
         nameMatches = ReputationResponseEnum.Yes
       )
 
-      when(mockBarsService.verifyBankDetails(any())(any(), any())) thenReturn Future.successful(Some(happyBarsResponse))
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
-      when(mockBankAccountInsightsConnector.check(any())(any())) thenReturn Future.successful(Right(bankAccountInsightsResponse))
+      when(mockBarsService.verifyBankDetails(any())(any(), any())) `thenReturn` Future.successful(Some(happyBarsResponse))
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
+      when(mockBankAccountInsightsConnector.check(any())(any())) `thenReturn` Future.successful(
+        Right(bankAccountInsightsResponse)
+      )
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -123,16 +129,27 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
       running(application) {
         val request =
           FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+            .withFormUrlEncodedBody(
+              ("firstName", "first"),
+              ("lastName", "last"),
+              ("accountNumber", "00123456"),
+              ("sortCode", "123456")
+            )
 
         val result = route(application, request).value
         val expectedAnswers =
           baseAnswers
-            .set(BankAccountDetailsPage, validAnswer).success.value
-            .set(BankAccountInsightsResultQuery, bankAccountInsightsResponse).success.value
+            .set(BankAccountDetailsPage, validAnswer)
+            .success
+            .value
+            .set(BankAccountInsightsResultQuery, bankAccountInsightsResponse)
+            .success
+            .value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, baseAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` BankAccountDetailsPage
+          .navigate(waypoints, baseAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
         verify(mockBarsService, times(1)).verifyBankDetails(any())(any(), any())
         verify(mockBankAccountInsightsConnector, times(1)).check(any())(any())
@@ -150,9 +167,9 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
         nameMatches = ReputationResponseEnum.Yes
       )
 
-      when(mockBarsService.verifyBankDetails(any())(any(), any())) thenReturn Future.successful(Some(happyBarsResponse))
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
-      when(mockBankAccountInsightsConnector.check(any())(any())) thenReturn Future.successful(Left(UnexpectedException))
+      when(mockBarsService.verifyBankDetails(any())(any(), any())) `thenReturn` Future.successful(Some(happyBarsResponse))
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
+      when(mockBankAccountInsightsConnector.check(any())(any())) `thenReturn` Future.successful(Left(UnexpectedException))
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -166,13 +183,20 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
       running(application) {
         val request =
           FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+            .withFormUrlEncodedBody(
+              ("firstName", "first"),
+              ("lastName", "last"),
+              ("accountNumber", "00123456"),
+              ("sortCode", "123456")
+            )
 
         val result = route(application, request).value
         val expectedAnswers = baseAnswers.set(BankAccountDetailsPage, validAnswer).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, baseAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` BankAccountDetailsPage
+          .navigate(waypoints, baseAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
         verify(mockBarsService, times(1)).verifyBankDetails(any())(any(), any())
         verify(mockBankAccountInsightsConnector, times(1)).check(any())(any())
@@ -181,9 +205,11 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
 
     "must save the answer and redirect to the next page when valid data is submitted and we cannot get a good response from BARS" in {
 
-      when(mockBarsService.verifyBankDetails(any())(any(), any())) thenReturn Future.successful(None)
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
-      when(mockBankAccountInsightsConnector.check(any())(any())) thenReturn Future.successful(Right(bankAccountInsightsResponse))
+      when(mockBarsService.verifyBankDetails(any())(any(), any())) `thenReturn` Future.successful(None)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
+      when(mockBankAccountInsightsConnector.check(any())(any())) `thenReturn` Future.successful(
+        Right(bankAccountInsightsResponse)
+      )
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -197,16 +223,27 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
       running(application) {
         val request =
           FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+            .withFormUrlEncodedBody(
+              ("firstName", "first"),
+              ("lastName", "last"),
+              ("accountNumber", "00123456"),
+              ("sortCode", "123456")
+            )
 
         val result = route(application, request).value
         val expectedAnswers =
           baseAnswers
-            .set(BankAccountDetailsPage, validAnswer).success.value
-            .set(BankAccountInsightsResultQuery, bankAccountInsightsResponse).success.value
+            .set(BankAccountDetailsPage, validAnswer)
+            .success
+            .value
+            .set(BankAccountInsightsResultQuery, bankAccountInsightsResponse)
+            .success
+            .value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, baseAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` BankAccountDetailsPage
+          .navigate(waypoints, baseAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
         verify(mockBarsService, times(1)).verifyBankDetails(any())(any(), any())
         verify(mockBankAccountInsightsConnector, times(1)).check(any())(any())
@@ -228,8 +265,8 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, None)(request, messages(application)).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints, None)(request, messages(application)).toString
       }
     }
 
@@ -244,8 +281,12 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
         nameMatches = ReputationResponseEnum.Indeterminate
       )
 
-      when(mockBarsService.verifyBankDetails(any())(any(), any())) thenReturn Future.successful(Some(invalidDetailsResponse))
-      when(mockBankAccountInsightsConnector.check(any())(any())) thenReturn Future.successful(Right(bankAccountInsightsResponse))
+      when(mockBarsService.verifyBankDetails(any())(any(), any())) `thenReturn` Future.successful(
+        Some(invalidDetailsResponse)
+      )
+      when(mockBankAccountInsightsConnector.check(any())(any())) `thenReturn` Future.successful(
+        Right(bankAccountInsightsResponse)
+      )
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -258,11 +299,16 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
       running(application) {
         val request =
           FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+            .withFormUrlEncodedBody(
+              ("firstName", "first"),
+              ("lastName", "last"),
+              ("accountNumber", "00123456"),
+              ("sortCode", "123456")
+            )
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
+        status(result) `mustEqual` BAD_REQUEST
       }
     }
 
@@ -277,8 +323,12 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
         nameMatches = ReputationResponseEnum.Indeterminate
       )
 
-      when(mockBarsService.verifyBankDetails(any())(any(), any())) thenReturn Future.successful(Some(invalidDetailsResponse))
-      when(mockBankAccountInsightsConnector.check(any())(any())) thenReturn Future.successful(Right(bankAccountInsightsResponse))
+      when(mockBarsService.verifyBankDetails(any())(any(), any())) `thenReturn` Future.successful(
+        Some(invalidDetailsResponse)
+      )
+      when(mockBankAccountInsightsConnector.check(any())(any())) `thenReturn` Future.successful(
+        Right(bankAccountInsightsResponse)
+      )
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -291,11 +341,16 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
       running(application) {
         val request =
           FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+            .withFormUrlEncodedBody(
+              ("firstName", "first"),
+              ("lastName", "last"),
+              ("accountNumber", "00123456"),
+              ("sortCode", "123456")
+            )
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
+        status(result) `mustEqual` BAD_REQUEST
       }
     }
 
@@ -310,8 +365,12 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
         nameMatches = ReputationResponseEnum.Yes
       )
 
-      when(mockBarsService.verifyBankDetails(any())(any(), any())) thenReturn Future.successful(Some(invalidDetailsResponse))
-      when(mockBankAccountInsightsConnector.check(any())(any())) thenReturn Future.successful(Right(bankAccountInsightsResponse))
+      when(mockBarsService.verifyBankDetails(any())(any(), any())) `thenReturn` Future.successful(
+        Some(invalidDetailsResponse)
+      )
+      when(mockBankAccountInsightsConnector.check(any())(any())) `thenReturn` Future.successful(
+        Right(bankAccountInsightsResponse)
+      )
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -324,11 +383,16 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
       running(application) {
         val request =
           FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+            .withFormUrlEncodedBody(
+              ("firstName", "first"),
+              ("lastName", "last"),
+              ("accountNumber", "00123456"),
+              ("sortCode", "123456")
+            )
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
+        status(result) `mustEqual` BAD_REQUEST
       }
     }
 
@@ -343,8 +407,12 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
         nameMatches = ReputationResponseEnum.Yes
       )
 
-      when(mockBarsService.verifyBankDetails(any())(any(), any())) thenReturn Future.successful(Some(invalidDetailsResponse))
-      when(mockBankAccountInsightsConnector.check(any())(any())) thenReturn Future.successful(Right(bankAccountInsightsResponse))
+      when(mockBarsService.verifyBankDetails(any())(any(), any())) `thenReturn` Future.successful(
+        Some(invalidDetailsResponse)
+      )
+      when(mockBankAccountInsightsConnector.check(any())(any())) `thenReturn` Future.successful(
+        Right(bankAccountInsightsResponse)
+      )
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -357,11 +425,16 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
       running(application) {
         val request =
           FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+            .withFormUrlEncodedBody(
+              ("firstName", "first"),
+              ("lastName", "last"),
+              ("accountNumber", "00123456"),
+              ("sortCode", "123456")
+            )
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
+        status(result) `mustEqual` BAD_REQUEST
       }
     }
 
@@ -376,8 +449,12 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
         nameMatches = ReputationResponseEnum.Yes
       )
 
-      when(mockBarsService.verifyBankDetails(any())(any(), any())) thenReturn Future.successful(Some(invalidDetailsResponse))
-      when(mockBankAccountInsightsConnector.check(any())(any())) thenReturn Future.successful(Right(bankAccountInsightsResponse))
+      when(mockBarsService.verifyBankDetails(any())(any(), any())) `thenReturn` Future.successful(
+        Some(invalidDetailsResponse)
+      )
+      when(mockBankAccountInsightsConnector.check(any())(any())) `thenReturn` Future.successful(
+        Right(bankAccountInsightsResponse)
+      )
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -390,11 +467,16 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
       running(application) {
         val request =
           FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+            .withFormUrlEncodedBody(
+              ("firstName", "first"),
+              ("lastName", "last"),
+              ("accountNumber", "00123456"),
+              ("sortCode", "123456")
+            )
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
+        status(result) `mustEqual` BAD_REQUEST
       }
     }
 
@@ -409,8 +491,12 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
         nameMatches = ReputationResponseEnum.No
       )
 
-      when(mockBarsService.verifyBankDetails(any())(any(), any())) thenReturn Future.successful(Some(invalidDetailsResponse))
-      when(mockBankAccountInsightsConnector.check(any())(any())) thenReturn Future.successful(Right(bankAccountInsightsResponse))
+      when(mockBarsService.verifyBankDetails(any())(any(), any())) `thenReturn` Future.successful(
+        Some(invalidDetailsResponse)
+      )
+      when(mockBankAccountInsightsConnector.check(any())(any())) `thenReturn` Future.successful(
+        Right(bankAccountInsightsResponse)
+      )
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -423,11 +509,16 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
       running(application) {
         val request =
           FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+            .withFormUrlEncodedBody(
+              ("firstName", "first"),
+              ("lastName", "last"),
+              ("accountNumber", "00123456"),
+              ("sortCode", "123456")
+            )
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
+        status(result) `mustEqual` BAD_REQUEST
       }
     }
 
@@ -442,8 +533,12 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
         nameMatches = ReputationResponseEnum.No
       )
 
-      when(mockBarsService.verifyBankDetails(any())(any(), any())) thenReturn Future.successful(Some(invalidDetailsResponse))
-      when(mockBankAccountInsightsConnector.check(any())(any())) thenReturn Future.successful(Right(bankAccountInsightsResponse))
+      when(mockBarsService.verifyBankDetails(any())(any(), any())) `thenReturn` Future.successful(
+        Some(invalidDetailsResponse)
+      )
+      when(mockBankAccountInsightsConnector.check(any())(any())) `thenReturn` Future.successful(
+        Right(bankAccountInsightsResponse)
+      )
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -456,11 +551,17 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
       running(application) {
         val request =
           FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"), ("softError", "false"))
+            .withFormUrlEncodedBody(
+              ("firstName", "first"),
+              ("lastName", "last"),
+              ("accountNumber", "00123456"),
+              ("sortCode", "123456"),
+              ("softError", "false")
+            )
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
+        status(result) `mustEqual` BAD_REQUEST
       }
     }
 
@@ -475,9 +576,13 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
         nameMatches = ReputationResponseEnum.No
       )
 
-      when(mockBarsService.verifyBankDetails(any())(any(), any())) thenReturn Future.successful(Some(invalidDetailsResponse))
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
-      when(mockBankAccountInsightsConnector.check(any())(any())) thenReturn Future.successful(Right(bankAccountInsightsResponse))
+      when(mockBarsService.verifyBankDetails(any())(any(), any())) `thenReturn` Future.successful(
+        Some(invalidDetailsResponse)
+      )
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
+      when(mockBankAccountInsightsConnector.check(any())(any())) `thenReturn` Future.successful(
+        Right(bankAccountInsightsResponse)
+      )
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -491,16 +596,28 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
       running(application) {
         val request =
           FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"), ("softError", "true"))
+            .withFormUrlEncodedBody(
+              ("firstName", "first"),
+              ("lastName", "last"),
+              ("accountNumber", "00123456"),
+              ("sortCode", "123456"),
+              ("softError", "true")
+            )
 
         val result = route(application, request).value
         val expectedAnswers =
           baseAnswers
-            .set(BankAccountDetailsPage, validAnswer).success.value
-            .set(BankAccountInsightsResultQuery, bankAccountInsightsResponse).success.value
+            .set(BankAccountDetailsPage, validAnswer)
+            .success
+            .value
+            .set(BankAccountInsightsResultQuery, bankAccountInsightsResponse)
+            .success
+            .value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual BankAccountDetailsPage.navigate(waypoints, baseAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` BankAccountDetailsPage
+          .navigate(waypoints, baseAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -514,8 +631,8 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -526,12 +643,17 @@ class BankAccountDetailsControllerSpec extends SpecBase with MockitoSugar with B
       running(application) {
         val request =
           FakeRequest(POST, bankAccountDetailsRoute)
-            .withFormUrlEncodedBody(("firstName", "first"), ("lastName", "last"), ("accountNumber", "00123456"), ("sortCode", "123456"))
+            .withFormUrlEncodedBody(
+              ("firstName", "first"),
+              ("lastName", "last"),
+              ("accountNumber", "00123456"),
+              ("sortCode", "123456")
+            )
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

@@ -88,7 +88,7 @@ class BarsConnectorSpec
 
           val result = connector.verify(request).futureValue
           
-          result.value mustEqual VerifyBankDetailsResponseModel(
+          result.value `mustEqual` VerifyBankDetailsResponseModel(
             accountNumberIsWellFormatted = ReputationResponseEnum.Yes,
             nonStandardAccountDetailsRequiredForBacs = ReputationResponseEnum.No,
             sortCodeIsPresentOnEISCD = ReputationResponseEnum.Yes,
@@ -129,7 +129,7 @@ class BarsConnectorSpec
 
           val result = connector.verify(request).futureValue
 
-          result.left.value mustEqual InvalidJson
+          result.left.value `mustEqual` InvalidJson
 
           verify(auditService, times(1)).auditVerifyBankDetails(
             eqTo(VerifyBankDetailsAuditEvent(
@@ -161,7 +161,7 @@ class BarsConnectorSpec
 
           val result = connector.verify(request).futureValue
 
-          result.left.value mustEqual UnexpectedResponseStatus(500)
+          result.left.value `mustEqual` UnexpectedResponseStatus(500)
 
           verify(auditService, times(1)).auditVerifyBankDetails(
             eqTo(VerifyBankDetailsAuditEvent(
@@ -190,7 +190,7 @@ class BarsConnectorSpec
 
         val result = connector.verify(request).futureValue
 
-        result.left.value mustEqual UnexpectedException
+        result.left.value `mustEqual` UnexpectedException
       }
     }
   }

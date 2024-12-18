@@ -24,7 +24,6 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import play.api.libs.json.Json
 
-
 class PaymentDetailsSpec extends AnyFreeSpec with Matchers with OptionValues with ModelGenerators {
 
   ".build" - {
@@ -35,7 +34,7 @@ class PaymentDetailsSpec extends AnyFreeSpec with Matchers with OptionValues wit
 
       val result = PaymentDetails.build(paymentPreference)
 
-      result must not be defined
+      result `must` `not` `be` defined
     }
 
     "must return None when the payment preference is `existing account`" in {
@@ -44,7 +43,7 @@ class PaymentDetailsSpec extends AnyFreeSpec with Matchers with OptionValues wit
 
       val result = PaymentDetails.build(paymentPreference)
 
-      result must not be defined
+      result `must` `not` `be` defined
     }
 
     "must return details when the payment preference is `weekly`" - {
@@ -52,17 +51,19 @@ class PaymentDetailsSpec extends AnyFreeSpec with Matchers with OptionValues wit
       "with bank account details, trimming the sort code and padding the account number" in {
 
         val paymentPreference = journey.PaymentPreference.Weekly(
-          Some(journey.BankAccountWithHolder(
-            holder = BankAccountHolder.Applicant,
-            details = BankAccountDetails("first", "last", "12-34 56", "123456"),
-            risk = Some(BankAccountInsightsResponseModel("correlation", 0, "foo"))
-          )),
+          Some(
+            journey.BankAccountWithHolder(
+              holder = BankAccountHolder.Applicant,
+              details = BankAccountDetails("first", "last", "12-34 56", "123456"),
+              risk = Some(BankAccountInsightsResponseModel("correlation", 0, "foo"))
+            )
+          ),
           None
         )
 
         val result = PaymentDetails.build(paymentPreference)
 
-        result.value mustEqual BankDetails(
+        result.value `mustEqual` BankDetails(
           accountHolder = ClaimantAccountHolder,
           bankAccount = BankAccount("123456", "00123456")
         )
@@ -71,16 +72,19 @@ class PaymentDetailsSpec extends AnyFreeSpec with Matchers with OptionValues wit
       "with building society details" in {
 
         val paymentPreference = journey.PaymentPreference.Weekly(
-          Some(journey.BuildingSocietyWithHolder(
-            holder = BankAccountHolder.Applicant,
-            details = models.BuildingSocietyDetails("first", "last", BuildingSociety.allBuildingSocieties.head, "roll number")
-          )),
+          Some(
+            journey.BuildingSocietyWithHolder(
+              holder = BankAccountHolder.Applicant,
+              details =
+                models.BuildingSocietyDetails("first", "last", BuildingSociety.allBuildingSocieties.head, "roll number")
+            )
+          ),
           None
         )
 
         val result = PaymentDetails.build(paymentPreference)
 
-        result.value mustEqual BuildingSocietyDetails(
+        result.value `mustEqual` BuildingSocietyDetails(
           accountHolder = ClaimantAccountHolder,
           buildingSocietyDetails = BuildingSocietyAccount(BuildingSociety.allBuildingSocieties.head.id, "roll number")
         )
@@ -92,7 +96,7 @@ class PaymentDetailsSpec extends AnyFreeSpec with Matchers with OptionValues wit
 
         val result = PaymentDetails.build(paymentPreference)
 
-        result must not be defined
+        result `must` `not` `be` defined
       }
     }
 
@@ -101,17 +105,19 @@ class PaymentDetailsSpec extends AnyFreeSpec with Matchers with OptionValues wit
       "with bank account details, trimming the sort code and padding the account number" in {
 
         val paymentPreference = journey.PaymentPreference.EveryFourWeeks(
-          Some(journey.BankAccountWithHolder(
-            holder = BankAccountHolder.Applicant,
-            details = BankAccountDetails("first", "last", "12-34 56", "123456"),
-            risk = None
-          )),
+          Some(
+            journey.BankAccountWithHolder(
+              holder = BankAccountHolder.Applicant,
+              details = BankAccountDetails("first", "last", "12-34 56", "123456"),
+              risk = None
+            )
+          ),
           None
         )
 
         val result = PaymentDetails.build(paymentPreference)
 
-        result.value mustEqual BankDetails(
+        result.value `mustEqual` BankDetails(
           accountHolder = ClaimantAccountHolder,
           bankAccount = BankAccount("123456", "00123456")
         )
@@ -120,16 +126,19 @@ class PaymentDetailsSpec extends AnyFreeSpec with Matchers with OptionValues wit
       "with building society details" in {
 
         val paymentPreference = journey.PaymentPreference.EveryFourWeeks(
-          Some(journey.BuildingSocietyWithHolder(
-            holder = BankAccountHolder.Applicant,
-            details = models.BuildingSocietyDetails("first", "last", BuildingSociety.allBuildingSocieties.head, "roll number")
-          )),
+          Some(
+            journey.BuildingSocietyWithHolder(
+              holder = BankAccountHolder.Applicant,
+              details =
+                models.BuildingSocietyDetails("first", "last", BuildingSociety.allBuildingSocieties.head, "roll number")
+            )
+          ),
           None
         )
 
         val result = PaymentDetails.build(paymentPreference)
 
-        result.value mustEqual BuildingSocietyDetails(
+        result.value `mustEqual` BuildingSocietyDetails(
           accountHolder = ClaimantAccountHolder,
           buildingSocietyDetails = BuildingSocietyAccount(BuildingSociety.allBuildingSocieties.head.id, "roll number")
         )
@@ -141,7 +150,7 @@ class PaymentDetailsSpec extends AnyFreeSpec with Matchers with OptionValues wit
 
         val result = PaymentDetails.build(paymentPreference)
 
-        result must not be defined
+        result `must` `not` `be` defined
       }
     }
   }
@@ -159,12 +168,12 @@ class PaymentDetailsSpec extends AnyFreeSpec with Matchers with OptionValues wit
           "accountHolderType" -> "CLAIMANT"
         ),
         "bankAccount" -> Json.obj(
-          "sortCode" -> "123456",
+          "sortCode"      -> "123456",
           "accountNumber" -> "12345678"
         )
       )
 
-      Json.toJson[PaymentDetails](bankDetails) mustEqual expectedJson
+      Json.toJson[PaymentDetails](bankDetails) `mustEqual` expectedJson
     }
 
     "must write Building Society Details" in {
@@ -179,11 +188,11 @@ class PaymentDetailsSpec extends AnyFreeSpec with Matchers with OptionValues wit
         ),
         "buildingSocietyDetails" -> Json.obj(
           "buildingSociety" -> "1234",
-          "rollNumber" -> "roll number"
+          "rollNumber"      -> "roll number"
         )
       )
 
-      Json.toJson[PaymentDetails](buildingSocietyDetails) mustEqual expectedJson
+      Json.toJson[PaymentDetails](buildingSocietyDetails) `mustEqual` expectedJson
     }
   }
 }

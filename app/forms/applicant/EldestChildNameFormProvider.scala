@@ -43,6 +43,6 @@ class EldestChildNameFormProvider @Inject() extends Mappings {
            maxLength(35, "eldestChildName.error.lastName.length"),
            regexp(Validation.nameInputPattern, "eldestChildName.error.lastName.invalid")
          ))
-    )(ChildName.apply)(ChildName.unapply)
+    )(ChildName.apply)(o => Some(Tuple.fromProductTyped(o)))
    )
  }

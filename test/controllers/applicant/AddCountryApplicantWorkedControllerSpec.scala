@@ -57,10 +57,11 @@ class AddCountryApplicantWorkedControllerSpec extends SpecBase with MockitoSugar
         val view = application.injector.instanceOf[AddCountryApplicantWorkedView]
 
         implicit val msgs: Messages = messages(application)
-        val nationalities = AddCountryApplicantWorkedSummary.rows(emptyUserAnswers, waypoints, AddCountryApplicantWorkedPage())
+        val nationalities =
+          AddCountryApplicantWorkedSummary.rows(emptyUserAnswers, waypoints, AddCountryApplicantWorkedPage())
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, nationalities)(request, implicitly).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints, nationalities)(request, implicitly).toString
       }
     }
 
@@ -68,7 +69,7 @@ class AddCountryApplicantWorkedControllerSpec extends SpecBase with MockitoSugar
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -85,8 +86,10 @@ class AddCountryApplicantWorkedControllerSpec extends SpecBase with MockitoSugar
         val result = route(application, request).value
         val expectedAnswers = emptyUserAnswers.set(AddCountryApplicantWorkedPage(), true).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual AddCountryApplicantWorkedPage().navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` AddCountryApplicantWorkedPage()
+          .navigate(waypoints, emptyUserAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -105,12 +108,13 @@ class AddCountryApplicantWorkedControllerSpec extends SpecBase with MockitoSugar
         val view = application.injector.instanceOf[AddCountryApplicantWorkedView]
 
         implicit val msgs: Messages = messages(application)
-        val nationalities = AddCountryApplicantWorkedSummary.rows(emptyUserAnswers, waypoints, AddCountryApplicantWorkedPage())
+        val nationalities =
+          AddCountryApplicantWorkedSummary.rows(emptyUserAnswers, waypoints, AddCountryApplicantWorkedPage())
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, nationalities)(request, implicitly).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints, nationalities)(request, implicitly).toString
       }
     }
 
@@ -123,8 +127,8 @@ class AddCountryApplicantWorkedControllerSpec extends SpecBase with MockitoSugar
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -139,8 +143,8 @@ class AddCountryApplicantWorkedControllerSpec extends SpecBase with MockitoSugar
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

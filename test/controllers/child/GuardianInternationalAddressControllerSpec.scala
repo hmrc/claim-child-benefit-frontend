@@ -42,9 +42,10 @@ class GuardianInternationalAddressControllerSpec extends SpecBase with MockitoSu
   val form = formProvider(guardianName)
   private val waypoints = EmptyWaypoints
 
-  lazy val guardianInternationalAddressRoute = routes.GuardianInternationalAddressController.onPageLoad(waypoints, index).url
+  lazy val guardianInternationalAddressRoute =
+    routes.GuardianInternationalAddressController.onPageLoad(waypoints, index).url
 
-  private val country     = Country.internationalCountries.head
+  private val country = Country.internationalCountries.head
   private val validAnswer = InternationalAddress("line 1", None, "town", None, Some("AA111AA"), country)
   private val userAnswers = baseAnswers.set(GuardianInternationalAddressPage(index), validAnswer).success.value
 
@@ -61,8 +62,11 @@ class GuardianInternationalAddressControllerSpec extends SpecBase with MockitoSu
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, index, guardianName)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints, index, guardianName)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -77,8 +81,11 @@ class GuardianInternationalAddressControllerSpec extends SpecBase with MockitoSu
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints, index, guardianName)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form.fill(validAnswer), waypoints, index, guardianName)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -86,7 +93,7 @@ class GuardianInternationalAddressControllerSpec extends SpecBase with MockitoSu
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -98,13 +105,21 @@ class GuardianInternationalAddressControllerSpec extends SpecBase with MockitoSu
       running(application) {
         val request =
           FakeRequest(POST, guardianInternationalAddressRoute)
-            .withFormUrlEncodedBody(("line1", "line 1"), ("town" -> "town"), ("postcode", "AA111AA"), ("country", country.code))
+            .withFormUrlEncodedBody(
+              ("line1", "line 1"),
+              "town" -> "town",
+              ("postcode", "AA111AA"),
+              ("country", country.code)
+            )
 
         val result = route(application, request).value
         val expectedAnswers = baseAnswers.set(child.GuardianInternationalAddressPage(index), validAnswer).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual child.GuardianInternationalAddressPage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` child
+          .GuardianInternationalAddressPage(index)
+          .navigate(waypoints, emptyUserAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -124,8 +139,11 @@ class GuardianInternationalAddressControllerSpec extends SpecBase with MockitoSu
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, index, guardianName)(request, messages(application)).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints, index, guardianName)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -138,8 +156,8 @@ class GuardianInternationalAddressControllerSpec extends SpecBase with MockitoSu
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -150,12 +168,17 @@ class GuardianInternationalAddressControllerSpec extends SpecBase with MockitoSu
       running(application) {
         val request =
           FakeRequest(POST, guardianInternationalAddressRoute)
-            .withFormUrlEncodedBody(("line1", "line 1"), ("town" -> "town"), ("postcode", "AA111AA"), ("country", country.code))
+            .withFormUrlEncodedBody(
+              ("line1", "line 1"),
+              "town" -> "town",
+              ("postcode", "AA111AA"),
+              ("country", country.code)
+            )
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

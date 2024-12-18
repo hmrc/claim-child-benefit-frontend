@@ -31,8 +31,8 @@ class SubmissionFailedAlreadyInPaymentControllerSpec extends SpecBase {
       val result = route(application, request).value
       val view = application.injector.instanceOf[SubmissionFailedAlreadyInPaymentView]
 
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view()(request, messages(application)).toString
+      status(result) `mustEqual` OK
+      contentAsString(result) `mustEqual` view()(request, messages(application)).toString
     }
   }
 }

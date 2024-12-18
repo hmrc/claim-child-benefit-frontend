@@ -39,9 +39,10 @@ class CorrespondenceInternationalAddressControllerSpec extends SpecBase with Moc
   val form = formProvider()
   private val waypoints = EmptyWaypoints
 
-  lazy val correspondenceInternationalAddressRoute = routes.CorrespondenceInternationalAddressController.onPageLoad(waypoints).url
+  lazy val correspondenceInternationalAddressRoute =
+    routes.CorrespondenceInternationalAddressController.onPageLoad(waypoints).url
 
-  private val country     = Country.internationalCountries.head
+  private val country = Country.internationalCountries.head
   private val validAnswer = InternationalAddress("line 1", None, "town", None, Some("AA111AA"), country)
   private val userAnswers = emptyUserAnswers.set(CorrespondenceInternationalAddressPage, validAnswer).success.value
 
@@ -58,8 +59,8 @@ class CorrespondenceInternationalAddressControllerSpec extends SpecBase with Moc
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints)(request, messages(application)).toString
       }
     }
 
@@ -74,8 +75,11 @@ class CorrespondenceInternationalAddressControllerSpec extends SpecBase with Moc
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form.fill(validAnswer), waypoints)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -83,7 +87,7 @@ class CorrespondenceInternationalAddressControllerSpec extends SpecBase with Moc
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -95,13 +99,20 @@ class CorrespondenceInternationalAddressControllerSpec extends SpecBase with Moc
       running(application) {
         val request =
           FakeRequest(POST, correspondenceInternationalAddressRoute)
-            .withFormUrlEncodedBody(("line1", "line 1"), ("town", "town"), ("postcode", "AA111AA"), ("country", country.code))
+            .withFormUrlEncodedBody(
+              ("line1", "line 1"),
+              ("town", "town"),
+              ("postcode", "AA111AA"),
+              ("country", country.code)
+            )
 
         val result = route(application, request).value
         val expectedAnswers = emptyUserAnswers.set(CorrespondenceInternationalAddressPage, validAnswer).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual CorrespondenceInternationalAddressPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` CorrespondenceInternationalAddressPage
+          .navigate(waypoints, emptyUserAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -121,8 +132,8 @@ class CorrespondenceInternationalAddressControllerSpec extends SpecBase with Moc
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints)(request, messages(application)).toString
       }
     }
 
@@ -135,8 +146,8 @@ class CorrespondenceInternationalAddressControllerSpec extends SpecBase with Moc
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -147,12 +158,17 @@ class CorrespondenceInternationalAddressControllerSpec extends SpecBase with Moc
       running(application) {
         val request =
           FakeRequest(POST, correspondenceInternationalAddressRoute)
-            .withFormUrlEncodedBody(("line1", "line 1"), ("town", "town"), ("postcode", "AA111AA"), ("country", country.code))
+            .withFormUrlEncodedBody(
+              ("line1", "line 1"),
+              ("town", "town"),
+              ("postcode", "AA111AA"),
+              ("country", country.code)
+            )
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

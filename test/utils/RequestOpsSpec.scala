@@ -37,7 +37,7 @@ class RequestOpsSpec extends SpecBase with ModelGenerators {
       val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino)
       val dataRequest = DataRequest(identifierRequest, userId, emptyUserAnswers)
 
-      dataRequest.signedIn mustBe true
+      dataRequest.signedIn `mustBe` true
     }
 
     "must be false for a DataRequest that wraps an UnauthenticatedIdentifierAction" in {
@@ -45,7 +45,7 @@ class RequestOpsSpec extends SpecBase with ModelGenerators {
       val identifierRequest = UnauthenticatedIdentifierRequest(baseRequest, userId)
       val dataRequest = DataRequest(identifierRequest, userId, emptyUserAnswers)
 
-      dataRequest.signedIn mustBe false
+      dataRequest.signedIn `mustBe` false
     }
 
     "must be true for an OptionalDataRequest that wraps an AuthenticatedIdentifierAction" in {
@@ -53,34 +53,34 @@ class RequestOpsSpec extends SpecBase with ModelGenerators {
       val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino)
       val dataRequest = OptionalDataRequest(identifierRequest, userId, None)
 
-      dataRequest.signedIn mustBe true
+      dataRequest.signedIn `mustBe` true
     }
-    
+
     "must be false for an OptionalDataRequest that wraps an UnauthenticatedIdentifierAction" in {
 
       val identifierRequest = UnauthenticatedIdentifierRequest(baseRequest, userId)
       val dataRequest = OptionalDataRequest(identifierRequest, userId, None)
 
-      dataRequest.signedIn mustBe false
+      dataRequest.signedIn `mustBe` false
     }
 
     "must be true for an AuthenticatedIdentifierAction" in {
 
       val identifierRequest = AuthenticatedIdentifierRequest(baseRequest, userId, nino)
 
-      identifierRequest.signedIn mustBe true
+      identifierRequest.signedIn `mustBe` true
     }
 
     "must be false for an UnauthenticatedIdentifierAction" in {
 
       val identifierRequest = UnauthenticatedIdentifierRequest(baseRequest, userId)
 
-      identifierRequest.signedIn mustBe false
+      identifierRequest.signedIn `mustBe` false
     }
 
     "must be false for a standard request" in {
 
-      baseRequest.signedIn mustBe false
+      baseRequest.signedIn `mustBe` false
     }
   }
 }

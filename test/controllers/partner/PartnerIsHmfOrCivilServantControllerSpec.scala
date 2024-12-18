@@ -57,8 +57,8 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
 
         val view = application.injector.instanceOf[PartnerIsHmfOrCivilServantView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, name.firstName)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints, name.firstName)(request, messages(application)).toString
       }
     }
 
@@ -75,8 +75,11 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), waypoints, name.firstName)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form.fill(true), waypoints, name.firstName)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -84,7 +87,7 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -101,8 +104,10 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
         val result = route(application, request).value
         val expectedAnswers = baseAnswers.set(PartnerIsHmfOrCivilServantPage, true).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual PartnerIsHmfOrCivilServantPage.navigate(waypoints, baseAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` PartnerIsHmfOrCivilServantPage
+          .navigate(waypoints, baseAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -122,8 +127,11 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, name.firstName)(request, messages(application)).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints, name.firstName)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -136,8 +144,8 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -152,8 +160,8 @@ class PartnerIsHmfOrCivilServantControllerSpec extends SpecBase with MockitoSuga
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

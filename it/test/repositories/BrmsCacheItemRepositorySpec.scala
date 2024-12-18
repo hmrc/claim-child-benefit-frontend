@@ -47,9 +47,9 @@ class BrmsCacheItemRepositorySpec
   private val stubClock: Clock = Clock.fixed(instant, ZoneId.systemDefault)
 
   private val mockAppConfig = mock[FrontendAppConfig]
-  when(mockAppConfig.brmsCacheTtl) thenReturn 1
+  when(mockAppConfig.brmsCacheTtl) `thenReturn` 1L
 
-  protected override val repository = new BrmsCacheRepository(
+  protected override val repository: BrmsCacheRepository = new BrmsCacheRepository(
     mongoComponent = mongoComponent,
     appConfig = mockAppConfig,
     clock = stubClock
@@ -67,8 +67,8 @@ class BrmsCacheItemRepositorySpec
       val setResult = repository.set(request, result).futureValue
       val insertedRecord = find(Filters.equal("request", request)).futureValue.headOption.value
 
-      setResult mustEqual true
-      insertedRecord mustEqual expectedResult
+      setResult `mustEqual` true
+      insertedRecord `mustEqual` expectedResult
     }
   }
 
@@ -89,8 +89,8 @@ class BrmsCacheItemRepositorySpec
         val result1 = repository.getResult(request1).futureValue
         val result2 = repository.getResult(request2).futureValue
 
-        result1.value mustEqual brmsResult1
-        result2.value mustEqual brmsResult2
+        result1.value `mustEqual` brmsResult1
+        result2.value `mustEqual` brmsResult2
       }
     }
 
@@ -102,7 +102,7 @@ class BrmsCacheItemRepositorySpec
 
         val result = repository.getResult(request).futureValue
 
-        result must not be defined
+        result `must` `not` `be` defined
       }
     }
   }

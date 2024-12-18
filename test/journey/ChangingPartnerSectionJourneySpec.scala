@@ -118,7 +118,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
     answersMustNotContain(CountryPartnerReceivedBenefitsPage(Index(0))),
     answersMustNotContain(PartnerClaimingChildBenefitPage),
     answersMustNotContain(PartnerEldestChildNamePage),
-    answersMustNotContain(PartnerEldestChildDateOfBirthPage),
+    answersMustNotContain(PartnerEldestChildDateOfBirthPage)
   )
 
   "when a user initially said they were married" - {
@@ -208,7 +208,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(SeparationDatePage, LocalDate.now),
               pageMustBe(CheckPartnerDetailsPage),
               partnerDetailsMustHaveBeenRemoved,
-              answerMustEqual(RelationshipStatusChangesTaskListPage,false)
+              answerMustEqual(RelationshipStatusChangesTaskListPage, false)
             )
         }
       }
@@ -249,7 +249,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(RelationshipStatusPage, relationship),
               pageMustBe(CheckPartnerDetailsPage),
               partnerDetailsMustHaveBeenRemoved,
-              answerMustEqual(RelationshipStatusChangesTaskListPage,false)
+              answerMustEqual(RelationshipStatusChangesTaskListPage, false)
             )
         }
       }
@@ -346,7 +346,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               pageMustBe(CheckPartnerDetailsPage),
               partnerDetailsMustHaveBeenRemoved,
               answersMustNotContain(CohabitationDatePage),
-              answerMustEqual(RelationshipStatusChangesTaskListPage,false)
+              answerMustEqual(RelationshipStatusChangesTaskListPage, false)
             )
         }
       }
@@ -389,7 +389,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               pageMustBe(CheckPartnerDetailsPage),
               partnerDetailsMustHaveBeenRemoved,
               answersMustNotContain(CohabitationDatePage),
-              answerMustEqual(RelationshipStatusChangesTaskListPage,false)
+              answerMustEqual(RelationshipStatusChangesTaskListPage, false)
             )
         }
       }
@@ -463,7 +463,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
               pageMustBe(CheckPartnerDetailsPage),
               answersMustNotContain(SeparationDatePage),
-              answerMustEqual(RelationshipStatusChangesTaskListPage,false)
+              answerMustEqual(RelationshipStatusChangesTaskListPage, false)
             )
         }
       }
@@ -530,7 +530,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
               pageMustBe(CheckPartnerDetailsPage),
               answersMustNotContain(SeparationDatePage),
-              answerMustEqual(RelationshipStatusChangesTaskListPage,false)
+              answerMustEqual(RelationshipStatusChangesTaskListPage, false)
             )
         }
       }
@@ -551,7 +551,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             pageMustBe(CheckPartnerDetailsPage),
             answersMustNotContain(SeparationDatePage),
             paymentDetailsMustRemainSingle,
-            answerMustEqual(RelationshipStatusChangesTaskListPage,false)
+            answerMustEqual(RelationshipStatusChangesTaskListPage, false)
           )
       }
     }
@@ -623,7 +623,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerEldestChildNamePage, childName),
               submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
               pageMustBe(CheckPartnerDetailsPage),
-              answerMustEqual(RelationshipStatusChangesTaskListPage,false)
+              answerMustEqual(RelationshipStatusChangesTaskListPage, false)
             )
         }
       }
@@ -688,7 +688,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
               submitAnswer(PartnerEldestChildNamePage, childName),
               submitAnswer(PartnerEldestChildDateOfBirthPage, LocalDate.now),
               pageMustBe(CheckPartnerDetailsPage),
-              answerMustEqual(RelationshipStatusChangesTaskListPage,false)
+              answerMustEqual(RelationshipStatusChangesTaskListPage, false)
             )
         }
       }
@@ -707,7 +707,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             submitAnswer(SeparationDatePage, LocalDate.now),
             pageMustBe(CheckPartnerDetailsPage),
             paymentDetailsMustRemainSingle,
-            answerMustEqual(RelationshipStatusChangesTaskListPage,false)
+            answerMustEqual(RelationshipStatusChangesTaskListPage, false)
           )
       }
     }
@@ -727,7 +727,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
             submitAnswer(RelationshipStatusPage, newRelationship),
             pageMustBe(CheckPartnerDetailsPage),
             paymentDetailsMustRemainSingle,
-            answerMustEqual(RelationshipStatusChangesTaskListPage,false)
+            answerMustEqual(RelationshipStatusChangesTaskListPage, false)
           )
       }
     }
@@ -775,7 +775,7 @@ class ChangingPartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
         )
     }
   }
-  
+
   "the user must be able to add a nationality for their partner" in {
 
     val initialise = journeyOf(

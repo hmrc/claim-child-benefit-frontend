@@ -54,7 +54,7 @@ class PartnerSpec extends AnyFreeSpec with Matchers with ModelGenerators with Op
       )
 
       val result = Partner.build(partner)
-      result.value mustEqual Partner(nino.withoutSuffix, surname)
+      result.value `mustEqual` Partner(nino.withoutSuffix, surname)
     }
 
     "must return None when the given model has a NINO and is not claiming Child Benefit or waiting to hear about their eligibility" in {
@@ -76,7 +76,7 @@ class PartnerSpec extends AnyFreeSpec with Matchers with ModelGenerators with Op
       )
 
       val result = Partner.build(partner)
-      result must not be defined
+      result `must` `not` `be` defined
     }
 
     "must return None when the given model does not have a NINO" in {
@@ -97,7 +97,7 @@ class PartnerSpec extends AnyFreeSpec with Matchers with ModelGenerators with Op
       )
 
       val result = Partner.build(partner)
-      result must not be defined
+      result `must` `not` `be` defined
     }
 
     "must normalise accented characters and replace ’ with ' in the partner's surname" in {
@@ -120,7 +120,7 @@ class PartnerSpec extends AnyFreeSpec with Matchers with ModelGenerators with Op
       )
 
       val result = Partner.build(partner)
-      result.value mustEqual Partner(nino.withoutSuffix, "A'eiuy")
+      result.value `mustEqual` Partner(nino.withoutSuffix, "A'eiuy")
     }
   }
 }

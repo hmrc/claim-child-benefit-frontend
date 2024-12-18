@@ -32,10 +32,8 @@ class RelationshipStatusSpec extends AnyFreeSpec with Matchers with ScalaCheckPr
 
       val gen = Gen.oneOf(RelationshipStatus.values.toSeq)
 
-      forAll(gen) {
-        relationshipStatus =>
-
-          JsString(relationshipStatus.toString).validate[RelationshipStatus].asOpt.value mustEqual relationshipStatus
+      forAll(gen) { relationshipStatus =>
+        JsString(relationshipStatus.toString).validate[RelationshipStatus].asOpt.value `mustEqual` relationshipStatus
       }
     }
 
@@ -43,10 +41,8 @@ class RelationshipStatusSpec extends AnyFreeSpec with Matchers with ScalaCheckPr
 
       val gen = arbitrary[String] suchThat (!RelationshipStatus.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-
-          JsString(invalidValue).validate[RelationshipStatus] mustEqual JsError("error.invalid")
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[RelationshipStatus] `mustEqual` JsError("error.invalid")
       }
     }
 
@@ -54,10 +50,8 @@ class RelationshipStatusSpec extends AnyFreeSpec with Matchers with ScalaCheckPr
 
       val gen = Gen.oneOf(RelationshipStatus.values.toSeq)
 
-      forAll(gen) {
-        relationshipStatus =>
-
-          Json.toJson(relationshipStatus) mustEqual JsString(relationshipStatus.toString)
+      forAll(gen) { relationshipStatus =>
+        Json.toJson(relationshipStatus) `mustEqual` JsString(relationshipStatus.toString)
       }
     }
   }

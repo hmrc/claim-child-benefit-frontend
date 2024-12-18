@@ -70,8 +70,11 @@ class PartnerEldestChildDateOfBirthControllerSpec extends SpecBase with MockitoS
 
         val view = application.injector.instanceOf[PartnerEldestChildDateOfBirthView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, name.firstName)(getRequest, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints, name.firstName)(
+          getRequest,
+          messages(application)
+        ).toString
       }
     }
 
@@ -86,8 +89,11 @@ class PartnerEldestChildDateOfBirthControllerSpec extends SpecBase with MockitoS
 
         val result = route(application, getRequest).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints, name.firstName)(getRequest, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form.fill(validAnswer), waypoints, name.firstName)(
+          getRequest,
+          messages(application)
+        ).toString
       }
     }
 
@@ -95,7 +101,7 @@ class PartnerEldestChildDateOfBirthControllerSpec extends SpecBase with MockitoS
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -108,8 +114,10 @@ class PartnerEldestChildDateOfBirthControllerSpec extends SpecBase with MockitoS
         val result = route(application, postRequest).value
         val expectedAnswers = baseAnswers.set(PartnerEldestChildDateOfBirthPage, validAnswer).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual PartnerEldestChildDateOfBirthPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` PartnerEldestChildDateOfBirthPage
+          .navigate(waypoints, emptyUserAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -129,8 +137,11 @@ class PartnerEldestChildDateOfBirthControllerSpec extends SpecBase with MockitoS
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, name.firstName)(request, messages(application)).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints, name.firstName)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -141,8 +152,8 @@ class PartnerEldestChildDateOfBirthControllerSpec extends SpecBase with MockitoS
       running(application) {
         val result = route(application, getRequest).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -153,8 +164,8 @@ class PartnerEldestChildDateOfBirthControllerSpec extends SpecBase with MockitoS
       running(application) {
         val result = route(application, postRequest).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

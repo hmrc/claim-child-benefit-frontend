@@ -31,18 +31,13 @@ import play.api.test.FakeRequest
 import java.time.{Clock, Instant, LocalDate, ZoneId}
 
 trait SpecBase
-  extends AnyFreeSpec
-    with Matchers
-    with TryValues
-    with OptionValues
-    with ScalaFutures
-    with IntegrationPatience {
+    extends AnyFreeSpec with Matchers with TryValues with OptionValues with ScalaFutures with IntegrationPatience {
 
   protected val index: Index = Index(0)
 
   protected val userAnswersId: String = "id"
 
-  protected val emptyUserAnswers : UserAnswers = UserAnswers(userAnswersId)
+  protected val emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId)
 
   protected val fixedInstant: Instant = LocalDate.now.atStartOfDay(ZoneId.systemDefault).toInstant
   protected val clockAtFixedInstant: Clock = Clock.fixed(fixedInstant, ZoneId.systemDefault)
@@ -50,10 +45,10 @@ trait SpecBase
   protected def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 
   protected def applicationBuilder(
-                                    userAnswers: Option[UserAnswers] = None,
-                                    clock: Clock = clockAtFixedInstant,
-                                    userIsAuthenticated: Boolean = false
-                                  ): GuiceApplicationBuilder = {
+    userAnswers: Option[UserAnswers] = None,
+    clock: Clock = clockAtFixedInstant,
+    userIsAuthenticated: Boolean = false
+  ): GuiceApplicationBuilder = {
 
     val identifierActionBinding: Binding[IdentifierAction] = if (userIsAuthenticated) {
       bind[IdentifierAction].to[FakeAuthenticatedIdentifierAction]

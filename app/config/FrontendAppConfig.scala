@@ -63,5 +63,5 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   val timeout: Int   = configuration.get[Int]("timeout-dialog.timeout")
   val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")
 
-  val brmsCacheTtl: Int   = configuration.get[Int]("mongodb.brmsTimeToLiveInSeconds")
+  val brmsCacheTtl: Long   = configuration.get[Long]("mongodb.brmsTimeToLiveInSeconds")
 }

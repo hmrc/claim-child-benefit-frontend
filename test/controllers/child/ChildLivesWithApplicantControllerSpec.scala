@@ -35,12 +35,14 @@ import scala.concurrent.Future
 
 class ChildLivesWithApplicantControllerSpec extends SpecBase with MockitoSugar {
 
-  private val waypoints          = EmptyWaypoints
-  private val childName          = ChildName("first", None, "last")
+  private val waypoints = EmptyWaypoints
+  private val childName = ChildName("first", None, "last")
 
   private val baseAnswers =
     emptyUserAnswers
-      .set(ChildNamePage(index), childName).success.value
+      .set(ChildNamePage(index), childName)
+      .success
+      .value
 
   lazy val childLivesWithApplicantRoute = routes.ChildLivesWithApplicantController.onPageLoad(waypoints, index).url
 
@@ -60,8 +62,11 @@ class ChildLivesWithApplicantControllerSpec extends SpecBase with MockitoSugar {
 
         val view = application.injector.instanceOf[ChildLivesWithApplicantView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, index, childName)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints, index, childName)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -78,8 +83,8 @@ class ChildLivesWithApplicantControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(
           form.fill(true),
           waypoints,
           index,
@@ -92,7 +97,7 @@ class ChildLivesWithApplicantControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -109,8 +114,11 @@ class ChildLivesWithApplicantControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
         val expectedAnswers = baseAnswers.set(child.ChildLivesWithApplicantPage(index), true).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual child.ChildLivesWithApplicantPage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` child
+          .ChildLivesWithApplicantPage(index)
+          .navigate(waypoints, emptyUserAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -130,8 +138,11 @@ class ChildLivesWithApplicantControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, index, childName)(request, messages(application)).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints, index, childName)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -144,8 +155,8 @@ class ChildLivesWithApplicantControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -160,9 +171,9 @@ class ChildLivesWithApplicantControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result) `mustEqual` SEE_OTHER
 
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

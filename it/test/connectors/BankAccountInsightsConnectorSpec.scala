@@ -19,7 +19,7 @@ package connectors
 import audit.{AuditService, CheckBankAccountInsightsAuditEvent}
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.http.Fault
-import models.{BankAccountInsightsRequest, BankAccountInsightsResponseModel, InvalidJson, UnexpectedException, UnexpectedResponseStatus}
+import _root_.models.{BankAccountInsightsRequest, BankAccountInsightsResponseModel, InvalidJson, UnexpectedException, UnexpectedResponseStatus}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -83,7 +83,7 @@ class BankAccountInsightsConnectorSpec
 
         val result = connector.check(request).futureValue
 
-        result.value mustEqual BankAccountInsightsResponseModel("ab8514f3-0f3c-4823-aba6-58f2222c33f1", 0, "foo")
+        result.value `mustEqual` BankAccountInsightsResponseModel("ab8514f3-0f3c-4823-aba6-58f2222c33f1", 0, "foo")
 
         verify(auditService, times(1)).auditCheckBankAccountInsights(
           eqTo(CheckBankAccountInsightsAuditEvent(
@@ -116,7 +116,7 @@ class BankAccountInsightsConnectorSpec
 
         val result = connector.check(request).futureValue
 
-        result.left.value mustEqual InvalidJson
+        result.left.value `mustEqual` InvalidJson
 
         verify(auditService, times(1)).auditCheckBankAccountInsights(
           eqTo(CheckBankAccountInsightsAuditEvent(
@@ -146,7 +146,7 @@ class BankAccountInsightsConnectorSpec
 
         val result = connector.check(request).futureValue
 
-        result.left.value mustEqual UnexpectedResponseStatus(INTERNAL_SERVER_ERROR)
+        result.left.value `mustEqual` UnexpectedResponseStatus(INTERNAL_SERVER_ERROR)
 
         verify(auditService, times(1)).auditCheckBankAccountInsights(
           eqTo(CheckBankAccountInsightsAuditEvent(
@@ -176,7 +176,7 @@ class BankAccountInsightsConnectorSpec
 
         val result = connector.check(request).futureValue
 
-        result.left.value mustEqual UnexpectedException
+        result.left.value `mustEqual` UnexpectedException
       }
     }
   }

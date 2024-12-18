@@ -30,12 +30,12 @@ class AddressSpec extends AnyFreeSpec with Matchers {
       val address = UkAddress("a", Some("b"), "c", Some("d"), "e")
       val json = Json.toJson(address)
 
-      json mustEqual Json.obj(
-        "line1" -> "a",
-        "line2" -> "b",
+      json `mustEqual` Json.obj(
+        "line1"      -> "a",
+        "line2"      -> "b",
         "townOrCity" -> "c",
-        "county" -> "d",
-        "postcode" -> "e"
+        "county"     -> "d",
+        "postcode"   -> "e"
       )
     }
 
@@ -44,10 +44,10 @@ class AddressSpec extends AnyFreeSpec with Matchers {
       val address = UkAddress("a", None, "c", None, "e")
       val json = Json.toJson(address)
 
-      json mustEqual Json.obj(
-        "line1" -> "a",
+      json `mustEqual` Json.obj(
+        "line1"      -> "a",
         "townOrCity" -> "c",
-        "postcode" -> "e"
+        "postcode"   -> "e"
       )
     }
   }
@@ -59,12 +59,12 @@ class AddressSpec extends AnyFreeSpec with Matchers {
       val address = InternationalAddress("a", Some("b"), "c", Some("d"), Some("e"), Country("f", "g"))
       val json = Json.toJson(address)
 
-      json mustEqual Json.obj(
-        "line1" -> "a",
-        "line2" -> "b",
-        "townOrCity" -> "c",
+      json `mustEqual` Json.obj(
+        "line1"         -> "a",
+        "line2"         -> "b",
+        "townOrCity"    -> "c",
         "stateOrRegion" -> "d",
-        "postcode" -> "e",
+        "postcode"      -> "e",
         "country" -> Json.obj(
           "code" -> "f",
           "name" -> "g"
@@ -77,8 +77,8 @@ class AddressSpec extends AnyFreeSpec with Matchers {
       val address = InternationalAddress("a", None, "c", None, None, Country("f", "g"))
       val json = Json.toJson(address)
 
-      json mustEqual Json.obj(
-        "line1" -> "a",
+      json `mustEqual` Json.obj(
+        "line1"      -> "a",
         "townOrCity" -> "c",
         "country" -> Json.obj(
           "code" -> "f",
@@ -95,12 +95,12 @@ class AddressSpec extends AnyFreeSpec with Matchers {
       val address = NPSAddress("a", Some("b"), Some("c"), Some("d"), Some("e"), Some("f"), Some(Country("g", "h")))
       val json = Json.toJson(address)
 
-      json mustEqual Json.obj(
-        "line1" -> "a",
-        "line2" -> "b",
-        "line3" -> "c",
-        "line4" -> "d",
-        "line5" -> "e",
+      json `mustEqual` Json.obj(
+        "line1"    -> "a",
+        "line2"    -> "b",
+        "line3"    -> "c",
+        "line4"    -> "d",
+        "line5"    -> "e",
         "postcode" -> "f",
         "country" -> Json.obj(
           "code" -> "g",
@@ -114,7 +114,7 @@ class AddressSpec extends AnyFreeSpec with Matchers {
       val address = NPSAddress("a", None, None, None, None, None, None)
       val json = Json.toJson(address)
 
-      json mustEqual Json.obj(
+      json `mustEqual` Json.obj(
         "line1" -> "a"
       )
     }

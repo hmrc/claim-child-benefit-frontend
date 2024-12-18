@@ -40,7 +40,7 @@ class BirthRegistrationMatchingRequestSpec extends AnyFreeSpec with Matchers wit
 
           val result = BirthRegistrationMatchingRequest(None, minimalChildName, dateOfBirth, England)
 
-          result.value mustEqual BirthRegistrationMatchingRequest(
+          result.value `mustEqual` BirthRegistrationMatchingRequest(
             birthReferenceNumber = None,
             firstName = "first",
             additionalNames = None,
@@ -54,7 +54,7 @@ class BirthRegistrationMatchingRequestSpec extends AnyFreeSpec with Matchers wit
 
           val result = BirthRegistrationMatchingRequest(None, minimalChildName, dateOfBirth, Wales)
 
-          result.value mustEqual BirthRegistrationMatchingRequest(
+          result.value `mustEqual` BirthRegistrationMatchingRequest(
             birthReferenceNumber = None,
             firstName = "first",
             additionalNames = None,
@@ -68,7 +68,7 @@ class BirthRegistrationMatchingRequestSpec extends AnyFreeSpec with Matchers wit
 
           val result = BirthRegistrationMatchingRequest(None, minimalChildName, dateOfBirth, NorthernIreland)
 
-          result.value mustEqual BirthRegistrationMatchingRequest(
+          result.value `mustEqual` BirthRegistrationMatchingRequest(
             birthReferenceNumber = None,
             firstName = "first",
             additionalNames = None,
@@ -81,9 +81,14 @@ class BirthRegistrationMatchingRequestSpec extends AnyFreeSpec with Matchers wit
 
       "for children who have middle names and birth certificate numbers" in {
 
-        val result = BirthRegistrationMatchingRequest(Some(BirthCertificateSystemNumber("123456789")), fullChildName, dateOfBirth, Scotland)
+        val result = BirthRegistrationMatchingRequest(
+          Some(BirthCertificateSystemNumber("123456789")),
+          fullChildName,
+          dateOfBirth,
+          Scotland
+        )
 
-        result.value mustEqual BirthRegistrationMatchingRequest(
+        result.value `mustEqual` BirthRegistrationMatchingRequest(
           birthReferenceNumber = Some("123456789"),
           firstName = "first",
           additionalNames = Some("middle"),
@@ -93,12 +98,16 @@ class BirthRegistrationMatchingRequestSpec extends AnyFreeSpec with Matchers wit
         )
       }
 
-
       "with spaces stripped for children who have Scottish birth certificate numbers with spaces" in {
 
-        val result = BirthRegistrationMatchingRequest(Some(ScottishBirthCertificateDetails(123, 2022, 12)), minimalChildName, dateOfBirth, Scotland)
+        val result = BirthRegistrationMatchingRequest(
+          Some(ScottishBirthCertificateDetails(123, 2022, 12)),
+          minimalChildName,
+          dateOfBirth,
+          Scotland
+        )
 
-        result.value mustEqual BirthRegistrationMatchingRequest(
+        result.value `mustEqual` BirthRegistrationMatchingRequest(
           birthReferenceNumber = Some("2022123012"),
           firstName = "first",
           additionalNames = None,
@@ -115,14 +124,14 @@ class BirthRegistrationMatchingRequestSpec extends AnyFreeSpec with Matchers wit
 
         val result = BirthRegistrationMatchingRequest(None, minimalChildName, dateOfBirth, OtherCountry)
 
-        result must not be defined
+        result `must` `not` `be` defined
       }
 
       "for children whose country of birth registration is unknown" in {
 
         val result = BirthRegistrationMatchingRequest(None, minimalChildName, dateOfBirth, UnknownCountry)
 
-        result must not be defined
+        result `must` `not` `be` defined
       }
     }
   }

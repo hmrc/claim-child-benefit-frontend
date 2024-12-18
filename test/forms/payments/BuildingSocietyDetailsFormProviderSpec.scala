@@ -145,24 +145,26 @@ class BuildingSocietyDetailsFormProviderSpec extends StringFieldBehaviours {
       val data = {
         for {
           length <- Gen.choose(19, 100)
-          chars <- Gen.listOfN(length, validChars)
+          chars  <- Gen.listOfN(length, validChars)
         } yield chars.mkString
       }.suchThat(_.trim.length > 18)
 
-      forAll(data) {
-        invalidString =>
-
-          val result = form.bind(Map(fieldName -> invalidString)).apply(fieldName)
-          val expectedError = FormError(fieldName, "buildingSocietyDetails.error.rollNumber.length", Seq(18))
-          result.errors must contain only expectedError
+      forAll(data) { invalidString =>
+        val result = form.bind(Map(fieldName -> invalidString)).apply(fieldName)
+        val expectedError = FormError(fieldName, "buildingSocietyDetails.error.rollNumber.length", Seq(18))
+        result.errors `must` contain `only` expectedError
       }
     }
 
     "must not bind strings with invalid characters" in {
 
       val result = form.bind(Map(fieldName -> "*foo*")).apply(fieldName)
-      val expectedError = FormError(fieldName, "buildingSocietyDetails.error.rollNumber.invalid", Seq(Validation.rollNumberPattern.toString))
-      result.errors must contain only expectedError
+      val expectedError = FormError(
+        fieldName,
+        "buildingSocietyDetails.error.rollNumber.invalid",
+        Seq(Validation.rollNumberPattern.toString)
+      )
+      result.errors `must` contain `only` expectedError
     }
   }
 }

@@ -20,8 +20,6 @@ import models.{CheckMode, NormalMode, UserAnswers}
 import play.api.mvc.Call
 import queries.Gettable
 
-import scala.annotation.nowarn
-
 final case class PageAndWaypoints(page: Page, waypoints: Waypoints) {
 
   lazy val route: Call = page.route(waypoints)
@@ -51,9 +49,11 @@ trait Page {
   protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, originalAnswers: UserAnswers, updatedAnswers: UserAnswers): Page =
     nextPageCheckMode(waypoints, updatedAnswers)
 
+  type QuestionPage = Page & Gettable[?]
+
   protected def nextPageCheckMode(waypoints: NonEmptyWaypoints, answers: UserAnswers): Page =
     nextPageNormalMode(waypoints, answers, answers) match {
-      case questionPage: Page with Gettable[_] =>
+      case questionPage: QuestionPage =>
         if (answers.isDefined(questionPage)) waypoints.next.page else questionPage
 
       case otherPage =>
@@ -68,7 +68,6 @@ trait Page {
 
   def route(waypoints: Waypoints): Call
 
-  @nowarn("msg=match may not be exhaustive")
   def changeLink(waypoints: Waypoints, sourcePage: WaypointPage): PageAndWaypoints = {
     sourcePage match {
       case p: CheckAnswersPage =>

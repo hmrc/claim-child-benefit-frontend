@@ -22,6 +22,7 @@ import pages.{AddItemPage, Page, QuestionPage, TaskListPage, Terminus, Waypoints
 import play.api.libs.json.{JsObject, JsPath}
 import play.api.mvc.Call
 import queries.{Derivable, DeriveNumberOfChildren}
+import pages.RecoveryOps
 
 final case class AddChildPage(override val index: Option[Index] = None) extends AddItemPage(index) with QuestionPage[Boolean] with Terminus {
 

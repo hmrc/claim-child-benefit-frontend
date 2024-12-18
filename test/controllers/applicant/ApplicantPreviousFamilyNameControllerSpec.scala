@@ -41,7 +41,8 @@ class ApplicantPreviousFamilyNameControllerSpec extends SpecBase with MockitoSug
   val form = formProvider()
   val validAnswer = ApplicantPreviousName("name")
 
-  lazy val applicantPreviousFamilyNameRoute = routes.ApplicantPreviousFamilyNameController.onPageLoad(waypoints, index).url
+  lazy val applicantPreviousFamilyNameRoute =
+    routes.ApplicantPreviousFamilyNameController.onPageLoad(waypoints, index).url
 
   "ApplicantPreviousFamilyName Controller" - {
 
@@ -56,14 +57,15 @@ class ApplicantPreviousFamilyNameControllerSpec extends SpecBase with MockitoSug
 
         val view = application.injector.instanceOf[ApplicantPreviousFamilyNameView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, index)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints, index)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ApplicantPreviousFamilyNamePage(index), validAnswer).success.value
+      val userAnswers =
+        UserAnswers(userAnswersId).set(ApplicantPreviousFamilyNamePage(index), validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -74,8 +76,11 @@ class ApplicantPreviousFamilyNameControllerSpec extends SpecBase with MockitoSug
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints, index)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form.fill(validAnswer), waypoints, index)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -83,7 +88,7 @@ class ApplicantPreviousFamilyNameControllerSpec extends SpecBase with MockitoSug
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -98,10 +103,14 @@ class ApplicantPreviousFamilyNameControllerSpec extends SpecBase with MockitoSug
             .withFormUrlEncodedBody(("value", validAnswer.lastName))
 
         val result = route(application, request).value
-        val expectedAnswers = emptyUserAnswers.set(applicant.ApplicantPreviousFamilyNamePage(index), validAnswer).success.value
+        val expectedAnswers =
+          emptyUserAnswers.set(applicant.ApplicantPreviousFamilyNamePage(index), validAnswer).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual applicant.ApplicantPreviousFamilyNamePage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` applicant
+          .ApplicantPreviousFamilyNamePage(index)
+          .navigate(waypoints, emptyUserAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -121,8 +130,8 @@ class ApplicantPreviousFamilyNameControllerSpec extends SpecBase with MockitoSug
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, index)(request, messages(application)).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints, index)(request, messages(application)).toString
       }
     }
 
@@ -135,8 +144,8 @@ class ApplicantPreviousFamilyNameControllerSpec extends SpecBase with MockitoSug
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -151,8 +160,8 @@ class ApplicantPreviousFamilyNameControllerSpec extends SpecBase with MockitoSug
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

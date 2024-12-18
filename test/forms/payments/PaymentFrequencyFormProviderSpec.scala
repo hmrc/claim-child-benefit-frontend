@@ -32,7 +32,7 @@ class PaymentFrequencyFormProviderSpec extends OptionFieldBehaviours {
     behave like optionsField[PaymentFrequency](
       form,
       fieldName,
-      validValues  = PaymentFrequency.values,
+      validValues = PaymentFrequency.values,
       invalidError = FormError(fieldName, "error.invalid")
     )
 

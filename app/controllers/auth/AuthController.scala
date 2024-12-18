@@ -74,7 +74,7 @@ class AuthController @Inject()(
   def signOut(): Action[AnyContent] = identify.async {
     implicit request =>
       request match {
-        case _: AuthenticatedIdentifierRequest[_] =>
+        case _: AuthenticatedIdentifierRequest[?] =>
           connector
             .getRecentClaim()
             .map {

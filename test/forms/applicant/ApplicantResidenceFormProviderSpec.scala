@@ -32,7 +32,7 @@ class ApplicantResidenceFormProviderSpec extends OptionFieldBehaviours {
     behave like optionsField[ApplicantResidence](
       form,
       fieldName,
-      validValues  = ApplicantResidence.values,
+      validValues = ApplicantResidence.values,
       invalidError = FormError(fieldName, "error.invalid")
     )
 

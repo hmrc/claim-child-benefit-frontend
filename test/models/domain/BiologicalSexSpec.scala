@@ -26,17 +26,17 @@ class BiologicalSexSpec extends AnyFreeSpec with Matchers {
 
     "must return Female when given Female" in {
 
-      BiologicalSex.build(models.ChildBiologicalSex.Female) mustEqual BiologicalSex.Female
+      BiologicalSex.build(models.ChildBiologicalSex.Female) `mustEqual` BiologicalSex.Female
     }
 
     "must return Male when given Male" in {
 
-      BiologicalSex.build(models.ChildBiologicalSex.Male) mustEqual BiologicalSex.Male
+      BiologicalSex.build(models.ChildBiologicalSex.Male) `mustEqual` BiologicalSex.Male
     }
 
     "must return Unspecified when given Unspecified" in {
 
-      BiologicalSex.build(models.ChildBiologicalSex.Unspecified) mustEqual BiologicalSex.Unspecified
+      BiologicalSex.build(models.ChildBiologicalSex.Unspecified) `mustEqual` BiologicalSex.Unspecified
     }
   }
 
@@ -44,17 +44,17 @@ class BiologicalSexSpec extends AnyFreeSpec with Matchers {
 
     "must write Female" in {
 
-      Json.toJson[BiologicalSex](BiologicalSex.Female) mustEqual JsString("FEMALE")
+      Json.toJson[BiologicalSex](BiologicalSex.Female) `mustEqual` JsString("FEMALE")
     }
 
     "must write Male" in {
 
-      Json.toJson[BiologicalSex](BiologicalSex.Male) mustEqual JsString("MALE")
+      Json.toJson[BiologicalSex](BiologicalSex.Male) `mustEqual` JsString("MALE")
     }
 
     "must write Unspecified" in {
 
-      Json.toJson[BiologicalSex](BiologicalSex.Unspecified) mustEqual JsString("UNSPECIFIED")
+      Json.toJson[BiologicalSex](BiologicalSex.Unspecified) `mustEqual` JsString("UNSPECIFIED")
     }
   }
 }

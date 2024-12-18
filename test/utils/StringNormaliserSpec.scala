@@ -44,12 +44,12 @@ class StringNormaliserSpec extends AnyFreeSpec with Matchers with StringNormalis
       ).flatten
 
       val input = accentedChars.mkString
-      normalise(input).toCharArray.filterNot(unaccentedChars.contains) mustBe empty
+      normalise(input).toCharArray.filterNot(unaccentedChars.contains) `mustBe` empty
     }
 
     "must replace `’` with `'`" in {
 
-      normalise("’") mustEqual "'"
+      normalise("’") `mustEqual` "'"
     }
   }
 }

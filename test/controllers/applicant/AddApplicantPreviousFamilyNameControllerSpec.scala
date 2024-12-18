@@ -41,7 +41,8 @@ class AddApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mockito
   val form = formProvider()
   private val waypoints = EmptyWaypoints
 
-  lazy val addApplicantPreviousFamilyNameRoute = routes.AddApplicantPreviousFamilyNameController.onPageLoad(waypoints).url
+  lazy val addApplicantPreviousFamilyNameRoute =
+    routes.AddApplicantPreviousFamilyNameController.onPageLoad(waypoints).url
 
   "AddApplicantPreviousFamilyName Controller" - {
 
@@ -57,10 +58,11 @@ class AddApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mockito
         val view = application.injector.instanceOf[AddApplicantPreviousFamilyNameView]
 
         implicit val msgs: Messages = messages(application)
-        val otherNames = AddApplicantPreviousFamilyNameSummary.rows(emptyUserAnswers, waypoints, AddApplicantPreviousFamilyNamePage())
+        val otherNames =
+          AddApplicantPreviousFamilyNameSummary.rows(emptyUserAnswers, waypoints, AddApplicantPreviousFamilyNamePage())
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, otherNames)(request, implicitly).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints, otherNames)(request, implicitly).toString
       }
     }
 
@@ -68,7 +70,7 @@ class AddApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mockito
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -85,8 +87,10 @@ class AddApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mockito
         val result = route(application, request).value
         val expectedAnswers = emptyUserAnswers.set(AddApplicantPreviousFamilyNamePage(), true).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual AddApplicantPreviousFamilyNamePage().navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` AddApplicantPreviousFamilyNamePage()
+          .navigate(waypoints, emptyUserAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -105,12 +109,13 @@ class AddApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mockito
         val view = application.injector.instanceOf[AddApplicantPreviousFamilyNameView]
 
         implicit val msgs: Messages = messages(application)
-        val otherNames = AddApplicantPreviousFamilyNameSummary.rows(emptyUserAnswers, waypoints, AddApplicantPreviousFamilyNamePage())
+        val otherNames =
+          AddApplicantPreviousFamilyNameSummary.rows(emptyUserAnswers, waypoints, AddApplicantPreviousFamilyNamePage())
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, otherNames)(request, implicitly).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints, otherNames)(request, implicitly).toString
       }
     }
 
@@ -123,8 +128,8 @@ class AddApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mockito
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -139,8 +144,8 @@ class AddApplicantPreviousFamilyNameControllerSpec extends SpecBase with Mockito
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

@@ -33,7 +33,7 @@ object MappingsSpec {
     val values: Set[Foo] = Set(Bar, Baz)
 
     implicit val fooEnumerable: Enumerable[Foo] =
-      Enumerable(values.toSeq.map(v => v.toString -> v): _*)
+      Enumerable(values.toSeq.map(v => v.toString -> v) *)
   }
 }
 
@@ -50,33 +50,33 @@ class MappingsSpec extends AnyFreeSpec with Matchers with OptionValues with Mapp
 
     "must bind a valid string" in {
       val result = testForm.bind(Map("value" -> "foobar"))
-      result.get mustEqual "foobar"
+      result.get `mustEqual` "foobar"
     }
 
     "must not bind an empty string" in {
       val result = testForm.bind(Map("value" -> ""))
-      result.errors must contain(FormError("value", "error.required"))
+      result.errors `must` contain(FormError("value", "error.required"))
     }
 
     "must not bind a string of whitespace only" in {
       val result = testForm.bind(Map("value" -> " \t"))
-      result.errors must contain (FormError("value", "error.required"))
+      result.errors `must` contain(FormError("value", "error.required"))
     }
 
     "must not bind an empty map" in {
       val result = testForm.bind(Map.empty[String, String])
-      result.errors must contain(FormError("value", "error.required"))
+      result.errors `must` contain(FormError("value", "error.required"))
     }
 
     "must return a custom error message" in {
       val form = Form("value" -> text("custom.error"))
       val result = form.bind(Map("value" -> ""))
-      result.errors must contain(FormError("value", "custom.error"))
+      result.errors `must` contain(FormError("value", "custom.error"))
     }
 
     "must unbind a valid value" in {
       val result = testForm.fill("foobar")
-      result.apply("value").value.value mustEqual "foobar"
+      result.apply("value").value.value `mustEqual` "foobar"
     }
   }
 
@@ -89,32 +89,32 @@ class MappingsSpec extends AnyFreeSpec with Matchers with OptionValues with Mapp
 
     "must bind true" in {
       val result = testForm.bind(Map("value" -> "true"))
-      result.get mustEqual true
+      result.get `mustEqual` true
     }
 
     "must bind false" in {
       val result = testForm.bind(Map("value" -> "false"))
-      result.get mustEqual false
+      result.get `mustEqual` false
     }
 
     "must not bind a non-boolean" in {
       val result = testForm.bind(Map("value" -> "not a boolean"))
-      result.errors must contain(FormError("value", "error.boolean"))
+      result.errors `must` contain(FormError("value", "error.boolean"))
     }
 
     "must not bind an empty value" in {
       val result = testForm.bind(Map("value" -> ""))
-      result.errors must contain(FormError("value", "error.required"))
+      result.errors `must` contain(FormError("value", "error.required"))
     }
 
     "must not bind an empty map" in {
       val result = testForm.bind(Map.empty[String, String])
-      result.errors must contain(FormError("value", "error.required"))
+      result.errors `must` contain(FormError("value", "error.required"))
     }
 
     "must unbind" in {
       val result = testForm.fill(true)
-      result.apply("value").value.value mustEqual "true"
+      result.apply("value").value.value `mustEqual` "true"
     }
   }
 
@@ -127,22 +127,22 @@ class MappingsSpec extends AnyFreeSpec with Matchers with OptionValues with Mapp
 
     "must bind a valid integer" in {
       val result = testForm.bind(Map("value" -> "1"))
-      result.get mustEqual 1
+      result.get `mustEqual` 1
     }
 
     "must not bind an empty value" in {
       val result = testForm.bind(Map("value" -> ""))
-      result.errors must contain(FormError("value", "error.required"))
+      result.errors `must` contain(FormError("value", "error.required"))
     }
 
     "must not bind an empty map" in {
       val result = testForm.bind(Map.empty[String, String])
-      result.errors must contain(FormError("value", "error.required"))
+      result.errors `must` contain(FormError("value", "error.required"))
     }
 
     "must unbind a valid value" in {
       val result = testForm.fill(123)
-      result.apply("value").value.value mustEqual "123"
+      result.apply("value").value.value `mustEqual` "123"
     }
   }
 
@@ -154,17 +154,17 @@ class MappingsSpec extends AnyFreeSpec with Matchers with OptionValues with Mapp
 
     "must bind a valid option" in {
       val result = testForm.bind(Map("value" -> "Bar"))
-      result.get mustEqual Bar
+      result.get `mustEqual` Bar
     }
 
     "must not bind an invalid option" in {
       val result = testForm.bind(Map("value" -> "Not Bar"))
-      result.errors must contain(FormError("value", "error.invalid"))
+      result.errors `must` contain(FormError("value", "error.invalid"))
     }
 
     "must not bind an empty map" in {
       val result = testForm.bind(Map.empty[String, String])
-      result.errors must contain(FormError("value", "error.required"))
+      result.errors `must` contain(FormError("value", "error.required"))
     }
   }
 
@@ -176,32 +176,32 @@ class MappingsSpec extends AnyFreeSpec with Matchers with OptionValues with Mapp
 
     "must bind none when the field is missing" in {
       val result = testForm.bind(Map.empty[String, String])
-      result.get mustBe None
+      result.get `mustBe` None
     }
 
     "must bind non when the field is an empty string" in {
       val result = testForm.bind(Map("value" -> ""))
-      result.get mustBe None
+      result.get `mustBe` None
     }
 
     "must bind none when the field is just whitespace" in {
       val result = testForm.bind(Map("value" -> "   "))
-      result.get mustBe None
+      result.get `mustBe` None
     }
 
     "must bind some when the field has a non-whitespace value" in {
       val result = testForm.bind(Map("value" -> "foo"))
-      result.get.value mustBe "foo"
+      result.get.value `mustBe` "foo"
     }
 
     "must unbind none" in {
       val filledForm = testForm.fill(None)
-      filledForm("value").value mustBe None
+      filledForm("value").value `mustBe` None
     }
 
     "must unbind some" in {
       val filledForm = testForm.fill(Some("foo"))
-      filledForm("value").value.value mustBe "foo"
+      filledForm("value").value.value `mustBe` "foo"
     }
 
     "must support additional constraints" - {
@@ -211,7 +211,7 @@ class MappingsSpec extends AnyFreeSpec with Matchers with OptionValues with Mapp
           "value" -> optional(Forms.text).verifying("some.error", _.isDefined)
         )
         val result = testForm.bind(Map.empty[String, String])
-        result.errors must contain only FormError("value", "some.error")
+        result.errors `must` contain `only` FormError("value", "some.error")
       }
 
       "when the inner mapping is used" in {
@@ -219,7 +219,7 @@ class MappingsSpec extends AnyFreeSpec with Matchers with OptionValues with Mapp
           "value" -> optional(Forms.text).verifying("some.error", _.contains("foo"))
         )
         val result = testForm.bind(Map("value" -> "bar"))
-        result.errors must contain only FormError("value", "some.error")
+        result.errors `must` contain `only` FormError("value", "some.error")
       }
     }
   }

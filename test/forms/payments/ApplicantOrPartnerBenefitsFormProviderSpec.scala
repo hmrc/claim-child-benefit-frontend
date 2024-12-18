@@ -32,7 +32,7 @@ class ApplicantOrPartnerBenefitsFormProviderSpec extends CheckboxFieldBehaviours
     behave like checkboxField[Benefits](
       form,
       fieldName,
-      validValues  = Benefits.values,
+      validValues = Benefits.values,
       invalidError = FormError(s"$fieldName[0]", "error.invalid")
     )
 

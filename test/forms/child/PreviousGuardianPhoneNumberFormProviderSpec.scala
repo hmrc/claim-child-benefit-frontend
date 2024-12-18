@@ -48,7 +48,7 @@ class PreviousGuardianPhoneNumberFormProviderSpec extends StringFieldBehaviours 
 
     "fail to bind an invalid phone number" in {
       val result = form.bind(Map(fieldName -> "invalid"))
-      result.error("value").value mustEqual FormError(fieldName, invalidKey, Seq(name.firstName))
+      result.error("value").value `mustEqual` FormError(fieldName, invalidKey, Seq(name.firstName))
     }
   }
 }

@@ -32,43 +32,43 @@ class IvResultSpec extends AnyFreeSpec with Matchers {
   "reads" - {
 
     "must read Success from an Iv Result" in {
-      json("Success").as[IvResult] mustEqual IvResult.Success
+      json("Success").as[IvResult] `mustEqual` IvResult.Success
     }
 
     "must read Incomplete from an Iv Result" in {
-      json("Incomplete").as[IvResult] mustEqual IvResult.Incomplete
+      json("Incomplete").as[IvResult] `mustEqual` IvResult.Incomplete
     }
-    
+
     "must read FailedMatching from an Iv Result" in {
-      json("FailedMatching").as[IvResult] mustEqual IvResult.FailedMatching
+      json("FailedMatching").as[IvResult] `mustEqual` IvResult.FailedMatching
     }
 
     "must read FailedIdentityVerification from an Iv Result" in {
-      json("FailedIdentityVerification").as[IvResult] mustEqual IvResult.FailedIdentityVerification
+      json("FailedIdentityVerification").as[IvResult] `mustEqual` IvResult.FailedIdentityVerification
     }
 
     "must read InsufficientEvidence from an Iv Result" in {
-      json("InsufficientEvidence").as[IvResult] mustEqual IvResult.InsufficientEvidence
+      json("InsufficientEvidence").as[IvResult] `mustEqual` IvResult.InsufficientEvidence
     }
 
     "must read LockedOut from an Iv Result" in {
-      json("LockedOut").as[IvResult] mustEqual IvResult.LockedOut
+      json("LockedOut").as[IvResult] `mustEqual` IvResult.LockedOut
     }
 
     "must read UserAborted from an Iv Result" in {
-      json("UserAborted").as[IvResult] mustEqual IvResult.UserAborted
+      json("UserAborted").as[IvResult] `mustEqual` IvResult.UserAborted
     }
 
     "must read Timeout from an Iv Result" in {
-      json("Timeout").as[IvResult] mustEqual IvResult.Timeout
+      json("Timeout").as[IvResult] `mustEqual` IvResult.Timeout
     }
 
     "must read TechnicalIssue from an Iv Result" in {
-      json("TechnicalIssue").as[IvResult] mustEqual IvResult.TechnicalIssue
+      json("TechnicalIssue").as[IvResult] `mustEqual` IvResult.TechnicalIssue
     }
 
     "must read PreconditionFailed from an Iv Result" in {
-      json("PreconditionFailed").as[IvResult] mustEqual IvResult.IvPreconditionFailed
+      json("PreconditionFailed").as[IvResult] `mustEqual` IvResult.IvPreconditionFailed
     }
   }
 }

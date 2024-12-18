@@ -22,7 +22,7 @@
         newTabLink: HmrcNewTabLinkHelper
 )
 
-@(claimDate: String)(implicit request: Request[_], messages: Messages)
+@(claimDate: String)(implicit request: Request[?], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("recentlySubmitted.title")), showBackLink = false, timeout = false) {
 

@@ -30,15 +30,17 @@ import java.time.LocalDate
 
 class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with ModelGenerators {
 
-  private val childName              = arbitrary[ChildName].sample.value
-  private val sex                    = arbitrary[ChildBiologicalSex].sample.value
-  private val systemNumber           = Gen.listOfN(9, Gen.numChar).map(chars => BirthCertificateSystemNumber(chars.mkString)).sample.value
-  private val adultName              = arbitrary[AdultName].sample.value
-  private val ukAddress              = arbitrary[UkAddress].sample.value
-  private val internationalAddress   = arbitrary[InternationalAddress].sample.value
-  private val scottishBcDetails      = arbitrary[ScottishBirthCertificateDetails].sample.value
-  private val northernIrishBcDetails = Gen.listOfN(7, Gen.numChar).map(chars => NorthernIrishBirthCertificateNumber(s"B1${chars.mkString}")).sample.value
-  private val relationship           = arbitrary[Relationship].sample.value
+  private val childName = arbitrary[ChildName].sample.value
+  private val sex = arbitrary[ChildBiologicalSex].sample.value
+  private val systemNumber =
+    Gen.listOfN(9, Gen.numChar).map(chars => BirthCertificateSystemNumber(chars.mkString)).sample.value
+  private val adultName = arbitrary[AdultName].sample.value
+  private val ukAddress = arbitrary[UkAddress].sample.value
+  private val internationalAddress = arbitrary[InternationalAddress].sample.value
+  private val scottishBcDetails = arbitrary[ScottishBirthCertificateDetails].sample.value
+  private val northernIrishBcDetails =
+    Gen.listOfN(7, Gen.numChar).map(chars => NorthernIrishBirthCertificateNumber(s"B1${chars.mkString}")).sample.value
+  private val relationship = arbitrary[Relationship].sample.value
 
   "when a user has added a child" - {
 
@@ -942,7 +944,7 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
             setUserAnswerTo(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
             setUserAnswerTo(PreviousGuardianInternationalAddressPage(Index(0)), internationalAddress),
             setUserAnswerTo(PreviousGuardianPhoneNumberKnownPage(Index(0)), true),
-            setUserAnswerTo(PreviousGuardianPhoneNumberPage(Index(0)),  "0777777777"),
+            setUserAnswerTo(PreviousGuardianPhoneNumberPage(Index(0)), "0777777777"),
             setUserAnswerTo(DateChildStartedLivingWithApplicantPage(Index(0)), LocalDate.now),
             goToChangeAnswer(ChildLivesWithApplicantPage(Index(0))),
             submitAnswer(ChildLivesWithApplicantPage(Index(0)), false),
@@ -1198,7 +1200,7 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
                 submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), false),
                 submitAnswer(PreviousGuardianInternationalAddressPage(Index(0)), internationalAddress),
                 pageMustBe(CheckChildDetailsPage(Index(0))),
-                answersMustNotContain(PreviousGuardianUkAddressPage(Index(0))),
+                answersMustNotContain(PreviousGuardianUkAddressPage(Index(0)))
               )
           }
         }
@@ -1216,7 +1218,7 @@ class ChangingChildSectionJourneySpec extends AnyFreeSpec with JourneyHelpers wi
                 submitAnswer(PreviousGuardianAddressInUkPage(Index(0)), true),
                 submitAnswer(PreviousGuardianUkAddressPage(Index(0)), ukAddress),
                 pageMustBe(CheckChildDetailsPage(Index(0))),
-                answersMustNotContain(PreviousGuardianInternationalAddressPage(Index(0))),
+                answersMustNotContain(PreviousGuardianInternationalAddressPage(Index(0)))
               )
           }
         }

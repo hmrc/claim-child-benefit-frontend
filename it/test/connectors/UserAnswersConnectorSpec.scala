@@ -17,7 +17,6 @@
 package connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock._
-import connectors.UserAnswersConnector
 import generators.ModelGenerators
 import models.UserAnswers
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -66,7 +65,7 @@ class UserAnswersConnectorSpec
 
       val result = connector.get().futureValue
 
-      result.value mustEqual answers
+      result.value `mustEqual` answers
     }
 
     "must return None when the server returns NOT_FOUND" in {
@@ -78,7 +77,7 @@ class UserAnswersConnectorSpec
 
       val result = connector.get().futureValue
 
-      result must not be defined
+      result `must` `not` `be` defined
     }
 
     "must return a failed future when the server returns an error" in {

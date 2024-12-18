@@ -40,9 +40,9 @@ class ApplicantArrivedInUkFormProviderSpec extends DateBehaviours {
     behave like dateField(form, "value", validData)
 
     behave like dateFieldWithMax(
-      form      = form,
-      key       = "value",
-      max       = maxDate,
+      form = form,
+      key = "value",
+      max = maxDate,
       formError = FormError("value", "applicantArrivedInUk.error.afterMaximum", Seq(maxDate.format(dateFormatter)))
     )
 

@@ -56,6 +56,6 @@ class GuardianInternationalAddressFormProvider @Inject() extends Mappings {
       "country" -> text("guardianInternationalAddress.error.country.required", args = Seq(guardian.firstName))
         .verifying("guardianInternationalAddress.error.country.required", value => Country.internationalCountries.exists(_.code == value))
         .transform[Country](value => Country.internationalCountries.find(_.code == value).get, _.code)
-    )(InternationalAddress.apply)(InternationalAddress.unapply)
+    )(InternationalAddress.apply)(o => Some(Tuple.fromProductTyped(o)))
   )
 }

@@ -83,7 +83,7 @@ object Residency {
           answers.getIor(ApplicantEmploymentStatusPage),
           getCountriesWorked(answers),
           getCountriesReceivedBenefits(answers)
-        ).parMapN(Residency.LivedInUkAndAbroad)
+        ).parMapN(Residency.LivedInUkAndAbroad.apply)
 
       case AlwaysAbroad =>
         (
@@ -91,7 +91,7 @@ object Residency {
           answers.getIor(ApplicantEmploymentStatusPage),
           getCountriesWorked(answers),
           getCountriesReceivedBenefits(answers)
-        ).parMapN(Residency.AlwaysLivedAbroad)
+        ).parMapN(Residency.AlwaysLivedAbroad.apply)
 
     }
 

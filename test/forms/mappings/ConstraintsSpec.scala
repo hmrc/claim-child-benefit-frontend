@@ -26,28 +26,28 @@ import play.api.data.validation.{Invalid, Valid}
 
 import java.time.LocalDate
 
-class ConstraintsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with Generators  with Constraints {
+class ConstraintsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with Generators with Constraints {
 
   "firstError" - {
 
     "must return Valid when all constraints pass" in {
       val result = firstError(maxLength(10, "error.length"), regexp("""^\w+$""".r, "error.regexp"))("foo")
-      result mustEqual Valid
+      result `mustEqual` Valid
     }
 
     "must return Invalid when the first constraint fails" in {
       val result = firstError(maxLength(10, "error.length"), regexp("""^\w+$""".r, "error.regexp"))("a" * 11)
-      result mustEqual Invalid("error.length", 10)
+      result `mustEqual` Invalid("error.length", 10)
     }
 
     "must return Invalid when the second constraint fails" in {
       val result = firstError(maxLength(10, "error.length"), regexp("""^\w+$""".r, "error.regexp"))("")
-      result mustEqual Invalid("error.regexp", """^\w+$""")
+      result `mustEqual` Invalid("error.regexp", """^\w+$""")
     }
 
     "must return Invalid for the first error when both constraints fail" in {
       val result = firstError(maxLength(-1, "error.length"), regexp("""^\w+$""".r, "error.regexp"))("")
-      result mustEqual Invalid("error.length", -1)
+      result `mustEqual` Invalid("error.length", -1)
     }
   }
 
@@ -55,17 +55,17 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
 
     "must return Valid for a number greater than the threshold" in {
       val result = minimumValue(1, "error.min").apply(2)
-      result mustEqual Valid
+      result `mustEqual` Valid
     }
 
     "must return Valid for a number equal to the threshold" in {
       val result = minimumValue(1, "error.min").apply(1)
-      result mustEqual Valid
+      result `mustEqual` Valid
     }
 
     "must return Invalid for a number below the threshold" in {
       val result = minimumValue(1, "error.min").apply(0)
-      result mustEqual Invalid("error.min", 1)
+      result `mustEqual` Invalid("error.min", 1)
     }
   }
 
@@ -73,17 +73,17 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
 
     "must return Valid for a number less than the threshold" in {
       val result = maximumValue(1, "error.max").apply(0)
-      result mustEqual Valid
+      result `mustEqual` Valid
     }
 
     "must return Valid for a number equal to the threshold" in {
       val result = maximumValue(1, "error.max").apply(1)
-      result mustEqual Valid
+      result `mustEqual` Valid
     }
 
     "must return Invalid for a number above the threshold" in {
       val result = maximumValue(1, "error.max").apply(2)
-      result mustEqual Invalid("error.max", 1)
+      result `mustEqual` Invalid("error.max", 1)
     }
   }
 
@@ -91,12 +91,12 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
 
     "must return Valid for an input that matches the expression" in {
       val result = regexp("""^\w+$""".r, "error.invalid")("foo")
-      result mustEqual Valid
+      result `mustEqual` Valid
     }
 
     "must return Invalid for an input that does not match the expression" in {
       val result = regexp("""^\d+$""".r, "error.invalid")("foo")
-      result mustEqual Invalid("error.invalid", """^\d+$""")
+      result `mustEqual` Invalid("error.invalid", """^\d+$""")
     }
   }
 
@@ -104,22 +104,22 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
 
     "must return Valid for a string shorter than the allowed length" in {
       val result = maxLength(10, "error.length")("a" * 9)
-      result mustEqual Valid
+      result `mustEqual` Valid
     }
 
     "must return Valid for an empty string" in {
       val result = maxLength(10, "error.length")("")
-      result mustEqual Valid
+      result `mustEqual` Valid
     }
 
     "must return Valid for a string equal to the allowed length" in {
       val result = maxLength(10, "error.length")("a" * 10)
-      result mustEqual Valid
+      result `mustEqual` Valid
     }
 
     "must return Invalid for a string longer than the allowed length" in {
       val result = maxLength(10, "error.length", "errorArg")("a" * 11)
-      result mustEqual Invalid("error.length", 10, "errorArg")
+      result `mustEqual` Invalid("error.length", 10, "errorArg")
     }
   }
 
@@ -132,11 +132,9 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
         date <- datesBetween(LocalDate.of(2000, 1, 1), max)
       } yield (max, date)
 
-      forAll(gen) {
-        case (max, date) =>
-
-          val result = maxDate(max, "error.future")(date)
-          result mustEqual Valid
+      forAll(gen) { case (max, date) =>
+        val result = maxDate(max, "error.future")(date)
+        result `mustEqual` Valid
       }
     }
 
@@ -147,11 +145,9 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
         date <- datesBetween(max.plusDays(1), LocalDate.of(3000, 1, 2))
       } yield (max, date)
 
-      forAll(gen) {
-        case (max, date) =>
-
-          val result = maxDate(max, "error.future", "foo")(date)
-          result mustEqual Invalid("error.future", "foo")
+      forAll(gen) { case (max, date) =>
+        val result = maxDate(max, "error.future", "foo")(date)
+        result `mustEqual` Invalid("error.future", "foo")
       }
     }
   }
@@ -165,11 +161,9 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
         date <- datesBetween(min, LocalDate.of(3000, 1, 1))
       } yield (min, date)
 
-      forAll(gen) {
-        case (min, date) =>
-
-          val result = minDate(min, "error.past", "foo")(date)
-          result mustEqual Valid
+      forAll(gen) { case (min, date) =>
+        val result = minDate(min, "error.past", "foo")(date)
+        result `mustEqual` Valid
       }
     }
 
@@ -180,11 +174,9 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
         date <- datesBetween(LocalDate.of(2000, 1, 1), min.minusDays(1))
       } yield (min, date)
 
-      forAll(gen) {
-        case (min, date) =>
-
-          val result = minDate(min, "error.past", "foo")(date)
-          result mustEqual Invalid("error.past", "foo")
+      forAll(gen) { case (min, date) =>
+        val result = minDate(min, "error.past", "foo")(date)
+        result `mustEqual` Invalid("error.past", "foo")
       }
     }
   }
@@ -201,18 +193,18 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
 
     "must return Valid if the data contains items from one set but not the other" in {
 
-      noMutuallyExclusiveAnswers(set1, set2, "error")(Set(A)) mustEqual Valid
-      noMutuallyExclusiveAnswers(set1, set2, "error")(Set(B)) mustEqual Valid
+      noMutuallyExclusiveAnswers(set1, set2, "error")(Set(A)) `mustEqual` Valid
+      noMutuallyExclusiveAnswers(set1, set2, "error")(Set(B)) `mustEqual` Valid
     }
 
     "must return Valid if the data does not contain items in either exclusive set" in {
 
-      noMutuallyExclusiveAnswers(set1, set2, "error")(Set(C)) mustEqual Valid
+      noMutuallyExclusiveAnswers(set1, set2, "error")(Set(C)) `mustEqual` Valid
     }
 
     "must return Invalid if the data contains items from both exclusive sets" in {
 
-      noMutuallyExclusiveAnswers(set1, set2, "error", "foo")(Set(A, B)) mustEqual Invalid("error", "foo")
+      noMutuallyExclusiveAnswers(set1, set2, "error", "foo")(Set(A, B)) `mustEqual` Invalid("error", "foo")
     }
   }
 
@@ -225,7 +217,7 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
       val index = Index(0)
 
       val result = notADuplicate(index, existingAnswers, "error.duplicate", "foo")(answer)
-      result mustEqual Valid
+      result `mustEqual` Valid
     }
 
     "must return Valid when this answer is in the existing answers at the same index position, but nowhere else" in {
@@ -235,7 +227,7 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
       val index = Index(1)
 
       val result = notADuplicate(index, existingAnswers, "error.duplicate", "foo")(answer)
-      result mustEqual Valid
+      result `mustEqual` Valid
     }
 
     "must return Invalid when this answer is in the existing answers at a different index position" in {
@@ -245,7 +237,7 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
       val index = Index(0)
 
       val result = notADuplicate(index, existingAnswers, "error.duplicate", "foo")(answer)
-      result mustEqual Invalid("error.duplicate", "foo")
+      result `mustEqual` Invalid("error.duplicate", "foo")
     }
   }
 }

@@ -32,7 +32,7 @@ class CurrentlyReceivingChildBenefitFormProviderSpec extends OptionFieldBehaviou
     behave like optionsField[CurrentlyReceivingChildBenefit](
       form,
       fieldName,
-      validValues  = CurrentlyReceivingChildBenefit.values,
+      validValues = CurrentlyReceivingChildBenefit.values,
       invalidError = FormError(fieldName, "error.invalid")
     )
 

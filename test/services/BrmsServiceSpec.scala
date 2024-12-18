@@ -38,12 +38,7 @@ import java.time.LocalDate
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class BrmsServiceSpec
-  extends AnyFreeSpec
-    with Matchers
-    with MockitoSugar
-    with OptionValues
-    with ScalaFutures {
+class BrmsServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with OptionValues with ScalaFutures {
 
   ".matchChild" - {
 
@@ -62,9 +57,11 @@ class BrmsServiceSpec
             val mockRepository = mock[BrmsCacheRepository]
             val mockMetrics = mock[MetricsService]
 
-            when(mockConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
-            when(mockRepository.set(any(), any())) thenReturn Future.successful(true)
-            when(mockRepository.getResult(any())) thenReturn Future.successful(None)
+            when(mockConnector.matchChild(any())(any())) `thenReturn` Future.successful(
+              BirthRegistrationMatchingResponseModel(true)
+            )
+            when(mockRepository.set(any(), any())) `thenReturn` Future.successful(true)
+            when(mockRepository.getResult(any())) `thenReturn` Future.successful(None)
 
             val app =
               new GuiceApplicationBuilder()
@@ -81,7 +78,7 @@ class BrmsServiceSpec
               val service = app.injector.instanceOf[BrmsService]
               val result = service.matchChild(Some(request)).futureValue
 
-              result mustEqual Matched
+              result `mustEqual` Matched
               verify(mockRepository, times(1)).set(eqTo(request), eqTo(Matched))
               verify(mockMetrics, times(1)).count(BrmsMonitor.getCounter(Matched))
             }
@@ -93,9 +90,11 @@ class BrmsServiceSpec
             val mockRepository = mock[BrmsCacheRepository]
             val mockMetrics = mock[MetricsService]
 
-            when(mockConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(false))
-            when(mockRepository.set(any(), any())) thenReturn Future.successful(true)
-            when(mockRepository.getResult(any())) thenReturn Future.successful(None)
+            when(mockConnector.matchChild(any())(any())) `thenReturn` Future.successful(
+              BirthRegistrationMatchingResponseModel(false)
+            )
+            when(mockRepository.set(any(), any())) `thenReturn` Future.successful(true)
+            when(mockRepository.getResult(any())) `thenReturn` Future.successful(None)
 
             val app =
               new GuiceApplicationBuilder()
@@ -112,7 +111,7 @@ class BrmsServiceSpec
               val service = app.injector.instanceOf[BrmsService]
               val result = service.matchChild(Some(request)).futureValue
 
-              result mustEqual NotMatched
+              result `mustEqual` NotMatched
               verify(mockRepository, times(1)).set(eqTo(request), eqTo(NotMatched))
               verify(mockMetrics, times(1)).count(BrmsMonitor.getCounter(NotMatched))
             }
@@ -124,9 +123,11 @@ class BrmsServiceSpec
             val mockRepository = mock[BrmsCacheRepository]
             val mockMetrics = mock[MetricsService]
 
-            when(mockConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
-            when(mockRepository.set(any(), any())) thenReturn Future.failed(new Exception("foo"))
-            when(mockRepository.getResult(any())) thenReturn Future.successful(None)
+            when(mockConnector.matchChild(any())(any())) `thenReturn` Future.successful(
+              BirthRegistrationMatchingResponseModel(true)
+            )
+            when(mockRepository.set(any(), any())) `thenReturn` Future.failed(new Exception("foo"))
+            when(mockRepository.getResult(any())) `thenReturn` Future.successful(None)
 
             val app =
               new GuiceApplicationBuilder()
@@ -143,7 +144,7 @@ class BrmsServiceSpec
               val service = app.injector.instanceOf[BrmsService]
               val result = service.matchChild(Some(request)).futureValue
 
-              result mustEqual Matched
+              result `mustEqual` Matched
               verify(mockRepository, times(1)).set(eqTo(request), eqTo(Matched))
               verify(mockMetrics, times(1)).count(BrmsMonitor.getCounter(Matched))
             }
@@ -155,8 +156,8 @@ class BrmsServiceSpec
             val mockRepository = mock[BrmsCacheRepository]
             val mockMetrics = mock[MetricsService]
 
-            when(mockConnector.matchChild(any())(any())) thenReturn Future.failed(new Exception("foo"))
-            when(mockRepository.getResult(any())) thenReturn Future.successful(None)
+            when(mockConnector.matchChild(any())(any())) `thenReturn` Future.failed(new Exception("foo"))
+            when(mockRepository.getResult(any())) `thenReturn` Future.successful(None)
 
             val app =
               new GuiceApplicationBuilder()
@@ -173,7 +174,7 @@ class BrmsServiceSpec
               val service = app.injector.instanceOf[BrmsService]
               val result = service.matchChild(Some(request)).futureValue
 
-              result mustEqual MatchingAttemptFailed
+              result `mustEqual` MatchingAttemptFailed
               verify(mockRepository, never()).set(any(), any())
               verify(mockMetrics, times(1)).count(BrmsMonitor.getCounter(MatchingAttemptFailed))
             }
@@ -190,8 +191,10 @@ class BrmsServiceSpec
             val mockRepository = mock[BrmsCacheRepository]
             val mockMetrics = mock[MetricsService]
 
-            when(mockConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
-            when(mockRepository.getResult(any())) thenReturn Future.successful(Some(brmsResult))
+            when(mockConnector.matchChild(any())(any())) `thenReturn` Future.successful(
+              BirthRegistrationMatchingResponseModel(true)
+            )
+            when(mockRepository.getResult(any())) `thenReturn` Future.successful(Some(brmsResult))
 
             val app =
               new GuiceApplicationBuilder()
@@ -207,7 +210,7 @@ class BrmsServiceSpec
               val service = app.injector.instanceOf[BrmsService]
               val result = service.matchChild(Some(request)).futureValue
 
-              result mustEqual brmsResult
+              result `mustEqual` brmsResult
               verify(mockConnector, never()).matchChild(any())(any())
               verify(mockMetrics, never()).count(any())
             }
@@ -223,9 +226,11 @@ class BrmsServiceSpec
           val mockRepository = mock[BrmsCacheRepository]
           val mockMetrics = mock[MetricsService]
 
-          when(mockConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
-          when(mockRepository.set(any(), any())) thenReturn Future.successful(true)
-          when(mockRepository.getResult(any())) thenReturn Future.successful(None)
+          when(mockConnector.matchChild(any())(any())) `thenReturn` Future.successful(
+            BirthRegistrationMatchingResponseModel(true)
+          )
+          when(mockRepository.set(any(), any())) `thenReturn` Future.successful(true)
+          when(mockRepository.getResult(any())) `thenReturn` Future.successful(None)
 
           val app =
             new GuiceApplicationBuilder()
@@ -242,7 +247,7 @@ class BrmsServiceSpec
             val service = app.injector.instanceOf[BrmsService]
             val result = service.matchChild(None).futureValue
 
-            result mustEqual NotAttempted
+            result `mustEqual` NotAttempted
             verify(mockConnector, never()).matchChild(any())(any())
             verify(mockRepository, never()).set(any(), any())
             verify(mockMetrics, times(1)).count(BrmsMonitor.getCounter(NotAttempted))
@@ -256,9 +261,11 @@ class BrmsServiceSpec
       "must return `not attempted`, not emit a metric and not call BRMS" in {
 
         val mockConnector = mock[BrmsConnector]
-        val mockMetrics   = mock[MetricsService]
+        val mockMetrics = mock[MetricsService]
 
-        when(mockConnector.matchChild(any())(any())) thenReturn Future.successful(BirthRegistrationMatchingResponseModel(true))
+        when(mockConnector.matchChild(any())(any())) `thenReturn` Future.successful(
+          BirthRegistrationMatchingResponseModel(true)
+        )
 
         val app =
           new GuiceApplicationBuilder()
@@ -271,7 +278,7 @@ class BrmsServiceSpec
           val service = app.injector.instanceOf[BrmsService]
           val result = service.matchChild(Some(request)).futureValue
 
-          result mustEqual NotAttempted
+          result `mustEqual` NotAttempted
           verify(mockConnector, never()).matchChild(any())(any())
           verify(mockMetrics, never()).count(any())
         }

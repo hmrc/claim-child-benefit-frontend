@@ -44,7 +44,7 @@ class ApplicantPhoneNumberFormProviderSpec extends StringFieldBehaviours {
     )
 
     "fail to bind an invalid phone number" in {
-      form.bind(Map(fieldName -> "invalid")).error("value").value.message mustEqual invalidKey
+      form.bind(Map(fieldName -> "invalid")).error("value").value.message `mustEqual` invalidKey
     }
   }
 }

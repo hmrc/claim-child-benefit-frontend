@@ -30,5 +30,5 @@ object ReputationResponseEnum extends Enumerable.Implicits {
   val values: Seq[ReputationResponseEnum] = Seq(Yes, No, Indeterminate, Inapplicable, Error, Partial)
 
   implicit val enumerable: Enumerable[ReputationResponseEnum] =
-    Enumerable(values.map(v => v.toString -> v): _*)
+    Enumerable(values.map(v => v.toString -> v)*)
 }

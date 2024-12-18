@@ -28,11 +28,11 @@ trait ModelGenerators {
   def ukPostcode: Gen[String] =
     for {
       firstChars <- Gen.choose(1, 2)
-      first <- Gen.listOfN(firstChars, Gen.alphaUpperChar).map(_.mkString)
-      second <- Gen.numChar.map(_.toString)
-      third <- Gen.oneOf(Gen.alphaUpperChar, Gen.numChar).map(_.toString)
-      fourth <- Gen.numChar.map(_.toString)
-      fifth <- Gen.listOfN(2, Gen.alphaUpperChar).map(_.mkString)
+      first      <- Gen.listOfN(firstChars, Gen.alphaUpperChar).map(_.mkString)
+      second     <- Gen.numChar.map(_.toString)
+      third      <- Gen.oneOf(Gen.alphaUpperChar, Gen.numChar).map(_.toString)
+      fourth     <- Gen.numChar.map(_.toString)
+      fifth      <- Gen.listOfN(2, Gen.alphaUpperChar).map(_.mkString)
     } yield s"$first$second$third$fourth$fifth"
 
   def genUkCtaNationality: Gen[Nationality] =
@@ -45,7 +45,7 @@ trait ModelGenerators {
     Gen.oneOf(Nationality.allNationalities.filter(_.group == NationalityGroup.NonEea))
 
   implicit lazy val arbitraryNationality: Arbitrary[Nationality] =
-    Arbitrary{
+    Arbitrary {
       Gen.oneOf(Nationality.allNationalities)
     }
 
@@ -58,8 +58,8 @@ trait ModelGenerators {
     Arbitrary {
       for {
         district <- Gen.choose(100, 999)
-        year <- Gen.choose(LocalDate.now.getYear - 20, LocalDate.now.getYear)
-        entry <- Gen.choose(1, 999)
+        year     <- Gen.choose(LocalDate.now.getYear - 20, LocalDate.now.getYear)
+        entry    <- Gen.choose(1, 999)
       } yield ScottishBirthCertificateDetails(district, year, entry)
     }
 
@@ -91,9 +91,9 @@ trait ModelGenerators {
   implicit lazy val arbitraryChildName: Arbitrary[ChildName] =
     Arbitrary {
       for {
-        firstName <- Gen.listOfN(35, Gen.alphaChar).map(_.mkString)
+        firstName   <- Gen.listOfN(35, Gen.alphaChar).map(_.mkString)
         middleNames <- Gen.option(Gen.listOfN(35, Gen.alphaChar).map(_.mkString))
-        lastName <- Gen.listOfN(35, Gen.alphaChar).map(_.mkString)
+        lastName    <- Gen.listOfN(35, Gen.alphaChar).map(_.mkString)
       } yield ChildName(firstName, middleNames, lastName)
     }
 
@@ -115,8 +115,11 @@ trait ModelGenerators {
   implicit lazy val arbitraryNino: Arbitrary[Nino] = Arbitrary {
     for {
       firstChar <- Gen.oneOf('A', 'C', 'E', 'H', 'J', 'L', 'M', 'O', 'P', 'R', 'S', 'W', 'X', 'Y').map(_.toString)
-      secondChar <- Gen.oneOf('A', 'B', 'C', 'E', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'R', 'S', 'T', 'W', 'X', 'Y', 'Z').map(_.toString)
-      digits <- Gen.listOfN(6, Gen.numChar)
+      secondChar <-
+        Gen
+          .oneOf('A', 'B', 'C', 'E', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'R', 'S', 'T', 'W', 'X', 'Y', 'Z')
+          .map(_.toString)
+      digits   <- Gen.listOfN(6, Gen.numChar)
       lastChar <- Gen.oneOf('A', 'B', 'C', 'D')
     } yield Nino(firstChar ++ secondChar ++ (digits :+ lastChar).mkString)
   }
@@ -124,10 +127,10 @@ trait ModelGenerators {
   implicit lazy val arbitraryAdultName: Arbitrary[AdultName] =
     Arbitrary {
       for {
-        title <- Gen.option(Gen.listOfN(35, Gen.alphaChar).map(_.mkString))
-        firstName <- Gen.listOfN(35, Gen.alphaChar).map(_.mkString)
+        title       <- Gen.option(Gen.listOfN(35, Gen.alphaChar).map(_.mkString))
+        firstName   <- Gen.listOfN(35, Gen.alphaChar).map(_.mkString)
         middleNames <- Gen.option(Gen.listOfN(35, Gen.alphaChar).map(_.mkString))
-        lastName <- Gen.listOfN(35, Gen.alphaChar).map(_.mkString)
+        lastName    <- Gen.listOfN(35, Gen.alphaChar).map(_.mkString)
       } yield AdultName(title, firstName, middleNames, lastName)
     }
 
@@ -157,33 +160,33 @@ trait ModelGenerators {
   implicit lazy val arbitraruNPSAddress: Arbitrary[NPSAddress] =
     Arbitrary {
       for {
-        line1 <- Gen.listOfN(35, Gen.alphaChar).map(_.mkString)
-        line2 <- Gen.option(Gen.listOfN(35, Gen.alphaChar).map(_.mkString))
-        line3 <- Gen.option(Gen.listOfN(35, Gen.alphaChar).map(_.mkString))
-        line4 <- Gen.option(Gen.listOfN(35, Gen.alphaChar).map(_.mkString))
-        line5 <- Gen.option(Gen.listOfN(35, Gen.alphaChar).map(_.mkString))
+        line1    <- Gen.listOfN(35, Gen.alphaChar).map(_.mkString)
+        line2    <- Gen.option(Gen.listOfN(35, Gen.alphaChar).map(_.mkString))
+        line3    <- Gen.option(Gen.listOfN(35, Gen.alphaChar).map(_.mkString))
+        line4    <- Gen.option(Gen.listOfN(35, Gen.alphaChar).map(_.mkString))
+        line5    <- Gen.option(Gen.listOfN(35, Gen.alphaChar).map(_.mkString))
         postcode <- Gen.option(Gen.listOfN(8, Gen.alphaChar).map(_.mkString))
-        country <- Gen.option(Gen.oneOf(Country.internationalCountries))
+        country  <- Gen.option(Gen.oneOf(Country.internationalCountries))
       } yield NPSAddress(line1, line2, line3, line4, line5, postcode, country)
     }
 
   implicit lazy val arbitraryBankAccountDetails: Arbitrary[BankAccountDetails] =
     Arbitrary {
       for {
-        firstName <- arbitrary[String]
-        lastName <- arbitrary[String]
+        firstName     <- arbitrary[String]
+        lastName      <- arbitrary[String]
         accountNumber <- arbitrary[String]
-        sortCode <- arbitrary[String]
+        sortCode      <- arbitrary[String]
       } yield BankAccountDetails(firstName, lastName, accountNumber, sortCode)
     }
 
   implicit lazy val arbitraryBuildingSocietyDetails: Arbitrary[BuildingSocietyDetails] =
     Arbitrary {
       for {
-        firstName <- arbitrary[String]
-        lastName <- arbitrary[String]
+        firstName       <- arbitrary[String]
+        lastName        <- arbitrary[String]
         buildingSociety <- Gen.oneOf(BuildingSociety.allBuildingSocieties)
-        rollNumber <- arbitrary[String]
+        rollNumber      <- arbitrary[String]
       } yield BuildingSocietyDetails(firstName, lastName, buildingSociety, rollNumber)
     }
 

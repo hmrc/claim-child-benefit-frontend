@@ -50,10 +50,9 @@ class ApplicantNationalityFormProviderSpec extends StringFieldBehaviours {
 
       val invalidAnswers = arbitrary[String].suchThat(x => !Nationality.allNationalities.map(_.name).contains(x))
 
-      forAll(invalidAnswers) {
-        answer =>
-          val result = form.bind(Map("value" -> answer)).apply(fieldName)
-          result.errors must contain only FormError(fieldName, requiredKey)
+      forAll(invalidAnswers) { answer =>
+        val result = form.bind(Map("value" -> answer)).apply(fieldName)
+        result.errors `must` contain `only` FormError(fieldName, requiredKey)
       }
     }
 
@@ -64,7 +63,7 @@ class ApplicantNationalityFormProviderSpec extends StringFieldBehaviours {
       val form = new ApplicantNationalityFormProvider()(index, existingAnswers)
 
       val result = form.bind(Map(fieldName -> answer.name)).apply(fieldName)
-      result.errors must contain only FormError(fieldName, "applicantNationality.error.duplicate")
+      result.errors `must` contain `only` FormError(fieldName, "applicantNationality.error.duplicate")
     }
   }
 }

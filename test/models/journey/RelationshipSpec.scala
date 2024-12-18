@@ -41,88 +41,138 @@ class RelationshipSpec extends AnyFreeSpec with Matchers with ModelGenerators wi
 
       val answers =
         UserAnswers("id")
-          .set(RelationshipStatusPage, Married).success.value
-          .set(PartnerNamePage, adultName).success.value
-          .set(PartnerNinoKnownPage, false).success.value
-          .set(PartnerDateOfBirthPage, LocalDate.now).success.value
-          .set(PartnerNationalityPage(index), nationality).success.value
-          .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-          .set(PartnerIsHmfOrCivilServantPage, false).success.value
-          .set(PartnerWorkedAbroadPage, false).success.value
-          .set(PartnerReceivedBenefitsAbroadPage, false).success.value
-          .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming).success.value
+          .set(RelationshipStatusPage, Married)
+          .success
+          .value
+          .set(PartnerNamePage, adultName)
+          .success
+          .value
+          .set(PartnerNinoKnownPage, false)
+          .success
+          .value
+          .set(PartnerDateOfBirthPage, LocalDate.now)
+          .success
+          .value
+          .set(PartnerNationalityPage(index), nationality)
+          .success
+          .value
+          .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses)
+          .success
+          .value
+          .set(PartnerIsHmfOrCivilServantPage, false)
+          .success
+          .value
+          .set(PartnerWorkedAbroadPage, false)
+          .success
+          .value
+          .set(PartnerReceivedBenefitsAbroadPage, false)
+          .success
+          .value
+          .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming)
+          .success
+          .value
 
       val (errors, data) = Relationship.build(answers).pad
 
-      data.value mustEqual Relationship(
+      data.value `mustEqual` Relationship(
         status = Married,
         since = None,
-        partner = Some(Partner(
-          name = adultName,
-          dateOfBirth = LocalDate.now,
-          nationalities = NonEmptyList(nationality, Nil),
-          nationalInsuranceNumber = None,
-          memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
-          eldestChild = None,
-          countriesWorked = Nil,
-          countriesReceivedBenefits = Nil,
-          employmentStatus = EmploymentStatus.activeStatuses
-        ))
+        partner = Some(
+          Partner(
+            name = adultName,
+            dateOfBirth = LocalDate.now,
+            nationalities = NonEmptyList(nationality, Nil),
+            nationalInsuranceNumber = None,
+            memberOfHMForcesOrCivilServantAbroad = false,
+            currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
+            eldestChild = None,
+            countriesWorked = Nil,
+            countriesReceivedBenefits = Nil,
+            employmentStatus = EmploymentStatus.activeStatuses
+          )
+        )
       )
 
-      errors must not be defined
+      errors `must` `not` `be` defined
     }
 
     "must return a model when the relationship is Cohabiting and cohabitation date and Partner data are present" in {
 
       val answers =
         UserAnswers("id")
-          .set(RelationshipStatusPage, Cohabiting).success.value
-          .set(CohabitationDatePage, LocalDate.now).success.value
-          .set(PartnerNamePage, adultName).success.value
-          .set(PartnerNinoKnownPage, false).success.value
-          .set(PartnerDateOfBirthPage, LocalDate.now).success.value
-          .set(PartnerNationalityPage(index), nationality).success.value
-          .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-          .set(PartnerIsHmfOrCivilServantPage, false).success.value
-          .set(PartnerWorkedAbroadPage, false).success.value
-          .set(PartnerReceivedBenefitsAbroadPage, false).success.value
-          .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming).success.value
+          .set(RelationshipStatusPage, Cohabiting)
+          .success
+          .value
+          .set(CohabitationDatePage, LocalDate.now)
+          .success
+          .value
+          .set(PartnerNamePage, adultName)
+          .success
+          .value
+          .set(PartnerNinoKnownPage, false)
+          .success
+          .value
+          .set(PartnerDateOfBirthPage, LocalDate.now)
+          .success
+          .value
+          .set(PartnerNationalityPage(index), nationality)
+          .success
+          .value
+          .set(PartnerEmploymentStatusPage, EmploymentStatus.activeStatuses)
+          .success
+          .value
+          .set(PartnerIsHmfOrCivilServantPage, false)
+          .success
+          .value
+          .set(PartnerWorkedAbroadPage, false)
+          .success
+          .value
+          .set(PartnerReceivedBenefitsAbroadPage, false)
+          .success
+          .value
+          .set(PartnerClaimingChildBenefitPage, PartnerClaimingChildBenefit.NotClaiming)
+          .success
+          .value
 
       val (errors, data) = Relationship.build(answers).pad
 
-      data.value mustEqual Relationship(
+      data.value `mustEqual` Relationship(
         status = Cohabiting,
         since = Some(LocalDate.now),
-        partner = Some(Partner(
-          name = adultName,
-          dateOfBirth = LocalDate.now,
-          nationalities = NonEmptyList(nationality, Nil),
-          nationalInsuranceNumber = None,
-          memberOfHMForcesOrCivilServantAbroad = false,
-          currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
-          eldestChild = None,
-          countriesWorked = Nil,
-          countriesReceivedBenefits = Nil,
-          employmentStatus = EmploymentStatus.activeStatuses
-        ))
+        partner = Some(
+          Partner(
+            name = adultName,
+            dateOfBirth = LocalDate.now,
+            nationalities = NonEmptyList(nationality, Nil),
+            nationalInsuranceNumber = None,
+            memberOfHMForcesOrCivilServantAbroad = false,
+            currentlyClaimingChildBenefit = PartnerClaimingChildBenefit.NotClaiming,
+            eldestChild = None,
+            countriesWorked = Nil,
+            countriesReceivedBenefits = Nil,
+            employmentStatus = EmploymentStatus.activeStatuses
+          )
+        )
       )
 
-      errors must not be defined
+      errors `must` `not` `be` defined
     }
 
     "must return a model when the relationship is Separated and separation date is present" in {
 
       val answers =
         UserAnswers("id")
-          .set(RelationshipStatusPage, Separated).success.value
-          .set(SeparationDatePage, LocalDate.now).success.value
+          .set(RelationshipStatusPage, Separated)
+          .success
+          .value
+          .set(SeparationDatePage, LocalDate.now)
+          .success
+          .value
 
       val (errors, data) = Relationship.build(answers).pad
 
-      data.value mustEqual Relationship(Separated, Some(LocalDate.now), None)
-      errors must not be defined
+      data.value `mustEqual` Relationship(Separated, Some(LocalDate.now), None)
+      errors `must` `not` `be` defined
     }
 
     "must return a model when the relationship is Single, Divorced or Widowed" in {
@@ -130,12 +180,14 @@ class RelationshipSpec extends AnyFreeSpec with Matchers with ModelGenerators wi
       val status = Gen.oneOf(Single, Divorced, Widowed).sample.value
       val answers =
         UserAnswers("id")
-          .set(RelationshipStatusPage, status).success.value
+          .set(RelationshipStatusPage, status)
+          .success
+          .value
 
       val (errors, data) = Relationship.build(answers).pad
 
-      data.value mustEqual Relationship(status, None, None)
-      errors must not be defined
+      data.value `mustEqual` Relationship(status, None, None)
+      errors `must` `not` `be` defined
     }
 
     "must return errors when relationship status is missing" in {
@@ -144,20 +196,22 @@ class RelationshipSpec extends AnyFreeSpec with Matchers with ModelGenerators wi
 
       val (errors, data) = Relationship.build(answers).pad
 
-      data must not be defined
-      errors.value.toChain.toList must contain only RelationshipStatusPage
+      data `must` `not` `be` defined
+      errors.value.toChain.toList `must` contain `only` RelationshipStatusPage
     }
 
     "must return errors when the relationship is Separated and separation date is missing" in {
 
       val answers =
         UserAnswers("id")
-          .set(RelationshipStatusPage, Separated).success.value
+          .set(RelationshipStatusPage, Separated)
+          .success
+          .value
 
       val (errors, data) = Relationship.build(answers).pad
 
-      data must not be defined
-      errors.value.toChain.toList must contain only SeparationDatePage
+      data `must` `not` `be` defined
+      errors.value.toChain.toList `must` contain `only` SeparationDatePage
     }
 
     "must return errors when the relationship is Cohabiting and cohabitation date or Partner data is missing" in {
@@ -166,8 +220,8 @@ class RelationshipSpec extends AnyFreeSpec with Matchers with ModelGenerators wi
 
       val (errors, data) = Relationship.build(answers).pad
 
-      data must not be defined
-      errors.value.toChain.toList must contain(CohabitationDatePage)
+      data `must` `not` `be` defined
+      errors.value.toChain.toList `must` contain(CohabitationDatePage)
     }
 
     "must return errors when the relationship is Married and Partner data is missing" in {
@@ -176,8 +230,8 @@ class RelationshipSpec extends AnyFreeSpec with Matchers with ModelGenerators wi
 
       val (errors, data) = Relationship.build(answers).pad
 
-      data must not be defined
-      errors mustBe defined
+      data `must` `not` `be` defined
+      errors `mustBe` defined
     }
   }
 }

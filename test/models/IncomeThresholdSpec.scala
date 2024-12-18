@@ -23,8 +23,8 @@ class IncomeThresholdSpec extends SpecBase {
   "IncomeThreshold" - {
 
     "must return correct amounts for date after 5 April 2024" in {
-      IncomeThreshold.Lower.amount mustBe "60,000"
-      IncomeThreshold.Upper.amount mustBe "80,000"
+      IncomeThreshold.Lower.amount `mustBe` "60,000"
+      IncomeThreshold.Upper.amount `mustBe` "80,000"
     }
   }
 }

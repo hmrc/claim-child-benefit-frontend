@@ -25,7 +25,8 @@ import org.scalatest.matchers.must.Matchers
 import pages.payments._
 import queries.BankAccountInsightsResultQuery
 
-class AccountDetailsWithHolderSpec extends AnyFreeSpec with Matchers with ModelGenerators with TryValues with OptionValues {
+class AccountDetailsWithHolderSpec
+    extends AnyFreeSpec with Matchers with ModelGenerators with TryValues with OptionValues {
 
   private val bankDetails = arbitrary[BankAccountDetails].sample.value
   private val buildingSociety = arbitrary[BuildingSocietyDetails].sample.value
@@ -43,31 +44,53 @@ class AccountDetailsWithHolderSpec extends AnyFreeSpec with Matchers with ModelG
 
             val answers =
               UserAnswers("id")
-                .set(ApplicantHasSuitableAccountPage, true).success.value
-                .set(AccountTypePage, AccountType.SortCodeAccountNumber).success.value
-                .set(BankAccountHolderPage, BankAccountHolder.Applicant).success.value
-                .set(BankAccountDetailsPage, bankDetails).success.value
-                .set(BankAccountInsightsResultQuery, bankAccountRisk).success.value
+                .set(ApplicantHasSuitableAccountPage, true)
+                .success
+                .value
+                .set(AccountTypePage, AccountType.SortCodeAccountNumber)
+                .success
+                .value
+                .set(BankAccountHolderPage, BankAccountHolder.Applicant)
+                .success
+                .value
+                .set(BankAccountDetailsPage, bankDetails)
+                .success
+                .value
+                .set(BankAccountInsightsResultQuery, bankAccountRisk)
+                .success
+                .value
 
             val (errors, data) = AccountDetailsWithHolder.build(answers).pad
 
-            data.value.value mustEqual BankAccountWithHolder(BankAccountHolder.Applicant, bankDetails, Some(bankAccountRisk))
-            errors must not be defined
+            data.value.value `mustEqual` BankAccountWithHolder(
+              BankAccountHolder.Applicant,
+              bankDetails,
+              Some(bankAccountRisk)
+            )
+            errors `must` `not` `be` defined
           }
 
           "when bank account insights are not available" in {
 
             val answers =
               UserAnswers("id")
-                .set(ApplicantHasSuitableAccountPage, true).success.value
-                .set(AccountTypePage, AccountType.SortCodeAccountNumber).success.value
-                .set(BankAccountHolderPage, BankAccountHolder.Applicant).success.value
-                .set(BankAccountDetailsPage, bankDetails).success.value
+                .set(ApplicantHasSuitableAccountPage, true)
+                .success
+                .value
+                .set(AccountTypePage, AccountType.SortCodeAccountNumber)
+                .success
+                .value
+                .set(BankAccountHolderPage, BankAccountHolder.Applicant)
+                .success
+                .value
+                .set(BankAccountDetailsPage, bankDetails)
+                .success
+                .value
 
             val (errors, data) = AccountDetailsWithHolder.build(answers).pad
 
-            data.value.value mustEqual BankAccountWithHolder(BankAccountHolder.Applicant, bankDetails, None)
-            errors must not be defined
+            data.value.value `mustEqual` BankAccountWithHolder(BankAccountHolder.Applicant, bankDetails, None)
+            errors `must` `not` `be` defined
           }
         }
 
@@ -75,13 +98,17 @@ class AccountDetailsWithHolderSpec extends AnyFreeSpec with Matchers with ModelG
 
           val answers =
             UserAnswers("id")
-              .set(ApplicantHasSuitableAccountPage, true).success.value
-              .set(AccountTypePage, AccountType.SortCodeAccountNumber).success.value
+              .set(ApplicantHasSuitableAccountPage, true)
+              .success
+              .value
+              .set(AccountTypePage, AccountType.SortCodeAccountNumber)
+              .success
+              .value
 
           val (errors, data) = AccountDetailsWithHolder.build(answers).pad
 
-          data must not be defined
-          errors.value.toChain.toList must contain theSameElementsAs Seq(
+          data `must` `not` `be` defined
+          errors.value.toChain.toList `must` contain theSameElementsAs Seq(
             BankAccountHolderPage,
             BankAccountDetailsPage
           )
@@ -94,28 +121,40 @@ class AccountDetailsWithHolderSpec extends AnyFreeSpec with Matchers with ModelG
 
           val answers =
             UserAnswers("id")
-              .set(ApplicantHasSuitableAccountPage, true).success.value
-              .set(AccountTypePage, AccountType.BuildingSocietyRollNumber).success.value
-              .set(BankAccountHolderPage, BankAccountHolder.Applicant).success.value
-              .set(BuildingSocietyDetailsPage, buildingSociety).success.value
+              .set(ApplicantHasSuitableAccountPage, true)
+              .success
+              .value
+              .set(AccountTypePage, AccountType.BuildingSocietyRollNumber)
+              .success
+              .value
+              .set(BankAccountHolderPage, BankAccountHolder.Applicant)
+              .success
+              .value
+              .set(BuildingSocietyDetailsPage, buildingSociety)
+              .success
+              .value
 
           val (errors, data) = AccountDetailsWithHolder.build(answers).pad
 
-          data.value.value mustEqual BuildingSocietyWithHolder(BankAccountHolder.Applicant, buildingSociety)
-          errors must not be defined
+          data.value.value `mustEqual` BuildingSocietyWithHolder(BankAccountHolder.Applicant, buildingSociety)
+          errors `must` `not` `be` defined
         }
 
         "must return errors when any details are missing" in {
 
           val answers =
             UserAnswers("id")
-              .set(ApplicantHasSuitableAccountPage, true).success.value
-              .set(AccountTypePage, AccountType.BuildingSocietyRollNumber).success.value
+              .set(ApplicantHasSuitableAccountPage, true)
+              .success
+              .value
+              .set(AccountTypePage, AccountType.BuildingSocietyRollNumber)
+              .success
+              .value
 
           val (errors, data) = AccountDetailsWithHolder.build(answers).pad
 
-          data must not be defined
-          errors.value.toChain.toList must contain theSameElementsAs Seq(
+          data `must` `not` `be` defined
+          errors.value.toChain.toList `must` contain theSameElementsAs Seq(
             BankAccountHolderPage,
             BuildingSocietyDetailsPage
           )
@@ -126,12 +165,14 @@ class AccountDetailsWithHolderSpec extends AnyFreeSpec with Matchers with ModelG
 
         val answers =
           UserAnswers("id")
-            .set(ApplicantHasSuitableAccountPage, true).success.value
+            .set(ApplicantHasSuitableAccountPage, true)
+            .success
+            .value
 
         val (errors, data) = AccountDetailsWithHolder.build(answers).pad
 
-        data must not be defined
-        errors.value.toChain.toList must contain only AccountTypePage
+        data `must` `not` `be` defined
+        errors.value.toChain.toList `must` contain `only` AccountTypePage
       }
     }
 
@@ -141,12 +182,14 @@ class AccountDetailsWithHolderSpec extends AnyFreeSpec with Matchers with ModelG
 
         val answers =
           UserAnswers("id")
-            .set(ApplicantHasSuitableAccountPage, false).success.value
+            .set(ApplicantHasSuitableAccountPage, false)
+            .success
+            .value
 
         val (errors, data) = AccountDetailsWithHolder.build(answers).pad
 
-        data.value must not be defined
-        errors must not be defined
+        data.value `must` `not` `be` defined
+        errors `must` `not` `be` defined
       }
     }
 
@@ -156,8 +199,8 @@ class AccountDetailsWithHolderSpec extends AnyFreeSpec with Matchers with ModelG
 
       val (errors, data) = AccountDetailsWithHolder.build(answers).pad
 
-      data must not be defined
-      errors.value.toChain.toList must contain only ApplicantHasSuitableAccountPage
+      data `must` `not` `be` defined
+      errors.value.toChain.toList `must` contain `only` ApplicantHasSuitableAccountPage
     }
   }
 }

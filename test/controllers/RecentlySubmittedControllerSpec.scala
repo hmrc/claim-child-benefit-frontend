@@ -50,7 +50,7 @@ class RecentlySubmittedControllerSpec extends SpecBase with MockitoSugar with Be
       val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy").withZone(ZoneId.systemDefault())
       val formattedDate = formatter.format(fixedInstant)
 
-      when(mockConnector.getRecentClaim()(any())) thenReturn Future.successful(Some(recentClaim))
+      when(mockConnector.getRecentClaim()(any())) `thenReturn` Future.successful(Some(recentClaim))
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -64,14 +64,14 @@ class RecentlySubmittedControllerSpec extends SpecBase with MockitoSugar with Be
 
         val view = application.injector.instanceOf[RecentlySubmittedView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(formattedDate)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(formattedDate)(request, messages(application)).toString
       }
     }
 
     "must redirect to Journey Recovery when a recent claim cannot be found for this user" in {
 
-      when(mockConnector.getRecentClaim()(any())) thenReturn Future.successful(None)
+      when(mockConnector.getRecentClaim()(any())) `thenReturn` Future.successful(None)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -83,8 +83,8 @@ class RecentlySubmittedControllerSpec extends SpecBase with MockitoSugar with Be
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

@@ -63,9 +63,13 @@ class ApplicantIncomeControllerSpec extends SpecBase with MockitoSugar {
 
         val view = application.injector.instanceOf[ApplicantIncomeView]
 
-        status(result) mustEqual OK
+        status(result) `mustEqual` OK
 
-        contentAsString(result) mustEqual view(form, waypoints, hasPartner = true)(request, messages(application), clockAtFixedInstant).toString
+        contentAsString(result) `mustEqual` view(form, waypoints, hasPartner = true)(
+          request,
+          messages(application),
+          clockAtFixedInstant
+        ).toString
       }
     }
 
@@ -80,9 +84,13 @@ class ApplicantIncomeControllerSpec extends SpecBase with MockitoSugar {
 
         val view = application.injector.instanceOf[ApplicantIncomeView]
 
-        status(result) mustEqual OK
+        status(result) `mustEqual` OK
 
-        contentAsString(result) mustEqual view(form, waypoints, hasPartner = false)(request, messages(application), clockAtFixedInstant).toString
+        contentAsString(result) `mustEqual` view(form, waypoints, hasPartner = false)(
+          request,
+          messages(application),
+          clockAtFixedInstant
+        ).toString
       }
     }
 
@@ -99,8 +107,12 @@ class ApplicantIncomeControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(Income.values.head), waypoints, hasPartner = false)(request, messages(application), clockAtFixedInstant).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form.fill(Income.values.head), waypoints, hasPartner = false)(
+          request,
+          messages(application),
+          clockAtFixedInstant
+        ).toString
       }
     }
 
@@ -108,7 +120,7 @@ class ApplicantIncomeControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(coupleAnswers))
@@ -125,8 +137,10 @@ class ApplicantIncomeControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
         val expectedAnswers = coupleAnswers.set(ApplicantIncomePage, Income.values.head).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ApplicantIncomePage.navigate(waypoints, coupleAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` ApplicantIncomePage
+          .navigate(waypoints, coupleAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -146,8 +160,12 @@ class ApplicantIncomeControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, hasPartner = false)(request, messages(application), clockAtFixedInstant).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints, hasPartner = false)(
+          request,
+          messages(application),
+          clockAtFixedInstant
+        ).toString
       }
     }
 
@@ -160,8 +178,8 @@ class ApplicantIncomeControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -176,8 +194,8 @@ class ApplicantIncomeControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

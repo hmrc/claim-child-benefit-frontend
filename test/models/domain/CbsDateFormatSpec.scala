@@ -38,7 +38,7 @@ class CbsDateFormatSpec extends AnyFreeSpec with Matchers {
       val model = TestModel(LocalDate.of(2023, 1, 2))
       val json = Json.toJson(model)
 
-      json mustEqual Json.obj("date" -> "02/01/2023")
+      json `mustEqual` Json.obj("date" -> "02/01/2023")
     }
   }
 }

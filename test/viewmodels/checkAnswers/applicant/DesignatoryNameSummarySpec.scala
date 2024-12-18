@@ -46,9 +46,11 @@ class DesignatoryNameSummarySpec extends AnyFreeSpec with Matchers with OptionVa
 
           val answers =
             UserAnswers("id", designatoryDetails = Some(designatoryDetails))
-              .set(DesignatoryNamePage, newName).success.value
+              .set(DesignatoryNamePage, newName)
+              .success
+              .value
 
-          DesignatoryNameSummary.row(answers, EmptyWaypoints).value.value.content mustEqual Text("new first new last")
+          DesignatoryNameSummary.row(answers, EmptyWaypoints).value.value.content `mustEqual` Text("new first new last")
         }
       }
 
@@ -59,7 +61,9 @@ class DesignatoryNameSummarySpec extends AnyFreeSpec with Matchers with OptionVa
           val answers =
             UserAnswers("id", designatoryDetails = Some(designatoryDetails))
 
-          DesignatoryNameSummary.row(answers, EmptyWaypoints).value.value.content mustEqual Text("original first original last")
+          DesignatoryNameSummary.row(answers, EmptyWaypoints).value.value.content `mustEqual` Text(
+            "original first original last"
+          )
         }
       }
     }
@@ -70,7 +74,7 @@ class DesignatoryNameSummarySpec extends AnyFreeSpec with Matchers with OptionVa
 
         val answers = UserAnswers("id").set(DesignatoryNamePage, newName).success.value
 
-        DesignatoryNameSummary.row(answers, EmptyWaypoints) must not be defined
+        DesignatoryNameSummary.row(answers, EmptyWaypoints) `must` not `be` defined
       }
     }
   }

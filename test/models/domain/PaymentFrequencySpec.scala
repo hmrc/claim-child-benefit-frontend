@@ -26,24 +26,24 @@ class PaymentFrequencySpec extends AnyFreeSpec with Matchers {
 
     "must return Weekly when given Weekly" in {
 
-      PaymentFrequency.build(models.PaymentFrequency.Weekly) mustEqual PaymentFrequency.Weekly
+      PaymentFrequency.build(models.PaymentFrequency.Weekly) `mustEqual` PaymentFrequency.Weekly
     }
 
     "must return Every Four Weeks when given Every Four Weeks" in {
 
-      PaymentFrequency.build(models.PaymentFrequency.EveryFourWeeks) mustEqual PaymentFrequency.EveryFourWeeks
+      PaymentFrequency.build(models.PaymentFrequency.EveryFourWeeks) `mustEqual` PaymentFrequency.EveryFourWeeks
     }
   }
   ".writes" - {
 
     "must write Weekly" in {
 
-      Json.toJson[PaymentFrequency](PaymentFrequency.Weekly) mustEqual JsString("ONCE_A_WEEK")
+      Json.toJson[PaymentFrequency](PaymentFrequency.Weekly) `mustEqual` JsString("ONCE_A_WEEK")
     }
 
     "must write Every Four Weeks" in {
 
-      Json.toJson[PaymentFrequency](PaymentFrequency.EveryFourWeeks) mustEqual JsString("EVERY_4_WEEKS")
+      Json.toJson[PaymentFrequency](PaymentFrequency.EveryFourWeeks) `mustEqual` JsString("EVERY_4_WEEKS")
     }
   }
 }

@@ -23,6 +23,7 @@ import pages.partner.RelationshipStatusPage
 import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+import pages.RecoveryOps
 
 case object ApplicantIncomePage extends QuestionPage[Income] {
 

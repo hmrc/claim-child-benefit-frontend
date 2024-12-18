@@ -27,6 +27,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import ConnectorFailureLogger._
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 
 class BrmsConnector @Inject()(config: Configuration, httpClient: HttpClientV2)
                              (implicit ec: ExecutionContext) {

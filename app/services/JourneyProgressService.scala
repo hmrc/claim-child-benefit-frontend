@@ -24,10 +24,12 @@ import javax.inject.Singleton
 @Singleton
 class JourneyProgressService {
 
+  private type AddItemPageWithTerminus = AddItemPage & Terminus
+  
   def continue(startFrom: Page, answers: UserAnswers): Page = {
 
     def nextPage(currentPage: Page): Page = currentPage match {
-      case a: AddItemPage with Terminus =>
+      case a: AddItemPageWithTerminus =>
         val answersWithYes = answers.set(a, true).getOrElse(throw new Exception(s"Unable to set ${a.path} to true"))
         val totalNumberOfItems = answers.get(a.deriveNumberOfItems).getOrElse(0)
 
@@ -56,7 +58,7 @@ class JourneyProgressService {
       case c: CheckAnswersPage =>
         nextPage(c.navigate(EmptyWaypoints, answers, answers).page)
 
-      case q: QuestionPage[_] =>
+      case q: QuestionPage[?] =>
         if (answers.isDefined(q)) {
           nextPage(q.navigate(EmptyWaypoints, answers, answers).page)
         }

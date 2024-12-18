@@ -22,6 +22,7 @@ import pages.{AddItemPage, Page, QuestionPage, Waypoints}
 import play.api.libs.json.{JsObject, JsPath}
 import play.api.mvc.Call
 import queries.{Derivable, DeriveNumberOfPartnerNationalities}
+import pages.RecoveryOps
 
 final case class AddPartnerNationalityPage(override val index: Option[Index] = None) extends AddItemPage(index) with QuestionPage[Boolean] {
 

@@ -26,7 +26,7 @@ final case class WhitespaceAwareOptionalMapping[A](
 
   override val key: String = wrapped.key
 
-  override val mappings: Seq[Mapping[_]] = wrapped.mappings
+  override val mappings: Seq[Mapping[?]] = wrapped.mappings
 
   override def constraints: Seq[Constraint[Option[A]]] = additionalConstraints
 

@@ -27,7 +27,7 @@ class NationalityGroupSpec extends AnyFreeSpec with Matchers {
     "must sort nationality groups in order Eea, NonEea, UkCta" in {
 
       val unsorted = List[NationalityGroup](NonEea, Eea, UkCta)
-      unsorted.sorted(NationalityGroupOrdering) mustEqual List(Eea, NonEea, UkCta)
+      unsorted.sorted(NationalityGroupOrdering) `mustEqual` List(Eea, NonEea, UkCta)
     }
   }
 }

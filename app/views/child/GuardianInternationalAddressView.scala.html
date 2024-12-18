@@ -27,7 +27,7 @@
         continueButton: components.ContinueButton
 )
 
-@(form: Form[_], waypoints: Waypoints, index: Index, guardian: AdultName)(implicit request: Request[_], messages: Messages)
+@(form: Form[?], waypoints: Waypoints, index: Index, guardian: AdultName)(implicit request: Request[?], messages: Messages)
 
 @layout(pageTitle = title(form, messages("guardianInternationalAddress.title"))) {
 

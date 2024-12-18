@@ -24,50 +24,42 @@ import play.api.data.{Form, FormError}
 
 trait FieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Generators {
 
-  def fieldThatBindsValidData(form: Form[_],
-                              fieldName: String,
-                              validDataGenerator: Gen[String]): Unit = {
-
+  def fieldThatBindsValidData(form: Form[?], fieldName: String, validDataGenerator: Gen[String]): Unit =
     "bind valid data" in {
 
-      forAll(validDataGenerator -> "validDataItem") {
-        dataItem: String =>
-          val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
-          result.value.value mustBe dataItem
-          result.errors mustBe empty
+      forAll(validDataGenerator -> "validDataItem") { dataItem =>
+        val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
+        result.value.value `mustBe` dataItem
+        result.errors `mustBe` empty
       }
     }
-  }
 
-  def fieldThatDoesNotBindInvalidData(form: Form[_],
-                                      fieldName: String,
-                                      invalidDataGenerator: Gen[String],
-                                      invalidError: FormError): Unit = {
-
+  def fieldThatDoesNotBindInvalidData(
+    form: Form[?],
+    fieldName: String,
+    invalidDataGenerator: Gen[String],
+    invalidError: FormError
+  ): Unit =
     "must not bind invalid data" in {
 
-      forAll(invalidDataGenerator) {
-        dataItem: String =>
-          val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
-          result.errors mustEqual Seq(invalidError)
+      forAll(invalidDataGenerator) { dataItem =>
+        val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
+        result.errors `mustEqual` Seq(invalidError)
       }
     }
-  }
 
-  def mandatoryField(form: Form[_],
-                     fieldName: String,
-                     requiredError: FormError): Unit = {
+  def mandatoryField(form: Form[?], fieldName: String, requiredError: FormError): Unit = {
 
     "not bind when key is not present at all" in {
 
       val result = form.bind(emptyForm).apply(fieldName)
-      result.errors mustEqual Seq(requiredError)
+      result.errors `mustEqual` Seq(requiredError)
     }
 
     "not bind blank values" in {
 
       val result = form.bind(Map(fieldName -> "")).apply(fieldName)
-      result.errors mustEqual Seq(requiredError)
+      result.errors `mustEqual` Seq(requiredError)
     }
   }
 }

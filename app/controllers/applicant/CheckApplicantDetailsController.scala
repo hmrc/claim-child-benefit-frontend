@@ -26,6 +26,8 @@ import viewmodels.checkAnswers.applicant._
 import viewmodels.govuk.summarylist._
 import views.html.applicant.CheckApplicantDetailsView
 
+import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryList
+
 import javax.inject.Inject
 
 class CheckApplicantDetailsController  @Inject()(
@@ -44,7 +46,7 @@ class CheckApplicantDetailsController  @Inject()(
       val thisPage = CheckApplicantDetailsPage
       val waypoints = EmptyWaypoints
 
-      lazy val unauthenticatedDetails = SummaryListViewModel(
+      lazy val unauthenticatedDetails: SummaryList = SummaryListViewModel(
         rows = Seq(
           ApplicantNinoKnownSummary.row(request.userAnswers, waypoints, thisPage),
           ApplicantNinoSummary.row(request.userAnswers, waypoints, thisPage),
@@ -76,8 +78,8 @@ class CheckApplicantDetailsController  @Inject()(
           EldestChildDateOfBirthSummary.row(request.userAnswers, waypoints, thisPage)
         ).flatten
       )
-      
-      lazy val authenticatedDetails = SummaryListViewModel(
+
+      lazy val authenticatedDetails: SummaryList = SummaryListViewModel(
         rows = Seq(
           DesignatoryNameSummary.checkApplicantDetailsRow(request.userAnswers, waypoints, thisPage),
           DesignatoryAddressSummary.checkApplicantDetailsRow(request.userAnswers, waypoints),
@@ -106,11 +108,11 @@ class CheckApplicantDetailsController  @Inject()(
         ).flatten
       )
 
-     if ( request.userAnswers.isAuthenticated) {
-       Ok(view(authenticatedDetails))
-     } else {
-       Ok(view(unauthenticatedDetails))
-     }
+      if (request.userAnswers.isAuthenticated) {
+        Ok(view(authenticatedDetails))
+      } else {
+        Ok(view(unauthenticatedDetails))
+      }
   }
 
   def onSubmit: Action[AnyContent] = (identify andThen checkRecentClaims andThen getData andThen requireData) {

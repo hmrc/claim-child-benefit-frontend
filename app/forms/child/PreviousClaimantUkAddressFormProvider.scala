@@ -55,6 +55,6 @@ class PreviousClaimantUkAddressFormProvider @Inject() extends Mappings {
           maxLength(8, "previousClaimantUkAddress.error.postcode.length", previousClaimant.firstName),
           regexp(Validation.ukPostcodePattern, "previousClaimantUkAddress.error.postcode.invalid", previousClaimant.firstName)
         )
-    )(UkAddress.apply)(UkAddress.unapply)
+    )(UkAddress.apply)(o => Some(Tuple.fromProductTyped(o)))
   )
 }
