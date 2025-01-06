@@ -22,7 +22,7 @@
         newTabLink: HmrcNewTabLinkHelper
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@()(implicit request: Request[?], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("alreadyClaimed.title")), showBackLink = true) {
 

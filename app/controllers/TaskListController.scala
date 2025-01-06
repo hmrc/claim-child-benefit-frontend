@@ -55,7 +55,7 @@ class TaskListController@Inject()(
       }
   }
 
-  private def getUserAnswers(implicit request: OptionalDataRequest[_]): Future[UserAnswers] =
+  private def getUserAnswers(implicit request: OptionalDataRequest[?]): Future[UserAnswers] =
     request
       .userAnswers
       .map(Future.successful)

@@ -39,7 +39,8 @@ class ApplicantHasPreviousFamilyNameControllerSpec extends SpecBase with Mockito
   val form = formProvider()
   private val waypoints = EmptyWaypoints
 
-  lazy val applicantHasPreviousFamilyNameRoute = routes.ApplicantHasPreviousFamilyNameController.onPageLoad(waypoints).url
+  lazy val applicantHasPreviousFamilyNameRoute =
+    routes.ApplicantHasPreviousFamilyNameController.onPageLoad(waypoints).url
 
   "ApplicantHasPreviousFamilyName Controller" - {
 
@@ -54,8 +55,8 @@ class ApplicantHasPreviousFamilyNameControllerSpec extends SpecBase with Mockito
 
         val view = application.injector.instanceOf[ApplicantHasPreviousFamilyNameView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints)(request, messages(application)).toString
       }
     }
 
@@ -72,8 +73,8 @@ class ApplicantHasPreviousFamilyNameControllerSpec extends SpecBase with Mockito
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), waypoints)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form.fill(true), waypoints)(request, messages(application)).toString
       }
     }
 
@@ -81,7 +82,7 @@ class ApplicantHasPreviousFamilyNameControllerSpec extends SpecBase with Mockito
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -98,8 +99,10 @@ class ApplicantHasPreviousFamilyNameControllerSpec extends SpecBase with Mockito
         val result = route(application, request).value
         val expectedAnswers = emptyUserAnswers.set(ApplicantHasPreviousFamilyNamePage, true).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ApplicantHasPreviousFamilyNamePage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` ApplicantHasPreviousFamilyNamePage
+          .navigate(waypoints, emptyUserAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -119,8 +122,8 @@ class ApplicantHasPreviousFamilyNameControllerSpec extends SpecBase with Mockito
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints)(request, messages(application)).toString
       }
     }
 
@@ -133,8 +136,8 @@ class ApplicantHasPreviousFamilyNameControllerSpec extends SpecBase with Mockito
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -149,8 +152,8 @@ class ApplicantHasPreviousFamilyNameControllerSpec extends SpecBase with Mockito
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

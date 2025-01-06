@@ -48,6 +48,6 @@ class ApplicantNameFormProvider @Inject() extends Mappings {
            maxLength(35, "applicantName.error.lastName.length"),
            regexp(Validation.nameInputPattern, "applicantName.error.lastName.invalid")
          ))
-    )(AdultName.apply)(AdultName.unapply)
+    )(AdultName.apply)(o => Some(Tuple.fromProductTyped(o)))
    )
  }

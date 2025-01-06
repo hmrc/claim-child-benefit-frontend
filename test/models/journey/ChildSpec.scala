@@ -34,12 +34,14 @@ import queries.{AllChildPreviousNames, AllChildSummaries}
 
 import java.time.LocalDate
 
-class ChildSpec extends AnyFreeSpec with Matchers with ModelGenerators with TryValues with OptionValues with ScalaCheckPropertyChecks {
+class ChildSpec
+    extends AnyFreeSpec with Matchers with ModelGenerators with TryValues with OptionValues
+    with ScalaCheckPropertyChecks {
 
   val testMessages = Map(
     "default" -> Map("title" -> "foo bar")
   )
-  val messagesApi       = new DefaultMessagesApi(testMessages)
+  val messagesApi = new DefaultMessagesApi(testMessages)
   implicit val messages: Messages = messagesApi.preferred(FakeRequest("GET", "/"))
 
   private val adultName = arbitrary[AdultName].sample.value
@@ -72,36 +74,33 @@ class ChildSpec extends AnyFreeSpec with Matchers with ModelGenerators with TryV
     "must be empty if the child was born in E/S/W/NI and is not adopted" in {
 
       val gen = for {
-        country <- Gen.oneOf(England, Scotland, Wales, NorthernIreland)
+        country      <- Gen.oneOf(England, Scotland, Wales, NorthernIreland)
         relationship <- Gen.oneOf(BirthChild, StepChild, OtherRelationship)
       } yield (country, relationship)
 
-      forAll(gen) {
-        case (country, relationship) =>
-          val child = baseChild.copy(
-            countryOfRegistration = country,
-            relationshipToApplicant = relationship
-          )
+      forAll(gen) { case (country, relationship) =>
+        val child = baseChild.copy(
+          countryOfRegistration = country,
+          relationshipToApplicant = relationship
+        )
 
-          child.requiredDocuments mustBe empty
+        child.requiredDocuments `mustBe` empty
       }
     }
 
     "must contain Birth Certificate and Travel Document if the child was born outside the UK" in {
 
-      forAll(Gen.oneOf(OtherCountry, UnknownCountry)) {
-        country =>
-
-          baseChild.copy(countryOfRegistration = country).requiredDocuments must contain theSameElementsAs Seq(
-            BirthCertificate,
-            TravelDocument
-          )
+      forAll(Gen.oneOf(OtherCountry, UnknownCountry)) { country =>
+        baseChild.copy(countryOfRegistration = country).requiredDocuments `must` contain theSameElementsAs Seq(
+          BirthCertificate,
+          TravelDocument
+        )
       }
     }
 
     "must contain Adoption Certificate if the child is adopted" in {
 
-      baseChild.copy(relationshipToApplicant = AdoptedChild).requiredDocuments must contain only AdoptionCertificate
+      baseChild.copy(relationshipToApplicant = AdoptedChild).requiredDocuments `must` contain `only` AdoptionCertificate
     }
   }
 
@@ -114,7 +113,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with ModelGenerators with TryV
         dateChildStartedLivingWithApplicant = Some(LocalDate.now.minusMonths(3).plusDays(1))
       )
 
-      child.possiblyLivedAbroadSeparately mustEqual true
+      child.possiblyLivedAbroadSeparately `mustEqual` true
     }
 
     "must be true when the date the child started living with the applicant is less than 3 months ago, and the previous guardian's address is not known" in {
@@ -124,7 +123,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with ModelGenerators with TryV
         dateChildStartedLivingWithApplicant = Some(LocalDate.now.minusMonths(3).plusDays(1))
       )
 
-      child.possiblyLivedAbroadSeparately mustEqual true
+      child.possiblyLivedAbroadSeparately `mustEqual` true
     }
 
     "must be false when the date the child started living with the applicant is less than 3 months ago or more, and the previous guardian's address is known to be UK" in {
@@ -134,7 +133,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with ModelGenerators with TryV
         dateChildStartedLivingWithApplicant = Some(LocalDate.now.minusMonths(3).plusDays(1))
       )
 
-      child.possiblyLivedAbroadSeparately mustEqual false
+      child.possiblyLivedAbroadSeparately `mustEqual` false
     }
 
     "must be false when the date the child started living with the applicant is 3 months ago or more, and the previous guardian's address is known to be non-UK" in {
@@ -144,12 +143,12 @@ class ChildSpec extends AnyFreeSpec with Matchers with ModelGenerators with TryV
         dateChildStartedLivingWithApplicant = Some(LocalDate.now.minusMonths(3))
       )
 
-      child.possiblyLivedAbroadSeparately mustEqual false
+      child.possiblyLivedAbroadSeparately `mustEqual` false
     }
 
     "must be false when the child has not lived with anyone else" in {
 
-      baseChild.possiblyLivedAbroadSeparately mustEqual false
+      baseChild.possiblyLivedAbroadSeparately `mustEqual` false
     }
   }
 
@@ -163,7 +162,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with ModelGenerators with TryV
         dateChildStartedLivingWithApplicant = Some(LocalDate.now.minusMonths(3).plusDays(1))
       )
 
-      child.possiblyRecentlyCaredForByLocalAuthority mustEqual true
+      child.possiblyRecentlyCaredForByLocalAuthority `mustEqual` true
     }
 
     "must be false when the date the child started living with the applicant is less than 3 months ago, and the previous guardian's UK address does not contain an LA keyword" in {
@@ -173,7 +172,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with ModelGenerators with TryV
         dateChildStartedLivingWithApplicant = Some(LocalDate.now.minusMonths(3).plusDays(1))
       )
 
-      child.possiblyRecentlyCaredForByLocalAuthority mustEqual false
+      child.possiblyRecentlyCaredForByLocalAuthority `mustEqual` false
     }
 
     "must be false when the date the child started living with the applicant is 3 months ago or more, and the previous guardian's UK address contains an LA keyword" in {
@@ -184,49 +183,101 @@ class ChildSpec extends AnyFreeSpec with Matchers with ModelGenerators with TryV
         dateChildStartedLivingWithApplicant = Some(LocalDate.now.minusMonths(3))
       )
 
-      child.possiblyRecentlyCaredForByLocalAuthority mustEqual false
+      child.possiblyRecentlyCaredForByLocalAuthority `mustEqual` false
     }
   }
-  
+
   ".buildChildren" - {
 
     val minimalChildAnswers: UserAnswers =
       UserAnswers("id")
-        .set(ChildNamePage(Index(0)), childName).success.value
-        .set(ChildHasPreviousNamePage(Index(0)), false).success.value
-        .set(ChildBiologicalSexPage(Index(0)), sex).success.value
-        .set(ChildDateOfBirthPage(Index(0)), LocalDate.now).success.value
-        .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.England).success.value
-        .set(BirthCertificateHasSystemNumberPage(Index(0)), false).success.value
-        .set(ApplicantRelationshipToChildPage(Index(0)), relationshipToChild).success.value
-        .set(AdoptingThroughLocalAuthorityPage(Index(0)), false).success.value
-        .set(AnyoneClaimedForChildBeforePage(Index(0)), false).success.value
-        .set(ChildLivesWithApplicantPage(Index(0)), true).success.value
-        .set(ChildLivedWithAnyoneElsePage(Index(0)), false).success.value
+        .set(ChildNamePage(Index(0)), childName)
+        .success
+        .value
+        .set(ChildHasPreviousNamePage(Index(0)), false)
+        .success
+        .value
+        .set(ChildBiologicalSexPage(Index(0)), sex)
+        .success
+        .value
+        .set(ChildDateOfBirthPage(Index(0)), LocalDate.now)
+        .success
+        .value
+        .set(ChildBirthRegistrationCountryPage(Index(0)), ChildBirthRegistrationCountry.England)
+        .success
+        .value
+        .set(BirthCertificateHasSystemNumberPage(Index(0)), false)
+        .success
+        .value
+        .set(ApplicantRelationshipToChildPage(Index(0)), relationshipToChild)
+        .success
+        .value
+        .set(AdoptingThroughLocalAuthorityPage(Index(0)), false)
+        .success
+        .value
+        .set(AnyoneClaimedForChildBeforePage(Index(0)), false)
+        .success
+        .value
+        .set(ChildLivesWithApplicantPage(Index(0)), true)
+        .success
+        .value
+        .set(ChildLivedWithAnyoneElsePage(Index(0)), false)
+        .success
+        .value
 
     def addFullChildAnswers(answers: UserAnswers, index: Index): UserAnswers =
       answers
-        .set(ChildNamePage(index), childName).success.value
-        .set(ChildHasPreviousNamePage(index), true).success.value
-        .set(ChildNameChangedByDeedPollPage(index), true).success.value
-        .set(ChildPreviousNamePage(index, Index(0)), childName).success.value
-        .set(ChildBiologicalSexPage(index), sex).success.value
-        .set(ChildDateOfBirthPage(index), LocalDate.now).success.value
-        .set(ChildBirthRegistrationCountryPage(index), ChildBirthRegistrationCountry.England).success.value
-        .set(BirthCertificateHasSystemNumberPage(index), true).success.value
-        .set(ChildBirthCertificateSystemNumberPage(index), systemNumber).success.value
-        .set(ApplicantRelationshipToChildPage(index), relationshipToChild).success.value
-        .set(AdoptingThroughLocalAuthorityPage(index), false).success.value
-        .set(AnyoneClaimedForChildBeforePage(index), true).success.value
-        .set(PreviousClaimantNameKnownPage(index), false).success.value
-        .set(ChildLivesWithApplicantPage(index), false).success.value
-        .set(GuardianNameKnownPage(index), false).success.value
+        .set(ChildNamePage(index), childName)
+        .success
+        .value
+        .set(ChildHasPreviousNamePage(index), true)
+        .success
+        .value
+        .set(ChildNameChangedByDeedPollPage(index), true)
+        .success
+        .value
+        .set(ChildPreviousNamePage(index, Index(0)), childName)
+        .success
+        .value
+        .set(ChildBiologicalSexPage(index), sex)
+        .success
+        .value
+        .set(ChildDateOfBirthPage(index), LocalDate.now)
+        .success
+        .value
+        .set(ChildBirthRegistrationCountryPage(index), ChildBirthRegistrationCountry.England)
+        .success
+        .value
+        .set(BirthCertificateHasSystemNumberPage(index), true)
+        .success
+        .value
+        .set(ChildBirthCertificateSystemNumberPage(index), systemNumber)
+        .success
+        .value
+        .set(ApplicantRelationshipToChildPage(index), relationshipToChild)
+        .success
+        .value
+        .set(AdoptingThroughLocalAuthorityPage(index), false)
+        .success
+        .value
+        .set(AnyoneClaimedForChildBeforePage(index), true)
+        .success
+        .value
+        .set(PreviousClaimantNameKnownPage(index), false)
+        .success
+        .value
+        .set(ChildLivesWithApplicantPage(index), false)
+        .success
+        .value
+        .set(GuardianNameKnownPage(index), false)
+        .success
+        .value
 
     "must return a single child (sparsest case)" in {
 
       val (errors, data) = Child.buildChildren(minimalChildAnswers).pad
 
-      data.value.toList must contain only Child(
+      data.value.toList `must` contain `only` Child(
         name = childName,
         nameChangedByDeedPoll = None,
         previousNames = Nil,
@@ -242,7 +293,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with ModelGenerators with TryV
         previousGuardian = None,
         dateChildStartedLivingWithApplicant = None
       )
-      errors must not be defined
+      errors `must` `not` `be` defined
     }
 
     "must return multiple children (including full case)" in {
@@ -285,7 +336,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with ModelGenerators with TryV
           dateChildStartedLivingWithApplicant = None
         )
       )
-      errors must not be defined
+      errors `must` not `be` defined
     }
 
     "must return errors" - {
@@ -296,20 +347,24 @@ class ChildSpec extends AnyFreeSpec with Matchers with ModelGenerators with TryV
 
         val (errors, data) = Child.buildChildren(answers).pad
 
-        data must not be defined
-        errors.value.toChain.toList must contain only AllChildSummaries
+        data `must` not `be` defined
+        errors.value.toChain.toList `must` contain `only` AllChildSummaries
       }
 
       "when the user said the child had other names, but they are missing and so is whether it was changed by deed poll" in {
 
         val answers =
           addFullChildAnswers(UserAnswers("id"), Index(0))
-            .remove(ChildNameChangedByDeedPollPage(Index(0))).success.value
-            .remove(AllChildPreviousNames(Index(0))).success.value
+            .remove(ChildNameChangedByDeedPollPage(Index(0)))
+            .success
+            .value
+            .remove(AllChildPreviousNames(Index(0)))
+            .success
+            .value
 
         val (errors, data) = Child.buildChildren(answers).pad
 
-        data must not be defined
+        data `must` not `be` defined
         errors.value.toChain.toList must contain theSameElementsAs Seq(
           ChildNameChangedByDeedPollPage(Index(0)),
           AllChildPreviousNames(Index(0))
@@ -317,78 +372,93 @@ class ChildSpec extends AnyFreeSpec with Matchers with ModelGenerators with TryV
       }
 
       "when the birth is registered in England or Wales, but whether there is a system number is missing" in {
-        
+
         val answers =
           minimalChildAnswers
-            .remove(BirthCertificateHasSystemNumberPage(Index(0))).success.value
+            .remove(BirthCertificateHasSystemNumberPage(Index(0)))
+            .success
+            .value
 
         val (errors, data) = Child.buildChildren(answers).pad
 
-        data must not be defined
-        errors.value.toChain.toList must contain only BirthCertificateHasSystemNumberPage(Index(0))
+        data `must` not `be` defined
+        errors.value.toChain.toList `must` contain `only` BirthCertificateHasSystemNumberPage(Index(0))
       }
 
       "when the user said there was a system number but it is missing" in {
 
         val answers =
           minimalChildAnswers
-            .set(BirthCertificateHasSystemNumberPage(Index(0)), true).success.value
+            .set(BirthCertificateHasSystemNumberPage(Index(0)), true)
+            .success
+            .value
 
         val (errors, data) = Child.buildChildren(answers).pad
 
-        data must not be defined
-        errors.value.toChain.toList must contain only ChildBirthCertificateSystemNumberPage(Index(0))
+        data `must` not `be` defined
+        errors.value.toChain.toList `must` contain `only` ChildBirthCertificateSystemNumberPage(Index(0))
       }
 
       "when the birth is registered in Scotland, but whether there is a registration number is missing" in {
 
         val answers =
           minimalChildAnswers
-            .set(ChildBirthRegistrationCountryPage(Index(0)), Scotland).success.value
+            .set(ChildBirthRegistrationCountryPage(Index(0)), Scotland)
+            .success
+            .value
 
         val (errors, data) = Child.buildChildren(answers).pad
 
-        data must not be defined
-        errors.value.toChain.toList must contain only ScottishBirthCertificateHasNumbersPage(Index(0))
+        data `must` not `be` defined
+        errors.value.toChain.toList `must` contain `only` ScottishBirthCertificateHasNumbersPage(Index(0))
       }
 
       "when the user said there was a Scottish registration number but it is missing" in {
 
         val answers =
           minimalChildAnswers
-            .set(ChildBirthRegistrationCountryPage(Index(0)), Scotland).success.value
-            .set(ScottishBirthCertificateHasNumbersPage(Index(0)), true).success.value
+            .set(ChildBirthRegistrationCountryPage(Index(0)), Scotland)
+            .success
+            .value
+            .set(ScottishBirthCertificateHasNumbersPage(Index(0)), true)
+            .success
+            .value
 
         val (errors, data) = Child.buildChildren(answers).pad
 
-        data must not be defined
-        errors.value.toChain.toList must contain only ChildScottishBirthCertificateDetailsPage(Index(0))
+        data `must` not `be` defined
+        errors.value.toChain.toList `must` contain `only` ChildScottishBirthCertificateDetailsPage(Index(0))
       }
 
       "when the birth is registered in Northern Ireland, but whether there is a registration number is missing" in {
 
         val answers =
           minimalChildAnswers
-            .set(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland).success.value
-
+            .set(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland)
+            .success
+            .value
 
         val (errors, data) = Child.buildChildren(answers).pad
 
-        data must not be defined
-        errors.value.toChain.toList must contain only BirthCertificateHasNorthernIrishNumberPage(Index(0))
+        data `must` not `be` defined
+        errors.value.toChain.toList `must` contain `only` BirthCertificateHasNorthernIrishNumberPage(Index(0))
       }
 
       "when the user said there was a NI registration number but it is missing" in {
 
         val answers =
           minimalChildAnswers
-            .set(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland).success.value
-            .set(BirthCertificateHasNorthernIrishNumberPage(Index(0)), true).success.value
+            .set(ChildBirthRegistrationCountryPage(Index(0)), NorthernIreland)
+            .success
+            .value
+            .set(BirthCertificateHasNorthernIrishNumberPage(Index(0)), true)
+            .success
+            .value
 
         val (errors, data) = Child.buildChildren(answers).pad
 
-        data must not be defined
-        errors.value.toChain.toList must contain only ChildNorthernIrishBirthCertificateNumberPage(Index(0))
+        data `must` not `be` defined
+        errors.value.toChain.toList `must` contain `only` ChildNorthernIrishBirthCertificateNumberPage(Index(0))
       }
     }
   }

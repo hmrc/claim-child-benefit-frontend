@@ -56,8 +56,11 @@ class PreviousGuardianNameKnownControllerSpec extends SpecBase with MockitoSugar
 
         val view = application.injector.instanceOf[PreviousGuardianNameKnownView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, index, childName)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints, index, childName)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -74,8 +77,11 @@ class PreviousGuardianNameKnownControllerSpec extends SpecBase with MockitoSugar
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), waypoints, index, childName)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form.fill(true), waypoints, index, childName)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -83,7 +89,7 @@ class PreviousGuardianNameKnownControllerSpec extends SpecBase with MockitoSugar
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -100,8 +106,11 @@ class PreviousGuardianNameKnownControllerSpec extends SpecBase with MockitoSugar
         val result = route(application, request).value
         val expectedAnswers = baseAnswers.set(child.PreviousGuardianNameKnownPage(index), true).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual child.PreviousGuardianNameKnownPage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` child
+          .PreviousGuardianNameKnownPage(index)
+          .navigate(waypoints, emptyUserAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -121,8 +130,11 @@ class PreviousGuardianNameKnownControllerSpec extends SpecBase with MockitoSugar
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, index, childName)(request, messages(application)).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints, index, childName)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -135,8 +147,8 @@ class PreviousGuardianNameKnownControllerSpec extends SpecBase with MockitoSugar
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -151,8 +163,8 @@ class PreviousGuardianNameKnownControllerSpec extends SpecBase with MockitoSugar
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

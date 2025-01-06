@@ -33,7 +33,7 @@ class ChildBiologicalSexFormProviderSpec extends OptionFieldBehaviours {
     behave like optionsField[ChildBiologicalSex](
       form,
       fieldName,
-      validValues  = ChildBiologicalSex.values,
+      validValues = ChildBiologicalSex.values,
       invalidError = FormError(fieldName, "error.invalid", Seq(childName.firstName))
     )
 

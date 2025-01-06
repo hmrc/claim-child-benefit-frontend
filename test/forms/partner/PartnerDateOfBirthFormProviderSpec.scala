@@ -42,16 +42,16 @@ class PartnerDateOfBirthFormProviderSpec extends DateBehaviours {
     behave like dateField(form, "value", validData)
 
     behave like dateFieldWithMax(
-      form      = form,
-      key       = "value",
-      max       = maxDate,
+      form = form,
+      key = "value",
+      max = maxDate,
       formError = FormError("value", "partnerDateOfBirth.error.afterMaximum", Seq(maxDate.format(dateFormatter)))
     )
 
     behave like dateFieldWithMin(
-      form      = form,
-      key       = "value",
-      min       = minDate,
+      form = form,
+      key = "value",
+      min = minDate,
       formError = FormError("value", "partnerDateOfBirth.error.beforeMinimum", Seq(minDate.format(dateFormatter)))
     )
 

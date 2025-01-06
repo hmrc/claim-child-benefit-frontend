@@ -19,8 +19,6 @@ package models
 import play.api.i18n.Messages
 import play.api.libs.json._
 
-import scala.annotation.nowarn
-
 trait Address extends Product with Serializable {
   val line1: String
   def lines(implicit messages: Messages): Seq[String]
@@ -36,7 +34,6 @@ object Address {
       InternationalAddress.format.widen[Address] orElse
       NPSAddress.format.widen[Address]
 
-  @nowarn("msg=match may not be exhaustive")
   def writes: Writes[Address] = Writes {
     case u: UkAddress            => Json.toJson(u)(UkAddress.format)
     case i: InternationalAddress => Json.toJson(i)(InternationalAddress.format)

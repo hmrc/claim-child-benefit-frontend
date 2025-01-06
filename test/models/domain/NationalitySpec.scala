@@ -26,17 +26,17 @@ class NationalitySpec extends AnyFreeSpec with Matchers {
 
     "must write UK / CTA" in {
 
-      Json.toJson[Nationality](Nationality.UkCta) mustEqual JsString("UK_OR_CTA")
+      Json.toJson[Nationality](Nationality.UkCta) `mustEqual` JsString("UK_OR_CTA")
     }
 
     "must write EEA" in {
 
-      Json.toJson[Nationality](Nationality.Eea) mustEqual JsString("EEA")
+      Json.toJson[Nationality](Nationality.Eea) `mustEqual` JsString("EEA")
     }
 
     "must write non-EEA" in {
 
-      Json.toJson[Nationality](Nationality.NonEea) mustEqual JsString("NON_EEA")
+      Json.toJson[Nationality](Nationality.NonEea) `mustEqual` JsString("NON_EEA")
     }
   }
 }

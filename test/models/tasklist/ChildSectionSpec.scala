@@ -30,13 +30,8 @@ import pages.child.{AddChildPage, ChildDateOfBirthPage, ChildNamePage}
 import services.JourneyProgressService
 
 class ChildSectionSpec
-  extends AnyFreeSpec
-    with Matchers
-    with MockitoSugar
-    with BeforeAndAfterEach
-    with ScalaCheckPropertyChecks
-    with OptionValues
-    with TryValues {
+    extends AnyFreeSpec with Matchers with MockitoSugar with BeforeAndAfterEach with ScalaCheckPropertyChecks
+    with OptionValues with TryValues {
 
   private val mockJourneyProgressService = mock[JourneyProgressService]
   private val applicantSection = new ApplicantSection(mockJourneyProgressService)
@@ -57,7 +52,7 @@ class ChildSectionSpec
       val section = new ChildSection(mockJourneyProgressService, applicantSection, partnerSection)
       val result = section.continue(answers)
 
-      result.value mustEqual ChildDateOfBirthPage(Index(0))
+      result.value `mustEqual` ChildDateOfBirthPage(Index(0))
       verify(mockJourneyProgressService, times(1)).continue(ChildNamePage(Index(0)), answers)
     }
   }
@@ -72,7 +67,7 @@ class ChildSectionSpec
       val section = new ChildSection(mockJourneyProgressService, applicantSection, partnerSection)
       val result = section.progress(answers)
 
-      result mustEqual NotStarted
+      result `mustEqual` NotStarted
       verify(mockJourneyProgressService, times(1)).continue(ChildNamePage(Index(0)), answers)
     }
 
@@ -84,7 +79,7 @@ class ChildSectionSpec
       val section = new ChildSection(mockJourneyProgressService, applicantSection, partnerSection)
       val result = section.progress(answers)
 
-      result mustEqual Completed
+      result `mustEqual` Completed
       verify(mockJourneyProgressService, times(1)).continue(ChildNamePage(Index(0)), answers)
     }
 
@@ -96,7 +91,7 @@ class ChildSectionSpec
       val section = new ChildSection(mockJourneyProgressService, applicantSection, partnerSection)
       val result = section.progress(answers)
 
-      result mustEqual InProgress
+      result `mustEqual` InProgress
       verify(mockJourneyProgressService, times(1)).continue(ChildNamePage(Index(0)), answers)
     }
   }

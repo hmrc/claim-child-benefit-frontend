@@ -111,7 +111,7 @@ class ImmigrationStatusConnectorSpec
 
       val result = connector.checkStatus(ninoSearchRequest, correlationId).futureValue
 
-      result mustEqual expectedResponse
+      result `mustEqual` expectedResponse
     }
 
     "must return a failed future when the server returns an error code" in {

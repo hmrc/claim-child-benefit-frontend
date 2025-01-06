@@ -47,7 +47,7 @@ class PartnerNinoFormProviderSpec extends StringFieldBehaviours {
       s"$spaceBefore$beginning$spaceInside$end$spaceAfter"
     }
     val gen = Gen.oneOf(ninoGen, ninoWithSpacesGen)
-    
+
     behave like fieldThatBindsValidData(
       form,
       fieldName,
@@ -62,7 +62,7 @@ class PartnerNinoFormProviderSpec extends StringFieldBehaviours {
 
     "must not bind values in the wrong format" in {
       val result = form.bind(Map(fieldName -> "GB123456A")).apply(fieldName)
-      result.errors.head mustBe FormError(fieldName, "partnerNino.error.invalid")
+      result.errors.head `mustBe` FormError(fieldName, "partnerNino.error.invalid")
     }
   }
 }

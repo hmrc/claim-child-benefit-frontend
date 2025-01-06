@@ -43,10 +43,10 @@ trait JourneyHelpers extends Matchers with TryValues with OptionValues {
     }
 
     def run(steps: JourneyStep[Unit]*): JourneyState =
-      journeyOf(steps: _*).runS(this).value
+      journeyOf(steps *).runS(this).value
 
     def check(steps: JourneyStep[Unit]*): JourneyState =
-      run(steps: _*)
+      run(steps *)
   }
 
   def journeyOf(steps: JourneyStep[Unit]*): JourneyStep[Unit] =
@@ -55,10 +55,10 @@ trait JourneyHelpers extends Matchers with TryValues with OptionValues {
     }
 
   def startingFrom(
-                    page: Page,
-                    waypoints: Waypoints = EmptyWaypoints,
-                    answers: UserAnswers = UserAnswers("id")
-                  ): JourneyState =
+    page: Page,
+    waypoints: Waypoints = EmptyWaypoints,
+    answers: UserAnswers = UserAnswers("id")
+  ): JourneyState =
     JourneyState(page, waypoints, answers)
 
   def next: JourneyStep[Unit] =
@@ -76,7 +76,10 @@ trait JourneyHelpers extends Matchers with TryValues with OptionValues {
   def getAnswers: JourneyStep[UserAnswers] =
     State.inspect(_.answers)
 
-  def setUserAnswerTo[A](page: Page with Settable[A], answer: A)(implicit writes: Writes[A], position: Position): JourneyStep[Unit] =
+  def setUserAnswerTo[A](page: Page & Settable[A], answer: A)(implicit
+    writes: Writes[A],
+    position: Position
+  ): JourneyStep[Unit] =
     State.modify { journeyState =>
       journeyState.copy(answers = journeyState.answers.set(page, answer).success.value)
     }
@@ -88,17 +91,17 @@ trait JourneyHelpers extends Matchers with TryValues with OptionValues {
 
   def pageMustBe(expectedPage: Page)(implicit position: Position): JourneyStep[Unit] =
     getPage.map { page =>
-      page mustEqual expectedPage
+      page `mustEqual` expectedPage
     }
 
   def waypointsMustBe(expectedWaypoints: Waypoints)(implicit position: Position): JourneyStep[Unit] =
     getWaypoints.map { waypoints =>
-      waypoints mustEqual expectedWaypoints
+      waypoints `mustEqual` expectedWaypoints
     }
 
   def answersMustContain[A](gettable: Gettable[A])(implicit reads: Reads[A], position: Position): JourneyStep[Unit] =
     getAnswers.map { answers =>
-      answers.get(gettable) mustBe defined
+      answers.get(gettable) `mustBe` defined
     }
 
   def answersMustNotContain[A](gettable: Gettable[A])(implicit reads: Reads[A], position: Position): JourneyStep[Unit] =
@@ -106,27 +109,31 @@ trait JourneyHelpers extends Matchers with TryValues with OptionValues {
       answers.get(gettable) must not be defined
     }
 
-  def answerMustEqual[A](gettable: Gettable[A], expectedAnswer: A)(implicit reads: Reads[A], position: Position): JourneyStep[Unit] =
+  def answerMustEqual[A](gettable: Gettable[A], expectedAnswer: A)(implicit
+    reads: Reads[A],
+    position: Position
+  ): JourneyStep[Unit] =
     getAnswers.map { answers =>
-      answers.get(gettable).value mustEqual expectedAnswer
+      answers.get(gettable).value `mustEqual` expectedAnswer
     }
 
-  def submitAnswer[A](page: Page with Settable[A], value: A)(implicit writes: Writes[A], position: Position): JourneyStep[Unit] = {
+  def submitAnswer[A](page: Page & Settable[A], value: A)(implicit
+    writes: Writes[A],
+    position: Position
+  ): JourneyStep[Unit] =
     for {
-      _ <- pageMustBe(page)
+      _               <- pageMustBe(page)
       originalAnswers <- getAnswers
-      _ <- setUserAnswerTo(page, value)
-      _ <- next(originalAnswers)
+      _               <- setUserAnswerTo(page, value)
+      _               <- next(originalAnswers)
     } yield ()
-  }
 
-  def removeAddToListItem[A](settable: Settable[A]): JourneyStep[Unit] = {
+  def removeAddToListItem[A](settable: Settable[A]): JourneyStep[Unit] =
     for {
       originalAnswers <- getAnswers
       _               <- remove(settable)
       _               <- next(originalAnswers)
     } yield ()
-  }
 
   def goTo(page: Page): JourneyStep[Unit] =
     State.modify(_.copy(page = page))
@@ -140,6 +147,6 @@ trait JourneyHelpers extends Matchers with TryValues with OptionValues {
   def goToChangeAnswer(page: Page): JourneyStep[Unit] =
     for {
       currentPage <- getPage
-      _ <- goToChangeAnswer(page, currentPage.asInstanceOf[WaypointPage])
+      _           <- goToChangeAnswer(page, currentPage.asInstanceOf[WaypointPage])
     } yield ()
 }

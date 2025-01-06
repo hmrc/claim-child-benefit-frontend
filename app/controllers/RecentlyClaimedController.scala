@@ -68,7 +68,7 @@ class RecentlyClaimedController @Inject()(
 
           val originalAnswers = request.userAnswers.getOrElse {
             request.request match {
-              case r: AuthenticatedIdentifierRequest[_] =>
+              case r: AuthenticatedIdentifierRequest[?] =>
                 UserAnswers(r.userId, nino = Some(r.nino))
 
               case r =>

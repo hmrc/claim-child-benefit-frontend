@@ -26,12 +26,18 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.{Page, Waypoints}
 import play.api.mvc.Call
+import models.tasklist.{Section => SectionTest}
 
 class SectionSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
 
   implicit def dontShrink[A]: Shrink[A] = Shrink.shrinkAny
 
-  case class TestSection(progress: SectionStatus, prerequisites: Seq[Section], continue: Option[Page] = None, isShown: Boolean = true) extends Section {
+  case class TestSection(
+    progress: SectionStatus,
+    prerequisites: Seq[Section],
+    continue: Option[Page] = None,
+    isShown: Boolean = true
+  ) extends SectionTest {
     override val name: String = "foo"
     override def continue(answers: UserAnswers): Option[Page] = continue
     override def progress(answers: UserAnswers): SectionStatus = progress
@@ -52,10 +58,9 @@ class SectionSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyCheck
 
       val answers = UserAnswers("id")
 
-      forAll(Gen.listOf(arbitrary[Section])) {
-        prerequisites =>
-          val section = TestSection(Completed, prerequisites)
-          section.status(answers) mustEqual Completed
+      forAll(Gen.listOf(arbitrary[Section])) { prerequisites =>
+        val section = TestSection(Completed, prerequisites)
+        section.status(answers) `mustEqual` Completed
       }
     }
 
@@ -63,10 +68,9 @@ class SectionSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyCheck
 
       val answers = UserAnswers("id")
 
-      forAll(Gen.listOf(arbitrary[Section])) {
-        prerequisites =>
-          val section = TestSection(InProgress, prerequisites)
-          section.status(answers) mustEqual InProgress
+      forAll(Gen.listOf(arbitrary[Section])) { prerequisites =>
+        val section = TestSection(InProgress, prerequisites)
+        section.status(answers) `mustEqual` InProgress
       }
     }
 
@@ -74,10 +78,9 @@ class SectionSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyCheck
 
       val answers = UserAnswers("id")
 
-      forAll(Gen.listOf(arbitrary[Section])) {
-        prerequisites =>
-          val section = TestSection(CannotStart, prerequisites)
-          section.status(answers) mustEqual CannotStart
+      forAll(Gen.listOf(arbitrary[Section])) { prerequisites =>
+        val section = TestSection(CannotStart, prerequisites)
+        section.status(answers) `mustEqual` CannotStart
       }
     }
 
@@ -85,10 +88,9 @@ class SectionSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyCheck
 
       val answers = UserAnswers("id")
 
-      forAll(Gen.listOf(TestSection(Completed, Nil))) {
-        prerequisites =>
-          val section = TestSection(NotStarted, prerequisites)
-          section.status(answers) mustEqual NotStarted
+      forAll(Gen.listOf(TestSection(Completed, Nil))) { prerequisites =>
+        val section = TestSection(NotStarted, prerequisites)
+        section.status(answers) `mustEqual` NotStarted
       }
     }
 
@@ -98,13 +100,12 @@ class SectionSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyCheck
 
       val gen = for {
         incompleteSection <- Gen.oneOf(NotStarted, InProgress).map(TestSection(_, Nil))
-        otherSections <- Gen.listOf(arbitrary[Section])
+        otherSections     <- Gen.listOf(arbitrary[Section])
       } yield otherSections :+ incompleteSection
 
-      forAll(gen) {
-        prerequisites =>
-          val section = TestSection(NotStarted, prerequisites)
-          section.status(answers) mustEqual CannotStart
+      forAll(gen) { prerequisites =>
+        val section = TestSection(NotStarted, prerequisites)
+        section.status(answers) `mustEqual` CannotStart
       }
     }
   }
@@ -127,21 +128,21 @@ class SectionSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyCheck
           val section = TestSection(status, Nil, Some(TestPage))
           val result = section.asViewModel(answers)
 
-          result mustEqual SectionViewModel("foo", Some(Call("", "")), status)
+          result `mustEqual` SectionViewModel("foo", Some(Call("", "")), status)
         }
       }
 
       "with no continue URL" - {
 
         "when this section should be shown but it does not have a continue page" in {
-          
+
           val status = Gen.oneOf(NotStarted, InProgress, Completed).sample.value
 
           val answers = UserAnswers("id")
           val section = TestSection(status, Nil, None)
           val result = section.asViewModel(answers)
 
-          result mustEqual SectionViewModel("foo", None, status)
+          result `mustEqual` SectionViewModel("foo", None, status)
         }
 
         "when this section should be shown, it has a continue page, but its status is Cannot Start" in {
@@ -154,7 +155,7 @@ class SectionSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyCheck
           val section = TestSection(CannotStart, Nil, Some(TestPage))
           val result = section.asViewModel(answers)
 
-          result mustEqual SectionViewModel("foo", None, CannotStart)
+          result `mustEqual` SectionViewModel("foo", None, CannotStart)
         }
       }
     }

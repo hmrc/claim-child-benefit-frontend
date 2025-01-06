@@ -29,28 +29,28 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
   ".build" - {
 
-      val basicChild = journey.Child(
-        name = models.ChildName("first", None, "last"),
-        nameChangedByDeedPoll = None,
-        previousNames = Nil,
-        biologicalSex = models.ChildBiologicalSex.Female,
-        dateOfBirth = LocalDate.now,
-        countryOfRegistration = models.ChildBirthRegistrationCountry.England,
-        birthCertificateNumber = None,
-        birthCertificateDetailsMatched = BirthRegistrationMatchingResult.NotAttempted,
-        relationshipToApplicant = models.ApplicantRelationshipToChild.BirthChild,
-        adoptingThroughLocalAuthority = false,
-        previousClaimant = None,
-        guardian = None,
-        previousGuardian = None,
-        dateChildStartedLivingWithApplicant = None
-      )
+    val basicChild = journey.Child(
+      name = models.ChildName("first", None, "last"),
+      nameChangedByDeedPoll = None,
+      previousNames = Nil,
+      biologicalSex = models.ChildBiologicalSex.Female,
+      dateOfBirth = LocalDate.now,
+      countryOfRegistration = models.ChildBirthRegistrationCountry.England,
+      birthCertificateNumber = None,
+      birthCertificateDetailsMatched = BirthRegistrationMatchingResult.NotAttempted,
+      relationshipToApplicant = models.ApplicantRelationshipToChild.BirthChild,
+      adoptingThroughLocalAuthority = false,
+      previousClaimant = None,
+      guardian = None,
+      previousGuardian = None,
+      dateChildStartedLivingWithApplicant = None
+    )
 
     "must return a Child" in {
 
       val result = Child.build(basicChild)
 
-      result mustEqual Child(
+      result `mustEqual` Child(
         name = ChildName("first", None, "last"),
         gender = BiologicalSex.Female,
         dateOfBirth = LocalDate.now,
@@ -70,7 +70,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
       val result = Child.build(child)
 
-      result.livingWithClaimant mustEqual false
+      result.livingWithClaimant `mustEqual` false
     }
 
     "must set `adoption status` to true when the child is adopted" in {
@@ -79,7 +79,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
       val result = Child.build(child)
 
-      result.adoptionStatus mustEqual true
+      result.adoptionStatus `mustEqual` true
     }
 
     "must set `adoption status` to true when the applicant is adopting the child" in {
@@ -88,7 +88,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
       val result = Child.build(child)
 
-      result.adoptionStatus mustEqual true
+      result.adoptionStatus `mustEqual` true
     }
 
     "must set `claimant is parent` to false when the relationship is `other`" in {
@@ -97,7 +97,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
       val result = Child.build(child)
 
-      result.claimantIsParent mustEqual false
+      result.claimantIsParent `mustEqual` false
     }
 
     "must set `claimant is parent` to true when the relationship is `birth child`" in {
@@ -106,7 +106,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
       val result = Child.build(child)
 
-      result.claimantIsParent mustEqual true
+      result.claimantIsParent `mustEqual` true
     }
 
     "must set `claimant is parent` to true when the relationship is `stepchild`" in {
@@ -115,7 +115,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
       val result = Child.build(child)
 
-      result.claimantIsParent mustEqual true
+      result.claimantIsParent `mustEqual` true
     }
 
     "must set `claimant is parent` to true when the relationship is `adopted child`" in {
@@ -124,7 +124,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
       val result = Child.build(child)
 
-      result.claimantIsParent mustEqual true
+      result.claimantIsParent `mustEqual` true
     }
 
     "must set `date of birth verified` to None when the child is registered in England" in {
@@ -133,7 +133,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
       val result = Child.build(child)
 
-      result.dateOfBirthVerified must not be defined
+      result.dateOfBirthVerified `must` `not` `be` defined
     }
 
     "must set `date of birth verified` to None when the child is registered in Wales" in {
@@ -142,7 +142,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
       val result = Child.build(child)
 
-      result.dateOfBirthVerified must not be defined
+      result.dateOfBirthVerified `must` `not` `be` defined
     }
 
     "must set `date of birth verified` to None when the child is registered in Scotland" in {
@@ -151,7 +151,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
       val result = Child.build(child)
 
-      result.dateOfBirthVerified must not be defined
+      result.dateOfBirthVerified `must` `not` `be` defined
     }
 
     "must set `date of birth verified` to `true` when the child is registered in Northern Ireland and a birth cert number is present" in {
@@ -163,7 +163,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
       val result = Child.build(child)
 
-      result.dateOfBirthVerified.value mustBe true
+      result.dateOfBirthVerified.value `mustBe` true
     }
 
     "must set `date of birth verified` to `false` when the child is registered in Northern Ireland and no birth cert number is present" in {
@@ -172,7 +172,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
       val result = Child.build(child)
 
-      result.dateOfBirthVerified.value mustBe false
+      result.dateOfBirthVerified.value `mustBe` false
     }
 
     "must set `date of birth verified` to `false` when the child is registered in another country" in {
@@ -181,7 +181,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
       val result = Child.build(child)
 
-      result.dateOfBirthVerified.value mustBe false
+      result.dateOfBirthVerified.value `mustBe` false
     }
 
     "must set `date of birth verified` to `false` when the child's birth registration country is Unknown" in {
@@ -190,7 +190,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
       val result = Child.build(child)
 
-      result.dateOfBirthVerified.value mustBe false
+      result.dateOfBirthVerified.value `mustBe` false
     }
 
     "must include birth certificate for a child born in England when it is present" in {
@@ -199,7 +199,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
       val result = Child.build(child)
 
-      result.birthRegistrationNumber.value mustEqual "123456789"
+      result.birthRegistrationNumber.value `mustEqual` "123456789"
     }
 
     "must include birth certificate number for a child born in Wales when it is present" in {
@@ -211,7 +211,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
       val result = Child.build(child)
 
-      result.birthRegistrationNumber.value mustEqual "123456789"
+      result.birthRegistrationNumber.value `mustEqual` "123456789"
     }
 
     "must include birth certificate number for a child born in Scotland when it is present" in {
@@ -223,7 +223,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
       val result = Child.build(child)
 
-      result.birthRegistrationNumber.value mustEqual "2022123456"
+      result.birthRegistrationNumber.value `mustEqual` "2022123456"
     }
 
     "must not include birth certificate number for a child born in Northern Ireland when it is present" in {
@@ -235,7 +235,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
       val result = Child.build(child)
 
-      result.birthRegistrationNumber must not be defined
+      result.birthRegistrationNumber `must` `not` `be` defined
     }
   }
 
@@ -259,20 +259,20 @@ class ChildSpec extends AnyFreeSpec with Matchers with OptionValues {
 
       val expectedJson = Json.obj(
         "name" -> Json.obj(
-          "forenames" -> "first",
+          "forenames"   -> "first",
           "middleNames" -> "middle",
-          "surname" -> "last"
+          "surname"     -> "last"
         ),
-        "gender" -> "FEMALE",
-        "dateOfBirth" -> "02/01/2022",
+        "gender"                  -> "FEMALE",
+        "dateOfBirth"             -> "02/01/2022",
         "birthRegistrationNumber" -> "123456789",
-        "countryOfRegistration" -> "ENGLAND_WALES",
-        "livingWithClaimant" -> true,
-        "claimantIsParent" -> true,
-        "adoptionStatus" -> false
+        "countryOfRegistration"   -> "ENGLAND_WALES",
+        "livingWithClaimant"      -> true,
+        "claimantIsParent"        -> true,
+        "adoptionStatus"          -> false
       )
 
-      Json.toJson(child) mustEqual expectedJson
+      Json.toJson(child) `mustEqual` expectedJson
     }
   }
 }

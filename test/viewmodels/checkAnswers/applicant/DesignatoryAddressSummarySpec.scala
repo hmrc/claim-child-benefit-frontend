@@ -47,9 +47,13 @@ class DesignatoryAddressSummarySpec extends AnyFreeSpec with Matchers with Optio
 
           val answers =
             UserAnswers("id", designatoryDetails = Some(designatoryDetails))
-              .set(DesignatoryUkAddressPage, newUkAddress).success.value
+              .set(DesignatoryUkAddressPage, newUkAddress)
+              .success
+              .value
 
-          DesignatoryAddressSummary.row(answers, EmptyWaypoints).value.value.content mustEqual HtmlContent(newUkAddress.lines.mkString("<br/>"))
+          DesignatoryAddressSummary.row(answers, EmptyWaypoints).value.value.content `mustEqual` HtmlContent(
+            newUkAddress.lines.mkString("<br/>")
+          )
         }
       }
 
@@ -59,9 +63,13 @@ class DesignatoryAddressSummarySpec extends AnyFreeSpec with Matchers with Optio
 
           val answers =
             UserAnswers("id", designatoryDetails = Some(designatoryDetails))
-              .set(DesignatoryInternationalAddressPage, newInternationalAddress).success.value
+              .set(DesignatoryInternationalAddressPage, newInternationalAddress)
+              .success
+              .value
 
-          DesignatoryAddressSummary.row(answers, EmptyWaypoints).value.value.content mustEqual HtmlContent(newInternationalAddress.lines.mkString("<br/>"))
+          DesignatoryAddressSummary.row(answers, EmptyWaypoints).value.value.content `mustEqual` HtmlContent(
+            newInternationalAddress.lines.mkString("<br/>")
+          )
         }
       }
 
@@ -71,7 +79,9 @@ class DesignatoryAddressSummarySpec extends AnyFreeSpec with Matchers with Optio
 
           val answers = UserAnswers("id", designatoryDetails = Some(designatoryDetails))
 
-          DesignatoryAddressSummary.row(answers, EmptyWaypoints).value.value.content mustEqual HtmlContent(originalAddress.lines.mkString("<br/>"))
+          DesignatoryAddressSummary.row(answers, EmptyWaypoints).value.value.content `mustEqual` HtmlContent(
+            originalAddress.lines.mkString("<br/>")
+          )
         }
       }
     }
@@ -82,7 +92,7 @@ class DesignatoryAddressSummarySpec extends AnyFreeSpec with Matchers with Optio
 
         val answers = UserAnswers("id").set(DesignatoryUkAddressPage, newUkAddress).success.value
 
-        DesignatoryAddressSummary.row(answers, EmptyWaypoints) must not be defined
+        DesignatoryAddressSummary.row(answers, EmptyWaypoints) `must` not `be` defined
       }
     }
   }

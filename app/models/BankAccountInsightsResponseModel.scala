@@ -40,7 +40,7 @@ object BankAccountInsightsResponseModel {
     ) and
     (__ \ "riskScore").read[Int] and
     (__ \ "reason").read[String]
-  )(BankAccountInsightsResponseModel.apply _)
+  )(BankAccountInsightsResponseModel.apply)
 
   implicit lazy val format: OFormat[BankAccountInsightsResponseModel] = OFormat(reads, writes)
 }

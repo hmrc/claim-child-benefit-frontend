@@ -22,6 +22,7 @@ import pages.{AddItemPage, Page, QuestionPage, Waypoint, Waypoints}
 import play.api.libs.json.{JsObject, JsPath}
 import play.api.mvc.Call
 import queries.{Derivable, DeriveNumberOfChildPreviousNames}
+import pages.RecoveryOps
 
 final case class AddChildPreviousNamePage(childIndex: Index, nameIndex: Option[Index] = None) extends AddItemPage(nameIndex) with QuestionPage[Boolean] {
 

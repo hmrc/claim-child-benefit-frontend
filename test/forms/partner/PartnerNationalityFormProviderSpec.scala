@@ -49,12 +49,12 @@ class PartnerNationalityFormProviderSpec extends StringFieldBehaviours {
 
     "must not bind any values other than valid nationalities" in {
 
-      val invalidAnswers = arbitrary[String].suchThat(x => x.trim.nonEmpty && !Nationality.allNationalities.map(_.name).contains(x))
+      val invalidAnswers =
+        arbitrary[String].suchThat(x => x.trim.nonEmpty && !Nationality.allNationalities.map(_.name).contains(x))
 
-      forAll(invalidAnswers) {
-        answer =>
-          val result = form.bind(Map("value" -> answer)).apply(fieldName)
-          result.errors must contain only FormError(fieldName, requiredKey)
+      forAll(invalidAnswers) { answer =>
+        val result = form.bind(Map("value" -> answer)).apply(fieldName)
+        result.errors `must` contain `only` FormError(fieldName, requiredKey)
       }
     }
 
@@ -64,7 +64,7 @@ class PartnerNationalityFormProviderSpec extends StringFieldBehaviours {
       val form = new PartnerNationalityFormProvider()(name, index, existingAnswers)
 
       val result = form.bind(Map(fieldName -> answer.name)).apply(fieldName)
-      result.errors must contain only FormError(fieldName, "partnerNationality.error.duplicate", Seq(name))
+      result.errors `must` contain `only` FormError(fieldName, "partnerNationality.error.duplicate", Seq(name))
     }
   }
 }

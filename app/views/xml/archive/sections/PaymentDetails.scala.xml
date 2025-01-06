@@ -2,7 +2,6 @@
 
 @this(
     mainHeader: MainHeader,
-    line: Line,
     doNotPay: DoNotPay,
     weekly: Weekly,
     everyFourWeeks: EveryFourWeeks,

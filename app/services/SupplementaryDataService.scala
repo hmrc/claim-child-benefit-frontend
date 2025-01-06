@@ -45,7 +45,7 @@ class SupplementaryDataServiceImpl @Inject() (
                                                override val messagesApi: MessagesApi
                                              )(implicit ec: ExecutionContext) extends SupplementaryDataService with I18nSupport {
 
-  private val userAgentBlock: FOUserAgent => Unit = { foUserAgent: FOUserAgent =>
+  private val userAgentBlock: FOUserAgent => Unit = { foUserAgent =>
     foUserAgent.setAccessibility(true)
     foUserAgent.setPdfUAEnabled(true)
     foUserAgent.setAuthor("HMRC forms service")

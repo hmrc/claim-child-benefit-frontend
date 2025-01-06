@@ -36,8 +36,8 @@ class NeedToUpliftIvControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[NeedToUpliftIvView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view()(request, messages(application)).toString
       }
     }
 
@@ -50,8 +50,10 @@ class NeedToUpliftIvControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual "http://localhost:9948/iv-stub/uplift?origin=CHB&confidenceLevel=250&completionURL=http%3A%2F%2Flocalhost%3A11303%2Ffill-online%2Fclaim-child-benefit%2Frecently-claimed-child-benefit&failureURL=http%3A%2F%2Flocalhost%3A11303%2Ffill-online%2Fclaim-child-benefit%2Fidentity-verification%2Fcomplete%3FcontinueUrl%3D%252Ffill-online%252Fclaim-child-benefit%252Fneed-to-confirm-identity"
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(
+          result
+        ).value `mustEqual` "http://localhost:9948/iv-stub/uplift?origin=CHB&confidenceLevel=250&completionURL=http%3A%2F%2Flocalhost%3A11303%2Ffill-online%2Fclaim-child-benefit%2Frecently-claimed-child-benefit&failureURL=http%3A%2F%2Flocalhost%3A11303%2Ffill-online%2Fclaim-child-benefit%2Fidentity-verification%2Fcomplete%3FcontinueUrl%3D%252Ffill-online%252Fclaim-child-benefit%252Fneed-to-confirm-identity"
       }
     }
   }

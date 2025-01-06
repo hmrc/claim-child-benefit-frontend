@@ -16,8 +16,6 @@
 
 package models
 
-import models.Enumerable
-
 sealed trait ServiceType {
 
 }
@@ -30,5 +28,5 @@ object ServiceType extends Enumerable.Implicits {
   case object StopChildBenefit extends WithName("stopChildBenefit") with ServiceType
 
   val values: List[ServiceType] = List(NewClaim, AddClaim, CheckClaim, RestartChildBenefit, StopChildBenefit)
-  implicit val enumerable: Enumerable[ServiceType] = Enumerable(values.map(v => v.toString -> v): _*)
+  implicit val enumerable: Enumerable[ServiceType] = Enumerable(values.map(v => v.toString -> v)*)
 }

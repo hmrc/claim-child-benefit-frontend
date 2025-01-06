@@ -32,7 +32,7 @@ class BankAccountHolderFormProviderSpec extends OptionFieldBehaviours {
     behave like optionsField[BankAccountHolder](
       form,
       fieldName,
-      validValues  = BankAccountHolder.values,
+      validValues = BankAccountHolder.values,
       invalidError = FormError(fieldName, "error.invalid")
     )
 

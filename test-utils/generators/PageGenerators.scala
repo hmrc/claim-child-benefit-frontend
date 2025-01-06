@@ -47,7 +47,8 @@ trait PageGenerators {
   implicit lazy val arbitraryPreviousClaimantAddressPage: Arbitrary[PreviousClaimantUkAddressPage] =
     Arbitrary(child.PreviousClaimantUkAddressPage(Index(0)))
 
-  implicit lazy val arbitraryChildScottishBirthCertificateDetailsPage: Arbitrary[ChildScottishBirthCertificateDetailsPage] =
+  implicit lazy val arbitraryChildScottishBirthCertificateDetailsPage
+    : Arbitrary[ChildScottishBirthCertificateDetailsPage] =
     Arbitrary(child.ChildScottishBirthCertificateDetailsPage(Index(0)))
 
   implicit lazy val arbitraryChildPreviousNamePage: Arbitrary[ChildPreviousNamePage] =
@@ -125,7 +126,8 @@ trait PageGenerators {
   implicit lazy val arbitraryApplicantNamePage: Arbitrary[ApplicantNamePage.type] =
     Arbitrary(ApplicantNamePage)
 
-  implicit lazy val arbitraryApplicantLivedAtCurrentAddressOneYearPage: Arbitrary[ApplicantLivedAtCurrentAddressOneYearPage.type] =
+  implicit lazy val arbitraryApplicantLivedAtCurrentAddressOneYearPage
+    : Arbitrary[ApplicantLivedAtCurrentAddressOneYearPage.type] =
     Arbitrary(ApplicantLivedAtCurrentAddressOneYearPage)
 
   implicit lazy val arbitraryApplicantHasPreviousFamilyNamePage: Arbitrary[ApplicantHasPreviousFamilyNamePage.type] =

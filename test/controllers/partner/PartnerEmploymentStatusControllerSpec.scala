@@ -57,9 +57,9 @@ class PartnerEmploymentStatusControllerSpec extends SpecBase with MockitoSugar {
 
         val view = application.injector.instanceOf[PartnerEmploymentStatusView]
 
-        status(result) mustEqual OK
+        status(result) `mustEqual` OK
 
-        contentAsString(result) mustEqual view(form, waypoints, name.firstName)(request, messages(application)).toString
+        contentAsString(result) `mustEqual` view(form, waypoints, name.firstName)(request, messages(application)).toString
       }
     }
 
@@ -76,8 +76,11 @@ class PartnerEmploymentStatusControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(EmploymentStatus.values.toSet), waypoints, name.firstName)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form.fill(EmploymentStatus.values.toSet), waypoints, name.firstName)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -85,7 +88,7 @@ class PartnerEmploymentStatusControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -100,10 +103,13 @@ class PartnerEmploymentStatusControllerSpec extends SpecBase with MockitoSugar {
             .withFormUrlEncodedBody(("value[0]", EmploymentStatus.values.head.toString))
 
         val result = route(application, request).value
-        val expectedAnswers = baseAnswers.set(PartnerEmploymentStatusPage, Set(EmploymentStatus.values.head)).success.value
+        val expectedAnswers =
+          baseAnswers.set(PartnerEmploymentStatusPage, Set(EmploymentStatus.values.head)).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual PartnerEmploymentStatusPage.navigate(waypoints, baseAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` PartnerEmploymentStatusPage
+          .navigate(waypoints, baseAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -123,8 +129,11 @@ class PartnerEmploymentStatusControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, name.firstName)(request, messages(application)).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints, name.firstName)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -137,8 +146,8 @@ class PartnerEmploymentStatusControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -153,8 +162,8 @@ class PartnerEmploymentStatusControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

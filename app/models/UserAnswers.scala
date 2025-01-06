@@ -51,12 +51,12 @@ final case class UserAnswers(
       .getOrElse(None)
       .map(derivable.derive)
 
-  def isDefined(gettable: Gettable[_]): Boolean =
+  def isDefined(gettable: Gettable[?]): Boolean =
     Reads.optionNoError(Reads.at[JsValue](gettable.path)).reads(data)
       .map(_.isDefined)
       .getOrElse(false)
 
-  def notDefined(gettable: Gettable[_]): Boolean =
+  def notDefined(gettable: Gettable[?]): Boolean =
     !isDefined(gettable)
 
   def set[A](page: Settable[A], value: A)(implicit writes: Writes[A]): Try[UserAnswers] = {
@@ -122,7 +122,7 @@ object UserAnswers {
 
   implicit val format: OFormat[UserAnswers] = OFormat(reads, writes)
 
-  def encryptedFormat(implicit crypto: Encrypter with Decrypter): OFormat[UserAnswers] = {
+  def encryptedFormat(implicit crypto: Encrypter & Decrypter): OFormat[UserAnswers] = {
 
     import play.api.libs.functional.syntax._
 

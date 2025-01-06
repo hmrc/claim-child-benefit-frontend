@@ -27,17 +27,17 @@ class TaxChargeChoiceSpec extends AnyFreeSpec with Matchers {
 
     "must read `optedOut` as Opted Out" in {
 
-      JsString("optedOut").validate[TaxChargeChoice] mustEqual JsSuccess(OptedOut)
+      JsString("optedOut").validate[TaxChargeChoice] `mustEqual` JsSuccess(OptedOut)
     }
 
     "must read `doesNotApply` as Does Not Apply" in {
 
-      JsString("doesNotApply").validate[TaxChargeChoice] mustEqual JsSuccess(DoesNotApply)
+      JsString("doesNotApply").validate[TaxChargeChoice] `mustEqual` JsSuccess(DoesNotApply)
     }
 
     "must read `notRecorded` as Not Recorded" in {
 
-      JsString("notRecorded").validate[TaxChargeChoice] mustEqual JsSuccess(NotRecorded)
+      JsString("notRecorded").validate[TaxChargeChoice] `mustEqual` JsSuccess(NotRecorded)
     }
 
     "must read a tax charge payer as Opted In" in {
@@ -46,7 +46,7 @@ class TaxChargeChoiceSpec extends AnyFreeSpec with Matchers {
         "taxChargePayer" -> "applicant"
       )
 
-      json.validate[TaxChargeChoice] mustEqual JsSuccess(OptedIn(TaxChargePayer.Applicant))
+      json.validate[TaxChargeChoice] `mustEqual` JsSuccess(OptedIn(TaxChargePayer.Applicant))
     }
   }
 
@@ -54,22 +54,22 @@ class TaxChargeChoiceSpec extends AnyFreeSpec with Matchers {
 
     "must write Opted Out" in {
 
-      Json.toJson[TaxChargeChoice](OptedOut) mustEqual JsString("optedOut")
+      Json.toJson[TaxChargeChoice](OptedOut) `mustEqual` JsString("optedOut")
     }
 
     "must write Does Not Apply" in {
 
-      Json.toJson[TaxChargeChoice](DoesNotApply) mustEqual JsString("doesNotApply")
+      Json.toJson[TaxChargeChoice](DoesNotApply) `mustEqual` JsString("doesNotApply")
     }
 
     "must write Not Recorded" in {
 
-      Json.toJson[TaxChargeChoice](NotRecorded) mustEqual JsString("notRecorded")
+      Json.toJson[TaxChargeChoice](NotRecorded) `mustEqual` JsString("notRecorded")
     }
 
     "must write Opted In" in {
 
-      Json.toJson[TaxChargeChoice](OptedIn(TaxChargePayer.Partner)) mustEqual Json.obj("taxChargePayer" -> "partner")
+      Json.toJson[TaxChargeChoice](OptedIn(TaxChargePayer.Partner)) `mustEqual` Json.obj("taxChargePayer" -> "partner")
     }
   }
 }

@@ -41,11 +41,10 @@ class ChildBirthCertificateSystemNumberFormProviderSpec extends StringFieldBehav
 
       val gen = Gen.listOfN(9, Gen.numChar).map(_.mkString)
 
-      forAll(gen) {
-        dataItem: String =>
-          val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
-          result.value.value mustBe dataItem
-          result.errors mustBe empty
+      forAll(gen) { dataItem =>
+        val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
+        result.value.value `mustBe` dataItem
+        result.errors `mustBe` empty
       }
     }
 
@@ -53,11 +52,10 @@ class ChildBirthCertificateSystemNumberFormProviderSpec extends StringFieldBehav
 
       val gen = Gen.listOfN(9, Gen.numChar).map(_.mkString(" "))
 
-      forAll(gen) {
-        dataItem: String =>
-          val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
-          result.value.value mustBe dataItem
-          result.errors mustBe empty
+      forAll(gen) { dataItem =>
+        val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
+        result.value.value `mustBe` dataItem
+        result.errors `mustBe` empty
       }
     }
 
@@ -65,11 +63,10 @@ class ChildBirthCertificateSystemNumberFormProviderSpec extends StringFieldBehav
 
       val gen = Gen.listOfN(9, Gen.numChar).map(_.mkString("-"))
 
-      forAll(gen) {
-        dataItem: String =>
-          val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
-          result.value.value mustBe dataItem
-          result.errors mustBe empty
+      forAll(gen) { dataItem =>
+        val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
+        result.value.value `mustBe` dataItem
+        result.errors `mustBe` empty
       }
     }
 
@@ -80,10 +77,13 @@ class ChildBirthCertificateSystemNumberFormProviderSpec extends StringFieldBehav
         chars     <- Gen.listOfN(charCount, Gen.numChar)
       } yield chars.mkString
 
-      forAll(gen) {
-        dataItem =>
-          val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
-          result.errors must contain only FormError(fieldName, invalidKey, Seq(Validation.systemNumberPattern.toString, childName.firstName))
+      forAll(gen) { dataItem =>
+        val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
+        result.errors `must` contain `only` FormError(
+          fieldName,
+          invalidKey,
+          Seq(Validation.systemNumberPattern.toString, childName.firstName)
+        )
       }
     }
 
@@ -94,22 +94,27 @@ class ChildBirthCertificateSystemNumberFormProviderSpec extends StringFieldBehav
         chars     <- Gen.listOfN(charCount, Gen.numChar)
       } yield chars.mkString
 
-      forAll(gen) {
-        dataItem =>
-          val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
-          result.errors must contain only FormError(fieldName, invalidKey, Seq(Validation.systemNumberPattern.toString, childName.firstName))
+      forAll(gen) { dataItem =>
+        val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
+        result.errors `must` contain `only` FormError(
+          fieldName,
+          invalidKey,
+          Seq(Validation.systemNumberPattern.toString, childName.firstName)
+        )
       }
     }
 
     "must not bind vales that contain characters other than digits" in {
 
-      forAll(arbitrary[String]) {
-        value =>
-
-          whenever (!value.forall(_.isDigit) && !value.forall(_ == ' ')) {
-            val result = form.bind(Map(fieldName -> value)).apply(fieldName)
-            result.errors must contain only FormError(fieldName, invalidKey, Seq(Validation.systemNumberPattern.toString, childName.firstName))
-          }
+      forAll(arbitrary[String]) { value =>
+        whenever(!value.forall(_.isDigit) && !value.forall(_ == ' ')) {
+          val result = form.bind(Map(fieldName -> value)).apply(fieldName)
+          result.errors `must` contain `only` FormError(
+            fieldName,
+            invalidKey,
+            Seq(Validation.systemNumberPattern.toString, childName.firstName)
+          )
+        }
       }
     }
 

@@ -53,8 +53,8 @@ class CheckChildDetailsControllerSpec extends SpecBase with SummaryListFluency {
           ).flatten
         )
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(list, waypoints, index, childName)(request, msgs).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(list, waypoints, index, childName)(request, msgs).toString
       }
     }
 
@@ -67,8 +67,11 @@ class CheckChildDetailsControllerSpec extends SpecBase with SummaryListFluency {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual CheckChildDetailsPage(index).navigate(waypoints, emptyUserAnswers, emptyUserAnswers).route.url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` CheckChildDetailsPage(index)
+          .navigate(waypoints, emptyUserAnswers, emptyUserAnswers)
+          .route
+          .url
       }
     }
 
@@ -81,8 +84,8 @@ class CheckChildDetailsControllerSpec extends SpecBase with SummaryListFluency {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -95,8 +98,8 @@ class CheckChildDetailsControllerSpec extends SpecBase with SummaryListFluency {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

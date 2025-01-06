@@ -39,5 +39,5 @@ object OtherEligibilityFailReason extends Enumerable.Implicits {
   )
 
   implicit val enumerable: Enumerable[OtherEligibilityFailReason] =
-    Enumerable(values.map(v => v.toString -> v): _*)
+    Enumerable(values.map(v => v.toString -> v)*)
 }

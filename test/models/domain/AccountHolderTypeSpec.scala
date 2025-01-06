@@ -26,17 +26,17 @@ class AccountHolderTypeSpec extends AnyFreeSpec with Matchers {
 
     "must write Claimant" in {
 
-      Json.toJson[AccountHolderType](AccountHolderType.Claimant) mustEqual JsString("CLAIMANT")
+      Json.toJson[AccountHolderType](AccountHolderType.Claimant) `mustEqual` JsString("CLAIMANT")
     }
 
     "must write Joint" in {
 
-      Json.toJson[AccountHolderType](AccountHolderType.Joint) mustEqual JsString("JOINT")
+      Json.toJson[AccountHolderType](AccountHolderType.Joint) `mustEqual` JsString("JOINT")
     }
 
     "must write Someone Else" in {
 
-      Json.toJson[AccountHolderType](AccountHolderType.SomeoneElse) mustEqual JsString("SOMEONE_ELSE")
+      Json.toJson[AccountHolderType](AccountHolderType.SomeoneElse) `mustEqual` JsString("SOMEONE_ELSE")
     }
   }
 }

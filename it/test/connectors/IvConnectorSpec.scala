@@ -17,7 +17,7 @@
 package connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock.{get, notFound, ok, urlEqualTo}
-import connectors.IvConnector
+
 import models.IvResult
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
@@ -73,7 +73,7 @@ class IvConnectorSpec
 
         val result = connector.getJourneyStatus(journeyId).futureValue
 
-        result mustEqual IvResult.Success
+        result `mustEqual` IvResult.Success
       }
     }
 

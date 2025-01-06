@@ -62,8 +62,10 @@ class ClaimSpec extends AnyFreeSpec with Matchers with Generators with OptionVal
         dateOfBirth = LocalDate.now,
         nationalInsuranceNumber = Some(nino),
         currentAddress = arbitrary[models.UkAddress].sample.value,
-        previousAddress = None, telephoneNumber = "0777777777",
-        nationalities = NonEmptyList(genUkCtaNationality.sample.value, Gen.listOf(arbitrary[models.Nationality]).sample.value),
+        previousAddress = None,
+        telephoneNumber = "0777777777",
+        nationalities =
+          NonEmptyList(genUkCtaNationality.sample.value, Gen.listOf(arbitrary[models.Nationality]).sample.value),
         residency = journey.Residency.AlwaysLivedInUk,
         memberOfHMForcesOrCivilServantAbroad = hmfAbroad,
         currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
@@ -83,33 +85,33 @@ class ClaimSpec extends AnyFreeSpec with Matchers with Generators with OptionVal
 
       val claim = Claim.build(nino, basicJourneyModel, hasClaimedChildBenefit = false, settledStatusStartDate = None)
 
-      claim.otherEligibilityFailure mustBe false
+      claim.otherEligibilityFailure `mustBe` false
     }
 
     "must set `other eligibility fail` to true when the journey model has any other eligibility fail reasons" in {
 
-      val model = basicJourneyModel.copy(otherEligibilityFailureReasons = Seq(OtherEligibilityFailReason.ApplicantWorkedAbroad))
+      val model =
+        basicJourneyModel.copy(otherEligibilityFailureReasons = Seq(OtherEligibilityFailReason.ApplicantWorkedAbroad))
 
       val claim = Claim.build(nino, model, hasClaimedChildBenefit = false, settledStatusStartDate = None)
 
-      claim.otherEligibilityFailure mustBe true
+      claim.otherEligibilityFailure `mustBe` true
     }
 
     "must set settled status on the Claimant to `true` when the settled status date is 3 months or more in the past" in {
 
-      forAll(datesBetween(LocalDate.now.minusYears(10), LocalDate.now.minusMonths(3))) {
-        settledStatusDate =>
+      forAll(datesBetween(LocalDate.now.minusYears(10), LocalDate.now.minusMonths(3))) { settledStatusDate =>
+        val nationality = models.Nationality.allNationalities.filter(_.group == models.NationalityGroup.Eea).head
+        val model =
+          basicJourneyModel.copy(
+            applicant = basicJourneyModel.applicant.copy(nationalities = NonEmptyList(nationality, Nil)),
+            children = NonEmptyList(basicChild.copy(dateOfBirth = LocalDate.now.minusYears(1)), Nil)
+          )
 
-          val nationality = models.Nationality.allNationalities.filter(_.group == models.NationalityGroup.Eea).head
-          val model =
-            basicJourneyModel.copy(
-              applicant = basicJourneyModel.applicant.copy(nationalities = NonEmptyList(nationality, Nil)),
-              children = NonEmptyList(basicChild.copy(dateOfBirth = LocalDate.now.minusYears(1)), Nil)
-            )
+        val claim =
+          Claim.build(nino, model, hasClaimedChildBenefit = false, settledStatusStartDate = Some(settledStatusDate))
 
-          val claim = Claim.build(nino, model, hasClaimedChildBenefit = false, settledStatusStartDate = Some(settledStatusDate))
-
-          claim.claimant.asInstanceOf[NonUkCtaClaimantAlwaysResident].rightToReside mustEqual true
+        claim.claimant.asInstanceOf[NonUkCtaClaimantAlwaysResident].rightToReside `mustEqual` true
       }
     }
 
@@ -120,42 +122,40 @@ class ClaimSpec extends AnyFreeSpec with Matchers with Generators with OptionVal
         childBirthDate    <- datesBetween(settledStatusDate, LocalDate.now)
       } yield (settledStatusDate, childBirthDate)
 
-      forAll(gen) {
-        case (settledStatusDate, childBirthDate) =>
+      forAll(gen) { case (settledStatusDate, childBirthDate) =>
+        val nationality = models.Nationality.allNationalities.filter(_.group == models.NationalityGroup.Eea).head
+        val model =
+          basicJourneyModel.copy(
+            applicant = basicJourneyModel.applicant.copy(nationalities = NonEmptyList(nationality, Nil)),
+            children = NonEmptyList(basicChild.copy(dateOfBirth = childBirthDate), Nil)
+          )
 
-          val nationality = models.Nationality.allNationalities.filter(_.group == models.NationalityGroup.Eea).head
-          val model =
-            basicJourneyModel.copy(
-              applicant = basicJourneyModel.applicant.copy(nationalities = NonEmptyList(nationality, Nil)),
-              children = NonEmptyList(basicChild.copy(dateOfBirth = childBirthDate), Nil)
-            )
+        val claim =
+          Claim.build(nino, model, hasClaimedChildBenefit = false, settledStatusStartDate = Some(settledStatusDate))
 
-          val claim = Claim.build(nino, model, hasClaimedChildBenefit = false, settledStatusStartDate = Some(settledStatusDate))
-
-          claim.claimant.asInstanceOf[NonUkCtaClaimantAlwaysResident].rightToReside mustEqual true
+        claim.claimant.asInstanceOf[NonUkCtaClaimantAlwaysResident].rightToReside `mustEqual` true
       }
     }
 
     "must set settled status on the Claimant to `false` when a settled status date is after the oldest child's birth date and less than 3 months ago" - {
 
       val gen = for {
-        childBirthDate <- datesBetween(LocalDate.now.minusMonths(3), LocalDate.now.minusDays(2))
+        childBirthDate    <- datesBetween(LocalDate.now.minusMonths(3), LocalDate.now.minusDays(2))
         settledStatusDate <- datesBetween(childBirthDate.plusDays(1), LocalDate.now)
       } yield (settledStatusDate, childBirthDate)
 
-      forAll(gen) {
-        case (settledStatusDate, childBirthDate) =>
+      forAll(gen) { case (settledStatusDate, childBirthDate) =>
+        val nationality = models.Nationality.allNationalities.filter(_.group == models.NationalityGroup.Eea).head
+        val model =
+          basicJourneyModel.copy(
+            applicant = basicJourneyModel.applicant.copy(nationalities = NonEmptyList(nationality, Nil)),
+            children = NonEmptyList(basicChild.copy(dateOfBirth = childBirthDate), Nil)
+          )
 
-          val nationality = models.Nationality.allNationalities.filter(_.group == models.NationalityGroup.Eea).head
-          val model =
-            basicJourneyModel.copy(
-              applicant = basicJourneyModel.applicant.copy(nationalities = NonEmptyList(nationality, Nil)),
-              children = NonEmptyList(basicChild.copy(dateOfBirth = childBirthDate), Nil)
-            )
+        val claim =
+          Claim.build(nino, model, hasClaimedChildBenefit = false, settledStatusStartDate = Some(settledStatusDate))
 
-          val claim = Claim.build(nino, model, hasClaimedChildBenefit = false, settledStatusStartDate = Some(settledStatusDate))
-
-          claim.claimant.asInstanceOf[NonUkCtaClaimantAlwaysResident].rightToReside mustEqual false
+        claim.claimant.asInstanceOf[NonUkCtaClaimantAlwaysResident].rightToReside `mustEqual` false
       }
     }
   }

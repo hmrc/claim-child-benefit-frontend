@@ -28,16 +28,16 @@ class AccountDetailsSpec extends AnyFreeSpec with Matchers {
     val account = BankAccount("a", "b", "c", "d", "e", Some(BankAccountInsightsResponseModel("f", 0, "h")))
     val json = Json.toJson(account)
 
-    json mustEqual Json.obj(
-      "holder"-> "a",
-      "firstName"-> "b",
-      "lastName"-> "c",
-      "sortCode"-> "d",
-      "accountNumber"-> "e",
+    json `mustEqual` Json.obj(
+      "holder"        -> "a",
+      "firstName"     -> "b",
+      "lastName"      -> "c",
+      "sortCode"      -> "d",
+      "accountNumber" -> "e",
       "bankAccountInsightsResult" -> Json.obj(
         "correlationId" -> "f",
-        "riskScore" -> 0,
-        "reason" -> "h"
+        "riskScore"     -> 0,
+        "reason"        -> "h"
       )
     )
   }
@@ -47,12 +47,12 @@ class AccountDetailsSpec extends AnyFreeSpec with Matchers {
     val account = BuildingSociety("a", "b", "c", "d", "e")
     val json = Json.toJson(account)
 
-    json mustEqual Json.obj(
-      "holder" -> "a",
-      "firstName" -> "b",
-      "lastName" -> "c",
+    json `mustEqual` Json.obj(
+      "holder"          -> "a",
+      "firstName"       -> "b",
+      "lastName"        -> "c",
       "buildingSociety" -> "d",
-      "rollNumber" -> "e"
+      "rollNumber"      -> "e"
     )
   }
 }

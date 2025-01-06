@@ -45,8 +45,12 @@ class DateChildStartedLivingWithApplicantControllerSpec extends SpecBase with Mo
   private val adultName = AdultName(None, "first", None, "last")
   private val baseAnswers =
     emptyUserAnswers
-      .set(ChildNamePage(index), childName).success.value
-      .set(ApplicantNamePage, adultName).success.value
+      .set(ChildNamePage(index), childName)
+      .success
+      .value
+      .set(ApplicantNamePage, adultName)
+      .success
+      .value
 
   val formProvider = new DateChildStartedLivingWithApplicantFormProvider(clockAtFixedInstant)
   private val form = formProvider(childName)
@@ -54,7 +58,8 @@ class DateChildStartedLivingWithApplicantControllerSpec extends SpecBase with Mo
 
   val validAnswer = LocalDate.now(clockAtFixedInstant).minusDays(1)
 
-  lazy val dateChildStartedLivingWithApplicantRoute = routes.DateChildStartedLivingWithApplicantController.onPageLoad(waypoints, index).url
+  lazy val dateChildStartedLivingWithApplicantRoute =
+    routes.DateChildStartedLivingWithApplicantController.onPageLoad(waypoints, index).url
 
   def getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, dateChildStartedLivingWithApplicantRoute)
@@ -80,8 +85,11 @@ class DateChildStartedLivingWithApplicantControllerSpec extends SpecBase with Mo
 
           val view = application.injector.instanceOf[DateChildStartedLivingWithApplicantView]
 
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(form, waypoints, index, childName, adultName)(getRequest, messages(application)).toString
+          status(result) `mustEqual` OK
+          contentAsString(result) `mustEqual` view(form, waypoints, index, childName, adultName)(
+            getRequest,
+            messages(application)
+          ).toString
         }
       }
 
@@ -97,8 +105,12 @@ class DateChildStartedLivingWithApplicantControllerSpec extends SpecBase with Mo
           val answers =
             emptyUserAnswers
               .copy(nino = Some(nino), designatoryDetails = Some(designatoryDetails))
-              .set(ChildNamePage(index), childName).success.value
-              .set(DesignatoryNamePage, newName).success.value
+              .set(ChildNamePage(index), childName)
+              .success
+              .value
+              .set(DesignatoryNamePage, newName)
+              .success
+              .value
 
           val application = applicationBuilder(userAnswers = Some(answers)).build()
 
@@ -107,8 +119,11 @@ class DateChildStartedLivingWithApplicantControllerSpec extends SpecBase with Mo
 
             val view = application.injector.instanceOf[DateChildStartedLivingWithApplicantView]
 
-            status(result) mustEqual OK
-            contentAsString(result) mustEqual view(form, waypoints, index, childName, newName)(getRequest, messages(application)).toString
+            status(result) `mustEqual` OK
+            contentAsString(result) `mustEqual` view(form, waypoints, index, childName, newName)(
+              getRequest,
+              messages(application)
+            ).toString
           }
         }
 
@@ -117,7 +132,9 @@ class DateChildStartedLivingWithApplicantControllerSpec extends SpecBase with Mo
           val answers =
             emptyUserAnswers
               .copy(nino = Some(nino), designatoryDetails = Some(designatoryDetails))
-              .set(ChildNamePage(index), childName).success.value
+              .set(ChildNamePage(index), childName)
+              .success
+              .value
 
           val application = applicationBuilder(userAnswers = Some(answers)).build()
 
@@ -126,8 +143,11 @@ class DateChildStartedLivingWithApplicantControllerSpec extends SpecBase with Mo
 
             val view = application.injector.instanceOf[DateChildStartedLivingWithApplicantView]
 
-            status(result) mustEqual OK
-            contentAsString(result) mustEqual view(form, waypoints, index, childName, npsName)(getRequest, messages(application)).toString
+            status(result) `mustEqual` OK
+            contentAsString(result) `mustEqual` view(form, waypoints, index, childName, npsName)(
+              getRequest,
+              messages(application)
+            ).toString
           }
         }
       }
@@ -144,8 +164,11 @@ class DateChildStartedLivingWithApplicantControllerSpec extends SpecBase with Mo
 
         val result = route(application, getRequest).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints, index, childName, adultName)(getRequest, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form.fill(validAnswer), waypoints, index, childName, adultName)(
+          getRequest,
+          messages(application)
+        ).toString
       }
     }
 
@@ -153,7 +176,7 @@ class DateChildStartedLivingWithApplicantControllerSpec extends SpecBase with Mo
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -164,10 +187,14 @@ class DateChildStartedLivingWithApplicantControllerSpec extends SpecBase with Mo
 
       running(application) {
         val result = route(application, postRequest).value
-        val expectedAnswers = baseAnswers.set(child.DateChildStartedLivingWithApplicantPage(index), validAnswer).success.value
+        val expectedAnswers =
+          baseAnswers.set(child.DateChildStartedLivingWithApplicantPage(index), validAnswer).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual child.DateChildStartedLivingWithApplicantPage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` child
+          .DateChildStartedLivingWithApplicantPage(index)
+          .navigate(waypoints, emptyUserAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -187,8 +214,11 @@ class DateChildStartedLivingWithApplicantControllerSpec extends SpecBase with Mo
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, index, childName, adultName)(request, messages(application)).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints, index, childName, adultName)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -199,8 +229,8 @@ class DateChildStartedLivingWithApplicantControllerSpec extends SpecBase with Mo
       running(application) {
         val result = route(application, getRequest).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -211,8 +241,8 @@ class DateChildStartedLivingWithApplicantControllerSpec extends SpecBase with Mo
       running(application) {
         val result = route(application, postRequest).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

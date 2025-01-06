@@ -14,23 +14,19 @@
  * limitations under the License.
  */
 
-package utils
+package controllers
 
-import cats.Monad
-import cats.implicits._
+import config.FrontendAppConfig
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl.idFunctor
+import uk.gov.hmrc.play.bootstrap.binders.{OnlyRelative, RedirectUrl}
 
-object MonadOps {
+import javax.inject.Inject
 
-  implicit class BooleanMonadSyntax[F[_]](fa: F[Boolean])(implicit m: Monad[F]) {
-
-    def &&(that: F[Boolean]): F[Boolean] = fa.flatMap {
-      case false => m.pure(false)
-      case true  => that
+class VerifyRedirectUrl @Inject()(config: FrontendAppConfig) {
+  def verify(continueUrl: RedirectUrl): String =
+    continueUrl
+      .getEither(OnlyRelative) match {
+      case Right(safeUrl) => safeUrl.url
+      case _ => config.signOutUrl
     }
-
-    def ||(that: F[Boolean]): F[Boolean] = fa.flatMap {
-      case true  => m.pure(true)
-      case false => that
-    }
-  }
 }

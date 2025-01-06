@@ -44,7 +44,8 @@ class ApplicantLivedAtCurrentAddressOneYearControllerSpec extends SpecBase with 
   val form = formProvider(currentAddress.line1)
   private val waypoints = EmptyWaypoints
 
-  lazy val applicantLivedAtCurrentAddressOneYearRoute = routes.ApplicantLivedAtCurrentAddressOneYearController.onPageLoad(waypoints).url
+  lazy val applicantLivedAtCurrentAddressOneYearRoute =
+    routes.ApplicantLivedAtCurrentAddressOneYearController.onPageLoad(waypoints).url
 
   "ApplicantLivedAtCurrentAddressOneYear Controller" - {
 
@@ -59,8 +60,11 @@ class ApplicantLivedAtCurrentAddressOneYearControllerSpec extends SpecBase with 
 
         val view = application.injector.instanceOf[ApplicantLivedAtCurrentAddressOneYearView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, currentAddress.line1)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints, currentAddress.line1)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -77,8 +81,11 @@ class ApplicantLivedAtCurrentAddressOneYearControllerSpec extends SpecBase with 
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), waypoints, currentAddress.line1)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form.fill(true), waypoints, currentAddress.line1)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -86,7 +93,7 @@ class ApplicantLivedAtCurrentAddressOneYearControllerSpec extends SpecBase with 
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -103,8 +110,10 @@ class ApplicantLivedAtCurrentAddressOneYearControllerSpec extends SpecBase with 
         val result = route(application, request).value
         val expectedAnswers = baseAnswers.set(ApplicantLivedAtCurrentAddressOneYearPage, true).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ApplicantLivedAtCurrentAddressOneYearPage.navigate(waypoints, baseAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` ApplicantLivedAtCurrentAddressOneYearPage
+          .navigate(waypoints, baseAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -124,8 +133,11 @@ class ApplicantLivedAtCurrentAddressOneYearControllerSpec extends SpecBase with 
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, currentAddress.line1)(request, messages(application)).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints, currentAddress.line1)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -138,8 +150,8 @@ class ApplicantLivedAtCurrentAddressOneYearControllerSpec extends SpecBase with 
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -154,8 +166,8 @@ class ApplicantLivedAtCurrentAddressOneYearControllerSpec extends SpecBase with 
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

@@ -31,6 +31,9 @@ import play.api.mvc.MultipartFormData
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps, UpstreamErrorResponse}
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
+import play.api.libs.ws.bodyWritableOf_Multipart
+
 
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit

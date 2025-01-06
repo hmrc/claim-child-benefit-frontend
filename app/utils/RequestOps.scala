@@ -18,26 +18,26 @@ package utils
 
 import models.requests.{AuthenticatedIdentifierRequest, DataRequest, OptionalDataRequest}
 import play.api.data.Mapping
-import play.api.mvc.Request
+import play.api.mvc. RequestHeader
 
 object RequestOps {
 
-  implicit class RequestSyntax(request: Request[_]) {
+  implicit class RequestSyntax(request: RequestHeader) {
 
     def signedIn: Boolean = request match {
-      case d: DataRequest[_] =>
+      case d: DataRequest[?] =>
         d.request match {
-          case _: AuthenticatedIdentifierRequest[_] => true
+          case _: AuthenticatedIdentifierRequest[?] => true
           case _ => false
         }
 
-      case x: OptionalDataRequest[_] =>
+      case x: OptionalDataRequest[?] =>
         x.request match {
-          case _: AuthenticatedIdentifierRequest[_] => true
+          case _: AuthenticatedIdentifierRequest[?] => true
           case _ => false
         }
 
-      case x: AuthenticatedIdentifierRequest[_] =>
+      case x: AuthenticatedIdentifierRequest[?] =>
         true
 
       case _ =>

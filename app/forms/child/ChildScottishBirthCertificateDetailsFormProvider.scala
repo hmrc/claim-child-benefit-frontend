@@ -52,7 +52,7 @@ class ChildScottishBirthCertificateDetailsFormProvider @Inject()(clock: Clock) e
           "childScottishBirthCertificateDetails.entry.error.invalid",
           args = Seq(childName.firstName)
         ).verifying(inRange(1, 999, "childScottishBirthCertificateDetails.entry.error.outOfRange", args = childName.firstName))
-      )(ScottishBirthCertificateDetails.apply)(ScottishBirthCertificateDetails.unapply)
+      )(ScottishBirthCertificateDetails.apply)(o => Some(Tuple.fromProductTyped(o)))
     )
   }
 
@@ -63,7 +63,7 @@ class ChildScottishBirthCertificateDetailsFormProvider @Inject()(clock: Clock) e
         if (input >= minimum && input <= maximum) {
           Valid
         } else {
-          Invalid(errorKey, Seq(minimum.toString, maximum.toString) ++ args: _*)
+          Invalid(errorKey, Seq(minimum.toString, maximum.toString) ++ args*)
         }
     }
 

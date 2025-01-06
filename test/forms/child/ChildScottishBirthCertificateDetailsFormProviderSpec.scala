@@ -25,7 +25,6 @@ import java.time.{Clock, Instant, LocalDate, ZoneId}
 
 class ChildScottishBirthCertificateDetailsFormProviderSpec extends IntFieldBehaviours {
 
-
   private val fixedInstant: Instant = LocalDate.now.atStartOfDay(ZoneId.systemDefault).toInstant
   private val clockAtFixedInstant: Clock = Clock.fixed(fixedInstant, ZoneId.systemDefault)
 

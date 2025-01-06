@@ -24,6 +24,7 @@ import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 import queries.{AllCountriesPartnerReceivedBenefits, AllCountriesPartnerWorked, AllPartnerNationalities, Settable}
+import pages.RecoveryOps
 
 import scala.util.{Success, Try}
 
@@ -118,7 +119,7 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
           }
       }
 
-    def pagesToAlwaysRemove(newStatus: RelationshipStatus): Seq[Settable[_]] =
+    def pagesToAlwaysRemove(newStatus: RelationshipStatus): Seq[Settable[?]] =
       newStatus match {
         case Married =>
           Seq(CohabitationDatePage, SeparationDatePage)
@@ -146,7 +147,7 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
     }.getOrElse(super.cleanup(value, updatedAnswers))
   }
 
-  private val partnerPages: Seq[Settable[_]] = Seq(
+  private val partnerPages: Seq[Settable[?]] = Seq(
     PartnerNamePage,
     PartnerNinoKnownPage,
     PartnerNinoPage,
@@ -163,7 +164,7 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
     PartnerEldestChildDateOfBirthPage
   )
 
-  private val paymentPages: Seq[Settable[_]] = Seq(
+  private val paymentPages: Seq[Settable[?]] = Seq(
     AccountTypePage,
     ApplicantIncomePage,
     PartnerIncomePage,
@@ -177,6 +178,6 @@ case object RelationshipStatusPage extends QuestionPage[RelationshipStatus] {
     BuildingSocietyDetailsPage
   )
 
-  private def removePages(answers: UserAnswers, pages: Seq[Settable[_]]): Try[UserAnswers] =
+  private def removePages(answers: UserAnswers, pages: Seq[Settable[?]]): Try[UserAnswers] =
     pages.foldLeft[Try[UserAnswers]](Success(answers))((acc, page) => acc.flatMap(_.remove(page)))
 }

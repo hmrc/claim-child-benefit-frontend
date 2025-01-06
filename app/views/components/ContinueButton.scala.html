@@ -21,7 +21,7 @@
         featureFlags: FeatureFlags
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@()(implicit request: Request[?], messages: Messages)
 
 @if(featureFlags.saveAndReturn && request.signedIn) {
     @govukButton(

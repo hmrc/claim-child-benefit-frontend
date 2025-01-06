@@ -26,7 +26,7 @@ import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{EmptyWaypoints, RecentlyClaimedPage}
 import play.api.Configuration
-import play.api.inject.{bind}
+import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserDataService
@@ -56,14 +56,17 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
 
         val view = application.injector.instanceOf[RecentlyClaimedView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(RecentlyClaimedPage(new FrontendAppConfig(new Configuration(ConfigFactory.load()))), defaultServiceType).success.value
+      val userAnswers = UserAnswers(userAnswersId)
+        .set(RecentlyClaimedPage(new FrontendAppConfig(new Configuration(ConfigFactory.load()))), defaultServiceType)
+        .success
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -75,8 +78,11 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(defaultServiceType), waypoints)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form.fill(defaultServiceType), waypoints)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -84,7 +90,7 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -103,8 +109,10 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
         val recentlyClaimedPage = RecentlyClaimedPage(config)
         val expectedAnswers = emptyUserAnswers.set(recentlyClaimedPage, defaultServiceType).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual recentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` recentlyClaimedPage
+          .navigate(waypoints, emptyUserAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -124,8 +132,8 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints)(request, messages(application)).toString
       }
     }
 
@@ -138,7 +146,7 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
+        status(result) `mustEqual` OK
       }
     }
 
@@ -146,7 +154,7 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = None)
@@ -164,8 +172,10 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
         val expectedAnswers = emptyUserAnswers.set(recentlyClaimedPage, defaultServiceType).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual recentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` recentlyClaimedPage
+          .navigate(waypoints, emptyUserAnswers, expectedAnswers)
+          .url
       }
     }
 
@@ -173,7 +183,7 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = None, userIsAuthenticated = true)
@@ -190,10 +200,13 @@ class RecentlyClaimedControllerSpec extends SpecBase with MockitoSugar {
         val recentlyClaimedPage = RecentlyClaimedPage(config)
         val result = route(application, request).value
 
-        val expectedAnswers = emptyUserAnswers.copy(nino = Some("nino")).set(recentlyClaimedPage, defaultServiceType).success.value
+        val expectedAnswers =
+          emptyUserAnswers.copy(nino = Some("nino")).set(recentlyClaimedPage, defaultServiceType).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual recentlyClaimedPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` recentlyClaimedPage
+          .navigate(waypoints, emptyUserAnswers, expectedAnswers)
+          .url
       }
     }
   }

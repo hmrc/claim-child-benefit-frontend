@@ -42,31 +42,49 @@ class PreviousGuardianSpec extends AnyFreeSpec with Matchers with TryValues with
 
           val answers =
             UserAnswers("id")
-              .set(ChildLivesWithApplicantPage(index), true).success.value
-              .set(ChildLivedWithAnyoneElsePage(index), true).success.value
-              .set(PreviousGuardianNameKnownPage(index), false).success.value
+              .set(ChildLivesWithApplicantPage(index), true)
+              .success
+              .value
+              .set(ChildLivedWithAnyoneElsePage(index), true)
+              .success
+              .value
+              .set(PreviousGuardianNameKnownPage(index), false)
+              .success
+              .value
 
           val (errors, data) = PreviousGuardian.build(answers, index).pad
 
-          data.value.value mustEqual PreviousGuardian(None, None, None)
-          errors must not be defined
+          data.value.value `mustEqual` PreviousGuardian(None, None, None)
+          errors `must` `not` `be` defined
         }
 
         "must return a Previous Guardian when name is known but other details are not" in {
 
           val answers =
             UserAnswers("id")
-              .set(ChildLivesWithApplicantPage(index), true).success.value
-              .set(ChildLivedWithAnyoneElsePage(index), true).success.value
-              .set(PreviousGuardianNameKnownPage(index), true).success.value
-              .set(PreviousGuardianNamePage(index), adultName).success.value
-              .set(PreviousGuardianAddressKnownPage(index), false).success.value
-              .set(PreviousGuardianPhoneNumberKnownPage(index), false).success.value
+              .set(ChildLivesWithApplicantPage(index), true)
+              .success
+              .value
+              .set(ChildLivedWithAnyoneElsePage(index), true)
+              .success
+              .value
+              .set(PreviousGuardianNameKnownPage(index), true)
+              .success
+              .value
+              .set(PreviousGuardianNamePage(index), adultName)
+              .success
+              .value
+              .set(PreviousGuardianAddressKnownPage(index), false)
+              .success
+              .value
+              .set(PreviousGuardianPhoneNumberKnownPage(index), false)
+              .success
+              .value
 
           val (errors, data) = PreviousGuardian.build(answers, index).pad
 
-          data.value.value mustEqual PreviousGuardian(Some(adultName), None, None)
-          errors must not be defined
+          data.value.value `mustEqual` PreviousGuardian(Some(adultName), None, None)
+          errors `must` `not` `be` defined
         }
 
         "must return a Previous Guardian when all details are known" - {
@@ -75,40 +93,76 @@ class PreviousGuardianSpec extends AnyFreeSpec with Matchers with TryValues with
 
             val answers =
               UserAnswers("id")
-                .set(ChildLivesWithApplicantPage(index), true).success.value
-                .set(ChildLivedWithAnyoneElsePage(index), true).success.value
-                .set(PreviousGuardianNameKnownPage(index), true).success.value
-                .set(PreviousGuardianNamePage(index), adultName).success.value
-                .set(PreviousGuardianAddressKnownPage(index), true).success.value
-                .set(PreviousGuardianAddressInUkPage(index), true).success.value
-                .set(PreviousGuardianUkAddressPage(index), ukAddress).success.value
-                .set(PreviousGuardianPhoneNumberKnownPage(index), true).success.value
-                .set(PreviousGuardianPhoneNumberPage(index), phoneNumber).success.value
+                .set(ChildLivesWithApplicantPage(index), true)
+                .success
+                .value
+                .set(ChildLivedWithAnyoneElsePage(index), true)
+                .success
+                .value
+                .set(PreviousGuardianNameKnownPage(index), true)
+                .success
+                .value
+                .set(PreviousGuardianNamePage(index), adultName)
+                .success
+                .value
+                .set(PreviousGuardianAddressKnownPage(index), true)
+                .success
+                .value
+                .set(PreviousGuardianAddressInUkPage(index), true)
+                .success
+                .value
+                .set(PreviousGuardianUkAddressPage(index), ukAddress)
+                .success
+                .value
+                .set(PreviousGuardianPhoneNumberKnownPage(index), true)
+                .success
+                .value
+                .set(PreviousGuardianPhoneNumberPage(index), phoneNumber)
+                .success
+                .value
 
             val (errors, data) = PreviousGuardian.build(answers, index).pad
 
-            data.value.value mustEqual PreviousGuardian(Some(adultName), Some(ukAddress), Some(phoneNumber))
-            errors must not be defined
+            data.value.value `mustEqual` PreviousGuardian(Some(adultName), Some(ukAddress), Some(phoneNumber))
+            errors `must` `not` `be` defined
           }
 
           "with an international address" in {
 
             val answers =
               UserAnswers("id")
-                .set(ChildLivesWithApplicantPage(index), true).success.value
-                .set(ChildLivedWithAnyoneElsePage(index), true).success.value
-                .set(PreviousGuardianNameKnownPage(index), true).success.value
-                .set(PreviousGuardianNamePage(index), adultName).success.value
-                .set(PreviousGuardianAddressKnownPage(index), true).success.value
-                .set(PreviousGuardianAddressInUkPage(index), false).success.value
-                .set(PreviousGuardianInternationalAddressPage(index), internationalAddress).success.value
-                .set(PreviousGuardianPhoneNumberKnownPage(index), true).success.value
-                .set(PreviousGuardianPhoneNumberPage(index), phoneNumber).success.value
+                .set(ChildLivesWithApplicantPage(index), true)
+                .success
+                .value
+                .set(ChildLivedWithAnyoneElsePage(index), true)
+                .success
+                .value
+                .set(PreviousGuardianNameKnownPage(index), true)
+                .success
+                .value
+                .set(PreviousGuardianNamePage(index), adultName)
+                .success
+                .value
+                .set(PreviousGuardianAddressKnownPage(index), true)
+                .success
+                .value
+                .set(PreviousGuardianAddressInUkPage(index), false)
+                .success
+                .value
+                .set(PreviousGuardianInternationalAddressPage(index), internationalAddress)
+                .success
+                .value
+                .set(PreviousGuardianPhoneNumberKnownPage(index), true)
+                .success
+                .value
+                .set(PreviousGuardianPhoneNumberPage(index), phoneNumber)
+                .success
+                .value
 
             val (errors, data) = PreviousGuardian.build(answers, index).pad
 
-            data.value.value mustEqual PreviousGuardian(Some(adultName), Some(internationalAddress), Some(phoneNumber))
-            errors must not be defined
+            data.value.value `mustEqual` PreviousGuardian(Some(adultName), Some(internationalAddress), Some(phoneNumber))
+            errors `must` `not` `be` defined
           }
         }
 
@@ -116,16 +170,26 @@ class PreviousGuardianSpec extends AnyFreeSpec with Matchers with TryValues with
 
           val answers =
             UserAnswers("id")
-              .set(ChildLivesWithApplicantPage(index), true).success.value
-              .set(ChildLivedWithAnyoneElsePage(index), true).success.value
-              .set(PreviousGuardianNameKnownPage(index), true).success.value
-              .set(PreviousGuardianAddressKnownPage(index), true).success.value
-              .set(PreviousGuardianPhoneNumberKnownPage(index), true).success.value
+              .set(ChildLivesWithApplicantPage(index), true)
+              .success
+              .value
+              .set(ChildLivedWithAnyoneElsePage(index), true)
+              .success
+              .value
+              .set(PreviousGuardianNameKnownPage(index), true)
+              .success
+              .value
+              .set(PreviousGuardianAddressKnownPage(index), true)
+              .success
+              .value
+              .set(PreviousGuardianPhoneNumberKnownPage(index), true)
+              .success
+              .value
 
           val (errors, data) = PreviousGuardian.build(answers, index).pad
 
-          data must not be defined
-          errors.value.toChain.toList must contain theSameElementsAs Seq(
+          data `must` `not` `be` defined
+          errors.value.toChain.toList `must` contain theSameElementsAs Seq(
             PreviousGuardianNamePage(index),
             PreviousGuardianAddressInUkPage(index),
             PreviousGuardianPhoneNumberPage(index)
@@ -136,38 +200,70 @@ class PreviousGuardianSpec extends AnyFreeSpec with Matchers with TryValues with
 
           val answers =
             UserAnswers("id")
-              .set(ChildLivesWithApplicantPage(index), true).success.value
-              .set(ChildLivedWithAnyoneElsePage(index), true).success.value
-              .set(PreviousGuardianNameKnownPage(index), true).success.value
-              .set(PreviousGuardianNamePage(index), adultName).success.value
-              .set(PreviousGuardianAddressKnownPage(index), true).success.value
-              .set(PreviousGuardianAddressInUkPage(index), true).success.value
-              .set(PreviousGuardianPhoneNumberKnownPage(index), true).success.value
-              .set(PreviousGuardianPhoneNumberPage(index), phoneNumber).success.value
+              .set(ChildLivesWithApplicantPage(index), true)
+              .success
+              .value
+              .set(ChildLivedWithAnyoneElsePage(index), true)
+              .success
+              .value
+              .set(PreviousGuardianNameKnownPage(index), true)
+              .success
+              .value
+              .set(PreviousGuardianNamePage(index), adultName)
+              .success
+              .value
+              .set(PreviousGuardianAddressKnownPage(index), true)
+              .success
+              .value
+              .set(PreviousGuardianAddressInUkPage(index), true)
+              .success
+              .value
+              .set(PreviousGuardianPhoneNumberKnownPage(index), true)
+              .success
+              .value
+              .set(PreviousGuardianPhoneNumberPage(index), phoneNumber)
+              .success
+              .value
 
           val (errors, data) = PreviousGuardian.build(answers, index).pad
 
-          data must not be defined
-          errors.value.toChain.toList must contain only PreviousGuardianUkAddressPage(index)
+          data `must` `not` `be` defined
+          errors.value.toChain.toList `must` contain `only` PreviousGuardianUkAddressPage(index)
         }
 
         "must return errors when the user says the address is not in the UK, but no address is provided" in {
 
           val answers =
             UserAnswers("id")
-              .set(ChildLivesWithApplicantPage(index), true).success.value
-              .set(ChildLivedWithAnyoneElsePage(index), true).success.value
-              .set(PreviousGuardianNameKnownPage(index), true).success.value
-              .set(PreviousGuardianNamePage(index), adultName).success.value
-              .set(PreviousGuardianAddressKnownPage(index), true).success.value
-              .set(PreviousGuardianAddressInUkPage(index), false).success.value
-              .set(PreviousGuardianPhoneNumberKnownPage(index), true).success.value
-              .set(PreviousGuardianPhoneNumberPage(index), phoneNumber).success.value
+              .set(ChildLivesWithApplicantPage(index), true)
+              .success
+              .value
+              .set(ChildLivedWithAnyoneElsePage(index), true)
+              .success
+              .value
+              .set(PreviousGuardianNameKnownPage(index), true)
+              .success
+              .value
+              .set(PreviousGuardianNamePage(index), adultName)
+              .success
+              .value
+              .set(PreviousGuardianAddressKnownPage(index), true)
+              .success
+              .value
+              .set(PreviousGuardianAddressInUkPage(index), false)
+              .success
+              .value
+              .set(PreviousGuardianPhoneNumberKnownPage(index), true)
+              .success
+              .value
+              .set(PreviousGuardianPhoneNumberPage(index), phoneNumber)
+              .success
+              .value
 
           val (errors, data) = PreviousGuardian.build(answers, index).pad
 
-          data must not be defined
-          errors.value.toChain.toList must contain only PreviousGuardianInternationalAddressPage(index)
+          data `must` `not` `be` defined
+          errors.value.toChain.toList `must` contain `only` PreviousGuardianInternationalAddressPage(index)
         }
       }
 
@@ -177,13 +273,17 @@ class PreviousGuardianSpec extends AnyFreeSpec with Matchers with TryValues with
 
           val answers =
             UserAnswers("id")
-              .set(ChildLivesWithApplicantPage(index), true).success.value
-              .set(ChildLivedWithAnyoneElsePage(index), false).success.value
+              .set(ChildLivesWithApplicantPage(index), true)
+              .success
+              .value
+              .set(ChildLivedWithAnyoneElsePage(index), false)
+              .success
+              .value
 
           val (errors, data) = PreviousGuardian.build(answers, index).pad
 
-          data.value must not be defined
-          errors must not be defined
+          data.value `must` `not` `be` defined
+          errors `must` `not` `be` defined
         }
       }
     }
@@ -196,8 +296,8 @@ class PreviousGuardianSpec extends AnyFreeSpec with Matchers with TryValues with
 
         val (errors, data) = PreviousGuardian.build(answers, index).pad
 
-        data.value must not be defined
-        errors must not be defined
+        data.value `must` `not` `be` defined
+        errors `must` `not` `be` defined
       }
     }
   }

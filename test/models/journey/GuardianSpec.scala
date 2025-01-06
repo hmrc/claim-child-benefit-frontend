@@ -39,28 +39,40 @@ class GuardianSpec extends AnyFreeSpec with Matchers with TryValues with OptionV
 
         val answers =
           UserAnswers("id")
-            .set(ChildLivesWithApplicantPage(index), false).success.value
-            .set(GuardianNameKnownPage(index), false).success.value
+            .set(ChildLivesWithApplicantPage(index), false)
+            .success
+            .value
+            .set(GuardianNameKnownPage(index), false)
+            .success
+            .value
 
         val (errors, data) = Guardian.build(answers, index).pad
 
-        data.value.value mustEqual Guardian(None, None)
-        errors must not be defined
+        data.value.value `mustEqual` Guardian(None, None)
+        errors `must` `not` `be` defined
       }
 
       "must return a Guardian when name is known but address is not" in {
 
         val answers =
           UserAnswers("id")
-            .set(ChildLivesWithApplicantPage(index), false).success.value
-            .set(GuardianNameKnownPage(index), true).success.value
-            .set(GuardianNamePage(index), adultName).success.value
-            .set(GuardianAddressKnownPage(index), false).success.value
+            .set(ChildLivesWithApplicantPage(index), false)
+            .success
+            .value
+            .set(GuardianNameKnownPage(index), true)
+            .success
+            .value
+            .set(GuardianNamePage(index), adultName)
+            .success
+            .value
+            .set(GuardianAddressKnownPage(index), false)
+            .success
+            .value
 
         val (errors, data) = Guardian.build(answers, index).pad
 
-        data.value.value mustEqual Guardian(Some(adultName), None)
-        errors must not be defined
+        data.value.value `mustEqual` Guardian(Some(adultName), None)
+        errors `must` not be defined
       }
 
       "must return a Guardian when all details are known" - {
@@ -69,34 +81,58 @@ class GuardianSpec extends AnyFreeSpec with Matchers with TryValues with OptionV
 
           val answers =
             UserAnswers("id")
-              .set(ChildLivesWithApplicantPage(index), false).success.value
-              .set(GuardianNameKnownPage(index), true).success.value
-              .set(GuardianNamePage(index), adultName).success.value
-              .set(GuardianAddressKnownPage(index), true).success.value
-              .set(GuardianAddressInUkPage(index), true).success.value
-              .set(GuardianUkAddressPage(index), ukAddress).success.value
+              .set(ChildLivesWithApplicantPage(index), false)
+              .success
+              .value
+              .set(GuardianNameKnownPage(index), true)
+              .success
+              .value
+              .set(GuardianNamePage(index), adultName)
+              .success
+              .value
+              .set(GuardianAddressKnownPage(index), true)
+              .success
+              .value
+              .set(GuardianAddressInUkPage(index), true)
+              .success
+              .value
+              .set(GuardianUkAddressPage(index), ukAddress)
+              .success
+              .value
 
           val (errors, data) = Guardian.build(answers, index).pad
 
-          data.value.value mustEqual Guardian(Some(adultName), Some(ukAddress))
-          errors must not be defined
+          data.value.value `mustEqual` Guardian(Some(adultName), Some(ukAddress))
+          errors `must` not `be` defined
         }
 
         "and the address is not in the UK" in {
 
           val answers =
             UserAnswers("id")
-              .set(ChildLivesWithApplicantPage(index), false).success.value
-              .set(GuardianNameKnownPage(index), true).success.value
-              .set(GuardianNamePage(index), adultName).success.value
-              .set(GuardianAddressKnownPage(index), true).success.value
-              .set(GuardianAddressInUkPage(index), false).success.value
-              .set(GuardianInternationalAddressPage(index), internationalAddress).success.value
+              .set(ChildLivesWithApplicantPage(index), false)
+              .success
+              .value
+              .set(GuardianNameKnownPage(index), true)
+              .success
+              .value
+              .set(GuardianNamePage(index), adultName)
+              .success
+              .value
+              .set(GuardianAddressKnownPage(index), true)
+              .success
+              .value
+              .set(GuardianAddressInUkPage(index), false)
+              .success
+              .value
+              .set(GuardianInternationalAddressPage(index), internationalAddress)
+              .success
+              .value
 
           val (errors, data) = Guardian.build(answers, index).pad
 
-          data.value.value mustEqual Guardian(Some(adultName), Some(internationalAddress))
-          errors must not be defined
+          data.value.value `mustEqual` Guardian(Some(adultName), Some(internationalAddress))
+          errors `must` not `be` defined
         }
       }
 
@@ -104,12 +140,16 @@ class GuardianSpec extends AnyFreeSpec with Matchers with TryValues with OptionV
 
         val answers =
           UserAnswers("id")
-            .set(ChildLivesWithApplicantPage(index), false).success.value
-            .set(GuardianNameKnownPage(index), true).success.value
+            .set(ChildLivesWithApplicantPage(index), false)
+            .success
+            .value
+            .set(GuardianNameKnownPage(index), true)
+            .success
+            .value
 
         val (errors, data) = Guardian.build(answers, index).pad
 
-        data must not be defined
+        data `must` not `be` defined
         errors.value.toChain.toList must contain theSameElementsAs Seq(
           GuardianNamePage(index),
           GuardianAddressKnownPage(index)
@@ -120,32 +160,52 @@ class GuardianSpec extends AnyFreeSpec with Matchers with TryValues with OptionV
 
         val answers =
           UserAnswers("id")
-            .set(ChildLivesWithApplicantPage(index), false).success.value
-            .set(GuardianNameKnownPage(index), true).success.value
-            .set(GuardianNamePage(index), adultName).success.value
-            .set(GuardianAddressKnownPage(index), true).success.value
-            .set(GuardianAddressInUkPage(index), true).success.value
+            .set(ChildLivesWithApplicantPage(index), false)
+            .success
+            .value
+            .set(GuardianNameKnownPage(index), true)
+            .success
+            .value
+            .set(GuardianNamePage(index), adultName)
+            .success
+            .value
+            .set(GuardianAddressKnownPage(index), true)
+            .success
+            .value
+            .set(GuardianAddressInUkPage(index), true)
+            .success
+            .value
 
         val (errors, data) = Guardian.build(answers, index).pad
 
-        data must not be defined
-        errors.value.toChain.toList must contain only GuardianUkAddressPage(index)
+        data `must` not `be` defined
+        errors.value.toChain.toList `must` contain `only` GuardianUkAddressPage(index)
       }
 
       "must return errors when the user says the address is not in the UK, but no address is provided" in {
 
         val answers =
           UserAnswers("id")
-            .set(ChildLivesWithApplicantPage(index), false).success.value
-            .set(GuardianNameKnownPage(index), true).success.value
-            .set(GuardianNamePage(index), adultName).success.value
-            .set(GuardianAddressKnownPage(index), true).success.value
-            .set(GuardianAddressInUkPage(index), false).success.value
+            .set(ChildLivesWithApplicantPage(index), false)
+            .success
+            .value
+            .set(GuardianNameKnownPage(index), true)
+            .success
+            .value
+            .set(GuardianNamePage(index), adultName)
+            .success
+            .value
+            .set(GuardianAddressKnownPage(index), true)
+            .success
+            .value
+            .set(GuardianAddressInUkPage(index), false)
+            .success
+            .value
 
         val (errors, data) = Guardian.build(answers, index).pad
 
-        data must not be defined
-        errors.value.toChain.toList must contain only GuardianInternationalAddressPage(index)
+        data `must` not `be` defined
+        errors.value.toChain.toList `must` contain `only` GuardianInternationalAddressPage(index)
       }
     }
 
@@ -157,8 +217,8 @@ class GuardianSpec extends AnyFreeSpec with Matchers with TryValues with OptionV
 
         val (errors, data) = Guardian.build(answers, index).pad
 
-        data.value must not be defined
-        errors must not be defined
+        data.value `must` not `be` defined
+        errors `must` not `be` defined
       }
     }
   }

@@ -36,8 +36,8 @@ class AnswersSavedControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[AnswersSavedView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view()(request, messages(application)).toString
       }
     }
   }

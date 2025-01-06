@@ -22,6 +22,7 @@ import models.{ServiceType, UserAnswers}
 import pages.utils.ExternalPage
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+import pages.RecoveryOps
 
 final case class RecentlyClaimedPage(config: FrontendAppConfig) extends QuestionPage[ServiceType] {
 

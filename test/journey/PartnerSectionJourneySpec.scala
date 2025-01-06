@@ -198,7 +198,7 @@ class PartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
           pageMustBe(PartnerReceivedBenefitsAbroadPage)
         )
     }
-    
+
     "must be able to remove them all and be asked again if they have worked abroad" in {
 
       startingFrom(PartnerWorkedAbroadPage)
@@ -262,7 +262,7 @@ class PartnerSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with Mod
         )
     }
   }
-  
+
   "users whose partner is entitled to Child Benefit or waiting to hear must be asked for their partner's eldest child's details then go to the task list" in {
 
     import PartnerClaimingChildBenefit._

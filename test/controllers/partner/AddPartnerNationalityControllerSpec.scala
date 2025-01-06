@@ -62,8 +62,11 @@ class AddPartnerNationalityControllerSpec extends SpecBase with MockitoSugar {
         implicit val msgs: Messages = messages(application)
         val nationalities = AddPartnerNationalitySummary.rows(emptyUserAnswers, waypoints, AddPartnerNationalityPage())
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, nationalities, name.firstName)(request, implicitly).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints, nationalities, name.firstName)(
+          request,
+          implicitly
+        ).toString
       }
     }
 
@@ -71,7 +74,7 @@ class AddPartnerNationalityControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -88,8 +91,10 @@ class AddPartnerNationalityControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
         val expectedAnswers = baseAnswers.set(AddPartnerNationalityPage(), true).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual AddPartnerNationalityPage().navigate(waypoints, baseAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` AddPartnerNationalityPage()
+          .navigate(waypoints, baseAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -112,8 +117,11 @@ class AddPartnerNationalityControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, nationalities, name.firstName)(request, implicitly).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints, nationalities, name.firstName)(
+          request,
+          implicitly
+        ).toString
       }
     }
 
@@ -126,8 +134,8 @@ class AddPartnerNationalityControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -142,8 +150,8 @@ class AddPartnerNationalityControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

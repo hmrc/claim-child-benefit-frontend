@@ -39,7 +39,8 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
   private val country = Gen.oneOf(Country.internationalCountries).sample.value
   private val internationalAddress = InternationalAddress("line1", None, "town", None, None, country)
   private val previousName = ApplicantPreviousName("name")
-  private val ukNpsAddress = NPSAddress("line 1", None, None, None, None, None, Country.allCountries.find(_.code == "GB"))
+  private val ukNpsAddress =
+    NPSAddress("line 1", None, None, None, None, None, Country.allCountries.find(_.code == "GB"))
   private val nonUkNpsAddress = NPSAddress("line 1", None, None, None, None, None, Some(country))
 
   "users who don't know their NINO, with no previous names or addresses, who have always lived in the UK and are not claiming right now must proceed to the task list" in {
@@ -109,7 +110,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
         )
     }
   }
-  
+
   "users with more than one nationality" - {
 
     "must be asked for as many as necessary" in {
@@ -494,9 +495,9 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
         )
     }
   }
-  
+
   "authenticated users who have always lived in the UK" - {
-    
+
     "must proceed from Applicant Residence to Applicant is HM Forces" in {
 
       val designatoryDetails = DesignatoryDetails(None, None, Some(ukNpsAddress), None, LocalDate.now)
@@ -610,9 +611,9 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
         )
     }
   }
-  
+
   "users who have not worked abroad must proceed" in {
-    
+
     startingFrom(ApplicantWorkedAbroadPage)
       .run(
         submitAnswer(ApplicantWorkedAbroadPage, false),
@@ -661,7 +662,7 @@ class ApplicantSectionJourneySpec extends AnyFreeSpec with JourneyHelpers with M
       )
   }
 
-  "users not claiming Child Benefit must not be asked for details of their eldest child" in {
+  "users not claiming Child Benefit `must` not `be` asked for details of their eldest child" in {
 
     startingFrom(CurrentlyReceivingChildBenefitPage)
       .run(

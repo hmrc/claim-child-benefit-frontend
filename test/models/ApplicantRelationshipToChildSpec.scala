@@ -24,7 +24,8 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.libs.json.{JsError, JsString, Json}
 
-class ApplicantRelationshipToChildSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
+class ApplicantRelationshipToChildSpec
+    extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
 
   "ApplicantRelationshipToChild" - {
 
@@ -32,10 +33,11 @@ class ApplicantRelationshipToChildSpec extends AnyFreeSpec with Matchers with Sc
 
       val gen = Gen.oneOf(ApplicantRelationshipToChild.values.toSeq)
 
-      forAll(gen) {
-        applicantRelationshipToChild =>
-
-          JsString(applicantRelationshipToChild.toString).validate[ApplicantRelationshipToChild].asOpt.value mustEqual applicantRelationshipToChild
+      forAll(gen) { applicantRelationshipToChild =>
+        JsString(applicantRelationshipToChild.toString)
+          .validate[ApplicantRelationshipToChild]
+          .asOpt
+          .value `mustEqual` applicantRelationshipToChild
       }
     }
 
@@ -43,10 +45,8 @@ class ApplicantRelationshipToChildSpec extends AnyFreeSpec with Matchers with Sc
 
       val gen = arbitrary[String] suchThat (!ApplicantRelationshipToChild.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-
-          JsString(invalidValue).validate[ApplicantRelationshipToChild] mustEqual JsError("error.invalid")
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[ApplicantRelationshipToChild] `mustEqual` JsError("error.invalid")
       }
     }
 
@@ -54,10 +54,8 @@ class ApplicantRelationshipToChildSpec extends AnyFreeSpec with Matchers with Sc
 
       val gen = Gen.oneOf(ApplicantRelationshipToChild.values.toSeq)
 
-      forAll(gen) {
-        applicantRelationshipToChild =>
-
-          Json.toJson(applicantRelationshipToChild) mustEqual JsString(applicantRelationshipToChild.toString)
+      forAll(gen) { applicantRelationshipToChild =>
+        Json.toJson(applicantRelationshipToChild) `mustEqual` JsString(applicantRelationshipToChild.toString)
       }
     }
   }

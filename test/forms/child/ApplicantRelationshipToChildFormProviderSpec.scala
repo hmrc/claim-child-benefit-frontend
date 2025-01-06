@@ -34,7 +34,7 @@ class ApplicantRelationshipToChildFormProviderSpec extends OptionFieldBehaviours
     behave like optionsField[ApplicantRelationshipToChild](
       form,
       fieldName,
-      validValues  = ApplicantRelationshipToChild.values,
+      validValues = ApplicantRelationshipToChild.values,
       invalidError = FormError(fieldName, "error.invalid", Seq(childName.firstName))
     )
 

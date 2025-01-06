@@ -46,6 +46,6 @@ class BuildingSocietyDetailsFormProvider @Inject() extends Mappings {
           maxLength(18, "buildingSocietyDetails.error.rollNumber.length"),
           regexp(Validation.rollNumberPattern, "buildingSocietyDetails.error.rollNumber.invalid")
         ))
-    )(BuildingSocietyDetails.apply)(BuildingSocietyDetails.unapply)
+    )(BuildingSocietyDetails.apply)(o => Some(Tuple.fromProductTyped(o)))
   )
 }

@@ -42,9 +42,10 @@ class PreviousGuardianInternationalAddressControllerSpec extends SpecBase with M
   val form = formProvider(previousGuardianName)
   private val waypoints = EmptyWaypoints
 
-  lazy val previousGuardianInternationalAddressRoute = routes.PreviousGuardianInternationalAddressController.onPageLoad(waypoints, index).url
+  lazy val previousGuardianInternationalAddressRoute =
+    routes.PreviousGuardianInternationalAddressController.onPageLoad(waypoints, index).url
 
-  private val country     = Country.internationalCountries.head
+  private val country = Country.internationalCountries.head
   private val validAnswer = InternationalAddress("line 1", None, "town", None, Some("AA111AA"), country)
   private val userAnswers = baseAnswers.set(PreviousGuardianInternationalAddressPage(index), validAnswer).success.value
 
@@ -61,8 +62,11 @@ class PreviousGuardianInternationalAddressControllerSpec extends SpecBase with M
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, index, previousGuardianName)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints, index, previousGuardianName)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -77,8 +81,11 @@ class PreviousGuardianInternationalAddressControllerSpec extends SpecBase with M
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints, index, previousGuardianName)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form.fill(validAnswer), waypoints, index, previousGuardianName)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -86,7 +93,7 @@ class PreviousGuardianInternationalAddressControllerSpec extends SpecBase with M
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -98,13 +105,22 @@ class PreviousGuardianInternationalAddressControllerSpec extends SpecBase with M
       running(application) {
         val request =
           FakeRequest(POST, previousGuardianInternationalAddressRoute)
-            .withFormUrlEncodedBody(("line1", "line 1"), ("town" -> "town"), ("postcode", "AA111AA"), ("country", country.code))
+            .withFormUrlEncodedBody(
+              ("line1", "line 1"),
+              "town" -> "town",
+              ("postcode", "AA111AA"),
+              ("country", country.code)
+            )
 
         val result = route(application, request).value
-        val expectedAnswers = baseAnswers.set(child.PreviousGuardianInternationalAddressPage(index), validAnswer).success.value
+        val expectedAnswers =
+          baseAnswers.set(child.PreviousGuardianInternationalAddressPage(index), validAnswer).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual child.PreviousGuardianInternationalAddressPage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` child
+          .PreviousGuardianInternationalAddressPage(index)
+          .navigate(waypoints, emptyUserAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -124,8 +140,11 @@ class PreviousGuardianInternationalAddressControllerSpec extends SpecBase with M
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, index, previousGuardianName)(request, messages(application)).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints, index, previousGuardianName)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -138,8 +157,8 @@ class PreviousGuardianInternationalAddressControllerSpec extends SpecBase with M
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -150,12 +169,17 @@ class PreviousGuardianInternationalAddressControllerSpec extends SpecBase with M
       running(application) {
         val request =
           FakeRequest(POST, previousGuardianInternationalAddressRoute)
-            .withFormUrlEncodedBody(("line1", "line 1"), ("town" -> "town"), ("postcode", "AA111AA"), ("country", country.code))
+            .withFormUrlEncodedBody(
+              ("line1", "line 1"),
+              "town" -> "town",
+              ("postcode", "AA111AA"),
+              ("country", country.code)
+            )
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

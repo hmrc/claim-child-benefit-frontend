@@ -20,7 +20,6 @@ import models.journey
 import play.api.libs.json.{Json, Writes}
 
 import java.time.LocalDate
-import scala.annotation.nowarn
 
 trait Residency
 
@@ -74,7 +73,6 @@ object Residency {
     }
   }
 
-  @nowarn("msg=match may not be exhaustive")
   implicit lazy val writes: Writes[Residency] = Writes {
     case AlwaysLivedInUk => Json.obj("alwaysLivedInUk" -> true)
     case a: LivedInUkAndAbroad => Json.toJson(a)(LivedInUkAndAbroad.writes)

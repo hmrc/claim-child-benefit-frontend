@@ -28,7 +28,8 @@ import org.scalatestplus.mockito.MockitoSugar
 import pages.partner.{CheckPartnerDetailsPage, PartnerNinoPage, RelationshipStatusPage}
 import services.JourneyProgressService
 
-class PartnerSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar with BeforeAndAfterEach with OptionValues with TryValues {
+class PartnerSectionSpec
+    extends AnyFreeSpec with Matchers with MockitoSugar with BeforeAndAfterEach with OptionValues with TryValues {
 
   private val mockJourneyProgressService = mock[JourneyProgressService]
   private val applicantSection = new ApplicantSection(mockJourneyProgressService)
@@ -48,11 +49,10 @@ class PartnerSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar wit
       val section = new PartnerSection(mockJourneyProgressService, applicantSection)
       val result = section.continue(answers)
 
-      result.value mustEqual PartnerNinoPage
+      result.value `mustEqual` PartnerNinoPage
       verify(mockJourneyProgressService, times(1)).continue(RelationshipStatusPage, answers)
     }
   }
-
 
   ".progress" - {
 
@@ -64,7 +64,7 @@ class PartnerSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar wit
       val section = new PartnerSection(mockJourneyProgressService, applicantSection)
       val result = section.progress(answers)
 
-      result mustEqual NotStarted
+      result `mustEqual` NotStarted
       verify(mockJourneyProgressService, times(1)).continue(RelationshipStatusPage, answers)
     }
 
@@ -76,7 +76,7 @@ class PartnerSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar wit
       val section = new PartnerSection(mockJourneyProgressService, applicantSection)
       val result = section.progress(answers)
 
-      result mustEqual Completed
+      result `mustEqual` Completed
       verify(mockJourneyProgressService, times(1)).continue(RelationshipStatusPage, answers)
     }
 
@@ -88,7 +88,7 @@ class PartnerSectionSpec extends AnyFreeSpec with Matchers with MockitoSugar wit
       val section = new PartnerSection(mockJourneyProgressService, applicantSection)
       val result = section.progress(answers)
 
-      result mustEqual InProgress
+      result `mustEqual` InProgress
       verify(mockJourneyProgressService, times(1)).continue(RelationshipStatusPage, answers)
     }
   }

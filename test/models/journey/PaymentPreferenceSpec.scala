@@ -39,7 +39,11 @@ class PaymentPreferenceSpec extends AnyFreeSpec with Matchers with ModelGenerato
 
       "and has previously claimed Child Benefit" - {
 
-        val baseAnswers = UserAnswers("id", nino = Some(nino.value), relationshipDetails = Some(RelationshipDetails(hasClaimedChildBenefit = true)))
+        val baseAnswers = UserAnswers(
+          "id",
+          nino = Some(nino.value),
+          relationshipDetails = Some(RelationshipDetails(hasClaimedChildBenefit = true))
+        )
 
         "and wants to be paid" - {
 
@@ -47,12 +51,14 @@ class PaymentPreferenceSpec extends AnyFreeSpec with Matchers with ModelGenerato
 
             val answers =
               baseAnswers
-                .set(WantToBePaidPage, true).success.value
+                .set(WantToBePaidPage, true)
+                .success
+                .value
 
             val (errors, data) = PaymentPreference.build(answers).pad
 
-            data.value mustEqual PaymentPreference.ExistingAccount(None)
-            errors must not be defined
+            data.value `mustEqual` PaymentPreference.ExistingAccount(None)
+            errors `must` `not` `be` defined
           }
         }
 
@@ -62,12 +68,14 @@ class PaymentPreferenceSpec extends AnyFreeSpec with Matchers with ModelGenerato
 
             val answers =
               baseAnswers
-                .set(WantToBePaidPage, false).success.value
+                .set(WantToBePaidPage, false)
+                .success
+                .value
 
             val (errors, data) = PaymentPreference.build(answers).pad
 
-            data.value mustEqual PaymentPreference.DoNotPay(None)
-            errors must not be defined
+            data.value `mustEqual` PaymentPreference.DoNotPay(None)
+            errors `must` not `be` defined
           }
         }
 
@@ -75,15 +83,19 @@ class PaymentPreferenceSpec extends AnyFreeSpec with Matchers with ModelGenerato
 
           val (errors, data) = PaymentPreference.build(baseAnswers).pad
 
-          data must not be defined
-          errors.value.toChain.toList must contain only WantToBePaidPage
+          data `must` not `be` defined
+          errors.value.toChain.toList `must` contain `only` WantToBePaidPage
         }
 
       }
 
       "and has not previously claimed Child Benefit" - {
 
-        val baseAnswers = UserAnswers("id", nino = Some(nino.value), relationshipDetails = Some(RelationshipDetails(hasClaimedChildBenefit = false)))
+        val baseAnswers = UserAnswers(
+          "id",
+          nino = Some(nino.value),
+          relationshipDetails = Some(RelationshipDetails(hasClaimedChildBenefit = false))
+        )
 
         "and wants to be paid weekly" - {
 
@@ -91,27 +103,37 @@ class PaymentPreferenceSpec extends AnyFreeSpec with Matchers with ModelGenerato
 
             val answers =
               baseAnswers
-                .set(WantToBePaidPage, true).success.value
-                .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
-                .set(ApplicantHasSuitableAccountPage, false).success.value
+                .set(WantToBePaidPage, true)
+                .success
+                .value
+                .set(PaymentFrequencyPage, PaymentFrequency.Weekly)
+                .success
+                .value
+                .set(ApplicantHasSuitableAccountPage, false)
+                .success
+                .value
 
             val (errors, data) = PaymentPreference.build(answers).pad
 
-            data.value mustEqual PaymentPreference.Weekly(None, None)
-            errors must not be defined
+            data.value `mustEqual` PaymentPreference.Weekly(None, None)
+            errors `must` not `be` defined
           }
 
           "must return errors when payment details are missing" in {
 
             val answers =
               baseAnswers
-                .set(WantToBePaidPage, true).success.value
-                .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
+                .set(WantToBePaidPage, true)
+                .success
+                .value
+                .set(PaymentFrequencyPage, PaymentFrequency.Weekly)
+                .success
+                .value
 
             val (errors, data) = PaymentPreference.build(answers).pad
 
-            data must not be defined
-            errors.value.toChain.toList must contain only ApplicantHasSuitableAccountPage
+            data `must` not `be` defined
+            errors.value.toChain.toList `must` contain `only` ApplicantHasSuitableAccountPage
           }
         }
 
@@ -121,27 +143,37 @@ class PaymentPreferenceSpec extends AnyFreeSpec with Matchers with ModelGenerato
 
             val answers =
               baseAnswers
-                .set(WantToBePaidPage, true).success.value
-                .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks).success.value
-                .set(ApplicantHasSuitableAccountPage, false).success.value
+                .set(WantToBePaidPage, true)
+                .success
+                .value
+                .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks)
+                .success
+                .value
+                .set(ApplicantHasSuitableAccountPage, false)
+                .success
+                .value
 
             val (errors, data) = PaymentPreference.build(answers).pad
 
-            data.value mustEqual PaymentPreference.EveryFourWeeks(None, None)
-            errors must not be defined
+            data.value `mustEqual` PaymentPreference.EveryFourWeeks(None, None)
+            errors `must` not `be` defined
           }
 
           "must return errors when payment details are missing" in {
 
             val answers =
               baseAnswers
-                .set(WantToBePaidPage, true).success.value
-                .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks).success.value
+                .set(WantToBePaidPage, true)
+                .success
+                .value
+                .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks)
+                .success
+                .value
 
             val (errors, data) = PaymentPreference.build(answers).pad
 
-            data must not be defined
-            errors.value.toChain.toList must contain only ApplicantHasSuitableAccountPage
+            data `must` not `be` defined
+            errors.value.toChain.toList `must` contain `only` ApplicantHasSuitableAccountPage
           }
         }
 
@@ -151,13 +183,17 @@ class PaymentPreferenceSpec extends AnyFreeSpec with Matchers with ModelGenerato
 
             val answers =
               baseAnswers
-                .set(WantToBePaidPage, true).success.value
-                .set(ApplicantHasSuitableAccountPage, false).success.value
+                .set(WantToBePaidPage, true)
+                .success
+                .value
+                .set(ApplicantHasSuitableAccountPage, false)
+                .success
+                .value
 
             val (errors, data) = PaymentPreference.build(answers).pad
 
-            data.value mustEqual PaymentPreference.EveryFourWeeks(None, None)
-            errors must not be defined
+            data.value `mustEqual` PaymentPreference.EveryFourWeeks(None, None)
+            errors `must` not `be` defined
           }
         }
 
@@ -167,12 +203,14 @@ class PaymentPreferenceSpec extends AnyFreeSpec with Matchers with ModelGenerato
 
             val answers =
               baseAnswers
-                .set(WantToBePaidPage, false).success.value
+                .set(WantToBePaidPage, false)
+                .success
+                .value
 
             val (errors, data) = PaymentPreference.build(answers).pad
 
-            data.value mustEqual PaymentPreference.DoNotPay(None)
-            errors must not be defined
+            data.value `mustEqual` PaymentPreference.DoNotPay(None)
+            errors `must` not `be` defined
           }
         }
 
@@ -180,8 +218,8 @@ class PaymentPreferenceSpec extends AnyFreeSpec with Matchers with ModelGenerato
 
           val (errors, data) = PaymentPreference.build(baseAnswers).pad
 
-          data must not be defined
-          errors.value.toChain.toList must contain only WantToBePaidPage
+          data `must` not `be` defined
+          errors.value.toChain.toList `must` contain `only` WantToBePaidPage
         }
       }
     }
@@ -194,69 +232,99 @@ class PaymentPreferenceSpec extends AnyFreeSpec with Matchers with ModelGenerato
 
           val answers =
             UserAnswers("id")
-              .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
-              .set(WantToBePaidPage, true).success.value
-              .set(EldestChildNamePage, childName).success.value
-              .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+              .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments)
+              .success
+              .value
+              .set(WantToBePaidPage, true)
+              .success
+              .value
+              .set(EldestChildNamePage, childName)
+              .success
+              .value
+              .set(EldestChildDateOfBirthPage, LocalDate.now)
+              .success
+              .value
 
           val (errors, data) = PaymentPreference.build(answers).pad
 
-          data.value mustEqual PaymentPreference.ExistingAccount(Some(EldestChild(childName, LocalDate.now)))
-          errors must not be defined
+          data.value `mustEqual` PaymentPreference.ExistingAccount(Some(EldestChild(childName, LocalDate.now)))
+          errors `must` not `be` defined
         }
 
         "must return DoNotPay when they do not want to be paid" in {
 
           val answers =
             UserAnswers("id")
-              .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
-              .set(WantToBePaidPage, false).success.value
-              .set(EldestChildNamePage, childName).success.value
-              .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+              .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments)
+              .success
+              .value
+              .set(WantToBePaidPage, false)
+              .success
+              .value
+              .set(EldestChildNamePage, childName)
+              .success
+              .value
+              .set(EldestChildDateOfBirthPage, LocalDate.now)
+              .success
+              .value
 
           val (errors, data) = PaymentPreference.build(answers).pad
 
-          data.value mustEqual PaymentPreference.DoNotPay(Some(EldestChild(childName, LocalDate.now)))
-          errors must not be defined
+          data.value `mustEqual` PaymentPreference.DoNotPay(Some(EldestChild(childName, LocalDate.now)))
+          errors `must` not `be` defined
         }
 
         "must return errors when whether they want to be paid is missing" in {
 
           val answers =
             UserAnswers("id")
-              .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
-              .set(EldestChildNamePage, childName).success.value
-              .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+              .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments)
+              .success
+              .value
+              .set(EldestChildNamePage, childName)
+              .success
+              .value
+              .set(EldestChildDateOfBirthPage, LocalDate.now)
+              .success
+              .value
           val (errors, data) = PaymentPreference.build(answers).pad
 
-          data must not be defined
-          errors.value.toChain.toList must contain only WantToBePaidPage
+          data `must` not `be` defined
+          errors.value.toChain.toList `must` contain `only` WantToBePaidPage
         }
 
         "must return errors when they want to be paid but their eldest child's details are missing" in {
 
           val answers =
             UserAnswers("id")
-              .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
-              .set(WantToBePaidPage, true).success.value
+              .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments)
+              .success
+              .value
+              .set(WantToBePaidPage, true)
+              .success
+              .value
 
           val (errors, data) = PaymentPreference.build(answers).pad
 
-          data must not be defined
-          errors mustBe defined
+          data `must` not `be` defined
+          errors `mustBe` defined
         }
 
         "must return errors when they do not want to be paid but their eldest child's details are missing" in {
 
           val answers =
             UserAnswers("id")
-              .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments).success.value
-              .set(WantToBePaidPage, false).success.value
+              .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.GettingPayments)
+              .success
+              .value
+              .set(WantToBePaidPage, false)
+              .success
+              .value
 
           val (errors, data) = PaymentPreference.build(answers).pad
 
-          data must not be defined
-          errors mustBe defined
+          data `must` not `be` defined
+          errors `mustBe` defined
         }
       }
 
@@ -268,48 +336,78 @@ class PaymentPreferenceSpec extends AnyFreeSpec with Matchers with ModelGenerato
 
             val answers =
               UserAnswers("id")
-                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
-                .set(WantToBePaidPage, true).success.value
-                .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
-                .set(ApplicantHasSuitableAccountPage, false).success.value
-                .set(EldestChildNamePage, childName).success.value
-                .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments)
+                .success
+                .value
+                .set(WantToBePaidPage, true)
+                .success
+                .value
+                .set(PaymentFrequencyPage, PaymentFrequency.Weekly)
+                .success
+                .value
+                .set(ApplicantHasSuitableAccountPage, false)
+                .success
+                .value
+                .set(EldestChildNamePage, childName)
+                .success
+                .value
+                .set(EldestChildDateOfBirthPage, LocalDate.now)
+                .success
+                .value
 
             val (errors, data) = PaymentPreference.build(answers).pad
 
-            data.value mustEqual PaymentPreference.Weekly(None, Some(EldestChild(childName, LocalDate.now)))
-            errors must not be defined
+            data.value `mustEqual` PaymentPreference.Weekly(None, Some(EldestChild(childName, LocalDate.now)))
+            errors `must` not `be` defined
           }
 
           "must return errors when their eldest child's details are missing" in {
 
             val answers =
               UserAnswers("id")
-                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
-                .set(WantToBePaidPage, true).success.value
-                .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
-                .set(ApplicantHasSuitableAccountPage, false).success.value
+                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments)
+                .success
+                .value
+                .set(WantToBePaidPage, true)
+                .success
+                .value
+                .set(PaymentFrequencyPage, PaymentFrequency.Weekly)
+                .success
+                .value
+                .set(ApplicantHasSuitableAccountPage, false)
+                .success
+                .value
 
             val (errors, data) = PaymentPreference.build(answers).pad
 
-            data must not be defined
-            errors mustBe defined
+            data `must` not `be` defined
+            errors `mustBe` defined
           }
 
           "must return errors when payment details are missing" in {
 
             val answers =
               UserAnswers("id")
-                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
-                .set(WantToBePaidPage, true).success.value
-                .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
-                .set(EldestChildNamePage, childName).success.value
-                .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments)
+                .success
+                .value
+                .set(WantToBePaidPage, true)
+                .success
+                .value
+                .set(PaymentFrequencyPage, PaymentFrequency.Weekly)
+                .success
+                .value
+                .set(EldestChildNamePage, childName)
+                .success
+                .value
+                .set(EldestChildDateOfBirthPage, LocalDate.now)
+                .success
+                .value
 
             val (errors, data) = PaymentPreference.build(answers).pad
 
-            data must not be defined
-            errors mustBe defined
+            data `must` not `be` defined
+            errors `mustBe` defined
           }
         }
 
@@ -319,48 +417,78 @@ class PaymentPreferenceSpec extends AnyFreeSpec with Matchers with ModelGenerato
 
             val answers =
               UserAnswers("id")
-                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
-                .set(WantToBePaidPage, true).success.value
-                .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks).success.value
-                .set(ApplicantHasSuitableAccountPage, false).success.value
-                .set(EldestChildNamePage, childName).success.value
-                .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments)
+                .success
+                .value
+                .set(WantToBePaidPage, true)
+                .success
+                .value
+                .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks)
+                .success
+                .value
+                .set(ApplicantHasSuitableAccountPage, false)
+                .success
+                .value
+                .set(EldestChildNamePage, childName)
+                .success
+                .value
+                .set(EldestChildDateOfBirthPage, LocalDate.now)
+                .success
+                .value
 
             val (errors, data) = PaymentPreference.build(answers).pad
 
-            data.value mustEqual PaymentPreference.EveryFourWeeks(None, Some(EldestChild(childName, LocalDate.now)))
-            errors must not be defined
+            data.value `mustEqual` PaymentPreference.EveryFourWeeks(None, Some(EldestChild(childName, LocalDate.now)))
+            errors `must` not `be` defined
           }
 
           "must return errors when their eldest child's details are missing" in {
 
             val answers =
               UserAnswers("id")
-                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
-                .set(WantToBePaidPage, true).success.value
-                .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks).success.value
-                .set(ApplicantHasSuitableAccountPage, false).success.value
+                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments)
+                .success
+                .value
+                .set(WantToBePaidPage, true)
+                .success
+                .value
+                .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks)
+                .success
+                .value
+                .set(ApplicantHasSuitableAccountPage, false)
+                .success
+                .value
 
             val (errors, data) = PaymentPreference.build(answers).pad
 
-            data must not be defined
-            errors mustBe defined
+            data `must` not `be` defined
+            errors `mustBe` defined
           }
 
           "must return errors when payment details are missing" in {
 
             val answers =
               UserAnswers("id")
-                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
-                .set(WantToBePaidPage, true).success.value
-                .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks).success.value
-                .set(EldestChildNamePage, childName).success.value
-                .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments)
+                .success
+                .value
+                .set(WantToBePaidPage, true)
+                .success
+                .value
+                .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks)
+                .success
+                .value
+                .set(EldestChildNamePage, childName)
+                .success
+                .value
+                .set(EldestChildDateOfBirthPage, LocalDate.now)
+                .success
+                .value
 
             val (errors, data) = PaymentPreference.build(answers).pad
 
-            data must not be defined
-            errors mustBe defined
+            data `must` not `be` defined
+            errors `mustBe` defined
           }
         }
 
@@ -370,16 +498,26 @@ class PaymentPreferenceSpec extends AnyFreeSpec with Matchers with ModelGenerato
 
             val answers =
               UserAnswers("id")
-                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
-                .set(WantToBePaidPage, true).success.value
-                .set(ApplicantHasSuitableAccountPage, false).success.value
-                .set(EldestChildNamePage, childName).success.value
-                .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments)
+                .success
+                .value
+                .set(WantToBePaidPage, true)
+                .success
+                .value
+                .set(ApplicantHasSuitableAccountPage, false)
+                .success
+                .value
+                .set(EldestChildNamePage, childName)
+                .success
+                .value
+                .set(EldestChildDateOfBirthPage, LocalDate.now)
+                .success
+                .value
 
             val (errors, data) = PaymentPreference.build(answers).pad
 
-            data.value mustEqual PaymentPreference.EveryFourWeeks(None, Some(EldestChild(childName, LocalDate.now)))
-            errors must not be defined
+            data.value `mustEqual` PaymentPreference.EveryFourWeeks(None, Some(EldestChild(childName, LocalDate.now)))
+            errors `must` not `be` defined
           }
         }
 
@@ -389,28 +527,40 @@ class PaymentPreferenceSpec extends AnyFreeSpec with Matchers with ModelGenerato
 
             val answers =
               UserAnswers("id")
-                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
-                .set(WantToBePaidPage, false).success.value
-                .set(EldestChildNamePage, childName).success.value
-                .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments)
+                .success
+                .value
+                .set(WantToBePaidPage, false)
+                .success
+                .value
+                .set(EldestChildNamePage, childName)
+                .success
+                .value
+                .set(EldestChildDateOfBirthPage, LocalDate.now)
+                .success
+                .value
 
             val (errors, data) = PaymentPreference.build(answers).pad
 
-            data.value mustEqual PaymentPreference.DoNotPay(Some(EldestChild(childName, LocalDate.now)))
-            errors must not be defined
+            data.value `mustEqual` PaymentPreference.DoNotPay(Some(EldestChild(childName, LocalDate.now)))
+            errors `must` not `be` defined
           }
 
           "must return errors when their eldest child's details are missing" in {
 
             val answers =
               UserAnswers("id")
-                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
-                .set(WantToBePaidPage, false).success.value
+                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments)
+                .success
+                .value
+                .set(WantToBePaidPage, false)
+                .success
+                .value
 
             val (errors, data) = PaymentPreference.build(answers).pad
 
-            data must not be defined
-            errors mustBe defined
+            data `must` not `be` defined
+            errors `mustBe` defined
           }
         }
 
@@ -418,12 +568,14 @@ class PaymentPreferenceSpec extends AnyFreeSpec with Matchers with ModelGenerato
 
           val answers =
             UserAnswers("id")
-              .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments).success.value
+              .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotGettingPayments)
+              .success
+              .value
 
           val (errors, data) = PaymentPreference.build(answers).pad
 
-          data must not be defined
-          errors.value.toChain.toList must contain only WantToBePaidPage
+          data `must` not `be` defined
+          errors.value.toChain.toList `must` contain `only` WantToBePaidPage
         }
       }
 
@@ -435,29 +587,43 @@ class PaymentPreferenceSpec extends AnyFreeSpec with Matchers with ModelGenerato
 
             val answers =
               UserAnswers("id")
-                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
-                .set(WantToBePaidPage, true).success.value
-                .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
-                .set(ApplicantHasSuitableAccountPage, false).success.value
+                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming)
+                .success
+                .value
+                .set(WantToBePaidPage, true)
+                .success
+                .value
+                .set(PaymentFrequencyPage, PaymentFrequency.Weekly)
+                .success
+                .value
+                .set(ApplicantHasSuitableAccountPage, false)
+                .success
+                .value
 
             val (errors, data) = PaymentPreference.build(answers).pad
 
-            data.value mustEqual PaymentPreference.Weekly(None, None)
-            errors must not be defined
+            data.value `mustEqual` PaymentPreference.Weekly(None, None)
+            errors `must` not `be` defined
           }
 
           "must return errors when payment details are missing" in {
 
             val answers =
               UserAnswers("id")
-                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
-                .set(WantToBePaidPage, true).success.value
-                .set(PaymentFrequencyPage, PaymentFrequency.Weekly).success.value
+                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming)
+                .success
+                .value
+                .set(WantToBePaidPage, true)
+                .success
+                .value
+                .set(PaymentFrequencyPage, PaymentFrequency.Weekly)
+                .success
+                .value
 
             val (errors, data) = PaymentPreference.build(answers).pad
 
-            data must not be defined
-            errors mustBe defined
+            data `must` not `be` defined
+            errors `mustBe` defined
           }
         }
 
@@ -467,29 +633,43 @@ class PaymentPreferenceSpec extends AnyFreeSpec with Matchers with ModelGenerato
 
             val answers =
               UserAnswers("id")
-                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
-                .set(WantToBePaidPage, true).success.value
-                .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks).success.value
-                .set(ApplicantHasSuitableAccountPage, false).success.value
+                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming)
+                .success
+                .value
+                .set(WantToBePaidPage, true)
+                .success
+                .value
+                .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks)
+                .success
+                .value
+                .set(ApplicantHasSuitableAccountPage, false)
+                .success
+                .value
 
             val (errors, data) = PaymentPreference.build(answers).pad
 
-            data.value mustEqual PaymentPreference.EveryFourWeeks(None, None)
-            errors must not be defined
+            data.value `mustEqual` PaymentPreference.EveryFourWeeks(None, None)
+            errors `must` not `be` defined
           }
 
           "must return errors when payment details are missing" in {
 
             val answers =
               UserAnswers("id")
-                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
-                .set(WantToBePaidPage, true).success.value
-                .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks).success.value
+                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming)
+                .success
+                .value
+                .set(WantToBePaidPage, true)
+                .success
+                .value
+                .set(PaymentFrequencyPage, PaymentFrequency.EveryFourWeeks)
+                .success
+                .value
 
             val (errors, data) = PaymentPreference.build(answers).pad
 
-            data must not be defined
-            errors mustBe defined
+            data `must` not `be` defined
+            errors `mustBe` defined
           }
         }
 
@@ -499,27 +679,37 @@ class PaymentPreferenceSpec extends AnyFreeSpec with Matchers with ModelGenerato
 
             val answers =
               UserAnswers("id")
-                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
-                .set(WantToBePaidPage, true).success.value
-                .set(ApplicantHasSuitableAccountPage, false).success.value
+                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming)
+                .success
+                .value
+                .set(WantToBePaidPage, true)
+                .success
+                .value
+                .set(ApplicantHasSuitableAccountPage, false)
+                .success
+                .value
 
             val (errors, data) = PaymentPreference.build(answers).pad
 
-            data.value mustEqual PaymentPreference.EveryFourWeeks(None, None)
-            errors must not be defined
+            data.value `mustEqual` PaymentPreference.EveryFourWeeks(None, None)
+            errors `must` not `be` defined
           }
 
           "must return errors when payment details are missing" in {
 
             val answers =
               UserAnswers("id")
-                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
-                .set(WantToBePaidPage, true).success.value
+                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming)
+                .success
+                .value
+                .set(WantToBePaidPage, true)
+                .success
+                .value
 
             val (errors, data) = PaymentPreference.build(answers).pad
 
-            data must not be defined
-            errors mustBe defined
+            data `must` not `be` defined
+            errors `mustBe` defined
           }
         }
 
@@ -529,13 +719,17 @@ class PaymentPreferenceSpec extends AnyFreeSpec with Matchers with ModelGenerato
 
             val answers =
               UserAnswers("id")
-                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
-                .set(WantToBePaidPage, false).success.value
+                .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming)
+                .success
+                .value
+                .set(WantToBePaidPage, false)
+                .success
+                .value
 
             val (errors, data) = PaymentPreference.build(answers).pad
 
-            data.value mustEqual PaymentPreference.DoNotPay(None)
-            errors must not be defined
+            data.value `mustEqual` PaymentPreference.DoNotPay(None)
+            errors `must` not `be` defined
           }
         }
 
@@ -543,12 +737,14 @@ class PaymentPreferenceSpec extends AnyFreeSpec with Matchers with ModelGenerato
 
           val answers =
             UserAnswers("id")
-              .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming).success.value
+              .set(CurrentlyReceivingChildBenefitPage, CurrentlyReceivingChildBenefit.NotClaiming)
+              .success
+              .value
 
           val (errors, data) = PaymentPreference.build(answers).pad
 
-          data must not be defined
-          errors.value.toChain.toList must contain only WantToBePaidPage
+          data `must` not `be` defined
+          errors.value.toChain.toList `must` contain `only` WantToBePaidPage
         }
       }
 
@@ -558,8 +754,8 @@ class PaymentPreferenceSpec extends AnyFreeSpec with Matchers with ModelGenerato
 
         val (errors, data) = PaymentPreference.build(answers).pad
 
-        data must not be defined
-        errors.value.toChain.toList must contain only CurrentlyReceivingChildBenefitPage
+        data `must` not `be` defined
+        errors.value.toChain.toList `must` contain `only` CurrentlyReceivingChildBenefitPage
       }
     }
   }

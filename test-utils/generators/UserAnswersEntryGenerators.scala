@@ -28,7 +28,8 @@ import uk.gov.hmrc.domain.Nino
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
 
-  implicit lazy val arbitraryPartnerIsHmfOrCivilServantUserAnswersEntry: Arbitrary[(PartnerIsHmfOrCivilServantPage.type, JsValue)] =
+  implicit lazy val arbitraryPartnerIsHmfOrCivilServantUserAnswersEntry
+    : Arbitrary[(PartnerIsHmfOrCivilServantPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[PartnerIsHmfOrCivilServantPage.type]
@@ -36,7 +37,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryApplicantIsHmfOrCivilServantUserAnswersEntry: Arbitrary[(ApplicantIsHmfOrCivilServantPage.type, JsValue)] =
+  implicit lazy val arbitraryApplicantIsHmfOrCivilServantUserAnswersEntry
+    : Arbitrary[(ApplicantIsHmfOrCivilServantPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[ApplicantIsHmfOrCivilServantPage.type]
@@ -60,7 +62,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryPreviousClaimantAddressUserAnswersEntry: Arbitrary[(PreviousClaimantUkAddressPage, JsValue)] =
+  implicit lazy val arbitraryPreviousClaimantAddressUserAnswersEntry
+    : Arbitrary[(PreviousClaimantUkAddressPage, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[PreviousClaimantUkAddressPage]
@@ -68,7 +71,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryChildScottishBirthCertificateDetailsUserAnswersEntry: Arbitrary[(ChildScottishBirthCertificateDetailsPage, JsValue)] =
+  implicit lazy val arbitraryChildScottishBirthCertificateDetailsUserAnswersEntry
+    : Arbitrary[(ChildScottishBirthCertificateDetailsPage, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[ChildScottishBirthCertificateDetailsPage]
@@ -84,7 +88,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryChildNameChangedByDeedPollUserAnswersEntry: Arbitrary[(ChildNameChangedByDeedPollPage, JsValue)] =
+  implicit lazy val arbitraryChildNameChangedByDeedPollUserAnswersEntry
+    : Arbitrary[(ChildNameChangedByDeedPollPage, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[ChildNameChangedByDeedPollPage]
@@ -116,7 +121,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryChildBirthRegistrationCountryUserAnswersEntry: Arbitrary[(ChildBirthRegistrationCountryPage, JsValue)] =
+  implicit lazy val arbitraryChildBirthRegistrationCountryUserAnswersEntry
+    : Arbitrary[(ChildBirthRegistrationCountryPage, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[ChildBirthRegistrationCountryPage]
@@ -124,7 +130,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryChildBirthCertificateSystemNumberUserAnswersEntry: Arbitrary[(ChildBirthCertificateSystemNumberPage, JsValue)] =
+  implicit lazy val arbitraryChildBirthCertificateSystemNumberUserAnswersEntry
+    : Arbitrary[(ChildBirthCertificateSystemNumberPage, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[ChildBirthCertificateSystemNumberPage]
@@ -140,7 +147,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryApplicantRelationshipToChildUserAnswersEntry: Arbitrary[(ApplicantRelationshipToChildPage, JsValue)] =
+  implicit lazy val arbitraryApplicantRelationshipToChildUserAnswersEntry
+    : Arbitrary[(ApplicantRelationshipToChildPage, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[ApplicantRelationshipToChildPage]
@@ -148,7 +156,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryAnyoneClaimedForChildBeforeUserAnswersEntry: Arbitrary[(AnyoneClaimedForChildBeforePage, JsValue)] =
+  implicit lazy val arbitraryAnyoneClaimedForChildBeforeUserAnswersEntry
+    : Arbitrary[(AnyoneClaimedForChildBeforePage, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[AnyoneClaimedForChildBeforePage]
@@ -196,7 +205,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryPartnerClaimingChildBenefitUserAnswersEntry: Arbitrary[(PartnerClaimingChildBenefitPage.type, JsValue)] =
+  implicit lazy val arbitraryPartnerClaimingChildBenefitUserAnswersEntry
+    : Arbitrary[(PartnerClaimingChildBenefitPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[PartnerClaimingChildBenefitPage.type]
@@ -204,7 +214,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryPartnerEldestChildNameUserAnswersEntry: Arbitrary[(PartnerEldestChildNamePage.type, JsValue)] =
+  implicit lazy val arbitraryPartnerEldestChildNameUserAnswersEntry
+    : Arbitrary[(PartnerEldestChildNamePage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[PartnerEldestChildNamePage.type]
@@ -212,7 +223,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryPartnerEldestChildDateOfBirthUserAnswersEntry: Arbitrary[(PartnerEldestChildDateOfBirthPage.type, JsValue)] =
+  implicit lazy val arbitraryPartnerEldestChildDateOfBirthUserAnswersEntry
+    : Arbitrary[(PartnerEldestChildDateOfBirthPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[PartnerEldestChildDateOfBirthPage.type]
@@ -228,7 +240,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryApplicantPreviousFamilyNameUserAnswersEntry: Arbitrary[(ApplicantPreviousFamilyNamePage, JsValue)] =
+  implicit lazy val arbitraryApplicantPreviousFamilyNameUserAnswersEntry
+    : Arbitrary[(ApplicantPreviousFamilyNamePage, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[ApplicantPreviousFamilyNamePage]
@@ -236,7 +249,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryApplicantPreviousAddressUserAnswersEntry: Arbitrary[(ApplicantPreviousUkAddressPage.type, JsValue)] =
+  implicit lazy val arbitraryApplicantPreviousAddressUserAnswersEntry
+    : Arbitrary[(ApplicantPreviousUkAddressPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[ApplicantPreviousUkAddressPage.type]
@@ -276,7 +290,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryApplicantLivedAtCurrentAddressOneYearUserAnswersEntry: Arbitrary[(ApplicantLivedAtCurrentAddressOneYearPage.type, JsValue)] =
+  implicit lazy val arbitraryApplicantLivedAtCurrentAddressOneYearUserAnswersEntry
+    : Arbitrary[(ApplicantLivedAtCurrentAddressOneYearPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[ApplicantLivedAtCurrentAddressOneYearPage.type]
@@ -284,7 +299,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryApplicantHasPreviousFamilyNameUserAnswersEntry: Arbitrary[(ApplicantHasPreviousFamilyNamePage.type, JsValue)] =
+  implicit lazy val arbitraryApplicantHasPreviousFamilyNameUserAnswersEntry
+    : Arbitrary[(ApplicantHasPreviousFamilyNamePage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[ApplicantHasPreviousFamilyNamePage.type]
@@ -300,7 +316,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryApplicantCurrentAddressUserAnswersEntry: Arbitrary[(ApplicantCurrentUkAddressPage.type, JsValue)] =
+  implicit lazy val arbitraryApplicantCurrentAddressUserAnswersEntry
+    : Arbitrary[(ApplicantCurrentUkAddressPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[ApplicantCurrentUkAddressPage.type]
@@ -308,7 +325,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryAddApplicantPreviousFamilyNameUserAnswersEntry: Arbitrary[(AddApplicantPreviousFamilyNamePage.type, JsValue)] =
+  implicit lazy val arbitraryAddApplicantPreviousFamilyNameUserAnswersEntry
+    : Arbitrary[(AddApplicantPreviousFamilyNamePage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[AddApplicantPreviousFamilyNamePage.type]
@@ -340,7 +358,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryEldestChildDateOfBirthUserAnswersEntry: Arbitrary[(EldestChildDateOfBirthPage.type, JsValue)] =
+  implicit lazy val arbitraryEldestChildDateOfBirthUserAnswersEntry
+    : Arbitrary[(EldestChildDateOfBirthPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[EldestChildDateOfBirthPage.type]
@@ -348,7 +367,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryCurrentlyReceivingChildBenefitUserAnswersEntry: Arbitrary[(CurrentlyReceivingChildBenefitPage.type, JsValue)] =
+  implicit lazy val arbitraryCurrentlyReceivingChildBenefitUserAnswersEntry
+    : Arbitrary[(CurrentlyReceivingChildBenefitPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[CurrentlyReceivingChildBenefitPage.type]
@@ -364,7 +384,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryApplicantHasSuitableAccountUserAnswersEntry: Arbitrary[(ApplicantHasSuitableAccountPage.type, JsValue)] =
+  implicit lazy val arbitraryApplicantHasSuitableAccountUserAnswersEntry
+    : Arbitrary[(ApplicantHasSuitableAccountPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[ApplicantHasSuitableAccountPage.type]
@@ -372,7 +393,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryApplicantOrPartnerBenefitsUserAnswersEntry: Arbitrary[(ApplicantOrPartnerBenefitsPage.type, JsValue)] =
+  implicit lazy val arbitraryApplicantOrPartnerBenefitsUserAnswersEntry
+    : Arbitrary[(ApplicantOrPartnerBenefitsPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[ApplicantOrPartnerBenefitsPage.type]

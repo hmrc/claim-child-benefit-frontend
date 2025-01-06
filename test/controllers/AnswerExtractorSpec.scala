@@ -42,15 +42,13 @@ class AnswerExtractorSpec extends SpecBase {
   private class TestController extends AnswerExtractor {
 
     def get(query: Gettable[Int])(implicit request: DataRequest[AnyContent]): Result =
-      getAnswer(query) {
-        answer =>
-          Ok(Json.toJson(answer))
+      getAnswer(query) { answer =>
+        Ok(Json.toJson(answer))
       }
 
     def getAsync(query: Gettable[Int])(implicit request: DataRequest[AnyContent]): Future[Result] =
-      getAnswerAsync(query) {
-        answer =>
-          Future.successful(Ok(Json.toJson(answer)))
+      getAnswerAsync(query) { answer =>
+        Future.successful(Ok(Json.toJson(answer)))
       }
   }
 
@@ -58,21 +56,21 @@ class AnswerExtractorSpec extends SpecBase {
 
     "must pass the answer into the provided block when the answer exists in user answers" in {
 
-      val answers = emptyUserAnswers.set(TestPage, 1).success.value
-      implicit val request = buildRequest(answers)
+      val answers: UserAnswers = emptyUserAnswers.set(TestPage, 1).success.value
+      implicit val request: DataRequest[AnyContent] = buildRequest(answers: UserAnswers)
 
       val controller = new TestController()
 
-      controller.get(TestPage) mustEqual Ok(Json.toJson(1))
+      controller.get(TestPage) `mustEqual` Ok(Json.toJson(1))
     }
 
     "must redirect to Journey Recovery when the answer does not exist in user answers" in {
 
-      implicit val request = buildRequest(emptyUserAnswers)
+      implicit val request: DataRequest[AnyContent] = buildRequest(emptyUserAnswers)
 
       val controller = new TestController()
 
-      controller.get(TestPage) mustEqual Redirect(routes.JourneyRecoveryController.onPageLoad())
+      controller.get(TestPage) `mustEqual` Redirect(routes.JourneyRecoveryController.onPageLoad())
     }
   }
 
@@ -80,21 +78,21 @@ class AnswerExtractorSpec extends SpecBase {
 
     "must pass the answer into the provided block when the answer exists in user answers" in {
 
-      val answers = emptyUserAnswers.set(TestPage, 1).success.value
-      implicit val request = buildRequest(answers)
+      val answers: UserAnswers = emptyUserAnswers.set(TestPage, 1).success.value
+      implicit val request: DataRequest[AnyContent] = buildRequest(answers: UserAnswers)
 
       val controller = new TestController()
 
-      controller.getAsync(TestPage).futureValue mustEqual Ok(Json.toJson(1))
+      controller.getAsync(TestPage).futureValue `mustEqual` Ok(Json.toJson(1))
     }
 
     "must redirect to Journey Recovery when the answer does not exist in user answers" in {
 
-      implicit val request = buildRequest(emptyUserAnswers)
+      implicit val request: DataRequest[AnyContent] = buildRequest(emptyUserAnswers)
 
       val controller = new TestController()
 
-      controller.getAsync(TestPage).futureValue mustEqual Redirect(routes.JourneyRecoveryController.onPageLoad())
+      controller.getAsync(TestPage).futureValue `mustEqual` Redirect(routes.JourneyRecoveryController.onPageLoad())
     }
   }
 }

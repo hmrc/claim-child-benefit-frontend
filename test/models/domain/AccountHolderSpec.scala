@@ -38,7 +38,7 @@ class AccountHolderSpec extends AnyFreeSpec with Matchers {
 
         val result = AccountHolder.build(bankDetails)
 
-        result mustEqual ClaimantAccountHolder
+        result `mustEqual` ClaimantAccountHolder
       }
 
       "where the account holder is joint, normalising inputs" in {
@@ -51,9 +51,10 @@ class AccountHolderSpec extends AnyFreeSpec with Matchers {
 
         val result = AccountHolder.build(bankDetails)
 
-        result mustEqual OtherAccountHolder(
+        result `mustEqual` OtherAccountHolder(
           accountHolderType = AccountHolderType.Joint,
-          forenames = "first", surname = "la'st"
+          forenames = "first",
+          surname = "la'st"
         )
       }
 
@@ -67,9 +68,10 @@ class AccountHolderSpec extends AnyFreeSpec with Matchers {
 
         val result = AccountHolder.build(bankDetails)
 
-        result mustEqual OtherAccountHolder(
+        result `mustEqual` OtherAccountHolder(
           accountHolderType = AccountHolderType.SomeoneElse,
-          forenames = "first", surname = "la'st"
+          forenames = "first",
+          surname = "la'st"
         )
       }
     }
@@ -80,26 +82,29 @@ class AccountHolderSpec extends AnyFreeSpec with Matchers {
 
         val buildingSocietyDetails = journey.BuildingSocietyWithHolder(
           holder = BankAccountHolder.Applicant,
-          details = models.BuildingSocietyDetails("first", "last", models.BuildingSociety.allBuildingSocieties.head, "roll number")
+          details = models
+            .BuildingSocietyDetails("first", "last", models.BuildingSociety.allBuildingSocieties.head, "roll number")
         )
 
         val result = AccountHolder.build(buildingSocietyDetails)
 
-        result mustEqual ClaimantAccountHolder
+        result `mustEqual` ClaimantAccountHolder
       }
 
       "where the account holder is joint, normalising inputs" in {
 
         val buildingSocietyDetails = journey.BuildingSocietyWithHolder(
           holder = BankAccountHolder.JointNames,
-          details = models.BuildingSocietyDetails("fîrśt", "la’st", models.BuildingSociety.allBuildingSocieties.head, "roll number")
+          details = models
+            .BuildingSocietyDetails("fîrśt", "la’st", models.BuildingSociety.allBuildingSocieties.head, "roll number")
         )
 
         val result = AccountHolder.build(buildingSocietyDetails)
 
-        result mustEqual OtherAccountHolder(
+        result `mustEqual` OtherAccountHolder(
           accountHolderType = AccountHolderType.Joint,
-          forenames = "first", surname = "la'st"
+          forenames = "first",
+          surname = "la'st"
         )
       }
 
@@ -107,14 +112,16 @@ class AccountHolderSpec extends AnyFreeSpec with Matchers {
 
         val buildingSocietyDetails = journey.BuildingSocietyWithHolder(
           holder = BankAccountHolder.SomeoneElse,
-          details = models.BuildingSocietyDetails("fîrśt", "la’st", models.BuildingSociety.allBuildingSocieties.head, "roll number")
+          details = models
+            .BuildingSocietyDetails("fîrśt", "la’st", models.BuildingSociety.allBuildingSocieties.head, "roll number")
         )
 
         val result = AccountHolder.build(buildingSocietyDetails)
 
-        result mustEqual OtherAccountHolder(
+        result `mustEqual` OtherAccountHolder(
           accountHolderType = AccountHolderType.SomeoneElse,
-          forenames = "first", surname = "la'st"
+          forenames = "first",
+          surname = "la'st"
         )
       }
     }
@@ -124,7 +131,7 @@ class AccountHolderSpec extends AnyFreeSpec with Matchers {
 
     "must write Claimant Account Holder" in {
 
-      Json.toJson[AccountHolder](ClaimantAccountHolder) mustEqual Json.obj("accountHolderType" -> "CLAIMANT")
+      Json.toJson[AccountHolder](ClaimantAccountHolder) `mustEqual` Json.obj("accountHolderType" -> "CLAIMANT")
     }
 
     "must write Other Account Holder" in {
@@ -137,11 +144,11 @@ class AccountHolderSpec extends AnyFreeSpec with Matchers {
 
       val expectedJson = Json.obj(
         "accountHolderType" -> "JOINT",
-        "forenames" -> "foo",
-        "surname" -> "bar"
+        "forenames"         -> "foo",
+        "surname"           -> "bar"
       )
-      
-      Json.toJson[AccountHolder](accountHolder) mustEqual expectedJson
+
+      Json.toJson[AccountHolder](accountHolder) `mustEqual` expectedJson
     }
   }
 }

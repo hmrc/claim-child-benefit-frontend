@@ -33,7 +33,7 @@ class ChildBirthRegistrationCountryFormProviderSpec extends OptionFieldBehaviour
     behave like optionsField[ChildBirthRegistrationCountry](
       form,
       fieldName,
-      validValues  = ChildBirthRegistrationCountry.values,
+      validValues = ChildBirthRegistrationCountry.values,
       invalidError = FormError(fieldName, "error.invalid", Seq(childName.firstName))
     )
 

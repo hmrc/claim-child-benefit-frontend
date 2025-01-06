@@ -34,7 +34,7 @@ class MessagesSpec extends AnyFreeSpec with Matchers {
   "All message files" - {
     "have the same set of keys" in {
       withClue(describeMismatch(englishMessages.keySet, welshMessages.keySet)) {
-        welshMessages.keySet mustBe englishMessages.keySet
+        welshMessages.keySet `mustBe` englishMessages.keySet
       }
     }
 
@@ -66,7 +66,7 @@ class MessagesSpec extends AnyFreeSpec with Matchers {
       withClue(
         s"In $label, there is an empty value for the key:[$key][$value]"
       ) {
-        value.trim.isEmpty mustBe false
+        value.trim.isEmpty `mustBe` false
       }
     }
 
@@ -75,8 +75,8 @@ class MessagesSpec extends AnyFreeSpec with Matchers {
       withClue(
         s"In $label, there is an unescaped or invalid quote:[$key][$value]"
       ) {
-        MatchSingleQuoteOnly.findFirstIn(value).isDefined mustBe false
-        MatchBacktickQuoteOnly.findFirstIn(value).isDefined mustBe false
+        MatchSingleQuoteOnly.findFirstIn(value).isDefined `mustBe` false
+        MatchBacktickQuoteOnly.findFirstIn(value).isDefined `mustBe` false
       }
     }
 
@@ -85,8 +85,7 @@ class MessagesSpec extends AnyFreeSpec with Matchers {
     missingKeys.toList.sorted.mkString(header + displayLine, "\n", displayLine)
   }
 
-  private def describeMismatch(englishKeySet: Set[String], welshKeySet: Set[String]) = {
-
+  private def describeMismatch(englishKeySet: Set[String], welshKeySet: Set[String]) =
     if (englishKeySet.size > welshKeySet.size)
       listMissingMessageKeys(
         "The following message keys are missing from the Welsh Set:",
@@ -97,5 +96,4 @@ class MessagesSpec extends AnyFreeSpec with Matchers {
         "The following message keys are missing from the English Set:",
         welshKeySet -- englishKeySet
       )
-  }
 }

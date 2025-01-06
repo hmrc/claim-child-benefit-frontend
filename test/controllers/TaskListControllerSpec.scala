@@ -65,8 +65,8 @@ class TaskListControllerSpec extends SpecBase with MockitoSugar with BeforeAndAf
 
           val view = application.injector.instanceOf[TaskListView]
 
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(Nil)(request, messages(application)).toString
+          status(result) `mustEqual` OK
+          contentAsString(result) `mustEqual` view(Nil)(request, messages(application)).toString
         }
       }
 
@@ -88,7 +88,7 @@ class TaskListControllerSpec extends SpecBase with MockitoSugar with BeforeAndAf
 
           val result = route(application, request).value
 
-          status(result) mustEqual OK
+          status(result) `mustEqual` OK
           verify(mockUserDataService, times(1)).set(any())(any())
         }
       }
@@ -111,7 +111,7 @@ class TaskListControllerSpec extends SpecBase with MockitoSugar with BeforeAndAf
 
           val result = route(application, request).value
 
-          status(result) mustEqual OK
+          status(result) `mustEqual` OK
           verify(mockUserDataService, times(1)).set(any())(any())
         }
       }

@@ -20,7 +20,7 @@
         layout: templates.Layout
 )
 
-@(continueUrl: String)(implicit request: Request[_], messages: Messages)
+@(continueUrl: String)(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle    = titleNoForm(messages("ivFailedIdentityVerification.title")),

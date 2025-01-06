@@ -21,6 +21,7 @@ import models.{ApplicantResidence, Country, UserAnswers}
 import pages.{Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
+import pages.RecoveryOps
 
 case object ApplicantUsualCountryOfResidencePage extends QuestionPage[Country] {
 

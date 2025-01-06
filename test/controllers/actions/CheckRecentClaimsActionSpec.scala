@@ -37,12 +37,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class CheckRecentClaimsActionSpec
-  extends AnyFreeSpec
-    with Matchers
-    with MockitoSugar
-    with BeforeAndAfterEach
-    with ScalaFutures
-    with OptionValues {
+    extends AnyFreeSpec with Matchers with MockitoSugar with BeforeAndAfterEach with ScalaFutures with OptionValues {
 
   private val mockConnector = mock[ClaimChildBenefitConnector]
 
@@ -66,25 +61,25 @@ class CheckRecentClaimsActionSpec
       "must redirect to Recently Submitted when the user has recently submitted a claim" in {
 
         val recentClaim = RecentClaim("nino", Instant.now, TaxChargeChoice.NotRecorded)
-        when(mockConnector.getRecentClaim()(any())) thenReturn Future.successful(Some(recentClaim))
+        when(mockConnector.getRecentClaim()(any())) `thenReturn` Future.successful(Some(recentClaim))
 
         val action = new Harness(mockConnector)
 
         val result = action.callFilter(request).futureValue
 
-        result.value mustEqual Redirect(routes.RecentlySubmittedController.onPageLoad())
+        result.value `mustEqual` Redirect(routes.RecentlySubmittedController.onPageLoad())
         verify(mockConnector, times(1)).getRecentClaim()(any())
       }
 
       "must proceed when the user has not recently submitted a claim" in {
 
-        when(mockConnector.getRecentClaim()(any())) thenReturn Future.successful(None)
+        when(mockConnector.getRecentClaim()(any())) `thenReturn` Future.successful(None)
 
         val action = new Harness(mockConnector)
 
         val result = action.callFilter(request).futureValue
 
-        result must not be defined
+        result `must` not `be` defined
         verify(mockConnector, times(1)).getRecentClaim()(any())
       }
     }
@@ -99,7 +94,7 @@ class CheckRecentClaimsActionSpec
 
         val result = action.callFilter(request).futureValue
 
-        result must not be defined
+        result `must` not `be` defined
         verify(mockConnector, never()).getRecentClaim()(any())
       }
     }

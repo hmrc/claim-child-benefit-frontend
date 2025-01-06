@@ -29,13 +29,11 @@ class ChildNameSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChe
 
     "must create a ChildName" in {
 
-      forAll(alphaString, Gen.option(alphaString), alphaString) {
-        case (first, middle, last) =>
+      forAll(alphaString, Gen.option(alphaString), alphaString) { case (first, middle, last) =>
+        val name = models.ChildName(first, middle, last)
+        val result = ChildName.build(name)
 
-          val name = models.ChildName(first, middle, last)
-          val result = ChildName.build(name)
-
-          result mustEqual ChildName(first, middle, last)
+        result `mustEqual` ChildName(first, middle, last)
       }
     }
 
@@ -44,7 +42,7 @@ class ChildNameSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChe
       val name = models.ChildName("āăą", Some("îïĩí"), "šŝś")
       val result = ChildName.build(name)
 
-      result mustEqual ChildName("aaa", Some("iiii"), "sss")
+      result `mustEqual` ChildName("aaa", Some("iiii"), "sss")
     }
 
     "must replace ’ with ' in first name, middle names and last name fields" in {
@@ -52,7 +50,7 @@ class ChildNameSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChe
       val name = models.ChildName("a’b", Some("c’d"), "e’f")
       val result = ChildName.build(name)
 
-      result mustEqual ChildName("a'b", Some("c'd"), "e'f")
+      result `mustEqual` ChildName("a'b", Some("c'd"), "e'f")
     }
   }
 }

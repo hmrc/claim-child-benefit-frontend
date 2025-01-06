@@ -203,10 +203,9 @@ class PreviousGuardianInternationalAddressFormProviderSpec extends StringFieldBe
 
       val invalidAnswers = arbitrary[String] suchThat (x => !Country.internationalCountries.map(_.code).contains(x))
 
-      forAll(invalidAnswers) {
-        answer =>
-          val result = form.bind(Map("value" -> answer)).apply(fieldName)
-          result.errors must contain only FormError(fieldName, requiredKey, Seq(name.firstName))
+      forAll(invalidAnswers) { answer =>
+        val result = form.bind(Map("value" -> answer)).apply(fieldName)
+        result.errors `must` contain `only` FormError(fieldName, requiredKey, Seq(name.firstName))
       }
     }
   }

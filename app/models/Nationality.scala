@@ -34,7 +34,7 @@ object NationalityGroup extends Enumerable.Implicits {
   val values: Seq[NationalityGroup] = Seq(UkCta, Eea, NonEea)
 
   implicit val enumerable: Enumerable[NationalityGroup] =
-    Enumerable(values.map(v => v.toString -> v): _*)
+    Enumerable(values.map(v => v.toString -> v)*)
 }
 
 object NationalityGroupOrdering extends Ordering[NationalityGroup] {

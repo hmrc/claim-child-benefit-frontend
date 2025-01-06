@@ -28,7 +28,7 @@ class BirthCertificateSystemNumberSpec extends AnyFreeSpec with Matchers {
 
     val json = Json.toJson(systemNumber)
 
-    json mustEqual JsString("123456789")
-    json.validate[BirthCertificateSystemNumber] mustEqual JsSuccess(systemNumber)
+    json `mustEqual` JsString("123456789")
+    json.validate[BirthCertificateSystemNumber] `mustEqual` JsSuccess(systemNumber)
   }
 }

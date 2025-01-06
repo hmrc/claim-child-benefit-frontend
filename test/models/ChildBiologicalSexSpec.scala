@@ -32,10 +32,8 @@ class ChildBiologicalSexSpec extends AnyFreeSpec with Matchers with ScalaCheckPr
 
       val gen = Gen.oneOf(ChildBiologicalSex.values.toSeq)
 
-      forAll(gen) {
-        childBiologicalSex =>
-
-          JsString(childBiologicalSex.toString).validate[ChildBiologicalSex].asOpt.value mustEqual childBiologicalSex
+      forAll(gen) { childBiologicalSex =>
+        JsString(childBiologicalSex.toString).validate[ChildBiologicalSex].asOpt.value `mustEqual` childBiologicalSex
       }
     }
 
@@ -43,10 +41,8 @@ class ChildBiologicalSexSpec extends AnyFreeSpec with Matchers with ScalaCheckPr
 
       val gen = arbitrary[String] suchThat (!ChildBiologicalSex.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-
-          JsString(invalidValue).validate[ChildBiologicalSex] mustEqual JsError("error.invalid")
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[ChildBiologicalSex] `mustEqual` JsError("error.invalid")
       }
     }
 
@@ -54,10 +50,8 @@ class ChildBiologicalSexSpec extends AnyFreeSpec with Matchers with ScalaCheckPr
 
       val gen = Gen.oneOf(ChildBiologicalSex.values.toSeq)
 
-      forAll(gen) {
-        childBiologicalSex =>
-
-          Json.toJson(childBiologicalSex) mustEqual JsString(childBiologicalSex.toString)
+      forAll(gen) { childBiologicalSex =>
+        Json.toJson(childBiologicalSex) `mustEqual` JsString(childBiologicalSex.toString)
       }
     }
   }

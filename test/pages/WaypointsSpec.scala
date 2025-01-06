@@ -33,7 +33,7 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
 
       "must return Waypoints with this waypoint at the head" in new Fixture {
 
-        EmptyWaypoints.setNextWaypoint(testWaypoint1) mustEqual Waypoints(List(testWaypoint1))
+        EmptyWaypoints.setNextWaypoint(testWaypoint1) `mustEqual` Waypoints(List(testWaypoint1))
       }
     }
 
@@ -41,24 +41,24 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
 
       "must return EmptyWaypoints when going to and from any kind page" in new Fixture {
 
-        EmptyWaypoints.recalibrate(RegularPage1, RegularPage2)                     mustEqual EmptyWaypoints
-        EmptyWaypoints.recalibrate(RegularPage1, AddToListSection1Page1)           mustEqual EmptyWaypoints
-        EmptyWaypoints.recalibrate(RegularPage1, AddItemPage1())                   mustEqual EmptyWaypoints
-        EmptyWaypoints.recalibrate(RegularPage1, CheckAnswersPage1)                mustEqual EmptyWaypoints
-        EmptyWaypoints.recalibrate(AddToListSection1Page1, RegularPage2)           mustEqual EmptyWaypoints
-        EmptyWaypoints.recalibrate(AddToListSection1Page1, AddToListSection1Page1) mustEqual EmptyWaypoints
-        EmptyWaypoints.recalibrate(AddToListSection1Page1, AddToListSection2Page1) mustEqual EmptyWaypoints
-        EmptyWaypoints.recalibrate(AddToListSection1Page1, AddItemPage1())         mustEqual EmptyWaypoints
-        EmptyWaypoints.recalibrate(AddToListSection1Page1, CheckAnswersPage1)      mustEqual EmptyWaypoints
-        EmptyWaypoints.recalibrate(AddItemPage1(), RegularPage2)                   mustEqual EmptyWaypoints
-        EmptyWaypoints.recalibrate(AddItemPage1(), AddToListSection1Page2)         mustEqual EmptyWaypoints
-        EmptyWaypoints.recalibrate(AddItemPage1(), AddToListSection2Page2)         mustEqual EmptyWaypoints
-        EmptyWaypoints.recalibrate(AddItemPage1(), AddItemPage2())                 mustEqual EmptyWaypoints
-        EmptyWaypoints.recalibrate(AddItemPage1(), CheckAnswersPage1)              mustEqual EmptyWaypoints
-        EmptyWaypoints.recalibrate(CheckAnswersPage1, RegularPage2)                mustEqual EmptyWaypoints
-        EmptyWaypoints.recalibrate(CheckAnswersPage1, AddToListSection1Page1)      mustEqual EmptyWaypoints
-        EmptyWaypoints.recalibrate(CheckAnswersPage1, AddItemPage1())              mustEqual EmptyWaypoints
-        EmptyWaypoints.recalibrate(CheckAnswersPage1, CheckAnswersPage2)           mustEqual EmptyWaypoints
+        EmptyWaypoints.recalibrate(RegularPage1, RegularPage2) `mustEqual` EmptyWaypoints
+        EmptyWaypoints.recalibrate(RegularPage1, AddToListSection1Page1) `mustEqual` EmptyWaypoints
+        EmptyWaypoints.recalibrate(RegularPage1, AddItemPage1()) `mustEqual` EmptyWaypoints
+        EmptyWaypoints.recalibrate(RegularPage1, CheckAnswersPage1) `mustEqual` EmptyWaypoints
+        EmptyWaypoints.recalibrate(AddToListSection1Page1, RegularPage2) `mustEqual` EmptyWaypoints
+        EmptyWaypoints.recalibrate(AddToListSection1Page1, AddToListSection1Page1) `mustEqual` EmptyWaypoints
+        EmptyWaypoints.recalibrate(AddToListSection1Page1, AddToListSection2Page1) `mustEqual` EmptyWaypoints
+        EmptyWaypoints.recalibrate(AddToListSection1Page1, AddItemPage1()) `mustEqual` EmptyWaypoints
+        EmptyWaypoints.recalibrate(AddToListSection1Page1, CheckAnswersPage1) `mustEqual` EmptyWaypoints
+        EmptyWaypoints.recalibrate(AddItemPage1(), RegularPage2) `mustEqual` EmptyWaypoints
+        EmptyWaypoints.recalibrate(AddItemPage1(), AddToListSection1Page2) `mustEqual` EmptyWaypoints
+        EmptyWaypoints.recalibrate(AddItemPage1(), AddToListSection2Page2) `mustEqual` EmptyWaypoints
+        EmptyWaypoints.recalibrate(AddItemPage1(), AddItemPage2()) `mustEqual` EmptyWaypoints
+        EmptyWaypoints.recalibrate(AddItemPage1(), CheckAnswersPage1) `mustEqual` EmptyWaypoints
+        EmptyWaypoints.recalibrate(CheckAnswersPage1, RegularPage2) `mustEqual` EmptyWaypoints
+        EmptyWaypoints.recalibrate(CheckAnswersPage1, AddToListSection1Page1) `mustEqual` EmptyWaypoints
+        EmptyWaypoints.recalibrate(CheckAnswersPage1, AddItemPage1()) `mustEqual` EmptyWaypoints
+        EmptyWaypoints.recalibrate(CheckAnswersPage1, CheckAnswersPage2) `mustEqual` EmptyWaypoints
       }
     }
   }
@@ -71,7 +71,9 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
 
         "when the list is not empty and does not start with the new waypoint" in new Fixture {
 
-          Waypoints(List(testWaypoint1)).setNextWaypoint(testWaypoint2) mustEqual Waypoints(List(testWaypoint2, testWaypoint1))
+          Waypoints(List(testWaypoint1)).setNextWaypoint(testWaypoint2) `mustEqual` Waypoints(
+            List(testWaypoint2, testWaypoint1)
+          )
         }
       }
 
@@ -79,7 +81,9 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
 
         "when the list starts with the new waypoint" in new Fixture {
 
-          Waypoints(List(testWaypoint1, testWaypoint2)).setNextWaypoint(testWaypoint1) mustEqual Waypoints(List(testWaypoint1, testWaypoint2))
+          Waypoints(List(testWaypoint1, testWaypoint2)).setNextWaypoint(testWaypoint1) `mustEqual` Waypoints(
+            List(testWaypoint1, testWaypoint2)
+          )
         }
       }
     }
@@ -92,7 +96,7 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
 
           val waypoints = Waypoints(List(testWaypoint1))
 
-          waypoints.recalibrate(AddToListSection1Page1, AddToListSection1Page2) mustEqual waypoints
+          waypoints.recalibrate(AddToListSection1Page1, AddToListSection1Page2) `mustEqual` waypoints
         }
       }
 
@@ -104,10 +108,10 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
 
             val waypoints = Waypoints(List(AddToListSection1Page1.addItemWaypoint, testWaypoint1))
 
-            waypoints.recalibrate(RegularPage1, AddToListSection1Page1) mustEqual waypoints
-            waypoints.recalibrate(AddToListSection2Page1, AddToListSection1Page1) mustEqual waypoints
-            waypoints.recalibrate(CheckAnswersPage1, AddToListSection1Page1) mustEqual waypoints
-            waypoints.recalibrate(AddItemPage1(), AddToListSection1Page1) mustEqual waypoints
+            waypoints.recalibrate(RegularPage1, AddToListSection1Page1) `mustEqual` waypoints
+            waypoints.recalibrate(AddToListSection2Page1, AddToListSection1Page1) `mustEqual` waypoints
+            waypoints.recalibrate(CheckAnswersPage1, AddToListSection1Page1) `mustEqual` waypoints
+            waypoints.recalibrate(AddItemPage1(), AddToListSection1Page1) `mustEqual` waypoints
           }
         }
 
@@ -115,13 +119,13 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
 
           "must add the add-to-list question page's add item waypoint to the list" in new Fixture {
 
-            val waypoints         = Waypoints(List(testWaypoint1))
+            val waypoints = Waypoints(List(testWaypoint1))
             val expectedWaypoints = Waypoints(List(AddToListSection1Page1.addItemWaypoint, testWaypoint1))
 
-            waypoints.recalibrate(RegularPage1, AddToListSection1Page1) mustEqual expectedWaypoints
-            waypoints.recalibrate(AddToListSection2Page1, AddToListSection1Page1) mustEqual expectedWaypoints
-            waypoints.recalibrate(CheckAnswersPage1, AddToListSection1Page1) mustEqual expectedWaypoints
-            waypoints.recalibrate(AddItemPage1(), AddToListSection1Page1) mustEqual expectedWaypoints
+            waypoints.recalibrate(RegularPage1, AddToListSection1Page1) `mustEqual` expectedWaypoints
+            waypoints.recalibrate(AddToListSection2Page1, AddToListSection1Page1) `mustEqual` expectedWaypoints
+            waypoints.recalibrate(CheckAnswersPage1, AddToListSection1Page1) `mustEqual` expectedWaypoints
+            waypoints.recalibrate(AddItemPage1(), AddToListSection1Page1) `mustEqual` expectedWaypoints
           }
         }
       }
@@ -134,10 +138,10 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
 
             val waypoints = Waypoints(List(CheckAnswersPage1.waypoint))
 
-            waypoints.recalibrate(RegularPage1, CheckAnswersPage1) mustEqual EmptyWaypoints
-            waypoints.recalibrate(CheckAnswersPage2, CheckAnswersPage1) mustEqual EmptyWaypoints
-            waypoints.recalibrate(AddToListSection1Page1, CheckAnswersPage1) mustEqual EmptyWaypoints
-            waypoints.recalibrate(AddItemPage1(), CheckAnswersPage1) mustEqual EmptyWaypoints
+            waypoints.recalibrate(RegularPage1, CheckAnswersPage1) `mustEqual` EmptyWaypoints
+            waypoints.recalibrate(CheckAnswersPage2, CheckAnswersPage1) `mustEqual` EmptyWaypoints
+            waypoints.recalibrate(AddToListSection1Page1, CheckAnswersPage1) `mustEqual` EmptyWaypoints
+            waypoints.recalibrate(AddItemPage1(), CheckAnswersPage1) `mustEqual` EmptyWaypoints
           }
         }
 
@@ -145,13 +149,13 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
 
           "must return the waypoints with first one removed" in new Fixture {
 
-            val waypoints         = Waypoints(List(CheckAnswersPage1.waypoint, CheckAnswersPage2.waypoint))
+            val waypoints = Waypoints(List(CheckAnswersPage1.waypoint, CheckAnswersPage2.waypoint))
             val expectedWaypoints = Waypoints(List(CheckAnswersPage2.waypoint))
 
-            waypoints.recalibrate(RegularPage1, CheckAnswersPage1) mustEqual expectedWaypoints
-            waypoints.recalibrate(CheckAnswersPage2, CheckAnswersPage1) mustEqual expectedWaypoints
-            waypoints.recalibrate(AddToListSection1Page1, CheckAnswersPage1) mustEqual expectedWaypoints
-            waypoints.recalibrate(AddItemPage1(), CheckAnswersPage1) mustEqual expectedWaypoints
+            waypoints.recalibrate(RegularPage1, CheckAnswersPage1) `mustEqual` expectedWaypoints
+            waypoints.recalibrate(CheckAnswersPage2, CheckAnswersPage1) `mustEqual` expectedWaypoints
+            waypoints.recalibrate(AddToListSection1Page1, CheckAnswersPage1) `mustEqual` expectedWaypoints
+            waypoints.recalibrate(AddItemPage1(), CheckAnswersPage1) `mustEqual` expectedWaypoints
           }
         }
 
@@ -161,10 +165,10 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
 
             val waypoints = Waypoints(List(CheckAnswersPage1.waypoint))
 
-            waypoints.recalibrate(RegularPage1, CheckAnswersPage2) mustEqual waypoints
-            waypoints.recalibrate(CheckAnswersPage2, CheckAnswersPage2) mustEqual waypoints
-            waypoints.recalibrate(AddToListSection1Page1, CheckAnswersPage2) mustEqual waypoints
-            waypoints.recalibrate(AddItemPage1(), CheckAnswersPage2) mustEqual waypoints
+            waypoints.recalibrate(RegularPage1, CheckAnswersPage2) `mustEqual` waypoints
+            waypoints.recalibrate(CheckAnswersPage2, CheckAnswersPage2) `mustEqual` waypoints
+            waypoints.recalibrate(AddToListSection1Page1, CheckAnswersPage2) `mustEqual` waypoints
+            waypoints.recalibrate(AddItemPage1(), CheckAnswersPage2) `mustEqual` waypoints
           }
         }
       }
@@ -176,12 +180,12 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
 
         val waypoint = CheckApplicantDetailsPage.waypoint
 
-        Waypoints.fromString(waypoint.urlFragment).value mustEqual Waypoints(List(waypoint))
+        Waypoints.fromString(waypoint.urlFragment).value `mustEqual` Waypoints(List(waypoint))
       }
 
       "must not read from an invalid string" in {
 
-        Waypoints.fromString("invalid") must not be defined
+        Waypoints.fromString("invalid") `must` `not` `be` defined
       }
     }
 
@@ -194,7 +198,7 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
       val data = Map("key" -> List(s"${waypoint.urlFragment}"))
       val expectedResult = Waypoints(List(waypoint))
 
-      bindable.bind("key", data).value.value mustEqual expectedResult
+      bindable.bind("key", data).value.value `mustEqual` expectedResult
     }
   }
 
@@ -215,7 +219,7 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
 
       override def isTheSamePage(other: Page): Boolean = other match {
         case CheckAnswersPage1 => true
-        case _ => false
+        case _                 => false
       }
     }
 
@@ -226,7 +230,7 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
 
       override def isTheSamePage(other: Page): Boolean = other match {
         case CheckAnswersPage2 => true
-        case _ => false
+        case _                 => false
       }
     }
 
@@ -243,7 +247,7 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
 
       override def isTheSamePage(other: Page): Boolean = other match {
         case _: AddItemPage1 => true
-        case _ => false
+        case _               => false
       }
 
       override def deriveNumberOfItems: Derivable[Seq[JsObject], Int] = ???
@@ -265,7 +269,7 @@ class WaypointsSpec extends AnyFreeSpec with Matchers with OptionValues with Eit
 
       override def isTheSamePage(other: Page): Boolean = other match {
         case _: AddItemPage2 => true
-        case _ => false
+        case _               => false
       }
 
       override def deriveNumberOfItems: Derivable[Seq[JsObject], Int] = Derive2

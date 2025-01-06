@@ -17,7 +17,6 @@
 package connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock._
-import connectors.BrmsConnector
 import models.ChildBirthRegistrationCountry.England
 import models.{BirthRegistrationMatchingRequest, BirthRegistrationMatchingResponseModel, ChildName}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -76,7 +75,7 @@ class BrmsConnectorSpec
 
           val result = connector.matchChild(request).futureValue
 
-          result mustEqual BirthRegistrationMatchingResponseModel(false)
+          result `mustEqual` BirthRegistrationMatchingResponseModel(false)
         }
       }
     }
@@ -100,7 +99,7 @@ class BrmsConnectorSpec
 
           val result = connector.matchChild(request)
 
-          result.failed.futureValue mustBe an[Exception]
+          result.failed.futureValue `mustBe` an[Exception]
         }
       }
     }

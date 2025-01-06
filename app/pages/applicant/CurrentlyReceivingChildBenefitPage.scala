@@ -20,10 +20,11 @@ import controllers.applicant.routes
 import models.CurrentlyReceivingChildBenefit.{GettingPayments, NotClaiming, NotGettingPayments}
 import models.{CurrentlyReceivingChildBenefit, UserAnswers}
 import pages.payments._
-import pages.{NonEmptyWaypoints, Page, QuestionPage, RecoveryOps, Waypoints}
+import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 import queries.Settable
+import pages.RecoveryOps
 
 import scala.util.{Success, Try}
 
@@ -78,7 +79,7 @@ case object CurrentlyReceivingChildBenefitPage extends QuestionPage[CurrentlyRec
         previousAnswers.isDefined(ApplicantIncomePage)
       }
 
-    def pagesToAlwaysRemove(receiving: CurrentlyReceivingChildBenefit): Seq[Settable[_]] = {
+    def pagesToAlwaysRemove(receiving: CurrentlyReceivingChildBenefit): Seq[Settable[?]] = {
       receiving match {
         case NotClaiming => Seq(EldestChildNamePage, EldestChildDateOfBirthPage)
         case _ => Nil
@@ -96,7 +97,7 @@ case object CurrentlyReceivingChildBenefitPage extends QuestionPage[CurrentlyRec
     }.getOrElse(super.cleanup(value, currentAnswers))
   }
 
-  private val paymentPages: Seq[Settable[_]] = Seq(
+  private val paymentPages: Seq[Settable[?]] = Seq(
     AccountTypePage,
     ApplicantIncomePage,
     PartnerIncomePage,
@@ -110,6 +111,6 @@ case object CurrentlyReceivingChildBenefitPage extends QuestionPage[CurrentlyRec
     BuildingSocietyDetailsPage
   )
 
-  private def removePages(answers: UserAnswers, pages: Seq[Settable[_]]): Try[UserAnswers] =
+  private def removePages(answers: UserAnswers, pages: Seq[Settable[?]]): Try[UserAnswers] =
     pages.foldLeft[Try[UserAnswers]](Success(answers))((acc, page) => acc.flatMap(_.remove(page)))
 }

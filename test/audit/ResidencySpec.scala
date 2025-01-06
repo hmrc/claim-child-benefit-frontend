@@ -30,8 +30,8 @@ class ResidencySpec extends AnyFreeSpec with Matchers {
 
       val model = Residency.LivedInUkAndAbroad(None, None, Set.empty[String], Nil, Nil)
 
-      Json.toJson(model) mustEqual Json.obj(
-        "alwaysLivedInUk" -> false,
+      Json.toJson(model) `mustEqual` Json.obj(
+        "alwaysLivedInUk"  -> false,
         "usuallyLivesInUk" -> true
       )
     }
@@ -48,14 +48,14 @@ class ResidencySpec extends AnyFreeSpec with Matchers {
 
       val json = Json.toJson(model)
 
-      json mustEqual Json.obj(
-        "alwaysLivedInUk" -> false,
-        "usuallyLivesInUk" -> false,
-        "usualCountryOfResidence" -> "country 1",
-        "arrivalDate" -> "2022-12-31",
-        "countriesRecentlyWorked" -> Json.arr("country 2"),
+      json `mustEqual` Json.obj(
+        "alwaysLivedInUk"                   -> false,
+        "usuallyLivesInUk"                  -> false,
+        "usualCountryOfResidence"           -> "country 1",
+        "arrivalDate"                       -> "2022-12-31",
+        "countriesRecentlyWorked"           -> Json.arr("country 2"),
         "countriesRecentlyReceivedBenefits" -> Json.arr("country 3"),
-        "employmentStatus" -> Json.arr("employment status")
+        "employmentStatus"                  -> Json.arr("employment status")
       )
     }
   }
@@ -68,26 +68,27 @@ class ResidencySpec extends AnyFreeSpec with Matchers {
 
       val json = Json.toJson(model)
 
-      json mustEqual Json.obj(
-        "alwaysLivedInUk" -> false,
-        "usuallyLivesInUk" -> false,
+      json `mustEqual` Json.obj(
+        "alwaysLivedInUk"         -> false,
+        "usuallyLivesInUk"        -> false,
         "usualCountryOfResidence" -> "country 1"
       )
     }
 
     "when optional values are present" in {
 
-      val model = Residency.AlwaysLivedAbroad("country 1", Set("employment status"), List("country 2"), List("country 3"))
+      val model =
+        Residency.AlwaysLivedAbroad("country 1", Set("employment status"), List("country 2"), List("country 3"))
 
       val json = Json.toJson(model)
 
-      json mustEqual Json.obj(
-        "alwaysLivedInUk" -> false,
-        "usuallyLivesInUk" -> false,
-        "usualCountryOfResidence" -> "country 1",
-        "countriesRecentlyWorked" -> Json.arr("country 2"),
+      json `mustEqual` Json.obj(
+        "alwaysLivedInUk"                   -> false,
+        "usuallyLivesInUk"                  -> false,
+        "usualCountryOfResidence"           -> "country 1",
+        "countriesRecentlyWorked"           -> Json.arr("country 2"),
         "countriesRecentlyReceivedBenefits" -> Json.arr("country 3"),
-        "employmentStatus" -> Json.arr("employment status")
+        "employmentStatus"                  -> Json.arr("employment status")
       )
     }
   }

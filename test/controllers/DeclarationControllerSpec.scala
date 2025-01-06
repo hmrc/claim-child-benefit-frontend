@@ -56,8 +56,8 @@ class DeclarationControllerSpec extends SpecBase with MockitoSugar with BeforeAn
 
         val view = application.injector.instanceOf[DeclarationView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view()(request, messages(application)).toString
       }
     }
 
@@ -65,7 +65,7 @@ class DeclarationControllerSpec extends SpecBase with MockitoSugar with BeforeAn
 
       "must redirect to Print" in {
 
-        when(mockSubmissionService.canSubmit(any())(any())) thenReturn Future.successful(false)
+        when(mockSubmissionService.canSubmit(any())(any())) `thenReturn` Future.successful(false)
 
         val app =
           applicationBuilder(Some(emptyUserAnswers))
@@ -77,8 +77,8 @@ class DeclarationControllerSpec extends SpecBase with MockitoSugar with BeforeAn
 
           val result = route(app, request).value
 
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual routes.PrintController.onPageLoad.url
+          status(result) `mustEqual` SEE_OTHER
+          redirectLocation(result).value `mustEqual` routes.PrintController.onPageLoad.url
         }
       }
     }
@@ -89,8 +89,8 @@ class DeclarationControllerSpec extends SpecBase with MockitoSugar with BeforeAn
 
         "and redirect to Submitted when the submission is successful" in {
 
-          when(mockSubmissionService.canSubmit(any())(any())) thenReturn Future.successful(true)
-          when(mockSubmissionService.submit(any())(any(), any())) thenReturn Future.successful(Done)
+          when(mockSubmissionService.canSubmit(any())(any())) `thenReturn` Future.successful(true)
+          when(mockSubmissionService.submit(any())(any(), any())) `thenReturn` Future.successful(Done)
 
           val app =
             applicationBuilder(Some(emptyUserAnswers))
@@ -103,16 +103,18 @@ class DeclarationControllerSpec extends SpecBase with MockitoSugar with BeforeAn
 
             val result = route(app, request).value
 
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual routes.SubmittedController.onPageLoad.url
+            status(result) `mustEqual` SEE_OTHER
+            redirectLocation(result).value `mustEqual` routes.SubmittedController.onPageLoad.url
             verify(mockSubmissionService, times(1)).submit(any())(any(), any())
           }
         }
 
         "and redirect to SubmissionFailedExistingClaim when there is an existing claim for the user in CBS" in {
 
-          when(mockSubmissionService.canSubmit(any())(any())) thenReturn Future.successful(true)
-          when(mockSubmissionService.submit(any())(any(), any())) thenReturn Future.failed(new InvalidClaimStateException)
+          when(mockSubmissionService.canSubmit(any())(any())) `thenReturn` Future.successful(true)
+          when(mockSubmissionService.submit(any())(any(), any())) `thenReturn` Future.failed(
+            new InvalidClaimStateException
+          )
 
           val app =
             applicationBuilder(Some(emptyUserAnswers))
@@ -123,16 +125,18 @@ class DeclarationControllerSpec extends SpecBase with MockitoSugar with BeforeAn
             val request = FakeRequest(POST, routes.DeclarationController.onSubmit.url)
             val result = route(app, request).value
 
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual routes.SubmissionFailedExistingClaimController.onPageLoad().url
+            status(result) `mustEqual` SEE_OTHER
+            redirectLocation(result).value `mustEqual` routes.SubmissionFailedExistingClaimController.onPageLoad().url
             verify(mockSubmissionService, times(1)).submit(any())(any(), any())
           }
         }
 
         "and redirect to SubmissionFailedAlreadyInPayment when the user has an existing claim which is already in payment" in {
 
-          when(mockSubmissionService.canSubmit(any())(any())) thenReturn Future.successful(true)
-          when(mockSubmissionService.submit(any())(any(), any())) thenReturn Future.failed(new AlreadyInPaymentException)
+          when(mockSubmissionService.canSubmit(any())(any())) `thenReturn` Future.successful(true)
+          when(mockSubmissionService.submit(any())(any(), any())) `thenReturn` Future.failed(
+            new AlreadyInPaymentException
+          )
 
           val app =
             applicationBuilder(Some(emptyUserAnswers))
@@ -143,16 +147,16 @@ class DeclarationControllerSpec extends SpecBase with MockitoSugar with BeforeAn
             val request = FakeRequest(POST, routes.DeclarationController.onSubmit.url)
             val result = route(app, request).value
 
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual routes.SubmissionFailedAlreadyInPaymentController.onPageLoad().url
+            status(result) `mustEqual` SEE_OTHER
+            redirectLocation(result).value `mustEqual` routes.SubmissionFailedAlreadyInPaymentController.onPageLoad().url
             verify(mockSubmissionService, times(1)).submit(any())(any(), any())
           }
         }
 
         "and redirect to Print when the submission fails for another reason" in {
 
-          when(mockSubmissionService.canSubmit(any())(any())) thenReturn Future.successful(true)
-          when(mockSubmissionService.submit(any())(any(), any())) thenReturn Future.failed(new Exception("foo"))
+          when(mockSubmissionService.canSubmit(any())(any())) `thenReturn` Future.successful(true)
+          when(mockSubmissionService.submit(any())(any(), any())) `thenReturn` Future.failed(new Exception("foo"))
 
           val app =
             applicationBuilder(Some(emptyUserAnswers))
@@ -165,8 +169,8 @@ class DeclarationControllerSpec extends SpecBase with MockitoSugar with BeforeAn
 
             val result = route(app, request).value
 
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual routes.PrintController.onPageLoad.url
+            status(result) `mustEqual` SEE_OTHER
+            redirectLocation(result).value `mustEqual` routes.PrintController.onPageLoad.url
             verify(mockSubmissionService, times(1)).submit(any())(any(), any())
           }
         }

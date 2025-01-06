@@ -48,17 +48,16 @@ class CheckDesignatoryDetailsControllerSpec extends SpecBase with SummaryListFlu
         val view = app.injector.instanceOf[CheckDesignatoryDetailsView]
         val emptyList = SummaryListViewModel(Nil)
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(emptyList)(request, messages(app)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(emptyList)(request, messages(app)).toString
       }
     }
 
     "must save `true` and redirect to the next page for a POST" in {
 
-
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val app =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -73,8 +72,11 @@ class CheckDesignatoryDetailsControllerSpec extends SpecBase with SummaryListFlu
         val result = route(app, request).value
         val expectedAnswers = emptyUserAnswers.set(CheckDesignatoryDetailsPage, true).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual CheckDesignatoryDetailsPage.navigate(EmptyWaypoints, emptyUserAnswers, expectedAnswers).route.url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` CheckDesignatoryDetailsPage
+          .navigate(EmptyWaypoints, emptyUserAnswers, expectedAnswers)
+          .route
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }

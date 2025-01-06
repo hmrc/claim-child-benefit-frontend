@@ -30,52 +30,52 @@ import play.api.libs.json.{JsValue, Json}
 trait UserAnswersGenerator extends TryValues {
   self: Generators =>
 
-  val generators: Seq[Gen[(QuestionPage[_], JsValue)]] =
+  val generators: Seq[Gen[(QuestionPage[?], JsValue)]] =
     arbitrary[(PartnerIsHmfOrCivilServantPage.type, JsValue)] ::
-    arbitrary[(ApplicantIsHmfOrCivilServantPage.type, JsValue)] ::
-    arbitrary[(AdoptingThroughLocalAuthorityPage, JsValue)] ::
-    arbitrary[(PreviousClaimantNamePage, JsValue)] ::
-    arbitrary[(PreviousClaimantUkAddressPage, JsValue)] ::
-    arbitrary[(ChildScottishBirthCertificateDetailsPage, JsValue)] ::
-    arbitrary[(ChildPreviousNamePage, JsValue)] ::
-    arbitrary[(ChildNameChangedByDeedPollPage, JsValue)] ::
-    arbitrary[(ChildNamePage, JsValue)] ::
-    arbitrary[(ChildHasPreviousNamePage, JsValue)] ::
-    arbitrary[(ChildDateOfBirthPage, JsValue)] ::
-    arbitrary[(ChildBirthRegistrationCountryPage, JsValue)] ::
-    arbitrary[(ChildBirthCertificateSystemNumberPage, JsValue)] ::
-    arbitrary[(ChildBiologicalSexPage, JsValue)] ::
-    arbitrary[(ApplicantRelationshipToChildPage, JsValue)] ::
-    arbitrary[(AnyoneClaimedForChildBeforePage, JsValue)] ::
-    arbitrary[(PartnerNinoKnownPage.type, JsValue)] ::
-    arbitrary[(PartnerNinoPage.type, JsValue)] ::
-    arbitrary[(PartnerNamePage.type, JsValue)] ::
-    arbitrary[(PartnerClaimingChildBenefitPage.type, JsValue)] ::
-    arbitrary[(PartnerEldestChildNamePage.type, JsValue)] ::
-    arbitrary[(PartnerEldestChildDateOfBirthPage.type, JsValue)] ::
-    arbitrary[(PartnerDateOfBirthPage.type, JsValue)] ::
-    arbitrary[(ApplicantPreviousFamilyNamePage, JsValue)] ::
-    arbitrary[(ApplicantPreviousUkAddressPage.type, JsValue)] ::
-    arbitrary[(ApplicantPhoneNumberPage.type, JsValue)] ::
-    arbitrary[(ApplicantNinoKnownPage.type, JsValue)] ::
-    arbitrary[(ApplicantNinoPage.type, JsValue)] ::
-    arbitrary[(ApplicantNamePage.type, JsValue)] ::
-    arbitrary[(ApplicantLivedAtCurrentAddressOneYearPage.type, JsValue)] ::
-    arbitrary[(ApplicantHasPreviousFamilyNamePage.type, JsValue)] ::
-    arbitrary[(ApplicantDateOfBirthPage.type, JsValue)] ::
-    arbitrary[(ApplicantCurrentUkAddressPage.type, JsValue)] ::
-    arbitrary[(PaymentFrequencyPage.type, JsValue)] ::
-    arbitrary[(WantToBePaidPage.type, JsValue)] ::
-    arbitrary[(EldestChildNamePage.type, JsValue)] ::
-    arbitrary[(EldestChildDateOfBirthPage.type, JsValue)] ::
-    arbitrary[(CurrentlyReceivingChildBenefitPage.type, JsValue)] ::
-    arbitrary[(BankAccountDetailsPage.type, JsValue)] ::
-    arbitrary[(ApplicantOrPartnerBenefitsPage.type, JsValue)] ::
-    arbitrary[(ApplicantBenefitsPage.type, JsValue)] ::
-    arbitrary[(RelationshipStatusPage.type, JsValue)] ::
-    arbitrary[(CohabitationDatePage.type, JsValue)] ::
-    arbitrary[(AlwaysLivedInUkPage.type, JsValue)] ::
-    Nil
+      arbitrary[(ApplicantIsHmfOrCivilServantPage.type, JsValue)] ::
+      arbitrary[(AdoptingThroughLocalAuthorityPage, JsValue)] ::
+      arbitrary[(PreviousClaimantNamePage, JsValue)] ::
+      arbitrary[(PreviousClaimantUkAddressPage, JsValue)] ::
+      arbitrary[(ChildScottishBirthCertificateDetailsPage, JsValue)] ::
+      arbitrary[(ChildPreviousNamePage, JsValue)] ::
+      arbitrary[(ChildNameChangedByDeedPollPage, JsValue)] ::
+      arbitrary[(ChildNamePage, JsValue)] ::
+      arbitrary[(ChildHasPreviousNamePage, JsValue)] ::
+      arbitrary[(ChildDateOfBirthPage, JsValue)] ::
+      arbitrary[(ChildBirthRegistrationCountryPage, JsValue)] ::
+      arbitrary[(ChildBirthCertificateSystemNumberPage, JsValue)] ::
+      arbitrary[(ChildBiologicalSexPage, JsValue)] ::
+      arbitrary[(ApplicantRelationshipToChildPage, JsValue)] ::
+      arbitrary[(AnyoneClaimedForChildBeforePage, JsValue)] ::
+      arbitrary[(PartnerNinoKnownPage.type, JsValue)] ::
+      arbitrary[(PartnerNinoPage.type, JsValue)] ::
+      arbitrary[(PartnerNamePage.type, JsValue)] ::
+      arbitrary[(PartnerClaimingChildBenefitPage.type, JsValue)] ::
+      arbitrary[(PartnerEldestChildNamePage.type, JsValue)] ::
+      arbitrary[(PartnerEldestChildDateOfBirthPage.type, JsValue)] ::
+      arbitrary[(PartnerDateOfBirthPage.type, JsValue)] ::
+      arbitrary[(ApplicantPreviousFamilyNamePage, JsValue)] ::
+      arbitrary[(ApplicantPreviousUkAddressPage.type, JsValue)] ::
+      arbitrary[(ApplicantPhoneNumberPage.type, JsValue)] ::
+      arbitrary[(ApplicantNinoKnownPage.type, JsValue)] ::
+      arbitrary[(ApplicantNinoPage.type, JsValue)] ::
+      arbitrary[(ApplicantNamePage.type, JsValue)] ::
+      arbitrary[(ApplicantLivedAtCurrentAddressOneYearPage.type, JsValue)] ::
+      arbitrary[(ApplicantHasPreviousFamilyNamePage.type, JsValue)] ::
+      arbitrary[(ApplicantDateOfBirthPage.type, JsValue)] ::
+      arbitrary[(ApplicantCurrentUkAddressPage.type, JsValue)] ::
+      arbitrary[(PaymentFrequencyPage.type, JsValue)] ::
+      arbitrary[(WantToBePaidPage.type, JsValue)] ::
+      arbitrary[(EldestChildNamePage.type, JsValue)] ::
+      arbitrary[(EldestChildDateOfBirthPage.type, JsValue)] ::
+      arbitrary[(CurrentlyReceivingChildBenefitPage.type, JsValue)] ::
+      arbitrary[(BankAccountDetailsPage.type, JsValue)] ::
+      arbitrary[(ApplicantOrPartnerBenefitsPage.type, JsValue)] ::
+      arbitrary[(ApplicantBenefitsPage.type, JsValue)] ::
+      arbitrary[(RelationshipStatusPage.type, JsValue)] ::
+      arbitrary[(CohabitationDatePage.type, JsValue)] ::
+      arbitrary[(AlwaysLivedInUkPage.type, JsValue)] ::
+      Nil
 
   implicit lazy val arbitraryUserData: Arbitrary[UserAnswers] = {
 
@@ -83,16 +83,15 @@ trait UserAnswersGenerator extends TryValues {
 
     Arbitrary {
       for {
-        id      <- nonEmptyString
-        data    <- generators match {
-          case Nil => Gen.const(Map[QuestionPage[_], JsValue]())
-          case _   => Gen.mapOf(oneOf(generators))
-        }
-      } yield UserAnswers (
+        id <- nonEmptyString
+        data <- generators match {
+                  case Nil => Gen.const(Map[QuestionPage[?], JsValue]())
+                  case _   => Gen.mapOf(oneOf(generators))
+                }
+      } yield UserAnswers(
         id = id,
-        data = data.foldLeft(Json.obj()) {
-          case (obj, (path, value)) =>
-            obj.setObject(path.path, value).get
+        data = data.foldLeft(Json.obj()) { case (obj, (path, value)) =>
+          obj.setObject(path.path, value).get
         }
       )
     }

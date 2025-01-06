@@ -137,7 +137,6 @@ class ChangingPaymentSectionJourneySpec extends AnyFreeSpec with JourneyHelpers 
 
         "changing to say they're not receiving qualifying benefits must remove Payment Frequency then go to Check Payments" in {
 
-
           val initialise = journeyOf(
             setUserAnswerTo(RelationshipStatusPage, relationship),
             setUserAnswerTo(CurrentlyReceivingChildBenefitPage, NotClaiming),

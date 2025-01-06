@@ -31,6 +31,8 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
+
 class BankAccountInsightsConnector @Inject()(config: Configuration, httpClient: HttpClientV2, auditService: AuditService)
                                             (implicit ec: ExecutionContext) extends Logging {
 

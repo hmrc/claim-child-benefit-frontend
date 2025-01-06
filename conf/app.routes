@@ -21,21 +21,21 @@ GET         /application-form-reset                      controllers.auth.Applic
 GET         /sign-out-and-apply                          controllers.auth.AuthController.signOutAndApplyUnauthenticated()
 
 GET         /unauthorised                               controllers.UnauthorisedController.onPageLoad
-GET         /agent-unsupported                          controllers.auth.AuthController.unsupportedAffinityGroupAgent(continueUrl: String)
-GET         /organisation-unsupported                   controllers.auth.AuthController.unsupportedAffinityGroupOrganisation(continueUrl: String)
-GET         /register                                   controllers.auth.AuthController.redirectToRegister(continueUrl: String)
-GET         /sign-in                                    controllers.auth.AuthController.redirectToLogin(continueUrl: String)
+GET         /agent-unsupported                          controllers.auth.AuthController.unsupportedAffinityGroupAgent(continueUrl: RedirectUrl)
+GET         /organisation-unsupported                   controllers.auth.AuthController.unsupportedAffinityGroupOrganisation(continueUrl: RedirectUrl)
+GET         /register                                   controllers.auth.AuthController.redirectToRegister(continueUrl: RedirectUrl)
+GET         /sign-in                                    controllers.auth.AuthController.redirectToLogin(continueUrl: RedirectUrl)
 
 GET         /sign-in-to-government-gateway              controllers.SignInController.onPageLoad(waypoints: Waypoints ?= EmptyWaypoints)
 POST        /sign-in-to-government-gateway              controllers.SignInController.onSubmit(waypoints: Waypoints ?= EmptyWaypoints)
 GET         /signed-in                                  controllers.auth.AuthController.signedIn()
 
-GET         /identity-verification/complete                          controllers.auth.IvController.handleIvFailure(continueUrl: String, journeyId: Option[String])
+GET         /identity-verification/complete                          controllers.auth.IvController.handleIvFailure(continueUrl: RedirectUrl, journeyId: Option[String])
 GET         /identity-verification/incomplete                        controllers.auth.IvController.ivIncomplete
 GET         /identity-verification/failed-matching                   controllers.auth.IvController.ivFailedMatching
-GET         /identity-verification/failed-identity-verification      controllers.auth.IvController.ivFailedIdentityVerification(continueUrl: String)
+GET         /identity-verification/failed-identity-verification      controllers.auth.IvController.ivFailedIdentityVerification(continueUrl: RedirectUrl)
 GET         /identity-verification/insufficient-evidence             controllers.auth.IvController.ivInsufficientEvidence
-GET         /identity-verification/user-aborted                      controllers.auth.IvController.ivUserAborted(continueUrl: String)
+GET         /identity-verification/user-aborted                      controllers.auth.IvController.ivUserAborted(continueUrl: RedirectUrl)
 GET         /identity-verification/locked-out                        controllers.auth.IvController.ivLockedOut
 GET         /identity-verification/precondition-failed               controllers.auth.IvController.ivPreconditionFailed
 GET         /identity-verification/technical-issue                   controllers.auth.IvController.ivTechnicalIssue

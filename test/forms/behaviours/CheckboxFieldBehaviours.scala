@@ -21,10 +21,7 @@ import play.api.data.{Form, FormError}
 
 trait CheckboxFieldBehaviours extends FormSpec {
 
-  def checkboxField[T](form: Form[_],
-                       fieldName: String,
-                       validValues: Seq[T],
-                       invalidError: FormError): Unit = {
+  def checkboxField[T](form: Form[?], fieldName: String, validValues: Seq[T], invalidError: FormError): Unit = {
     for {
       (value, i) <- validValues.zipWithIndex
     } yield s"binds `$value` successfully" in {
@@ -32,8 +29,8 @@ trait CheckboxFieldBehaviours extends FormSpec {
         s"$fieldName[$i]" -> value.toString
       )
       val result = form.bind(data)
-      result.get mustEqual Set(value)
-      result.errors mustBe empty
+      result.get `mustEqual` Set(value)
+      result.errors `mustBe` empty
     }
 
     "fail to bind when the answer is invalid" in {
@@ -44,10 +41,7 @@ trait CheckboxFieldBehaviours extends FormSpec {
     }
   }
 
-  def mandatoryCheckboxField(form: Form[_],
-                             fieldName: String,
-                             requiredKey: String,
-                             args: Any*): Unit = {
+  def mandatoryCheckboxField(form: Form[?], fieldName: String, requiredKey: String, args: Any*): Unit = {
 
     "fail to bind when no answers are selected" in {
       val data = Map.empty[String, String]
@@ -63,12 +57,12 @@ trait CheckboxFieldBehaviours extends FormSpec {
   }
 
   def checkboxFieldWithMutuallyExclusiveAnswers[A](
-                                                    form: Form[_],
-                                                    fieldName: String,
-                                                    set1: Set[A],
-                                                    set2: Set[A],
-                                                    expectedError: FormError
-                                                  ): Unit = {
+    form: Form[?],
+    fieldName: String,
+    set1: Set[A],
+    set2: Set[A],
+    expectedError: FormError
+  ): Unit = {
 
     "must bind when all values are from the first set" in {
       val data = set1.toList.zipWithIndex.map { case (item, index) =>
@@ -76,8 +70,8 @@ trait CheckboxFieldBehaviours extends FormSpec {
       }.toMap
 
       val result = form.bind(data)
-      result.get mustEqual set1
-      result.errors mustBe empty
+      result.get `mustEqual` set1
+      result.errors `mustBe` empty
     }
 
     "must bind when all values are from the second set" in {
@@ -86,16 +80,21 @@ trait CheckboxFieldBehaviours extends FormSpec {
       }.toMap
 
       val result = form.bind(data)
-      result.get mustEqual set2
-      result.errors mustBe empty
+      result.get `mustEqual` set2
+      result.errors `mustBe` empty
     }
 
     "must not bind when there are values from both sets" in {
-      val data = set1.union(set2).toList.zipWithIndex.map { case (item, index) =>
-        s"$fieldName[$index]" -> item.toString
-      }.toMap
+      val data = set1
+        .union(set2)
+        .toList
+        .zipWithIndex
+        .map { case (item, index) =>
+          s"$fieldName[$index]" -> item.toString
+        }
+        .toMap
 
-      form.bind(data).errors must contain only expectedError
+      form.bind(data).errors `must` contain `only` expectedError
     }
   }
 }

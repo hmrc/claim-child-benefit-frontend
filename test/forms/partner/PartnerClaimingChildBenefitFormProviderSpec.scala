@@ -33,7 +33,7 @@ class PartnerClaimingChildBenefitFormProviderSpec extends OptionFieldBehaviours 
     behave like optionsField[PartnerClaimingChildBenefit](
       form,
       fieldName,
-      validValues  = PartnerClaimingChildBenefit.values,
+      validValues = PartnerClaimingChildBenefit.values,
       invalidError = FormError(fieldName, "error.invalid", Seq(name))
     )
 

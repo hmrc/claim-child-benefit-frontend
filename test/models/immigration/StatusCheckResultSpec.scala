@@ -63,7 +63,7 @@ class StatusCheckResultSpec extends AnyFreeSpec with Matchers with OptionValues 
         statuses = statuses
       )
 
-      checkResult.settledStatusStartDate.value mustEqual oldNonExpiredDate
+      checkResult.settledStatusStartDate.value `mustEqual` oldNonExpiredDate
     }
 
     "must ignore records that are not EUS ILR" in {
@@ -103,7 +103,7 @@ class StatusCheckResultSpec extends AnyFreeSpec with Matchers with OptionValues 
         statuses = statuses
       )
 
-      checkResult.settledStatusStartDate.value mustEqual eusIlrDate
+      checkResult.settledStatusStartDate.value `mustEqual` eusIlrDate
     }
 
     "must be None when the only EUS ILR records are expired" in {
@@ -135,7 +135,7 @@ class StatusCheckResultSpec extends AnyFreeSpec with Matchers with OptionValues 
         statuses = statuses
       )
 
-      checkResult.settledStatusStartDate must not be defined
+      checkResult.settledStatusStartDate `must` not `be` defined
     }
 
     "must be None when there are no EUS ILR records" in {
@@ -143,7 +143,6 @@ class StatusCheckResultSpec extends AnyFreeSpec with Matchers with OptionValues 
       val nonEusIlrDate = LocalDate.of(2010, 1, 1)
 
       val statuses = List(
-
         ImmigrationStatus(
           statusStartDate = nonEusIlrDate,
           statusEndDate = None,
@@ -160,7 +159,7 @@ class StatusCheckResultSpec extends AnyFreeSpec with Matchers with OptionValues 
         statuses = statuses
       )
 
-      checkResult.settledStatusStartDate must not be defined
+      checkResult.settledStatusStartDate `must` not `be` defined
     }
   }
 }

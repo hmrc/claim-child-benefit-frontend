@@ -33,12 +33,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class BarsServiceSpec
-  extends AnyFreeSpec
-    with Matchers
-    with MockitoSugar
-    with OptionValues
-    with ScalaFutures{
+class BarsServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with OptionValues with ScalaFutures {
 
   ".verify" - {
 
@@ -56,8 +51,7 @@ class BarsServiceSpec
       )
 
       val mockConnector = mock[BarsConnector]
-      when(mockConnector.verify(any())(any())) thenReturn Future.successful(Right(barsResponse))
-
+      when(mockConnector.verify(any())(any())) `thenReturn` Future.successful(Right(barsResponse))
 
       val app =
         new GuiceApplicationBuilder()
@@ -72,15 +66,14 @@ class BarsServiceSpec
 
         val result = service.verifyBankDetails(bankDetails).futureValue
 
-        result.value mustEqual barsResponse
+        result.value `mustEqual` barsResponse
       }
     }
 
     "must return None when the connector returns an error response" in {
 
       val mockConnector = mock[BarsConnector]
-      when(mockConnector.verify(any())(any())) thenReturn Future.successful(Left(InvalidJson))
-
+      when(mockConnector.verify(any())(any())) `thenReturn` Future.successful(Left(InvalidJson))
 
       val app =
         new GuiceApplicationBuilder()
@@ -95,7 +88,7 @@ class BarsServiceSpec
 
         val result = service.verifyBankDetails(bankDetails).futureValue
 
-        result must not be defined
+        result `must` not `be` defined
       }
     }
   }

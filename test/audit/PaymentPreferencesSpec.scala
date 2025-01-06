@@ -32,30 +32,39 @@ class PaymentPreferencesSpec extends AnyFreeSpec with Matchers {
     "when bank account details and eldest child are present" in {
 
       val preference = Weekly(
-        Some(BankAccount("applicant", "first", "last", "000000", "00000000", Some(BankAccountInsightsResponseModel("correlation", 0, "foo")))),
+        Some(
+          BankAccount(
+            "applicant",
+            "first",
+            "last",
+            "000000",
+            "00000000",
+            Some(BankAccountInsightsResponseModel("correlation", 0, "foo"))
+          )
+        ),
         Some(EldestChild(ChildName("first", None, "last"), dateOfBirth))
       )
       val json = Json.toJson(preference)
 
-      json mustEqual Json.obj(
+      json `mustEqual` Json.obj(
         "wantsToBePaid" -> true,
-        "frequency" -> PaymentFrequency.Weekly.toString,
+        "frequency"     -> PaymentFrequency.Weekly.toString,
         "account" -> Json.obj(
-          "holder" -> "applicant",
-          "firstName" -> "first",
-          "lastName" -> "last",
-          "sortCode" -> "000000",
+          "holder"        -> "applicant",
+          "firstName"     -> "first",
+          "lastName"      -> "last",
+          "sortCode"      -> "000000",
           "accountNumber" -> "00000000",
           "bankAccountInsightsResult" -> Json.obj(
             "correlationId" -> "correlation",
-            "riskScore" -> 0,
-            "reason" -> "foo"
+            "riskScore"     -> 0,
+            "reason"        -> "foo"
           )
         ),
         "eldestChild" -> Json.obj(
           "name" -> Json.obj(
             "firstName" -> "first",
-            "lastName" -> "last"
+            "lastName"  -> "last"
           ),
           "dateOfBirth" -> "2020-12-31"
         )
@@ -67,10 +76,10 @@ class PaymentPreferencesSpec extends AnyFreeSpec with Matchers {
       val preference = Weekly(None, None)
       val json = Json.toJson(preference)
 
-      json mustEqual Json.obj(
+      json `mustEqual` Json.obj(
         "wantsToBePaid" -> true,
-        "frequency" -> PaymentFrequency.Weekly.toString,
-        "account" -> "no suitable account"
+        "frequency"     -> PaymentFrequency.Weekly.toString,
+        "account"       -> "no suitable account"
       )
     }
   }
@@ -80,30 +89,39 @@ class PaymentPreferencesSpec extends AnyFreeSpec with Matchers {
     "when bank account details and eldest child are present" in {
 
       val preference = EveryFourWeeks(
-        Some(BankAccount("applicant", "first", "last", "000000", "00000000", Some(BankAccountInsightsResponseModel("correlation", 0, "foo")))),
+        Some(
+          BankAccount(
+            "applicant",
+            "first",
+            "last",
+            "000000",
+            "00000000",
+            Some(BankAccountInsightsResponseModel("correlation", 0, "foo"))
+          )
+        ),
         Some(EldestChild(ChildName("first", None, "last"), dateOfBirth))
       )
       val json = Json.toJson(preference)
 
-      json mustEqual Json.obj(
+      json `mustEqual` Json.obj(
         "wantsToBePaid" -> true,
-        "frequency" -> PaymentFrequency.EveryFourWeeks.toString,
+        "frequency"     -> PaymentFrequency.EveryFourWeeks.toString,
         "account" -> Json.obj(
-          "holder" -> "applicant",
-          "firstName" -> "first",
-          "lastName" -> "last",
-          "sortCode" -> "000000",
+          "holder"        -> "applicant",
+          "firstName"     -> "first",
+          "lastName"      -> "last",
+          "sortCode"      -> "000000",
           "accountNumber" -> "00000000",
           "bankAccountInsightsResult" -> Json.obj(
             "correlationId" -> "correlation",
-            "riskScore" -> 0,
-            "reason" -> "foo"
+            "riskScore"     -> 0,
+            "reason"        -> "foo"
           )
         ),
         "eldestChild" -> Json.obj(
           "name" -> Json.obj(
             "firstName" -> "first",
-            "lastName" -> "last"
+            "lastName"  -> "last"
           ),
           "dateOfBirth" -> "2020-12-31"
         )
@@ -115,10 +133,10 @@ class PaymentPreferencesSpec extends AnyFreeSpec with Matchers {
       val preference = EveryFourWeeks(None, None)
       val json = Json.toJson(preference)
 
-      json mustEqual Json.obj(
+      json `mustEqual` Json.obj(
         "wantsToBePaid" -> true,
-        "frequency" -> PaymentFrequency.EveryFourWeeks.toString,
-        "account" -> "no suitable account"
+        "frequency"     -> PaymentFrequency.EveryFourWeeks.toString,
+        "account"       -> "no suitable account"
       )
     }
   }
@@ -131,12 +149,12 @@ class PaymentPreferencesSpec extends AnyFreeSpec with Matchers {
 
       val json = Json.toJson(preference)
 
-      json mustEqual Json.obj(
+      json `mustEqual` Json.obj(
         "wantsToBePaid" -> false,
         "eldestChild" -> Json.obj(
           "name" -> Json.obj(
             "firstName" -> "first",
-            "lastName" -> "last"
+            "lastName"  -> "last"
           ),
           "dateOfBirth" -> "2020-12-31"
         )
@@ -149,7 +167,7 @@ class PaymentPreferencesSpec extends AnyFreeSpec with Matchers {
 
       val json = Json.toJson(preference)
 
-      json mustEqual Json.obj(
+      json `mustEqual` Json.obj(
         "wantsToBePaid" -> false
       )
     }
@@ -162,12 +180,12 @@ class PaymentPreferencesSpec extends AnyFreeSpec with Matchers {
       val preference = ExistingAccount(Some(EldestChild(ChildName("first", None, "last"), dateOfBirth)))
       val json = Json.toJson(preference)
 
-      json mustEqual Json.obj(
+      json `mustEqual` Json.obj(
         "wantsToBePaid" -> true,
         "eldestChild" -> Json.obj(
           "name" -> Json.obj(
             "firstName" -> "first",
-            "lastName" -> "last"
+            "lastName"  -> "last"
           ),
           "dateOfBirth" -> "2020-12-31"
         ),
@@ -180,9 +198,9 @@ class PaymentPreferencesSpec extends AnyFreeSpec with Matchers {
       val preference = ExistingAccount(None)
       val json = Json.toJson(preference)
 
-      json mustEqual Json.obj(
+      json `mustEqual` Json.obj(
         "wantsToBePaid" -> true,
-        "account" -> "use existing account"
+        "account"       -> "use existing account"
       )
     }
   }

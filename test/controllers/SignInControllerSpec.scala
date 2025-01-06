@@ -23,6 +23,7 @@ import forms.SignInFormProvider
 import pages.{EmptyWaypoints, TaskListPage}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 import views.html.SignInView
 
 class SignInControllerSpec extends SpecBase {
@@ -43,8 +44,8 @@ class SignInControllerSpec extends SpecBase {
         val result = route(application, request).value
         val view = application.injector.instanceOf[SignInView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, EmptyWaypoints)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, EmptyWaypoints)(request, messages(application)).toString
       }
     }
 
@@ -58,8 +59,10 @@ class SignInControllerSpec extends SpecBase {
         val result = route(application, request).value
         val config = application.injector.instanceOf[FrontendAppConfig]
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual authRoutes.AuthController.redirectToLogin(config.loginContinueUrl + config.signedInUrl).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` authRoutes.AuthController
+          .redirectToLogin(RedirectUrl(config.loginContinueUrl + config.signedInUrl))
+          .url
       }
     }
 
@@ -72,11 +75,11 @@ class SignInControllerSpec extends SpecBase {
         val request = FakeRequest(POST, signInRoute).withFormUrlEncodedBody("value" -> "false")
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual TaskListPage.route(EmptyWaypoints).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` TaskListPage.route(EmptyWaypoints).url
       }
     }
-    
+
     "must return a bad request when invalid data is submitted" in {
 
       val application = applicationBuilder(None).build()
@@ -88,8 +91,8 @@ class SignInControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[SignInView]
         val boundForm = form.bind(Map("value" -> ""))
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, EmptyWaypoints)(request, messages(application)).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, EmptyWaypoints)(request, messages(application)).toString
       }
     }
   }

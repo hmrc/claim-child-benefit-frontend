@@ -43,14 +43,20 @@ class EldestChildSpec extends AnyFreeSpec with Matchers with ModelGenerators wit
 
         val answers =
           UserAnswers("id")
-            .set(PartnerClaimingChildBenefitPage, claiming).success.value
-            .set(PartnerEldestChildNamePage, childName).success.value
-            .set(PartnerEldestChildDateOfBirthPage, LocalDate.now).success.value
+            .set(PartnerClaimingChildBenefitPage, claiming)
+            .success
+            .value
+            .set(PartnerEldestChildNamePage, childName)
+            .success
+            .value
+            .set(PartnerEldestChildDateOfBirthPage, LocalDate.now)
+            .success
+            .value
 
         val (errors, data) = EldestChild.buildPartnerEldestChild(answers).pad
 
-        data.value.value mustEqual EldestChild(childName, LocalDate.now)
-        errors must not be defined
+        data.value.value `mustEqual` EldestChild(childName, LocalDate.now)
+        errors `must` `not` `be` defined
       }
 
       "must return errors when any details are missing" in {
@@ -59,8 +65,8 @@ class EldestChildSpec extends AnyFreeSpec with Matchers with ModelGenerators wit
 
         val (errors, data) = EldestChild.buildPartnerEldestChild(answers).pad
 
-        data must not be defined
-        errors.value.toChain.toList must contain theSameElementsAs Seq(
+        data `must` `not` `be` defined
+        errors.value.toChain.toList `must` contain theSameElementsAs Seq(
           PartnerEldestChildNamePage,
           PartnerEldestChildDateOfBirthPage
         )
@@ -75,8 +81,8 @@ class EldestChildSpec extends AnyFreeSpec with Matchers with ModelGenerators wit
 
         val (errors, data) = EldestChild.buildPartnerEldestChild(answers).pad
 
-        data.value must not be defined
-        errors must not be defined
+        data.value `must` `not` `be` defined
+        errors `must` `not` `be` defined
       }
     }
 
@@ -86,8 +92,8 @@ class EldestChildSpec extends AnyFreeSpec with Matchers with ModelGenerators wit
 
       val (errors, data) = EldestChild.buildPartnerEldestChild(answers).pad
 
-      data must not be defined
-      errors.value.toChain.toList must contain only PartnerClaimingChildBenefitPage
+      data `must` `not` `be` defined
+      errors.value.toChain.toList `must` contain `only` PartnerClaimingChildBenefitPage
     }
   }
 
@@ -97,13 +103,17 @@ class EldestChildSpec extends AnyFreeSpec with Matchers with ModelGenerators wit
 
       val answers =
         UserAnswers("id")
-          .set(EldestChildNamePage, childName).success.value
-          .set(EldestChildDateOfBirthPage, LocalDate.now).success.value
+          .set(EldestChildNamePage, childName)
+          .success
+          .value
+          .set(EldestChildDateOfBirthPage, LocalDate.now)
+          .success
+          .value
 
       val (errors, data) = EldestChild.buildApplicantEldestChild(answers).pad
 
-      data.value mustEqual EldestChild(childName, LocalDate.now)
-      errors must not be defined
+      data.value `mustEqual` EldestChild(childName, LocalDate.now)
+      errors `must` `not` `be` defined
     }
 
     "must return errors when any details are missing" in {
@@ -112,8 +122,8 @@ class EldestChildSpec extends AnyFreeSpec with Matchers with ModelGenerators wit
 
       val (errors, data) = EldestChild.buildApplicantEldestChild(answers).pad
 
-      data must not be defined
-      errors.value.toChain.toList must contain theSameElementsAs Seq(
+      data `must` `not` `be` defined
+      errors.value.toChain.toList `must` contain theSameElementsAs Seq(
         EldestChildNamePage,
         EldestChildDateOfBirthPage
       )

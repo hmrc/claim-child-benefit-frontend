@@ -24,7 +24,7 @@
         continueButton: components.ContinueButton
 )
 
-@(form: Form[_], waypoints: Waypoints, index: Index, childName: ChildName)(implicit request: Request[_], messages: Messages)
+@(form: Form[?], waypoints: Waypoints, index: Index, childName: ChildName)(implicit request: Request[?], messages: Messages)
 
 @layout(pageTitle = title(form, messages("childLivedWithAnyoneElse.title"))) {
 

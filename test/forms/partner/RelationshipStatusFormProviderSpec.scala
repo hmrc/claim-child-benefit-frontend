@@ -32,7 +32,7 @@ class RelationshipStatusFormProviderSpec extends OptionFieldBehaviours {
     behave like optionsField[RelationshipStatus](
       form,
       fieldName,
-      validValues  = RelationshipStatus.values,
+      validValues = RelationshipStatus.values,
       invalidError = FormError(fieldName, "error.invalid")
     )
 

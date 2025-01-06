@@ -31,18 +31,18 @@ class RelationshipStatusChangesTaskListControllerSpec extends SpecBase {
 
     "must return OK and the correct view for a GET" in {
 
-        val answers = emptyUserAnswers.set(RelationshipStatusChangesTaskListPage, true).success.value
-        val application = applicationBuilder(userAnswers = Some(answers)).build()
+      val answers = emptyUserAnswers.set(RelationshipStatusChangesTaskListPage, true).success.value
+      val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-        running(application) {
-          val request = FakeRequest(GET, routes.RelationshipStatusChangesTaskListController.onPageLoad().url)
+      running(application) {
+        val request = FakeRequest(GET, routes.RelationshipStatusChangesTaskListController.onPageLoad().url)
 
-          val result = route(application, request).value
+        val result = route(application, request).value
 
-          val view = application.injector.instanceOf[RelationshipStatusChangesTaskListView]
+        val view = application.injector.instanceOf[RelationshipStatusChangesTaskListView]
 
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(waypoints)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(waypoints)(request, messages(application)).toString
       }
     }
 
@@ -55,8 +55,11 @@ class RelationshipStatusChangesTaskListControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual RelationshipStatusChangesTaskListPage.navigate(waypoints, emptyUserAnswers, emptyUserAnswers).route.url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` RelationshipStatusChangesTaskListPage
+          .navigate(waypoints, emptyUserAnswers, emptyUserAnswers)
+          .route
+          .url
       }
     }
   }

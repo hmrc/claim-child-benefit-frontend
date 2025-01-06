@@ -30,6 +30,7 @@ import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
 import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, CredentialStrength, MissingBearerToken}
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
@@ -54,7 +55,9 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
         "they must be redirected to uplift MFA" in {
 
           val authAction = new OptionalAuthIdentifierAction(
-            new FakeAuthConnector(Some(Individual) ~ Some(CredentialStrength.weak) ~ Some(ConfidenceLevel.L250) ~ Some(userId) ~ Some(nino)),
+            new FakeAuthConnector(
+              Some(Individual) ~ Some(CredentialStrength.weak) ~ ConfidenceLevel.L250 ~ Some(userId) ~ Some(nino)
+            ),
             bodyParsers,
             config
           )
@@ -62,8 +65,10 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
 
           val result = authAction(a => Ok(a.userId))(request)
 
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual "http://localhost:9553/bas-gateway/uplift-mfa?origin=CHB&continueUrl=http%3A%2F%2Flocalhost%3A11303%2F"
+          status(result) `mustEqual` SEE_OTHER
+          redirectLocation(
+            result
+          ).value `mustEqual` "http://localhost:9553/bas-gateway/uplift-mfa?origin=CHB&continueUrl=http%3A%2F%2Flocalhost%3A11303%2F"
         }
       }
 
@@ -74,7 +79,9 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
           "they must be redirected to Unsupported Affinity Group - Agent" in {
 
             val authAction = new OptionalAuthIdentifierAction(
-              new FakeAuthConnector(Some(Agent) ~ Some(CredentialStrength.strong) ~ ConfidenceLevel.L50 ~ Some(userId) ~ Some(nino)),
+              new FakeAuthConnector(
+                Some(Agent) ~ Some(CredentialStrength.strong) ~ ConfidenceLevel.L50 ~ Some(userId) ~ Some(nino)
+              ),
               bodyParsers,
               config
             )
@@ -82,8 +89,10 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
 
             val result = authAction(a => Ok(a.userId))(request)
 
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual authRoutes.AuthController.unsupportedAffinityGroupAgent("http://localhost:11303/").url
+            status(result) `mustEqual` SEE_OTHER
+            redirectLocation(result).value `mustEqual` authRoutes.AuthController
+              .unsupportedAffinityGroupAgent(RedirectUrl("http://localhost:11303/"))
+              .url
           }
         }
 
@@ -92,7 +101,9 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
           "they must be redirected to Unsupported Affinity Group - Organisation" in {
 
             val authAction = new OptionalAuthIdentifierAction(
-              new FakeAuthConnector(Some(Organisation) ~ Some(CredentialStrength.strong) ~ ConfidenceLevel.L50 ~ Some(userId) ~ Some(nino)),
+              new FakeAuthConnector(
+                Some(Organisation) ~ Some(CredentialStrength.strong) ~ ConfidenceLevel.L50 ~ Some(userId) ~ Some(nino)
+              ),
               bodyParsers,
               config
             )
@@ -100,8 +111,10 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
 
             val result = authAction(a => Ok(a.userId))(request)
 
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual authRoutes.AuthController.unsupportedAffinityGroupOrganisation("http://localhost:11303/").url
+            status(result) `mustEqual` SEE_OTHER
+            redirectLocation(result).value `mustEqual` authRoutes.AuthController
+              .unsupportedAffinityGroupOrganisation(RedirectUrl("http://localhost:11303/"))
+              .url
           }
         }
 
@@ -112,16 +125,20 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
             "must be redirected to uplift their confidence level" in {
 
               val authAction = new OptionalAuthIdentifierAction(
-                new FakeAuthConnector(Some(Individual) ~ Some(CredentialStrength.strong) ~ ConfidenceLevel.L200 ~ Some(userId) ~ Some(nino)),
+                new FakeAuthConnector(
+                  Some(Individual) ~ Some(CredentialStrength.strong) ~ ConfidenceLevel.L200 ~ Some(userId) ~ Some(nino)
+                ),
                 bodyParsers,
                 config
               )
-              val request = FakeRequest().withSession(SessionKeys.sessionId -> sessionId)
+              val request = FakeRequest("GET", "/some/redirect").withSession(SessionKeys.sessionId -> sessionId)
 
               val result = authAction(a => Ok(a.userId))(request)
 
-              status(result) mustEqual SEE_OTHER
-              redirectLocation(result).value mustEqual "http://localhost:9948/iv-stub/uplift?origin=CHB&confidenceLevel=250&completionURL=http%3A%2F%2Flocalhost%3A11303%2F&failureURL=http%3A%2F%2Flocalhost%3A11303%2Ffill-online%2Fclaim-child-benefit%2Fidentity-verification%2Fcomplete%3FcontinueUrl%3D%252F"
+              status(result) `mustEqual` SEE_OTHER
+              redirectLocation(
+                result
+              ).value `mustEqual` "http://localhost:9948/iv-stub/uplift?origin=CHB&confidenceLevel=250&completionURL=http%3A%2F%2Flocalhost%3A11303%2Fsome%2Fredirect&failureURL=http%3A%2F%2Flocalhost%3A11303%2Ffill-online%2Fclaim-child-benefit%2Fidentity-verification%2Fcomplete%3FcontinueUrl%3D%252Fsome%252Fredirect"
             }
           }
 
@@ -130,19 +147,25 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
             "they must get redirected to PEGA" in {
 
               val authAction = new OptionalAuthIdentifierAction(
-                new FakeAuthConnector(Some(Individual) ~ Some(CredentialStrength.strong) ~ ConfidenceLevel.L250 ~ Some(userId) ~ Some(nino)),
+                new FakeAuthConnector(
+                  Some(Individual) ~ Some(CredentialStrength.strong) ~ ConfidenceLevel.L250 ~ Some(userId) ~ Some(nino)
+                ),
                 bodyParsers,
                 config
               )
               val request = FakeRequest().withSession(SessionKeys.sessionId -> sessionId)
 
-              val result = authAction(a => a match {
-                case x: AuthenticatedIdentifierRequest[_] => Ok(s"${x.userId} ${x.nino}")
-                case y: UnauthenticatedIdentifierRequest[_] => Ok(y.userId)
-              })(request)
+              val result = authAction(a =>
+                a match {
+                  case x: AuthenticatedIdentifierRequest[?]   => Ok(s"${x.userId} ${x.nino}")
+                  case y: UnauthenticatedIdentifierRequest[?] => Ok(y.userId)
+                }
+              )(request)
 
-              status(result) mustEqual SEE_OTHER
-              redirectLocation(result).value mustEqual "https://account.hmrc.gov.uk/child-benefit/make_a_claim/recently-claimed-child-benefit"
+              status(result) `mustEqual` SEE_OTHER
+              redirectLocation(
+                result
+              ).value `mustEqual` "https://account.hmrc.gov.uk/child-benefit/make_a_claim/recently-claimed-child-benefit"
             }
           }
         }
@@ -153,38 +176,48 @@ class OptionalAuthIdentifierActionSpec extends SpecBase {
 
       "must use an UnauthenticatedIdentifierRequest" in {
 
-        val authAction = new OptionalAuthIdentifierAction(new FakeFailingAuthConnector(MissingBearerToken()), bodyParsers, config)
+        val authAction =
+          new OptionalAuthIdentifierAction(new FakeFailingAuthConnector(MissingBearerToken()), bodyParsers, config)
         val request = FakeRequest().withSession(SessionKeys.sessionId -> sessionId)
 
-        val result = authAction(a => a match {
-          case x: AuthenticatedIdentifierRequest[_] => Ok(s"${x.userId} ${x.nino}")
-          case y: UnauthenticatedIdentifierRequest[_] => Ok(y.userId)
-        })(request)
+        val result = authAction(a =>
+          a match {
+            case x: AuthenticatedIdentifierRequest[?]   => Ok(s"${x.userId} ${x.nino}")
+            case y: UnauthenticatedIdentifierRequest[?] => Ok(y.userId)
+          }
+        )(request)
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual sessionId
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` sessionId
       }
 
       "must redirect to the session expired page when the user is unauthenticated and has no session identifier" in {
 
-        val authAction = new OptionalAuthIdentifierAction(new FakeFailingAuthConnector(new MissingBearerToken), bodyParsers, config)
+        val authAction =
+          new OptionalAuthIdentifierAction(new FakeFailingAuthConnector(new MissingBearerToken), bodyParsers, config)
         val request = FakeRequest()
 
         val result = authAction(a => Ok(a.userId))(request)
 
-        status(result) mustBe SEE_OTHER
+        status(result) `mustBe` SEE_OTHER
         redirectLocation(result).value must startWith(controllers.routes.JourneyRecoveryController.onPageLoad().url)
       }
     }
   }
 
   class FakeAuthConnector[T](value: T) extends AuthConnector {
-    override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
+    override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext
+    ): Future[A] =
       Future.fromTry(Try(value.asInstanceOf[A]))
   }
 
   class FakeFailingAuthConnector(exceptionToReturn: Throwable) extends AuthConnector {
-    override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
+    override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext
+    ): Future[A] =
       Future.failed(exceptionToReturn)
   }
 }

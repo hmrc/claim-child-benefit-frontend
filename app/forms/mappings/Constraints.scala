@@ -68,7 +68,7 @@ trait Constraints {
         if (input >= minimum && input <= maximum) {
           Valid
         } else {
-          Invalid(errorKey, Seq(minimum, maximum) ++ args: _*)
+          Invalid(errorKey, Seq(minimum, maximum) ++ args*)
         }
     }
 
@@ -77,7 +77,7 @@ trait Constraints {
       case str if str.matches(regex.toString) =>
         Valid
       case _ =>
-        Invalid(errorKey, regex.toString +: args: _*)
+        Invalid(errorKey, regex.toString +: args*)
     }
 
   protected def maxLength(maximum: Int, errorKey: String, args: Any*): Constraint[String] =
@@ -85,13 +85,13 @@ trait Constraints {
       case str if str.length <= maximum =>
         Valid
       case _ =>
-        Invalid(errorKey, maximum +: args: _*)
+        Invalid(errorKey, maximum +: args*)
     }
 
   protected def maxDate(maximum: LocalDate, errorKey: String, args: Any*): Constraint[LocalDate] =
     Constraint {
       case date if date.isAfter(maximum) =>
-        Invalid(errorKey, args: _*)
+        Invalid(errorKey, args*)
       case _ =>
         Valid
     }
@@ -99,23 +99,23 @@ trait Constraints {
   protected def minDate(minimum: LocalDate, errorKey: String, args: Any*): Constraint[LocalDate] =
     Constraint {
       case date if date.isBefore(minimum) =>
-        Invalid(errorKey, args: _*)
+        Invalid(errorKey, args*)
       case _ =>
         Valid
     }
 
-  protected def nonEmptySet(errorKey: String, args: Any*): Constraint[Set[_]] =
+  protected def nonEmptySet(errorKey: String, args: Any*): Constraint[Set[?]] =
     Constraint {
       case set if set.nonEmpty =>
         Valid
       case _ =>
-        Invalid(errorKey, args: _*)
+        Invalid(errorKey, args*)
     }
 
   protected def noMutuallyExclusiveAnswers[A](set1: Set[A], set2: Set[A], errorKey: String, args: Any*): Constraint[Set[A]] =
     Constraint {
       case set if set.intersect(set1).nonEmpty && set.intersect(set2).nonEmpty =>
-        Invalid(errorKey, args: _*)
+        Invalid(errorKey, args*)
       case _ =>
         Valid
     }
@@ -127,7 +127,7 @@ trait Constraints {
 
     Constraint {
       case answer if filteredAnswers.map(_._1) contains answer =>
-        Invalid(errorKey, args: _*)
+        Invalid(errorKey, args*)
       case _ =>
         Valid
     }

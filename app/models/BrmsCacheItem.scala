@@ -35,14 +35,14 @@ object BrmsCacheItem {
       (__ \ "request").read[BirthRegistrationMatchingRequest] and
       (__ \ "result").read[BirthRegistrationMatchingResult] and
       (__ \ "timestamp").read(MongoJavatimeFormats.instantFormat)
-    )(BrmsCacheItem.apply _)
+    )(BrmsCacheItem.apply)
 
   val writes: OWrites[BrmsCacheItem] =
     (
       (__ \ "request").write[BirthRegistrationMatchingRequest] and
       (__ \ "result").write[BirthRegistrationMatchingResult] and
       (__ \ "timestamp").write(MongoJavatimeFormats.instantFormat)
-    )(unlift(BrmsCacheItem.unapply))
+    )(unlift((o:BrmsCacheItem) => Some(Tuple.fromProductTyped(o))))
 
   implicit val format: OFormat[BrmsCacheItem] = OFormat(reads, writes)
 }

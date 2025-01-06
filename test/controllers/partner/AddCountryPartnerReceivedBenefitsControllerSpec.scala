@@ -44,7 +44,8 @@ class AddCountryPartnerReceivedBenefitsControllerSpec extends SpecBase with Mock
   private val waypoints = EmptyWaypoints
   private val baseAnswers = emptyUserAnswers.set(PartnerNamePage, name).success.value
 
-  lazy val addCountryPartnerReceivedBenefitsRoute = routes.AddCountryPartnerReceivedBenefitsController.onPageLoad(waypoints).url
+  lazy val addCountryPartnerReceivedBenefitsRoute =
+    routes.AddCountryPartnerReceivedBenefitsController.onPageLoad(waypoints).url
 
   "AddCountryPartnerReceivedBenefits Controller" - {
 
@@ -60,10 +61,17 @@ class AddCountryPartnerReceivedBenefitsControllerSpec extends SpecBase with Mock
         val view = application.injector.instanceOf[AddCountryPartnerReceivedBenefitsView]
 
         implicit val msgs: Messages = messages(application)
-        val nationalities = AddCountryPartnerReceivedBenefitsSummary.rows(emptyUserAnswers, waypoints, AddCountryPartnerReceivedBenefitsPage())
+        val nationalities = AddCountryPartnerReceivedBenefitsSummary.rows(
+          emptyUserAnswers,
+          waypoints,
+          AddCountryPartnerReceivedBenefitsPage()
+        )
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, nationalities, name.firstName)(request, implicitly).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints, nationalities, name.firstName)(
+          request,
+          implicitly
+        ).toString
       }
     }
 
@@ -71,7 +79,7 @@ class AddCountryPartnerReceivedBenefitsControllerSpec extends SpecBase with Mock
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -88,8 +96,10 @@ class AddCountryPartnerReceivedBenefitsControllerSpec extends SpecBase with Mock
         val result = route(application, request).value
         val expectedAnswers = baseAnswers.set(AddCountryPartnerReceivedBenefitsPage(), true).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual AddCountryPartnerReceivedBenefitsPage().navigate(waypoints, baseAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` AddCountryPartnerReceivedBenefitsPage()
+          .navigate(waypoints, baseAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -108,12 +118,16 @@ class AddCountryPartnerReceivedBenefitsControllerSpec extends SpecBase with Mock
         val view = application.injector.instanceOf[AddCountryPartnerReceivedBenefitsView]
 
         implicit val msgs: Messages = messages(application)
-        val nationalities = AddCountryPartnerReceivedBenefitsSummary.rows(baseAnswers, waypoints, AddCountryPartnerReceivedBenefitsPage())
+        val nationalities =
+          AddCountryPartnerReceivedBenefitsSummary.rows(baseAnswers, waypoints, AddCountryPartnerReceivedBenefitsPage())
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, nationalities, name.firstName)(request, implicitly).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints, nationalities, name.firstName)(
+          request,
+          implicitly
+        ).toString
       }
     }
 
@@ -126,8 +140,8 @@ class AddCountryPartnerReceivedBenefitsControllerSpec extends SpecBase with Mock
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -142,8 +156,8 @@ class AddCountryPartnerReceivedBenefitsControllerSpec extends SpecBase with Mock
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

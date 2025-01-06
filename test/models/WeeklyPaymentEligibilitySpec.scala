@@ -27,49 +27,49 @@ class WeeklyPaymentEligibilitySpec extends AnyFreeSpec with Matchers with Option
   ".eligible" - {
 
     "must be true if the user is Single" in {
-      WeeklyPaymentEligibility(Single, None).eligible mustEqual true
+      WeeklyPaymentEligibility(Single, None).eligible `mustEqual` true
     }
 
     "must be true if the user is Separated" in {
-      WeeklyPaymentEligibility(Separated, None).eligible mustEqual true
+      WeeklyPaymentEligibility(Separated, None).eligible `mustEqual` true
     }
 
     "must be true if the user is Divorced" in {
-      WeeklyPaymentEligibility(Divorced, None).eligible mustEqual true
+      WeeklyPaymentEligibility(Divorced, None).eligible `mustEqual` true
     }
 
     "must be true if the user is Widowed" in {
-      WeeklyPaymentEligibility(Widowed, None).eligible mustEqual true
+      WeeklyPaymentEligibility(Widowed, None).eligible `mustEqual` true
     }
 
     "must be true if the user is Married and has any qualifying benefits" in {
 
       val benefits = Set(Gen.oneOf(Benefits.qualifyingBenefits).sample.value)
 
-      WeeklyPaymentEligibility(Married, Some(benefits)).eligible mustEqual true
+      WeeklyPaymentEligibility(Married, Some(benefits)).eligible `mustEqual` true
     }
 
     "must be true if the user is Cohabiting and has any qualifying benefits" in {
 
       val benefits = Set(Gen.oneOf(Benefits.qualifyingBenefits).sample.value)
 
-      WeeklyPaymentEligibility(Cohabiting, Some(benefits)).eligible mustEqual true
+      WeeklyPaymentEligibility(Cohabiting, Some(benefits)).eligible `mustEqual` true
     }
 
     "must be false if the user is Married and has no qualifying benefits" in {
-      WeeklyPaymentEligibility(Married, Some(Set(Benefits.NoneOfTheAbove))).eligible mustEqual false
+      WeeklyPaymentEligibility(Married, Some(Set(Benefits.NoneOfTheAbove))).eligible `mustEqual` false
     }
 
     "must be false if the user is Cohabiting and has no qualifying benefits" in {
-      WeeklyPaymentEligibility(Cohabiting, Some(Set(Benefits.NoneOfTheAbove))).eligible mustEqual false
+      WeeklyPaymentEligibility(Cohabiting, Some(Set(Benefits.NoneOfTheAbove))).eligible `mustEqual` false
     }
 
     "must be false if the user is Married and there are no benefits at all" in {
-      WeeklyPaymentEligibility(Married, None).eligible mustEqual false
+      WeeklyPaymentEligibility(Married, None).eligible `mustEqual` false
     }
 
     "must be false if the user is Cohabiting and there are no benefits at all" in {
-      WeeklyPaymentEligibility(Cohabiting, None).eligible mustEqual false
+      WeeklyPaymentEligibility(Cohabiting, None).eligible `mustEqual` false
     }
   }
 }

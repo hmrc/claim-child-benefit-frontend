@@ -22,6 +22,7 @@ import pages.{NonEmptyWaypoints, Page, QuestionPage, Waypoints}
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 import queries.Settable
+import pages.RecoveryOps
 
 import scala.util.{Success, Try}
 
@@ -70,7 +71,7 @@ case object AlwaysLivedInUkPage extends QuestionPage[Boolean] {
     value.map {
       case true =>
 
-        val maybeRemoveLivedHereAYear: Option[Settable[_]] =
+        val maybeRemoveLivedHereAYear: Option[Settable[?]] =
           userAnswers
             .get(ApplicantPreviousInternationalAddressPage)
             .map(_ => ApplicantLivedAtCurrentAddressOneYearPage)
@@ -94,7 +95,7 @@ case object AlwaysLivedInUkPage extends QuestionPage[Boolean] {
         setPagesToTrue(userAnswers, pagesToSet)
     }.getOrElse(super.cleanup(value, userAnswers))
 
-  private def removePages(answers: UserAnswers, pages: Seq[Settable[_]]): Try[UserAnswers] =
+  private def removePages(answers: UserAnswers, pages: Seq[Settable[?]]): Try[UserAnswers] =
     pages.foldLeft[Try[UserAnswers]](Success(answers))((acc, page) => acc.flatMap(_.remove(page)))
 
   private def setPagesToTrue(answers: UserAnswers, pages: Seq[Settable[Boolean]]): Try[UserAnswers] =

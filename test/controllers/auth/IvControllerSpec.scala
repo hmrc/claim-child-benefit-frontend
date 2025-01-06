@@ -27,6 +27,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 import views.html.auth._
 
 import scala.concurrent.Future
@@ -41,9 +42,10 @@ class IvControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEac
   }
 
   private val journeyId = "journeyId"
-  private val continueUrl = "continueUrl"
+  private val continueUrl = "/continueUrl"
   private val app = applicationBuilder(None).overrides(bind[IvConnector].toInstance(mockIvConnector)).build()
-  private val request = FakeRequest(GET, routes.IvController.handleIvFailure(continueUrl, Some(journeyId)).url)
+  private val request =
+    FakeRequest(GET, routes.IvController.handleIvFailure(RedirectUrl(continueUrl), Some(journeyId)).url)
 
   "handleIvFailure" - {
 
@@ -52,8 +54,8 @@ class IvControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEac
       when(mockIvConnector.getJourneyStatus(eqTo(journeyId))(any())).thenReturn(Future.successful(IvResult.Success))
       val result = route(app, request).value
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual continueUrl
+      status(result) `mustEqual` SEE_OTHER
+      redirectLocation(result).value `mustEqual` continueUrl
     }
 
     "must redirect to Iv Incomplete when the IV journey status is Incomplete" in {
@@ -61,35 +63,40 @@ class IvControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEac
       when(mockIvConnector.getJourneyStatus(eqTo(journeyId))(any())).thenReturn(Future.successful(IvResult.Incomplete))
       val result = route(app, request).value
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.IvController.ivIncomplete.url
+      status(result) `mustEqual` SEE_OTHER
+      redirectLocation(result).value `mustEqual` routes.IvController.ivIncomplete.url
     }
 
     "must redirect to Iv Failed Matching when the IV journey status is FailedMatching" in {
 
-      when(mockIvConnector.getJourneyStatus(eqTo(journeyId))(any())).thenReturn(Future.successful(IvResult.FailedMatching))
+      when(mockIvConnector.getJourneyStatus(eqTo(journeyId))(any()))
+        .thenReturn(Future.successful(IvResult.FailedMatching))
       val result = route(app, request).value
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.IvController.ivFailedMatching.url
+      status(result) `mustEqual` SEE_OTHER
+      redirectLocation(result).value `mustEqual` routes.IvController.ivFailedMatching.url
     }
 
     "must redirect to Iv Failed Identity Verification when the IV journey status is FailedIdentityVerification" in {
 
-      when(mockIvConnector.getJourneyStatus(eqTo(journeyId))(any())).thenReturn(Future.successful(IvResult.FailedIdentityVerification))
+      when(mockIvConnector.getJourneyStatus(eqTo(journeyId))(any()))
+        .thenReturn(Future.successful(IvResult.FailedIdentityVerification))
       val result = route(app, request).value
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.IvController.ivFailedIdentityVerification(continueUrl).url
+      status(result) `mustEqual` SEE_OTHER
+      redirectLocation(result).value `mustEqual` routes.IvController
+        .ivFailedIdentityVerification(RedirectUrl(continueUrl))
+        .url
     }
 
     "must redirect to Iv Insufficient Evidence when the IV journey status is InsufficientEvidence" in {
 
-      when(mockIvConnector.getJourneyStatus(eqTo(journeyId))(any())).thenReturn(Future.successful(IvResult.InsufficientEvidence))
+      when(mockIvConnector.getJourneyStatus(eqTo(journeyId))(any()))
+        .thenReturn(Future.successful(IvResult.InsufficientEvidence))
       val result = route(app, request).value
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.IvController.ivInsufficientEvidence.url
+      status(result) `mustEqual` SEE_OTHER
+      redirectLocation(result).value `mustEqual` routes.IvController.ivInsufficientEvidence.url
     }
 
     "must redirect to Iv User Aborted when the IV journey status is UserAborted" in {
@@ -97,8 +104,8 @@ class IvControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEac
       when(mockIvConnector.getJourneyStatus(eqTo(journeyId))(any())).thenReturn(Future.successful(IvResult.UserAborted))
       val result = route(app, request).value
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.IvController.ivUserAborted(continueUrl).url
+      status(result) `mustEqual` SEE_OTHER
+      redirectLocation(result).value `mustEqual` routes.IvController.ivUserAborted(RedirectUrl(continueUrl)).url
     }
 
     "must redirect to Iv Locked Out when the IV journey status is LockedOut" in {
@@ -106,26 +113,28 @@ class IvControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEac
       when(mockIvConnector.getJourneyStatus(eqTo(journeyId))(any())).thenReturn(Future.successful(IvResult.LockedOut))
       val result = route(app, request).value
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.IvController.ivLockedOut.url
+      status(result) `mustEqual` SEE_OTHER
+      redirectLocation(result).value `mustEqual` routes.IvController.ivLockedOut.url
     }
 
     "must redirect to Iv Precondition Failed when the IV journey status is IvPreconditionFailed" in {
 
-      when(mockIvConnector.getJourneyStatus(eqTo(journeyId))(any())).thenReturn(Future.successful(IvResult.IvPreconditionFailed))
+      when(mockIvConnector.getJourneyStatus(eqTo(journeyId))(any()))
+        .thenReturn(Future.successful(IvResult.IvPreconditionFailed))
       val result = route(app, request).value
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.IvController.ivPreconditionFailed.url
+      status(result) `mustEqual` SEE_OTHER
+      redirectLocation(result).value `mustEqual` routes.IvController.ivPreconditionFailed.url
     }
 
     "must redirect to Iv Technical Issue when the IV journey status is IvTechnicalIssue" in {
 
-      when(mockIvConnector.getJourneyStatus(eqTo(journeyId))(any())).thenReturn(Future.successful(IvResult.TechnicalIssue))
+      when(mockIvConnector.getJourneyStatus(eqTo(journeyId))(any()))
+        .thenReturn(Future.successful(IvResult.TechnicalIssue))
       val result = route(app, request).value
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.IvController.ivTechnicalIssue.url
+      status(result) `mustEqual` SEE_OTHER
+      redirectLocation(result).value `mustEqual` routes.IvController.ivTechnicalIssue.url
     }
 
     "must redirect to Iv Timeout when the IV journey status is IvTimeout" in {
@@ -133,17 +142,17 @@ class IvControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEac
       when(mockIvConnector.getJourneyStatus(eqTo(journeyId))(any())).thenReturn(Future.successful(IvResult.Timeout))
       val result = route(app, request).value
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.IvController.ivTimeout.url
+      status(result) `mustEqual` SEE_OTHER
+      redirectLocation(result).value `mustEqual` routes.IvController.ivTimeout.url
     }
 
     "must redirect to Iv Error when called with no journey Id" in {
 
-      val request = FakeRequest(GET, routes.IvController.handleIvFailure(continueUrl, None).url)
+      val request = FakeRequest(GET, routes.IvController.handleIvFailure(RedirectUrl(continueUrl), None).url)
       val result = route(app, request).value
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.IvController.ivError.url
+      status(result) `mustEqual` SEE_OTHER
+      redirectLocation(result).value `mustEqual` routes.IvController.ivError.url
     }
   }
 
@@ -156,8 +165,8 @@ class IvControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEac
 
       val view = app.injector.instanceOf[IvIncompleteView]
 
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view()(request, messages(app)).toString
+      status(result) `mustEqual` OK
+      contentAsString(result) `mustEqual` view()(request, messages(app)).toString
     }
   }
 
@@ -170,8 +179,8 @@ class IvControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEac
 
       val view = app.injector.instanceOf[IvFailedMatchingView]
 
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view()(request, messages(app)).toString
+      status(result) `mustEqual` OK
+      contentAsString(result) `mustEqual` view()(request, messages(app)).toString
     }
   }
 
@@ -179,13 +188,13 @@ class IvControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEac
 
     "must return OK and the correct view" in {
 
-      val request = FakeRequest(GET, routes.IvController.ivFailedIdentityVerification(continueUrl).url)
+      val request = FakeRequest(GET, routes.IvController.ivFailedIdentityVerification(RedirectUrl(continueUrl)).url)
       val result = route(app, request).value
 
       val view = app.injector.instanceOf[IvFailedIdentityVerificationView]
 
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view(continueUrl)(request, messages(app)).toString
+      status(result) `mustEqual` OK
+      contentAsString(result) `mustEqual` view(continueUrl)(request, messages(app)).toString
     }
   }
 
@@ -198,8 +207,8 @@ class IvControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEac
 
       val view = app.injector.instanceOf[IvInsufficientEvidenceView]
 
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view()(request, messages(app)).toString
+      status(result) `mustEqual` OK
+      contentAsString(result) `mustEqual` view()(request, messages(app)).toString
     }
   }
 
@@ -207,13 +216,13 @@ class IvControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEac
 
     "must return OK and the correct view" in {
 
-      val request = FakeRequest(GET, routes.IvController.ivUserAborted(continueUrl).url)
+      val request = FakeRequest(GET, routes.IvController.ivUserAborted(RedirectUrl(continueUrl)).url)
       val result = route(app, request).value
 
       val view = app.injector.instanceOf[IvUserAbortedView]
 
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view(continueUrl)(request, messages(app)).toString
+      status(result) `mustEqual` OK
+      contentAsString(result) `mustEqual` view(continueUrl)(request, messages(app)).toString
     }
   }
 
@@ -226,8 +235,8 @@ class IvControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEac
 
       val view = app.injector.instanceOf[IvLockedOutView]
 
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view()(request, messages(app)).toString
+      status(result) `mustEqual` OK
+      contentAsString(result) `mustEqual` view()(request, messages(app)).toString
     }
   }
 
@@ -240,8 +249,8 @@ class IvControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEac
 
       val view = app.injector.instanceOf[IvPreconditionFailedView]
 
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view()(request, messages(app)).toString
+      status(result) `mustEqual` OK
+      contentAsString(result) `mustEqual` view()(request, messages(app)).toString
     }
   }
 
@@ -254,8 +263,8 @@ class IvControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEac
 
       val view = app.injector.instanceOf[IvTechnicalIssueView]
 
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view()(request, messages(app)).toString
+      status(result) `mustEqual` OK
+      contentAsString(result) `mustEqual` view()(request, messages(app)).toString
     }
   }
 
@@ -268,8 +277,8 @@ class IvControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEac
 
       val view = app.injector.instanceOf[IvTimeoutView]
 
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view()(request, messages(app)).toString
+      status(result) `mustEqual` OK
+      contentAsString(result) `mustEqual` view()(request, messages(app)).toString
     }
   }
 
@@ -282,8 +291,8 @@ class IvControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEac
 
       val view = app.injector.instanceOf[IvErrorView]
 
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view()(request, messages(app)).toString
+      status(result) `mustEqual` OK
+      contentAsString(result) `mustEqual` view()(request, messages(app)).toString
     }
   }
 }

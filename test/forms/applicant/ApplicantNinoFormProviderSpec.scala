@@ -59,7 +59,7 @@ class ApplicantNinoFormProviderSpec extends StringFieldBehaviours {
 
     "must not bind values in the wrong format" in {
       val result = form.bind(Map(fieldName -> "GB123456A")).apply(fieldName)
-      result.errors.head mustBe FormError(fieldName, "applicantNino.error.invalid")
+      result.errors.head `mustBe` FormError(fieldName, "applicantNino.error.invalid")
     }
   }
 }

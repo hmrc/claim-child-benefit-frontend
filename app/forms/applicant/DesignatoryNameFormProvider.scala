@@ -48,6 +48,6 @@ class DesignatoryNameFormProvider @Inject() extends Mappings {
           maxLength(35, "designatoryName.error.lastName.length"),
           regexp(Validation.nameInputPattern, "designatoryName.error.lastName.invalid")
         ))
-    )(AdultName.apply)(AdultName.unapply)
+    )(AdultName.apply)(o => Some(Tuple.fromProductTyped(o)))
   )
 }

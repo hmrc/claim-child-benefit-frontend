@@ -128,7 +128,7 @@
                             maybeEldestChild.map(x => eldestChildSection(x))
 
                         case journey.PaymentPreference.ExistingAccount(maybeEldestChild) =>
-                    maybeEldestChild.map(x => eldestChildSection(x))
+                            maybeEldestChild.map(x => eldestChildSection(x))
                     }}
                 </fo:block-container>
             </fo:block>

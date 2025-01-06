@@ -66,8 +66,8 @@ class SubmittedControllerSpec extends SpecBase with MockitoSugar with BeforeAndA
 
         val view = app.injector.instanceOf[SubmittedNoTaxChargeView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(app)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view()(request, messages(app)).toString
       }
 
       "when the applicant opted out of HICBC" in {
@@ -81,8 +81,8 @@ class SubmittedControllerSpec extends SpecBase with MockitoSugar with BeforeAndA
 
         val view = app.injector.instanceOf[SubmittedWithTaxChargeNotBeingPaidView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(app)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view()(request, messages(app)).toString
       }
 
       "when the applicant opted in to HICBC" in {
@@ -97,8 +97,8 @@ class SubmittedControllerSpec extends SpecBase with MockitoSugar with BeforeAndA
 
         val view = app.injector.instanceOf[SubmittedWithTaxChargeBeingPaidView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(taxChargePayer)(request, messages(app)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(taxChargePayer)(request, messages(app)).toString
       }
     }
 
@@ -111,8 +111,8 @@ class SubmittedControllerSpec extends SpecBase with MockitoSugar with BeforeAndA
 
       val result = route(app, request).value
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.RecentlySubmittedController.onPageLoad().url
+      status(result) `mustEqual` SEE_OTHER
+      redirectLocation(result).value `mustEqual` routes.RecentlySubmittedController.onPageLoad().url
     }
 
     "must redirect to the home page when we cannot find a recent claim for this user" in {
@@ -123,8 +123,8 @@ class SubmittedControllerSpec extends SpecBase with MockitoSugar with BeforeAndA
 
       val result = route(app, request).value
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.IndexController.onPageLoad.url
+      status(result) `mustEqual` SEE_OTHER
+      redirectLocation(result).value `mustEqual` routes.IndexController.onPageLoad.url
     }
 
     ".exitSurvey" - {
@@ -139,8 +139,8 @@ class SubmittedControllerSpec extends SpecBase with MockitoSugar with BeforeAndA
 
           val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
-          session(result).get("foo") must not be defined
+          status(result) `mustEqual` SEE_OTHER
+          session(result).get("foo") `must` not `be` defined
         }
       }
     }

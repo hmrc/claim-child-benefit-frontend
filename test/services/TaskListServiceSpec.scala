@@ -32,7 +32,9 @@ import org.scalatestplus.mockito.MockitoSugar
 import pages.partner.RelationshipStatusPage
 import play.api.mvc.Call
 
-class TaskListServiceSpec extends AnyFreeSpec with Matchers with ScalaFutures with MockitoSugar with TryValues with OptionValues with BeforeAndAfterEach {
+class TaskListServiceSpec
+    extends AnyFreeSpec with Matchers with ScalaFutures with MockitoSugar with TryValues with OptionValues
+    with BeforeAndAfterEach {
 
   private val mockApplicantSection = mock[ApplicantSection]
   private val mockChildSection = mock[ChildSection]
@@ -60,9 +62,12 @@ class TaskListServiceSpec extends AnyFreeSpec with Matchers with ScalaFutures wi
         mockPaymentSection
       )
 
-      when(mockApplicantSection.asViewModel(any())).thenReturn(SectionViewModel("applicant", Some(Call("", "app")), Completed))
-      when(mockPartnerSection.asViewModel(any())).thenReturn(SectionViewModel("partner", Some(Call("", "p")), Completed))
-      when(mockChildSection.asViewModel(any())).thenReturn(SectionViewModel("child", Some(Call("", "child")), InProgress))
+      when(mockApplicantSection.asViewModel(any()))
+        .thenReturn(SectionViewModel("applicant", Some(Call("", "app")), Completed))
+      when(mockPartnerSection.asViewModel(any()))
+        .thenReturn(SectionViewModel("partner", Some(Call("", "p")), Completed))
+      when(mockChildSection.asViewModel(any()))
+        .thenReturn(SectionViewModel("child", Some(Call("", "child")), InProgress))
       when(mockPaymentSection.asViewModel(any())).thenReturn(SectionViewModel("payment", None, CannotStart))
 
       val relationshipStatus = Gen.oneOf(Single, Separated, Divorced, Widowed).sample.value
@@ -71,7 +76,7 @@ class TaskListServiceSpec extends AnyFreeSpec with Matchers with ScalaFutures wi
 
       val result = service.sections(answers)
 
-      result mustEqual Seq(
+      result `mustEqual` Seq(
         SectionViewModel("applicant", Some(Call("", "app")), Completed),
         SectionViewModel("partner", Some(Call("", "p")), Completed),
         SectionViewModel("child", Some(Call("", "child")), InProgress),

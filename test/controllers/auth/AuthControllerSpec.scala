@@ -27,6 +27,7 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserDataService
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 import views.html.auth.{UnsupportedAffinityGroupAgentView, UnsupportedAffinityGroupOrganisationView}
 
 import java.time.Instant
@@ -41,7 +42,7 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
       "must clear user answers and redirect to application reset" in {
 
         val mockUserDataService = mock[UserDataService]
-        when(mockUserDataService.clear()(any())) thenReturn Future.successful(Done)
+        when(mockUserDataService.clear()(any())) `thenReturn` Future.successful(Done)
 
         val application =
           applicationBuilder(None)
@@ -56,8 +57,8 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
 
           val expectedRedirectUrl = routes.ApplicationResetController.onPageLoad.url
 
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual expectedRedirectUrl
+          status(result) `mustEqual` SEE_OTHER
+          redirectLocation(result).value `mustEqual` expectedRedirectUrl
           verify(mockUserDataService, times(1)).clear()(any())
         }
       }
@@ -89,10 +90,11 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
 
             val result = route(application, request).value
 
-            val expectedRedirectUrl = "http://localhost:9553/bas-gateway/sign-out-without-state?continue=http%3A%2F%2Flocalhost%3A11303%2Ffill-online%2Fclaim-child-benefit%2Fsubmitted-signed-out"
+            val expectedRedirectUrl =
+              "http://localhost:9553/bas-gateway/sign-out-without-state?continue=http%3A%2F%2Flocalhost%3A11303%2Ffill-online%2Fclaim-child-benefit%2Fsubmitted-signed-out"
 
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual expectedRedirectUrl
+            status(result) `mustEqual` SEE_OTHER
+            redirectLocation(result).value `mustEqual` expectedRedirectUrl
             verify(mockUserDataService, never).clear()(any())
           }
         }
@@ -121,10 +123,11 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
 
             val result = route(application, request).value
 
-            val expectedRedirectUrl = "http://localhost:9553/bas-gateway/sign-out-without-state?continue=http%3A%2F%2Flocalhost%3A11303%2Ffill-online%2Fclaim-child-benefit%2Fsigned-out"
+            val expectedRedirectUrl =
+              "http://localhost:9553/bas-gateway/sign-out-without-state?continue=http%3A%2F%2Flocalhost%3A11303%2Ffill-online%2Fclaim-child-benefit%2Fsigned-out"
 
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual expectedRedirectUrl
+            status(result) `mustEqual` SEE_OTHER
+            redirectLocation(result).value `mustEqual` expectedRedirectUrl
             verify(mockUserDataService, never).clear()(any())
           }
         }
@@ -139,13 +142,14 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(None).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.AuthController.unsupportedAffinityGroupAgent("continueUrl").url)
+        val request =
+          FakeRequest(GET, routes.AuthController.unsupportedAffinityGroupAgent(RedirectUrl("/continueUrl")).url)
 
         val result = route(application, request).value
         val view = application.injector.instanceOf[UnsupportedAffinityGroupAgentView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view("continueUrl")(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view("/continueUrl")(request, messages(application)).toString
       }
     }
   }
@@ -157,13 +161,14 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(None).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.AuthController.unsupportedAffinityGroupOrganisation("continueUrl").url)
+        val request =
+          FakeRequest(GET, routes.AuthController.unsupportedAffinityGroupOrganisation(RedirectUrl("/continueUrl")).url)
 
         val result = route(application, request).value
         val view = application.injector.instanceOf[UnsupportedAffinityGroupOrganisationView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view("continueUrl")(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view("/continueUrl")(request, messages(application)).toString
       }
     }
   }
@@ -175,12 +180,14 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(None).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.AuthController.redirectToRegister("continueUrl").url)
+        val request = FakeRequest(GET, routes.AuthController.redirectToRegister(RedirectUrl("/continueUrl")).url)
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual "http://localhost:9553/bas-gateway/register?origin=CHB&continueUrl=continueUrl&accountType=Individual"
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(
+          result
+        ).value `mustEqual` "http://localhost:9553/bas-gateway/register?origin=CHB&continueUrl=%2FcontinueUrl&accountType=Individual"
       }
     }
   }
@@ -192,12 +199,14 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(None).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.AuthController.redirectToLogin("continueUrl").url)
+        val request = FakeRequest(GET, routes.AuthController.redirectToLogin(RedirectUrl("/continueUrl")).url)
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual "http://localhost:9553/bas-gateway/sign-in?origin=CHB&continue=continueUrl"
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(
+          result
+        ).value `mustEqual` "http://localhost:9553/bas-gateway/sign-in?origin=CHB&continue=%2FcontinueUrl"
       }
     }
   }
@@ -212,15 +221,15 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
         val request = FakeRequest(GET, routes.AuthController.signedIn().url)
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual TaskListPage.route(EmptyWaypoints).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` TaskListPage.route(EmptyWaypoints).url
       }
     }
 
     "must save an empty UserAnswers then redirect to the task list when the user does not have any user answers" in {
 
       val mockUserDataService = mock[UserDataService]
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(None)
@@ -233,8 +242,8 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
         val expectedAnswers = UserAnswers(userAnswersId, lastUpdated = Instant.now(clockAtFixedInstant))
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual TaskListPage.route(EmptyWaypoints).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` TaskListPage.route(EmptyWaypoints).url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -251,8 +260,10 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual "http://localhost:9553/bas-gateway/sign-out-without-state?continue=http%3A%2F%2Flocalhost%3A11303%2Ffill-online%2Fclaim-child-benefit%2Frecently-claimed-child-benefit"
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(
+          result
+        ).value `mustEqual` "http://localhost:9553/bas-gateway/sign-out-without-state?continue=http%3A%2F%2Flocalhost%3A11303%2Ffill-online%2Fclaim-child-benefit%2Frecently-claimed-child-benefit"
       }
     }
   }

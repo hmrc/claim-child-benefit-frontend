@@ -55,6 +55,6 @@ class CorrespondenceUkAddressFormProvider @Inject() extends Mappings {
           maxLength(8, "correspondenceUkAddress.error.postcode.length"),
           regexp(Validation.ukPostcodePattern, "correspondenceUkAddress.error.postcode.invalid")
         )
-    )(UkAddress.apply)(UkAddress.unapply)
+    )(UkAddress.apply)(o => Some(Tuple.fromProductTyped(o)))
   )
 }

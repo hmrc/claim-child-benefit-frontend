@@ -26,55 +26,67 @@ class CountryOfRegistrationSpec extends AnyFreeSpec with Matchers {
 
     "must return EnglandWales when given England" in {
 
-      CountryOfRegistration.build(models.ChildBirthRegistrationCountry.England) mustEqual CountryOfRegistration.EnglandWales
+      CountryOfRegistration.build(
+        models.ChildBirthRegistrationCountry.England
+      ) `mustEqual` CountryOfRegistration.EnglandWales
     }
 
     "must return EnglandWales when given Wales" in {
 
-      CountryOfRegistration.build(models.ChildBirthRegistrationCountry.Wales) mustEqual CountryOfRegistration.EnglandWales
+      CountryOfRegistration.build(
+        models.ChildBirthRegistrationCountry.Wales
+      ) `mustEqual` CountryOfRegistration.EnglandWales
     }
 
     "must return Scotland when given Scotland" in {
 
-      CountryOfRegistration.build(models.ChildBirthRegistrationCountry.Scotland) mustEqual CountryOfRegistration.Scotland
+      CountryOfRegistration.build(
+        models.ChildBirthRegistrationCountry.Scotland
+      ) `mustEqual` CountryOfRegistration.Scotland
     }
 
     "must return NorthernIreland when given NorthernIreland" in {
 
-      CountryOfRegistration.build(models.ChildBirthRegistrationCountry.NorthernIreland) mustEqual CountryOfRegistration.NorthernIreland
+      CountryOfRegistration.build(
+        models.ChildBirthRegistrationCountry.NorthernIreland
+      ) `mustEqual` CountryOfRegistration.NorthernIreland
     }
 
     "must return Abroad when given Other" in {
 
-      CountryOfRegistration.build(models.ChildBirthRegistrationCountry.OtherCountry) mustEqual CountryOfRegistration.Abroad
+      CountryOfRegistration.build(
+        models.ChildBirthRegistrationCountry.OtherCountry
+      ) `mustEqual` CountryOfRegistration.Abroad
     }
 
     "must return Abroad when given Unknown" in {
 
-      CountryOfRegistration.build(models.ChildBirthRegistrationCountry.UnknownCountry) mustEqual CountryOfRegistration.Abroad
+      CountryOfRegistration.build(
+        models.ChildBirthRegistrationCountry.UnknownCountry
+      ) `mustEqual` CountryOfRegistration.Abroad
     }
   }
-  
+
   ".writes" - {
 
     "must write England / Wales" in {
 
-      Json.toJson[CountryOfRegistration](CountryOfRegistration.EnglandWales) mustEqual JsString("ENGLAND_WALES")
+      Json.toJson[CountryOfRegistration](CountryOfRegistration.EnglandWales) `mustEqual` JsString("ENGLAND_WALES")
     }
 
     "must write Scotland" in {
 
-      Json.toJson[CountryOfRegistration](CountryOfRegistration.Scotland) mustEqual JsString("SCOTLAND")
+      Json.toJson[CountryOfRegistration](CountryOfRegistration.Scotland) `mustEqual` JsString("SCOTLAND")
     }
 
     "must write Northern Ireland" in {
 
-      Json.toJson[CountryOfRegistration](CountryOfRegistration.NorthernIreland) mustEqual JsString("NORTHERN_IRELAND")
+      Json.toJson[CountryOfRegistration](CountryOfRegistration.NorthernIreland) `mustEqual` JsString("NORTHERN_IRELAND")
     }
 
     "must write Abroad" in {
 
-      Json.toJson[CountryOfRegistration](CountryOfRegistration.Abroad) mustEqual JsString("ABROAD")
+      Json.toJson[CountryOfRegistration](CountryOfRegistration.Abroad) `mustEqual` JsString("ABROAD")
     }
   }
 }

@@ -40,8 +40,8 @@ class CheckApplicantDetailsControllerSpec extends SpecBase with SummaryListFluen
         val view = app.injector.instanceOf[CheckApplicantDetailsView]
         val emptyList = SummaryListViewModel(Nil)
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(emptyList)(request, messages(app)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(emptyList)(request, messages(app)).toString
       }
     }
 
@@ -54,8 +54,11 @@ class CheckApplicantDetailsControllerSpec extends SpecBase with SummaryListFluen
 
         val result = route(app, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual CheckApplicantDetailsPage.navigate(EmptyWaypoints, emptyUserAnswers, emptyUserAnswers).route.url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` CheckApplicantDetailsPage
+          .navigate(EmptyWaypoints, emptyUserAnswers, emptyUserAnswers)
+          .route
+          .url
       }
     }
   }

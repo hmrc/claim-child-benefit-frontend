@@ -49,12 +49,12 @@ class CountryPartnerWorkedFormProviderSpec extends StringFieldBehaviours {
 
     "must not bind any values other than valid international countries" in {
 
-      val invalidAnswers = arbitrary[String].suchThat(x => x.trim.nonEmpty && !Country.internationalCountries.map(_.code).contains(x))
+      val invalidAnswers =
+        arbitrary[String].suchThat(x => x.trim.nonEmpty && !Country.internationalCountries.map(_.code).contains(x))
 
-      forAll(invalidAnswers) {
-        answer =>
-          val result = form.bind(Map("value" -> answer)).apply(fieldName)
-          result.errors must contain only FormError(fieldName, requiredKey)
+      forAll(invalidAnswers) { answer =>
+        val result = form.bind(Map("value" -> answer)).apply(fieldName)
+        result.errors `must` contain `only` FormError(fieldName, requiredKey)
       }
     }
 
@@ -64,7 +64,7 @@ class CountryPartnerWorkedFormProviderSpec extends StringFieldBehaviours {
       val form = new CountryPartnerWorkedFormProvider()(name, index, existingAnswers)
 
       val result = form.bind(Map(fieldName -> answer.code)).apply(fieldName)
-      result.errors must contain only FormError(fieldName, "countryPartnerWorked.error.duplicate", Seq(name))
+      result.errors `must` contain `only` FormError(fieldName, "countryPartnerWorked.error.duplicate", Seq(name))
     }
   }
 }

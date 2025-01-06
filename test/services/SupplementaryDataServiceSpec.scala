@@ -44,12 +44,7 @@ import java.util.UUID
 import scala.concurrent.Future
 
 class SupplementaryDataServiceSpec
-  extends AnyFreeSpec
-    with Matchers
-    with OptionValues
-    with MockitoSugar
-    with ModelGenerators
-    with ScalaFutures
+    extends AnyFreeSpec with Matchers with OptionValues with MockitoSugar with ModelGenerators with ScalaFutures
     with BeforeAndAfterEach {
 
   override def beforeEach(): Unit = {
@@ -64,7 +59,6 @@ class SupplementaryDataServiceSpec
   private val mockFop = mock[FopService]
   private val clock = Clock.fixed(Instant.now(), ZoneOffset.UTC)
 
-
   private val request: RequestHeader = FakeRequest()
 
   private val nino = arbitrary[Nino].sample.value.value
@@ -76,8 +70,10 @@ class SupplementaryDataServiceSpec
       dateOfBirth = LocalDate.now,
       nationalInsuranceNumber = Some(nino),
       currentAddress = arbitrary[models.UkAddress].sample.value,
-      previousAddress = None, telephoneNumber = "0777777777",
-      nationalities = NonEmptyList(genUkCtaNationality.sample.value, Gen.listOf(arbitrary[models.Nationality]).sample.value),
+      previousAddress = None,
+      telephoneNumber = "0777777777",
+      nationalities =
+        NonEmptyList(genUkCtaNationality.sample.value, Gen.listOf(arbitrary[models.Nationality]).sample.value),
       residency = journey.Residency.AlwaysLivedInUk,
       memberOfHMForcesOrCivilServantAbroad = false,
       currentlyReceivingChildBenefit = CurrentlyReceivingChildBenefit.NotClaiming,
@@ -145,20 +141,23 @@ class SupplementaryDataServiceSpec
         val expectedView = template(model, additionalDetails)(englishMessages)
         val expectedPdf = "hello".getBytes
 
-        when(mockFop.render(any(), any())) thenReturn Future.successful(expectedPdf)
-        when(mockClaimChildBenefitConnector.submitSupplementaryData(any(), any())(any())).thenReturn(Future.successful(Done))
+        when(mockFop.render(any(), any())) `thenReturn` Future.successful(expectedPdf)
+        when(mockClaimChildBenefitConnector.submitSupplementaryData(any(), any())(any()))
+          .thenReturn(Future.successful(Done))
 
         service.submit(nino, model, uuid, additionalDetails)(request).futureValue
 
         verify(mockFop, times(1)).render(eqTo(expectedView.body), any())
-        verify(mockClaimChildBenefitConnector, times(1)).submitSupplementaryData(eqTo(expectedPdf), eqTo(expectedMetadata))(any())
+        verify(mockClaimChildBenefitConnector, times(1))
+          .submitSupplementaryData(eqTo(expectedPdf), eqTo(expectedMetadata))(any())
       }
 
       "must fail when the supplementary data call fails" in {
 
         val additionalDetails = AdditionalArchiveDetails(None)
-        when(mockFop.render(any(), any())) thenReturn Future.successful("hello".getBytes)
-        when(mockClaimChildBenefitConnector.submitSupplementaryData(any(), any())(any())).thenReturn(Future.failed(new RuntimeException()))
+        when(mockFop.render(any(), any())) `thenReturn` Future.successful("hello".getBytes)
+        when(mockClaimChildBenefitConnector.submitSupplementaryData(any(), any())(any()))
+          .thenReturn(Future.failed(new RuntimeException()))
         service.submit(nino, model, uuid, additionalDetails)(request).failed.futureValue
       }
     }

@@ -40,8 +40,8 @@ class PaidToExistingAccountControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[PaidToExistingAccountView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(waypoints)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(waypoints)(request, messages(application)).toString
       }
     }
 
@@ -54,8 +54,11 @@ class PaidToExistingAccountControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual PaidToExistingAccountPage.navigate(waypoints, emptyUserAnswers, emptyUserAnswers).route.url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` PaidToExistingAccountPage
+          .navigate(waypoints, emptyUserAnswers, emptyUserAnswers)
+          .route
+          .url
       }
     }
   }

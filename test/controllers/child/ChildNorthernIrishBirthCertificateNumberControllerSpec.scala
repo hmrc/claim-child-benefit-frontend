@@ -19,11 +19,11 @@ package controllers.child
 import base.SpecBase
 import controllers.{routes => baseRoutes}
 import forms.child.ChildNorthernIrishBirthCertificateNumberFormProvider
-import models.{NorthernIrishBirthCertificateNumber, ChildName, Done}
+import models.{ChildName, Done, NorthernIrishBirthCertificateNumber}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.child.{ChildNorthernIrishBirthCertificateNumberPage, ChildNamePage}
+import pages.child.{ChildNamePage, ChildNorthernIrishBirthCertificateNumberPage}
 import pages.{EmptyWaypoints, child}
 import play.api.inject.bind
 import play.api.test.FakeRequest
@@ -59,8 +59,11 @@ class ChildNorthernIrishBirthCertificateNumberControllerSpec extends SpecBase wi
 
         val view = application.injector.instanceOf[ChildNorthernIrishBirthCertificateNumberView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints, index, childName)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints, index, childName)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -77,8 +80,11 @@ class ChildNorthernIrishBirthCertificateNumberControllerSpec extends SpecBase wi
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints, index, childName)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form.fill(validAnswer), waypoints, index, childName)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -86,7 +92,7 @@ class ChildNorthernIrishBirthCertificateNumberControllerSpec extends SpecBase wi
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(baseAnswers))
@@ -101,10 +107,14 @@ class ChildNorthernIrishBirthCertificateNumberControllerSpec extends SpecBase wi
             .withFormUrlEncodedBody(("value", validAnswer.value))
 
         val result = route(application, request).value
-        val expectedAnswers = baseAnswers.set(child.ChildNorthernIrishBirthCertificateNumberPage(index), validAnswer).success.value
+        val expectedAnswers =
+          baseAnswers.set(child.ChildNorthernIrishBirthCertificateNumberPage(index), validAnswer).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual child.ChildNorthernIrishBirthCertificateNumberPage(index).navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` child
+          .ChildNorthernIrishBirthCertificateNumberPage(index)
+          .navigate(waypoints, emptyUserAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -124,8 +134,11 @@ class ChildNorthernIrishBirthCertificateNumberControllerSpec extends SpecBase wi
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints, index, childName)(request, messages(application)).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints, index, childName)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -138,8 +151,8 @@ class ChildNorthernIrishBirthCertificateNumberControllerSpec extends SpecBase wi
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -154,8 +167,8 @@ class ChildNorthernIrishBirthCertificateNumberControllerSpec extends SpecBase wi
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

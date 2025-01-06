@@ -17,7 +17,6 @@
 package connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock._
-import connectors.ClaimChildBenefitConnector
 import connectors.ClaimChildBenefitConnector._
 import generators.ModelGenerators
 import models.domain._
@@ -91,7 +90,7 @@ class ClaimChildBenefitConnectorSpec
 
         val result = connector.designatoryDetails().futureValue
 
-        result mustEqual happyDesignatoryDetailsModel
+        result `mustEqual` happyDesignatoryDetailsModel
       }
     }
 
@@ -106,7 +105,7 @@ class ClaimChildBenefitConnectorSpec
 
         val result = connector.designatoryDetails()
 
-        result.failed.futureValue mustBe an[Exception]
+        result.failed.futureValue `mustBe` an[Exception]
       }
     }
   }
@@ -147,7 +146,7 @@ class ClaimChildBenefitConnectorSpec
 
       val result = connector.submitClaim(claim, correlationId).futureValue
 
-      result mustEqual Done
+      result `mustEqual` Done
     }
 
     "must return a failed future (Bad Request Exception) when the server returns 400" in {
@@ -159,7 +158,7 @@ class ClaimChildBenefitConnectorSpec
 
       val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
-      result mustBe a[BadRequestException]
+      result `mustBe` a[BadRequestException]
     }
 
     "must return a failed future (Invalid Claim State Exception) when the server returns 422 with a code of INVALID_CLAIM_STATE" in {
@@ -184,7 +183,7 @@ class ClaimChildBenefitConnectorSpec
 
       val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
-      result mustBe an[InvalidClaimStateException]
+      result `mustBe` an[InvalidClaimStateException]
     }
 
     "must return a failed future (Invalid Account State Exception) when the server returns 422 with a code of INVALID_ACCOUNT_STATE" in {
@@ -209,7 +208,7 @@ class ClaimChildBenefitConnectorSpec
 
       val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
-      result mustBe an[InvalidAccountStateException]
+      result `mustBe` an[InvalidAccountStateException]
     }
 
     "must return a failed future (Already In Payment Exception) when the server returns 422 with a code of PAYMENT_PRESENT_AFTER_FIRST_PAYMENT_INSTRUCTION" in {
@@ -234,7 +233,7 @@ class ClaimChildBenefitConnectorSpec
 
       val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
-      result mustBe an[AlreadyInPaymentException]
+      result `mustBe` an[AlreadyInPaymentException]
     }
 
     "must return a failed future (Unprocessable Entity Exception) when the server returns 422 with no recognised code" in {
@@ -259,7 +258,7 @@ class ClaimChildBenefitConnectorSpec
 
       val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
-      result mustBe an[UnprocessableEntityException]
+      result `mustBe` an[UnprocessableEntityException]
     }
 
     "must return a failed future (Unrecognised Response Exception) when the server returns 422 but we cannon parse the response body" in {
@@ -279,7 +278,7 @@ class ClaimChildBenefitConnectorSpec
 
       val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
-      result mustBe an[UnprocessableEntityException]
+      result `mustBe` an[UnprocessableEntityException]
     }
 
     "must return a failed future (Server Error) when the server returns 500" in {
@@ -294,7 +293,7 @@ class ClaimChildBenefitConnectorSpec
 
       val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
-      result mustBe a[ServerErrorException]
+      result `mustBe` a[ServerErrorException]
     }
 
     "must return a failed future (Service Unavailable) when the server returns 503" in {
@@ -309,7 +308,7 @@ class ClaimChildBenefitConnectorSpec
 
       val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
-      result mustBe a[ServiceUnavailableException]
+      result `mustBe` a[ServiceUnavailableException]
     }
 
     "must return a failed future (Unrecognised Response) when the server returns an unexpected code" in {
@@ -326,7 +325,7 @@ class ClaimChildBenefitConnectorSpec
 
       val result = connector.submitClaim(claim, correlationId).failed.futureValue
 
-      result mustBe an[UnrecognisedResponseException]
+      result `mustBe` an[UnrecognisedResponseException]
     }
   }
 
@@ -393,7 +392,7 @@ class ClaimChildBenefitConnectorSpec
 
         val result = connector.relationshipDetails().futureValue
 
-        result mustEqual RelationshipDetails(hasClaimedChildBenefit = true)
+        result `mustEqual` RelationshipDetails(hasClaimedChildBenefit = true)
       }
     }
 
@@ -408,7 +407,7 @@ class ClaimChildBenefitConnectorSpec
 
         val result = connector.relationshipDetails()
 
-        result.failed.futureValue mustBe an[Exception]
+        result.failed.futureValue `mustBe` an[Exception]
       }
     }
   }
@@ -426,7 +425,7 @@ class ClaimChildBenefitConnectorSpec
 
       val result = connector.getRecentClaim().futureValue
 
-      result.value mustEqual recentClaim
+      result.value `mustEqual` recentClaim
     }
 
     "must return None when the server returns Not Found" in {
@@ -436,7 +435,7 @@ class ClaimChildBenefitConnectorSpec
           .willReturn(notFound())
       )
 
-      connector.getRecentClaim().futureValue must not be defined
+      connector.getRecentClaim().futureValue `must` `not` `be` defined
     }
 
     "must return a failed future when the server returns an error" in {

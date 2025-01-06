@@ -34,8 +34,15 @@ class ResidencySpec extends AnyFreeSpec with Matchers with ModelGenerators with 
   private val index = Index(0)
   private val nino = arbitrary[Nino].sample.value
   private val country = Gen.oneOf(Country.internationalCountries).sample.value
-  private val ukDesignatoryDetails = DesignatoryDetails(None, None, Some(NPSAddress("line1", None, None, None, None, None, None)), None, LocalDate.now)
-  private val intDesignatoryDetails = DesignatoryDetails(None, None, Some(NPSAddress("line1", None, None, None, None, None, Some(country))), None, LocalDate.now)
+  private val ukDesignatoryDetails =
+    DesignatoryDetails(None, None, Some(NPSAddress("line1", None, None, None, None, None, None)), None, LocalDate.now)
+  private val intDesignatoryDetails = DesignatoryDetails(
+    None,
+    None,
+    Some(NPSAddress("line1", None, None, None, None, None, Some(country))),
+    None,
+    LocalDate.now
+  )
 
   ".build" - {
 
@@ -47,8 +54,8 @@ class ResidencySpec extends AnyFreeSpec with Matchers with ModelGenerators with 
 
         val (errors, data) = Residency.build(answers).pad
 
-        data.value mustEqual Residency.AlwaysLivedInUk
-        errors must not be defined
+        data.value `mustEqual` Residency.AlwaysLivedInUk
+        errors `must` `not` `be` defined
       }
     }
 
@@ -64,68 +71,114 @@ class ResidencySpec extends AnyFreeSpec with Matchers with ModelGenerators with 
 
             val answers =
               baseAnswers
-                .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
-                .set(ApplicantUsuallyLivesInUkPage, false).success.value
-                .set(ApplicantUsualCountryOfResidencePage, country).success.value
-                .set(DesignatoryAddressInUkPage, true).success.value
-                .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
-                .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-                .set(ApplicantWorkedAbroadPage, true).success.value
-                .set(CountryApplicantWorkedPage(index), country).success.value
-                .set(ApplicantReceivedBenefitsAbroadPage, true).success.value
-                .set(CountryApplicantReceivedBenefitsPage(index), country).success.value
+                .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad)
+                .success
+                .value
+                .set(ApplicantUsuallyLivesInUkPage, false)
+                .success
+                .value
+                .set(ApplicantUsualCountryOfResidencePage, country)
+                .success
+                .value
+                .set(DesignatoryAddressInUkPage, true)
+                .success
+                .value
+                .set(ApplicantArrivedInUkPage, LocalDate.now)
+                .success
+                .value
+                .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses)
+                .success
+                .value
+                .set(ApplicantWorkedAbroadPage, true)
+                .success
+                .value
+                .set(CountryApplicantWorkedPage(index), country)
+                .success
+                .value
+                .set(ApplicantReceivedBenefitsAbroadPage, true)
+                .success
+                .value
+                .set(CountryApplicantReceivedBenefitsPage(index), country)
+                .success
+                .value
 
             val (errors, data) = Residency.build(answers).pad
 
-            data.value mustEqual Residency.LivedInUkAndAbroad(
+            data.value `mustEqual` Residency.LivedInUkAndAbroad(
               usualCountryOfResidence = Some(country),
               arrivalDate = Some(LocalDate.now),
               employmentStatus = EmploymentStatus.activeStatuses,
               countriesWorked = List(country),
               countriesReceivedBenefits = List(country)
             )
-            errors must not be defined
+            errors `must` `not` `be` defined
           }
 
           "must return UK and Abroad when the user usually lives in the UK and has not worked or received benefits abroad (sparsest case)" in {
 
             val answers =
               baseAnswers
-                .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
-                .set(ApplicantUsuallyLivesInUkPage, true).success.value
-                .set(DesignatoryAddressInUkPage, true).success.value
-                .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
-                .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-                .set(ApplicantWorkedAbroadPage, false).success.value
-                .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
+                .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad)
+                .success
+                .value
+                .set(ApplicantUsuallyLivesInUkPage, true)
+                .success
+                .value
+                .set(DesignatoryAddressInUkPage, true)
+                .success
+                .value
+                .set(ApplicantArrivedInUkPage, LocalDate.now)
+                .success
+                .value
+                .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses)
+                .success
+                .value
+                .set(ApplicantWorkedAbroadPage, false)
+                .success
+                .value
+                .set(ApplicantReceivedBenefitsAbroadPage, false)
+                .success
+                .value
 
             val (errors, data) = Residency.build(answers).pad
 
-            data.value mustEqual Residency.LivedInUkAndAbroad(
+            data.value `mustEqual` Residency.LivedInUkAndAbroad(
               usualCountryOfResidence = None,
               arrivalDate = Some(LocalDate.now),
               employmentStatus = EmploymentStatus.activeStatuses,
               countriesWorked = Nil,
               countriesReceivedBenefits = Nil
             )
-            errors must not be defined
+            errors `must` `not` `be` defined
           }
 
           "must return errors when the arrival date is missing" in {
 
             val answers =
               baseAnswers
-                .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
-                .set(ApplicantUsuallyLivesInUkPage, true).success.value
-                .set(DesignatoryAddressInUkPage, true).success.value
-                .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-                .set(ApplicantWorkedAbroadPage, false).success.value
-                .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
+                .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad)
+                .success
+                .value
+                .set(ApplicantUsuallyLivesInUkPage, true)
+                .success
+                .value
+                .set(DesignatoryAddressInUkPage, true)
+                .success
+                .value
+                .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses)
+                .success
+                .value
+                .set(ApplicantWorkedAbroadPage, false)
+                .success
+                .value
+                .set(ApplicantReceivedBenefitsAbroadPage, false)
+                .success
+                .value
 
             val (errors, data) = Residency.build(answers).pad
 
-            data must not be defined
-            errors.value.toChain.toList must contain only ApplicantArrivedInUkPage
+            data `must` `not` `be` defined
+            errors.value.toChain.toList `must` contain `only` ApplicantArrivedInUkPage
           }
         }
 
@@ -137,51 +190,85 @@ class ResidencySpec extends AnyFreeSpec with Matchers with ModelGenerators with 
 
             val answers =
               baseAnswers
-                .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
-                .set(ApplicantUsuallyLivesInUkPage, false).success.value
-                .set(ApplicantUsualCountryOfResidencePage, country).success.value
-                .set(DesignatoryAddressInUkPage, false).success.value
-                .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
-                .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-                .set(ApplicantWorkedAbroadPage, true).success.value
-                .set(CountryApplicantWorkedPage(index), country).success.value
-                .set(ApplicantReceivedBenefitsAbroadPage, true).success.value
-                .set(CountryApplicantReceivedBenefitsPage(index), country).success.value
+                .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad)
+                .success
+                .value
+                .set(ApplicantUsuallyLivesInUkPage, false)
+                .success
+                .value
+                .set(ApplicantUsualCountryOfResidencePage, country)
+                .success
+                .value
+                .set(DesignatoryAddressInUkPage, false)
+                .success
+                .value
+                .set(ApplicantArrivedInUkPage, LocalDate.now)
+                .success
+                .value
+                .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses)
+                .success
+                .value
+                .set(ApplicantWorkedAbroadPage, true)
+                .success
+                .value
+                .set(CountryApplicantWorkedPage(index), country)
+                .success
+                .value
+                .set(ApplicantReceivedBenefitsAbroadPage, true)
+                .success
+                .value
+                .set(CountryApplicantReceivedBenefitsPage(index), country)
+                .success
+                .value
 
             val (errors, data) = Residency.build(answers).pad
 
-            data.value mustEqual Residency.LivedInUkAndAbroad(
+            data.value `mustEqual` Residency.LivedInUkAndAbroad(
               usualCountryOfResidence = Some(country),
               arrivalDate = None,
               employmentStatus = EmploymentStatus.activeStatuses,
               countriesWorked = List(country),
               countriesReceivedBenefits = List(country)
             )
-            errors must not be defined
+            errors `must` `not` `be` defined
           }
 
           "must return UK and Abroad when the user usually lives in the UK and has not worked or received benefits abroad (sparsest case)" in {
 
             val answers =
               baseAnswers
-                .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
-                .set(ApplicantUsuallyLivesInUkPage, true).success.value
-                .set(DesignatoryAddressInUkPage, false).success.value
-                .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
-                .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-                .set(ApplicantWorkedAbroadPage, false).success.value
-                .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
+                .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad)
+                .success
+                .value
+                .set(ApplicantUsuallyLivesInUkPage, true)
+                .success
+                .value
+                .set(DesignatoryAddressInUkPage, false)
+                .success
+                .value
+                .set(ApplicantArrivedInUkPage, LocalDate.now)
+                .success
+                .value
+                .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses)
+                .success
+                .value
+                .set(ApplicantWorkedAbroadPage, false)
+                .success
+                .value
+                .set(ApplicantReceivedBenefitsAbroadPage, false)
+                .success
+                .value
 
             val (errors, data) = Residency.build(answers).pad
 
-            data.value mustEqual Residency.LivedInUkAndAbroad(
+            data.value `mustEqual` Residency.LivedInUkAndAbroad(
               usualCountryOfResidence = None,
               arrivalDate = None,
               employmentStatus = EmploymentStatus.activeStatuses,
               countriesWorked = Nil,
               countriesReceivedBenefits = Nil
             )
-            errors must not be defined
+            errors `must` `not` `be` defined
           }
         }
 
@@ -193,65 +280,105 @@ class ResidencySpec extends AnyFreeSpec with Matchers with ModelGenerators with 
 
             val answers =
               baseAnswers
-                .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
-                .set(ApplicantUsuallyLivesInUkPage, false).success.value
-                .set(ApplicantUsualCountryOfResidencePage, country).success.value
-                .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
-                .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-                .set(ApplicantWorkedAbroadPage, true).success.value
-                .set(CountryApplicantWorkedPage(index), country).success.value
-                .set(ApplicantReceivedBenefitsAbroadPage, true).success.value
-                .set(CountryApplicantReceivedBenefitsPage(index), country).success.value
+                .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad)
+                .success
+                .value
+                .set(ApplicantUsuallyLivesInUkPage, false)
+                .success
+                .value
+                .set(ApplicantUsualCountryOfResidencePage, country)
+                .success
+                .value
+                .set(ApplicantArrivedInUkPage, LocalDate.now)
+                .success
+                .value
+                .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses)
+                .success
+                .value
+                .set(ApplicantWorkedAbroadPage, true)
+                .success
+                .value
+                .set(CountryApplicantWorkedPage(index), country)
+                .success
+                .value
+                .set(ApplicantReceivedBenefitsAbroadPage, true)
+                .success
+                .value
+                .set(CountryApplicantReceivedBenefitsPage(index), country)
+                .success
+                .value
 
             val (errors, data) = Residency.build(answers).pad
 
-            data.value mustEqual Residency.LivedInUkAndAbroad(
+            data.value `mustEqual` Residency.LivedInUkAndAbroad(
               usualCountryOfResidence = Some(country),
               arrivalDate = Some(LocalDate.now),
               employmentStatus = EmploymentStatus.activeStatuses,
               countriesWorked = List(country),
               countriesReceivedBenefits = List(country)
             )
-            errors must not be defined
+            errors `must` `not` `be` defined
           }
 
           "must return UK and Abroad when the user usually lives in the UK and has not worked or received benefits abroad (sparsest case)" in {
 
             val answers =
               baseAnswers
-                .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
-                .set(ApplicantUsuallyLivesInUkPage, true).success.value
-                .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
-                .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-                .set(ApplicantWorkedAbroadPage, false).success.value
-                .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
+                .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad)
+                .success
+                .value
+                .set(ApplicantUsuallyLivesInUkPage, true)
+                .success
+                .value
+                .set(ApplicantArrivedInUkPage, LocalDate.now)
+                .success
+                .value
+                .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses)
+                .success
+                .value
+                .set(ApplicantWorkedAbroadPage, false)
+                .success
+                .value
+                .set(ApplicantReceivedBenefitsAbroadPage, false)
+                .success
+                .value
 
             val (errors, data) = Residency.build(answers).pad
 
-            data.value mustEqual Residency.LivedInUkAndAbroad(
+            data.value `mustEqual` Residency.LivedInUkAndAbroad(
               usualCountryOfResidence = None,
               arrivalDate = Some(LocalDate.now),
               employmentStatus = EmploymentStatus.activeStatuses,
               countriesWorked = Nil,
               countriesReceivedBenefits = Nil
             )
-            errors must not be defined
+            errors `must` `not` `be` defined
           }
 
           "must return errors when the arrival date is missing" in {
 
             val answers =
               baseAnswers
-                .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
-                .set(ApplicantUsuallyLivesInUkPage, true).success.value
-                .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-                .set(ApplicantWorkedAbroadPage, false).success.value
-                .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
+                .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad)
+                .success
+                .value
+                .set(ApplicantUsuallyLivesInUkPage, true)
+                .success
+                .value
+                .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses)
+                .success
+                .value
+                .set(ApplicantWorkedAbroadPage, false)
+                .success
+                .value
+                .set(ApplicantReceivedBenefitsAbroadPage, false)
+                .success
+                .value
 
             val (errors, data) = Residency.build(answers).pad
 
-            data must not be defined
-            errors.value.toChain.toList must contain only ApplicantArrivedInUkPage
+            data `must` `not` `be` defined
+            errors.value.toChain.toList `must` contain `only` ApplicantArrivedInUkPage
           }
         }
 
@@ -263,49 +390,79 @@ class ResidencySpec extends AnyFreeSpec with Matchers with ModelGenerators with 
 
             val answers =
               baseAnswers
-                .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
-                .set(ApplicantUsuallyLivesInUkPage, false).success.value
-                .set(ApplicantUsualCountryOfResidencePage, country).success.value
-                .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
-                .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-                .set(ApplicantWorkedAbroadPage, true).success.value
-                .set(CountryApplicantWorkedPage(index), country).success.value
-                .set(ApplicantReceivedBenefitsAbroadPage, true).success.value
-                .set(CountryApplicantReceivedBenefitsPage(index), country).success.value
+                .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad)
+                .success
+                .value
+                .set(ApplicantUsuallyLivesInUkPage, false)
+                .success
+                .value
+                .set(ApplicantUsualCountryOfResidencePage, country)
+                .success
+                .value
+                .set(ApplicantArrivedInUkPage, LocalDate.now)
+                .success
+                .value
+                .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses)
+                .success
+                .value
+                .set(ApplicantWorkedAbroadPage, true)
+                .success
+                .value
+                .set(CountryApplicantWorkedPage(index), country)
+                .success
+                .value
+                .set(ApplicantReceivedBenefitsAbroadPage, true)
+                .success
+                .value
+                .set(CountryApplicantReceivedBenefitsPage(index), country)
+                .success
+                .value
 
             val (errors, data) = Residency.build(answers).pad
 
-            data.value mustEqual Residency.LivedInUkAndAbroad(
+            data.value `mustEqual` Residency.LivedInUkAndAbroad(
               usualCountryOfResidence = Some(country),
               arrivalDate = None,
               employmentStatus = EmploymentStatus.activeStatuses,
               countriesWorked = List(country),
               countriesReceivedBenefits = List(country)
             )
-            errors must not be defined
+            errors `must` `not` `be` defined
           }
 
           "must return UK and Abroad when the user usually lives in the UK and has not worked or received benefits abroad (sparsest case)" in {
 
             val answers =
               baseAnswers
-                .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
-                .set(ApplicantUsuallyLivesInUkPage, true).success.value
-                .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
-                .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-                .set(ApplicantWorkedAbroadPage, false).success.value
-                .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
+                .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad)
+                .success
+                .value
+                .set(ApplicantUsuallyLivesInUkPage, true)
+                .success
+                .value
+                .set(ApplicantArrivedInUkPage, LocalDate.now)
+                .success
+                .value
+                .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses)
+                .success
+                .value
+                .set(ApplicantWorkedAbroadPage, false)
+                .success
+                .value
+                .set(ApplicantReceivedBenefitsAbroadPage, false)
+                .success
+                .value
 
             val (errors, data) = Residency.build(answers).pad
 
-            data.value mustEqual Residency.LivedInUkAndAbroad(
+            data.value `mustEqual` Residency.LivedInUkAndAbroad(
               usualCountryOfResidence = None,
               arrivalDate = None,
               employmentStatus = EmploymentStatus.activeStatuses,
               countriesWorked = Nil,
               countriesReceivedBenefits = Nil
             )
-            errors must not be defined
+            errors `must` `not` `be` defined
           }
         }
 
@@ -313,16 +470,28 @@ class ResidencySpec extends AnyFreeSpec with Matchers with ModelGenerators with 
 
           val answers =
             UserAnswers("id", nino = Some(nino.nino), designatoryDetails = Some(ukDesignatoryDetails))
-              .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
-              .set(ApplicantUsuallyLivesInUkPage, true).success.value
-              .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
-              .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-              .set(ApplicantWorkedAbroadPage, true).success.value
-              .set(ApplicantReceivedBenefitsAbroadPage, true).success.value
+              .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad)
+              .success
+              .value
+              .set(ApplicantUsuallyLivesInUkPage, true)
+              .success
+              .value
+              .set(ApplicantArrivedInUkPage, LocalDate.now)
+              .success
+              .value
+              .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses)
+              .success
+              .value
+              .set(ApplicantWorkedAbroadPage, true)
+              .success
+              .value
+              .set(ApplicantReceivedBenefitsAbroadPage, true)
+              .success
+              .value
 
           val (errors, data) = Residency.build(answers).pad
 
-          data must not be defined
+          data `must` `not` `be` defined
           errors.value.toChain.toList must contain theSameElementsAs Seq(
             AllCountriesApplicantWorked,
             AllCountriesApplicantReceivedBenefits
@@ -336,84 +505,142 @@ class ResidencySpec extends AnyFreeSpec with Matchers with ModelGenerators with 
 
           val answers =
             UserAnswers("id")
-              .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
-              .set(ApplicantUsuallyLivesInUkPage, false).success.value
-              .set(ApplicantUsualCountryOfResidencePage, country).success.value
-              .set(ApplicantCurrentAddressInUkPage, true).success.value
-              .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
-              .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-              .set(ApplicantWorkedAbroadPage, true).success.value
-              .set(CountryApplicantWorkedPage(index), country).success.value
-              .set(ApplicantReceivedBenefitsAbroadPage, true).success.value
-              .set(CountryApplicantReceivedBenefitsPage(index), country).success.value
+              .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad)
+              .success
+              .value
+              .set(ApplicantUsuallyLivesInUkPage, false)
+              .success
+              .value
+              .set(ApplicantUsualCountryOfResidencePage, country)
+              .success
+              .value
+              .set(ApplicantCurrentAddressInUkPage, true)
+              .success
+              .value
+              .set(ApplicantArrivedInUkPage, LocalDate.now)
+              .success
+              .value
+              .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses)
+              .success
+              .value
+              .set(ApplicantWorkedAbroadPage, true)
+              .success
+              .value
+              .set(CountryApplicantWorkedPage(index), country)
+              .success
+              .value
+              .set(ApplicantReceivedBenefitsAbroadPage, true)
+              .success
+              .value
+              .set(CountryApplicantReceivedBenefitsPage(index), country)
+              .success
+              .value
 
           val (errors, data) = Residency.build(answers).pad
 
-          data.value mustEqual Residency.LivedInUkAndAbroad(
+          data.value `mustEqual` Residency.LivedInUkAndAbroad(
             usualCountryOfResidence = Some(country),
             arrivalDate = Some(LocalDate.now),
             employmentStatus = EmploymentStatus.activeStatuses,
             countriesWorked = List(country),
             countriesReceivedBenefits = List(country)
           )
-          errors must not be defined
+          errors `must` `not` `be` defined
         }
 
         "must return UK and Abroad when the user usually lives in the UK, currently lives outside the UK, and has not worked or received benefits abroad (sparsest case)" in {
 
           val answers =
             UserAnswers("id")
-              .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
-              .set(ApplicantUsuallyLivesInUkPage, true).success.value
-              .set(ApplicantCurrentAddressInUkPage, false).success.value
-              .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
-              .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-              .set(ApplicantWorkedAbroadPage, false).success.value
-              .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
+              .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad)
+              .success
+              .value
+              .set(ApplicantUsuallyLivesInUkPage, true)
+              .success
+              .value
+              .set(ApplicantCurrentAddressInUkPage, false)
+              .success
+              .value
+              .set(ApplicantArrivedInUkPage, LocalDate.now)
+              .success
+              .value
+              .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses)
+              .success
+              .value
+              .set(ApplicantWorkedAbroadPage, false)
+              .success
+              .value
+              .set(ApplicantReceivedBenefitsAbroadPage, false)
+              .success
+              .value
 
           val (errors, data) = Residency.build(answers).pad
 
-          data.value mustEqual Residency.LivedInUkAndAbroad(
+          data.value `mustEqual` Residency.LivedInUkAndAbroad(
             usualCountryOfResidence = None,
             arrivalDate = None,
             employmentStatus = EmploymentStatus.activeStatuses,
             countriesWorked = Nil,
             countriesReceivedBenefits = Nil
           )
-          errors must not be defined
+          errors `must` `not` `be` defined
         }
 
         "must return errors when whether the user currently lives in the UK is missing" in {
 
           val answers =
             UserAnswers("id")
-              .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
-              .set(ApplicantUsuallyLivesInUkPage, true).success.value
-              .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-              .set(ApplicantWorkedAbroadPage, false).success.value
-              .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
+              .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad)
+              .success
+              .value
+              .set(ApplicantUsuallyLivesInUkPage, true)
+              .success
+              .value
+              .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses)
+              .success
+              .value
+              .set(ApplicantWorkedAbroadPage, false)
+              .success
+              .value
+              .set(ApplicantReceivedBenefitsAbroadPage, false)
+              .success
+              .value
 
           val (errors, data) = Residency.build(answers).pad
 
-          data must not be defined
-          errors.value.toChain.toList must contain only ApplicantCurrentAddressInUkPage
+          data `must` `not` `be` defined
+          errors.value.toChain.toList `must` contain `only` ApplicantCurrentAddressInUkPage
         }
 
         "must return errors when the user say they worked and received benefits abroad, but there are no countries" in {
 
           val answers =
             UserAnswers("id")
-              .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
-              .set(ApplicantUsuallyLivesInUkPage, true).success.value
-              .set(ApplicantCurrentAddressInUkPage, true).success.value
-              .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
-              .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-              .set(ApplicantWorkedAbroadPage, true).success.value
-              .set(ApplicantReceivedBenefitsAbroadPage, true).success.value
+              .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad)
+              .success
+              .value
+              .set(ApplicantUsuallyLivesInUkPage, true)
+              .success
+              .value
+              .set(ApplicantCurrentAddressInUkPage, true)
+              .success
+              .value
+              .set(ApplicantArrivedInUkPage, LocalDate.now)
+              .success
+              .value
+              .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses)
+              .success
+              .value
+              .set(ApplicantWorkedAbroadPage, true)
+              .success
+              .value
+              .set(ApplicantReceivedBenefitsAbroadPage, true)
+              .success
+              .value
 
           val (errors, data) = Residency.build(answers).pad
 
-          data must not be defined
+          data `must` `not` `be` defined
           errors.value.toChain.toList must contain theSameElementsAs Seq(
             AllCountriesApplicantWorked,
             AllCountriesApplicantReceivedBenefits
@@ -427,7 +654,7 @@ class ResidencySpec extends AnyFreeSpec with Matchers with ModelGenerators with 
 
         val (errors, data) = Residency.build(answers).pad
 
-        data must not be defined
+        data `must` `not` `be` defined
         errors.value.toChain.toList must contain theSameElementsAs Seq(
           ApplicantUsuallyLivesInUkPage,
           ApplicantCurrentAddressInUkPage,
@@ -441,18 +668,32 @@ class ResidencySpec extends AnyFreeSpec with Matchers with ModelGenerators with 
 
         val answers =
           UserAnswers("id")
-            .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad).success.value
-            .set(ApplicantUsuallyLivesInUkPage, false).success.value
-            .set(ApplicantCurrentAddressInUkPage, true).success.value
-            .set(ApplicantArrivedInUkPage, LocalDate.now).success.value
-            .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-            .set(ApplicantWorkedAbroadPage, false).success.value
-            .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
+            .set(ApplicantResidencePage, ApplicantResidence.UkAndAbroad)
+            .success
+            .value
+            .set(ApplicantUsuallyLivesInUkPage, false)
+            .success
+            .value
+            .set(ApplicantCurrentAddressInUkPage, true)
+            .success
+            .value
+            .set(ApplicantArrivedInUkPage, LocalDate.now)
+            .success
+            .value
+            .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses)
+            .success
+            .value
+            .set(ApplicantWorkedAbroadPage, false)
+            .success
+            .value
+            .set(ApplicantReceivedBenefitsAbroadPage, false)
+            .success
+            .value
 
         val (errors, data) = Residency.build(answers).pad
 
-        data must not be defined
-        errors.value.toChain.toList must contain only ApplicantUsualCountryOfResidencePage
+        data `must` `not` `be` defined
+        errors.value.toChain.toList `must` contain `only` ApplicantUsualCountryOfResidencePage
       }
     }
 
@@ -462,55 +703,81 @@ class ResidencySpec extends AnyFreeSpec with Matchers with ModelGenerators with 
 
         val answers =
           UserAnswers("id")
-            .set(ApplicantResidencePage, ApplicantResidence.AlwaysAbroad).success.value
-            .set(ApplicantUsualCountryOfResidencePage, country).success.value
-            .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-            .set(ApplicantWorkedAbroadPage, true).success.value
-            .set(CountryApplicantWorkedPage(index), country).success.value
-            .set(ApplicantReceivedBenefitsAbroadPage, true).success.value
-            .set(CountryApplicantReceivedBenefitsPage(index), country).success.value
+            .set(ApplicantResidencePage, ApplicantResidence.AlwaysAbroad)
+            .success
+            .value
+            .set(ApplicantUsualCountryOfResidencePage, country)
+            .success
+            .value
+            .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses)
+            .success
+            .value
+            .set(ApplicantWorkedAbroadPage, true)
+            .success
+            .value
+            .set(CountryApplicantWorkedPage(index), country)
+            .success
+            .value
+            .set(ApplicantReceivedBenefitsAbroadPage, true)
+            .success
+            .value
+            .set(CountryApplicantReceivedBenefitsPage(index), country)
+            .success
+            .value
 
         val (errors, data) = Residency.build(answers).pad
 
-        data.value mustEqual Residency.AlwaysLivedAbroad(
+        data.value `mustEqual` Residency.AlwaysLivedAbroad(
           usualCountryOfResidence = country,
           employmentStatus = EmploymentStatus.activeStatuses,
           countriesWorked = List(country),
           countriesReceivedBenefits = List(country)
         )
-        errors must not be defined
+        errors `must` `not` `be` defined
       }
 
       "must return Always Abroad when the user has not worked or received benefits abroad (sparsest case)" in {
 
         val answers =
           UserAnswers("id")
-            .set(ApplicantResidencePage, ApplicantResidence.AlwaysAbroad).success.value
-            .set(ApplicantUsualCountryOfResidencePage, country).success.value
-            .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-            .set(ApplicantWorkedAbroadPage, false).success.value
-            .set(ApplicantReceivedBenefitsAbroadPage, false).success.value
+            .set(ApplicantResidencePage, ApplicantResidence.AlwaysAbroad)
+            .success
+            .value
+            .set(ApplicantUsualCountryOfResidencePage, country)
+            .success
+            .value
+            .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses)
+            .success
+            .value
+            .set(ApplicantWorkedAbroadPage, false)
+            .success
+            .value
+            .set(ApplicantReceivedBenefitsAbroadPage, false)
+            .success
+            .value
 
         val (errors, data) = Residency.build(answers).pad
 
-        data.value mustEqual Residency.AlwaysLivedAbroad(
+        data.value `mustEqual` Residency.AlwaysLivedAbroad(
           usualCountryOfResidence = country,
           employmentStatus = EmploymentStatus.activeStatuses,
           countriesWorked = Nil,
           countriesReceivedBenefits = Nil
         )
-        errors must not be defined
+        errors `must` `not` `be` defined
       }
 
       "must return errors when any details are missing" in {
 
         val answers =
           UserAnswers("id")
-            .set(ApplicantResidencePage, ApplicantResidence.AlwaysAbroad).success.value
+            .set(ApplicantResidencePage, ApplicantResidence.AlwaysAbroad)
+            .success
+            .value
 
         val (errors, data) = Residency.build(answers).pad
 
-        data must not be defined
+        data `must` `not` `be` defined
         errors.value.toChain.toList must contain theSameElementsAs Seq(
           ApplicantUsualCountryOfResidencePage,
           ApplicantEmploymentStatusPage,
@@ -523,15 +790,25 @@ class ResidencySpec extends AnyFreeSpec with Matchers with ModelGenerators with 
 
         val answers =
           UserAnswers("id")
-            .set(ApplicantResidencePage, ApplicantResidence.AlwaysAbroad).success.value
-            .set(ApplicantUsualCountryOfResidencePage, country).success.value
-            .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses).success.value
-            .set(ApplicantWorkedAbroadPage, true).success.value
-            .set(ApplicantReceivedBenefitsAbroadPage, true).success.value
+            .set(ApplicantResidencePage, ApplicantResidence.AlwaysAbroad)
+            .success
+            .value
+            .set(ApplicantUsualCountryOfResidencePage, country)
+            .success
+            .value
+            .set(ApplicantEmploymentStatusPage, EmploymentStatus.activeStatuses)
+            .success
+            .value
+            .set(ApplicantWorkedAbroadPage, true)
+            .success
+            .value
+            .set(ApplicantReceivedBenefitsAbroadPage, true)
+            .success
+            .value
 
         val (errors, data) = Residency.build(answers).pad
 
-        data must not be defined
+        data `must` `not` `be` defined
         errors.value.toChain.toList must contain theSameElementsAs Seq(
           AllCountriesApplicantWorked,
           AllCountriesApplicantReceivedBenefits
@@ -545,8 +822,8 @@ class ResidencySpec extends AnyFreeSpec with Matchers with ModelGenerators with 
 
       val (errors, data) = Residency.build(answers).pad
 
-      data must not be defined
-      errors.value.toChain.toList must contain only ApplicantResidencePage
+      data `must` `not` `be` defined
+      errors.value.toChain.toList `must` contain `only` ApplicantResidencePage
     }
   }
 }

@@ -36,7 +36,7 @@ class DataRetrievalActionImpl @Inject()(
     val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     request match {
-      case a: AuthenticatedIdentifierRequest[_] =>
+      case a: AuthenticatedIdentifierRequest[?] =>
         for {
           maybeUserAnswers <- userDataService.get()(hc).logFailure(s"UserDataService failed on get on ${request.path}")
           designatoryDetails <- connector.designatoryDetails()(hc).logFailure(s"DesignatoryDetails failed on ${request.path}.")
@@ -52,7 +52,7 @@ class DataRetrievalActionImpl @Inject()(
         )
 
 
-      case _: UnauthenticatedIdentifierRequest[_] =>
+      case _: UnauthenticatedIdentifierRequest[?] =>
         userDataService.get()(hc).map { maybeAnswers =>
           OptionalDataRequest(request, request.userId, maybeAnswers)
         }.logFailure(s"UserDataService failed on get on ${request.path}.")

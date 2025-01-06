@@ -40,7 +40,8 @@ class CurrentlyReceivingChildBenefitControllerSpec extends SpecBase with Mockito
   private val waypoints = EmptyWaypoints
   private val validAnswer = CurrentlyReceivingChildBenefit.values.head
 
-  lazy val currentlyReceivingChildBenefitRoute = routes.CurrentlyReceivingChildBenefitController.onPageLoad(waypoints).url
+  lazy val currentlyReceivingChildBenefitRoute =
+    routes.CurrentlyReceivingChildBenefitController.onPageLoad(waypoints).url
 
   "CurrentlyReceivingChildBenefit Controller" - {
 
@@ -55,8 +56,8 @@ class CurrentlyReceivingChildBenefitControllerSpec extends SpecBase with Mockito
 
         val view = application.injector.instanceOf[CurrentlyReceivingChildBenefitView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, waypoints)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form, waypoints)(request, messages(application)).toString
       }
     }
 
@@ -73,8 +74,11 @@ class CurrentlyReceivingChildBenefitControllerSpec extends SpecBase with Mockito
 
         val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), waypoints)(request, messages(application)).toString
+        status(result) `mustEqual` OK
+        contentAsString(result) `mustEqual` view(form.fill(validAnswer), waypoints)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -82,7 +86,7 @@ class CurrentlyReceivingChildBenefitControllerSpec extends SpecBase with Mockito
 
       val mockUserDataService = mock[UserDataService]
 
-      when(mockUserDataService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserDataService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -99,8 +103,10 @@ class CurrentlyReceivingChildBenefitControllerSpec extends SpecBase with Mockito
         val result = route(application, request).value
         val expectedAnswers = emptyUserAnswers.set(CurrentlyReceivingChildBenefitPage, validAnswer).success.value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual CurrentlyReceivingChildBenefitPage.navigate(waypoints, emptyUserAnswers, expectedAnswers).url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` CurrentlyReceivingChildBenefitPage
+          .navigate(waypoints, emptyUserAnswers, expectedAnswers)
+          .url
         verify(mockUserDataService, times(1)).set(eqTo(expectedAnswers))(any())
       }
     }
@@ -120,8 +126,8 @@ class CurrentlyReceivingChildBenefitControllerSpec extends SpecBase with Mockito
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, waypoints)(request, messages(application)).toString
+        status(result) `mustEqual` BAD_REQUEST
+        contentAsString(result) `mustEqual` view(boundForm, waypoints)(request, messages(application)).toString
       }
     }
 
@@ -134,8 +140,8 @@ class CurrentlyReceivingChildBenefitControllerSpec extends SpecBase with Mockito
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -150,8 +156,8 @@ class CurrentlyReceivingChildBenefitControllerSpec extends SpecBase with Mockito
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoutes.JourneyRecoveryController.onPageLoad().url
+        status(result) `mustEqual` SEE_OTHER
+        redirectLocation(result).value `mustEqual` baseRoutes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }
