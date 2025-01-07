@@ -13,7 +13,7 @@ object AppDependencies {
     "org.typelevel"                 %% "cats-core"                      % "2.12.0",
     "uk.gov.hmrc"                   %% s"domain-play-30"                % "10.0.0",
     "com.googlecode.libphonenumber" % "libphonenumber"                  % "8.13.42",
-    "org.apache.xmlgraphics"        % "fop"                             % "2.9"
+    "org.apache.xmlgraphics"        % "fop"                             % "2.10"
   )
 
   val test: Seq[ModuleID] = Seq(
